@@ -1,5 +1,5 @@
 import { Space, Image, Switch, Button } from 'antd';
-import { delProduct } from '../../api/productApi';
+import { delProduct, changeProductStatus } from '../../api/productApi';
 import { getToken } from '../../util/auth';
 import MainHeader from '../../component/MainHeader/MainHeader';
 import ContentTab from '../../component/ContentTab/ContentTab';
@@ -99,12 +99,29 @@ const Product = () => {
                 title: '状态',
                 dataIndex: 'state',
                 key: 'state',
-                render: text => {
+                render: (text, record) => {
                     return (
                         <>
                             <Switch
                                 defaultChecked={text === '1' ? true : false}
+                                onChange={async value => {
+                                    const formData = new FormData();
+                                    formData.append('id', record.key);
+                                    formData.append(
+                                        'status',
+                                        value ? '1' : '0',
+                                    );
+                                    formData.append('access_token', getToken());
+                                    try {
+                                        const res =
+                                            await changeProductStatus(formData);
+                                        console.log(res);
+                                    } catch (error) {
+                                        throw error;
+                                    }
+                                }}
                             />
+                            <span>{text === '1' ? '上架' : '下架'}</span>
                         </>
                     );
                 },
@@ -115,24 +132,39 @@ const Product = () => {
                 key: 'operation',
                 render: (_, record) => {
                     return (
-                        <Button
-                            type="primary"
-                            danger
-                            onClick={async () => {
-                                const formData = new FormData();
-                                formData.append('id', record.key);
-                                formData.append('access_token', getToken());
-                                try {
-                                    const res = await delProduct(formData);
-                                    // return res.data;
-                                    console.log(res);
-                                } catch (error) {
-                                    throw error;
-                                }
-                            }}
-                        >
-                            删除
-                        </Button>
+                        <Space>
+                            <Button
+                                type="primary"
+                                onClick={() => {
+                                    window.open(
+                                        'https://' +
+                                            'r0201.demo.hdyshop.cn' +
+                                            '/h-product-detail-p' +
+                                            record.key +
+                                            '.html',
+                                        { replace: true },
+                                    );
+                                }}
+                            >
+                                预览
+                            </Button>
+                            <Button
+                                type="primary"
+                                danger
+                                onClick={async () => {
+                                    const formData = new FormData();
+                                    formData.append('id', record.key);
+                                    formData.append('access_token', getToken());
+                                    try {
+                                        const res = await delProduct(formData);
+                                    } catch (error) {
+                                        throw error;
+                                    }
+                                }}
+                            >
+                                删除
+                            </Button>
+                        </Space>
                     );
                 },
             },

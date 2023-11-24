@@ -32,3 +32,14 @@ export function delProduct(data) {
         data,
     });
 }
+
+/**
+ * 更改商品状态(上架/下架)
+ */
+export function changeProductStatus(data) {
+    return request({
+        url: baseURL.adminApi + '/ApiStore/product_status_update',
+        method: 'post',
+        data,
+    });
+}
