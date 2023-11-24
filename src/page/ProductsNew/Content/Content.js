@@ -1,0 +1,311 @@
+import {
+    Button,
+    Input,
+    Typography,
+    Tooltip,
+    Form,
+    Checkbox,
+    Row,
+    Col,
+} from 'antd';
+import { useState } from 'react';
+import { QuestionMark } from '../../../component/Icon/Icon';
+import RichTextEditor from '../../../component/RichTextEditor/RichTextEditor';
+import UploadImg from '../../../component/UploadImg/UploadImg';
+import Card from '../../../component/Card/Card';
+import Extra from './Extra';
+import './Content.scss';
+import Product from '../../../models/productCreate';
+
+const { TextArea } = Input;
+
+/**
+ * 产品信息
+ */
+const ProductInformation = ({ product, setProduct }) => {
+    return (
+        <>
+            <div>
+                <Typography.Title level={5}>商品标题</Typography.Title>
+                <Form.Item
+                    name="商品标题"
+                    rules={[
+                        {
+                            required: true,
+                            message: '请输入商品标题',
+                        },
+                    ]}
+                >
+                    <Input
+                        placeholder="例如：冬季，毛衣"
+                        onChange={e => {
+                            setProduct({ ...product, title: e.target.value });
+                        }}
+                    />
+                </Form.Item>
+            </div>
+            <div>
+                <Typography.Title level={5}>商品摘要</Typography.Title>
+                <Form.Item name="商品摘要">
+                    <TextArea
+                        placeholder="请用简短的文字描述本商品"
+                        showCount
+                        maxLength={400}
+                        autoSize={{
+                            minRows: 1,
+                            maxRows: 8,
+                        }}
+                        onChange={e => {
+                            setProduct({
+                                ...product,
+                                content1: e.target.value,
+                            });
+                        }}
+                    />
+                </Form.Item>
+            </div>
+            <div>
+                <Typography.Title level={5}>商品描述</Typography.Title>
+                <RichTextEditor product={product} setProduct={setProduct} />
+            </div>
+        </>
+    );
+};
+
+/**
+ * 价格/交易，售价、原件、成本价
+ * @returns
+ */
+const Price = ({ product, setProduct }) => {
+    const data = [
+        {
+            title: '售价',
+            tooltipTitle: '当商品参与限时促销活动时，商品售价将修改无效',
+            name: '售价',
+        },
+        {
+            title: '原价',
+            tooltipTitle: '原价为0或小于等于售价时，网店将隐藏原价展示',
+            name: '原价',
+        },
+        {
+            title: '成本价',
+            tooltipTitle: '成本价信息不会展示给消费者',
+            name: '成本价',
+        },
+    ];
+
+    console.log(product);
+
+    return (
+        <>
+            {data.map((item, index) => {
+                const child = (
+                    <Col flex={1}>
+                        <Typography.Title level={5}>
+                            <span>{item.title} &nbsp;</span>
+                            <Tooltip title={item.tooltipTitle}>
+                                <QuestionMark
+                                    style={{ width: 20, height: 20 }}
+                                />
+                            </Tooltip>
+                        </Typography.Title>
+                        <Form.Item name={item.name}>
+                            <Input addonBefore="US$" />
+                        </Form.Item>
+                    </Col>
+                );
+
+                if (index % 2 === 1) {
+                    return <Row key={index}>{child}</Row>;
+                } else {
+                    return <child />;
+                }
+            })}
+        </>
+    );
+};
+
+/**
+ * 库存
+ */
+const Inventory = ({ product, setProduct }) => {
+    const data = [
+        {
+            title: 'SKU',
+        },
+        {
+            title: '条形码(ISBN、UPC、GTIN等)',
+        },
+        {
+            title: '库存数量',
+        },
+    ];
+
+    return (
+        <>
+            {data.map((item, index) => (
+                <div key={index}>
+                    <Typography.Title level={5}>{item.title}</Typography.Title>
+                    <Form.Item name={item.title}>
+                        <Input />
+                    </Form.Item>
+                </div>
+            ))}
+        </>
+    );
+};
+
+/**
+ * 海关信息
+ * @returns
+ */
+const CustomsInformation = ({ product, setProduct }) => {
+    const data = [
+        {
+            title: '发货国家/地区',
+            tooltipTitle: '绝大多数情况下是产品制造或组装的地点',
+            name: '发货国家/地区',
+            placeholder: '选择国家',
+        },
+        {
+            title: 'HS（协调制度）代码',
+            name: 'HS（协调制度）代码',
+            placeholder: '请输入HS编码',
+        },
+    ];
+
+    return (
+        <>
+            {data.map((item, index) => (
+                <div key={index}>
+                    <Typography.Title level={5}>
+                        <span>{item.title} &nbsp;</span>
+                        {item.tooltipTitle && (
+                            <Tooltip title={item.tooltipTitle}>
+                                <QuestionMark
+                                    style={{ width: 20, height: 20 }}
+                                />
+                            </Tooltip>
+                        )}
+                    </Typography.Title>
+                    <Form.Item name={item.name}>
+                        <Input placeholder={item.placeholder} />
+                    </Form.Item>
+                </div>
+            ))}
+        </>
+    );
+};
+
+const Content = () => {
+    const [product, setProduct] = useState(new Product());
+
+    const cardItems = [
+        {
+            title: '商品信息',
+            name: '商品信息',
+            child: (
+                <ProductInformation product={product} setProduct={setProduct} />
+            ),
+        },
+        {
+            title: '商品图片/视频',
+            name: '商品图片/视频',
+            child: <UploadImg />,
+            extra: (
+                <>
+                    <Button type="link">
+                        添加<strong>URL</strong>
+                    </Button>
+                    <Button type="link">添加多媒体文件</Button>
+                </>
+            ),
+        },
+        {
+            title: '价格/交易',
+            name: '价格/交易',
+            child: (
+                <>
+                    <Price />
+
+                    <div>
+                        <div>
+                            <p>
+                                <span>利润 &nbsp;</span>
+                                <Tooltip title="利润=售价 - 成本价">
+                                    <QuestionMark
+                                        style={{ width: 20, height: 20 }}
+                                    />
+                                </Tooltip>
+                            </p>
+                            <div>
+                                <Input addonBefore="US$" disabled />
+                            </div>
+                        </div>
+                        <div>
+                            <p>
+                                <span>利润率 &nbsp;</span>
+                                <Tooltip title="利润率=利润 / 售价">
+                                    <QuestionMark
+                                        style={{ width: 20, height: 20 }}
+                                    />
+                                </Tooltip>
+                            </p>
+                            <div>
+                                <Input disabled />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <Checkbox checked>需要收取税费</Checkbox>
+                    </div>
+                </>
+            ),
+        },
+        {
+            title: '库存',
+            name: '库存',
+            child: (
+                <>
+                    <Inventory />
+                    <div>
+                        <Checkbox checked>开启库存追踪</Checkbox>
+                        <Checkbox>缺货后继续销售</Checkbox>
+                    </div>
+                </>
+            ),
+        },
+        {
+            title: '海关信息',
+            name: '海关信息',
+            child: <CustomsInformation />,
+        },
+        {
+            title: '多款式',
+            name: '多款式',
+            child: (
+                <div>
+                    <Checkbox>此商品有多个款式</Checkbox>
+                </div>
+            ),
+        },
+    ];
+
+    return (
+        <div className="mc-layout-main">
+            <div className="mc-layout-content">
+                {cardItems.map((item, index) => (
+                    <Card props={item} key={index} />
+                ))}
+            </div>
+
+            <div className="mc-layout-extra">
+                <Extra />
+            </div>
+        </div>
+    );
+};
+
+export default Content;

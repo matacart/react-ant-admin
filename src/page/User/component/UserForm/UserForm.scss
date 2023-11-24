@@ -1,0 +1,154 @@
+.mc-login-form {
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    width: 80%;
+    max-width: 400px;
+
+    & h3 {
+        color: #262626;
+        font-weight: 600;
+        font-size: 30px;
+        line-height: 42px;
+    }
+
+    &-wrap {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+// 输入框
+.field {
+    width: 100%;
+    height: 50px;
+    position: relative;
+    margin-bottom: 20px;
+
+    input {
+        width: 100%;
+        height: 50px;
+        border-radius: 4px;
+        align-items: center;
+        border: 1px solid #d7dbe7;
+        outline: none;
+        padding: 20px 16px 0px 16px;
+        position: absolute;
+        cursor: text;
+        transition: border-color 0.5s;
+
+        &:focus {
+            border-color: #356dff;
+            box-shadow: 0 0 12px rgba(53, 109, 255, 0.15);
+        }
+
+        &:focus + label {
+            transform: translateY(-11px) scale(0.75);
+        }
+    }
+    input[type='password']::-ms-reveal {
+        display: none;
+    }
+
+    label {
+        position: absolute;
+        padding-left: 16px;
+        top: 50%;
+        margin-top: -8px;
+        color: #7a8499;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 20px;
+        transform-origin: left;
+        transition:
+            transform 0.3s ease,
+            font-size 0.3s ease;
+    }
+
+    button {
+        height: 48.2px;
+        position: absolute;
+
+        // background: rgba(0, 0, 0, 0.3);
+        top: 0.8px;
+        right: 0.8px;
+        border: 0;
+        width: 115px;
+        border-radius: 0px 4px 4px 0px;
+        cursor: pointer;
+        // transition:
+        //     width 0.3s ease,
+        //     background 0.3s ease,
+        //     opacity 0.3s ease;
+        // opacity: 0;
+        color: #000;
+
+        text-transform: uppercae;
+        pointer-events: auto;
+
+        // &.active {
+        //     // color: #ffffff;
+        //     color: #000;
+        //     background: #639edb;
+        //     opacity: 1;
+        //     pointer-events: auto;
+        //     &:hover {
+        //         background: #5e99d6;
+        //     }
+        // }
+    }
+
+    .isShow {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translate(-50%, -50%);
+
+        & svg {
+            width: 16px;
+            height: 16px;
+        }
+    }
+    .isShow:hover {
+        cursor: pointer;
+    }
+}
+
+.mc-privacy-policy {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 20px 0;
+    color: #7a8499;
+    font-size: 12px;
+}
+.privacy-container {
+    margin-left: 11px;
+    cursor: pointer;
+}
+
+#login-form-button {
+    height: 50px;
+    pad: 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    line-height: 22px;
+    white-space: normal;
+    word-wrap: break-word;
+    background-color: #356dff;
+    border: 0;
+    box-shadow: none;
+
+    &[disabled] {
+        color: #fff;
+        opacity: 0.4;
+    }
+}
+
+.jump a {
+    color: #356dff;
+    text-decoration: none;
+}

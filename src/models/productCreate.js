@@ -1,0 +1,46 @@
+class Product {
+    mode = '';
+    sku = '';
+    categoryIds = '';
+    product_image = '';
+    product_video = '';
+    additional_image = '';
+    price = '';
+    specialprice = '';
+    start_time = '';
+    end_time = '';
+    quantity = '';
+    sales_count = '';
+    minimum = '';
+    weight = '';
+    weight_class_id = '';
+    languages_id = '';
+    title = '';
+    stock_status_id = '';
+    subtract = '';
+    shipping = '';
+    is_best = '';
+    is_new = '';
+    is_hot = '';
+    sort = '';
+    is_share = '';
+    inquiry_status = '';
+    ad_waf_status = '';
+    ad_product_id = '';
+    ad_product_url = '';
+    divided_status = '';
+    divided_country = '';
+    divided_url = '';
+    group_id = '';
+    content1 = '';
+    content = '';
+    product_url = '';
+    tag = '';
+    meta_title = '';
+    meta_keyword = '';
+    meta_description = '';
+    status = '';
+    access_token = '';
+}
+
+export default Product;

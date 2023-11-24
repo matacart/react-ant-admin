@@ -1,0 +1,19 @@
+.mc-layout {
+    &-main {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    }
+
+    &-content {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        width: 0;
+    }
+
+    &-extra {
+        width: 285px;
+        margin-left: 20px;
+    }
+}

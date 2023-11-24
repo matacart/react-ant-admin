@@ -1,0 +1,26 @@
+.alert {
+    margin-bottom: 20px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 6px;
+    background-color: #00142d;
+
+    & > .text {
+        font-weight: 600;
+        font-size: 16px;
+        color: #fff;
+    }
+}
+
+.more {
+    & > svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.cardWrapper {
+    padding: 28px 32px;
+}

@@ -1,0 +1,60 @@
+.mc-login {
+    &-wrap {
+        min-width: 1200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    &-container {
+        display: flex;
+        min-height: 100vh;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    &-logo {
+        position: relative;
+        width: 67.5%;
+        background: url('../../assets//imgs/login_bg.jpg') center / cover
+            no-repeat;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: block;
+            background-color: rgba(36, 40, 51, 0.5);
+        }
+    }
+
+    &-form-container {
+        position: relative;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 400px;
+        background-color: #fff;
+    }
+}
+
+.mc-logo-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    margin-top: -3%;
+    transform: translate(-50%, -50%);
+
+    & p {
+        margin-bottom: 24px;
+        color: #fff;
+        font-weight: 300;
+        font-size: 32px;
+        font-family: Helvetica;
+        line-height: 1;
+    }
+}

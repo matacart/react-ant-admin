@@ -1,0 +1,14 @@
+.image-show-uploader {
+    min-height: 154px;
+
+    & > .uploadTipDesc {
+        margin-top: 12px;
+        margin-bottom: 0;
+        color: #7a8499;
+    }
+}
+
+.icon svg {
+    width: 25px;
+    height: 25px;
+}

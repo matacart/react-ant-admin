@@ -1,0 +1,35 @@
+.item {
+    padding: 28px 24px;
+    background-color: #fff;
+    display: flex;
+    border-radius: 8px;
+
+    &-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #f5f8fc;
+        & .icon {
+            width: 35px;
+            height: 35px;
+        }
+    }
+
+    &-body {
+        padding-left: 24px;
+
+        & .title {
+            margin-bottom: 6px;
+            color: #242833;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 22px;
+        }
+
+        & .description {
+            color: #7a8499;
+            font-size: 14px;
+            font-weight: normal;
+            line-height: 20px;
+        }
+    }
+}

@@ -1,0 +1,83 @@
+.mcLayoutHeader {
+    height: 100%;
+    background-color: #fff;
+    color: #252a3d;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+    box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+    position: relative;
+    z-index: 100;
+    padding: 0;
+}
+.Header-logo {
+    box-sizing: border-box;
+    width: 240px;
+    padding-left: 28px;
+    position: relative;
+    overflow: hidden;
+
+    & > a {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    & img {
+        width: auto;
+        height: 50px;
+    }
+}
+
+.header-content {
+    width: 100%;
+    max-width: 624px;
+    height: 100%;
+    padding: 0 12px;
+
+    & > span {
+        width: 100%;
+        height: 36px;
+        border-radius: 4px;
+    }
+}
+
+.right-content {
+    position: relative;
+    padding-right: 24px;
+    align-items: center;
+
+    & > div {
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    & svg {
+        width: 20px;
+        height: 20px;
+    }
+    & button {
+        width: 25px;
+        height: 25px;
+        padding: 0;
+    }
+}
+
+.setShop {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & > h4 {
+        width: 20px;
+    }
+
+    & > svg {
+        width: 20px;
+        height: 20px;
+    }
+}

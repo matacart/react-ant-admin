@@ -1,0 +1,43 @@
+.mc-external-login-divider {
+    margin-top: 32px;
+    width: 100%;
+    padding: 0 40px;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) calc(50% - 1px),
+        #b8becc calc(50%),
+        rgba(0, 0, 0, 0) calc(50% + 1px)
+    );
+
+    &__text {
+        display: inline-block;
+        padding: 0 20px;
+        color: #7a8499;
+        background-color: #fff;
+    }
+}
+
+.icon > svg {
+    width: 22px;
+    height: 22px;
+}
+
+.mc-external-login-button {
+    margin-top: 20px;
+    padding: 12px 0;
+    height: 47px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #474f5e;
+    font-weight: 600;
+    font-size: 16px;
+    border: 1px solid #d7dbe7;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}

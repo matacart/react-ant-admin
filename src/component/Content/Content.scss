@@ -1,0 +1,46 @@
+.mc-product-searcher-complex-center {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    margin: 15px 0px;
+}
+
+.mc-product-searcher-complex-center-prefix {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.mc-product-searcher-complex-center-suffix {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.search {
+    & > span > span:nth-child(1) {
+        height: 36px !important;
+    }
+
+    & button {
+        width: 36px !important;
+        height: 36px !important;
+        box-sizing: border-box;
+    }
+}
+
+.example {
+}
