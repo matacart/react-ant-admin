@@ -74,7 +74,6 @@ const ProductInformation = ({ product, setProduct }) => {
 
 /**
  * 价格/交易，售价、原件、成本价
- * @returns
  */
 const Price = ({ product, setProduct }) => {
     const data = [
@@ -95,33 +94,21 @@ const Price = ({ product, setProduct }) => {
         },
     ];
 
-    console.log(product);
-
     return (
         <>
-            {data.map((item, index) => {
-                const child = (
-                    <Col flex={1}>
-                        <Typography.Title level={5}>
-                            <span>{item.title} &nbsp;</span>
-                            <Tooltip title={item.tooltipTitle}>
-                                <QuestionMark
-                                    style={{ width: 20, height: 20 }}
-                                />
-                            </Tooltip>
-                        </Typography.Title>
-                        <Form.Item name={item.name}>
-                            <Input addonBefore="US$" />
-                        </Form.Item>
-                    </Col>
-                );
-
-                if (index % 2 === 1) {
-                    return <Row key={index}>{child}</Row>;
-                } else {
-                    return <child />;
-                }
-            })}
+            {data.map((item, index) => (
+                <Col key={index} md={24} lg={12}>
+                    <Typography.Title level={5}>
+                        <span>{item.title} &nbsp;</span>
+                        <Tooltip title={item.tooltipTitle}>
+                            <QuestionMark style={{ width: 20, height: 20 }} />
+                        </Tooltip>
+                    </Typography.Title>
+                    <Form.Item name={item.name}>
+                        <Input addonBefore="US$" />
+                    </Form.Item>
+                </Col>
+            ))}
         </>
     );
 };
@@ -145,12 +132,12 @@ const Inventory = ({ product, setProduct }) => {
     return (
         <>
             {data.map((item, index) => (
-                <div key={index}>
+                <Col key={index} md={24} lg={12}>
                     <Typography.Title level={5}>{item.title}</Typography.Title>
                     <Form.Item name={item.title}>
                         <Input />
                     </Form.Item>
-                </div>
+                </Col>
             ))}
         </>
     );
@@ -158,7 +145,6 @@ const Inventory = ({ product, setProduct }) => {
 
 /**
  * 海关信息
- * @returns
  */
 const CustomsInformation = ({ product, setProduct }) => {
     const data = [
@@ -178,7 +164,7 @@ const CustomsInformation = ({ product, setProduct }) => {
     return (
         <>
             {data.map((item, index) => (
-                <div key={index}>
+                <Col key={index} md={24} lg={12}>
                     <Typography.Title level={5}>
                         <span>{item.title} &nbsp;</span>
                         {item.tooltipTitle && (
@@ -192,7 +178,7 @@ const CustomsInformation = ({ product, setProduct }) => {
                     <Form.Item name={item.name}>
                         <Input placeholder={item.placeholder} />
                     </Form.Item>
-                </div>
+                </Col>
             ))}
         </>
     );
@@ -227,10 +213,12 @@ const Content = () => {
             name: '价格/交易',
             child: (
                 <>
-                    <Price />
+                    <Row gutter={25}>
+                        <Price />
+                    </Row>
 
-                    <div>
-                        <div>
+                    <Row gutter={16}>
+                        <Col md={12} lg={6}>
                             <p>
                                 <span>利润 &nbsp;</span>
                                 <Tooltip title="利润=售价 - 成本价">
@@ -242,8 +230,8 @@ const Content = () => {
                             <div>
                                 <Input addonBefore="US$" disabled />
                             </div>
-                        </div>
-                        <div>
+                        </Col>
+                        <Col md={12} lg={6}>
                             <p>
                                 <span>利润率 &nbsp;</span>
                                 <Tooltip title="利润率=利润 / 售价">
@@ -255,10 +243,10 @@ const Content = () => {
                             <div>
                                 <Input disabled />
                             </div>
-                        </div>
-                    </div>
+                        </Col>
+                    </Row>
 
-                    <div>
+                    <div style={{ marginTop: 15 }}>
                         <Checkbox checked>需要收取税费</Checkbox>
                     </div>
                 </>
@@ -269,18 +257,24 @@ const Content = () => {
             name: '库存',
             child: (
                 <>
-                    <Inventory />
-                    <div>
+                    <Row gutter={25}>
+                        <Inventory />
+                    </Row>
+                    <Row>
                         <Checkbox checked>开启库存追踪</Checkbox>
                         <Checkbox>缺货后继续销售</Checkbox>
-                    </div>
+                    </Row>
                 </>
             ),
         },
         {
             title: '海关信息',
             name: '海关信息',
-            child: <CustomsInformation />,
+            child: (
+                <Row gutter={25}>
+                    <CustomsInformation />
+                </Row>
+            ),
         },
         {
             title: '多款式',

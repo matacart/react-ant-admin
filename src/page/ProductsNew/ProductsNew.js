@@ -22,6 +22,7 @@ const ProductsNew = () => {
                 autoComplete="off"
             >
                 <MainHeader {...header} />
+
                 <Content />
 
                 <Divider />

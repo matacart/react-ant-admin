@@ -3,7 +3,7 @@ import store from '../store/store';
 import { getToken } from './auth';
 
 const baseURL = {
-    adminApi: 'https://api.handingyun.cn/appstore',
+    adminApi: 'https://api.handingyun.cn/y1',
     matacartApi: 'https://www.matacart.com',
 };
 

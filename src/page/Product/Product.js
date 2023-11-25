@@ -1,4 +1,4 @@
-import { Space, Image, Switch, Button } from 'antd';
+import { Space, Image, Switch, Button, message } from 'antd';
 import { delProduct, changeProductStatus } from '../../api/productApi';
 import { getToken } from '../../util/auth';
 import MainHeader from '../../component/MainHeader/MainHeader';
@@ -115,8 +115,9 @@ const Product = () => {
                                     try {
                                         const res =
                                             await changeProductStatus(formData);
-                                        console.log(res);
+                                        message.success('状态更改成功');
                                     } catch (error) {
+                                        message.error('状态更改失败');
                                         throw error;
                                     }
                                 }}

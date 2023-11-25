@@ -16,7 +16,6 @@ import './Extra.scss';
 
 /**
  * 商品设置
- * @returns
  */
 const ProductSettings = () => {
     const data = {

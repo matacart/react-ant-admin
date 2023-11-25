@@ -1,4 +1,3 @@
-import { Navigate } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { RouterBeforeEach } from './RouterBeforeEach';
 
