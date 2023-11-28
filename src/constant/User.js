@@ -1,13 +1,16 @@
+import { get } from '../locales/utils';
 const USER_FORM = {
     '/user/signIn': {
-        title: '登录商店',
-        submText: '登录',
-        dividerLine: '或',
+        type: '登录',
+        title: get('UserPage_login_title'),
+        submText: get('UserPage_login_text'),
+        dividerLine: get('UserPage_login_dividerLine'),
     },
     '/user/signUp': {
-        title: '开始您的免费试用',
-        submText: '注册',
-        dividerLine: '通过其他方式注册',
+        type: '注册',
+        title: get('UserPage_register_title'),
+        submText: get('UserPage_register_text'),
+        dividerLine: get('UserPage_register_dividerLine'),
     },
 };
 

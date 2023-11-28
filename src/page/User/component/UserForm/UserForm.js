@@ -5,18 +5,20 @@ import {
     signUpThunk,
     getUserInfoThunk,
 } from '../../../../store/reducers/thunk/userThunk';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button, Form, Checkbox, message } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { get } from '../../../../locales/utils';
 
 import FormHeader from '../FormHeader/FormHeader';
 import External from '../External/External';
 import FormFooter from '../FormFooter/FormFooter';
-import './UserForm.scss';
 
 import { USER_FORM } from '../../../../constant/User';
 import { getVerificationCode } from '../../../../api/user';
 import { getToken } from '../../../../util/auth';
+
+import './UserForm.scss';
 
 // state 映射
 const mapStateToProps = state => {
@@ -57,20 +59,20 @@ const UserForm = ({ user }) => {
     const handleChange = event => {
         const dom = event.target;
 
-        switch (dom.nextElementSibling.innerText) {
-            case '昵称':
+        switch (dom.id) {
+            case 'nickname':
                 setNickname(dom.value);
                 break;
-            case '手机号':
+            case 'account':
                 setUsername(dom.value);
                 break;
-            case '验证码':
+            case 'verificationCode':
                 setVerificationCode(dom.value);
                 break;
-            case '密码':
+            case 'password':
                 setPassword(dom.value);
                 break;
-            case '确认密码':
+            case 'confirmPassword':
                 setConfirmPassword(dom.value);
                 break;
             default:
@@ -90,8 +92,8 @@ const UserForm = ({ user }) => {
     function formValidation(event) {
         const dom = event.target;
 
-        switch (dom.nextElementSibling.innerText) {
-            case '昵称':
+        switch (dom.id) {
+            case 'nickname':
                 if (event.target.value)
                     setIsInput([
                         true,
@@ -109,7 +111,7 @@ const UserForm = ({ user }) => {
                         isInput[4],
                     ]);
                 break;
-            case '手机号':
+            case 'account':
                 if (event.target.value)
                     setIsInput([
                         isInput[0],
@@ -127,7 +129,7 @@ const UserForm = ({ user }) => {
                         isInput[4],
                     ]);
                 break;
-            case '验证码':
+            case 'verificationCode':
                 if (event.target.value)
                     setIsInput([
                         isInput[0],
@@ -145,7 +147,7 @@ const UserForm = ({ user }) => {
                         isInput[4],
                     ]);
                 break;
-            case '密码':
+            case 'password':
                 if (event.target.value)
                     setIsInput([
                         isInput[0],
@@ -163,7 +165,7 @@ const UserForm = ({ user }) => {
                         isInput[4],
                     ]);
                 break;
-            case '确认密码':
+            case 'confirmPassword':
                 if (event.target.value)
                     setIsInput([
                         isInput[0],
@@ -220,6 +222,7 @@ const UserForm = ({ user }) => {
             } else {
             }
         } else {
+            console.log(username);
             if (username && password) {
                 // 登录
                 dispatch(loginThunk({ username, password }))
@@ -287,13 +290,14 @@ const UserForm = ({ user }) => {
                                 style={{ marginBottom: 16 }}
                             >
                                 {/* 昵称 */}
-                                {data.submText === '注册' && (
+                                {data.type === '注册' && (
                                     <div className="nickname">
                                         <div className="field">
                                             <input
                                                 type="text"
                                                 onChange={handleChange}
                                                 onBlur={formValidation}
+                                                id="nickname"
                                             />
                                             <label
                                                 htmlFor="nickname"
@@ -301,7 +305,11 @@ const UserForm = ({ user }) => {
                                                     isInput[0] ? inputStyle : {}
                                                 }
                                             >
-                                                <span>昵称</span>
+                                                <span>
+                                                    {get(
+                                                        'UserPage_register_nickname',
+                                                    )}
+                                                </span>
                                             </label>
                                         </div>
                                     </div>
@@ -313,24 +321,28 @@ const UserForm = ({ user }) => {
                                             type="text"
                                             onChange={handleChange}
                                             onBlur={formValidation}
+                                            id="account"
                                         />
                                         <label
                                             htmlFor="account"
                                             style={isInput[1] ? inputStyle : {}}
                                         >
                                             {/* <span>邮箱/手机号</span> */}
-                                            <span>手机号</span>
+                                            <span>
+                                                {get('UserPage_account')}
+                                            </span>
                                         </label>
                                     </div>
                                 </div>
                                 {/* 验证码 */}
-                                {data.submText === '注册' && (
+                                {data.type === '注册' && (
                                     <div className="verificationCode">
                                         <div className="field">
                                             <input
                                                 type="text"
                                                 onChange={handleChange}
                                                 onBlur={formValidation}
+                                                id="verificationCode"
                                             />
                                             <label
                                                 htmlFor="verificationCode"
@@ -338,13 +350,19 @@ const UserForm = ({ user }) => {
                                                     isInput[2] ? inputStyle : {}
                                                 }
                                             >
-                                                <span>验证码</span>
+                                                <span>
+                                                    {get(
+                                                        'UserPage_register_verificationCode',
+                                                    )}
+                                                </span>
                                             </label>
                                             <button
                                                 className="getVerificationCode"
                                                 onClick={sendVerificationCode}
                                             >
-                                                获取验证码
+                                                {get(
+                                                    'UserPage_register_getVerificationCode',
+                                                )}
                                             </button>
                                         </div>
                                     </div>
@@ -357,13 +375,16 @@ const UserForm = ({ user }) => {
                                             onChange={handleChange}
                                             onBlur={formValidation}
                                             ref={passwordRef}
+                                            id="password"
                                         />
 
                                         <label
                                             htmlFor="password"
                                             style={isInput[3] ? inputStyle : {}}
                                         >
-                                            <span>密码</span>
+                                            <span>
+                                                {get('UserPage_password')}
+                                            </span>
                                         </label>
                                         <div
                                             className="isShow"
@@ -385,7 +406,7 @@ const UserForm = ({ user }) => {
                                     </div>
                                 </div>
                                 {/* 确认密码 */}
-                                {data.submText === '注册' && (
+                                {data.type === '注册' && (
                                     <div className="confirmPassword">
                                         <div className="field">
                                             <input
@@ -393,6 +414,7 @@ const UserForm = ({ user }) => {
                                                 onChange={handleChange}
                                                 onBlur={formValidation}
                                                 ref={confirmPasswordRef}
+                                                id="confirmPassword"
                                             />
 
                                             <label
@@ -401,7 +423,11 @@ const UserForm = ({ user }) => {
                                                     isInput[4] ? inputStyle : {}
                                                 }
                                             >
-                                                <span>确认密码</span>
+                                                <span>
+                                                    {get(
+                                                        'UserPage_register_confirmPassword',
+                                                    )}
+                                                </span>
                                             </label>
                                             <div
                                                 className="isShow"
@@ -426,7 +452,7 @@ const UserForm = ({ user }) => {
                                     </div>
                                 )}
                                 {/* 协议 */}
-                                {data.submText === '注册' && (
+                                {data.type === '注册' && (
                                     <div className="mc-privacy-policy">
                                         <Checkbox
                                             className="mc-privacy-checkbox"
@@ -434,10 +460,18 @@ const UserForm = ({ user }) => {
                                         ></Checkbox>
 
                                         <div className="privacy-container">
-                                            注册表示您已同意 &nbsp; {'MATACART'}
-                                            &nbsp;
-                                            <Link to="#">用户协议</Link>，
-                                            <Link to="#">隐私政策</Link>
+                                            {get('UserPage_register_privacy')}
+                                            <Link to="#">
+                                                {get(
+                                                    'UserPage_register_userAgreement',
+                                                )}
+                                            </Link>
+                                            ，
+                                            <Link to="#">
+                                                {get(
+                                                    'UserPage_register_privacyPolicy',
+                                                )}
+                                            </Link>
                                         </div>
                                     </div>
                                 )}
@@ -455,7 +489,7 @@ const UserForm = ({ user }) => {
                             </Form>
 
                             {/* 注册/忘记密码 */}
-                            {data.submText === '登录' && (
+                            {data.type === '登录' && (
                                 <div
                                     style={{
                                         display: 'flex',
@@ -464,10 +498,16 @@ const UserForm = ({ user }) => {
                                     className="jump"
                                 >
                                     <strong>
-                                        <Link to="/user/signUp">注册</Link>
+                                        <Link to="/user/signUp">
+                                            {get('UserPage_register_text')}
+                                        </Link>
                                     </strong>
                                     <strong>
-                                        <Link to="#">忘记密码</Link>
+                                        <Link to="#">
+                                            {get(
+                                                'UserPage_login_forgetPassword',
+                                            )}
+                                        </Link>
                                     </strong>
                                 </div>
                             )}
@@ -475,16 +515,13 @@ const UserForm = ({ user }) => {
                     </div>
 
                     {/* 其他 登录/注册 方式 */}
-                    {data.submText === '登录' && (
-                        <External
-                            dividerLine={data.dividerLine}
-                            text={data.submText}
-                        />
+                    {data.type === '登录' && (
+                        <External dividerLine={data.dividerLine} />
                     )}
                 </div>
             </div>
 
-            {data.submText === '注册' && <FormFooter />}
+            {data.type === '注册' && <FormFooter />}
         </>
     );
 };

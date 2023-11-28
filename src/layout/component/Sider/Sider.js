@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { Menu as AntdMenu, Button, theme, Affix } from 'antd';
+import { connect } from 'react-redux';
+import { Menu as AntdMenu, theme } from 'antd';
 import { Setting } from '../../../component/Icon/Icon';
 import AntdSider from 'antd/es/layout/Sider';
 import { SIDER } from '../../../constant/Sider';
 import { Link } from 'react-router-dom';
+import { get } from '../../../locales/utils';
 import './Sider.scss';
 
 // state 映射
@@ -130,7 +131,11 @@ const Sider = ({ sider }) => {
                         {
                             key: '/admin/settings',
                             icon: <Setting />,
-                            label: <Link to="/admin/settings">设置</Link>,
+                            label: (
+                                <Link to="/admin/settings">
+                                    {get('SiderPage_setting')}
+                                </Link>
+                            ),
                         },
                     ]}
                     className="menu"

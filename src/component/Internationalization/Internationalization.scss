@@ -1,0 +1,25 @@
+.mc-login-header {
+    &-container {
+        display: flex;
+        align-items: center;
+        padding: 10px 6px;
+        color: #242833;
+        border-radius: 4px;
+        transition: background-color ease 0.3s;
+
+        & a,
+        & a:hover {
+            color: #242833;
+        }
+
+        &:hover {
+            background: #f7f8fb;
+        }
+    }
+
+    &-button {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+}

@@ -1,17 +1,19 @@
-// 登录/注册 页面跳转
+import { get } from '../../../../locales/utils';
 import { Link } from 'react-router-dom';
 import './FormFooter.scss';
 
 /**
- * 底部
+ * 底部 登录/注册 页面跳转
  * @returns
  */
 const FormFooter = () => {
     return (
         <>
             <div className="mc-login-bottom-button">
-                已有账号，
-                <Link to="/user/signIn">直接登录</Link>
+                {get('UserPage_register_footer_text1')}
+                <Link to="/user/signIn">
+                    {get('UserPage_register_footer_text2')}
+                </Link>
             </div>
             <div className="mc-login-footer"></div>
         </>

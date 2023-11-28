@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getUserInfo, removeToken } from '../../../util/auth';
+import Internationalization from '../../../component/Internationalization/Internationalization';
 import {
     Input as AntdInput,
     Divider as AntdDivider,
@@ -71,9 +72,6 @@ const HeaderRight = () => {
 
     let delayStateStopwatch;
     if (navigator.onLine) {
-        // 判断语言
-        // console.log(delay.language);
-
         delayStateStopwatch = setInterval(() => {
             setDelayState(navigator.connection.rtt);
         }, 3000);
@@ -123,6 +121,9 @@ const HeaderRight = () => {
             <Button type="text" block style={{ width: '25px' }}>
                 <BellOutlined />
             </Button>
+
+            {/* 国际化 */}
+            <Internationalization />
 
             {/* 使用文档 */}
             <Tooltip placement="bottom" title="使用文档" arrow={true}>

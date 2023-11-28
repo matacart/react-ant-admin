@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { get } from '../../../../locales/utils';
 import DataProcessing from '../../../../component/DataProcessing/DataProcessing';
 import {
     Google,
@@ -13,28 +14,28 @@ const data = [
         itemType: 'Button',
         type: 'text',
         block: true,
-        itemChild: '使用Google',
+        itemChild: get('UserPage_external_google'),
         icon: <Google className="icon" />,
         className: 'mc-external-login-button',
     },
     {
         itemType: 'Button',
         block: true,
-        itemChild: '使用Facebook',
+        itemChild: get('UserPage_external_facebook'),
         icon: <Facebook className="icon" />,
         className: 'mc-external-login-button',
     },
     {
         itemType: 'Button',
         block: true,
-        itemChild: '使用Apple',
+        itemChild: get('UserPage_external_apple'),
         icon: <IOS className="icon" />,
         className: 'mc-external-login-button',
     },
     {
         itemType: 'Button',
         block: true,
-        itemChild: '使用Linkiee',
+        itemChild: get('UserPage_external_linkiee'),
         icon: <Linkiee className="icon" />,
         className: 'mc-external-login-button',
     },
@@ -44,8 +45,9 @@ const data = [
  * 其他 登录/注册 方式
  * @returns
  */
-const External = ({ dividerLine, text }) => {
+const External = ({ dividerLine }) => {
     const warning = () => {
+        // message.warning(get('message_warning_unopened'));
         message.warning('暂未开通，敬请期待。');
     };
 
@@ -61,7 +63,7 @@ const External = ({ dividerLine, text }) => {
                 {data.map((item, index) => {
                     return DataProcessing.Form({
                         ...item,
-                        itemChild: item.itemChild + text,
+                        itemChild: item.itemChild,
                         key: index,
                         onClick: warning,
                     });

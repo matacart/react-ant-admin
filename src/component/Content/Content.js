@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Flex, Empty, Button, Table, ConfigProvider, Spin } from 'antd';
-import zhCN from 'antd/es/locale/zh_CN';
 import { getProductList } from '../../api/productApi';
 import { getToken } from '../../util/auth';
 import { Funnel } from '../../component/Icon/Icon';
@@ -354,22 +353,20 @@ const Content = ({ tableTitle }) => {
 
             {/* 数据展示 */}
             {tableData.length > 0 ? (
-                <ConfigProvider locale={zhCN}>
-                    <Table
-                        loading={loading}
-                        rowSelection={{ ...rowSelection }}
-                        columns={tableTitle}
-                        dataSource={tableData}
-                        style={{ border: '1px solid #eef1f7', borderRadius: 6 }}
-                        pagination={{
-                            defaultCurrent: 1,
-                            total: data.count,
-                            showQuickJumper: true,
-                            position: ['bottomCenter'],
-                            onChange: jump,
-                        }}
-                    />
-                </ConfigProvider>
+                <Table
+                    loading={loading}
+                    rowSelection={{ ...rowSelection }}
+                    columns={tableTitle}
+                    dataSource={tableData}
+                    style={{ border: '1px solid #eef1f7', borderRadius: 6 }}
+                    pagination={{
+                        defaultCurrent: 1,
+                        total: data.count,
+                        showQuickJumper: true,
+                        position: ['bottomCenter'],
+                        onChange: jump,
+                    }}
+                />
             ) : (
                 <Empty
                     image={NoData}

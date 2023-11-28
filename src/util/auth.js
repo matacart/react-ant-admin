@@ -3,6 +3,8 @@ import Cookies from 'js-cookie';
 const TokenKey = 'Admin-Token';
 // user
 const UserInfo = 'User-Info';
+// page
+const Page = 'Page-Info';
 
 /*********************************  token操作  **************************/
 /**
@@ -50,4 +52,25 @@ export function setUserInfo(info) {
  */
 export function removeUserInfo() {
     return localStorage.removeItem(UserInfo);
+}
+
+/*********************************  page页面信息  **************************/
+let page = {};
+/**
+ * 获取用户信息
+ */
+export function getLocale() {
+    if (
+        JSON.parse(localStorage.getItem(Page)) &&
+        JSON.parse(localStorage.getItem(Page)).locale
+    )
+        return JSON.parse(localStorage.getItem(Page)).locale;
+}
+
+/**
+ * 存储用户信息
+ */
+export function setLocale(locale) {
+    page.locale = locale;
+    return localStorage.setItem(Page, JSON.stringify(page));
 }

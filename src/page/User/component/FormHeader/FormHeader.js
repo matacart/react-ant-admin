@@ -1,48 +1,47 @@
-// 国际化
 import React from 'react';
-import { GlobalOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
+import { setLanguage } from '../../../../store/reducers/slice/pageSlice';
+import { Language, LanguageMap } from '../../../../constant/Page';
+import { JudgingLanguage } from '../../../../util/utils';
 import { Dropdown, Space, Typography } from 'antd';
+import { GlobalOutlined } from '@ant-design/icons';
 
 import './FormHeader.scss';
 
-const items = [
-    {
-        key: '1',
-        label: '简体中文',
-    },
-    {
-        key: '2',
-        label: '繁体中文',
-    },
-    {
-        key: '3',
-        label: 'English',
-    },
-    {
-        key: '4',
-        label: 'Bahasa Melayu',
-    },
-    {
-        key: '5',
-        label: 'Bahasa Indonesia',
-    },
-];
+// state 数据映射
+const mapStateToProps = state => {
+    const locale = state.page.locale;
+    return { locale };
+};
+// action 函数映射
+const mapDispatchToProps = { setLanguage };
 
-const FormHeader = () => {
+/**
+ * 国际化
+ */
+const FormHeader = ({ locale, setLanguage }) => {
+    /**
+     * 处理选中事件
+     */
+    const select = e => {
+        setLanguage(e.key);
+    };
+
     return (
         <div className="mc-login-header-wrap">
             <div className="mc-login-header-container">
                 <Dropdown
                     menu={{
-                        items,
+                        items: Language,
                         selectable: true,
-                        defaultSelectedKeys: ['1'],
+                        defaultSelectedKeys: JudgingLanguage(locale),
+                        onSelect: select,
                     }}
                     placement="bottomRight"
                 >
                     <Typography.Link>
                         <Space className="mc-login-header-button">
-                            {items[0].label}
+                            {LanguageMap[JudgingLanguage(locale)]}
                             <GlobalOutlined />
                         </Space>
                     </Typography.Link>
@@ -52,4 +51,4 @@ const FormHeader = () => {
     );
 };
 
-export default FormHeader;
+export default connect(mapStateToProps, mapDispatchToProps)(FormHeader);

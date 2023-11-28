@@ -1,28 +1,28 @@
-import { Route, Routes, RouterProvider } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { ConfigProvider } from 'antd';
 import routeMap from './router/routeMap';
-import { RouterBeforeEach } from './router/RouterBeforeEach';
+import { RouterProvider } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
+import Intl from './locales/Intl';
+import { JudgingLanguage } from './util/utils';
+import zhCN from 'antd/es/locale/zh_CN';
 
-export default function App() {
-    /* // 老版本
-    const RouteAuthFun = routeList => {
-        return routeList.map(item => {
-            return (
-                <Route
-                    path={item.path}
-                    element={
-                        <RouterBeforeEach key={item.path}>
-                            {item.element}
-                        </RouterBeforeEach>
-                    }
-                    key={item.path}
-                >
-                    {item.children && RouteAuthFun(item.children)}
-                </Route>
-            );
-        });
-    };
+// state 数据映射
+const mapStateToProps = state => {
+    const stateLocale = state.page.locale;
+    return { stateLocale };
+};
 
-    return <Routes>{RouteAuthFun(routeMap)}</Routes>; */
+function App({ stateLocale }) {
+    const { locale, messages } = Intl(JudgingLanguage(stateLocale));
 
-    return <RouterProvider router={routeMap} />;
+    return (
+        <IntlProvider locale={locale} messages={messages}>
+            <ConfigProvider locale={zhCN}>
+                <RouterProvider router={routeMap} />
+            </ConfigProvider>
+        </IntlProvider>
+    );
 }
+
+export default connect(mapStateToProps)(App);

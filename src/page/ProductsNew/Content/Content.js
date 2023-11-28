@@ -94,6 +94,21 @@ const Price = ({ product, setProduct }) => {
         },
     ];
 
+    const setValue = e => {
+        const item = e.target;
+
+        switch (item.id) {
+            case 'trigger_售价':
+                setProduct({ ...product, specialprice: item.value });
+                break;
+            case 'trigger_原价':
+                setProduct({ ...product, price: item.value });
+                break;
+            default:
+                break;
+        }
+    };
+
     return (
         <>
             {data.map((item, index) => (
@@ -105,7 +120,7 @@ const Price = ({ product, setProduct }) => {
                         </Tooltip>
                     </Typography.Title>
                     <Form.Item name={item.name}>
-                        <Input addonBefore="US$" />
+                        <Input addonBefore="US$" onChange={setValue} />
                     </Form.Item>
                 </Col>
             ))}
@@ -129,13 +144,30 @@ const Inventory = ({ product, setProduct }) => {
         },
     ];
 
+    const t = e => {
+        let item = e.target;
+
+        switch (item.id) {
+            case 'trigger_SKU':
+                setProduct({ ...product, sku: item.value });
+                break;
+            case 'trigger_条形码(ISBN、UPC、GTIN等)':
+                break;
+            case 'trigger_库存数量':
+                setProduct({ ...product, quantity: item.value });
+                break;
+            default:
+                break;
+        }
+    };
+
     return (
         <>
             {data.map((item, index) => (
                 <Col key={index} md={24} lg={12}>
                     <Typography.Title level={5}>{item.title}</Typography.Title>
                     <Form.Item name={item.title}>
-                        <Input />
+                        <Input onChange={t} />
                     </Form.Item>
                 </Col>
             ))}
@@ -214,7 +246,7 @@ const Content = () => {
             child: (
                 <>
                     <Row gutter={25}>
-                        <Price />
+                        <Price product={product} setProduct={setProduct} />
                     </Row>
 
                     <Row gutter={16}>
@@ -228,7 +260,14 @@ const Content = () => {
                                 </Tooltip>
                             </p>
                             <div>
-                                <Input addonBefore="US$" disabled />
+                                <Input
+                                    addonBefore="US$"
+                                    disabled
+                                    value={
+                                        Number(product.specialprice) -
+                                        Number(product.price)
+                                    }
+                                />
                             </div>
                         </Col>
                         <Col md={12} lg={6}>
@@ -237,6 +276,11 @@ const Content = () => {
                                 <Tooltip title="利润率=利润 / 售价">
                                     <QuestionMark
                                         style={{ width: 20, height: 20 }}
+                                        value={
+                                            (Number(product.specialprice) -
+                                                Number(product.price)) /
+                                            (1.0 * Number(product.specialprice))
+                                        }
                                     />
                                 </Tooltip>
                             </p>
@@ -258,7 +302,7 @@ const Content = () => {
             child: (
                 <>
                     <Row gutter={25}>
-                        <Inventory />
+                        <Inventory product={product} setProduct={setProduct} />
                     </Row>
                     <Row>
                         <Checkbox checked>开启库存追踪</Checkbox>

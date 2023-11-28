@@ -13,6 +13,7 @@ import {
     Facebook,
     Telegram,
 } from '../component/Icon/Icon';
+import { get } from '../locales/utils';
 
 // const SIDER = [
 //     {
@@ -113,76 +114,124 @@ import {
 
 const SIDER = [
     {
-        TITLE: <Link to="home">首页</Link>,
+        TITLE: <Link to="home">{get('SiderPage_home')}</Link>,
         INDEX: '/admin/home',
         ICON: <Squares />,
     },
     {
-        TITLE: '订单',
+        TITLE: get('SiderPage_orderForm'),
         ICON: <DocumentText />,
         CHILD: [
             {
-                TITLE: <Link to="orders">订单列表</Link>,
+                TITLE: (
+                    <Link to="orders">{get('SiderPage_orderForm_list')}</Link>
+                ),
                 INDEX: '/admin/orders',
             },
             {
-                TITLE: <Link to="abandoningAnOrder">弃单</Link>,
+                TITLE: (
+                    <Link to="abandoningAnOrder">
+                        {get('SiderPage_orderForm_abandonedSingle')}
+                    </Link>
+                ),
                 INDEX: '/admin/abandoningAnOrder',
             },
             {
-                TITLE: <Link to="draftForm">草稿单</Link>,
+                TITLE: (
+                    <Link to="draftForm">
+                        {get('SiderPage_orderForm_draftSheet')}
+                    </Link>
+                ),
                 INDEX: '/admin/draftForm',
             },
         ],
     },
     {
-        TITLE: '商品',
+        TITLE: get('SiderPage_commodity'),
         ICON: <ShoppingBag />,
         CHILD: [
             {
-                TITLE: <Link to="product">商品管理</Link>,
+                TITLE: (
+                    <Link to="product">
+                        {get('SiderPage_commodity_merchandiseControl')}
+                    </Link>
+                ),
                 INDEX: '/admin/product',
             },
             {
-                TITLE: <Link to="stock">库存</Link>,
+                TITLE: (
+                    <Link to="stock">
+                        {get('SiderPage_commodity_repertory')}
+                    </Link>
+                ),
                 INDEX: '/admin/stock',
             },
             {
-                TITLE: <Link to="transfer">转移</Link>,
+                TITLE: (
+                    <Link to="transfer">
+                        {get('SiderPage_commodity_shift')}
+                    </Link>
+                ),
                 INDEX: '/admin/transfer',
             },
             {
-                TITLE: <Link to="classification">分类</Link>,
+                TITLE: (
+                    <Link to="classification">
+                        {get('SiderPage_commodity_classify')}
+                    </Link>
+                ),
                 INDEX: '/admin/classification',
             },
             {
-                TITLE: <Link to="giftCard">礼品卡</Link>,
+                TITLE: (
+                    <Link to="giftCard">
+                        {get('SiderPage_commodity_giftCard')}
+                    </Link>
+                ),
                 INDEX: '/admin/giftCard',
             },
         ],
     },
     {
-        TITLE: '在线商店',
+        TITLE: get('SiderPage_onlineStore'),
         ICON: <Shop />,
         CHILD: [
             {
-                TITLE: <Link to="onlineStore">店铺设计</Link>,
+                TITLE: (
+                    <Link to="onlineStore">
+                        {get('SiderPage_onlineStore_shopDesign')}
+                    </Link>
+                ),
                 INDEX: '/admin/onlineStore',
             },
             {
-                TITLE: <Link to="blog">博客</Link>,
+                TITLE: (
+                    <Link to="blog">{get('SiderPage_onlineStore_blog')}</Link>
+                ),
                 INDEX: '/admin/blog',
             },
             {
-                TITLE: <Link to="customPage">自定义页面</Link>,
+                TITLE: (
+                    <Link to="customPage">
+                        {get('SiderPage_onlineStore_customPage')}
+                    </Link>
+                ),
                 INDEX: '/admin/customPage',
             },
             {
-                TITLE: <Link to="menuNavigation">菜单导航</Link>,
+                TITLE: (
+                    <Link to="menuNavigation">
+                        {get('SiderPage_onlineStore_menuNavigation')}
+                    </Link>
+                ),
                 INDEX: '/admin/menuNavigation',
             },
             {
-                TITLE: <Link to="preferences">偏好设置</Link>,
+                TITLE: (
+                    <Link to="preferences">
+                        {get('SiderPage_onlineStore_preferenceSetting')}
+                    </Link>
+                ),
                 INDEX: '/admin/preferences',
             },
         ],

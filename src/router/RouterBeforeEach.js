@@ -6,7 +6,6 @@ import {
     useMatches,
     useOutlet,
 } from 'react-router-dom';
-import routeMap from './routeMap';
 import { getToken } from '../util/auth';
 import { message } from 'antd';
 import store from '../store/store';
@@ -53,7 +52,8 @@ export const RouterBeforeEach = () => {
      * 模仿 vue-router 后置钩子修改网页标题
      */
     useEffect(() => {
-        document.title = matches[2].handle.title + ' - MataCart';
+        if (matches[2])
+            document.title = matches[2].handle.title + ' - MataCart';
     }, [matches]);
 
     return page;
