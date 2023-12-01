@@ -47,6 +47,17 @@ export function signUp(data) {
 }
 
 /**
+ * 修改密码请求
+ */
+export function resetting(data) {
+    return request({
+        url: baseURL.matacartApi + '/h-module-UForgetPassword.html',
+        method: 'post',
+        data,
+    });
+}
+
+/**
  * 获取用户基本信息
  * @param {String} token 身份鉴权
  */

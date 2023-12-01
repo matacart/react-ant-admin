@@ -4,8 +4,8 @@ import routeMap from './router/routeMap';
 import { RouterProvider } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import Intl from './locales/Intl';
+import { AntdLanguageMap } from './constant/Page';
 import { JudgingLanguage } from './util/utils';
-import zhCN from 'antd/es/locale/zh_CN';
 
 // state 数据映射
 const mapStateToProps = state => {
@@ -18,7 +18,7 @@ function App({ stateLocale }) {
 
     return (
         <IntlProvider locale={locale} messages={messages}>
-            <ConfigProvider locale={zhCN}>
+            <ConfigProvider locale={AntdLanguageMap[locale]}>
                 <RouterProvider router={routeMap} />
             </ConfigProvider>
         </IntlProvider>

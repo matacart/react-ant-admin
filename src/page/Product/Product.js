@@ -4,38 +4,41 @@ import { getToken } from '../../util/auth';
 import MainHeader from '../../component/MainHeader/MainHeader';
 import ContentTab from '../../component/ContentTab/ContentTab';
 import Content from '../../component/Content/Content';
+import { GetIntl, useGetIntl } from '../../locales/utils';
 import './Product.scss';
 
 /**
  * 产品管理页面
  */
 const Product = () => {
+    const getIntl = useGetIntl();
+
     const data = {
         header: {
-            title: '商品管理',
-            uploadText: '导入商品',
-            rButtonText: '创建商品',
+            title: GetIntl('SiderPage_commodity_merchandiseControl'),
+            uploadText: GetIntl('Product_Header1'),
+            rButtonText: GetIntl('Product_Header_Button'),
             rHref: '/admin/product/new',
         },
         tab: {
             items: [
                 {
-                    label: '全部',
+                    label: GetIntl('Produc_tabs_All'),
                     children: '',
                     key: '1',
                 },
                 {
-                    label: '已上架',
+                    label: GetIntl('Product_tabs_OnTheShelves'),
                     children: '',
                     key: '2',
                 },
                 {
-                    label: '已下架',
+                    label: GetIntl('Product_tabs_OffTheShelf'),
                     children: '',
                     key: '3',
                 },
                 {
-                    label: '已存档',
+                    label: GetIntl('Product_tabs_Archived'),
                     children: '',
                     key: '4',
                 },
@@ -44,7 +47,7 @@ const Product = () => {
         },
         tableTitle: [
             {
-                title: '商品',
+                title: GetIntl('SiderPage_commodity'),
                 dataIndex: 'commodity',
                 key: 'commodity',
                 render: (_, record) => {
@@ -66,17 +69,17 @@ const Product = () => {
                 },
             },
             {
-                title: '售价',
+                title: GetIntl('Product_Table_Title2'),
                 dataIndex: 'price',
                 key: 'price',
                 render: text => <>{'US$' + Number(text).toFixed(2)}</>,
                 sorter: {
-                    compare: (a, b) => a.price.localeCompare(b.price),
+                    compare: (a, b) => Number(a.price) - Number(b.price),
                     multiple: 4,
                 },
             },
             /*  {
-                title: '库存数',
+                title: GetIntl('Product_Table_Title3'),
                 dataIndex: 'inventory',
                 key: 'inventory',
                 sorter: {
@@ -85,7 +88,7 @@ const Product = () => {
                 },
             }, */
             {
-                title: '创建时间',
+                title: GetIntl('Product_Table_Title4'),
                 dataIndex: 'creationTime',
                 key: 'creationTime',
                 defaultSortOrder: 'descend',
@@ -96,7 +99,7 @@ const Product = () => {
                 },
             },
             {
-                title: '状态',
+                title: GetIntl('Product_Table_Title5'),
                 dataIndex: 'state',
                 key: 'state',
                 render: (text, record) => {
@@ -115,20 +118,32 @@ const Product = () => {
                                     try {
                                         const res =
                                             await changeProductStatus(formData);
-                                        message.success('状态更改成功');
+                                        message.success(
+                                            getIntl.get(
+                                                'Message_success_StatusChange',
+                                            ),
+                                        );
                                     } catch (error) {
-                                        message.error('状态更改失败');
+                                        message.error(
+                                            getIntl.get(
+                                                'Message_error_StatusChange',
+                                            ),
+                                        );
                                         throw error;
                                     }
                                 }}
                             />
-                            <span>{text === '1' ? '上架' : '下架'}</span>
+                            <span>
+                                {text === '1'
+                                    ? GetIntl('Product_Table_Title5_text1')
+                                    : GetIntl('Product_Table_Title5_text2')}
+                            </span>
                         </>
                     );
                 },
             },
             {
-                title: '操作',
+                title: GetIntl('Product_Table_Title6'),
                 dataIndex: 'operation',
                 key: 'operation',
                 render: (_, record) => {
@@ -147,7 +162,7 @@ const Product = () => {
                                     );
                                 }}
                             >
-                                预览
+                                {GetIntl('Product_Table_Title6_Button1')}
                             </Button>
                             <Button
                                 type="primary"
@@ -163,7 +178,7 @@ const Product = () => {
                                     }
                                 }}
                             >
-                                删除
+                                {GetIntl('Product_Table_Title6_Button2')}
                             </Button>
                         </Space>
                     );

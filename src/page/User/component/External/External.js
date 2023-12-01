@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { get } from '../../../../locales/utils';
+import { useGetIntl, GetIntl } from '../../../../locales/utils';
 import DataProcessing from '../../../../component/DataProcessing/DataProcessing';
 import {
     Google,
@@ -9,46 +9,46 @@ import {
 } from '../../../../component/Icon/Icon';
 import './External.scss';
 
-const data = [
-    {
-        itemType: 'Button',
-        type: 'text',
-        block: true,
-        itemChild: get('UserPage_external_google'),
-        icon: <Google className="icon" />,
-        className: 'mc-external-login-button',
-    },
-    {
-        itemType: 'Button',
-        block: true,
-        itemChild: get('UserPage_external_facebook'),
-        icon: <Facebook className="icon" />,
-        className: 'mc-external-login-button',
-    },
-    {
-        itemType: 'Button',
-        block: true,
-        itemChild: get('UserPage_external_apple'),
-        icon: <IOS className="icon" />,
-        className: 'mc-external-login-button',
-    },
-    {
-        itemType: 'Button',
-        block: true,
-        itemChild: get('UserPage_external_linkiee'),
-        icon: <Linkiee className="icon" />,
-        className: 'mc-external-login-button',
-    },
-];
-
 /**
  * 其他 登录/注册 方式
  * @returns
  */
 const External = ({ dividerLine }) => {
+    const getIntl = useGetIntl();
+    const data = [
+        {
+            itemType: 'Button',
+            type: 'text',
+            block: true,
+            itemChild: GetIntl('UserPage_external_google'),
+            icon: <Google className="icon" />,
+            className: 'mc-external-login-button',
+        },
+        {
+            itemType: 'Button',
+            block: true,
+            itemChild: GetIntl('UserPage_external_facebook'),
+            icon: <Facebook className="icon" />,
+            className: 'mc-external-login-button',
+        },
+        {
+            itemType: 'Button',
+            block: true,
+            itemChild: GetIntl('UserPage_external_apple'),
+            icon: <IOS className="icon" />,
+            className: 'mc-external-login-button',
+        },
+        {
+            itemType: 'Button',
+            block: true,
+            itemChild: GetIntl('UserPage_external_linkiee'),
+            icon: <Linkiee className="icon" />,
+            className: 'mc-external-login-button',
+        },
+    ];
+
     const warning = () => {
-        // message.warning(get('message_warning_unopened'));
-        message.warning('暂未开通，敬请期待。');
+        message.warning(getIntl.get('Message_warning_unopened'));
     };
 
     return (

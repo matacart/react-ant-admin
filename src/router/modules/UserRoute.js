@@ -21,6 +21,13 @@ const UserRoute = [
                 element: <UserForm />,
                 handle: { title: '登录' },
             },
+            {
+                // 忘记密码
+                path: '/user/resetting',
+                name: 'resetting',
+                element: <UserForm />,
+                handle: { title: '忘记密码' },
+            },
         ],
     },
 ];

@@ -1,15 +1,22 @@
 import { Form, Divider, Button } from 'antd';
 import MainHeader from '../../component/MainHeader/MainHeader';
 import Content from './Content/Content';
+import { useGetIntl } from '../../locales/utils';
 
 const ProductsNew = () => {
+    const getIntl = useGetIntl();
     const header = {
-        title: '添加商品',
+        title: getIntl.get('ProductNew_title'),
         goBack: true,
         href: '/admin/product',
-        rButtonText: '预览',
+        rButtonText: getIntl.get('ProductNew_rButton_text'),
         rButtonType: 'default',
     };
+
+    /**
+     * 创建商品事件
+     */
+    const createProduct = () => {};
 
     return (
         <>
@@ -28,7 +35,9 @@ const ProductsNew = () => {
                 <Divider />
 
                 <div style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                    <Button type="primary">创建</Button>
+                    <Button type="primary" onClick={createProduct}>
+                        {getIntl.get('Create')}
+                    </Button>
                 </div>
             </Form>
         </>

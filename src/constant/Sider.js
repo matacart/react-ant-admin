@@ -13,7 +13,7 @@ import {
     Facebook,
     Telegram,
 } from '../component/Icon/Icon';
-import { get } from '../locales/utils';
+import { GetIntl } from '../locales/utils';
 
 // const SIDER = [
 //     {
@@ -114,24 +114,26 @@ import { get } from '../locales/utils';
 
 const SIDER = [
     {
-        TITLE: <Link to="home">{get('SiderPage_home')}</Link>,
+        TITLE: <Link to="home">{GetIntl('SiderPage_home')}</Link>,
         INDEX: '/admin/home',
         ICON: <Squares />,
     },
     {
-        TITLE: get('SiderPage_orderForm'),
+        TITLE: GetIntl('SiderPage_orderForm'),
         ICON: <DocumentText />,
         CHILD: [
             {
                 TITLE: (
-                    <Link to="orders">{get('SiderPage_orderForm_list')}</Link>
+                    <Link to="orders">
+                        {GetIntl('SiderPage_orderForm_list')}
+                    </Link>
                 ),
                 INDEX: '/admin/orders',
             },
             {
                 TITLE: (
                     <Link to="abandoningAnOrder">
-                        {get('SiderPage_orderForm_abandonedSingle')}
+                        {GetIntl('SiderPage_orderForm_abandonedSingle')}
                     </Link>
                 ),
                 INDEX: '/admin/abandoningAnOrder',
@@ -139,7 +141,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="draftForm">
-                        {get('SiderPage_orderForm_draftSheet')}
+                        {GetIntl('SiderPage_orderForm_draftSheet')}
                     </Link>
                 ),
                 INDEX: '/admin/draftForm',
@@ -147,13 +149,13 @@ const SIDER = [
         ],
     },
     {
-        TITLE: get('SiderPage_commodity'),
+        TITLE: GetIntl('SiderPage_commodity'),
         ICON: <ShoppingBag />,
         CHILD: [
             {
                 TITLE: (
                     <Link to="product">
-                        {get('SiderPage_commodity_merchandiseControl')}
+                        {GetIntl('SiderPage_commodity_merchandiseControl')}
                     </Link>
                 ),
                 INDEX: '/admin/product',
@@ -161,7 +163,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="stock">
-                        {get('SiderPage_commodity_repertory')}
+                        {GetIntl('SiderPage_commodity_repertory')}
                     </Link>
                 ),
                 INDEX: '/admin/stock',
@@ -169,7 +171,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="transfer">
-                        {get('SiderPage_commodity_shift')}
+                        {GetIntl('SiderPage_commodity_shift')}
                     </Link>
                 ),
                 INDEX: '/admin/transfer',
@@ -177,7 +179,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="classification">
-                        {get('SiderPage_commodity_classify')}
+                        {GetIntl('SiderPage_commodity_classify')}
                     </Link>
                 ),
                 INDEX: '/admin/classification',
@@ -185,7 +187,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="giftCard">
-                        {get('SiderPage_commodity_giftCard')}
+                        {GetIntl('SiderPage_commodity_giftCard')}
                     </Link>
                 ),
                 INDEX: '/admin/giftCard',
@@ -193,27 +195,29 @@ const SIDER = [
         ],
     },
     {
-        TITLE: get('SiderPage_onlineStore'),
+        TITLE: GetIntl('SiderPage_onlineStore'),
         ICON: <Shop />,
         CHILD: [
             {
                 TITLE: (
                     <Link to="onlineStore">
-                        {get('SiderPage_onlineStore_shopDesign')}
+                        {GetIntl('SiderPage_onlineStore_shopDesign')}
                     </Link>
                 ),
                 INDEX: '/admin/onlineStore',
             },
             {
                 TITLE: (
-                    <Link to="blog">{get('SiderPage_onlineStore_blog')}</Link>
+                    <Link to="blog">
+                        {GetIntl('SiderPage_onlineStore_blog')}
+                    </Link>
                 ),
                 INDEX: '/admin/blog',
             },
             {
                 TITLE: (
                     <Link to="customPage">
-                        {get('SiderPage_onlineStore_customPage')}
+                        {GetIntl('SiderPage_onlineStore_customPage')}
                     </Link>
                 ),
                 INDEX: '/admin/customPage',
@@ -221,7 +225,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="menuNavigation">
-                        {get('SiderPage_onlineStore_menuNavigation')}
+                        {GetIntl('SiderPage_onlineStore_menuNavigation')}
                     </Link>
                 ),
                 INDEX: '/admin/menuNavigation',
@@ -229,7 +233,7 @@ const SIDER = [
             {
                 TITLE: (
                     <Link to="preferences">
-                        {get('SiderPage_onlineStore_preferenceSetting')}
+                        {GetIntl('SiderPage_onlineStore_preferenceSetting')}
                     </Link>
                 ),
                 INDEX: '/admin/preferences',

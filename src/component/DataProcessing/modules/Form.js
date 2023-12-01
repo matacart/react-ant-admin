@@ -22,6 +22,7 @@ const Form = item => {
         itemStyle, // style 样式
         className, // 类名
         key, // 唯一标识
+        placeholder, // 输入框提示文字
 
         // input
         addonAfter,
@@ -80,7 +81,6 @@ const Form = item => {
         optionLabelProp,
         options,
         optionrender,
-        placeholder,
         placement,
         removelcon,
         searchValue,
@@ -126,6 +126,7 @@ const Form = item => {
                     value={value}
                     onChange={onChange}
                     onPressEnter={onPressEnter}
+                    placeholder={placeholder}
                 ></Input>
             );
 
@@ -149,12 +150,15 @@ const Form = item => {
                     styles={styles}
                     target={target}
                     onClick={onClick}
+                    placeholder={placeholder}
                 >
                     {itemChild}
                 </Button>
             );
 
         case 'Select':
+            console.log(defaultValue);
+
             return (
                 <Select
                     className={className}
@@ -238,6 +242,7 @@ const Form = item => {
                     key={key}
                     style={itemStyle}
                     allowClear={allowClear}
+                    placeholder={placeholder}
                 />
             );
 

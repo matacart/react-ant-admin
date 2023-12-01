@@ -13,6 +13,9 @@
     overflow: auto;
     overflow-x: hidden;
     background-color: #eaedf1;
+    z-index: 99;
+    opacity: 1;
+    transition: width 4s;
 }
 .body {
     -webkit-box-flex: 1;
@@ -82,5 +85,14 @@
     & svg {
         width: 18px;
         height: 18px;
+    }
+}
+
+/* 在992px及以上的宽度应用的样式 */
+@media screen and (max-width: 992px) {
+    /* 添加你想要的样式和布局调整 */
+    .content {
+        display: none;
+        opacity: 0;
     }
 }

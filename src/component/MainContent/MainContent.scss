@@ -1,4 +1,10 @@
 .mainContent {
+    min-width: 768px;
     background-color: #fff;
+    padding: 0 24px 24px;
     border-radius: 6px;
+
+    &-filter {
+        margin: 15px 0;
+    }
 }

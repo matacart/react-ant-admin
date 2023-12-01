@@ -1,6 +1,7 @@
 import { Content as AntdContent } from 'antd/es/layout/layout';
 import { theme as AntdTheme } from 'antd';
 import { Outlet } from 'react-router';
+import './Content.scss';
 
 /**
  * admin 系统，主内容区域
@@ -12,11 +13,10 @@ const Content = () => {
 
     return (
         <AntdContent
+            className="antdContent"
             style={{
                 minHeight: 'calc(100vh - 60px)',
                 padding: 24,
-                marginLeft: 239,
-                // background: colorBgContainer,
                 backgroundColor: '#EAEDF1',
             }}
         >

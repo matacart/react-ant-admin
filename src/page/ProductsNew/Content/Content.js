@@ -14,8 +14,9 @@ import RichTextEditor from '../../../component/RichTextEditor/RichTextEditor';
 import UploadImg from '../../../component/UploadImg/UploadImg';
 import Card from '../../../component/Card/Card';
 import Extra from './Extra';
-import './Content.scss';
 import Product from '../../../models/productCreate';
+import { useGetIntl } from '../../../locales/utils';
+import './Content.scss';
 
 const { TextArea } = Input;
 
@@ -23,16 +24,21 @@ const { TextArea } = Input;
  * 产品信息
  */
 const ProductInformation = ({ product, setProduct }) => {
+    const getIntl = useGetIntl();
     return (
         <>
             <div>
-                <Typography.Title level={5}>商品标题</Typography.Title>
+                <Typography.Title level={5}>
+                    {getIntl.get('ProductNew_ProductTitle')}
+                </Typography.Title>
                 <Form.Item
-                    name="商品标题"
+                    name={getIntl.get('ProductNew_ProductTitle')}
                     rules={[
                         {
                             required: true,
-                            message: '请输入商品标题',
+                            message: getIntl.get(
+                                'ProductNew_PleaseEnterTheItemTitle',
+                            ),
                         },
                     ]}
                 >
@@ -45,8 +51,12 @@ const ProductInformation = ({ product, setProduct }) => {
                 </Form.Item>
             </div>
             <div>
-                <Typography.Title level={5}>商品摘要</Typography.Title>
-                <Form.Item name="商品摘要">
+                <Typography.Title level={5}>
+                    {getIntl.get('ProductNew_CommodityAbstract')}
+                </Typography.Title>
+                <Form.Item
+                    name={getIntl.get('ProductNew_CommodityAbstract')}
+                >
                     <TextArea
                         placeholder="请用简短的文字描述本商品"
                         showCount
@@ -65,7 +75,9 @@ const ProductInformation = ({ product, setProduct }) => {
                 </Form.Item>
             </div>
             <div>
-                <Typography.Title level={5}>商品描述</Typography.Title>
+                <Typography.Title level={5}>
+                    {getIntl.get('ProductNew_productDescription')}
+                </Typography.Title>
                 <RichTextEditor product={product} setProduct={setProduct} />
             </div>
         </>
@@ -76,20 +88,21 @@ const ProductInformation = ({ product, setProduct }) => {
  * 价格/交易，售价、原件、成本价
  */
 const Price = ({ product, setProduct }) => {
+    const getIntl = useGetIntl();
     const data = [
         {
-            title: '售价',
-            tooltipTitle: '当商品参与限时促销活动时，商品售价将修改无效',
+            title: getIntl.get('ProductNew_Price_Title1'),
+            tooltipTitle: getIntl.get('ProductNew_Price_TooltipTitle1'),
             name: '售价',
         },
         {
-            title: '原价',
-            tooltipTitle: '原价为0或小于等于售价时，网店将隐藏原价展示',
+            title: getIntl.get('ProductNew_Price_Title2'),
+            tooltipTitle: getIntl.get('ProductNew_Price_TooltipTitle2'),
             name: '原价',
         },
         {
-            title: '成本价',
-            tooltipTitle: '成本价信息不会展示给消费者',
+            title: getIntl.get('ProductNew_Price_Title3'),
+            tooltipTitle: getIntl.get('ProductNew_Price_TooltipTitle3'),
             name: '成本价',
         },
     ];
@@ -132,15 +145,19 @@ const Price = ({ product, setProduct }) => {
  * 库存
  */
 const Inventory = ({ product, setProduct }) => {
+    const getIntl = useGetIntl();
     const data = [
         {
             title: 'SKU',
+            name: 'SKU',
         },
         {
-            title: '条形码(ISBN、UPC、GTIN等)',
+            title: getIntl.get('ProductNew_Stock_BarCode'),
+            name: '条形码',
         },
         {
-            title: '库存数量',
+            title: getIntl.get('ProductNew_Stock_QuantityInStock'),
+            name: '库存数量',
         },
     ];
 
@@ -151,7 +168,7 @@ const Inventory = ({ product, setProduct }) => {
             case 'trigger_SKU':
                 setProduct({ ...product, sku: item.value });
                 break;
-            case 'trigger_条形码(ISBN、UPC、GTIN等)':
+            case 'trigger_条形码':
                 break;
             case 'trigger_库存数量':
                 setProduct({ ...product, quantity: item.value });
@@ -166,7 +183,7 @@ const Inventory = ({ product, setProduct }) => {
             {data.map((item, index) => (
                 <Col key={index} md={24} lg={12}>
                     <Typography.Title level={5}>{item.title}</Typography.Title>
-                    <Form.Item name={item.title}>
+                    <Form.Item name={item.name}>
                         <Input onChange={t} />
                     </Form.Item>
                 </Col>
@@ -179,15 +196,18 @@ const Inventory = ({ product, setProduct }) => {
  * 海关信息
  */
 const CustomsInformation = ({ product, setProduct }) => {
+    const getIntl = useGetIntl();
     const data = [
         {
-            title: '发货国家/地区',
-            tooltipTitle: '绝大多数情况下是产品制造或组装的地点',
+            title: getIntl.get('ProductNew_CustomsInformation_title1'),
+            tooltipTitle: getIntl.get(
+                'ProductNew_CustomsInformation_tooltipTitle',
+            ),
             name: '发货国家/地区',
             placeholder: '选择国家',
         },
         {
-            title: 'HS（协调制度）代码',
+            title: getIntl.get('ProductNew_CustomsInformation_title2'),
             name: 'HS（协调制度）代码',
             placeholder: '请输入HS编码',
         },
@@ -217,32 +237,36 @@ const CustomsInformation = ({ product, setProduct }) => {
 };
 
 const Content = () => {
+    const getIntl = useGetIntl();
     const [product, setProduct] = useState(new Product());
 
     const cardItems = [
         {
-            title: '商品信息',
-            name: '商品信息',
+            title: getIntl.get('ProductNew_CommodityInformation'),
+            name: getIntl.get('ProductNew_CommodityInformation'),
             child: (
                 <ProductInformation product={product} setProduct={setProduct} />
             ),
         },
         {
-            title: '商品图片/视频',
-            name: '商品图片/视频',
+            title: getIntl.get('ProductNew_CommodityPictureOrVideo'),
+            name: getIntl.get('ProductNew_CommodityPictureOrVideo'),
             child: <UploadImg />,
             extra: (
                 <>
                     <Button type="link">
-                        添加<strong>URL</strong>
+                        {getIntl.get('ProductNew_Add')}
+                        &nbsp; <strong>URL</strong>
                     </Button>
-                    <Button type="link">添加多媒体文件</Button>
+                    <Button type="link">
+                        {getIntl.get('ProductNew_AddAMultimediaFile')}
+                    </Button>
                 </>
             ),
         },
         {
-            title: '价格/交易',
-            name: '价格/交易',
+            title: getIntl.get('ProductNew_PriceOrTrading'),
+            name: getIntl.get('ProductNew_PriceOrTrading'),
             child: (
                 <>
                     <Row gutter={25}>
@@ -252,8 +276,15 @@ const Content = () => {
                     <Row gutter={16}>
                         <Col md={12} lg={6}>
                             <p>
-                                <span>利润 &nbsp;</span>
-                                <Tooltip title="利润=售价 - 成本价">
+                                <span>
+                                    {getIntl.get('ProductNew_profit')}{' '}
+                                    &nbsp;
+                                </span>
+                                <Tooltip
+                                    title={getIntl.get(
+                                        'ProductNew_Profit_Tooltip',
+                                    )}
+                                >
                                     <QuestionMark
                                         style={{ width: 20, height: 20 }}
                                     />
@@ -272,8 +303,17 @@ const Content = () => {
                         </Col>
                         <Col md={12} lg={6}>
                             <p>
-                                <span>利润率 &nbsp;</span>
-                                <Tooltip title="利润率=利润 / 售价">
+                                <span>
+                                    {getIntl.get(
+                                        'ProductNew_profitMargin',
+                                    )}{' '}
+                                    &nbsp;
+                                </span>
+                                <Tooltip
+                                    title={getIntl.get(
+                                        'ProductNew_profitMargin_Tooltip',
+                                    )}
+                                >
                                     <QuestionMark
                                         style={{ width: 20, height: 20 }}
                                         value={
@@ -291,29 +331,35 @@ const Content = () => {
                     </Row>
 
                     <div style={{ marginTop: 15 }}>
-                        <Checkbox checked>需要收取税费</Checkbox>
+                        <Checkbox checked>
+                            {getIntl.get('ProductNew_Taxes')}
+                        </Checkbox>
                     </div>
                 </>
             ),
         },
         {
-            title: '库存',
-            name: '库存',
+            title: getIntl.get('ProductNew_Stock'),
+            name: getIntl.get('ProductNew_Stock'),
             child: (
                 <>
                     <Row gutter={25}>
                         <Inventory product={product} setProduct={setProduct} />
                     </Row>
                     <Row>
-                        <Checkbox checked>开启库存追踪</Checkbox>
-                        <Checkbox>缺货后继续销售</Checkbox>
+                        <Checkbox checked>
+                            {getIntl.get('ProductNew_Checkbox1_Text')}
+                        </Checkbox>
+                        <Checkbox>
+                            {getIntl.get('ProductNew_Checkbox2_Text')}
+                        </Checkbox>
                     </Row>
                 </>
             ),
         },
         {
-            title: '海关信息',
-            name: '海关信息',
+            title: getIntl.get('ProductNew_CustomsInformation'),
+            name: getIntl.get('ProductNew_CustomsInformation'),
             child: (
                 <Row gutter={25}>
                     <CustomsInformation />
@@ -321,11 +367,13 @@ const Content = () => {
             ),
         },
         {
-            title: '多款式',
-            name: '多款式',
+            title: getIntl.get('ProductNew_MultiStyle'),
+            name: getIntl.get('ProductNew_MultiStyle'),
             child: (
                 <div>
-                    <Checkbox>此商品有多个款式</Checkbox>
+                    <Checkbox>
+                        {getIntl.get('ProductNew_MultipleStyles')}
+                    </Checkbox>
                 </div>
             ),
         },

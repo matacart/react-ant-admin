@@ -1,10 +1,21 @@
 import { useRef } from 'react';
+import { connect } from 'react-redux';
 import { Editor } from '@tinymce/tinymce-react';
+import Intl from '../../locales/Intl';
+import { RichTextEditorLanguageMap } from '../../constant/Page';
+import { JudgingLanguage } from '../../util/utils';
+
+// state 数据映射
+const mapStateToProps = state => {
+    const stateLocale = state.page.locale;
+    return { stateLocale };
+};
 
 /**
  * 富文本编辑器
  */
-const RichTextEditor = ({ product, setProduct }) => {
+const RichTextEditor = ({ stateLocale, product, setProduct }) => {
+    const { locale, messages } = Intl(JudgingLanguage(stateLocale));
     const editorRef = useRef(null);
     const log = () => {
         if (editorRef.current) {
@@ -54,14 +65,14 @@ const RichTextEditor = ({ product, setProduct }) => {
                     ],
 
                     // 语言
-                    language_url: '/tinymce/langs/zh-Hans.js',
-                    language: 'zh-Hans',
-                    content_langs: [
-                        {
-                            title: 'Chinese',
-                            code: 'zh-Hans',
-                        },
-                    ],
+                    language: RichTextEditorLanguageMap[locale],
+                    // language_url: '/tinymce/langs/zh_HK.js',
+                    // content_langs: [
+                    //     {
+                    //         // title: 'Chinese Traditional, Hong Kong',
+                    //         code: 'zh-HK',
+                    //     },
+                    // ],
 
                     // 工具栏是否换行
                     toolbar_mode: 'wrap',
@@ -82,4 +93,4 @@ const RichTextEditor = ({ product, setProduct }) => {
     );
 };
 
-export default RichTextEditor;
+export default connect(mapStateToProps)(RichTextEditor);

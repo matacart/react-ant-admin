@@ -1,4 +1,4 @@
-import { get } from '../../../../locales/utils';
+import { GetIntl } from '../../../../locales/utils';
 import { Link } from 'react-router-dom';
 import './FormFooter.scss';
 
@@ -10,9 +10,9 @@ const FormFooter = () => {
     return (
         <>
             <div className="mc-login-bottom-button">
-                {get('UserPage_register_footer_text1')}
+                {GetIntl('UserPage_register_footer_text1')}
                 <Link to="/user/signIn">
-                    {get('UserPage_register_footer_text2')}
+                    {GetIntl('UserPage_register_footer_text2')}
                 </Link>
             </div>
             <div className="mc-login-footer"></div>

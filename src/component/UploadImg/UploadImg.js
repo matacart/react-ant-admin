@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Upload, message } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useGetIntl } from '../../locales/utils';
 import './UploadImg.scss';
 
 const { Dragger } = Upload;
@@ -15,7 +16,6 @@ const getBase64 = (img, callback) => {
 };
 
 /**
- *
  * @param {*} file
  * @returns
  */
@@ -57,6 +57,7 @@ const props = {
  * @param {{name: string, multiple: string}} props
  */
 const UploadImg = ({ props }) => {
+    const getIntl = useGetIntl();
     const [loading, setLoading] = useState(false);
     // const [imageUrl, setImageUrl] = useState();
     // const handleChange = info => {
@@ -89,7 +90,7 @@ const UploadImg = ({ props }) => {
                         marginTop: 8,
                     }}
                 >
-                    添加图片(或把图片拖到框内)
+                    {getIntl.get('ProductNew_Dragger_Text')}
                 </div>
             </div>
         </div>
@@ -103,7 +104,7 @@ const UploadImg = ({ props }) => {
                 {uploadButton}
             </Dragger>
             <p className="uploadTipDesc">
-                支持上传jpg、png、webp、SVG格式图片，最大限制为10M（4M为最佳店铺浏览体验）；支持上传GIF格式动图，最大限制8M
+                {getIntl.get('ProductNew_uploadTipDesc')}
             </p>
         </div>
     );

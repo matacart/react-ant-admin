@@ -34,7 +34,8 @@ export const RouterBeforeEach = () => {
         if (
             !getToken() &&
             location.pathname !== '/user/signIn' &&
-            location.pathname !== '/user/signUp'
+            location.pathname !== '/user/signUp' &&
+            location.pathname !== '/user/resetting'
         ) {
             message.error('登录信息已过期，请重新登录！');
             return <Navigate to="/user/signIn" replace />;

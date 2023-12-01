@@ -5,7 +5,7 @@ import { Setting } from '../../../component/Icon/Icon';
 import AntdSider from 'antd/es/layout/Sider';
 import { SIDER } from '../../../constant/Sider';
 import { Link } from 'react-router-dom';
-import { get } from '../../../locales/utils';
+import { GetIntl } from '../../../locales/utils';
 import './Sider.scss';
 
 // state 映射
@@ -98,6 +98,7 @@ const Sider = ({ sider }) => {
                 left: 0,
                 top: 0,
                 bottom: 0,
+                ...sider.menu,
             }}
         >
             <div className="body">
@@ -133,7 +134,7 @@ const Sider = ({ sider }) => {
                             icon: <Setting />,
                             label: (
                                 <Link to="/admin/settings">
-                                    {get('SiderPage_setting')}
+                                    {GetIntl('SiderPage_setting')}
                                 </Link>
                             ),
                         },

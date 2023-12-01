@@ -3,12 +3,13 @@ import { connect, useDispatch } from 'react-redux';
 import {
     loginThunk,
     signUpThunk,
+    resettingThunk,
     getUserInfoThunk,
 } from '../../../../store/reducers/thunk/userThunk';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Button, Form, Checkbox, message } from 'antd';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
-import { get } from '../../../../locales/utils';
+import { GetIntl } from '../../../../locales/utils';
 
 import FormHeader from '../FormHeader/FormHeader';
 import External from '../External/External';
@@ -191,55 +192,79 @@ const UserForm = ({ user }) => {
      * 表单提交事件
      */
     function submitForm() {
-        if (data.submText === '注册') {
-            if (
-                nickname &&
-                username &&
-                verificationCode &&
-                password &&
-                confirmPassword &&
-                isAgree
-            ) {
-                dispatch(
-                    signUpThunk({
-                        nickname,
-                        username,
-                        password,
-                        code: verificationCode,
-                    }),
-                )
-                    .then(res => {
-                        if (res.payload.status) {
-                            message.error(res.payload.msg);
-                        } else {
-                            message.success(res.payload.msg);
-                            navigate('/user/signIn');
-                        }
-                    })
-                    .catch(error => {
-                        message.error(error);
-                    });
-            } else {
-            }
-        } else {
-            console.log(username);
-            if (username && password) {
-                // 登录
-                dispatch(loginThunk({ username, password }))
-                    .then(res => {
-                        // 获取用户信息
-                        dispatch(getUserInfoThunk(getToken()));
-                        if (res.payload.status) {
-                            message.error(res.payload.msg);
-                        } else {
-                            navigate('/user/signIn');
-                        }
-                    })
-                    .catch(error => {
-                        message.error(error);
-                    });
-            } else {
-            }
+        if (data.type === '登录' && username && password) {
+            // 登录
+            dispatch(loginThunk({ username, password }))
+                .then(res => {
+                    // 获取用户信息
+                    dispatch(getUserInfoThunk(getToken()));
+                    if (res.payload.status) {
+                        message.error(res.payload.msg);
+                    } else {
+                        navigate('/user/signIn');
+                    }
+                })
+                .catch(error => {
+                    message.error(error);
+                });
+        }
+
+        if (
+            data.type === '注册' &&
+            nickname &&
+            username &&
+            verificationCode &&
+            password &&
+            confirmPassword &&
+            isAgree
+        ) {
+            dispatch(
+                signUpThunk({
+                    nickname,
+                    username,
+                    password,
+                    code: verificationCode,
+                }),
+            )
+                .then(res => {
+                    if (res.payload.status) {
+                        message.success(res.payload.msg);
+                        navigate('/user/signIn');
+                    } else {
+                        message.error(res.payload.msg);
+                    }
+                })
+                .catch(error => {
+                    message.error(error);
+                });
+        }
+
+        if (
+            data.type === '忘记密码' &&
+            username &&
+            verificationCode &&
+            password &&
+            confirmPassword
+        ) {
+            dispatch(
+                resettingThunk({
+                    username,
+                    password,
+                    confirmPassword,
+                    code: verificationCode,
+                }),
+            )
+                .then(res => {
+                    if (res.payload.status) {
+                        message.success(res.payload.msg);
+                        navigate('/user/signIn');
+                    } else {
+                        message.error(res.payload.msg);
+                    }
+                })
+                .catch(error => {
+                    message.error(error);
+                });
         }
     }
 
@@ -264,14 +289,28 @@ const UserForm = ({ user }) => {
      * 发送验证码
      */
     function sendVerificationCode() {
-        getVerificationCode(username)
-            .then(request => {
-                if (request.data.status) message.success('成功发送验证码！');
-                else message.warning('用户存在');
-            })
-            .catch(error => {
-                message.error('发送失败!');
-            });
+        if (data.type === '注册') {
+            getVerificationCode(username)
+                .then(request => {
+                    if (request.data.status)
+                        message.success('成功发送验证码！');
+                    else message.warning('用户存在');
+                })
+                .catch(error => {
+                    message.error('发送失败!');
+                });
+        }
+
+        if (data.type === '忘记密码') {
+            getVerificationCode(username, 'forget')
+                .then(request => {
+                    if (request.data.status)
+                        message.success('成功发送验证码！');
+                })
+                .catch(error => {
+                    message.error(error);
+                });
+        }
     }
 
     return (
@@ -306,7 +345,7 @@ const UserForm = ({ user }) => {
                                                 }
                                             >
                                                 <span>
-                                                    {get(
+                                                    {GetIntl(
                                                         'UserPage_register_nickname',
                                                     )}
                                                 </span>
@@ -329,13 +368,14 @@ const UserForm = ({ user }) => {
                                         >
                                             {/* <span>邮箱/手机号</span> */}
                                             <span>
-                                                {get('UserPage_account')}
+                                                {GetIntl('UserPage_account')}
                                             </span>
                                         </label>
                                     </div>
                                 </div>
                                 {/* 验证码 */}
-                                {data.type === '注册' && (
+                                {(data.type === '注册' ||
+                                    data.type === '忘记密码') && (
                                     <div className="verificationCode">
                                         <div className="field">
                                             <input
@@ -351,7 +391,7 @@ const UserForm = ({ user }) => {
                                                 }
                                             >
                                                 <span>
-                                                    {get(
+                                                    {GetIntl(
                                                         'UserPage_register_verificationCode',
                                                     )}
                                                 </span>
@@ -360,7 +400,7 @@ const UserForm = ({ user }) => {
                                                 className="getVerificationCode"
                                                 onClick={sendVerificationCode}
                                             >
-                                                {get(
+                                                {GetIntl(
                                                     'UserPage_register_getVerificationCode',
                                                 )}
                                             </button>
@@ -383,7 +423,13 @@ const UserForm = ({ user }) => {
                                             style={isInput[3] ? inputStyle : {}}
                                         >
                                             <span>
-                                                {get('UserPage_password')}
+                                                {data.type === '忘记密码'
+                                                    ? GetIntl(
+                                                          'UserPage_resetting_password',
+                                                      )
+                                                    : GetIntl(
+                                                          'UserPage_password',
+                                                      )}
                                             </span>
                                         </label>
                                         <div
@@ -406,7 +452,8 @@ const UserForm = ({ user }) => {
                                     </div>
                                 </div>
                                 {/* 确认密码 */}
-                                {data.type === '注册' && (
+                                {(data.type === '注册' ||
+                                    data.type === '忘记密码') && (
                                     <div className="confirmPassword">
                                         <div className="field">
                                             <input
@@ -424,7 +471,7 @@ const UserForm = ({ user }) => {
                                                 }
                                             >
                                                 <span>
-                                                    {get(
+                                                    {GetIntl(
                                                         'UserPage_register_confirmPassword',
                                                     )}
                                                 </span>
@@ -460,15 +507,17 @@ const UserForm = ({ user }) => {
                                         ></Checkbox>
 
                                         <div className="privacy-container">
-                                            {get('UserPage_register_privacy')}
-                                            <Link to="#">
-                                                {get(
+                                            {GetIntl(
+                                                'UserPage_register_privacy',
+                                            )}
+                                            <Link to="https://www.matacart.com/xieyi.html">
+                                                {GetIntl(
                                                     'UserPage_register_userAgreement',
                                                 )}
                                             </Link>
                                             ，
-                                            <Link to="#">
-                                                {get(
+                                            <Link to="https://www.matacart.com/privacy.html">
+                                                {GetIntl(
                                                     'UserPage_register_privacyPolicy',
                                                 )}
                                             </Link>
@@ -499,12 +548,12 @@ const UserForm = ({ user }) => {
                                 >
                                     <strong>
                                         <Link to="/user/signUp">
-                                            {get('UserPage_register_text')}
+                                            {GetIntl('UserPage_register_text')}
                                         </Link>
                                     </strong>
                                     <strong>
-                                        <Link to="#">
-                                            {get(
+                                        <Link to="/user/resetting">
+                                            {GetIntl(
                                                 'UserPage_login_forgetPassword',
                                             )}
                                         </Link>
@@ -521,7 +570,9 @@ const UserForm = ({ user }) => {
                 </div>
             </div>
 
-            {data.type === '注册' && <FormFooter />}
+            {(data.type === '注册' || data.type === '忘记密码') && (
+                <FormFooter />
+            )}
         </>
     );
 };

@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginThunk, signUpThunk, getUserInfoThunk } from '../thunk/userThunk';
+import {
+    loginThunk,
+    signUpThunk,
+    resettingThunk,
+    getUserInfoThunk,
+} from '../thunk/userThunk';
 import { setToken, setUserInfo } from '../../../util/auth';
 
 /**
@@ -28,6 +33,9 @@ export const userSlice = createSlice({
             } else return action.payload;
         });
         builder.addCase(signUpThunk.fulfilled, (state, action) => {
+            return action.payload;
+        });
+        builder.addCase(resettingThunk.fulfilled, (state, action) => {
             return action.payload;
         });
         builder.addCase(getUserInfoThunk.fulfilled, (state, action) => {

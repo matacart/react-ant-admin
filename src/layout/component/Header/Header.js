@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { updataMenu } from '../../../store/reducers/slice/siderSlice';
 import { getUserInfo, removeToken } from '../../../util/auth';
 import Internationalization from '../../../component/Internationalization/Internationalization';
 import {
@@ -22,9 +24,24 @@ import {
 } from '@ant-design/icons';
 import { Clock, AccountManagement, LogOut } from '../../../component/Icon/Icon';
 import Logo from '../../../assets/imgs/matacart_logo_topLeft.png';
+import { GetIntl, useGetIntl } from '../../../locales/utils';
+import { useIntl } from 'react-intl';
 
 import './Header.scss';
 
+// state 映射
+const mapStateToProps = state => {
+    const sider = state.sider;
+    return { sider };
+};
+
+const mapDispatchToProps = {
+    updataMenu,
+};
+
+/**
+ * 布局头部
+ */
 const HeaderRight = () => {
     const items = [
         {
@@ -36,7 +53,9 @@ const HeaderRight = () => {
             key: '2',
             label: (
                 <Link to={'/'}>
-                    <span>{`批量处理进度`}</span>
+                    <span>
+                        {GetIntl('Layout_Header_BatchProcessingProgress')}
+                    </span>
                 </Link>
             ),
             icon: <Clock />,
@@ -45,7 +64,7 @@ const HeaderRight = () => {
             key: '3',
             label: (
                 <Link to={'/'}>
-                    <span>{`账户管理`}</span>
+                    <span>{GetIntl('Layout_Header_AccountManagement')}</span>
                 </Link>
             ),
             icon: <AccountManagement />,
@@ -54,7 +73,7 @@ const HeaderRight = () => {
             key: '4',
             label: (
                 <Link to={'/user/signIn'}>
-                    <span>{`退出登录`}</span>
+                    <span>{GetIntl('Layout_Header_LogOff')}</span>
                 </Link>
             ),
             icon: <LogOut />,
@@ -126,14 +145,18 @@ const HeaderRight = () => {
             <Internationalization />
 
             {/* 使用文档 */}
-            <Tooltip placement="bottom" title="使用文档" arrow={true}>
+            <Tooltip
+                placement="bottom"
+                title={GetIntl('UseTheDocument')}
+                arrow={true}
+            >
                 <QuestionCircleOutlined />
             </Tooltip>
 
             {/* 网络状态 */}
             <Tooltip
                 placement="bottom"
-                title={`延迟${delayState}ms`}
+                title={GetIntl('Delay', { delayState: delayState })}
                 arrow={true}
             >
                 <WifiOutlined />
@@ -154,9 +177,18 @@ const HeaderRight = () => {
 
 /**
  * admin 系统，头部菜单
- *
  */
-const Header = () => {
+const Header = ({ sider, updataMenu }) => {
+    const getIntl = useGetIntl();
+    /**
+     * 小页面布局下，单击菜单事件。
+     */
+    const clickMenu = e => {
+        if (!sider.menu.display || sider.menu.display === 'none')
+            updataMenu({ display: 'flex', opacity: 1 });
+        else updataMenu({ display: 'none', opacity: 0 });
+    };
+
     return (
         <AntdHeader
             style={{
@@ -165,7 +197,6 @@ const Header = () => {
                 justifyContent: 'space-between',
                 height: '60px',
                 lineHeight: '60px',
-
                 position: 'sticky',
                 top: 0,
             }}
@@ -177,8 +208,20 @@ const Header = () => {
                 </Link>
             </div>
 
+            <div className="Header-menu">
+                <label className="burger" htmlFor="burger">
+                    <input type="checkbox" id="burger" onClick={clickMenu} />
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+            </div>
+
             <div className="header-content" style={{ flex: '1 1 0%' }}>
-                <AntdInput placeholder="搜索" prefix={<SearchOutlined />} />
+                <AntdInput
+                    placeholder={getIntl.get('Search')}
+                    prefix={<SearchOutlined />}
+                />
             </div>
 
             <HeaderRight />
@@ -186,4 +229,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

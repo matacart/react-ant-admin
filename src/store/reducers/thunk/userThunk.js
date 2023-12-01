@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { login, signUp, getUserInfo } from '../../../api/user';
+import { login, signUp, resetting, getUserInfo } from '../../../api/user';
 
 /**
  * 登录
@@ -54,6 +54,38 @@ const signUpThunk = createAsyncThunk(
 );
 
 /**
+ * 修改密码
+ */
+const resettingThunk = createAsyncThunk(
+    'user/resettingPost',
+    async ({
+        username,
+        area_code = '86',
+        code,
+        password,
+        confirmPassword,
+        service = 'xht',
+    }) => {
+        // 数据格式化
+        const formData = new FormData();
+        formData.append('username', username.trim());
+        formData.append('area_code', area_code.trim());
+        formData.append('code', code.trim());
+        formData.append('password', password.trim());
+        formData.append('confirm_password', confirmPassword.trim());
+        formData.append('service', service.trim());
+        formData.append('from', 'matacart');
+
+        try {
+            const res = await resetting(formData);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+);
+
+/**
  * 用户信息获取
  */
 const getUserInfoThunk = createAsyncThunk(
@@ -68,4 +100,4 @@ const getUserInfoThunk = createAsyncThunk(
     },
 );
 
-export { loginThunk, signUpThunk, getUserInfoThunk };
+export { loginThunk, signUpThunk, resettingThunk, getUserInfoThunk };
