@@ -1,6 +1,8 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import axios from 'axios';
+import { Oauth2 } from '../../../config/myConfig'
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -20,7 +22,7 @@ export async function logout(options?: { [key: string]: any }) {
   });
 }
 
-/** 登录接口 POST /api/login/account  /y2/ApiAppstore/newlogin */ 
+/** 登录接口 POST /api/login/account  /y2/ApiAppstore/newlogin */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
   return request<API.LoginResult>('/api/ApiAppstore/newlogin', {
     method: 'POST',
@@ -64,7 +66,7 @@ export async function rule(
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'update',
       ...(options || {}),
     }
@@ -75,7 +77,7 @@ export async function updateRule(options?: { [key: string]: any }) {
 export async function addRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'post',
       ...(options || {}),
     }
@@ -86,7 +88,7 @@ export async function addRule(options?: { [key: string]: any }) {
 export async function removeRule(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/api/rule', {
     method: 'POST',
-    data:{
+    data: {
       method: 'delete',
       ...(options || {}),
     }
@@ -116,3 +118,41 @@ export async function register(body: API.LoginParams, options?: { [key: string]:
     ...(options || {}),
   });
 }
+
+/** 获取access_token */
+// export async function getAccessToken() {
+//   let AccessToken = '';
+//   await axios.post(
+//     Oauth2.hdyUrl,
+//     {
+//       grant_type: Oauth2.grant_type,
+//       accessKeyId: Oauth2.accessKeyId,
+//       accessKeySecret: Oauth2.accessKeySecret
+//     }, {
+//     headers: {
+//       'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//   }).then((res:any) => {
+//     AccessToken = res.data.access_token;
+//   }).catch((error:any) => {
+//     console.log('error', error);
+//   });
+//   return AccessToken;
+// }
+
+/** 获取access_token */
+export async function getAccessToken() {
+  return request(Oauth2.hdyUrl,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      grant_type: Oauth2.grant_type,
+      accessKeyId: Oauth2.accessKeyId,
+      accessKeySecret: Oauth2.accessKeySecret
+    },
+  })
+}
+
+  

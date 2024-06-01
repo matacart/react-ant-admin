@@ -152,9 +152,6 @@ export default function Create() {
                                             flex: 1,
                                             marginRight: 0
                                         }}
-                                            // disabled
-
-
                                         >获取验证码</Button>
                                     </div>
                                 </div>

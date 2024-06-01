@@ -1,44 +1,48 @@
-import { Button, Form, Input, Divider,Checkbox ,message} from 'antd';
+import { Button, Form, Input, Divider, Checkbox, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { FormattedMessage, useIntl,Link,history,useModel} from '@umijs/max';
+import { FormattedMessage, useIntl, Link, history, useModel } from '@umijs/max';
 import type { FormProps } from 'antd';
 import './Register.scss'
 import React, { useState } from 'react';
 import { request } from '@umijs/max';
 import { flushSync } from 'react-dom';
 import { register } from '@/services/y2/api';
-
+import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import {state} from '../../../config/myConfig'
 type FieldType = {
     username?: string;
     password?: string;
     agreement?: string;
 };
-interface Props{
-    changeForm:(value:number)=>void
+interface Props {
+    changeForm: (value: number) => void
 }
 
 
 
 
-export default function Register(props:Props) {
+export default function Register(props: Props) {
 
     const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
+    const [captchaIsLoding, setCaptchaIsLoading] = useState(false);
+    const [formIsLoading, setFormIsLoading] = useState(false);
+    const [phone, setPhone] = useState('');
+    const intl = useIntl();
 
     const fetchUserInfo = async () => {
-      const userInfo = await initialState?.fetchUserInfo?.();
-      if (userInfo) {
-        flushSync(() => {
-          setInitialState((s) => ({
-            ...s,
-            currentUser: userInfo,
-          }));
-        });
-      }
+        const userInfo = await initialState?.fetchUserInfo?.();
+        if (userInfo) {
+            flushSync(() => {
+                setInitialState((s) => ({
+                    ...s,
+                    currentUser: userInfo,
+                }));
+            });
+        }
     };
 
-    const intl = useIntl();
     return (
         <>
             {/* 表头 */}
@@ -55,30 +59,24 @@ export default function Register(props:Props) {
                     onFinish={
                         async (values: API.LoginParams) => {
                             try {
-                              const msg = await register({ ...values });
-                              if (msg.code === 0) {
-                                const token = msg.token;
-                                localStorage.setItem('token', token);
-                                const defaultLoginSuccessMessage = intl.formatMessage({
-                                  id: 'pages.login.success',
-                                  defaultMessage: '注册成功！',
-                                });
-                                message.success(defaultLoginSuccessMessage);
-                                await fetchUserInfo();
-                                const urlParams = new URL(window.location.href).searchParams;
-                                history.push(urlParams.get('redirect') || '/');
-                                return;
-                              }
-                              console.log(msg);
-                              // 如果失败去设置用户错误信息
-                              setUserLoginState(msg);
+                                const msg = await register({ ...values });
+                                if (msg.code === 0) {
+                                    const defaultLoginSuccessMessage = intl.formatMessage({
+                                        id: 'pages.register.success',
+                                        defaultMessage: '注册成功！',
+                                    });
+                                    message.success(defaultLoginSuccessMessage);
+                                    history.push('/user/signIn');
+                                    return;
+                                }
+                                message.error(intl.formatMessage({id: 'pages.captcha.wrong', defaultMessage: '验证码错误'}));
                             } catch (error) {
-                              const defaultLoginFailureMessage = intl.formatMessage({
-                                id: 'pages.login.failure',
-                                defaultMessage: '注册失败，请重试！',
-                              });
-                              console.log(error);
-                              message.error(defaultLoginFailureMessage);
+                                const defaultLoginFailureMessage = intl.formatMessage({
+                                    id: 'pages.register.failure',
+                                    defaultMessage: '注册失败，请重试！',
+                                });
+                                console.log(error);
+                                message.error(defaultLoginFailureMessage);
                             }
                         }
                     }
@@ -89,7 +87,16 @@ export default function Register(props:Props) {
                         rules={[
                             {
                                 required: true,
-                                message: intl.formatMessage({ id: 'pages.login.username.required' }),
+                                message: intl.formatMessage({ id: 'pages.login.phone.required', defaultMessage: '手机号是必填项' }),
+                            },
+                            {
+                                pattern: /^1\d{10}$/,
+                                message: (
+                                    <FormattedMessage
+                                        id="pages.login.phoneNumber.invalid"
+                                        defaultMessage="手机号格式错误！"
+                                    />
+                                ),
                             },
                         ]}
                     >
@@ -97,9 +104,69 @@ export default function Register(props:Props) {
                             style={{
                                 height: '52px',
                             }}
+                            onChange={(e) => {
+                                setPhone(e.target.value);
+                            }}
                             prefix={<UserOutlined className="site-form-item-icon" />}
                             placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
                         />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="captcha"
+                        rules={[
+                            {
+                                required: true,
+                                message: intl.formatMessage({ id: 'pages.captcha.required', defaultMessage: '请输入验证码' }),
+                            },
+                        ]}
+
+                    >
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignContent: 'center',
+                            }}
+                        >
+                            <Input
+                                style={{
+                                    width: '50%',
+                                    height: '51px',
+                                    flex: 2,
+                                    marginRight: '10px',
+                                }}
+                                type="text"
+                                placeholder={intl.formatMessage({ id: 'pages.captcha', defaultMessage: '验证码' })}
+                            />
+                            <Button
+                                loading={captchaIsLoding}
+                                style={{
+                                    height: '51px',
+                                    flex: 1
+                                }}
+                                onClick={async () => {
+                                    setCaptchaIsLoading(true);
+                                    const result = await getFakeCaptcha({
+                                        phone,
+                                    });
+                                    if (!result) {
+                                        message.error(intl.formatMessage({
+                                            id: 'pages.getcaptcha.failure'
+                                        })); return;
+                                    } else {
+                                        let msg= intl.formatMessage({
+                                            id: 'pages.getcaptcha.success'
+                                        })+result
+                                        message.success(msg);
+                                    }
+                                    setCaptchaIsLoading(false);
+                                }}
+                            >
+                                <FormattedMessage id={'pages.getCaptcha'} />
+                            </Button>
+                        </div>
+
                     </Form.Item>
                     <Form.Item
                         name="password"
@@ -133,7 +200,7 @@ export default function Register(props:Props) {
                                     if (!value || getFieldValue('password') === value) {
                                         return Promise.resolve();
                                     }
-                                    return Promise.reject(<FormattedMessage id="pages.register.password.not.match" defaultMessage='输入的密码不匹配'/>);
+                                    return Promise.reject(<FormattedMessage id="pages.register.password.not.match" defaultMessage='输入的密码不匹配' />);
                                 },
                             })
                         ]}
@@ -148,7 +215,7 @@ export default function Register(props:Props) {
                             placeholder={intl.formatMessage({ id: 'pages.register.password.again' })}
                         />
                     </Form.Item>
-                    <Form.Item<FieldType>
+                    <Form.Item
                         name="agreement"
                         valuePropName="checked"
                         rules={[
@@ -156,11 +223,25 @@ export default function Register(props:Props) {
                                 validator: (_, value) =>
                                     value
                                         ? Promise.resolve()
-                                        : Promise.reject(new Error('Should accept agreement')),
+                                        : Promise.reject(new Error(intl.formatMessage({ id: 'pages.shouldGreetment' }))),
                             },
                         ]}
                     >
-                        <Checkbox>同意协议</Checkbox>
+                        <Checkbox style={{
+                            color: '#7a8499',
+                            fontSize: '12px'
+                        }}><FormattedMessage id={'pages.registerAgreed'} defaultMessage='注册表示您已同意' />{state.title}&nbsp;
+                            <a style={{
+                                fontSize: '12px',
+                                fontWeight: '400'
+                            }} href='https://www.matacart.com/xieyi.html'><FormattedMessage id="pages.userAgreement" defaultMessage="用户协议" />,</a>
+                            <a style={{
+                                fontSize: '12px',
+                                fontWeight: '400'
+                            }} href='https://www.matacart.com/privacy.html'><FormattedMessage id='pages.privacyPolicy' defaultMessage='隐私政策' /></a>
+                        </Checkbox>
+
+
                     </Form.Item>
                     <Button
                         style={{
@@ -186,7 +267,7 @@ export default function Register(props:Props) {
                 }}
                 orientationMargin="3em"
             >
-                通过其他方式注册
+                <FormattedMessage id="pages.register.otherWays" defaultMessage='通过其他方式注册' />
             </Divider>
             {/* 其他登录方式 */}
             <div
@@ -221,8 +302,9 @@ export default function Register(props:Props) {
                     {intl.formatMessage({ id: 'pages.register.link.linkie' })}
                 </Button>
 
-                <div>已有账号，
-                    <Link to="/user/signIn">去登录</Link>
+                <div>
+                    <FormattedMessage id={'pages.alreadyHavaAccount'} />，
+                    <Link to="/user/signIn"><FormattedMessage id={'pages.goToLogin'} /></Link>
                 </div>
             </div>
         </>

@@ -1,0 +1,27 @@
+.top {
+    border-bottom: 1px solid #eaedf5;
+    display: flex;
+    width: 400px;
+    padding: 10px 16px 16px 16px;
+    justify-content: center;
+    align-content: center;
+    .input{
+        flex: 1
+    }
+    .line{
+        position: relative;
+        top: 20px;
+        background-color: #d7dbe7;
+        margin: 0 12px;
+        display: inline-block;
+        width: 12px;
+        height: 1px;
+        -ms-flex-negative: 0;
+        flex-shrink: 0;
+    }
+}
+.bottom{
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 10px 16px;
+}

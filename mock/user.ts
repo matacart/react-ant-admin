@@ -14,8 +14,18 @@
 //     });
 //   },
 // };
+import { message } from 'antd';
 import { Request, Response } from 'express';
+import { fill } from 'lodash';
 
+interface DataType {
+  key: React.Key;
+  imgUrl: string;
+  name: string;
+  price: number;
+  inventory: number;
+  state:boolean;
+}
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -25,8 +35,8 @@ const waitTime = (time: number = 100) => {
 };
 
 async function getFakeCaptcha(req: Request, res: Response) {
-  await waitTime(2000);
-  return res.json('captcha-xxx');
+  await waitTime(500);
+  return res.json('123');
 }
 
 const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
@@ -219,27 +229,101 @@ export default {
   'GET  /api/login/captcha': getFakeCaptcha,
 
   'POST /api/ApiAppstore/reset': async (req: Request, res: Response) => {
-    const { phone, username,captcha } = req.body;
-    console.log(phone, username,captcha);
-    await waitTime(1000);
+    const { phone, username, captcha } = req.body;
+
+    if (captcha != '123456') {
       res.send({
-        code: 0,
-        token: 'sdfsadfasdfasf3rwetwetgeww',
-        currentAuthority: 'admin',
+        code: 1,
       });
-      access = 'admin';
-    
+      return;
+    }
+
+    res.send({
+      code: 0,
+      currentAuthority: 'admin',
+    });
+    access = 'admin';
   },
 
   'POST /api/ApiAppstore/register': async (req: Request, res: Response) => {
     const { password, username } = req.body;
     await waitTime(1000);
-      res.send({
-        code: 0,
-        token: 'sdfsadfasdfasf3rwetwetgeww',
-        currentAuthority: 'admin',
-      });
-      access = 'admin';
-      return;
+    res.send({
+      code: 0,
+      token: 'sdfsadfasdfasf3rwetwetgeww',
+      currentAuthority: 'admin',
+    });
+    access = 'admin';
+    return;
   },
+
+  'POST /api/Oauth2/gettoken': async (req: Request, res: Response) => {
+    const { 
+      grant_type,
+      accessKeyId,
+      accessKeySecret } = req.body;
+    if(grant_type=='client_credential'
+      && accessKeyId=='hdq8v4nqcpbras5u8l'
+      && accessKeySecret==='ay9clijrp84j8lyx9ftzjyx4zdm0mstp'
+    ){
+      res.send({
+        access_token:'123456',
+      })
+    }else{
+      message.error('授权失败'); 
+    }
+
+  },
+  'POST /api/upload': (req: Request, res: Response) => {
+    const formData = new FormData();
+    res.json({
+      status: 'success',
+      message: 'File uploaded successfully',
+      fileId: '123',
+      fileUrl: '#',
+      fileSize: 0,
+      fileName: '1'
+    })
+  },
+  'GET /api/cloudImgList': (req: Request,res:Response) => {
+    res.json([
+    {
+      fileId: 1,
+      fileUrl:'https://s21.ax1x.com/2024/05/28/pk1JZZD.png',
+      fileName: '88888888888888888888888'
+    },{
+      fileId: 2,
+      fileUrl:'https://s21.ax1x.com/2024/05/28/pk1JZZD.png',
+      fileName: '88888888888888888888888'
+
+    },{
+      fileId: 3,
+      fileUrl:'https://s21.ax1x.com/2024/05/28/pk1JZZD.png',
+      fileName: '88888888888888888888888'
+
+    },{
+      fileId: 4,
+      fileUrl:'https://s21.ax1x.com/2024/05/28/pk1JZZD.png',
+    },{
+      fileId: 5,
+      fileUrl:'https://s21.ax1x.com/2024/05/28/pk1JZZD.png',
+    }
+    ])
+  },
+  'GET /api/product/query' :(req:Request,res:Response) =>{
+    res.status(200);
+    let tempData: DataType[] = [];
+    for(let i=0;i<10;++i){
+        tempData.push({
+            key: i.toString(),
+            imgUrl: '#',
+            name: i.toString(),
+            price: i,
+            state: false,
+            inventory: i
+        });
+    }
+    res.json(tempData);
+  }
 };
+

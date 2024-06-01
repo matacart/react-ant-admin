@@ -49,4 +49,7 @@ export default {
   'menu.editor.flow': 'フローエディタ',
   'menu.editor.mind': 'マインドエディター',
   'menu.editor.koni': 'コニエディター',
+  'menu.products': '商品',  
+"menu.stores": '店舗',  
+'menu.stores.create': '店舗を作成',
 };

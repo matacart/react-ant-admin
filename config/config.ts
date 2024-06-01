@@ -21,8 +21,11 @@ export default defineConfig({
    * @doc https://umijs.org/docs/api/config#targets
    */
   // targets: {
-  //   ie: 11,
+    
   // },
+
+  jsMinifier: 'terser',
+
   /**
    * @name 路由的配置，不在路由中引入的文件不会编译
    * @description 只支持 path，component，routes，redirect，wrappers，title 的配置

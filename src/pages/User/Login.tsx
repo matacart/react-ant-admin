@@ -14,7 +14,8 @@ import './Login.scss';
 export default  function Login() {
     //国际化
     const intl = useIntl();
-
+    
+    const [phone, setPhone] = useState('');
     const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
@@ -114,6 +115,19 @@ export default  function Login() {
                     placeholder={intl.formatMessage({ id: 'pages.login.password.label' })}
                   />
                 </Form.Item>
+                <Form.Item
+                  name="remember"
+                  valuePropName="checked"
+                  required={false}
+                  // initialValue={true}
+                  style={{
+                    margin:0
+                  }}
+                >
+                  <Checkbox>
+                    <FormattedMessage id="pages.login.rememberMe" defaultMessage="记住我" />
+                  </Checkbox>
+                </Form.Item>
                 <Button
                   style={{
                     height: '46px',
@@ -148,7 +162,7 @@ export default  function Login() {
               }}
               orientationMargin="3em"
             >
-              或
+              <FormattedMessage id='pages.or'/>
             </Divider>
             {/* 其他登录方式 */}
             <div

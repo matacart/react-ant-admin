@@ -7,14 +7,12 @@
   font-weight: 500;
   line-height: 20px;
   .create-warp{
-      max-width: 976px;
-      min-width: 700px;
       width: 100%;
+      min-width: 500px;
       .create-title{
           padding-bottom: 0px;
           color: #474f5e;
           font-size: 14px;
-          font-weight: 500;
           line-height: 20px;
           display: flex;
           justify-content: space-between;
@@ -40,6 +38,8 @@
 
       }
       .create-content{
+          position: relative;
+          top: -10px;
           padding: 20px 24px;
           border-radius: 6px;
           width: 100%;

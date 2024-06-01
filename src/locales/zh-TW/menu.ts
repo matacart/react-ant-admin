@@ -49,4 +49,8 @@ export default {
   'menu.editor.flow': '流程編輯器',
   'menu.editor.mind': '腦圖編輯器',
   'menu.editor.koni': '拓撲編輯器',
+  //1
+  'menu.products': '商品',  
+"menu.stores": '店餪',  
+'menu.stores.create': '創建店餪',
 };

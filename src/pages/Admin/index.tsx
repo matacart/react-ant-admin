@@ -27,7 +27,7 @@ export default () => {
           <DataCard/>
           <Callapse/>
           <TextCard
-            title="为您的店铺选择套餐题"
+            title="为您的店铺选择套餐"
             contentText={
               <>
               立即付费解锁更多功能，享受更好的服务和支持。已支持以下付款方式：<br/>
