@@ -1,3 +1,4 @@
+import { valueType } from "antd/es/statistic/utils";
 import { action, makeObservable, observable } from "mobx";
 
 // 引入mobx
@@ -16,26 +17,18 @@ class newStore {
     // })
   // }
 
- // ################# 状态 ################## 
 
   // 商品信息
 
   // 商品标题 
-  @observable title = '123';
+  @observable title = '';
   // 商品摘要
   @observable resume = '';
   // 商品描述
   @observable desc = '';
-  
   // 商品图片/视频
-
   @observable selectedImgList :any[] =  [];
-
-  // // 商品图片/视频 - className
-  // @observable selectedImgListImgClass : any[] = [];
-
-  //############### 操作状态的方法 #####################
-
+  
   // 操作选中的图片数组
   @action getSelectedImgList = ()=>{
     return this.selectedImgList;
@@ -57,7 +50,77 @@ class newStore {
   @action isIncludeSelectedImgList = (img:any)=>{
     return this.selectedImgList.indexOf(img)>-1;
   }
+
+
+  // 价格/交易
+
+  // 售价
+  @observable price:valueType = 0;
+  // 原价
+  @observable originPrice:valueType = 0;
+  // 成本价
+  @observable costPrice:valueType = 0;
+  // 需要收取税费
+  @observable needTax:boolean = false;
+
+  @action setPrice = (value:valueType)=>{
+    this.price=value;
+  }
+  @action setOriginPrice = (value:valueType)=>{
+    this.originPrice=value;
+  }
+  @action setCostPrice = (value:valueType)=>{
+    this.costPrice=value;
+  }
+  @action setNeedTax = (value:boolean)=>{
+    this.needTax=value;
+  }
+
+  // 库存
+
+  // SKU
+  @observable SKU:string = '';
+  // 条码
+  @observable ISBN:string = '';
+  // 库存数量
+  @observable inventory:number = 0;
+  // 缺货后继续销售
+  // @observable continueSell:
+
+
+
+
+
+
+    // 库存追踪
+  @observable inventoryTracking:boolean = false; 
+
+
+  @action setInventoryTracking = (value:boolean)=>{
+    this.inventoryTracking=value;
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new newStore()

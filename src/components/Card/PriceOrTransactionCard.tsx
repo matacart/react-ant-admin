@@ -1,10 +1,22 @@
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
+import newStore from "@/store/newStore";
+import { valueType } from "antd/es/statistic/utils";
+import { values } from 'lodash';
 
-const onChange: InputNumberProps['onChange'] = (value) => {
-    console.log('changed', value);
+const priceOnChange: InputNumberProps['onChange'] = (value) => {
+    newStore.setPrice(value==null?0:value);
 };
+const originPriceOnChange: InputNumberProps['onChange'] = (value) => {
+    newStore.setOriginPrice(value==null?0:value);
+};
+const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
+    newStore.setCostPrice(value==null?0:value);
+
+};
+
+
 
 export default function PriceOrTransactionCard() {
     return (
@@ -28,7 +40,7 @@ export default function PriceOrTransactionCard() {
                                     defaultValue={1000}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={onChange}
+                                    onChange={priceOnChange}
                                     className="ant-input"
                                 />
                             </Form.Item>
@@ -50,7 +62,7 @@ export default function PriceOrTransactionCard() {
                                     defaultValue={1000}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={onChange}
+                                    onChange={originPriceOnChange}
                                     className="ant-input"
                                 />
                             </Form.Item>
@@ -73,7 +85,7 @@ export default function PriceOrTransactionCard() {
                                     defaultValue={1000}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={onChange}
+                                    onChange={costPriceOnChange}
                                     className="ant-input"
                                 />
                             </Form.Item>
@@ -126,7 +138,9 @@ export default function PriceOrTransactionCard() {
                             span: 5,
                         }}
                         name="needTaxes">
-                        <Checkbox>开启库存追踪</Checkbox>
+                        <Checkbox onChange={(e)=>{
+                            newStore.setInventoryTracking(e.target.value)
+                        }}>开启库存追踪</Checkbox>
                     </Form.Item>
                 </Form>
             </Card>
@@ -156,7 +170,20 @@ const Scoped = styled.div`
     &-input{
             width: 100%;
             height: 36px;
-    } 
+
+
+            &-number-input-wrap{
+                height:36px;
+                display:flex;
+                align-content: center;
+
+            }
+            &-number-input{
+                position:relative;
+                top: -1px;
+            }
+    }
 }
+
 `
 

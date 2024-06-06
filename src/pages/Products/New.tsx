@@ -1,6 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Button, Card, ConfigProvider, Drawer, Form, Input, Select } from 'antd'
-import { Provider } from './../../.umi-production/plugin-model/index';
 import ProductDataCard from '@/components/Card/ProductDataCard';
 import ProductImgCard from '@/components/Card/ProductImgCard';
 import PriceOrTransactionCard from '@/components/Card/PriceOrTransactionCard';

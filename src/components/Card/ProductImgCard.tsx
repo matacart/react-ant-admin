@@ -70,7 +70,7 @@ export default function ProductImgCard() {
   const [tempSelectedImg, setSelectedImg] = useState<any>([]);
 
   const getImgList = () => {
-    axios.get('/api/cloudImgList').then((req: any) => {
+    axios.post('/api/cloudImgList').then((req: any) => {
       console.log(req.data)
       setImgList(req.data);
     })
