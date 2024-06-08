@@ -25,7 +25,9 @@ export default function PriceOrTransactionCard() {
                 <Form layout="vertical">
                     <Row>
                         <Col span={11}>
-                            <Form.Item label={
+                            <Form.Item 
+                            required
+                            label={
                                 <>
                                     售价
                                     <Tooltip title="这里是关于用户名的额外信息">

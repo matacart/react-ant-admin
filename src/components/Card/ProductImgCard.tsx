@@ -35,27 +35,24 @@ export default function ProductImgCard() {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
 
-
-  const handleChange: UploadProps['onChange'] = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === 'error') {
-      message.error("文件上传失败，请重试");
-      setLoading(false);
-    }
-
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as FileType, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
-    console.log(info)
-
-  };
+  // const props : UploadProps = {
+  //   name: 'file',
+  //   action: '/api/ApiAppstore/doUploadPic',
+  //   data:{
+  //     app_id:19
+  //   },
+  //   onChange(info) {
+  //     // if (info.file.status !== 'uploading') {
+  //     //   console.log(info.file, info.fileList);
+  //     // }
+  //     // if (info.file.status === 'done') {
+  //     //   message.success(`${info.file.name} file uploaded successfully`);
+  //     // } else if (info.file.status === 'error') {
+  //     //   message.error(`${info.file.name} file upload failed.`);
+  //     // }
+  //     console.log(info);
+  //   }
+  // }
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
@@ -69,6 +66,7 @@ export default function ProductImgCard() {
   // Modal被选中的图片列表
   const [tempSelectedImg, setSelectedImg] = useState<any>([]);
 
+  // 文件库
   const getImgList = () => {
     axios.post('/api/cloudImgList').then((req: any) => {
       console.log(req.data)
@@ -127,10 +125,7 @@ export default function ProductImgCard() {
           {
             newStore.getSelectedImgList()?.map((img: any, index: any) => {
               let tempSelectedImgIndex = tempSelectedImg.indexOf(img);
-              // useEffect(()=>{
-                
-              // })
-              return (
+             return (
                 <div style={{
                   height: 150,
                   width: 128,
@@ -151,12 +146,13 @@ export default function ProductImgCard() {
             })
           }
         </div>
-          {newStore.selectedImgList.length>0? '':<><UploadCard /><UploadTipDesc>
+          {newStore.selectedImgList.length>0? '':<>
+          <UploadCard  />
+          
+          <UploadTipDesc>
           支持上传jpg、png、webp、SVG格式图片，最大限制为10M（4M为最佳店铺浏览体验）；支持上传GIF格式动图，最大限制8M
         </UploadTipDesc></>}
          
-        
-
         {/* 添加url Modal */}
         <Modal
           title="YouTube视频"

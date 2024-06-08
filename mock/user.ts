@@ -210,7 +210,7 @@ export default {
 
     res.send({
       code: 1,
-      type,
+      msg: '用户名或密码错误',
       currentAuthority: 'guest',
     });
     access = 'guest';
@@ -344,10 +344,10 @@ export default {
     ])
   },
   // 产品列表
-  'POST /api/product_list' :(req:Request,res:Response) =>{
+  'POST  /api/ApiStore/product_list' :(req:Request,res:Response) =>{
     res.json({
       "code": 0,
-      "msg": "",
+      "msg": "ok",
       "count": "1356",
       "data": [
           {
@@ -956,8 +956,19 @@ export default {
     })
   },
   // 删除产品
-  'POST /api/product_del' :(req:Request,res:Response)=>{
-
-  }
+  'POST /api/ApiAppstore/product_del' :(req:Request,res:Response)=>{
+    res.json({
+      code: 0,
+      id:req?.body?.id,
+    })
+  },
+  'POST /api/ApiAppstore/doUploadPic' :(req:Request,res:Response)=>{
+    res.json({
+      fileId: '123456',  
+      fileName: 'example.jpg',  
+      fileUrl: '#'
+      // ... 其他你想要的返回数据  
+    })
+  },
 };
 

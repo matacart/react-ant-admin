@@ -3,6 +3,8 @@ import { Card, Space } from 'antd';
 import styles from './index.scss';
 import DataCard from '@/components/Card/DataCard';
 import TextCard, {ButtonContent,CardContent} from '@/components/Card/TextCard'
+import Time from '@/components/Admin/Time';
+import ShopTimeDisplay from '@/components/Admin/Time';
 
 export default () => {
 
@@ -24,6 +26,7 @@ export default () => {
           width: '100%',
         }}
         >
+          <ShopTimeDisplay/>
           <DataCard/>
           <Callapse/>
           <TextCard
@@ -59,7 +62,6 @@ export default () => {
           >
 
           </TextCard>
-          
         </Space>
       </div>
     </div>

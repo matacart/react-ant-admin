@@ -1,3 +1,4 @@
+import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
@@ -15,7 +16,9 @@ export default function StockCard() {
                 <Form layout="vertical">
                     <Row>
                         <Col span={11}>
-                            <Form.Item label="SKU"
+                            <Form.Item
+                            required
+                            label="SKU"
                                 name='SKU'>
                                 <Input
                                     onChange={onChange}
@@ -53,7 +56,12 @@ export default function StockCard() {
                     <Form.Item
                         valuePropName="checked"
                         name="continueSelling">
-                        <Checkbox>缺货后继续销售
+                        <Checkbox
+                        onChange={(e)=>{
+                            newStore.setContinueSell(e.target.value)
+                        }}
+                        
+                        >缺货后继续销售
                             <Tooltip title="这里是关于用户名的额外信息">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                     <QuestionCircleOutlined />

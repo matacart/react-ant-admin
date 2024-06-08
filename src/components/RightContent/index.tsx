@@ -11,6 +11,76 @@ export const SelectLang = () => {
       style={{
         padding: 4,
       }}
+      postLocalesData={()=>{return[  
+        {  
+            "lang": "zh-CN",  
+            "label": "简体中文",  
+            "icon": "🇨🇳", // 中国国旗  
+            "title": "语言"  
+        },  
+        {  
+          "lang": "zh-TW",  
+          "label": "繁體中文",  
+          "icon": "tw", 
+          "title": "語言"  
+        },
+        {  
+            "lang": "en-US",  
+            "label": "English",  
+            "icon": "🇺🇸", // 美国国旗  
+            "title": "Language"  
+        },  
+        {  
+          "lang": "ja-JP",  
+          "label": "日本語",  
+          "icon": "🇯🇵", // 日本国旗  
+          "title": "言語"  
+        },  
+        {  
+            "lang": "es-ES",  
+            "label": "Español",  
+            "icon": "🇪🇸", // 西班牙国旗  
+            "title": "Idioma"  
+        },  
+        {  
+            "lang": "fr-FR",  
+            "label": "Français",  
+            "icon": "🇫🇷", // 法国国旗  
+            "title": "Langue"  
+        },  
+        {  
+            "lang": "de-DE",  
+            "label": "Deutsch",  
+            "icon": "🇩🇪", // 德国国旗  
+            "title": "Sprache"  
+        },  
+
+        {  
+            "lang": "ko-KR",  
+            "label": "한국어",  
+            "icon": "🇰🇷", // 韩国国旗  
+            "title": "언어"  
+        },  
+        {  
+            "lang": "ru-RU",  
+            "label": "Русский",  
+            "icon": "🇷🇺", // 俄罗斯国旗  
+            "title": "Язык"  
+        },  
+        {  
+            "lang": "ar-SA",  
+            "label": "العربية",  
+            "icon": "🇸🇦", // 沙特阿拉伯国旗（作为阿拉伯语的代表）  
+            "title": "لغة"  
+        },  
+        {  
+            "lang": "pt-BR",  
+            "label": "Português",  
+            "icon": "🇧🇷", // 巴西国旗（作为葡萄牙语的代表）  
+            "title": "Idioma"  
+        }  
+      ]}
+   }
     />
   );
 };

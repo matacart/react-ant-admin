@@ -14,21 +14,21 @@ function ProductDataCard() {
             <Form layout='vertical' className='product-form'>
                 <Form.Item
                 name="title"
-                
+                required
                 label="商品标题"
                     rules={[
                         { validator: (_, value) => value ? Promise.resolve() : Promise.reject(new Error('请输入商品标题')) },
                     ]}
                 >
                     <Input 
-                    value={newStore.title}
-                    onBlur={(e) => {
-                        newStore.title=e.target.value
+                    onChange={(e) => {
+                        newStore.setTitle(e.target.value);
                     }}
                     placeholder="例如：冬季，毛衣" />
                 </Form.Item>
                 <Form.Item 
                 name="resume"
+                required
                 label='商品摘要'>
                     <TextArea showCount maxLength={400} onBlur={(e)=>{
                         newStore.resume=e.target.value;

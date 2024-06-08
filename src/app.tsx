@@ -7,11 +7,11 @@ import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 // import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/y2/api';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
-import { message } from 'antd';
+import { message, Select } from 'antd';
 import { Ping } from './components/RightContent';
 import access from './access';
 import { Oauth2 } from '../config/myConfig'
@@ -48,10 +48,10 @@ export async function getInitialState(): Promise<{
   // access_token 初始化
   let access_token = localStorage.getItem('access_token')
   if (!access_token) {
-    getAccessToken().then((res)=>{
-      localStorage.setItem('access_token',res.access_token)
+    getAccessToken().then((res) => {
+      localStorage.setItem('access_token', res.access_token)
       // console.log(res)
-    }).catch((err)=>{
+    }).catch((err) => {
       message.error(err.message)
     })
   }
@@ -76,14 +76,39 @@ export async function getInitialState(): Promise<{
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
-
+const getDomainList = () => {
+  return axios.post('/api/ApiAppstore/domain_select')
+}
 // layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+  const [domainList, setDomainList] = useState<any>([])
+  const [defaultDomain, setDefaultDomain] = useState('')
+  useEffect(() => {
+    getDomainList().then((res) => {
+      let list: any = [];
+      res?.data?.data.forEach((item: any, index: any) => {
+        list.push({
+          value: item.id,
+          label: item.domain_name,
+        })
+      })
+      setDomainList(list);
+      setDefaultDomain(res.data.data[0]?.id);
+    })
+  },[])
   return {
+    //菜单栏
     actionsRender: () => [
       <Question key="doc" />,
       <SelectLang key="SelectLang" />,
       <Ping key="Ping" />,
+      <Select
+        size='large'
+        options={domainList}
+        placeholder="站点"
+        style={{ width: 100 }}
+        listHeight={230}
+      />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
@@ -181,11 +206,11 @@ export const request: RequestConfig = {
   // 错误统一处理
   errorConfig: {
     // 抛出错误
-    errorThrower: (res:any) => {
-      const { code, data, errorCode, errorMessage} =
+    errorThrower: (res: any) => {
+      const { code, data, errorCode, errorMessage } =
         res as unknown as ResponseStructure;
-        // access_token 过期
-      if (code===40013) {
+      // access_token 过期
+      if (code == 40013) {
         const error: any = new Error(errorMessage);
         error.name = 'access_token_expires';
         error.info = { errorCode, errorMessage, data };
@@ -208,11 +233,11 @@ export const request: RequestConfig = {
 
     errorHandler(error: any, opts: any) {
       // message.error("网络繁忙，请稍后再试");
-      if(error.name === 'access_token_expires'){
-          getAccessToken().then(res=>{
-            let access_token = res.data.access_token;
-            localStorage.setItem('access_token',access_token)
-          }).catch((err)=>{console.log(err)})
+      if (error.name === 'access_token_expires') {
+        getAccessToken().then(res => {
+          let access_token = res.data.access_token;
+          localStorage.setItem('access_token', access_token)
+        }).catch((err) => { console.log(err) })
       }
     },
   },
@@ -225,18 +250,21 @@ export const request: RequestConfig = {
       const token = localStorage.getItem('token')
       if (token && config.url != loginPath)
         config.headers['token'] = token;
-      
+        // config['token'] = token;
       // 携带access_token
-      config.headers['Authorization'] ='Bearer '+ localStorage.getItem('access_token') ;
+      config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
       return config;
     },
-    
+
   ],
   // 响应拦截器
   responseInterceptors: [
     (response: any) => response,
     // access_token 过期
-
+    (res:any) =>{
+      if(res.code==1001)history.push(loginPath)
+      else return res;
+    }
   ],
 
 
