@@ -66,6 +66,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   const intl = useIntl();
 
   const onMenuClick = useCallback(
+
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
@@ -73,8 +74,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
           setInitialState((s) => ({ ...s, currentUser: undefined }));
         });
         loginOut();
+        localStorage.removeItem('token');
         return;
-      }
+      };
       history.push(`/account/${key}`);
     },
     [setInitialState],

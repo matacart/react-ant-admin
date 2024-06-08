@@ -4,11 +4,12 @@ import type { SelectProps } from 'antd';
 import PriceRangeSelector from "../Select/PriceRangeSelector";
 import MoreSelect from "../Select/MoreSelect";
 import { result } from "lodash";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Nothing from "../Info/Nothing";
 import type { TableColumnsType, TableProps } from 'antd'
 import ProductList from "../List/ProductList";
 import ProductListAjax from "../List/ProductListAjax";
+import axios from "axios";
 
 
 const { Search } = Input;
@@ -37,8 +38,6 @@ const options: SelectProps['options'] = [
 
 
 
-
-
 const tagRender: TagRender = (props) => {
     const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -59,7 +58,6 @@ const tagRender: TagRender = (props) => {
 };
 export default function ProductsSelectCard() {
     const resultList=useState([]);
-
     return (
         <>
             <div className="products-select">
@@ -79,7 +77,7 @@ export default function ProductsSelectCard() {
                         <Space.Compact>
                             <Select
                                 size='large'
-                                defaultValue="全部"
+                                defaultValue={'全部'}
                                 style={{ width: 100 }}
                                 listHeight={230}
                                 options={[
@@ -184,15 +182,6 @@ export default function ProductsSelectCard() {
                     </div>
                 </div>
             </div>
-            {/* {(resultList.length > 0 ? 
-            <div className="products-result-list">
-                <div className="products-result-list-item">
-                    
-                </div>
-            </div>:<Nothing/>)} */}
-            {/* <Nothing/> */}
-
-            {/* <ProductList/> */}
             <ProductListAjax/>
 
         </>

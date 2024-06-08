@@ -1,5 +1,5 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { LinkOutlined } from '@ant-design/icons';
+import { LinkOutlined, SettingOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
@@ -7,17 +7,18 @@ import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 // import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/y2/api';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
-import { message } from 'antd';
+import { Divider, message, Select } from 'antd';
 import { Ping } from './components/RightContent';
 import access from './access';
 import { Oauth2 } from '../config/myConfig'
 import { getAccessToken } from '@/services/y2/api';
 import type { RequestConfig } from '@umijs/max';
 import { errorConfig } from './requestErrorConfig';
+import SelectDomain from './components/RightContent/SelectDomain';
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 
 
@@ -34,7 +35,6 @@ export async function getInitialState(): Promise<{
     //调用(mock中的)接口获取用户信息
     try {
       const msg = await queryCurrentUser({
-        skipErrorHandler: true,
       });
       return msg.data; // 返回用户信息
     } catch (error) {
@@ -48,10 +48,10 @@ export async function getInitialState(): Promise<{
   // access_token 初始化
   let access_token = localStorage.getItem('access_token')
   if (!access_token) {
-    getAccessToken().then((res)=>{
-      localStorage.setItem('access_token',res.access_token)
+    getAccessToken().then((res) => {
+      localStorage.setItem('access_token', res.access_token)
       // console.log(res)
-    }).catch((err)=>{
+    }).catch((err) => {
       message.error(err.message)
     })
   }
@@ -76,14 +76,24 @@ export async function getInitialState(): Promise<{
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
-
+const getDomainList = () => {
+  return axios.post('/api/ApiAppstore/domain_select')
+}
 // layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+
+
+
+
   return {
+    //菜单栏
     actionsRender: () => [
+      <SelectDomain/>,
       <Question key="doc" />,
       <SelectLang key="SelectLang" />,
       <Ping key="Ping" />,
+
+
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
@@ -123,14 +133,16 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-        <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-          <LinkOutlined />
-          <span>OpenAPI 文档</span>
-        </Link>,
-      ]
-      : [],
+    links: [
+      // <Link key="openapi" to="/settings" target="_blank">
+      //   <SettingOutlined />
+      //   <span>设置</span>
+      // </Link>,
+      <Link key="openapi" to="/settings/index">
+        <SettingOutlined />
+        <span>设置</span>
+      </Link>,
+    ],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -140,7 +152,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       return (
         <>
           {children}
-          {isDev && (
+          {/* {isDev && (
             <SettingDrawer
               disableUrlParams
               enableDarkTheme
@@ -152,7 +164,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 }));
               }}
             />
-          )}
+          )} */}
         </>
       );
     },
@@ -178,42 +190,43 @@ interface ResponseStructure {
 export const request: RequestConfig = {
   timeout: 60000, //超时处理，请求超过1分钟，取消请求
 
-  // 错误统一处理
+  // // 错误统一处理
   errorConfig: {
     // 抛出错误
-    errorThrower: (res:any) => {
-      const { code, data, errorCode, errorMessage} =
-        res as unknown as ResponseStructure;
-        // access_token 过期
-      if (code===40013) {
-        const error: any = new Error(errorMessage);
-        error.name = 'access_token_expires';
-        error.info = { errorCode, errorMessage, data };
-        throw error; // 抛出自制的错误
-      }
+    errorThrower: (res: any) => {
+      // const { code, data, errorCode, errorMessage } =
+      //   res as unknown as ResponseStructure;
+      //   console.log(res);
+      // // access_token 过期
+      // if (data.code == 40013) {
+      //   const error: any = new Error(errorMessage);
+      //   error.name = 'access_token_expires';
+      //   error.info = { errorCode, errorMessage, data };
+      //   throw error; // 抛出自制的错误
+      // }
     },
-    // 错误接收及处理 axios
-    // errorHandler(error: any, opts: any) {
-    //   // message.error("网络繁忙，请稍后再试");
-    //   let access_token = ''
-    //   if(error.name === 'access_token_expires'){
-    //     getAccessToken().then((res:any)=>{
-    //       access_token = res.data;
-    //       localStorage.setItem('access_token',access_token)
-    //     });
-    //   console.log('重新获取access_token')
-    //   message.error('access_token过期，请稍后再试');
-    //   }
+  //   // 错误接收及处理 axios
+  //   // errorHandler(error: any, opts: any) {
+  //   //   // message.error("网络繁忙，请稍后再试");
+  //   //   let access_token = ''
+  //   //   if(error.name === 'access_token_expires'){
+  //   //     getAccessToken().then((res:any)=>{
+  //   //       access_token = res.data;
+  //   //       localStorage.setItem('access_token',access_token)
+  //   //     });
+  //   //   console.log('重新获取access_token')
+  //   //   message.error('access_token过期，请稍后再试');
+  //   //   }
 
 
     errorHandler(error: any, opts: any) {
       // message.error("网络繁忙，请稍后再试");
-      if(error.name === 'access_token_expires'){
-          getAccessToken().then(res=>{
-            let access_token = res.data.access_token;
-            localStorage.setItem('access_token',access_token)
-          }).catch((err)=>{console.log(err)})
-      }
+      // if (error.name === 'access_token_expires') {
+      //   getAccessToken().then(res => {
+      //     let access_token = res.data.access_token;
+      //     localStorage.setItem('access_token', access_token)
+      //   }).catch((err) => { console.log(err) })
+      // }
     },
   },
 
@@ -225,18 +238,27 @@ export const request: RequestConfig = {
       const token = localStorage.getItem('token')
       if (token && config.url != loginPath)
         config.headers['token'] = token;
-      
+        // config['token'] = token;
       // 携带access_token
-      config.headers['Authorization'] ='Bearer '+ localStorage.getItem('access_token') ;
+      config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
       return config;
     },
-    
+
   ],
   // 响应拦截器
   responseInterceptors: [
     (response: any) => response,
     // access_token 过期
-
+    (res:any) =>{
+      console.log(res);
+      if(res.data.code==40013){
+          getAccessToken().then(res => {
+          localStorage.setItem('access_token',  res.access_token)
+        }).catch((err) => { console.log(err) });
+      }
+      if(res.code==1001)history.push(loginPath);
+      else return res;
+    }
   ],
 
 

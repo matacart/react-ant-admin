@@ -1,23 +1,24 @@
 import { Badge, Card, Flex, Form, Input, Modal, Select } from "antd";
 import React, { useEffect, useMemo, useState } from 'react';
 import { InboxOutlined, LoadingOutlined, PlusOutlined, SearchOutlined, ShopOutlined } from '@ant-design/icons';
-import type { GetProp, UploadProps } from 'antd';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { message, Upload, Image } from 'antd';
 import styled from 'styled-components';
 import { values } from "lodash";
 import axios from "axios";
 import UploadCard from "./UploadLargeCard";
-import UploadSmallCard from "./UploadSmallCard";
 import newStore from "@/store/newStore";
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 export default function ProductImgCard() {
 
@@ -30,76 +31,147 @@ export default function ProductImgCard() {
   const [addImgModalOpen, setAddImgModalOpen] = useState(false)
   const [form] = Form.useForm();
 
-  // img上传
-
-  const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string>();
 
 
-  const handleChange: UploadProps['onChange'] = (info) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true);
-      return;
+// ##################### 添加多媒体文件 ###############################
+
+  // 从文件库中选择
+  const [fileLibrary, setFileLibrary] = useState<any>([]);
+
+  // Modal被选中的图片列表
+  const [tempSelectedImg, setSelectedImg] = useState<any>([]);
+
+  // 文件库
+  const getImgList = () => {
+    axios.post('/api/cloudImgList').then((req: any) => {
+      console.log(req.data)
+      setFileLibrary(req.data);
+    })
+  }
+
+  // Modal 中选中顺序
+  const getTempSelectedImgIndex = (img: any) => {
+    return tempSelectedImg.indexOf(img);
+  }
+  // 是否已被之前选中
+  const isBeforeSelected = (img: any) => {
+    return newStore.isIncludeSelectedImgList(img);
+  }
+  // 是否现在被选中
+  const isCurrentSelected = (img: any) => {
+    return tempSelectedImg.indexOf(img) > -1
+  }
+  // 图片选中
+  const imgClass = (img: any) => {
+    if (isBeforeSelected(img)) {
+      return "img-selected-band";
+    } else if (isCurrentSelected(img)) {
+      return "img-selected img-mask"
+    } else {
+      return "img-mask"
     }
-    if (info.file.status === 'error') {
-      message.error("文件上传失败，请重试");
-      setLoading(false);
+  }
+
+
+// ###########   图片上传  ######################
+
+  const { Dragger } = Upload;
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    // {
+    //   uid: '-1',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-2',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-3',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-4',
+    //   name: 'image.png',
+    //   status: 'done',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-xxx',
+    //   percent: 50,
+    //   name: 'image.png',
+    //   status: 'uploading',
+    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    // },
+    // {
+    //   uid: '-5',
+    //   name: 'image.png',
+    //   status: 'error',
+    // },
+  ]);
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
     }
 
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as FileType, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
-    console.log(info)
-
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
   };
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>{
+    console.log(newFileList);
+    setFileList(newFileList);
+    newStore.setSelectedImgList(newFileList);
+  }
+
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <PlusOutlined />
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
   );
 
-  // 从文件库中选择
-  const [imgList, setImgList] = useState<any>([]);
-  // Modal被选中的图片列表
-  const [tempSelectedImg, setSelectedImg] = useState<any>([]);
+  const props: UploadProps = {
+    name: 'file',
+    listType: "picture-card",
+    fileList: fileList,
+    showUploadList: false,
+    multiple: true,
+    action: '/api/ApiAppstore/doUploadPic',
+    onChange(info) {
+      const { status, response } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+        newStore.addSelectedImgList(response?.fileUrl)
+        console.log('llllllllllllllll' +
+          '    id:' +
+          response?.fileId,
+          '    name:' + response?.fileName,
+          '     url:' + response?.fileUrl);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
 
-  const getImgList = () => {
-    axios.post('/api/cloudImgList').then((req: any) => {
-      console.log(req.data)
-      setImgList(req.data);
-    })
-  }
 
-  const [imgMask,setIsMask] = useState('');
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
 
-  // Modal 中选中顺序
-  const getTempSelectedImgIndex = (img:any)=>{
-    return tempSelectedImg.indexOf(img);
-  }
-  // 是否已被之前选中
-  const isBeforeSelected =(img:any)=>{
-   return newStore.isIncludeSelectedImgList(img);
-  } 
-  // 是否现在被选中
-  const isCurrentSelected = (img:any)=>{
-    return tempSelectedImg.indexOf(img) > -1
-  }
-  // 
-  const imgClass =(img:any)=>{
-    if(isBeforeSelected(img)){
-      return "img-selected-band";
-    }else if(isCurrentSelected(img)){
-      return "img-selected img-mask"
-    }else{
-      return "img-mask"
-    }
-  }
+
 
   return (
     <Scoped>
@@ -120,17 +192,13 @@ export default function ProductImgCard() {
       >
         <div className="content" style={{
           display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
           height: "auto",
         }}>
-          {
+          {/* 图片展示 */}
+          {/* {
             newStore.getSelectedImgList()?.map((img: any, index: any) => {
               let tempSelectedImgIndex = tempSelectedImg.indexOf(img);
-              // useEffect(()=>{
-                
-              // })
-              return (
+             return (
                 <div style={{
                   height: 150,
                   width: 128,
@@ -149,13 +217,43 @@ export default function ProductImgCard() {
                     src={img?.fileUrl} key={img?.fileId} />
                 </div>)
             })
-          }
+          } */}
+          <Upload
+            action="/appstore/ApiAppstore/doUploadPic"
+            listType="picture-card"
+            multiple={true}
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+          >
+            {fileList.length >= 8 ? null : uploadButton}
+          </Upload>
+          {previewImage && (
+            <Image
+              wrapperStyle={{ display: 'none' }}
+              preview={{
+                visible: previewOpen,
+                onVisibleChange: (visible) => setPreviewOpen(visible),
+                afterOpenChange: (visible) => !visible && setPreviewImage(''),
+              }}
+              src={previewImage}
+            />
+          )}
+
+
         </div>
-          {newStore.selectedImgList.length>0? '':<><UploadCard /><UploadTipDesc>
+        {/* 图片上传-外 */}
+        {/* <Dragger {...props} height={200} >
+          <PlusOutlined style={{
+            fontSize: 30,
+            color: "#929292"
+          }} />
+          <p className="ant-upload-text">添加图片（或把图片拖到框内）</p>
+        </Dragger>
+
+        <UploadTipDesc>
           支持上传jpg、png、webp、SVG格式图片，最大限制为10M（4M为最佳店铺浏览体验）；支持上传GIF格式动图，最大限制8M
-        </UploadTipDesc></>}
-         
-        
+        </UploadTipDesc> */}
 
         {/* 添加url Modal */}
         <Modal
@@ -204,10 +302,7 @@ export default function ProductImgCard() {
 
         {/* 添加多媒体图片 Modal */}
         <Modal
-          width="90vw"
-          style={{
-            maxWidth: "860px"
-          }}
+          width="90vw" style={{ maxWidth: "860px" }}
           styles={{
             body: {
               height: "700px",
@@ -224,6 +319,7 @@ export default function ProductImgCard() {
           }}
           onCancel={() => setAddImgModalOpen(false)}
         >
+          {/* 图片搜索 */}
           <div className="img-modal-header" style={{
             display: "flex",
             alignContent: "center",
@@ -253,75 +349,22 @@ export default function ProductImgCard() {
               ]}
             />
           </div>
-          <div className="content" style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "8px"
+          {/* 图片列表wrap */}
+          <div className="content" style={{ display: "flex", flexWrap: "wrap", gap: "8px"
           }}>
-            <UploadSmallCard />
-            {
-              imgList?.map((img: any, index: any) => {
-                
+            {/* 列表 */}
+            <div>
+              {/* 上传 */}
+              <div>
 
+              </div>
+              {/* 图片 */}
+              <div>
 
-
-
-                let imgIndex= getTempSelectedImgIndex(img);
-                // 
-                return (
-                  <div style={{
-                    height: 150,
-                    width: 128,
-                    borderRadius: 8,
-                    overflow: "hidden"
-                  }}>
-                    {/* 遮罩 */}
-                    <Mask
-                    >
-                      <div 
-                      // className={}
-                        onClick={() => {
- 
-                          let newTempSelectedImg = [...tempSelectedImg];
-
-                          if (!tempSelectedImg.includes(img)){
-                            newTempSelectedImg.push(img);
-                            setSelectedImg(newTempSelectedImg);
-                          } else {
-                            newTempSelectedImg.splice(getTempSelectedImgIndex(img), 1)
-                            setSelectedImg(newTempSelectedImg)
-                          }
-                        }}
-                      >
-                      </div>
-                    </Mask>
-                    <Badge offset={[-20, 20]} count={(imgIndex > -1 ? imgIndex + 1 : 0)}
-                      style={{
-                        zIndex: 10
-                      }}>
-                      <img
-                        style={{
-                          height: 128,
-                          width: 128,
-                          overflow: 'hidden',
-                          objectFit: "contain",
-                          background: "rgb(247, 248, 251)",
-                          cursor: "default",
-                        }}
-                        src={img?.fileUrl} key={img?.fileId} />
-                    </Badge>
-
-
-                    <div style={{
-                      height: 22,
-                      fontSize: 16,
-                      // marginTop: 6,
-                      overflow: "hidden"
-                    }}>{img?.fileName}</div>
-                  </div>
-                )
-              })
-            }
+              </div>
+            </div>
+            {/* 分页 */}
+            <div></div>
 
           </div>
         </Modal>
@@ -358,7 +401,6 @@ const Scoped = styled.div`
 
 
 `
-// 外层styled 样式无法直接穿透内层变化的jsx，只会在指定标签初次渲染时加载，指定标签下的子元素变化不在跟随。运算遍历的地方需再用一层styled样式标签包裹，重新渲染时才会再次调用styled组件
 const Mask = styled.div`
 .img-mask{
   position:absolute;

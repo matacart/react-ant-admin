@@ -5,11 +5,13 @@ import styled from "styled-components";
 import MoreSelect from './../Select/MoreSelect';
 import Product from './../../pages/Products/index';
 import { useRef, useState } from "react";
+import newStore from "@/store/newStore";
 
-const onChange = (checked: boolean) => {
-    console.log(`switch to ${checked}`);
+
+// 上架商品
+const onPutProduct = (checked: boolean) => {
+    newStore.setContinueSell(checked);
 };
-
 
 type WebChannel = {
     name: string;
@@ -74,7 +76,9 @@ for (let i = 10; i < 36; i++) {
     });
 }
 
-const handleChange = (value: string) => {
+
+
+const handleTagChange = (value: string) => {
     console.log(`selected ${value}`);
 };
 
@@ -87,7 +91,7 @@ export default function ProductSettingsCard() {
     const [name, setName] = useState('');
     const inputRef = useRef<InputRef>(null);
 
-    const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     };
 
@@ -109,7 +113,7 @@ export default function ProductSettingsCard() {
             <Card title='商品设置' className="card">
                 <div className="item between">
                     <span>上架商品</span>
-                    <Switch defaultChecked onChange={onChange} />
+                    <Switch defaultChecked onChange={onPutProduct} />
                 </div>
                 <div className="item">
                     <div>发货</div>
@@ -143,19 +147,24 @@ export default function ProductSettingsCard() {
                     }
                 </div>
                 <Form layout="vertical">
-                    <Form.Item style={{
-                        fontWeight: 600
-                    }} label={
-                        <>
-                            SKU
-                            <Tooltip title="这里是关于用户名的额外信息">
-                                <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                                    <QuestionCircleOutlined />
-                                </span>
-                            </Tooltip>
-                        </>
-                    } >
+                    <Form.Item
+                    
+                        style={{
+                            fontWeight: 600
+                        }} label={
+                            <>
+                                SPU
+                                <Tooltip title="这里是关于用户名的额外信息">
+                                    <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                                        <QuestionCircleOutlined />
+                                    </span>
+                                </Tooltip>
+                            </>
+                        } >
                         <Input
+                            onChange={(e)=>{
+                                
+                            }}
                             defaultValue={1000}
                             className="ant-input"
                         />
@@ -163,10 +172,12 @@ export default function ProductSettingsCard() {
                     <Form.Item label={
                         <>
                             重量
-
                         </>
                     } >
                         <Input
+                            onChange={(e)=>{
+                                newStore.setWeight(e.target.value)
+                            }}
                             defaultValue={1000}
                             className="ant-input"
                             addonAfter={selectAfter}
@@ -178,13 +189,15 @@ export default function ProductSettingsCard() {
                     <Form.Item label={
                         <>
                             商品厂商
-
                         </>
                     } >
                         <Input
                             placeholder="例如：Zara"
                             className="ant-input"
-                        />
+                            onChange={(e)=>{
+                                newStore.setManufactuer(e.target.value);
+                            }}
+                        ></Input>
                     </Form.Item>
                     <Form.Item
                         className="moreLink"
@@ -193,14 +206,13 @@ export default function ProductSettingsCard() {
                                 <span>标签</span>
                                 <a>查看所有标签</a>
                             </div>
-
                         }
                     >
                         <Select
                             mode="tags"
                             style={{ width: '100%', padding: '0' }}
                             placeholder="添加标签（例如：复古/夏季）"
-                            onChange={handleChange}
+                            onChange={handleTagChange}
                             options={options}
                             className="ant-input"
                         />
@@ -226,7 +238,7 @@ export default function ProductSettingsCard() {
                                             placeholder="Please enter item"
                                             ref={inputRef}
                                             value={name}
-                                            onChange={onNameChange}
+                                            onChange={onTypeChange}
                                             onKeyDown={(e) => e.stopPropagation()}
                                         />
                                         <Button type="text" icon={<PlusOutlined />} onClick={addItem}>

@@ -7,7 +7,9 @@ export default function CustomsInformation() {
         <Scoped>
             <Card title="海关信息">
                 <Form layout="vertical">
-                    <Form.Item label={
+                    <Form.Item 
+                    required
+                    label={
                         <>
                             发货国家/地区
                             <Tooltip title="这里是关于用户名的额外信息">
@@ -53,7 +55,9 @@ export default function CustomsInformation() {
                             ]}
                         />
                     </Form.Item>
-                    <Form.Item label="HS(协调制度) 代码">
+                    <Form.Item
+                    required                    
+                    label="HS(协调制度) 代码">
                         <Input placeholder="请输入HS编码" />
                     </Form.Item>
                 </Form>

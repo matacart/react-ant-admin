@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
+import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
@@ -8,6 +8,8 @@ import Product from './../../pages/Products/index';
 import ProductList from './ProductList';
 import { result } from 'lodash';
 import axios from 'axios';
+import { deleteProduct, getProductList } from '@/services/y2/api';
+import { Response } from 'express';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -60,9 +62,9 @@ export default function ProductListAjax() {
   });
 
   // 复制商品模态框
-
   const [radioValue, setRadioValue] = useState(0)
 
+  // 
   const onChangeRadio = (e: RadioChangeEvent) => {
     console.log('radio checked', e.target.value);
     setRadioValue(e.target.value);
@@ -88,7 +90,7 @@ export default function ProductListAjax() {
     {
       title: '商品',
       dataIndex: 'name',
-      width: 170,
+      width: 180,
       render: (value, record, index) => <div style={{
         display: 'flex',
         flexWrap: 'nowrap',
@@ -99,8 +101,11 @@ export default function ProductListAjax() {
           marginLeft: 10,
           alignContent: 'center',
           whiteSpace: 'nowrap',
-          // overflow: 'hidden',
-          // textOverflow: 'ellipsis',
+
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          
+          maxWidth:"100%"
         }}>{record.name}</span>
       </div>
     },
@@ -108,6 +113,14 @@ export default function ProductListAjax() {
       title: '售价',
       dataIndex: 'price',
       width: 150,
+      render: (value, record, index) =>{
+        let num = Number(value);
+        return <>
+          {`US$ ${num.toFixed(2)}`}
+        </>
+      } 
+        
+      
     },
     {
       title: '库存数',
@@ -141,7 +154,7 @@ export default function ProductListAjax() {
       width: 100,
       fixed: 'right',
 
-      render: (index) => {
+      render: (index,record) => {
         return (
           <div style={{
             color: '#474f5e',
@@ -163,7 +176,19 @@ export default function ProductListAjax() {
                 </div>
               </Tooltip>
             </ButtonIcon>
-            <Button type="link" danger>
+            <Button type="link" 
+              onClick={()=>{
+                deleteProduct(record.key.toString()).then((res)=>{
+                  console.log(res)
+                  if(res?.code==0){
+                    message.success(`删除成功`);
+                    fetchData();
+                  }else{
+                    message.error(`删除失败，请重试`)
+                  }
+                });
+              }}
+            danger>
               Delete
             </Button>
           </div>
@@ -194,15 +219,18 @@ export default function ProductListAjax() {
     //   });
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    axios.post(`/api/product_list?page=${page}&limit=${limit}`)
+    getProductList(page,limit)
       .then((res) => {
         let newData:DataType[] = [];
-        res.data.data.forEach((item:any)=>{
+        res.data?.forEach((item:any)=>{
           newData.push({
             key:item.id,
             imgUrl: item.product_image,
             price: item.price,
             name: item.title,
+            state: item.status==1,
+            inventory: item.quantity,
+            
           })
         })
         setData(newData);
@@ -211,7 +239,7 @@ export default function ProductListAjax() {
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
-            total: res.data.count,
+            total: res.count,
             // 200 is mock data, you should read it from server
             // total: data.totalCount,
           }
@@ -230,7 +258,6 @@ export default function ProductListAjax() {
       filters,
       ...sorter,
     });
-
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
@@ -238,7 +265,8 @@ export default function ProductListAjax() {
   };
 
   return (
-    <>
+    <Scoped>
+    {/* 商品列表 */}
       <Table
         columns={columns}
         rowKey={(record) => record.key}
@@ -246,11 +274,17 @@ export default function ProductListAjax() {
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
+        scroll={{ x: 1300 }}
+        rowSelection={{
+          type: 'checkbox',
+          onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+
+          },
+        }}
       />
-
-
+      
       {/* 复制商品模态框 */}
-
       <Modal
         centered
         title="复制商品"
@@ -303,12 +337,16 @@ export default function ProductListAjax() {
           </Radio.Group>
         </Content>
       </Modal>
-    </>
+    </Scoped>
 
   );
 };
 
-
+const Scoped = styled.div`
+  .ant-table-tbody > tr > td {
+    padding: 10px; 
+  }
+`
 
 const ButtonIcon = styled.div`
 .wrap{
@@ -323,6 +361,7 @@ const ButtonIcon = styled.div`
         cursor:pointer;
     }
 }
+
 `
 
 const Content = styled.div`
