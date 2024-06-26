@@ -5,6 +5,7 @@ import { Link } from "@umijs/max"
 import { Button, Col, Row, Tag, Tooltip } from "antd"
 import styled from "styled-components"
 import { history } from 'umi'
+
 export default function Package() {
     return (
         <Scoped>
@@ -67,6 +68,7 @@ export default function Package() {
                         </div>
                     </Col>
                 </Row>
+
                 {/* 我的套餐 */}
                 <Row className="myPackage">
                     <Col span={8}>
@@ -94,7 +96,9 @@ export default function Package() {
                                         启用中
                                     </Tag>
                                 </div>
+                                <Link to={`/stores-subscriptions/list/paid`}>
                                 <Button>购买套餐</Button>
+                                </Link>
                             </div>
                             <div className="sectionBox">
                                 <div className="sectionLabel">
@@ -122,6 +126,8 @@ export default function Package() {
                         </div>
                     </Col>
                 </Row>
+
+
                 {/* 我的服务权益 */}
                 <Row className="myServiceRights">
                     <Col span={8}>

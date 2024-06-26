@@ -1,6 +1,7 @@
 import { Card } from "antd";
 import { ReactNode } from "react";
 import { Flex, Button } from 'antd'
+import { Link } from "@umijs/max"
  
 export type ButtonContent={
     text:string,
@@ -27,7 +28,10 @@ export default function TextCard(cardContent: CardContent): ReactNode {
                         buttonContents.map((buttonContent,index)=>{
                             return(
                                 <>
-                                    <Button key={index} href={buttonContent.url}>{buttonContent.text}</Button>
+                                    <Link  to={buttonContent.url}>
+                                    <Button key={index}>{buttonContent.text}</Button>
+                                    
+                                    </Link>
                                 </>
                             )
                         })
