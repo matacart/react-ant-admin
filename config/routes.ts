@@ -86,14 +86,10 @@ export default [
   },
   {
     path: '/stores-subscriptions',
-    name: '订阅',
     routes:[
       {
         path: 'list/paid',
-        name: '套餐',
-
         component: './stores-subscriptions/list/Paid' ,
-        layout:false
       }
     ]
   },
@@ -111,7 +107,6 @@ export default [
       },
       {
         path: 'bill',
-        layout: false,
         component: './Settings/Bill'
       },
       
