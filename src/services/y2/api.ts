@@ -4,6 +4,7 @@ import { request } from '@umijs/max';
 import axios from 'axios';
 import { Oauth2 } from '../../../config/myConfig'
 import newStore from '@/store/newStore';
+import TableList from './../../pages/TableList/index';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -153,9 +154,8 @@ export async function getAccessToken() {
       accessKeyId: Oauth2.accessKeyId,
       accessKeySecret: Oauth2.accessKeySecret
     },
-  })
+  });
 }
-
 
 // 删除产品
 export async function deleteProduct(id: string) {
@@ -171,6 +171,7 @@ export async function deleteProduct(id: string) {
   })
 }
 
+// 产品列表
 export async function getProductList(page: any, limit: any) {
   return request(`/api/ApiStore/product_list?page=${page}&limit=${limit}`, {
     method: 'POST',
@@ -230,5 +231,27 @@ export async function addProduct() {
       "meta_description":"日日日日日日日日日日",
       "status": 1
     }
+  })
+}
+
+
+// 店铺列表
+export async function getDomainList( options?: { [key: string]: any }) {
+  return request<API.LoginResult>('/api/ApiAppstore/domain_select', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// 文件库
+export async function getFileList(page: any, limit: any) {
+  return request(`/api/ApiStore/file_list?page=${page}&limit=${limit}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
 }

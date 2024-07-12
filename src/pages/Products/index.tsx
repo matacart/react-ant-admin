@@ -4,7 +4,7 @@ import {
   Tabs,
 } from 'antd'
 import './index.scss'
-import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone } from '@ant-design/icons'
+import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone, DownOutlined } from '@ant-design/icons'
 import SelectCountry from '../../components/Stores/SelectCountry'
 import SelectCurrency from '../../components/Stores/SelectCurrency'
 import SelectContryCode from '../../components/Stores/SelectCountryCode'
@@ -20,7 +20,7 @@ const TabLabel = styled.div`
    font-size: 18px;
 `
 
-const items: MenuProps['items'] = [
+const aItems: MenuProps['items'] = [
   {
     key: '1',
     label: (
@@ -41,11 +41,6 @@ const items: MenuProps['items'] = [
       </>
     ),
   },
-  {
-    key: '4',
-    danger: true,
-    label: 'a danger item',
-  },
 ];
 
 
@@ -56,7 +51,7 @@ const initialItems = [
     label: <TabLabel>
       全部
     </TabLabel>
-    
+
     ,
     children: (<ProductsSelectCard />),
     key: '1',
@@ -85,13 +80,18 @@ const initialItems = [
 
 
 
+
+
+
 export default function Product() {
 
   const [items, setItems] = useState(initialItems);
 
 
   return (
-    <div className='create-warp-flex'>
+    <div className='create-warp-flex' style={{
+      width: "100%"
+    }}>
       <div className="create-warp">
         <div className='create-title'>
           <div className='create-title-left'>
@@ -110,9 +110,11 @@ export default function Product() {
               top: -44,
               left: 83,
             }}>
-              <Dropdown menu={{ items }} >
+              <Dropdown menu={{ items: aItems }} >
                 <a onClick={(e) => e.preventDefault()}>
-                  导入商品
+                  <Space>
+                    导入商品
+                  </Space>
                 </a>
               </Dropdown>
             </div>
@@ -127,11 +129,48 @@ export default function Product() {
               }}>
               创建商品
             </Button>
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
           </div>
         </div>
         <div className='create-content'>
           <Tabs
-          defaultActiveKey='1'
+            defaultActiveKey='1'
             items={items}
           />
         </div>

@@ -42,7 +42,7 @@ export default () => {
             buttonContents={[
               {
                 text: '选择套餐',
-                url: '#'
+                url: '/stores-subscriptions/list/paid'
               }
             ]}
           />

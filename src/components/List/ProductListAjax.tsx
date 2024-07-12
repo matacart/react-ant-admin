@@ -221,7 +221,6 @@ export default function ProductListAjax() {
     const page = getRandomuserParams(tableParams).page;
     getProductList(page,limit)
       .then((res) => {
-        console.log(res)
         let newData:DataType[] = [];
         res.data?.forEach((item:any)=>{
           newData.push({
@@ -259,7 +258,6 @@ export default function ProductListAjax() {
       filters,
       ...sorter,
     });
-
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
@@ -267,7 +265,7 @@ export default function ProductListAjax() {
   };
 
   return (
-    <>
+    <Scoped>
     {/* 商品列表 */}
       <Table
         columns={columns}
@@ -339,12 +337,16 @@ export default function ProductListAjax() {
           </Radio.Group>
         </Content>
       </Modal>
-    </>
+    </Scoped>
 
   );
 };
 
-
+const Scoped = styled.div`
+  .ant-table-tbody > tr > td {
+    padding: 10px; 
+  }
+`
 
 const ButtonIcon = styled.div`
 .wrap{
@@ -359,6 +361,7 @@ const ButtonIcon = styled.div`
         cursor:pointer;
     }
 }
+
 `
 
 const Content = styled.div`
