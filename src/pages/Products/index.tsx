@@ -80,6 +80,9 @@ const initialItems = [
 
 
 
+
+
+
 export default function Product() {
 
   const [items, setItems] = useState(initialItems);
@@ -126,6 +129,43 @@ export default function Product() {
               }}>
               创建商品
             </Button>
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
           </div>
         </div>
         <div className='create-content'>
