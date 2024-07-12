@@ -1,6 +1,7 @@
 ﻿import { layout } from "@/app.bak";
 import component from "@/locales/bn-BD/component";
 import menu from "@/locales/bn-BD/menu";
+import route from "mock/route";
 import { Children } from "react";
 
 /**
@@ -41,39 +42,121 @@ export default [
       },
     ],
   },
-  // menu
+  // home
   {
     path: '/home',
     name: 'home',
     icon: 'crown',
     // access: 'canAdmin',//权限
     component: './Admin/index',
-    routes: [
-
-    ]
   },
+  // 订单
+  {
+    path: '/orders',
+    name: 'orders',
+    icon: 'ContainerOutlined',
+    routes:[
+      {
+        path: 'manages',
+        name: 'manages',
+        component: './Orders/index'
+      },{
+        path: 'recallOrders',
+        name: 'recallOrders',
+        component: './Orders/AbandonedOrder',
+      },{
+        path: 'draftOrders',
+        name: 'draftOrders',
+        component: './Orders/DraftDocument'
+      }
+    ]    
+  },
+  // 商品
   {  
       path: '/products',
       name: 'products',
-      icon: 'smile',
+      icon: 'ProductOutlined',
       routes: [
         {
           path: 'index',
-          name: 'index',
+          name: '商品',
           component: './Products/index',
         },
         {
+          // 创建商品
           path: 'new',
           name: 'new',
           menu: false,
           component: './Products/New',
+        },{
+          path: 'inventory',
+          name: 'inventory',
+        },{
+          path: 'transfers',
+          name: 'transfers'
+        },{
+          path: 'purchase_orders',
+          name: 'purchase_orders',
+        },{
+          path: 'categories',
+          name: 'categories'
+        },{
+          path: 'gift-cards',
+          name: 'gift-cards'
         }
       ]
+  },
+  // 客户
+  {
+    name: 'customer',
+    path: '/customer',
+    icon: 'UserOutlined',
+    routes: [
+      {
+        path: 'persona',
+        name: 'persona',
+      },
+      
+    ],
+  },
+  // 折扣
+  {
+    path: '/discount' ,
+    name: 'discount',
+    icon: 'TagOutlined'
+  },
+  // 营销
+  {
+    path: 'marketing',
+    name: 'marketing',
+    icon: 'BlockOutlined',
+    routes:[
+      {
+        path: 'campaigns',
+        name: 'campaigns',
+      },{
+        path: 'automation',
+        name: 'automation',
+      }
+    ]
+  },
+  {
+    path: 'analyse',
+    name: 'analyse',
+    icon: 'PieChartOutlined',
+    routes:[
+      {
+        path: 'reports',
+        name: 'reports',
+      },{
+        path: 'realtime',
+        name: 'realtime',
+      }
+    ]
   },
 
   // stores
   {
-    name: 'stores',
     path: '/stores',
     icon: 'crown',
     routes:[

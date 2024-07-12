@@ -57,5 +57,30 @@ export default {
 'menu.stores.running': "Open",  
 "menu.stores.stop": "Closed",  
 'menu.search.none': 'No stores matching the criteria',  
-'menu.stores.manage': 'Manage Stores'
+'menu.stores.manage': 'Manage Stores',
+//
+'menu.orders': 'Orders',  
+'menu.orders.manages': 'Order Management',  
+'menu.orders.recallOrders': 'Cancelled Orders',  
+'menu.orders.draftOrders': 'Draft Orders',  
+  
+'menu.products.inventory': 'Inventory',  
+'menu.products.transfers': 'Transfers',  
+'menu.products.purchase_orders':'Purchase Orders',  
+'menu.products.categories':'Categories',  
+'menu.products.gift-cards':'Gift Cards',  
+  
+'menu.customer': 'Customers',  
+'menu.customer.persona': 'Segmentation',  
+  
+'menu.discount': 'Discount',  
+  
+'menu.marketing': 'Marketing',  
+'menu.marketing.campaigns': 'Campaigns',  
+'menu.marketing.automation': 'Automation',  
+  
+'menu.analyse': 'Analysis',  
+'menu.analyse.reports': 'Reports',  
+'menu.analyse.realtime': 'Realtime Analysis',
+
 }

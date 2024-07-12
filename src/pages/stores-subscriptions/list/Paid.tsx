@@ -182,7 +182,6 @@ export default function Paid() {
     const [price, setPrice] = useState(priceMonth);
     // current active card ,default 2 
     const [hover, setHoverNum] = useState(2);
-
     return (
         <Scoped>
             <div className="mc-layout">

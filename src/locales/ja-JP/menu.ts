@@ -57,5 +57,30 @@ export default {
 'menu.stores.running': "営業中",  
 "menu.stores.stop": "休止中",  
 'menu.search.none': '該当の店舗はありません',  
-'menu.stores.manage': '店舗管理'
+'menu.stores.manage': '店舗管理',
+//
+'menu.orders': '注文',  
+'menu.orders.manages': '注文管理',  
+'menu.orders.recallOrders': 'キャンセルした注文',  
+'menu.orders.draftOrders': '下書き注文',  
+  
+'menu.products.inventory': '在庫',  
+'menu.products.transfers': '移動',  
+'menu.products.purchase_orders':'調達注文',  
+'menu.products.categories':'カテゴリー',  
+'menu.products.gift-cards':'ギフトカード',  
+  
+'menu.customer': '顧客',  
+'menu.customer.persona': '細分',  
+  
+'menu.discount': '割引',  
+  
+'menu.marketing': 'マーケティング',  
+'menu.marketing.campaigns': 'キャンペーン',  
+'menu.marketing.automation': '自動化',  
+  
+'menu.analyse': '分析',  
+'menu.analyse.reports': 'レポート',  
+'menu.analyse.realtime': 'リアルタイム分析',
+
 };
