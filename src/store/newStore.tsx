@@ -1,5 +1,5 @@
 import { addProduct } from "@/services/y2/api";
-import { message, SelectProps } from "antd";
+import { message, SelectProps, UploadFile } from "antd";
 import { valueType } from "antd/es/statistic/utils";
 import { action, makeObservable, observable } from "mobx";
 
@@ -47,8 +47,8 @@ class newStore {
   // sku: 1112321
   // categoryIds: 1280766382208
   // product_image: 123
-  // product_video: 
-  // additional_image: ["//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2022-09-12/631ee7556bfb8.jpg","//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2022-09-13/632041ee769f4.jpg"]
+  // product_video: "//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2022-09-12/631ee7556bfb8.jpg"
+  // additional_image: ["//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2022-09-13/632041ee769f4.jpg"]
   // price: 213
   // specialprice: 
   // start_time: 
@@ -96,7 +96,7 @@ class newStore {
   // 商品描述
   @observable desc = '';
   // 商品图片/视频
-  @observable selectedImgList: any[] = [];
+  @observable selectedImgList: UploadFile[] = [];
 
   @action setTitle = (title: string) => {
     this.title = title;

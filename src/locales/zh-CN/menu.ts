@@ -54,4 +54,35 @@ export default {
   'menu.products.index': '商品列表',
   "menu.stores": "店铺",
   'menu.stores.create': '创建店铺',
+  //
+  'menu.search.stores': "搜索店铺名称/子域名/主域名",
+  'menu.stores.running': "营业中",
+  "menu.stores.stop": "已停用",
+  'menu.search.none': '暂无符合条件的店铺',
+  'menu.stores.manage': '管理店铺',
+  //
+  'menu.orders': '订单',
+  'menu.orders.manages': '订单管理',
+  'menu.orders.recallOrders': '弃单',
+  'menu.orders.draftOrders': '草稿单',
+
+  'menu.products.inventory': '库存',
+  'menu.products.transfers': '转移',
+  'menu.products.purchase_orders':'采购订单',
+  'menu.products.categories':'分类',
+  'menu.products.gift-cards':'礼品卡',
+
+  'menu.customer': '客户',
+  'menu.customer.persona': '细分',
+
+  'menu.discount': '折扣',
+
+  'menu.marketing': '营销',
+  'menu.marketing.campaigns': '宣传活动',
+  'menu.marketing.automation': '自动化',
+
+  'menu.analyse': '分析',
+  'menu.analyse.reports': '报告',
+  'menu.analyse.realtime': '实时分析',
+
 };

@@ -53,4 +53,34 @@ export default {
   'menu.products': '商品',  
 "menu.stores": '店餪',  
 'menu.stores.create': '創建店餪',
+//
+'menu.search.stores': "搜尋店餪名稱/子域名/主域名",  
+'menu.stores.running': "營業中",  
+"menu.stores.stop": "已停用",  
+'menu.search.none': '暫無符合條件的店餪',  
+'menu.stores.manage': '管理店餪',
+//
+'menu.orders': '訂單',  
+'menu.orders.manages': '訂單管理',  
+'menu.orders.recallOrders': '棄單',  
+'menu.orders.draftOrders': '草稿單',  
+  
+'menu.products.inventory': '庫存',  
+'menu.products.transfers': '轉移',  
+'menu.products.purchase_orders':'採購訂單',  
+'menu.products.categories':'分類',  
+'menu.products.gift-cards':'禮品卡',  
+  
+'menu.customer': '客戶',  
+'menu.customer.persona': '細分',  
+  
+'menu.discount': '折扣',  
+  
+'menu.marketing': '營銷',  
+'menu.marketing.campaigns': '宣傳活動',  
+'menu.marketing.automation': '自動化',  
+  
+'menu.analyse': '分析',  
+'menu.analyse.reports': '報告',  
+'menu.analyse.realtime': '實時分析',
 };
