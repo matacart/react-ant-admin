@@ -4,7 +4,7 @@ import ProductDataCard from '@/components/Card/ProductDataCard';
 import ProductImgCard from '@/components/Card/ProductImgCard';
 import PriceOrTransactionCard from '@/components/Card/PriceOrTransactionCard';
 import StockCard from '@/components/Card/StockCard';
-import CustomsInformation from '@/components/Card/CustomsInformation';
+import CustomsDeclaration from '@/components/Card/CustomsDeclaration';
 import MultipleStylesCard from '@/components/Card/MultipleStylesCard';
 import styled from 'styled-components';
 import ProductSettingsCard from '@/components/Card/ProductSettingsCard';
@@ -45,7 +45,7 @@ function New(){
                             <ProductImgCard />
                             <PriceOrTransactionCard />
                             <StockCard/>
-                            <CustomsInformation/>
+                            <CustomsDeclaration/>
                             <MultipleStylesCard/>
                         </div>
                         <div className='mc-layout-extra'>

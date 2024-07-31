@@ -42,7 +42,7 @@ const DropdownState = () => {
   );  
   
   return (  
-    <div className="dropdown">  
+    <div >  
       <button className='dropdown-button' onClick={toggleDropdown}>付款状态</button>  
       {isOpen && renderOptions()}  
     </div>  

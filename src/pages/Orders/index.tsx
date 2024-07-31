@@ -2,14 +2,15 @@
 import React, { useRef, useState } from 'react'
 import { Button, Dropdown, Flex, Space } from 'antd';
 import { Tabs } from 'antd'
-import type { MenuProps, TabsProps } from 'antd'
+import type {  TabsProps } from 'antd'
 import OrdersSelectCard from '@/components/Card/OrdersSelectCard'
 import './index.scss'
 import styled from 'styled-components'
-import { ImportOutlined } from '@ant-design/icons';
+import Icon, { ImportOutlined } from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import tabs from 'antd/es/tabs';
 import { Card } from 'antd';
+import  DynamicTabs from '@/components/Tabs/DTTabs'
 
 const TabLabel = styled.div`
    font-size: 18px;
@@ -18,35 +19,52 @@ const onChange = (key: string) => {
   console.log(key);
 };
 
-const OrdersTabsitems: TabsProps['items'] = [
-  {
-    key: '1',
-    label: '全部',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '2',
-    label: '代发货',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '3',
-    label: '已取消',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '4',
-    label: '处理中',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '5',
-    label: '今日新订单',
-    children: (<OrdersSelectCard />),
-  },
-];
+interface MenuItem {  
+  key: string;  
+  label: React.ReactNode;  
+  onClick?: () => void; // 可选的点击事件处理函数  
+}  
+  
+interface MenuProps {  
+  items: MenuItem[];  
+}  
+  
+const MenuComponent: React.FC<MenuProps> = ({ items }) => {  
+  // 假设你有一个已有的函数或组件，这里我们模拟一个函数  
+  const handleLianHuoDanClick = () => {  
+    // 这里可以调用已有的组件或执行任何逻辑  
+    console.log('练货单被点击了');  
+    // 例如，你可以控制一个状态来显示Popup组件  
+  };  
+  
+  // 你可以在这里预处理items，为特定的项添加事件处理函数，但通常直接在渲染时处理更简单  
+  
+  return (  
+    <div>  
+      {items.map(item => (  
+        <div key={item.key} onClick={item.onClick}>  
+          {item.label}  
+        </div>  
+      ))}  
+      {/* 如果有需要，你可以在这里根据状态渲染Popup组件 */}  
+    </div>  
+  );  
+};  
 
-type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
+
+// `
+// function fetchMockData() {
+//     throw new Error('Function not implemented.');
+// }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -62,30 +80,24 @@ const aItems: MenuProps['items'] = [
     label: (
       <>练货单</>
     ),
+    onClick: handleLianHuoDanClick,
   },
   {
     key: '2',
-    label: (
-      <>订单明细
-      </>
-    )
-  },
-  {
-    key: '3',
     label: (
       <>出货表
       </>
     ),
   },
   {
-    key: '4',
+    key: '3',
     label: (
       <>订单明细
       </>
     ),
   },
   {
-    key: '5',
+    key: '4',
     label: (
       <>订单报表
       </>
@@ -97,7 +109,9 @@ const aItems: MenuProps['items'] = [
 
 
 export default function orders() {
-  const [items, setItems] = useState(OrdersTabsitems);
+  const [items, setItems] = useState(<DynamicTabs/>);
+  const [isBatchShippingModalVisible, setIsBatchShippingModalVisible] = useState(false);  
+  
   return (
     
    
@@ -137,7 +151,7 @@ export default function orders() {
           
           <div className='"button-container"'>
             < Button className="my-button1"
-              
+              onClick={() => {  }}
               style={{
                 marginTop: "10px",
                 backgroundColor: 'WHITE',
@@ -173,18 +187,70 @@ export default function orders() {
 
               }}>
               创建订单
+              
             </Button>
-           
+          
 
           </div>
+          
         </div>
+
+
+
+
+
+
+
+        
         <div className='create-content'>
+       
+        <div  >
+<DynamicTabs />  
+
+</div>
           <Tabs
             defaultActiveKey='1'
-            items={items}
+           
           />
+      
         </div>
-        
+      
+        {/* <div className="tabs-container">  
+  <div className="tabs">  
+  <DynamicTabs />
+  <div className="right-side">  
+              <AddressState/>
+  </div>  
+  </div>  
+  
+</div> */}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       </div>
      
      
@@ -212,6 +278,10 @@ export default function orders() {
 
 
 
+
+function handleLianHuoDanClick(): void {
+  throw new Error('Function not implemented.');
+}
 // function setTabs(arg0: any[]) {
 //   throw new Error('Function not implemented.');
 // }

@@ -12,7 +12,7 @@ import { ImportOutlined, PlusOutlined, } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { useState, useRef } from 'react'
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard'
-import { history, Link } from '@umijs/max';
+import { history } from '@umijs/max';
 import styled from 'styled-components'
 
 

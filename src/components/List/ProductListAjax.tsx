@@ -5,7 +5,7 @@ import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import Product from './../../pages/Products/index';
-import ProductList from './ProductList';
+// import ProductList from './ProductList';
 import { result } from 'lodash';
 import axios from 'axios';
 import { deleteProduct, getProductList } from '@/services/y2/api';
@@ -200,23 +200,23 @@ export default function ProductListAjax() {
 
   const fetchData = () => {
     setLoading(true);
-    // fetch(`/api/product/query/${qs.stringify(getRandomuserParams(tableParams))}`)
-    // fetch(`/api/product/query`)
-    //   .then((res) => res.json())
-    //   .then(({ results }) => {
-    //     setData(results);
-    //     setLoading(false);
-    //     // setTableParams({
-    //     //   ...tableParams,
-    //     //   pagination: {
-    //     //     ...tableParams.pagination,
-    //     //     total: 200,
-    //     //     // 200 is mock data, you should read it from server
-    //     //     // total: data.totalCount,
-    //     //   },
-    //     // });
-    //     console.log(result);
-    //   });
+    fetch(`/api/product/query/${qs.stringify(getRandomuserParams(tableParams))}`)
+    fetch(`/api/product/query`)
+      .then((res) => res.json())
+      .then(({ results }) => {
+        setData(results);
+        setLoading(false);
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: 200,
+            // 200 is mock data, you should read it from server
+            // total: data.totalCount,
+          },
+        });
+        console.log(result);
+      });
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
     getProductList(page,limit)

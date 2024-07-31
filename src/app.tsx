@@ -19,6 +19,10 @@ import { getAccessToken } from '@/services/y2/api';
 import type { RequestConfig } from '@umijs/max';
 import { errorConfig } from './requestErrorConfig';
 import SelectDomain from './components/RightContent/SelectDomain';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProductListAjax from './components/List/OrderListAjax';
+import Orders from './pages/Orders';
+
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 
 
@@ -250,7 +254,7 @@ export const request: RequestConfig = {
     (response: any) => response,
     // access_token 过期
     (res:any) =>{
-      console.log(res);
+      // console.log(res);
       if(res.data.code==40013){
           getAccessToken().then(res => {
           localStorage.setItem('access_token',  res.access_token)
@@ -264,3 +268,16 @@ export const request: RequestConfig = {
 
 };
 
+// function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<Layout />}>
+//           <Route path="orders" element={<Orders />}>
+//             <Route path=":id" element={<OrderDetails />} /> {/* 子路由 */}
+//           </Route>
+//         </Route>
+//       </Routes>
+//     </Router>
+//   );
+// }
