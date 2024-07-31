@@ -74,44 +74,34 @@ const MenuComponent: React.FC<MenuProps> = ({ items }) => {
 
 
 
+
+
+
+import {useIntl, useModel } from '@umijs/max';
+export default function orders() {
+
+  const intl = useIntl();
 const aItems: MenuProps['items'] = [
   {
     key: '1',
-    label: (
-      <>练货单</>
-    ),
+    label:intl.formatMessage({id:'orderlist.picking.list'}),
     onClick: handleLianHuoDanClick,
   },
   {
     key: '2',
-    label: (
-      <>出货表
-      </>
-    ),
+    label: intl.formatMessage({id:'orderlist.shipping.list'}),
   },
   {
     key: '3',
-    label: (
-      <>订单明细
-      </>
-    ),
+    label: intl.formatMessage({id:'orderlist.order.detail'}),
   },
   {
     key: '4',
-    label: (
-      <>订单报表
-      </>
-    ),
+    label: intl.formatMessage({id:'orderlist.order.report'}),
   },
 ];
 
 
-
-
-export default function orders() {
-  const [items, setItems] = useState(<DynamicTabs/>);
-  const [isBatchShippingModalVisible, setIsBatchShippingModalVisible] = useState(false);  
-  
   return (
     
    
@@ -125,7 +115,7 @@ export default function orders() {
               position: 'relative',
               top: 10,
               display: 'inline-block',
-            }}>订单列表</h3>
+            }}>{intl.formatMessage({ id:'orderlist.header'})}</h3>
             <ImportOutlined style={{
               position: 'relative',
               top: -24,
@@ -142,7 +132,7 @@ export default function orders() {
               <Dropdown menu={{ items: aItems }} >
                 <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
                   <Space>
-                    导入订单
+                  {intl.formatMessage({ id:'orderlist.import.orders'})}
                   </Space>
                 </a>
               </Dropdown>
@@ -159,7 +149,7 @@ export default function orders() {
                 width: "90px", height: "36px", fontSize: "14px",
 
               }}>
-              批量发货
+             {intl.formatMessage({ id:'order.button.bulkshipping'})}
             </Button>
 
             <Button className='my-button2'
@@ -172,7 +162,7 @@ export default function orders() {
 
 
               }}>
-              更新追踪编号
+             {intl.formatMessage({ id:'order.button.updatetrackingnumber'})}
             </Button>
 
 
@@ -186,8 +176,7 @@ export default function orders() {
 
 
               }}>
-              创建订单
-              
+             {intl.formatMessage({ id:'order.button.createorder'})}
             </Button>
           
 

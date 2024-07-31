@@ -1,10 +1,11 @@
 import React, { useState } from 'react';  
 import './DropdownState.scss'; // 假设您有一个CSS文件来处理样式  
+import { useIntl } from '@umijs/max';
   
 const DeliveryState = () => {  
   const [isOpen, setIsOpen] = useState(false); // 控制下拉框的显示状态  
   const [selectedValues, setSelectedValues] = useState([]); // 存储选中的值  
-  
+  const intl = useIntl();
   const toggleDropdown = () => {  
     setIsOpen(!isOpen); // 切换下拉框的显示状态  
   };  
@@ -43,7 +44,7 @@ const DeliveryState = () => {
   
   return (  
     <div className="dropdown">  
-      <button className='dropdown-button' onClick={toggleDropdown}>发货状态</button>  
+      <button className='dropdown-button' onClick={toggleDropdown}> {intl.formatMessage({ id:'order.button.deliverystate'})}</button>  
       {isOpen && renderOptions()}  
     </div>  
   );  

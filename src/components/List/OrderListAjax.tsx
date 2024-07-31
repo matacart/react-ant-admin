@@ -11,7 +11,7 @@ import axios from 'axios';
 import {  getOrderList } from '@/services/y2/order';
 import { Response } from 'express';
 import DeliveryState from './../Card/DeliveryState';
-import { history, Link} from '@umijs/max';
+import { history, Link, useIntl} from '@umijs/max';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -21,16 +21,17 @@ interface DataType
 
 
 {
-    orderId: string;
+    orderid: string;
     orderdata: string;
-    paymentMethod:string;
-    name:string;
-    shippingMethod:string;
+    paymentmethod:string;
+    deliveryname:string;
+    shippingmethod:string;
     price: number;
     orderstate:string;
     paymentstate:string;
     deliverystate:string;
-    namenuber:string;
+    paymentchannel:string;
+    tel:string;
   }
 
 
@@ -49,9 +50,9 @@ const getRandomuserParams = (params: TableParams) => ({
 });
 
 export default function ProductListAjax() {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -87,61 +88,62 @@ export default function ProductListAjax() {
   // 表头
  
   const columns: TableColumnsType<DataType> = [
+    
     {
-      title: '订单编号',
-      dataIndex: 'orderId',
+      title: intl.formatMessage({ id:'order.tableheader.orderid'}),
+      dataIndex: 'orderid',
       width: 100,
       
     },
     {
-      title: '订单日期',
+      title: intl.formatMessage({ id:'order.tableheader.orderdata'}),
       dataIndex: 'orderdata',
       width: 100,
       
       
     },
     {
-      title: '订单状态',
+      title: intl.formatMessage({ id:'order.tableheader.orderstate'}),
       dataIndex: 'orderstate',
       width: 100, 
     },
     {
-      title: '付款状态',
+      title: intl.formatMessage({ id:'order.tableheader.paymenstate'}),
       dataIndex: 'paymentstate',
       width: 100,
     },
     {
-      title: '发货状态',
+      title: intl.formatMessage({ id:'order.tableheader.deliverystate'}),
       dataIndex: 'deliverystate',
       width: 100,
     },
     {
-      title: '支付方式',
-      dataIndex: 'paymentMethod',
+      title:intl.formatMessage({ id:'order.tableheader.paymentmethod'}),
+      dataIndex: 'paymentmethod',
       width: 100,
     },
     {
-      title: '支付渠道',
-      dataIndex: 'paymentMethod',
+      title: intl.formatMessage({ id:'order.tableheader.paymentchannel'}),
+      dataIndex: 'paymentchannel',
       width: 100,
     },
     {
-      title: '收件人',
-      dataIndex: 'name',
+      title: intl.formatMessage({ id:'order.tableheader.deliveryname'}),
+      dataIndex: 'deliveryname',
       width: 100,
     },
     {
-     title:'收件人手机号',
-     dataIndex:'namenuber',
+     title:intl.formatMessage({ id:'order.tableheader.tel'}),
+     dataIndex:'tel',
      width:100,
     },
     {
-      title: '运费方案',
-      dataIndex: 'shippingMethod',
+      title: intl.formatMessage({ id:'order.tableheader.shippingmethod'}),
+      dataIndex: 'shippingmethod',
       width: 100,
     },
     {
-      title: '合计',
+      title: intl.formatMessage({ id:'order.tableheader.pricetotal'}),
       dataIndex: 'price',
       width: 100,
       render: (value, record, index) =>{
@@ -179,15 +181,16 @@ export default function ProductListAjax() {
         let newData:DataType[] = [];
         res.data?.forEach((item:any)=>{
           newData.push({
-            orderId: item.id,
+            orderid: item.id,
             orderdata:item.date_purchased,
             orderstate:item.orders_status_name,
-            paymentMethod:item.payment_method,
-            paymentstate:item.payment_status_id,
-            deliverystate:item.delivery_status_id,
-            name:item.delivery_name,
-            namenuber:item.tel,
-            shippingMethod:item.shipping_method,
+            paymentmethod:item.payment_method,
+            paymentstate:item.payment_status_name,
+            deliverystate:item.delivery_status_name,
+            deliveryname:item.delivery_name,
+            tel:item.tel,
+            shippingmethod:item.shipping_method,
+            paymentchannel:item.payment_method,
             price: item.order_total,
             
           })
@@ -236,14 +239,14 @@ const handleOrderClick = (orderId: string) => {
     {/* 列表 */}
       <Table
         columns={columns}
-        rowKey={(record) => record.orderId}
+        rowKey={(record) => record.orderid}
         dataSource={data}
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 1300 }}
         onRow={(record) => ({ // 添加onRow属性来处理行点击事件
-          onClick: () => handleOrderClick(record.orderId), // 点击行时调用handleOrderClick
+          onClick: () => handleOrderClick(record.orderid), // 点击行时调用handleOrderClick
         })}
         rowSelection={{
           type: 'checkbox',

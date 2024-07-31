@@ -16,6 +16,7 @@ import AbstractCard from '@/components/Card/AbstractCard';
 import OrdersLabelCard from '@/components/Card/OrdersLabelCard';
 import OrdersTimeline from '@/components/Card/OrdersTimeline';
 import { getOrderDetail } from '@/services/y2/order';
+import orders from './index';
 interface OrderDetail {
     id: string; // 订单ID
     date_purchased:string;//订单日期

@@ -6,6 +6,8 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import login from './en-US/login';
+import orders from './en-US/orders';
+
 export default {
   'navBar.lang': 'Languages',
   'layout.user.link.help': 'Help',
@@ -16,6 +18,7 @@ export default {
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
   ...globalHeader,
   ...menu,
+  ...orders,
   ...settingDrawer,
   ...settings,
   ...pwa,

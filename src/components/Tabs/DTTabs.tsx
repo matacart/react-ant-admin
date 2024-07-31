@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, Button, Modal } from 'antd';
 const { TabPane } = Tabs;
 import OrdersSelectCard from '@/components/Card/OrdersSelectCard';
+import { useIntl } from '@umijs/max';
 ;
 
 
@@ -14,12 +15,13 @@ const ComponentE = () => <div><OrdersSelectCard /></div>;
 
 function DynamicTabs() {
   const [activeKey, setActiveKey] = useState('1');
+  const intl = useIntl();
   const [panes, setPanes] = useState([
-    { title: '全部', content: <ComponentA />, key: '1' },
-    { title: '代发货', content: <ComponentB />, key: '2' },
-    { title: '已取消', content: <ComponentC />, key: '3' },
-    { title: '处理中', content: <ComponentD />, key: '4' },
-    { title: '今日新订单', content: <ComponentE />, key: '5' },
+    { title:intl.formatMessage({ id:'order.tabs.all'}), content: <ComponentA />, key: '1' },
+    { title:intl.formatMessage({ id:'order.tabs.readytoship'}), content: <ComponentB />, key: '2' },
+    { title: intl.formatMessage({ id:'order.tabs.cancelled'}),  content: <ComponentC />, key: '3' },
+    { title:  intl.formatMessage({ id:'order.tabs.process'}), content: <ComponentD />, key: '4' },
+    { title: intl.formatMessage({ id:'order.tabs.neworders'}),content: <ComponentE />, key: '5' },
   ]);
 
   const addNewTab = () => {

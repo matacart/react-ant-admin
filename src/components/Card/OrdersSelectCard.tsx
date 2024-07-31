@@ -12,6 +12,7 @@ import DropdownState from "./PaymentState";
 import orders from './../../pages/Orders/PascalCase';
 import PaymentState from "./PaymentState";
 import DeliveryState from './DeliveryState';
+import { useIntl } from "@umijs/max";
 
 
 
@@ -43,6 +44,7 @@ const tagRender: TagRender = (props) => {
 };
 
 export default function OrdersSelectCard() {
+    const intl = useIntl();
     const resultList=useState([]);
     return (
         <>
@@ -63,7 +65,7 @@ export default function OrdersSelectCard() {
                      
                         <Search  
                 size="large" // 如果您想要一个较大的搜索框，这里可以保留；如果想要更紧凑的，可以改为 'small' 或 'middle'  
-                 placeholder="支持商品名称、SKU、用户邮箱、标签等快捷搜索"  
+                 placeholder={intl.formatMessage({ id:'order.select.text'})}
                  onSearch={onSearch}  
                  style={{ width: 920  }} // 控制搜索框的宽度  
 />
@@ -73,11 +75,11 @@ export default function OrdersSelectCard() {
                       <MoreSelect />
                         
                      
-                      <Button size="large">编辑表头</Button>
+                      <Button size="large"> {intl.formatMessage({ id:'order.button.edittable'})}</Button>
                      
                      <Select
                          size='large'
-                         defaultValue="排序"
+                         defaultValue={intl.formatMessage({ id:'order.button.sorting'})}
                          style={{ width: 75}}
                          listHeight={300}                        
                          options={[

@@ -7,6 +7,8 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);  
     border: 0px solid #ccc;  
     background: #FFFFFF;
+    min-width: 100px; /* 设置最小宽度 */
+    max-width: 300px; /* 设置最大宽度 *
     /* 确保下拉框有足够的宽度 */  
   
     position: fixed;
@@ -17,11 +19,7 @@
     
   .dropdown-item {  
     /* 单个选项的样式 */  
-  
-
-
-
-
+  width: auto; /* 自动调整宽度 */
   background-color: #fff;  
   padding: 8px;  
   border-radius: 5px;  
@@ -31,13 +29,17 @@
   }  
     
 .dropdown-button{
-width: 100px;   
-height: 40px;
-padding: 7px 15px;
-background: #FFFFFF;
-border: 1px solid #eee;
-font-size: 16px;
-border-radius: 8px;
+  display: inline-block; /* 或者使用 flex */
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏超出的部分 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  width: auto; /* 自动调整宽度 */
+  height: 40px;
+  padding: 7px 15px;
+  background: #FFFFFF;
+  border: 1px solid #eee;
+  font-size: 16px;
+  border-radius: 8px;
 }
 
 .Clear-button{
