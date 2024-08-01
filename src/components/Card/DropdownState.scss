@@ -1,0 +1,50 @@
+.hidden {  
+    display: flex;  
+  }  
+    
+  .dropdown-content {  
+    /* 其他样式，如背景色、边框等 */  
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);  
+    border: 0px solid #ccc;  
+    background: #FFFFFF;
+    min-width: 100px; /* 设置最小宽度 */
+    max-width: 300px; /* 设置最大宽度 *
+    /* 确保下拉框有足够的宽度 */  
+  
+    position: fixed;
+    z-index: 1000;
+    width: 100px;  
+    /* 以及其他需要的样式 */  
+  }  
+    
+  .dropdown-item {  
+    /* 单个选项的样式 */  
+  width: auto; /* 自动调整宽度 */
+  background-color: #fff;  
+  padding: 8px;  
+  border-radius: 5px;  
+  position: relative; /* 相对于遮罩层定位 */  
+  z-index: 1; /* 确保在遮罩层之上 */ 
+    /* 其他样式 */  
+  }  
+    
+.dropdown-button{
+  display: inline-block; /* 或者使用 flex */
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏超出的部分 */
+  text-overflow: ellipsis; /* 显示省略号 */
+  width: auto; /* 自动调整宽度 */
+  height: 40px;
+  padding: 7px 15px;
+  background: #FFFFFF;
+  border: 1px solid #eee;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+.Clear-button{
+background-color: #FFFFFF;
+border: 0px solid #ccc;  
+
+
+}

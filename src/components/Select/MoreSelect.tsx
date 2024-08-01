@@ -10,6 +10,7 @@ import './MoreSelect.scss'
 
 import CustomizeProductTypeSelector from './CustomizeProductTypeSelector';
 import ProductTypeSelector from './ProductTypeSelector';
+import { useIntl } from '@umijs/max';
 
 const text = `
   A dog is a type of domesticated animal.
@@ -83,7 +84,7 @@ const items: CollapseProps['items'] = [
   
 
 export default function MoreSelect(){
-
+  const intl = useIntl();
   const [open, setOpen] = useState(false);
 
   const showDrawer = () => {
@@ -97,7 +98,7 @@ export default function MoreSelect(){
   return (
     <>
       <Button size='large' onClick={showDrawer}  >
-        更多筛选
+      {intl.formatMessage({ id:'order.button.moreselect'})}
       </Button>
       <Drawer title='筛选' open={open} onClose={onClose} >
         <ConfigProvider 

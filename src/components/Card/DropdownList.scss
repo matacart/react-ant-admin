@@ -1,0 +1,47 @@
+//订单下拉选项列表
+
+.dropdown-content{
+  
+    position: absolute;  
+    top: 12%; /* 出现在按钮下方 */  
+    z-index: 2000;
+    width: 96px;
+    justify-content: center; 
+    background-color: #fff;  
+    border: 1px solid #ccc;  
+
+
+}
+
+//订单下拉按钮
+.dropdown-button{
+    
+    width: 96px;
+    height: 40px;
+    background-color: #FFFFFF;
+    font-size: 16px;
+    padding: 7px 15px;
+    border: 1px solid #DCDFE6; /* Ant Design默认边框颜色 */
+    border-radius: 10px; /* 圆角边框，Ant Design默认值 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgba(0, 0, 0, 0.85); /* 文字颜色，Ant Design默认值 */
+    transition: all 0.3s; /* 过渡动画，Ant Design默认值 */
+}
+
+//清除按钮
+.Clear-button{
+    border: none; /* 移除边框 */
+    background-color: #FFFFFF; /* 设置背景颜色 */
+ 
+    padding: 8px 16px; /* 设置内边距 */
+    cursor: pointer; /* 改变鼠标光标为手形，提示可点击 */
+
+    font-size: 12px; /* 设置字体大小 */
+
+}
+

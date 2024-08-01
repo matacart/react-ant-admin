@@ -65,7 +65,6 @@ export default {
   'menu.orders.manages': '订单管理',
   'menu.orders.recallOrders': '弃单',
   'menu.orders.draftOrders': '草稿单',
-
   'menu.products.inventory': '库存',
   'menu.products.transfers': '转移',
   'menu.products.purchase_orders':'采购订单',

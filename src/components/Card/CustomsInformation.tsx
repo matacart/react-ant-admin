@@ -1,96 +1,126 @@
-import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Form, Input, Select, Tooltip } from "antd";
-import styled from "styled-components";
+import { Badge, Button, Card, Divider, Form, Input, Tooltip } from "antd";
+import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { observer } from "mobx-react-lite";
+import { useIntl } from "@umijs/max";
 
-export default function CustomsInformation() {
+const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    console.log('Change:', e.target.value);
+};
+const {TextArea} = Input
+
+function CustomsInformation({order}) {
+    const intl = useIntl();
     return (
-        <Scoped>
-            <Card title="海关信息">
-                <Form layout="vertical">
-                    <Form.Item 
-                    required
-                    label={
-                        <>
-                            发货国家/地区
-                            <Tooltip title="这里是关于用户名的额外信息">
-                                <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                                    <QuestionCircleOutlined />
-                                </span>
-                            </Tooltip>
-                        </>
-                    }>
-                        <Select
-                            showSearch
-                            placeholder="Search to Select"
-                            optionFilterProp="children"
-                            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                            filterSort={(optionA, optionB) =>
-                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                            }
-                            options={[
-                                {
-                                    value: '1',
-                                    label: 'Not Identified',
-                                },
-                                {
-                                    value: '2',
-                                    label: 'Closed',
-                                },
-                                {
-                                    value: '3',
-                                    label: 'Communicated',
-                                },
-                                {
-                                    value: '4',
-                                    label: 'Identified',
-                                },
-                                {
-                                    value: '5',
-                                    label: 'Resolved',
-                                },
-                                {
-                                    value: '6',
-                                    label: 'Cancelled',
-                                },
-                            ]}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                    required                    
-                    label="HS(协调制度) 代码">
-                        <Input placeholder="请输入HS编码" />
-                    </Form.Item>
-                </Form>
-            </Card>
-        </Scoped>
-    )
-}
+        <Card  style={{ width: '300px' }} 
+        title={
+            <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
+           <div>   
+               <p style={{fontSize:'16px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.customer'})}</p> 
+               
+                             </div>
+                             <EllipsisOutlined />
+                             </div>
+        }
+      
+    >
+        <Form >
+       
+            <div  style={{
+          display: 'flex',
+            flexDirection: 'column',
+               alignItems: 'flex-start',
+                  gap: '0px', // Adjust the gap size as needed
+}}>
+                <p style={{fontSize:'14px',color:'#356DFF'}}>{order?.delivery_name}</p>
+               <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}：
+               {intl.formatMessage({ id:'order.detail.sex_0'})}</p> 
+               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}</p>
+               <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.benefitstext'})}</p>
+               <p style={{fontSize:'14px',color:'#356DFF'}}>{intl.formatMessage({ id:'order.detail.historypurchase'})}
+               ：2{intl.formatMessage({ id:'order.detail.numberpurchase'})}</p>
 
-const Scoped = styled.div`
-.ant{
-    &-card{
-        &-head-title{
-            font-weight: 400;
-        }
-        &-body{
-            padding-bottom: 0;
-        }
-        label{
-            font-weight: 600;
-        }
-    }
-    &-checkbox-wrapper{
-        span{
-            font-weight: 400;
-        }
-    }
-    &-input{
-            width: 100%;
-            height: 36px;
-    }
-    &-select{
-        width: 100%;
-        height: 36px;
-    }
+             
+
+
+             </div>
+            
+        </Form>
+        <Divider/>
+        <Form>
+           <div> {intl.formatMessage({ id:'order.detail.contact'})}
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
+       
+       <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap'}}>{order?.email}</div>
+
+
+       < Tooltip title="复制">
+                             <CopyOutlined style={{margin:'10PX'}}/>
+                             </Tooltip>
+                          
+        
+        </div>
+      
+       
+        <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
+       +86
+       <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap',marginLeft: '-80px'}}>{order?.tel}</div>
+
+
+       < Tooltip title="复制">
+                             <CopyOutlined style={{margin:'10PX'}}/>
+                             </Tooltip>
+                          
+        
+        </div>
+      
+       
+
+
+
+
+
+
+        </div>
+          
+        </Form>
+        <Divider/>
+        <Form>
+        <div  style={{
+          display: 'flex',
+            flexDirection: 'column',
+               alignItems: 'flex-start',
+                  gap: '0px', // Adjust the gap size as needed
+}}>
+                <p style={{fontSize:'14px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.deliveryaddress'})}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_name}</p> 
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.address}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.city}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.province}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.coutry}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.post}</p>
+              
+               < Tooltip title="复制">{intl.formatMessage({ id:'order.detail.copy'})}
+                             <CopyOutlined style={{margin:'10PX'}}/>
+                             </Tooltip>
+
+             </div>
+        </Form>
+        <Divider/>
+        <Form>
+            <div>
+            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingaddress'})}</p> 
+               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingtext'})}</p>
+            </div>
+        </Form>
+         <Divider/>
+         <Form>
+            <div>
+            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingtext'})}</p> 
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.country}</p>
+    
+            </div>
+         </Form>
+    </Card>
+);
 }
-`
+export default observer(CustomsInformation);

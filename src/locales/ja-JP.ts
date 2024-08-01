@@ -1,6 +1,7 @@
 import component from './ja-JP/component';
 import globalHeader from './ja-JP/globalHeader';
 import menu from './ja-JP/menu';
+import orders from './ja-JP/orders';
 import pages from './ja-JP/pages';
 import pwa from './ja-JP/pwa';
 import settingDrawer from './ja-JP/settingDrawer';
@@ -17,6 +18,7 @@ export default {
   ...globalHeader,
   ...menu,
   ...settingDrawer,
+  ...orders,
   ...settings,
   ...pwa,
   ...component,

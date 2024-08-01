@@ -161,3 +161,4 @@ export default defineConfig({
   // icon 集
   icons: {autoInstall: {}},
 });
+

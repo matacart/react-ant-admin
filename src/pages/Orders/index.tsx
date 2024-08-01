@@ -2,14 +2,15 @@
 import React, { useRef, useState } from 'react'
 import { Button, Dropdown, Flex, Space } from 'antd';
 import { Tabs } from 'antd'
-import type { MenuProps, TabsProps } from 'antd'
+import type {  TabsProps } from 'antd'
 import OrdersSelectCard from '@/components/Card/OrdersSelectCard'
 import './index.scss'
 import styled from 'styled-components'
-import { ImportOutlined } from '@ant-design/icons';
+import Icon, { ImportOutlined } from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import tabs from 'antd/es/tabs';
 import { Card } from 'antd';
+import  DynamicTabs from '@/components/Tabs/DTTabs'
 
 const TabLabel = styled.div`
    font-size: 18px;
@@ -18,86 +19,64 @@ const onChange = (key: string) => {
   console.log(key);
 };
 
-const OrdersTabsitems: TabsProps['items'] = [
-  {
-    key: '1',
-    label: '全部',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '2',
-    label: '代发货',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '3',
-    label: '已取消',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '4',
-    label: '处理中',
-    children: (<OrdersSelectCard />),
-  },
-  {
-    key: '5',
-    label: '今日新订单',
-    children: (<OrdersSelectCard />),
-  },
-];
-
-type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
-
-
-
-
+interface MenuItem {  
+  key: string;  
+  label: React.ReactNode;  
+  onClick?: () => void; // 可选的点击事件处理函数  
+}  
+  
+interface MenuProps {  
+  items: MenuItem[];  
+}  
+  
+const MenuComponent: React.FC<MenuProps> = ({ items }) => {  
+  // 假设你有一个已有的函数或组件，这里我们模拟一个函数  
+  const handleLianHuoDanClick = () => {  
+    // 这里可以调用已有的组件或执行任何逻辑  
+    console.log('练货单被点击了');  
+    // 例如，你可以控制一个状态来显示Popup组件  
+  };  
+  
+  // 你可以在这里预处理items，为特定的项添加事件处理函数，但通常直接在渲染时处理更简单  
+  
+  return (  
+    <div>  
+      {items.map(item => (  
+        <div key={item.key} onClick={item.onClick}>  
+          {item.label}  
+        </div>  
+      ))}  
+      {/* 如果有需要，你可以在这里根据状态渲染Popup组件 */}  
+    </div>  
+  );  
+};  
 
 
+import {useIntl, useModel } from '@umijs/max';
+export default function orders() {
 
-
-
+  const intl = useIntl();
 const aItems: MenuProps['items'] = [
   {
     key: '1',
-    label: (
-      <>练货单</>
-    ),
+    label:intl.formatMessage({id:'orderlist.picking.list'}),
+    onClick: handleLianHuoDanClick,
   },
   {
     key: '2',
-    label: (
-      <>订单明细
-      </>
-    )
+    label: intl.formatMessage({id:'orderlist.shipping.list'}),
   },
   {
     key: '3',
-    label: (
-      <>出货表
-      </>
-    ),
+    label: intl.formatMessage({id:'orderlist.order.detail'}),
   },
   {
     key: '4',
-    label: (
-      <>订单明细
-      </>
-    ),
-  },
-  {
-    key: '5',
-    label: (
-      <>订单报表
-      </>
-    ),
+    label: intl.formatMessage({id:'orderlist.order.report'}),
   },
 ];
 
 
-
-
-export default function orders() {
-  const [items, setItems] = useState(OrdersTabsitems);
   return (
     
    
@@ -111,7 +90,7 @@ export default function orders() {
               position: 'relative',
               top: 10,
               display: 'inline-block',
-            }}>订单列表</h3>
+            }}>{intl.formatMessage({ id:'orderlist.header'})}</h3>
             <ImportOutlined style={{
               position: 'relative',
               top: -24,
@@ -128,7 +107,7 @@ export default function orders() {
               <Dropdown menu={{ items: aItems }} >
                 <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
                   <Space>
-                    导入订单
+                  {intl.formatMessage({ id:'orderlist.import.orders'})}
                   </Space>
                 </a>
               </Dropdown>
@@ -137,7 +116,7 @@ export default function orders() {
           
           <div className='"button-container"'>
             < Button className="my-button1"
-              
+              onClick={() => {  }}
               style={{
                 marginTop: "10px",
                 backgroundColor: 'WHITE',
@@ -145,7 +124,7 @@ export default function orders() {
                 width: "90px", height: "36px", fontSize: "14px",
 
               }}>
-              批量发货
+             {intl.formatMessage({ id:'order.button.bulkshipping'})}
             </Button>
 
             <Button className='my-button2'
@@ -158,7 +137,7 @@ export default function orders() {
 
 
               }}>
-              更新追踪编号
+             {intl.formatMessage({ id:'order.button.updatetrackingnumber'})}
             </Button>
 
 
@@ -172,19 +151,35 @@ export default function orders() {
 
 
               }}>
-              创建订单
+             {intl.formatMessage({ id:'order.button.createorder'})}
             </Button>
-           
+          
 
           </div>
+          
         </div>
+
+
+
+
+
+
+
+        
         <div className='create-content'>
+       
+        <div  >
+<DynamicTabs />  
+
+</div>
           <Tabs
             defaultActiveKey='1'
-            items={items}
+           
           />
+      
         </div>
-        
+
+
       </div>
      
      
@@ -212,6 +207,10 @@ export default function orders() {
 
 
 
+
+function handleLianHuoDanClick(): void {
+  throw new Error('Function not implemented.');
+}
 // function setTabs(arg0: any[]) {
 //   throw new Error('Function not implemented.');
 // }
