@@ -1,18 +1,17 @@
 import { Badge, Button, Card, Divider, Form, Input, Tooltip } from "antd";
 import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
+import { useIntl } from "@umijs/max";
 
-const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log('Change:', e.target.value);
-};
-const {TextArea} = Input
+
 function OrdersIdCard({order}) {
+    const intl = useIntl();
     return (
         <Card  style={{ width: '300px' }} 
         title={
             <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
            <div>   
-               <p style={{fontSize:'16px',color:'#242833'}}>订单ID</p> 
+               <p style={{fontSize:'16px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.orderid'})}</p> 
                
                              </div>
                              </div>
@@ -28,7 +27,7 @@ function OrdersIdCard({order}) {
                   gap: '0px', // Adjust the gap size as needed
 }}>
                 <p style={{fontSize:'14px',color:'#474F5E',margin:'0'}}>{order?.id}</p>
-                < Tooltip title="复制">复制
+                < Tooltip title="复制">{intl.formatMessage({ id:'order.detail.copy'})}
                              <CopyOutlined style={{margin:'10PX'}}/>
                              </Tooltip>
 

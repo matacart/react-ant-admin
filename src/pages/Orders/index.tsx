@@ -52,31 +52,6 @@ const MenuComponent: React.FC<MenuProps> = ({ items }) => {
 };  
 
 
-// `
-// function fetchMockData() {
-//     throw new Error('Function not implemented.');
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import {useIntl, useModel } from '@umijs/max';
 export default function orders() {
 
@@ -203,41 +178,6 @@ const aItems: MenuProps['items'] = [
           />
       
         </div>
-      
-        {/* <div className="tabs-container">  
-  <div className="tabs">  
-  <DynamicTabs />
-  <div className="right-side">  
-              <AddressState/>
-  </div>  
-  </div>  
-  
-</div> */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       </div>

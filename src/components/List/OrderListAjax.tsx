@@ -163,15 +163,6 @@ export default function ProductListAjax() {
       .then(({ results }) => {
         setData(results);
         setLoading(false);
-        // setTableParams({
-        //   ...tableParams,
-        //   pagination: {
-        //     ...tableParams.pagination,
-        //     total: 200,
-        //     // 200 is mock data, you should read it from server
-        //     // total: data.totalCount,
-        //   },
-        // });
         console.log(result);
       });
     const limit  = getRandomuserParams(tableParams).results;
@@ -183,10 +174,10 @@ export default function ProductListAjax() {
           newData.push({
             orderid: item.id,
             orderdata:item.date_purchased,
-            orderstate:item.orders_status_name,
-            paymentmethod:item.payment_method,
-            paymentstate:item.payment_status_name,
-            deliverystate:item.delivery_status_name,
+            orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
+          paymentmethod: item.payment_method,
+          paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
+          deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
             deliveryname:item.delivery_name,
             tel:item.tel,
             shippingmethod:item.shipping_method,
@@ -209,7 +200,9 @@ export default function ProductListAjax() {
       })
 
   };
-
+  const translateStatus = (statusKey: string, intl: any): string => {
+    return intl.formatMessage({ id: statusKey });
+  };
 
   useEffect(() => {
     fetchData();

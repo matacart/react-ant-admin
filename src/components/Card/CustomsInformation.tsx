@@ -1,6 +1,7 @@
 import { Badge, Button, Card, Divider, Form, Input, Tooltip } from "antd";
 import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
+import { useIntl } from "@umijs/max";
 
 const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
@@ -8,12 +9,13 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) 
 const {TextArea} = Input
 
 function CustomsInformation({order}) {
+    const intl = useIntl();
     return (
         <Card  style={{ width: '300px' }} 
         title={
             <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
            <div>   
-               <p style={{fontSize:'16px',color:'#242833'}}>客户</p> 
+               <p style={{fontSize:'16px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.customer'})}</p> 
                
                              </div>
                              <EllipsisOutlined />
@@ -30,10 +32,12 @@ function CustomsInformation({order}) {
                   gap: '0px', // Adjust the gap size as needed
 }}>
                 <p style={{fontSize:'14px',color:'#356DFF'}}>{order?.delivery_name}</p>
-               <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>性别：未知</p> 
-               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>注册状态：否</p>
-               <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>会员优惠：购物时未登录，无优惠</p>
-               <p style={{fontSize:'14px',color:'#356DFF'}}>历史购买：2单</p>
+               <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}：
+               {intl.formatMessage({ id:'order.detail.sex_0'})}</p> 
+               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}</p>
+               <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.benefitstext'})}</p>
+               <p style={{fontSize:'14px',color:'#356DFF'}}>{intl.formatMessage({ id:'order.detail.historypurchase'})}
+               ：2{intl.formatMessage({ id:'order.detail.numberpurchase'})}</p>
 
              
 
@@ -43,7 +47,7 @@ function CustomsInformation({order}) {
         </Form>
         <Divider/>
         <Form>
-           <div> 联系信息
+           <div> {intl.formatMessage({ id:'order.detail.contact'})}
         <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
        
        <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap'}}>{order?.email}</div>
@@ -87,7 +91,7 @@ function CustomsInformation({order}) {
                alignItems: 'flex-start',
                   gap: '0px', // Adjust the gap size as needed
 }}>
-                <p style={{fontSize:'14px',color:'#242833'}}>收货地址</p>
+                <p style={{fontSize:'14px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.deliveryaddress'})}</p>
                <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_name}</p> 
                <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.address}</p>
                <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.city}</p>
@@ -95,7 +99,7 @@ function CustomsInformation({order}) {
                <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.coutry}</p>
                <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.post}</p>
               
-               < Tooltip title="复制">复制
+               < Tooltip title="复制">{intl.formatMessage({ id:'order.detail.copy'})}
                              <CopyOutlined style={{margin:'10PX'}}/>
                              </Tooltip>
 
@@ -104,16 +108,16 @@ function CustomsInformation({order}) {
         <Divider/>
         <Form>
             <div>
-            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>账单地址</p> 
-               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>与收货地址相同</p>
+            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingaddress'})}</p> 
+               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingtext'})}</p>
             </div>
         </Form>
          <Divider/>
          <Form>
             <div>
-            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>市场</p> 
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>United States</p>
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>美国 (USD)</p>
+            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingtext'})}</p> 
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.country}</p>
+    
             </div>
          </Form>
     </Card>

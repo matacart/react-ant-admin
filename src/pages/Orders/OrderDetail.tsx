@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import  FraudAnalysis from '@/components/Card/FraudAnalysis'
 import qs from 'qs';
 import { Divider } from 'antd';
-import { history, useParams } from '@umijs/max';
+import { history, useIntl, useParams } from '@umijs/max';
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import AbstractCard from '@/components/Card/AbstractCard';
@@ -20,7 +20,7 @@ import orders from './index';
 interface OrderDetail {
     id: string; // 订单ID
     date_purchased:string;//订单日期
-    orders_status_name:string;//订单状态
+    orders_status_id:string;//订单状态
     delivery_status_id:string;//发货状态
     payment_status_id:string;//支付状态
     orders_name:string;
@@ -50,12 +50,12 @@ interface historyinfo {
 function OrderDetail() {  
   const [loading, setLoading] = useState(true);  
   const [order, setOrder] = useState<OrderDetail | undefined>(undefined);
-  console.log(order);
-  console.log(12);
   const [error, setError] = useState<string | null>(null);
   const { orderId } = useParams<{ orderId: string }>();  
-  
-
+  const intl = useIntl();
+  const translateStatus = (key: string) => {
+    return intl.formatMessage({ id: key });
+};
   useEffect(() => {
     async function fetchOrder() {
       setLoading(true);
@@ -100,12 +100,18 @@ function OrderDetail() {
                       <div className='wrap'>
                     </div>
                      </Tooltip>
-                     <div className="status" style={{fontSize:'12px', marginLeft: '10px',color:'#474F5E' }}>{order?.orders_status_name}</div>
-                     <div className="status" style={{fontSize:'12px', marginLeft: '10px',color:'#474F5E' }}>{order?.payment_status_id}</div>
-                     <div className="status" style={{fontSize:'12px', marginLeft: '10px' ,color:'#474F5E'}}>{order?.delivery_status_id}</div>
+                     <div className="status" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
+                {order && translateStatus(`order.status.name_${order.orders_status_id}`)}
+            </div>
+            <div className="status" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
+                {order && translateStatus(`order.status.name_${order.payment_status_id}`)}
+            </div>
+            <div className="status" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
+                {order && translateStatus(`order.status.name_${order.delivery_status_id}`)}
+            </div>
                           </div>
                           <div className="mc-time" style={{fontSize:'14px',color:'#474F5E'}}>
-                          {order?.date_purchased}通过 草稿单 下单
+                          {order?.date_purchased} {intl.formatMessage({ id:'order.detail.dowloadvia'})}
                             
 </div>                        
                             </div>
@@ -125,7 +131,7 @@ function OrderDetail() {
             height: "36px",
             fontSize: "14px",
           }}>
-    退货
+  {intl.formatMessage({ id:'order.detail.return'})}
   </Button>
   <Button className='my-button'
           style={{
@@ -135,7 +141,7 @@ function OrderDetail() {
             height: "36px",
             fontSize: "14px",
           }}>
-    退款
+   {intl.formatMessage({ id:'order.detail.refund'})}
   </Button>
   <Select className='selector'
           style={{
@@ -143,7 +149,7 @@ function OrderDetail() {
             fontSize: "14px", // 确保字体大小一致
             
           }}
-          defaultValue="更多" />
+          defaultValue=   {intl.formatMessage({ id:'order.detail.more'})} />
           <Button className='my-button'
           style={{
             marginLeft: '12px',
@@ -172,7 +178,7 @@ function OrderDetail() {
 
                            <OrdersShippedCard order={order}/>
                            <OrdersPaidCard order={order}/>
-                           <OrdersTimeline order={order}/>
+                           {order && <OrdersTimeline order={order}/>}
                           
                         </div>
                         <div className='mc-layout-extra'>

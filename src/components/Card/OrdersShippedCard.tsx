@@ -5,12 +5,17 @@ import order from "mock/order";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getOrderDetail } from "@/services/y2/order";
+import { useIntl } from "@umijs/max";
 const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
 };
 const {TextArea} = Input
-function OrdersShippedCard({order}) {
 
+function OrdersShippedCard({order}) {
+  const intl = useIntl();
+  const translateStatus = (key: string) => {
+    return intl.formatMessage({ id: key });
+};
 
     return (
         <Card  style={{ width: '980px' }} 
@@ -18,7 +23,7 @@ function OrdersShippedCard({order}) {
             <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
            <div>    <CheckCircleTwoTone twoToneColor="#52c41a" style={{margin:'10px'}}/>
                 
-           {order?.delivery_status_id} #{order?.id}-F1
+           {order && translateStatus(`order.status.name_${order.delivery_status_id}`)} #{order?.id}-F1
                 < Tooltip title="复制">
                              <CopyOutlined style={{margin:'10PX'}}/>
                              </Tooltip>
@@ -31,8 +36,8 @@ function OrdersShippedCard({order}) {
         <Form >
        
             <div>
-                <p style={{fontSize:'14px',color:'#7A8499'}}>地点</p>
-               <p style={{fontSize:'14px',color:'#242833'}}>默认地点</p> 
+                <p style={{fontSize:'14px',color:'#7A8499'}}>{intl.formatMessage({ id:'order.detail.location'})}</p>
+               <p style={{fontSize:'14px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.defaultlocation'})}</p> 
                <p style={{fontSize:'14px',color:'#7A8499'}}> {order?.delivery_status_id}</p>
                <p style={{fontSize:'14px',color:'#242833'}}>{order?.delivery_time}</p>
 
@@ -59,7 +64,7 @@ function OrdersShippedCard({order}) {
         <Divider/>
         <Form>
             <div  style={{ display: 'flex', alignItems: 'center', marginTop: '10px', justifyContent: 'space-between' }}>
-                 <div style={{fontSize:'14px',color:'#7A8499'}}>包裹跟踪信息：无</div>
+                 <div style={{fontSize:'14px',color:'#7A8499'}}>{intl.formatMessage({ id:'order.detail.tracking'})}：无</div>
                  <Button className='my-button'
               
               style={{
@@ -70,7 +75,7 @@ function OrdersShippedCard({order}) {
 
 
               }}>
-              添加追踪信息
+            {intl.formatMessage({ id:'order.detail.addtracking'})}
               
             </Button>
             </div>

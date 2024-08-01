@@ -35,11 +35,11 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "1",
-            "orders_status_name":"\u5f85\u5904\u7406",
+        
             "delivery_status_id": "2",
-            "delivery_status_name": "\u5904\u7406\u4e2d",
+         
             "payment_status_id":"8",
-            "payment_status_name":"\u4ed8\u6b3e\u6210\u529f",
+         
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",
@@ -91,11 +91,11 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "9",
-            "orders_status_name":"\u5f85\u5b8c\u6210",
+       
             "delivery_status_id": "3",
-            "delivery_status_name": "\u5df2\u53d1\u8d27",
+       
             "payment_status_id":"8",
-            "payment_status_name":"\u4ed8\u6b3e\u6210\u529f",
+         
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",
@@ -147,11 +147,11 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "10",
-            "orders_status_name":"\u5df2\u5b8c\u6210",
+       
             "delivery_status_id": "10",
-            "delivery_status_name": "\u5df2\u5b8c\u6210",
+         
             "payment_status_id":"8",
-            "payment_status_name":"\u4ed8\u6b3e\u6210\u529f",
+           
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",
@@ -203,11 +203,11 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "1",
-            "orders_status_name":"\u5df2\u53d6\u6d88",
+           
             "delivery_status_id": "1",
-            "delivery_status_name": "\u5df2\u53d6\u6d88",
+          
             "payment_status_id":"7",
-            "payment_status_name":"\u4ed8\u6b3e\u5931\u8d25",
+       
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",
@@ -259,11 +259,11 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "2",
-            "orders_status_name":"\u5904\u7406\u4e2d",
+   
             "delivery_status_id": "0",
-            "delivery_status_name": "\u5df2\u53d6\u6d88",
+      
             "payment_status_id":"15",
-            "payment_status_name":"\u5f85\u9000\u6b3e",
+    
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",
@@ -315,11 +315,11 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "10",
-            "orders_status_name":"\u5df2\u5b8c\u6210",
+    
             "delivery_status_id": "0",
-            "delivery_status_name": "\u5df2\u53d6\u6d88",
+        
             "payment_status_id":"16",
-            "payment_status_name":"\u5df2\u9000\u6b3e",
+         
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",
@@ -401,7 +401,6 @@ export default {
             "domain_name": "www.mate-mall.com",
             "payment_time": "1970-01-01 08:00:00",
             "delivery_time": "1970-01-01 08:00:00",
-            "orders_status_name": "\u5f85\u5904\u7406",
             "productip": "223.70.199.97",
             "settlement_status": "0",
             "settlement_time": "1970-01-01 08:00:00",
@@ -427,16 +426,16 @@ export default {
                     "orders_status_id":"您编辑了发货单1001-F1的跟踪信息。",
                     "pid":"0",
                     "time":"2023-05-11 15:31:38",
-                    "comments":"{shipping_id} 111 {shipping_method} Quickway",
+                    "comments":"{shipping_id} 111 ",
 
                 },
                 {
                     "id": "2",
                     "orders_id": "5517521343832146904",
-                    "pid":"5517521343832146903",
+                    "pid":"1",
                     "orders_status_id":"您编辑了发货单1001-F1的跟踪信息。",
                     "time":"2023-05-11 15:31:38",
-                    "comments":" ",
+                    "comments":"{remark} 123 ",
 
                 },
                 {
@@ -445,7 +444,7 @@ export default {
                     "pid":"5517521343832146903",
                     "orders_status_id":"您添加了备注。",
                     "time":"2023-05-11 15:31:38",
-                    "comments":"{remark} 123",
+                    "comments":"",
 
                 },
                 {
@@ -465,7 +464,7 @@ export default {
                     "time":"2023-05-11 15:31:38",
                     "comments":"重新发送邮件",
 
-                }
+                },
             ],
             "product_text": "Name: ssss<br\/>Model: ssss | Qty: 1 | <br\/>",
             "status_history_text": "Time: 2023-05-11 15:31:38     Status: Pending<br\/>Comments: 0<br\/><br\/>"
