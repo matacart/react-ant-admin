@@ -91,7 +91,16 @@
 'order.detail.orderlabel': 'Order Label',
 'order.detail.manager': 'Manage',
 'order.detail.selecttext': 'Enter Label',
-
+//timeline
+'status.added.remark': 'You added a remark.',
+'merchant.remark': 'Merchant Remark',
+'status.edited.shipping.info': 'You edited the tracking information for shipping order 1001-F1.',
+'status.payment.request.handled': 'SYSTEM handled the COD payment request of US$1.00.',
+'amount': 'Amount',
+'amount.value': 'US$1.00',
+'status.shipping.update.email.sent': 'Shipping update email sent to Bacteria Nitrogen (1807191473@qq.com).',
+'resend.email': 'Resend Email',
+'app.order.timeline.load-more': 'Load More Records'
 
         
       }

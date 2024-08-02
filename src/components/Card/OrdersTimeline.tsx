@@ -1,79 +1,59 @@
-import React, { ReactNode, useState } from 'react';
-import { Timeline, Button, Collapse } from 'antd';
-import { CaretDownOutlined, CaretRightOutlined, CheckCircleFilled, ClockCircleFilled, DownOutlined, ExclamationCircleFilled, SyncOutlined, UpOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Timeline, Button } from 'antd';
+import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { useIntl } from '@umijs/max';
 
 interface historyinfo {
-  state: ReactNode;
+  id: string;
   orders_id: string;
+  orders_status_id: string; // 国际化标识符
   pid: string;
-  orders_status_id: string;
   time: string;
-  comments: string;
+  comments: string; // 国际化标识符
   children?: historyinfo[];
 }
 
-const renderChildren = (children: historyinfo[], expandedItems: number[], handleExpand: (index: number) => void) => {
-  return (
-    <Timeline>
-      {children.map((childItem, childIndex) => {
-        const childExpandIcon = expandedItems.includes(childIndex) ? <CaretDownOutlined /> : <CaretRightOutlined />;
-        return (
-          <Timeline.Item key={childIndex}>
-            <p onClick={() => handleExpand(childIndex)}>
-              {childItem.orders_status_id} {childExpandIcon}
-              <p style={{ fontSize: '12px', color: '#7A8499' }}>{childItem.time}</p>
-              {expandedItems.includes(childIndex) && (
-                <>
-                  <p>{childItem.comments}</p>
-                  {renderChildren(childItem.children || [], expandedItems, handleExpand)}
-                </>
-              )}
-            </p>
-          </Timeline.Item>
-        );
-      })}
-    </Timeline>
-  );
-};
-
 const OdersTimeline: React.FC<{ order: { historyinfo: historyinfo[] } }> = ({ order }) => {
+  const intl = useIntl();
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
-  const [itemsToShow, setItemsToShow] = useState(4); // 初始只显示前四个数据项
+  const [itemsToShow, setItemsToShow] = useState(4);
 
   const handleExpand = (index: number) => {
-    if (expandedItems.includes(index)) {
-      setExpandedItems(expandedItems.filter(item => item !== index));
-    } else {
-      setExpandedItems([...expandedItems, index]);
-    }
+    setExpandedItems(prevItems => {
+      if (prevItems.includes(index)) {
+        return prevItems.filter(item => item !== index);
+      } else {
+        return [...prevItems, index];
+      }
+    });
   };
 
   const handleLoadMore = () => {
-    setItemsToShow(order.historyinfo.length); // 显示所有数据项
+    setItemsToShow(order.historyinfo.length);
   };
 
   return (
     <Timeline>
-      {(order.historyinfo || []).slice(0, itemsToShow).map((item: historyinfo, index: number) => {
-        const ExpandIcon = expandedItems.includes(index) ? <CaretDownOutlined /> : <CaretRightOutlined />;
-        return (
-          <Timeline.Item key={index}>
-            <p onClick={() => handleExpand(index)}>
-              {item.orders_status_id} {ExpandIcon}
-              <p style={{ fontSize: '12px', color: '#7A8499' }}>{item.time}</p>
-              {expandedItems.includes(index) && (
-                <>
-                  <p>{item.comments}</p>
-                  {item.children && renderChildren(item.children, expandedItems, handleExpand)}
-                </>
-              )}
-            </p>
-          </Timeline.Item>
-        );
-      })}
+      {(order.historyinfo || []).slice(0, itemsToShow).map((item: historyinfo, index: number) => (
+        <Timeline.Item key={index}>
+          <p onClick={() => handleExpand(index)}>
+            {intl.formatMessage({ id: item.orders_status_id })}
+            {expandedItems.includes(index) ? <CaretDownOutlined /> : <CaretRightOutlined />}
+            <p style={{ fontSize: '12px', color: '#7A8499' }}>{item.time}</p>
+            {expandedItems.includes(index) && (
+              <>
+                <p>{intl.formatMessage({ id: item.comments })}</p>
+                {item.children && item.children.map((childItem: historyinfo) => (
+                  <p key={childItem.id}>{intl.formatMessage({ id: childItem.comments })}</p>
+                ))}
+              </>
+            )}
+          </p>
+        </Timeline.Item>
+      ))}
       {itemsToShow < order.historyinfo.length && (
         <Button type="link" onClick={handleLoadMore}>
-          查看更多记录
+          {intl.formatMessage({ id: 'app.order.timeline.load-more' })}
         </Button>
       )}
     </Timeline>

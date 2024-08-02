@@ -13,6 +13,7 @@ import orders from './../../pages/Orders/PascalCase';
 import PaymentState from "./PaymentState";
 import DeliveryState from './DeliveryState';
 import { useIntl } from "@umijs/max";
+import OrdersNewTabs from "./OrdersNewTabs";
 
 
 
@@ -73,7 +74,7 @@ export default function OrdersSelectCard() {
                       <PaymentState /> 
                       <DeliveryState />
                       <MoreSelect />
-                        
+                     
                      
                       <Button size="large"> {intl.formatMessage({ id:'order.button.edittable'})}</Button>
                      
@@ -93,7 +94,7 @@ export default function OrdersSelectCard() {
                              { value: '总价（高至低）', label: '总价（低至高）' },
                          ]}
                      />
-                       
+                        <OrdersNewTabs/>
                     </div>
                     
                 </div>

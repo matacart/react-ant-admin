@@ -10,7 +10,7 @@ import Icon, { ImportOutlined } from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import tabs from 'antd/es/tabs';
 import { Card } from 'antd';
-import  DynamicTabs from '@/components/Tabs/DTTabs'
+import  DTTabs from '@/components/Tabs/DTTabs'
 
 const TabLabel = styled.div`
    font-size: 18px;
@@ -169,8 +169,7 @@ const aItems: MenuProps['items'] = [
         <div className='create-content'>
        
         <div  >
-<DynamicTabs />  
-
+  <DTTabs  /> 
 </div>
           <Tabs
             defaultActiveKey='1'

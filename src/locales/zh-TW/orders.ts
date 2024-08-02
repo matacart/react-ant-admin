@@ -92,4 +92,14 @@ export default {
 'order.detail.orderlabel': '訂單標籤',
 'order.detail.manager': '管理',
 'order.detail.selecttext': '輸入標籤，按enter確認',
+//时间轴
+'status.added.remark': '您添加了備註。',
+'merchant.remark': '商家備註',
+'status.edited.shipping.info': '您編輯了發貨單1001-F1的追蹤資訊。',
+'status.payment.request.handled': 'SYSTEM透過貨到付款處理了US$1.00的付款請求。',
+'amount': '金額',
+'amount.value': 'US$1.00',
+'status.shipping.update.email.sent': '發貨更新電子郵件已發送至化細菌 硝 (1807191473@qq.com)。',
+'resend.email': '重新發送郵件',
+'app.order.timeline.load-more': '查看更多記錄'
   };
