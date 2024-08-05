@@ -14,10 +14,7 @@ import PaymentState from "./PaymentState";
 import DeliveryState from './DeliveryState';
 import { useIntl } from "@umijs/max";
 import OrdersNewTabs from "./OrdersNewTabs";
-
-
-
-
+import { useTabsContext } from '@/components/Card/TabsContext'; 
 
 const { Search } = Input;
 const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
@@ -27,6 +24,7 @@ type TagRender = SelectProps['tagRender'];
 
 const tagRender: TagRender = (props) => {
     const { label, value, closable, onClose } = props;
+    const { panes } = useTabsContext(); // 使用 useTabsContext 获取 Context 数据
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -46,7 +44,8 @@ const tagRender: TagRender = (props) => {
 
 export default function OrdersSelectCard() {
     const intl = useIntl();
-    const resultList=useState([]);
+    const [resultList, setResultList] = useState([]); // 初始化状态
+    
     return (
         <>
             <div className="Orders-select">
@@ -94,13 +93,12 @@ export default function OrdersSelectCard() {
                              { value: '总价（高至低）', label: '总价（低至高）' },
                          ]}
                      />
-                        <OrdersNewTabs/>
                     </div>
                     
                 </div>
                 
             </div>
-            <OrdersListAjax />
+            {/* <OrdersListAjax /> */}
              
         </>
     );
