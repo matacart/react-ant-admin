@@ -1,12 +1,14 @@
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Tabs, Button, Modal, Form, Input } from 'antd';
 import OrdersSelectCard from '@/components/Card/OrdersSelectCard';
 import { useIntl } from '@umijs/max';
-import { TabsProvider, useTabsContext, TabsContextValue } from '@/components/Card/TabsContext'; 
+import { TabsProvider, useTabsContext, TabsContextValue } from '@/components/Card/TabsContext';
 import OrdersListAjax from '../List/OrderListAjax';
 import { Content } from 'antd/es/layout/layout';
 import OrdersNewTabs from '../Card/OrdersNewTabs';
 import { filter } from 'lodash';
+import { LoadingOutlined } from '@ant-design/icons/lib/icons';
+import { v4 as generateUUID } from 'uuid'; 
 
 // 定义 reducer 的 action 类型
 type ActionType = 'ADD_PANE' | 'REMOVE_PANE' | 'RENAME_PANE' | 'SET_ACTIVE_KEY' | 'SET_PANES' | 'UPDATE_FILTER';
@@ -89,12 +91,13 @@ const reducer = (state: TabState, action: Action): TabState => {
 };
 
 function DTTabs() {
+  const [filterConditions, setFilterConditions] = useState<Record<string, string>>({});
+
   const [state, dispatch] = useReducer(reducer, {
     panes: [],
-    activeKey: '1',
+    activeKey: '0',
     filterConditions: {},
   });
-
   const intl = useIntl();
 
   React.useEffect(() => {
@@ -126,6 +129,7 @@ function DTTabs() {
         filter: 'today',
       },
     ];
+    
     console.log('Initial panes:', initialPanes); // 添加调试输出
     dispatch({ type: 'SET_PANES', payload: initialPanes });
   }, []);
@@ -195,11 +199,12 @@ function DTTabs() {
 
   // 生成唯一 key 的辅助函数
   function generateUniqueKey(panes: TabPane[]): string {
-    let key = uuidv4(); // 使用 uuidv4 生成唯一键
-
-    while (panes.some(pane => pane.key === key)) {
-      key = uuidv4();
-    }
+    let key: string;
+  
+    do {
+      key = generateUUID(); // 使用新的别名生成 UUID
+    } while (panes.some(pane => pane.key === key));
+  
     return key;
   }
 
@@ -209,15 +214,36 @@ function DTTabs() {
       dispatch(createSetPanesAction(newPanes));
     },
     updateFilter: (key: string, filter: string) => {
-      dispatch({
-        type: 'UPDATE_FILTER',
-        payload: { key, filter },
-      });
+      dispatch({ type: 'UPDATE_FILTER', payload: { key, filter } }); // 直接更新 state
     },
+    activeKey: state.activeKey, // 使用当前的 activeKey
+    setActiveKey: (key: string) => dispatch({ type: 'SET_ACTIVE_KEY', payload: key }), // 实现 setActiveKey
   };
+  const [loading, setLoading] = useState(false); // 新增加载标志
+  useEffect(() => {
+    // 当 activeKey 改变时，加载对应的内容
+    setLoading(true); // 开始加载
+    // 你可以在这里执行异步操作，例如获取数据
+    // 数据加载完成后，记得清除 loading 标志
+    // setLoading(false);
+
+    // 示例：模拟数据加载
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, [state.activeKey]);
 
   // 定义一个函数，根据 key 的值返回不同的内容
   const getContentByKey = (key: string) => {
+    if (loading) {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+          <LoadingOutlined style={{ color: '#1890FF', fontSize: '30px' }} spin />
+        </div>
+      ); // 显示加载提示
+      
+    }
+    
     switch (key) {
       case '0': // 对应 "归档订单: 展示已归档的订单"
         return <OrdersListAjax filterCondition={state.filterConditions[key] || 'archived'} />;
@@ -286,6 +312,3 @@ function DTTabs() {
 
 export default DTTabs;
 
-function uuidv4(): any {
-  throw new Error('Function not implemented.');
-}

@@ -8,6 +8,8 @@ interface TabPane {
 }
 
 interface TabsContextValue {
+  activeKey: string;
+  setActiveKey: (key: string) => void;
   panes: TabPane[];
   setPanes: (newPanes: TabPane[]) => void;
   updateFilter: (key: string, filter: string) => void;
@@ -19,7 +21,7 @@ const TabsContext = createContext<TabsContextValue | undefined>(undefined);
 // TabsProvider 组件
 const TabsProvider: React.FC<{ children: React.ReactNode; value: TabsContextValue }> = ({ children, value }) => {
   // 确保 value 符合 TabsContextValue 类型
-  if (!Array.isArray(value.panes) || typeof value.setPanes !== 'function') {
+  if (!Array.isArray(value.panes) || typeof value.setPanes !== 'function' || typeof value.setActiveKey !== 'function') {
     throw new Error('TabsProvider value prop must be a valid TabsContextValue object');
   }
 

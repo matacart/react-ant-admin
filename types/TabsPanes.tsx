@@ -11,12 +11,19 @@ interface TabPane {
 
 const App: React.FC = () => {
   // 定义上下文值
+  const [activeKey, setActiveKey] = useState('1'); // 初始激活的标签页
+  const [panes, setPanes] = useState<TabPane[]>([]); // 示例值
+
+  const updateFilter = (key: string, filter: string) => {
+    console.log(`Updating filter for tab ${key}:`, filter);
+  };
+
   const tabsContextValue: TabsContextValue = {
-    panes: [], // 示例值
-    setPanes: (newPanes: TabPane[]) => {
-      // 实现 setPanes 函数逻辑
-      console.log('Setting new panes:', newPanes);
-    },
+    activeKey,
+    setActiveKey,
+    panes,
+    setPanes,
+    updateFilter,
   };
 
   return (

@@ -40,7 +40,7 @@ const getRandomuserParams = (params: TableParams) => ({
   ...params,
 });
 
-export default function OrdersListAjax({ filterCondition }: Props) {
+export default function OrdersListAjax({ filterCondition }: { filterCondition: string }) {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
   // 分页器初始参数
@@ -121,7 +121,8 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     setLoading(true);
     const limit = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    getOrderList(page, limit, condition)
+    let finalCondition = condition || '';
+    getOrderList(page, limit, finalCondition)
       .then((res) => {
         let newData: DataType[] = [];
         res.data?.forEach((item: any) => {

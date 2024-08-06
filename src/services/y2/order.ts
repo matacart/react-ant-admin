@@ -6,7 +6,7 @@ import { request } from '@umijs/max';
 
 
 //  读取订单列表
-export async function getOrderList(page: any, limit: any) {
+export async function getOrderList(page: any, limit: any, finalCondition?: string) {
     return request(`/api/ApiStore/order_list?page=${page}`, {
       method: 'POST',
       headers: {

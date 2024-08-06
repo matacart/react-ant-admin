@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Button, Modal, Input, Space, Popover } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Modal, Input, Space, Popover, Tag } from 'antd';
 import { useTabsContext } from '@/components/Card/TabsContext'; // 导入 useTabsContext
 import { CloseOutlined } from '@ant-design/icons';
+import './OrdersNewTabs.scss';
 
 interface TabPane {
   title: string;
@@ -21,21 +22,36 @@ interface FilterCondition {
 const OrdersNewTabs: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const { setPanes } = useTabsContext(); // 从 TabsContext 获取 setPanes
+  const { setPanes, panes } = useTabsContext(); // 从 TabsContext 获取 setPanes 和 panes
+  const [filterConditions, setFilterConditions] = useState<Record<string, string>>({});
+  const initialConditions: FilterCondition[] = [
+    { id: '0', filter_group_id: '0', filter_name: '归档订单: 展示已归档的订单', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
+    { id: '1', filter_group_id: '1', filter_name: '发货状态: 待发货, 部分发货', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
+    { id: '2', filter_group_id: '1', filter_name: '订单状态: 处理中', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
+    { id: '3', filter_group_id: '1', filter_name: '订单状态: 已取消', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
+    { id: '4', filter_group_id: '1', filter_name: '订单日期: 今天', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' }
+  ];
+
+  const [array, setArray] = useState<FilterCondition[]>(initialConditions);
+  const [history, setHistory] = useState<FilterCondition[][]>([initialConditions]);
 
   const showModal = () => {
     setVisible(true);
   };
 
   const handleOk = () => {
+    // 清空当前过滤条件
+    setArray([]);
+
     const newKey = `${Date.now()}`; // 使用当前时间戳作为唯一key
     const newTabPane: TabPane = {
       title: inputValue,
       key: newKey,
-      content: <FilterContent filters={array} />, // 添加过滤条件内容
+      // content: <FilterContent filters={array} />, // 添加过滤条件内容
     };
 
     setPanes((prevPanes) => [...prevPanes, newTabPane]); // 添加新的选项卡
+    setFilterConditions((prevConditions) => ({ ...prevConditions, [newKey]: inputValue }));
     setVisible(false);
 
     setInputValue('');
@@ -49,56 +65,50 @@ const OrdersNewTabs: React.FC = () => {
     setInputValue(e.target.value);
   };
 
-  const array: FilterCondition[] = [
-    { id: '0', filter_group_id: '0', filter_name: '订单状态', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-    { id: '1', filter_group_id: '0', filter_name: '订单状态', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-    { id: '2', filter_group_id: '1', filter_name: '订单状态', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-    { id: '3', filter_group_id: '1', filter_name: '订单状态', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-    { id: '4', filter_group_id: '1', filter_name: '订单状态', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' }
-  ];
-
-  // 过滤条件的展示组件
-  const FilterContent: React.FC<{ filters: FilterCondition[] }> = ({ filters }) => {
-    return (
-      <div>
-        {filters.map((filter) => (
-          <div key={filter.id}>
-            <span>{filter.filter_name}: </span>
-            <span>{filter.filter_value}</span>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   // 处理关闭过滤条件
   const handleRemoveFilter = (id: string) => {
-    // 逻辑处理：例如从数组中移除对应的过滤条件
-    console.log(`Remove filter with ID: ${id}`);
+    // 更新 array 数组以移除对应的过滤条件
+    setArray((prevArray) => prevArray.filter((item) => item.id !== id));
+    saveToHistory();
   };
 
-  // 过滤条件按钮
-  const filterButtons = array.map((filter) => (
-    <Popover
-      key={filter.id}
-      content={<CloseOutlined onClick={() => handleRemoveFilter(filter.id)} />}
-      trigger="hover"
-      placement="bottom"
-    >
-      <Button disabled size="small" style={{ marginRight: 8 }}>
+  // 保存当前条件到历史
+  const saveToHistory = () => {
+    setHistory([...history, [...array]]);
+  };
+
+  // 过滤条件标签渲染
+  const filterTags = array.map((filter) => {
+    return (
+      <Tag
+        key={filter.id}
+        closable
+        onClose={() => handleRemoveFilter(filter.id)}
+        className='tag'
+      >
         {filter.filter_name}
-      </Button>
-    </Popover>
-  ));
+      </Tag>
+    );
+  });
+
+   // 更新useEffect逻辑
+   useEffect(() => {
+    // 当过滤条件改变时，恢复最后一个保存的状态
+    if (Object.keys(filterConditions).length > 0) {
+      setArray(initialConditions);
+    }
+  }, [filterConditions]);
 
   return (
     <div className="container">
-      <Space>
-        {filterButtons}
-        <Button className='button' type="primary" onClick={showModal}>
-          新建选项卡
-        </Button>
-      </Space>
+      <div className="filter-and-button-container">
+        <Space direction="horizontal" size="middle">
+          {filterTags}
+          <Button className="button" type="primary" onClick={showModal}>
+            新建选项卡
+          </Button>
+        </Space>
+      </div>
       <Modal
         title="新建选项卡"
         visible={visible}

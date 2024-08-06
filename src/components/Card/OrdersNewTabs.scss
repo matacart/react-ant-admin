@@ -1,2 +1,30 @@
-/* OrdersNewTabs.css */
 
+.button-selected:hover {
+    cursor: text; /* 改变鼠标样式 */
+    background-color: #DCEAFB; /* 背景颜色 */
+    border: 1px solid #99C1E7; /* 边框颜色 */
+  }
+
+  .button {
+    margin: 10px 4px 0 0;
+    padding:  0 9px ;
+    font-size: 12px; // 假设你想要的是 12px
+    color: #474F5E;
+    border: 1px solid #ccc;
+    background: #FFFFFF;
+    height:28px;
+  }
+  .tag {
+    margin: 10px 4px 0 0;
+    background-color: #E2F0FF;
+    font-size: 14px;
+    height: 30px;
+    line-height: 28px; /* 使文本垂直居中 */
+    padding: 0 8px; /* 左右内边距，使文本左右有一定的间距 */
+    display: inline-block; /* 使元素能够根据内容自动调整宽度 */
+  }
+  .filter-and-button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 调整按钮和标签之间的间距 */
+  }
