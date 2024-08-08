@@ -1,22 +1,24 @@
 import { ArrowLeftOutlined, CopyOutlined, LeftOutlined, LeftSquareFilled, LeftSquareOutlined, RightOutlined, RightSquareFilled, RightSquareOutlined } from '@ant-design/icons'
 import { Button, Card, ConfigProvider, Drawer, Form, GetProp, Input, message, Select, TableProps, Tooltip } from 'antd'
-import OrdersShippedCard from '@/components/Card/OrdersShippedCard';
-import OrdersPaidCard from '@/components/Card/OrdersPaidCard';
-import OrdersNotesCard from '@/components/Card/OrdersNotesCard'
-import CustomsInformation from '@/components/Card/CustomsInformation';
-import OrdersIdCard from '@/components/Card/OrdersIdCard';
+
 import styled from 'styled-components';
-import  FraudAnalysis from '@/components/Card/FraudAnalysis'
+
 import qs from 'qs';
 import { Divider } from 'antd';
 import { history, useIntl, useParams } from '@umijs/max';
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import AbstractCard from '@/components/Card/AbstractCard';
-import OrdersLabelCard from '@/components/Card/OrdersLabelCard';
-import OrdersTimeline from '@/components/Card/OrdersTimeline';
+
 import { getOrderDetail } from '@/services/y2/order';
-import orders from './index';
+import OrdersShippedCard from './OrdersShippedCard';
+import AbstractCard from './AbstractCard';
+import CustomsInformation from './CustomsInformation';
+import FraudAnalysis from './FraudAnalysis';
+import OrdersIdCard from './OrdersIdCard';
+import OrdersLabelCard from './OrdersLabelCard';
+import OrdersNotesCard from './OrdersNotesCard';
+import OrdersPaidCard from './OrdersPaidCard';
+import OrdersTimeline from './OrdersTimeline';
 interface OrderDetail {
     id: string; // 订单ID
     date_purchased:string;//订单日期

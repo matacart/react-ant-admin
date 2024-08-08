@@ -19,7 +19,7 @@ import type { RequestConfig } from '@umijs/max';
 import { errorConfig } from './requestErrorConfig';
 import SelectDomain from './components/RightContent/SelectDomain';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ProductListAjax from './components/List/OrderListAjax';
+// import ProductListAjax from './components/List/OrderListAjax';
 import Orders from './pages/Orders';
 import React, { useState } from 'react';
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
@@ -268,25 +268,3 @@ export const request: RequestConfig = {
 };
 
 
-//App
-// App.tsx
-
-// import OrdersNewTabs from '@/components/Card/OrdersNewTabs';
-// import { TabsProvider } from '@/components/Card/TabsContext';
-
-// interface TabPane {
-//   title: string;
-//   key: string;
-//   content?: any; // 可选属性
-// }
-// const App = () => {
-//   const [panes, setPanes] = useState<TabPane[]>([]); // 直接使用 useState 来管理状态
-  
-//   return (
-//     <TabsProvider value={{ panes, setPanes }}> {/* 使用TabsProvider */}
-//       <OrdersNewTabs />
-//     </TabsProvider>
-//   );
-// };
-
-// export default App;

@@ -59,7 +59,7 @@ export default [
       {  
         path: 'manages',  
         name: 'manages',  
-        component: './Orders/index', // 假设您的 Orders/index 组件位于 src/pages/Orders/index.jsx 或类似的路径  
+        component: './Orders/OrderItem/index', // 假设您的 Orders/index 组件位于 src/pages/Orders/OrderItem/index.jsx 或类似的路径  
       
       
     
@@ -71,7 +71,7 @@ export default [
         // 菜单的显示与隐藏应该在菜单配置中处理  
         // 但如果您需要在路由级别做一些处理，可以考虑使用 meta 字段  
       
-        component: './Orders/OrderDetail', // 订单详情组件的路径  
+        component: './Orders/OrderDetail/OrderDetail', // 订单详情组件的路径  
         // 在 UmiJS 中，通常不需要在路由配置中直接传递 props  
         // 但您可以在组件内部通过 this.props.location.params.orderId 访问动态路由参数  
         // 注意：UmiJS 可能不直接支持 params，您可能需要使用 query 或其他方式来传递参数  

@@ -16,7 +16,7 @@ export default{
 'order.button.sorting':'排序',
 //标签页头
 'order.tabs.all':'全部',
-'order.tabs.readytoship':'代发货',
+'order.tabs.readytoship':'待发货',
 'order.tabs.cancelled':'已取消',
 'order.tabs.process':'处理中',
 'order.tabs.neworders':'今日新订单',

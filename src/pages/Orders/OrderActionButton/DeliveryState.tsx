@@ -1,5 +1,5 @@
 import React, { useState } from 'react';  
-import './DropdownState.scss'; // 假设您有一个CSS文件来处理样式  
+import '@/components/Card/DropdownList.scss'; 
 import { useIntl } from '@umijs/max';
   
 const DeliveryState = () => {  
@@ -25,7 +25,7 @@ const DeliveryState = () => {
   const renderOptions = () => (  
     <div className="dropdown-content">  
       {/* 假设的选项列表 */}  
-      {['代发货','已发货','发货中'].map((option, index) => (  
+      {['待发货','已发货','发货中'].map((option, index) => (  
         <div key={index} className="dropdown-item" onClick={() => handleOptionChange(option)}>  
           <input  
             type="checkbox"  

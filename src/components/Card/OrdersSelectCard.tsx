@@ -2,19 +2,17 @@ import { Space, Select, Input, Tag, Button } from "antd";
 import type { SearchProps } from 'antd/es/input/Search';
 import type { SelectProps } from 'antd';
 import { useState } from "react";
-import OrdersListAjax from "../List/OrderListAjax";
 import PriceRangeSelector from "../Select/PriceRangeSelector";
 import MoreSelect from "../Select/MoreSelect";
 import Icon from "@ant-design/icons";
-import DropdownState from "./PaymentState";
 
 // import OrderSelectComponent from "./SelectCeck";
 import orders from './../../pages/Orders/PascalCase';
-import PaymentState from "./PaymentState";
-import DeliveryState from './DeliveryState';
 import { useIntl } from "@umijs/max";
-import OrdersNewTabs from "./OrdersNewTabs";
-import { useTabsContext } from '@/components/Card/TabsContext'; 
+import DeliveryState from "@/pages/Orders/OrderActionButton/DeliveryState";
+import PaymentState from "@/pages/Orders/OrderActionButton/PaymentState";
+
+
 
 const { Search } = Input;
 const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
@@ -24,7 +22,7 @@ type TagRender = SelectProps['tagRender'];
 
 const tagRender: TagRender = (props) => {
     const { label, value, closable, onClose } = props;
-    const { panes } = useTabsContext(); // 使用 useTabsContext 获取 Context 数据
+
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -98,7 +96,6 @@ export default function OrdersSelectCard() {
                 </div>
                 
             </div>
-            {/* <OrdersListAjax /> */}
              
         </>
     );

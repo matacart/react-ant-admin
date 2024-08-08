@@ -6,22 +6,23 @@ import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from 
 import styled from 'styled-components';
 import { getOrderList } from '@/services/y2/order';
 import { history, useIntl } from '@umijs/max';
+
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
 // 表单项订单数据类型
 interface DataType {
-    orderid: string;
-    orderdata: string;
-    paymentmethod: string;
-    deliveryname: string;
-    shippingmethod: string;
-    price: number;
-    orderstate: string;
-    paymentstate: string;
-    deliverystate: string;
-    paymentchannel: string;
-    tel: string;
+  orderid: string;
+  orderdata: string;
+  paymentmethod: string;
+  deliveryname: string;
+  shippingmethod: string;
+  price: number;
+  orderstate: string;
+  paymentstate: string;
+  deliverystate: string;
+  paymentchannel: string;
+  tel: string;
 }
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -31,7 +32,7 @@ interface TableParams {
 }
 
 interface Props {
-  filterCondition?: string;
+  filterCondition?: string[];
 }
 
 const getRandomuserParams = (params: TableParams) => ({
@@ -40,7 +41,7 @@ const getRandomuserParams = (params: TableParams) => ({
   ...params,
 });
 
-export default function OrdersListAjax({ filterCondition }: { filterCondition: string }) {
+export default function OrdersListAjax({ filterCondition }: Props) {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
   // 分页器初始参数
@@ -117,11 +118,12 @@ export default function OrdersListAjax({ filterCondition }: { filterCondition: s
     },
   ];
 
-  const fetchData = (condition?: string) => {
+  const fetchData = (condition?: string[]) => {
     setLoading(true);
     const limit = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    let finalCondition = condition || '';
+    let finalCondition: string[] = condition ? condition : [];
+    // 确保将过滤条件正确地传递给 getOrderList 方法
     getOrderList(page, limit, finalCondition)
       .then((res) => {
         let newData: DataType[] = [];
@@ -157,6 +159,7 @@ export default function OrdersListAjax({ filterCondition }: { filterCondition: s
   };
 
   useEffect(() => {
+    // 在这里监听 `filterCondition` 的变化，并重新获取数据
     fetchData(filterCondition);
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize, filterCondition]);
 
@@ -187,7 +190,7 @@ export default function OrdersListAjax({ filterCondition }: { filterCondition: s
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 1300 }}
-        onRow={(record) => ({ // 添加onRow属性来处理行点击事件
+        onRow={(record) => ({
           onClick: () => handleOrderClick(record.orderid), // 点击行时调用handleOrderClick
         })}
         rowSelection={{

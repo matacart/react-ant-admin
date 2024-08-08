@@ -5,15 +5,23 @@ import { request } from '@umijs/max';
 
 
 
-//  读取订单列表
-export async function getOrderList(page: any, limit: any, finalCondition?: string) {
-    return request(`/api/ApiStore/order_list?page=${page}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-  }
+//  读取订单列表import { request } from 'your-request-library'; // 假设这是您的请求库
+
+export async function getOrderList(page: number, limit: number, finalCondition?: string[]): Promise<any> {
+  const body = {
+    page,
+    limit,
+    ...(finalCondition && { finalCondition }), // 只有当finalCondition存在时才添加
+  };
+
+  return request(`/api/ApiStore/order_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body), // 将body转换为JSON字符串
+  });
+}
   
   //读取订单
 
