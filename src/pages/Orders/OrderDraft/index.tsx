@@ -12,6 +12,7 @@ import tabs from 'antd/es/tabs';
 import { Card } from 'antd';
 import  DTTabs from '@/components/Tabs/DTTabs'  
 import ReactDOM from 'react-dom'; 
+import { Link} from 'react-router-dom';
 import { history } from '@umijs/max';
 const TabLabel = styled.div`
    font-size: 18px;
@@ -91,7 +92,7 @@ const aItems: MenuProps['items'] = [
               position: 'relative',
               top: 10,
               display: 'inline-block',
-            }}>{intl.formatMessage({ id:'orderlist.header'})}</h3>
+            }}>{intl.formatMessage({ id:'order.draft.header'})}</h3>
             <ImportOutlined style={{
               position: 'relative',
               top: -24,
@@ -108,7 +109,7 @@ const aItems: MenuProps['items'] = [
               <Dropdown menu={{ items: aItems }} >
                 <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
                   <Space>
-                  {intl.formatMessage({ id:'orderlist.import.orders'})}
+                  {intl.formatMessage({ id:'order.import.draft'})}
                   </Space>
                 </a>
               </Dropdown>
@@ -116,42 +117,22 @@ const aItems: MenuProps['items'] = [
           </div>
           
           <div className='"button-container"'>
-            < Button 
-              onClick={() => {  }}
-              style={{
-                marginTop: "10px",
-                backgroundColor: 'WHITE',
-                marginRight: '12px',
-                width: "90px", height: "36px", fontSize: "14px",
-
-              }}>
-             {intl.formatMessage({ id:'order.button.bulkshipping'})}
-            </Button>
-
-            <Button
-             
-              style={{
-                marginTop: "10px",
-                marginRight: '12px',
-                backgroundColor: 'white',
-                width: "118px", height: "36px", fontSize: "14px",
+           
 
 
-              }}>
-             {intl.formatMessage({ id:'order.button.updatetrackingnumber'})}
-            </Button>
-
-
-
-            <Button type="primary"
+          <Button type="primary"
               onClick={() => { history.push('/orders/draftOrders/add') }}
               style={{
                 marginTop: "10px",
-                width: "88px", height: "36px", fontSize: "16px",background:'#356DFF',
+                width: "88px", height: "36px", fontSize: "16px",background:'#356DFF'
 
               }}>
                {intl.formatMessage({ id: 'order.button.createorder' })}
             </Button>
+          
+   
+
+          
 
           </div>
           
@@ -167,12 +148,9 @@ const aItems: MenuProps['items'] = [
         <div className='create-content'>
        
         <div  >
-  <DTTabs  /> 
+//订单列表
 </div>
-          <Tabs
-            defaultActiveKey='1'
-           
-          />
+       //
       
         </div>
       </div>
@@ -202,13 +180,7 @@ const aItems: MenuProps['items'] = [
 
 
 
-
 function handleLianHuoDanClick(): void {
-  throw new Error('Function not implemented.');
+    throw new Error('Function not implemented.');
 }
-// function setTabs(arg0: any[]) {
-//   throw new Error('Function not implemented.');
-// }
-
-
 

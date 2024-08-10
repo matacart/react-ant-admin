@@ -82,18 +82,16 @@ export default [
         name: 'recallOrders',
         component: './Orders/AbandonedOrder',
       },
-      // {
-      //   // 
-      //   path: 'new',
-      //   name: 'new',
-      //   menu: false,
-      //   component: './Orders/New',
-      // },
       {
         path: 'draftOrders',
         name: 'draftOrders',
-        component: './Orders/DraftDocument'
-      }
+        component: './Orders/OrderDraft/index',
+      },
+        {
+          path: 'draftOrders/add',
+          name: '',
+          component: './Orders/OrderDraft/OrderDraftAdd',
+        },
     ]    
   },
   // 商品

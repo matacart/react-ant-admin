@@ -1,14 +1,10 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
-import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Button, Checkbox, GetProp, Input, message, Modal, Popover, Radio, Switch, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { getOrderList } from '@/services/y2/order';
 import { history, useIntl } from '@umijs/max';
-
-type ColumnsType<T> = TableProps<T>['columns'];
-type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
 // 表单项订单数据类型
 interface DataType {
@@ -23,7 +19,9 @@ interface DataType {
   deliverystate: string;
   paymentchannel: string;
   tel: string;
+  [key: string]: string | number;
 }
+
 interface TableParams {
   pagination?: TablePaginationConfig;
   sortField?: string;
@@ -31,8 +29,18 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
+// 接收 FilterCondition 类型
+interface FilterCondition {
+  id: string;
+  filter_group_id: string;
+  filter_name: React.ReactNode;
+  filter_field: string;
+  filter_value: string;
+  module: string;
+}
+
 interface Props {
-  filterCondition?: string[];
+  filterCondition?: FilterCondition[];
 }
 
 const getRandomuserParams = (params: TableParams) => ({
@@ -44,18 +52,14 @@ const getRandomuserParams = (params: TableParams) => ({
 export default function OrdersListAjax({ filterCondition }: Props) {
   const intl = useIntl();
   const [loading, setLoading] = useState(false);
-  // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
       pageSize: 10,
     },
   });
-
-  // 列表数据
   const [data, setData] = useState<DataType[]>([]);
 
-  // 表头
   const columns: TableColumnsType<DataType> = [
     {
       title: intl.formatMessage({ id: 'order.tableheader.orderid' }),
@@ -111,38 +115,53 @@ export default function OrdersListAjax({ filterCondition }: Props) {
       title: intl.formatMessage({ id: 'order.tableheader.pricetotal' }),
       dataIndex: 'price',
       width: 100,
-      render: (value, record, index) => {
+      render: (value: any, record: any, index: any) => {
         let num = Number(value);
         return <>{`US$ ${num.toFixed(2)}`}</>;
       },
     },
   ];
 
-  const fetchData = (condition?: string[]) => {
+  const fetchData = (condition?: FilterCondition[]) => {
     setLoading(true);
     const limit = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    let finalCondition: string[] = condition ? condition : [];
-    // 确保将过滤条件正确地传递给 getOrderList 方法
-    getOrderList(page, limit, finalCondition)
-      .then((res) => {
-        let newData: DataType[] = [];
-        res.data?.forEach((item: any) => {
-          newData.push({
-            orderid: item.id,
-            orderdata: item.date_purchased,
-            orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
-            paymentmethod: item.payment_method,
-            paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
-            deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
-            deliveryname: item.delivery_name,
-            tel: item.tel,
-            shippingmethod: item.shipping_method,
-            paymentchannel: item.payment_method,
-            price: item.order_total,
-          });
-        });
-        setData(newData);
+    let finalCondition: FilterCondition[] = condition || [];
+
+    // 确保 finalCondition 包含了 filterCondition 中的过滤条件
+    if (filterCondition && filterCondition.length > 0) {
+      finalCondition = filterCondition;
+    }
+
+    console.log('Fetching data with:', { page, limit, finalCondition });
+
+    // 构造查询字符串
+    const searchParams = new URLSearchParams();
+    finalCondition.forEach(cond => {
+      searchParams.set(cond.filter_field, cond.filter_value);
+    });
+
+    // 发送请求
+  getOrderList(page, limit, finalCondition)
+  .then((res) => {
+    console.log('Response from getOrderList:', res);
+
+    const newData: DataType[] = res.data?.map((item: any) => ({
+          orderid: item.id,
+          orderdata: item.date_purchased,
+          orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
+          paymentmethod: item.payment_method,
+          paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
+          deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
+          deliveryname: item.delivery_name,
+          tel: item.tel,
+          shippingmethod: item.shipping_method,
+          paymentchannel: item.payment_method,
+          price: item.order_total,
+        }));
+
+        console.log('New data after processing:', newData);
+        setData(newData); // 使用过滤后的数据
         setLoading(false);
         setTableParams({
           ...tableParams,
@@ -151,11 +170,11 @@ export default function OrdersListAjax({ filterCondition }: Props) {
             total: res.count,
           },
         });
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
       });
-  };
-
-  const translateStatus = (statusKey: string, intl: any): string => {
-    return intl.formatMessage({ id: statusKey });
   };
 
   useEffect(() => {
@@ -163,13 +182,16 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     fetchData(filterCondition);
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize, filterCondition]);
 
+  const translateStatus = (statusKey: string, intl: any): string => {
+    return intl.formatMessage({ id: statusKey });
+  };
+
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
       pagination,
       filters,
       ...sorter,
     });
-    // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
@@ -206,6 +228,8 @@ export default function OrdersListAjax({ filterCondition }: Props) {
 
 const Scoped = styled.div`
   .ant-table-tbody > tr > td {
-    padding: 10px; 
+    padding: 10px;
   }
 `;
+
+

@@ -102,8 +102,10 @@ export default{
 'amount.value': 'US$1.00',
 'status.shipping.update.email.sent': '发货更新电子邮件已发送至化细菌 硝 (1807191473@qq.com)。',
 'resend.email': '重新发送邮件',
-'app.order.timeline.load-more': '查看更多记录'
-
+'app.order.timeline.load-more': '查看更多记录',
+//草稿箱订单
+'order.import.draft': '导出草稿单',
+'order.draft.header':'草稿单',
 
 
 

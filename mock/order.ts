@@ -258,7 +258,7 @@ export default {
             "postcode": "32204",
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
-            "orders_status_id": "2",
+            "orders_status_id": "0",
    
             "delivery_status_id": "0",
       
