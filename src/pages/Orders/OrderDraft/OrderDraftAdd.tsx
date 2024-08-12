@@ -8,14 +8,12 @@ import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import AbstractCard from '../OrderDetail/AbstractCard';
-import CustomsInformation from '../OrderDetail/CustomsInformation';
-import FraudAnalysis from '../OrderDetail/FraudAnalysis';
-import OrdersIdCard from '../OrderDetail/OrdersIdCard';
-import OrdersLabelCard from '../OrderDetail/OrdersLabelCard';
-import OrdersNotesCard from '../OrderDetail/OrdersNotesCard';
 import AddProductCard from './AddProductCard';
 import DraftPaidCard from './DraftPaidCard';
+import CustomInformationEdit from './CustomInformationEdit';
+import MaketCard from './MaketCard';
+import OrderDraftLabel from './OrderDraftLabel';
+import OrderNotesLable from './OrderNotesLable';
 
 
 
@@ -42,24 +40,13 @@ function New(){
                         < AddProductCard />
                          <DraftPaidCard/>
 
-
-
-
-
-
-
-
-
-
                         </div>
                         <div className='mc-layout-extra'>
                            
-                        <OrdersNotesCard/>
-                        <CustomsInformation order={undefined} />
-                        <OrdersIdCard order={undefined} />
-                        < FraudAnalysis />
-                        < AbstractCard/>
-                        <OrdersLabelCard/>
+                       <CustomInformationEdit/>
+                       <MaketCard/>
+                       <OrderNotesLable/>
+                      <OrderDraftLabel/>
 
 
 

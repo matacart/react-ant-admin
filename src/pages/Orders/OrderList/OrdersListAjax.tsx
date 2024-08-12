@@ -135,11 +135,11 @@ export default function OrdersListAjax({ filterCondition }: Props) {
 
     console.log('Fetching data with:', { page, limit, finalCondition });
 
-    // 构造查询字符串
-    const searchParams = new URLSearchParams();
-    finalCondition.forEach(cond => {
-      searchParams.set(cond.filter_field, cond.filter_value);
-    });
+    // // 构造查询字符串
+    // const searchParams = new URLSearchParams();
+    // finalCondition.forEach(cond => {
+    //   searchParams.set(cond.filter_field, cond.filter_value);
+    // });
 
     // 发送请求
   getOrderList(page, limit, finalCondition)
