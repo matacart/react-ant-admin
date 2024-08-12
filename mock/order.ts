@@ -258,7 +258,7 @@ export default {
             "postcode": "32204",
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
-            "orders_status_id": "2",
+            "orders_status_id": "0",
    
             "delivery_status_id": "0",
       
@@ -423,48 +423,53 @@ export default {
                 {
                     "id": "1",
                     "orders_id": "5517521343832146903",
-                    "orders_status_id":"您编辑了发货单1001-F1的跟踪信息。",
+                    "orders_status_id":"status.added.remark", // 使用国际化标识符
                     "pid":"0",
                     "time":"2023-05-11 15:31:38",
-                    "comments":"{shipping_id} 111 ",
-
-                },
-                {
-                    "id": "2",
-                    "orders_id": "5517521343832146904",
-                    "pid":"1",
-                    "orders_status_id":"您编辑了发货单1001-F1的跟踪信息。",
-                    "time":"2023-05-11 15:31:38",
-                    "comments":"{remark} 123 ",
+                    "comments":"merchant.remark", // 使用国际化标识符
+                    "children": [
+                        {
+                            "id": "2",
+                            "orders_id": "5517521343832146904",
+                            "pid":"1",
+                            "comments":"111"
+                        }
+                    ]
 
                 },
                 {
                     "id": "3",
                     "orders_id": "5517521343832146905",
                     "pid":"5517521343832146903",
-                    "orders_status_id":"您添加了备注。",
+                    "orders_status_id":"status.edited.shipping.info", // 使用国际化标识符
                     "time":"2023-05-11 15:31:38",
-                    "comments":"",
-
+                    "comments":"222"
                 },
                 {
                     "id": "4",
                     "orders_id": "5517521343832146906",
                     "pid":"0",
-                    "orders_status_id":"SYSTEM通过货到付款处理了US$1.00的付款请求。",
+                    "orders_status_id":"status.payment.request.handled", // 使用国际化标识符
                     "time":"2023-05-11 15:31:38",
-                    "comments":"{order_total} US$1.00",
-
+                    "comments":"amount", // 使用国际化标识符
+                    "children": [
+                        {
+                            "id": "5",
+                            "orders_id": "5517521343832146909",
+                            "pid":"1",
+                            "comments":"amount.value" // 使用国际化标识符
+                        }
+                    ]
                 },
-                {
-                    "id": "5",
-                    "orders_id": "5517521343832146907",
-                    "pid":"0",
-                    "orders_status_id":"发货更新电子邮件已发送至化细菌 硝 (1807191473@qq.com)。",
-                    "time":"2023-05-11 15:31:38",
-                    "comments":"重新发送邮件",
-
-                },
+                
+                    {
+                        "id": "6",
+                        "orders_id": "5517521343832146907",
+                        "pid":"0",
+                        "orders_status_id":"status.shipping.update.email.sent", // 使用国际化标识符
+                        "time":"2023-05-11 15:31:38",
+                        "comments":"resend.email" // 使用国际化标识符
+                    }
             ],
             "product_text": "Name: ssss<br\/>Model: ssss | Qty: 1 | <br\/>",
             "status_history_text": "Time: 2023-05-11 15:31:38     Status: Pending<br\/>Comments: 0<br\/><br\/>"

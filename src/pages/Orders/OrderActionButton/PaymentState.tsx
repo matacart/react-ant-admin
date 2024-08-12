@@ -1,5 +1,5 @@
 import React, { useState } from 'react';  
-import './DropdownState.scss'; // 假设您有一个CSS文件来处理样式  
+import '@/components/Card/DropdownList.scss';
 import { useIntl } from '@umijs/max';
   
 const DropdownState = () => {  

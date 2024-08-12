@@ -1,6 +1,6 @@
 export default{
 'orderlist.header':'订单列表',
-'orderlist.import.orders':'导入订单',
+'orderlist.import.orders':'导出订单',
 'orderlist.picking.list':'拣货单',
 'orderlist.shipping.list':'出货表',
 'orderlist.order.detail':'订单明细',
@@ -16,7 +16,7 @@ export default{
 'order.button.sorting':'排序',
 //标签页头
 'order.tabs.all':'全部',
-'order.tabs.readytoship':'代发货',
+'order.tabs.readytoship':'待发货',
 'order.tabs.cancelled':'已取消',
 'order.tabs.process':'处理中',
 'order.tabs.neworders':'今日新订单',
@@ -93,9 +93,19 @@ export default{
 'order.detail.orderlabel':'订单标签',
 'order.detail.manager':'管理',
 'order.detail.selecttext':'输入标签，按enter确认',
-
-
-
+//订单详情时间轴
+'status.added.remark': '您添加了备注。',
+'merchant.remark': '商家备注',
+'status.edited.shipping.info': '您编辑了发货单1001-F1的跟踪信息。',
+'status.payment.request.handled': 'SYSTEM通过货到付款处理了US$1.00的付款请求。',
+'amount': '金额',
+'amount.value': 'US$1.00',
+'status.shipping.update.email.sent': '发货更新电子邮件已发送至化细菌 硝 (1807191473@qq.com)。',
+'resend.email': '重新发送邮件',
+'app.order.timeline.load-more': '查看更多记录',
+//草稿箱订单
+'order.import.draft': '导出草稿单',
+'order.draft.header':'草稿单',
 
 
 

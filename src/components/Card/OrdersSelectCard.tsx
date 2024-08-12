@@ -2,19 +2,15 @@ import { Space, Select, Input, Tag, Button } from "antd";
 import type { SearchProps } from 'antd/es/input/Search';
 import type { SelectProps } from 'antd';
 import { useState } from "react";
-import OrdersListAjax from "../List/OrderListAjax";
 import PriceRangeSelector from "../Select/PriceRangeSelector";
 import MoreSelect from "../Select/MoreSelect";
 import Icon from "@ant-design/icons";
-import DropdownState from "./PaymentState";
 
 // import OrderSelectComponent from "./SelectCeck";
 import orders from './../../pages/Orders/PascalCase';
-import PaymentState from "./PaymentState";
-import DeliveryState from './DeliveryState';
 import { useIntl } from "@umijs/max";
-
-
+import DeliveryState from "@/pages/Orders/OrderActionButton/DeliveryState";
+import PaymentState from "@/pages/Orders/OrderActionButton/PaymentState";
 
 
 
@@ -26,6 +22,7 @@ type TagRender = SelectProps['tagRender'];
 
 const tagRender: TagRender = (props) => {
     const { label, value, closable, onClose } = props;
+
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -45,7 +42,8 @@ const tagRender: TagRender = (props) => {
 
 export default function OrdersSelectCard() {
     const intl = useIntl();
-    const resultList=useState([]);
+    const [resultList, setResultList] = useState([]); // 初始化状态
+    
     return (
         <>
             <div className="Orders-select">
@@ -73,7 +71,7 @@ export default function OrdersSelectCard() {
                       <PaymentState /> 
                       <DeliveryState />
                       <MoreSelect />
-                        
+                     
                      
                       <Button size="large"> {intl.formatMessage({ id:'order.button.edittable'})}</Button>
                      
@@ -93,13 +91,11 @@ export default function OrdersSelectCard() {
                              { value: '总价（高至低）', label: '总价（低至高）' },
                          ]}
                      />
-                       
                     </div>
                     
                 </div>
                 
             </div>
-            <OrdersListAjax />
              
         </>
     );

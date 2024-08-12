@@ -10,8 +10,9 @@ import Icon, { ImportOutlined } from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import tabs from 'antd/es/tabs';
 import { Card } from 'antd';
-import  DynamicTabs from '@/components/Tabs/DTTabs'
-
+import  DTTabs from '@/components/Tabs/DTTabs'  
+import ReactDOM from 'react-dom'; 
+import { history } from '@umijs/max';
 const TabLabel = styled.div`
    font-size: 18px;
 `
@@ -115,7 +116,7 @@ const aItems: MenuProps['items'] = [
           </div>
           
           <div className='"button-container"'>
-            < Button className="my-button1"
+            < Button 
               onClick={() => {  }}
               style={{
                 marginTop: "10px",
@@ -127,7 +128,7 @@ const aItems: MenuProps['items'] = [
              {intl.formatMessage({ id:'order.button.bulkshipping'})}
             </Button>
 
-            <Button className='my-button2'
+            <Button
              
               style={{
                 marginTop: "10px",
@@ -142,18 +143,15 @@ const aItems: MenuProps['items'] = [
 
 
 
-            <Button className='my-button3'
-              
+            <Button type="primary"
+              onClick={() => { history.push('/orders/draftOrders/add') }}
               style={{
                 marginTop: "10px",
-                backgroundColor: '#356DFF',
-                width: "88px", height: "34px", fontSize: "14px", color: 'white',
-
+                width: "88px", height: "36px", fontSize: "16px",background:'#356DFF',
 
               }}>
-             {intl.formatMessage({ id:'order.button.createorder'})}
+               {intl.formatMessage({ id: 'order.button.createorder' })}
             </Button>
-          
 
           </div>
           
@@ -169,8 +167,7 @@ const aItems: MenuProps['items'] = [
         <div className='create-content'>
        
         <div  >
-<DynamicTabs />  
-
+  <DTTabs  /> 
 </div>
           <Tabs
             defaultActiveKey='1'
@@ -178,8 +175,6 @@ const aItems: MenuProps['items'] = [
           />
       
         </div>
-
-
       </div>
      
      
