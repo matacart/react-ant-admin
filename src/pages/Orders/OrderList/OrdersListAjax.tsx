@@ -5,7 +5,8 @@ import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from 
 import styled from 'styled-components';
 import { getOrderList } from '@/services/y2/order';
 import { history, useIntl } from '@umijs/max';
-
+import Tag from 'antd/lib/tag';
+import styles from './OrdersListAjax.scss';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;
@@ -29,7 +30,6 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
-// 接收 FilterCondition 类型
 interface FilterCondition {
   id: string;
   filter_group_id: string;
@@ -43,6 +43,8 @@ interface Props {
   filterCondition?: FilterCondition[];
 }
 
+const ovalShapeClass = 'oval-shape';
+const ovalShapeClass2 = 'oval-shape2';
 const getRandomuserParams = (params: TableParams) => ({
   results: params.pagination?.pageSize,
   page: params.pagination?.current,
@@ -59,12 +61,24 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     },
   });
   const [data, setData] = useState<DataType[]>([]);
-
+  const renderCustomTag = (text: string) => (
+    <Tag  className={styles[ovalShapeClass]}>
+      {text}
+    </Tag>
+  );
+  const renderCustomTag2 = (text: string) => (
+    <Tag  className={styles[ovalShapeClass2]}>
+      {text}
+    </Tag>
+  );
   const columns: TableColumnsType<DataType> = [
     {
       title: intl.formatMessage({ id: 'order.tableheader.orderid' }),
       dataIndex: 'orderid',
       width: 100,
+      render: (text: string) => (
+        <span style={{ color: '#242833' }}>{text}</span>
+      ),
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.orderdata' }),
@@ -75,16 +89,19 @@ export default function OrdersListAjax({ filterCondition }: Props) {
       title: intl.formatMessage({ id: 'order.tableheader.orderstate' }),
       dataIndex: 'orderstate',
       width: 100,
+      render: (text: string) => renderCustomTag(text), // 使用自定义函数
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.paymenstate' }),
       dataIndex: 'paymentstate',
       width: 100,
+      render: (text: string) => renderCustomTag(text), // 使用自定义函数
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.deliverystate' }),
       dataIndex: 'deliverystate',
       width: 100,
+      render: (text: string) => renderCustomTag2(text), // 使用自定义函数
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.paymentmethod' }),
@@ -135,13 +152,13 @@ export default function OrdersListAjax({ filterCondition }: Props) {
 
     console.log('Fetching data with:', { page, limit, finalCondition });
 
-    // // 构造查询字符串
-    // const searchParams = new URLSearchParams();
-    // finalCondition.forEach(cond => {
-    //   searchParams.set(cond.filter_field, cond.filter_value);
-    // });
+    // 构造查询字符串
+    const searchParams = new URLSearchParams();
+    finalCondition.forEach(cond => {
+      searchParams.set(cond.filter_field, cond.filter_value);
+    });
 
-    // 发送请求
+
   getOrderList(page, limit, finalCondition)
   .then((res) => {
     console.log('Response from getOrderList:', res);
@@ -227,6 +244,10 @@ export default function OrdersListAjax({ filterCondition }: Props) {
 };
 
 const Scoped = styled.div`
+  .ant-table-thead > tr > th {
+    background-color: #F5F8FC !important; // 设置表头背景色
+  }
+
   .ant-table-tbody > tr > td {
     padding: 10px;
   }

@@ -86,30 +86,28 @@ const FilteredOrdersComponent = ({ id, activeKey }: { id: string; activeKey: str
 
   return (
     <div>
-      <div>
-        <OrdersSelectCard />
-      </div>
-      <div>
-        {filterCondition.map((element) => (
-          <Tag
-            key={element.id}
-            className='tag'
-            closable
-            onClose={() => handleRemoveCondition(element.id)}
-          >
-            {element.filter_name}
-          </Tag>
-        ))}
-        <Button className="button" type="primary">
-          新建选项卡
-        </Button>
-      </div>
-      {filterCondition.length > 0 ? (
-        <OrdersListAjax filterCondition={filterCondition} />
-      ) : (
-        <OrdersListAjax /> // 默认情况下展示全部数据
-      )}
+    <div>
+      <OrdersSelectCard />
     </div>
+    <div>
+      {filterCondition.map((element) => (
+        <Tag
+          key={element.id}
+          className='tag'
+          closable
+          onClose={() => handleRemoveCondition(element.id)}
+        >
+          {element.filter_name}
+        </Tag>
+      ))}
+      <Button className="button" type="primary">
+        新建选项卡
+      </Button>
+    </div>
+    {filterCondition.length > 0 && ( // 使用逻辑与运算符来控制渲染
+      <OrdersListAjax filterCondition={filterCondition} />
+    )}
+  </div>
   );
 };
 

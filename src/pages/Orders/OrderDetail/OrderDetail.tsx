@@ -8,7 +8,6 @@ import { Divider } from 'antd';
 import { history, useIntl, useParams } from '@umijs/max';
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-
 import { getOrderDetail } from '@/services/y2/order';
 import OrdersShippedCard from './OrdersShippedCard';
 import AbstractCard from './AbstractCard';
@@ -78,10 +77,6 @@ function OrderDetail() {
       
   
   }, [orderId]);
-
-
-
-
     return (     
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -102,13 +97,13 @@ function OrderDetail() {
                       <div className='wrap'>
                     </div>
                      </Tooltip>
-                     <div className="status" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
+                     <div className="oval-shape" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
                 {order && translateStatus(`order.status.name_${order.orders_status_id}`)}
             </div>
-            <div className="status" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
+            <div className="oval-shape" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
                 {order && translateStatus(`order.status.name_${order.payment_status_id}`)}
             </div>
-            <div className="status" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
+            <div className="oval-shape" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
                 {order && translateStatus(`order.status.name_${order.delivery_status_id}`)}
             </div>
                           </div>

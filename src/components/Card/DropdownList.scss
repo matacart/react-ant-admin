@@ -3,9 +3,9 @@
 .dropdown-content{
   
     position: absolute;  
-    top: 12%; /* 出现在按钮下方 */  
+    top: 9%; /* 出现在按钮下方 */  
     z-index: 2000;
-    width: 96px;
+    width: 118px;
     justify-content: center; 
     background-color: #fff;  
     border: 1px solid #ccc;  
@@ -16,7 +16,7 @@
 //订单下拉按钮
 .dropdown-button{
     
-    width: 96px;
+    width: 118px;
     height: 40px;
     background-color: #FFFFFF;
     font-size: 16px;
