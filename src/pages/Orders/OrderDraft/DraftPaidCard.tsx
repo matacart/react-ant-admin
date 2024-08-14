@@ -1,43 +1,6 @@
 import React from 'react';
 import { Card, Form, Divider } from 'antd';
 
-// 定义样式
-const itemStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: '10px',
-};
-
-const labelStyle = {
-  fontSize: '14px',
-  color: '#474F5E',
-};
-
-const discountLabelStyle = {
-  fontSize: '14px',
-  color: '#B8BECC',
-};
-
-const totalLabelStyle = {
-  fontSize: '14px',
-  color: '#242833',
-};
-
-const amountStyle = {
-  fontSize: '14px',
-  color: '#474F5E',
-};
-
-const discountAmountStyle = {
-  fontSize: '14px',
-  color: '#B8BECC',
-};
-
-const totalAmountStyle = {
-  fontSize: '14px',
-  color: '#242833',
-};
 
 function App() {
   return (
@@ -82,3 +45,40 @@ function App() {
 }
 
 export default App;
+// 定义样式
+const itemStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '10px',
+};
+
+const labelStyle = {
+  fontSize: '14px',
+  color: '#474F5E',
+};
+
+const discountLabelStyle = {
+  fontSize: '14px',
+  color: '#B8BECC',
+};
+
+const totalLabelStyle = {
+  fontSize: '14px',
+  color: '#242833',
+};
+
+const amountStyle = {
+  fontSize: '14px',
+  color: '#474F5E',
+};
+
+const discountAmountStyle = {
+  fontSize: '14px',
+  color: '#B8BECC',
+};
+
+const totalAmountStyle = {
+  fontSize: '14px',
+  color: '#242833',
+};

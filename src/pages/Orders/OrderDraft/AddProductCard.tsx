@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Form, Modal, Input, message, Select, Table, Space, TableProps } from 'antd';
+import { Button, Card, Form, Modal, Input, message, Select, Table, Space, TableProps, InputNumber } from 'antd';
 import { getProductList } from '@/services/y2/api'; // 假设这是你的 API 调用模块
 import { ColumnsType } from 'antd/lib/table';
 import { Props } from '@/pages/Test/types';
+import { ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons/lib/icons';
 
 // 假设的数据类型
 interface DataType {
@@ -12,6 +13,8 @@ interface DataType {
   price: string;
   state: boolean;
   inventory: number;
+  quantity: number; // 新增数量字段
+  total: number; // 新增合计金额字段
   selected?: boolean;
 }
 
@@ -22,7 +25,7 @@ const AddProductCard: React.FC<Props> = () => {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [shouldHideAddButton, setShouldHideAddButton] = useState(false); // 新增状态
-
+  const [shouldShowBottomAddButton, setShouldShowBottomAddButton] = useState(false);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -31,15 +34,22 @@ const AddProductCard: React.FC<Props> = () => {
     setIsModalVisible(false);
   };
 
-  const handleOk = (selectedProducts: DataType[]) => {
+  const handleOk = (newSelectedProducts: DataType[]) => {
     // 计算总数量和总金额
-    const totalQty = selectedProducts.reduce((acc, product) => acc + product.inventory, 0);
-    const totalAmt = selectedProducts.reduce((acc, product) => acc + parseFloat(product.price), 0);
+    const newTotalQty = newSelectedProducts.reduce((acc, product) => acc + product.quantity, 0);
+    const newTotalAmt = newSelectedProducts.reduce((acc, product) => acc + product.total, 0);
 
     // 更新状态
-    setSelectedProducts(selectedProducts);
-    setTotalQuantity(totalQty);
-    setTotalAmount(totalAmt);
+    // 需要检查是否有新商品被添加
+    const updatedSelectedProducts = [...selectedProducts, ...newSelectedProducts];
+    const uniqueUpdatedSelectedProducts = updatedSelectedProducts.filter(
+      (product, index, self) =>
+        index === self.findIndex((t) => t.key === product.key)
+    );
+
+    setSelectedProducts(uniqueUpdatedSelectedProducts);
+    setTotalQuantity(newTotalQty);
+    setTotalAmount(newTotalAmt);
 
     // 显示已选商品列表
     setShowSelectedProducts(true);
@@ -47,8 +57,10 @@ const AddProductCard: React.FC<Props> = () => {
     setIsModalVisible(false);
     message.success('商品已成功添加！');
 
-    // 隐藏添加按钮
-    setShouldHideAddButton(true);
+  // 隐藏添加按钮
+  setShouldHideAddButton(uniqueUpdatedSelectedProducts.length > 0);
+  setShouldShowBottomAddButton(uniqueUpdatedSelectedProducts.length > 0);
+
   };
 
   const [dataSource, setDataSource] = useState<DataType[]>([]);
@@ -69,6 +81,8 @@ const AddProductCard: React.FC<Props> = () => {
         price: item.price,
         state: item.status === 1,
         inventory: item.quantity,
+        quantity: 1, // 初始化数量为 1
+        total: parseFloat(item.price), // 初始化合计为价格
       }));
       setDataSource(newData);
       setLoading(false);
@@ -141,6 +155,46 @@ const AddProductCard: React.FC<Props> = () => {
     },
   ];
 
+
+  
+  const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>, productKey: React.Key) => {
+    const newQuantity = parseInt(event.target.value, 10); // 直接从字符串转换为整数
+    const updatedProducts = selectedProducts.map((product) => {
+      if (product.key === productKey) {
+        return {
+          ...product,
+          quantity: newQuantity,
+          total: newQuantity * parseFloat(product.price),
+        };
+      }
+      return product;
+    });
+    setSelectedProducts(updatedProducts);
+  };
+  function showDeleteConfirmation(productKey: string) {
+    Modal.confirm({
+      title: '确认要将此商品从订单中移除吗？',
+      okText: '移除',
+      cancelText: '取消',
+      onOk() {
+        handleRemoveProduct(productKey);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  }
+  
+  function handleRemoveProduct(productKey: string) {
+    const updatedProducts = selectedProducts.filter(product => product.key !== productKey);
+    setSelectedProducts(updatedProducts);
+  
+    // 检查移除商品后 selectedProducts 是否为空
+    if (updatedProducts.length === 0) {
+      setShouldHideAddButton(false);
+      setShouldShowBottomAddButton(false);
+    }
+  }
   return (
     <Card style={{ width: '980px' }} title={<div>商品</div>}>
       <Form>
@@ -181,124 +235,150 @@ const AddProductCard: React.FC<Props> = () => {
             </>
           )}
 
+          {showSelectedProducts && selectedProducts.length > 0 && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start', // 左对齐
+                marginTop: '10px',
+                marginLeft: '20px', // 添加左边距
+                width: '100%', // 确保整个容器宽度适应
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between', // 两端对齐
+                  width: '90%',
+                }}
+              >
+                <div style={{ fontSize: '14px', color: '#474F5E' }}>商品</div>
+                <div style={{ fontSize: '14px', color: '#474F5E', marginRight: '-400px' }}>数量</div>
+                <div style={{ fontSize: '14px', color: '#474F5E' }}>合计</div>
+              </div>
 
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between', // 两端对齐
+                  width: '90%',
+                  marginTop: '10px',
+                }}
+              >
+                {/* 商品详细信息 */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '50%', // 确保有足够的空间显示商品
+                  }}
+                >
+                  {selectedProducts.map((product) => (
+                    <div
+                      key={product.key}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: '50px',
+                      }}
+                    >
+                      <img
+                        src={product.imgUrl}
+                        alt=""
+                        style={{
+                          width: '50px',
+                          height: '50px',
+                          marginRight: '10px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                      <div>
+                        <p style={{ margin: 0 }}>{product.name}</p> {/* 修改为实际的商品名称 */}
+                        <span style={{ margin: 0 }}>US${product.price}</span>
+                      </div>
+                      
+                    </div>
+                  ))}
+                </div>
 
-
-{showSelectedProducts && selectedProducts.length > 0 && (
-
-<div
-style={{
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start', // 左对齐
-  marginTop: '0px',
-  marginLeft: '20px', // 添加左边距
-  width: '100%', // 确保整个容器宽度适应
-}}
->
-<div
-  style={{
-    display: 'flex',
-    justifyContent: 'space-between', // 两端对齐
-    width: '100%',
-  }}
->
-  <div style={{ fontSize: '18px', color: '#474F5E' }}>商品</div>
-  <div style={{ fontSize: '18px', color: '#474F5E' }}>数量</div>
-  <div style={{ fontSize: '18px', color: '#474F5E' }}>合计</div>
-</div>
-
-<div
-  style={{
-    display: 'flex',
-    justifyContent: 'space-between', // 两端对齐
-    width: '100%',
-    marginTop: '0px',
-  }}
->
-  {/* 商品详细信息 */}
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '60%', // 确保有足够的空间显示商品
-    }}
-  >
-    {selectedProducts.map((product) => (
-      <div
-        key={product.key}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: '10px',
-        }}
-      >
-        <img
-          src={product.imgUrl}
-          alt=""
-          style={{
-            width: '50px',
-            height: '50px',
-            marginRight: '10px',
-            objectFit: 'cover',
-          }}
+                {/* 数量 */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center', // 中间居中
+                    marginRight: '-60px',
+                  }}
+                >
+                   {selectedProducts.map((product) => {
+     const isOverstock = product.quantity > product.inventory;
+      return (
+      <div key={product.key} style={{ marginBottom: '10px' }}>
+        <InputNumber
+          min={1}
+          max={product.inventory}
+          value={product.quantity}
+          onChange={(value) => handleQuantityChange({ target: { value } }, product.key)}
+          style={{ width: '100px', marginBottom: '60px' }}
         />
-        <div>
-          <p style={{ margin: 0 }}>{11}</p> {/* 修改为实际的商品名称 */}
-          <p style={{ margin: 0 }}>{`价格: US$ ${parseFloat(product.price).toFixed(2)}`}</p>
-        </div>
+        {isOverstock && (
+          <div style={{ color: 'red', fontSize: '12px' }}>库存未达到起批量，请重新选择或删除</div>
+        )}
       </div>
-    ))}
-  </div>
-
-  {/* 数量 */}
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center', // 中间居中
-     
-    }}
-  >
-    <span>{`${totalQuantity} 件`}</span>
-  </div>
-
-  {/* 合计 */}
-  <div
-    style={{
+    );
+  })}
+</div>
+                {/* 合计 */}
+             <div
+         style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-end', // 右对齐
-   
     }}
   >
-    <span>{`US$ ${totalAmount.toFixed(2)}`}</span>
-  </div>
-</div>
-</div>
-)}
+       {selectedProducts.map((product) => (
+      <div key={product.key} style={{ marginBottom: '80px', position: 'relative' }}>
+        <span style={{ marginRight: '-5px' }}>US${product.total}</span>
+        <ClockCircleOutlined 
+        style={{ cursor: 'pointer', position: 'absolute', top:'4px',right: '-40px' }}
+        />
+         <DeleteOutlined
+          onClick={() => showDeleteConfirmation(product.key)}
+          style={{ cursor: 'pointer', position: 'absolute', top:'4px',right: '-80px' }}
+        />
+      </div>
+                  ))}
+                  
+                </div>
+            
+              </div>
+              
+            </div>
+            
+          )}
 
           {/* 添加商品和添加自定义商品按钮移动到左下方 */}
-          {showSelectedProducts && (
+          {showSelectedProducts && shouldShowBottomAddButton && (
             <div
               style={{
                 display: 'flex',
                 position: 'absolute',
-                bottom: '10px',
+                bottom: '20px',
                 left: '10px',
                 flexDirection: 'row',
                 gap: '10px',
-              
               }}
             >
               <Button
-                type="primary"
                 onClick={showModal}
                 style={{
-                  width: "120px",
-                  height: "36px",
                   fontSize: "14px",
-                  background: '#356DFF',
+                  color: '#474F5E',
+                  backgroundColor:'#FFFFF',
+                  width:'160px',
+                  height:'36px',
+                  padding:'7px 15px',
                 }}
               >
                 添加商品
@@ -307,6 +387,8 @@ style={{
                 style={{
                   fontSize: "14px",
                   color: '#356DFF',
+                  background:'#FFFFF',
+                  border:'none',
                 }}
               >
                 添加自定义商品
@@ -317,8 +399,6 @@ style={{
         </div>
 
       </Form>
-
-
 
       {/* 渲染 AddProductModal 组件 */}
       <Modal
