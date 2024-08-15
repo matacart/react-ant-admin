@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Form, Modal, Input, message, Select, Table, Space, TableProps, InputNumber } from 'antd';
-import { getProductList } from '@/services/y2/api'; // 假设这是你的 API 调用模块
+import { getProductList } from '@/services/y2/api'; 
 import { ColumnsType } from 'antd/lib/table';
 import { Props } from '@/pages/Test/types';
 import { ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons/lib/icons';
@@ -26,6 +26,7 @@ const AddProductCard: React.FC<Props> = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [shouldHideAddButton, setShouldHideAddButton] = useState(false); // 新增状态
   const [shouldShowBottomAddButton, setShouldShowBottomAddButton] = useState(false);
+
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -62,9 +63,21 @@ const AddProductCard: React.FC<Props> = () => {
   setShouldShowBottomAddButton(uniqueUpdatedSelectedProducts.length > 0);
 
   };
-
   const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [loading, setLoading] = useState(false);
+  // 新增状态存储搜索关键词
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  // 搜索逻辑
+  const filteredDataSource = dataSource.filter((item) =>
+    item.name.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
+  
+  // 搜索框处理函数
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+  };
+
 
   useEffect(() => {
     fetchData();
@@ -81,7 +94,7 @@ const AddProductCard: React.FC<Props> = () => {
         price: item.price,
         state: item.status === 1,
         inventory: item.quantity,
-        quantity: 1, // 初始化数量为 1
+        quantity: 2, // 初始化数量为 1
         total: parseFloat(item.price), // 初始化合计为价格
       }));
       setDataSource(newData);
@@ -402,97 +415,101 @@ const AddProductCard: React.FC<Props> = () => {
 
       {/* 渲染 AddProductModal 组件 */}
       <Modal
-        title="选择商品/款式 (0/100)"
-        visible={isModalVisible}
-        width={850}
-        height={850}
-        onOk={(e) => {
-          if (dataSource.some(item => item.selected)) {
-            handleOk(dataSource.filter(item => item.selected));
-          } else {
-            e.preventDefault();
-            message.warning('请选择至少一个商品！');
-          }
+    title="选择商品/款式 (0/100)"
+    visible={isModalVisible}
+    width={850}
+    height={850}
+    onOk={(e) => {
+      if (filteredDataSource.some(item => item.selected)) {
+        handleOk(filteredDataSource.filter(item => item.selected));
+      } else {
+        e.preventDefault();
+        message.warning('请选择至少一个商品！');
+      }
+    }}
+    onCancel={handleCancel}
+    okText="选择"
+    cancelText="取消"
+    headerClassName="custom-header-class"
+    bodyStyle={{ padding: '20px', backgroundColor: '#FFFFFF' }}
+    footerStyle={{ padding: '20px', textAlign: 'right' }}
+  >
+    <Form name="add-product-form">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
-        onCancel={handleCancel}
-        okText="选择"
-        cancelText="取消"
-        headerClassName="custom-header-class"
-        bodyStyle={{ padding: '20px', backgroundColor: '#FFFFFF' }}
-        footerStyle={{ padding: '20px', textAlign: 'right' }}
       >
-        <Form name="add-product-form">
-          <div
+        <Select
+          defaultValue="商品名称"
+          style={{ width: 101, height: 36, borderRadius: 0, marginRight: '-15px' }}
+          options={[
+            { value: '商品名称', label: '商品名称' },
+            { value: '商品SKU', label: '商品SKU' },
+          ]}
+        />
+        <Input
+          style={{
+            width: '200px',
+            height: '36px',
+            borderRadius: 0,
+            marginLeft: '0px',
+          }}
+          placeholder="请输入搜索关键词"
+          value={searchKeyword}
+          onChange={handleSearch} // 添加搜索框的 onChange 处理函数
+        />
+        <Input
+          placeholder="商品分类"
+          style={{
+            width: '170px',
+            height: '36px',
+            borderRadius: 0,
+            marginLeft: '5px',
+          }}
+        />
+        <Input
+          placeholder="标签"
+          style={{
+            width: '170px',
+            height: '36px',
+            borderRadius: 0,
+            marginLeft: '5px',
+          }}
+        />
+        <div>
+          <Button
+            type="primary"
+            onClick={() => {
+              // 重置功能实现
+              setSearchKeyword('');
+            }}
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
+              height: '36px',
+              backgroundColor: '#FFFFFF',
+              color: '#474F5E',
+              borderColor: '#CCCCCC',
             }}
           >
-            <Select
-              defaultValue="商品名称"
-              style={{ width: 101, height: 36, borderRadius: 0, marginRight: '-15px' }}
-              options={[
-                { value: '商品名称', label: '商品名称' },
-                { value: '商品SKU', label: '商品SKU' },
-              ]}
-            />
-            <Input
-              style={{
-                width: '200px',
-                height: '36px',
-                borderRadius: 0,
-                marginLeft: '0px',
-              }}
-            />
-            <Input
-              placeholder="商品分类"
-              style={{
-                width: '170px',
-                height: '36px',
-                borderRadius: 0,
-                marginLeft: '5px',
-              }}
-            />
-            <Input
-              placeholder="标签"
-              style={{
-                width: '170px',
-                height: '36px',
-                borderRadius: 0,
-                marginLeft: '5px',
-              }}
-            />
-            <div>
-              <Button
-                type="primary"
-                onClick={() => {
-                  // 重置功能实现
-                }}
-                style={{
-                  height: '36px',
-                  backgroundColor: '#FFFFFF',
-                  color: '#474F5E',
-                  borderColor: '#CCCCCC',
-                }}
-              >
-                重置
-              </Button>
-            </div>
-          </div>
+            重置
+          </Button>
+        </div>
+      </div>
 
-          {/* 添加表格 */}
-          <Table
-            loading={loading}
-            dataSource={dataSource}
-            columns={columns}
-            rowKey="key"
-            scroll={{ x: 300 }} // 设置水平滚动条宽度
-            rowSelection={rowSelection}
-            onChange={handleTableChange}
-          />
-        </Form>
-      </Modal>
+      {/* 添加表格 */}
+      <Table
+        loading={loading}
+        dataSource={filteredDataSource} // 使用过滤后的数据源
+        columns={columns}
+        rowKey="key"
+        scroll={{ x: 300 }} // 设置水平滚动条宽度
+        rowSelection={rowSelection}
+        onChange={handleTableChange}
+      />
+    </Form>
+  </Modal>
     </Card>
   );
 };
