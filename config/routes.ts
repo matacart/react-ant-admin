@@ -136,6 +136,11 @@ export default [
     icon: 'UserOutlined',
     routes: [
       {
+        path: 'management',
+        name: 'management',
+        component: './Customer/index',
+      },
+      {
         path: 'persona',
         name: 'persona',
       },

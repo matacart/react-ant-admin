@@ -10,7 +10,6 @@ import { DeleteOutlined } from '@ant-design/icons/lib/icons';
 export default function CustomInformationEdit() {   
   const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(false);
   const [isBillingModalVisible, setIsBillingModalVisible] = useState(false);
-  const [showSearchBox, setShowSearchBox] = useState(true); // 控制搜索框是否显示
   const [deliveryAddress, setDeliveryAddress] = useState<{ 
     name: string; 
     familyname:string;
@@ -57,32 +56,54 @@ const saveBillingAddress = () => {
   console.log('Saving billing address:', billingAddress);
   setIsBillingModalVisible(false); // 关闭模态框
 };
-const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);  
-const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familyname:string;email: string; phone: string }>({ name: '', familyname:' ',email: '', phone: '' });
-    const onCreateNewCustomer = (value: string) => {  
-    if (value === '+ 创建新客户') {  
-      setNewCustomerModalVisible(true);  
-      // 可以在这里添加代码来清空搜索框，如果使用了受控组件的话  
-    }  
-  };  
-  
-  const handleNewCustomerOk = () => {  
+// 新增的状态
+const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
+  const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familyname: string; email: string; phone: string }>({ name: '', familyname: '', email: '', phone: '' });
+  const [isCustomerInfoShown, setIsCustomerInfoShown] = useState(false); // 控制客户信息是否展示
+  const [showSearchBox, setShowSearchBox] = useState(true); // 控制搜索框的显示状态
+  const [selectedCustomer, setSelectedCustomer] = useState<{ name: string; familyname: string; email: string; phone: string } | null>(null); // 当前选中的客户信息
+  const [historyRecords, setHistoryRecords] = useState<{ name: string; familyname: string; email: string; phone: string }[]>([]); // 储存客户记录
+
+  const onCreateNewCustomer = (value: string) => {
+    if (value === '+ 创建新客户') {
+      setNewCustomerModalVisible(true);
+      setShowSearchBox(false); // 隐藏搜索框
+    }
+  };
+
+  // 选择历史记录中客户信息
+  const handleHistoryRecordSelect = (value: string) => {
+    const selectedRecord = historyRecords.find(record => `${record.name} (${record.email})` === value);
+    if (selectedRecord) {
+      setSelectedCustomer(selectedRecord);
+      setIsCustomerInfoShown(true); // 展示选中客户信息
+    }
+  };
+
+  // 保存新客户信息并添加到历史记录
+  const handleNewCustomerOk = () => {
+    setHistoryRecords([...historyRecords, { ...newCustomerInfo }]);
     setNewCustomerModalVisible(false);
-    setShowSearchBox(false); // 隐藏搜索框  
-    setNewCustomerInfo({ name: newCustomerInfo.name,familyname:newCustomerInfo.familyname, email: newCustomerInfo.email, phone: newCustomerInfo.phone });  
-  };  
-  
-  const handleNewCustomerCancel = () => {  
-    setNewCustomerModalVisible(false);  
-  };  
-  // 新增删除客户信息的处理函数
-  const handleDeleteCustomerInfo = () => {
-    setNewCustomerInfo({ name: '', familyname: '', email: '', phone: '' });
+    setSelectedCustomer(newCustomerInfo); // 同时展示刚创建的客户信息
+  };
+
+  const handleNewCustomerCancel = () => {
+    setNewCustomerModalVisible(false);
+    setNewCustomerInfo({ name: '', familyname: '', email: '', phone: '' }); // 重置客户信息
+    setIsCustomerInfoShown(false); // 不展示客户信息
     setShowSearchBox(true); // 显示搜索框
   };
 
-  return (  
-<StyledCard
+  // 新增删除客户信息的处理函数
+  const handleDeleteCustomerInfo = () => {
+    setSelectedCustomer(null); // 清除选中的客户
+    setNewCustomerInfo({ name: '', familyname: '', email: '', phone: '' });
+    setIsCustomerInfoShown(false); // 隐藏客户信息
+    setShowSearchBox(true); // 显示搜索框
+  };
+
+  return (
+    <StyledCard
       style={{ width: '300px' }}
       title={
         <TitleWrapper>
@@ -93,31 +114,36 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
                 style={{ width: '110%' }}
                 placeholder="搜索或创建客户"
                 options={[
+                  ...historyRecords.map(record => ({ value: `${record.name} (${record.email})`, key: record.email })),
                   { value: '+ 创建新客户', key: 'createNew' },
                 ]}
-                onSelect={onCreateNewCustomer}
+                onSelect={(value, option) => {
+                  if (option.key === 'createNew') {
+                    onCreateNewCustomer(value);
+                  } else {
+                    handleHistoryRecordSelect(value);
+                  }
+                }}
               >
                 <SearchInput />
               </AutoComplete>
             )}
           </div>
-          
         </TitleWrapper>
-        
       }
     >
       <Form>
-          {/* 新客户信息展示 */}
-          {newCustomerInfo.name && (
-            <div style={{ marginTop: '10px' }}> {/* 添加外层 div 并设置样式 */}
-              <p style={{ fontSize: '14px', color: '#356DFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                {`${newCustomerInfo.name} ${newCustomerInfo.familyname}`}
-                <DeleteOutlined onClick={handleDeleteCustomerInfo} style={{ fontSize: '16px',color:'red' }} />
-              </p>
-              <p style={{ fontSize: '14px', color: '#474F5E', margin: '0 0 2px 0' }}>{newCustomerInfo.phone}</p>
-              <p style={{ fontSize: '14px', color: '#356DFF', margin: '0' }}>{newCustomerInfo.email}</p>
-            </div>
-          )}
+        {/* 新客户信息展示 */}
+        {selectedCustomer && (
+          <div style={{ marginTop: '10px' }}> {/* 添加外层 div 并设置样式 */}
+            <p style={{ fontSize: '14px', color: '#356DFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+              {`${selectedCustomer.name} ${selectedCustomer.familyname}`}
+              <DeleteOutlined onClick={handleDeleteCustomerInfo} style={{ fontSize: '16px', color: 'red' }} />
+            </p>
+            <p style={{ fontSize: '14px', color: '#474F5E', margin: '0 0 2px 0' }}>{selectedCustomer.phone}</p>
+            <p style={{ fontSize: '14px', color: '#356DFF', margin: '0' }}>{selectedCustomer.email}</p>
+          </div>
+        )}
       </Form>
       <Divider />
       <Form>
@@ -128,12 +154,15 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
   {/* Render the address if it exists */}
   {deliveryAddress.address ? (
     <PlaceholderText>
-      地址: {deliveryAddress.address}<br />
-      城市: {deliveryAddress.city}<br />
-      省份: {deliveryAddress.province}<br />
-      邮政编码: {deliveryAddress.postalCode}<br />
-      区: {deliveryAddress.district}<br />
-      手机: {deliveryAddress.phone}
+      <div style={{fontSize:'14px',color:'#474F5E'}}>
+     { `${deliveryAddress.name}${deliveryAddress.familyname}`}<br />
+      {deliveryAddress.phone}<br />
+      { `${deliveryAddress.company},${deliveryAddress.address},${deliveryAddress.address2} 
+      ,${deliveryAddress.district}
+      ,${deliveryAddress.city}
+      ${deliveryAddress.province}`}<br />
+      {`${deliveryAddress.postalCode},${deliveryAddress.country}`}
+      </div>
     </PlaceholderText>
   ) : (
     <PlaceholderText>暂无地址</PlaceholderText>
@@ -147,14 +176,17 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
         </TitleWrapper>
        {/* Render the address if it exists */}
        {billingAddress.address ? (
-          <PlaceholderText>
-            地址: {billingAddress.address}<br />
-            城市: {billingAddress.city}<br />
-            省份: {billingAddress.province}<br />
-            邮政编码: {billingAddress.postalCode}<br />
-            区: {billingAddress.district}<br />
-            手机: {billingAddress.phone}
-          </PlaceholderText>
+    <PlaceholderText>
+      <div style={{fontSize:'14px',color:'#474F5E'}}>
+     { `${billingAddress.name}${billingAddress.familyname}`}<br />
+      {billingAddress.phone}<br />
+      { `${billingAddress.company},${billingAddress.address},${billingAddress.address2} 
+      ,${billingAddress.district}
+      ,${billingAddress.city}
+      ${billingAddress.province}`}<br />
+      {`${billingAddress.postalCode},${billingAddress.country}`}
+      </div>
+    </PlaceholderText>
         ) : (
           <PlaceholderText>暂无地址</PlaceholderText>
         )}
@@ -410,7 +442,7 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
                 >
                   <label htmlFor="firstName">名字</label>
                   <Input placeholder="请填写名字" style={{ marginTop: '4px' }} 
-                   onChange={(e) => setNewCustomerInfo({ ...newCustomerInfo, name: e.target.value })}/>
+                  value={newCustomerInfo.name} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, name: e.target.value }))} />
                 </Form.Item>
               </Col>
               <Col span={11}>
@@ -420,7 +452,7 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
                 >
                   <label htmlFor="lastName">姓氏</label>
                   <Input placeholder="请填写姓氏" style={{ marginTop: '4px' }} 
-                     onChange={(e) => setNewCustomerInfo({ ...newCustomerInfo, familyname: e.target.value })}/>
+                   value={newCustomerInfo.familyname} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, familyname: e.target.value }))} />
                 </Form.Item>
               </Col>
             </Row>
@@ -431,7 +463,7 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
     >
       <label htmlFor="firstName">邮箱</label>
       <Input placeholder="请填写邮箱" style={{ marginTop: '4px' }} 
-       onChange={(e) => setNewCustomerInfo({ ...newCustomerInfo, email: e.target.value })}/>
+      value={newCustomerInfo.email} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, email: e.target.value }))} />
     </Form.Item>
 
     <Form.Item
@@ -440,7 +472,7 @@ const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familynam
     >
       <label htmlFor="lastName">手机</label>
       <Input placeholder="请填写手机号" style={{ marginTop: '4px' }} 
-       onChange={(e) => setNewCustomerInfo({ ...newCustomerInfo, phone: e.target.value })}/>
+     value={newCustomerInfo.phone} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, phone: e.target.value }))} />
     </Form.Item>
         </Form>
       </Modal>

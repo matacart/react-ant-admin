@@ -1,0 +1,70 @@
+.create-warp-flex {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: #474f5e;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  
+    .create-warp {
+      width: 100%;
+      min-width: 500px;
+  
+      .create-title {
+        padding-bottom: 0px;
+        color: #474f5e;
+        font-size: 14px;
+        line-height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+  
+        .create-title-left {
+          display: inline-block;
+  
+          h3 {
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            margin: 0 24px 24px 0;
+            overflow: hidden;
+            color: #242833;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 32px;
+          }
+        }
+  
+        .button-container {
+          display: inline-block;
+          justify-content: space-between;
+        }
+  
+      }
+  
+      .create-content {
+        position: relative;
+        top: -10px;
+        padding: 5px 24px;
+        border-radius: 6px;
+        width: 100%;
+        background-color: white;
+  
+      }
+  
+      .DynamicTabs{
+  
+    font-size: 18px;
+  
+  
+      }
+     
+      .oval-shape {
+        border-radius: 10px; /* 设置边框半径以实现椭圆形 */
+        font-size: 14px; /* 设置字体大小 */
+        color: #242833; /* 设置字体颜色 */
+        background: #FFEDC9;
+      }
+    }
+  }
