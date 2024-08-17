@@ -137,7 +137,7 @@ export default [
     routes: [
       {
         path: 'management',
-        name: 'management',
+        name: '客户',
         component: './Customer/index',
       },
       {

@@ -5,13 +5,14 @@ import Search from 'antd/lib/input/Search';
 import AutoComplete from 'antd/lib/auto-complete';
 import Space from 'antd/lib/space';
 import { DeleteOutlined } from '@ant-design/icons/lib/icons';
+import { addCustomers } from '@/services/y2/customer';
 
 
-export default function CustomInformationEdit() {   
+export default function CustomInformationEdit() {
   const [isDeliveryModalVisible, setIsDeliveryModalVisible] = useState(false);
   const [isBillingModalVisible, setIsBillingModalVisible] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState<{ 
-    name: string; 
+    realname: string; 
     familyname:string;
     address: string; 
     address2: string; 
@@ -21,10 +22,10 @@ export default function CustomInformationEdit() {
     postalCode: string; 
     district: string; 
     company:string;
-    phone: string 
-  }>({ name: '', country:' ',familyname:' ',address: '', address2: '',city: '', province: '',company:' ', postalCode: '', district: '', phone: '' });
+    tel: string 
+  }>({ realname: '', familyname: '', address: '', address2: '', city: '', province: '', country: '', postalCode: '', district: '', company: '', tel: '' });
   const [billingAddress, setBillingAddress] = useState<{ 
-    name: string; 
+    realname: string; 
     familyname:string;
     address: string; 
     address2: string; 
@@ -34,35 +35,43 @@ export default function CustomInformationEdit() {
     postalCode: string; 
     district: string; 
     company:string;
-    phone: string 
-  }>({ name: '', country:' ',familyname:' ',address: '', address2: '',city: '', province: '',company:' ', postalCode: '', district: '', phone: '' });
-  // 模态框内的处理
-  const handleDeliveryAddressChange = (key: keyof typeof deliveryAddress, value: string) => {
-    setDeliveryAddress(prevState => ({ ...prevState, [key]: value }));
-  };
+    tel: string 
+  }>({ realname: '', familyname: '', address: '', address2: '', city: '', province: '', country: '', postalCode: '', district: '', company: '', tel: '' });
 
-  const handleBillingAddressChange = (key: keyof typeof billingAddress, value: string) => {
-    setBillingAddress(prevState => ({ ...prevState, [key]: value }));
-  };
- // 新增保存函数
- const saveDeliveryAddress = () => {
-  // 这里可以添加保存到服务器的逻辑
-  console.log('Saving delivery address:', deliveryAddress);
-  setIsDeliveryModalVisible(false); // 关闭模态框
-};
+  // 新增状态用于保存原始的收获地址和账单地址
+  const [originalDeliveryAddress, setOriginalDeliveryAddress] = useState<{ 
+    realname: string; 
+    familyname:string;
+    address: string; 
+    address2: string; 
+    city: string; 
+    province: string; 
+    country:string;
+    postalCode: string; 
+    district: string; 
+    company:string;
+    tel: string 
+  }>({ realname: '', familyname: '', address: '', address2: '', city: '', province: '', country: '', postalCode: '', district: '', company: '', tel: '' });
+  const [originalBillingAddress, setOriginalBillingAddress] = useState<{ 
+    realname: string; 
+    familyname:string;
+    address: string; 
+    address2: string; 
+    city: string; 
+    province: string; 
+    country:string;
+    postalCode: string; 
+    district: string; 
+    company:string;
+    tel: string 
+  }>({ realname: '', familyname: '', address: '', address2: '', city: '', province: '', country: '', postalCode: '', district: '', company: '', tel: '' });
 
-const saveBillingAddress = () => {
-  // 这里可以添加保存到服务器的逻辑
-  console.log('Saving billing address:', billingAddress);
-  setIsBillingModalVisible(false); // 关闭模态框
-};
-// 新增的状态
-const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
-  const [newCustomerInfo, setNewCustomerInfo] = useState<{ name: string; familyname: string; email: string; phone: string }>({ name: '', familyname: '', email: '', phone: '' });
+  const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
+  const [newCustomerInfo, setNewCustomerInfo] = useState<{ realname: string; familyname: string; email: string; tel: string }>({ realname: '', familyname: '', email: '', tel: '' });
   const [isCustomerInfoShown, setIsCustomerInfoShown] = useState(false); // 控制客户信息是否展示
   const [showSearchBox, setShowSearchBox] = useState(true); // 控制搜索框的显示状态
-  const [selectedCustomer, setSelectedCustomer] = useState<{ name: string; familyname: string; email: string; phone: string } | null>(null); // 当前选中的客户信息
-  const [historyRecords, setHistoryRecords] = useState<{ name: string; familyname: string; email: string; phone: string }[]>([]); // 储存客户记录
+  const [selectedCustomer, setSelectedCustomer] = useState<{ realname: string; familyname: string; email: string; tel: string } | null>(null); // 当前选中的客户信息
+  const [historyRecords, setHistoryRecords] = useState<{ realname: string; familyname: string; email: string; tel: string }[]>([]); // 储存客户记录
 
   const onCreateNewCustomer = (value: string) => {
     if (value === '+ 创建新客户') {
@@ -71,35 +80,128 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
     }
   };
 
-  // 选择历史记录中客户信息
   const handleHistoryRecordSelect = (value: string) => {
-    const selectedRecord = historyRecords.find(record => `${record.name} (${record.email})` === value);
+    const selectedRecord = historyRecords.find(record => `${record.realname} (${record.email})` === value);
     if (selectedRecord) {
       setSelectedCustomer(selectedRecord);
       setIsCustomerInfoShown(true); // 展示选中客户信息
+
+      // 更新收获地址和账单地址
+      setOriginalDeliveryAddress({
+        realname: selectedRecord.realname,
+        familyname: selectedRecord.familyname,
+        address: '', // 可以从数据库获取具体的地址
+        address2: '',
+        city: '',
+        province: '',
+        country: '',
+        postalCode: '',
+        district: '',
+        company: '',
+        tel: selectedRecord.tel
+      });
+      setOriginalBillingAddress({
+        realname: selectedRecord.realname,
+        familyname: selectedRecord.familyname,
+        address: '', // 同上
+        address2: '',
+        city: '',
+        province: '',
+        country: '',
+        postalCode: '',
+        district: '',
+        company: '',
+        tel: selectedRecord.tel
+      });
     }
   };
 
-  // 保存新客户信息并添加到历史记录
-  const handleNewCustomerOk = () => {
-    setHistoryRecords([...historyRecords, { ...newCustomerInfo }]);
-    setNewCustomerModalVisible(false);
-    setSelectedCustomer(newCustomerInfo); // 同时展示刚创建的客户信息
+  const handleNewCustomerOk = async () => {
+    try {
+      // 确保 newCustomerInfo 有值
+      if (!newCustomerInfo.realname || !newCustomerInfo.email || !newCustomerInfo.tel) {
+        throw new Error('Please fill in all required fields.');
+      }
+
+      await addCustomers(newCustomerInfo);
+      setHistoryRecords([...historyRecords, { ...newCustomerInfo }]);
+      setNewCustomerModalVisible(false);
+      setSelectedCustomer(newCustomerInfo);
+      setIsCustomerInfoShown(true);
+
+      // 更新收获地址和账单地址
+      setOriginalDeliveryAddress({
+        realname: newCustomerInfo.realname,
+        familyname: newCustomerInfo.familyname,
+        address: '', // 可以从数据库获取具体的地址
+        address2: '',
+        city: '',
+        province: '',
+        country: '',
+        postalCode: '',
+        district: '',
+        company: '',
+        tel: newCustomerInfo.tel
+      });
+      setOriginalBillingAddress({
+        realname: newCustomerInfo.realname,
+        familyname: newCustomerInfo.familyname,
+        address: '', // 同上
+        address2: '',
+        city: '',
+        province: '',
+        country: '',
+        postalCode: '',
+        district: '',
+        company: '',
+        tel: newCustomerInfo.tel
+      });
+    } catch (error) {
+      console.error('Error adding new customer:', error);
+    }
   };
 
   const handleNewCustomerCancel = () => {
     setNewCustomerModalVisible(false);
-    setNewCustomerInfo({ name: '', familyname: '', email: '', phone: '' }); // 重置客户信息
+    setNewCustomerInfo({ realname: '', familyname: '', email: '', tel: '' }); // 重置客户信息
     setIsCustomerInfoShown(false); // 不展示客户信息
     setShowSearchBox(true); // 显示搜索框
   };
 
-  // 新增删除客户信息的处理函数
   const handleDeleteCustomerInfo = () => {
-    setSelectedCustomer(null); // 清除选中的客户
-    setNewCustomerInfo({ name: '', familyname: '', email: '', phone: '' });
+    // 清除选中的客户信息
+    setSelectedCustomer(null);
+    setNewCustomerInfo({ realname: '', familyname: '', email: '', tel: '' });
     setIsCustomerInfoShown(false); // 隐藏客户信息
     setShowSearchBox(true); // 显示搜索框
+
+    // 清除相关的收获地址和账单地址
+    setOriginalDeliveryAddress({ realname: '', familyname: '', address: '', address2: '', city: '', province: '', country: '', postalCode: '', district: '', company: '', tel: '' });
+    setOriginalBillingAddress({ realname: '', familyname: '', address: '', address2: '', city: '', province: '', country: '', postalCode: '', district: '', company: '', tel: '' });
+  };
+
+  const handleDeliveryAddressChange = (key: keyof typeof deliveryAddress, value: string) => {
+    setDeliveryAddress(prevState => ({ ...prevState, [key]: value }));
+  };
+
+  const handleBillingAddressChange = (key: keyof typeof billingAddress, value: string) => {
+    setBillingAddress(prevState => ({ ...prevState, [key]: value }));
+  };
+
+  const saveDeliveryAddress = () => {
+    // 这里可以添加保存到服务器的逻辑
+    console.log('Saving delivery address:', deliveryAddress);
+    setIsDeliveryModalVisible(false); // 关闭模态框
+    // 保存收获地址到界面上
+    setOriginalDeliveryAddress(deliveryAddress);
+  };
+
+  const saveBillingAddress = () => {
+    // 这里可以添加保存到服务器的逻辑
+    console.log('Saving billing address:', billingAddress);
+    setIsBillingModalVisible(false); // 关闭模态框
+    // 保存账单地址到界面上
+    setOriginalBillingAddress(billingAddress);
   };
 
   return (
@@ -114,7 +216,7 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
                 style={{ width: '110%' }}
                 placeholder="搜索或创建客户"
                 options={[
-                  ...historyRecords.map(record => ({ value: `${record.name} (${record.email})`, key: record.email })),
+                  ...historyRecords.map(record => ({ value: `${record.realname} (${record.email})`, key: record.email })),
                   { value: '+ 创建新客户', key: 'createNew' },
                 ]}
                 onSelect={(value, option) => {
@@ -137,10 +239,10 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
         {selectedCustomer && (
           <div style={{ marginTop: '10px' }}> {/* 添加外层 div 并设置样式 */}
             <p style={{ fontSize: '14px', color: '#356DFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-              {`${selectedCustomer.name} ${selectedCustomer.familyname}`}
+              {`${selectedCustomer.realname} ${selectedCustomer.familyname}`}
               <DeleteOutlined onClick={handleDeleteCustomerInfo} style={{ fontSize: '16px', color: 'red' }} />
             </p>
-            <p style={{ fontSize: '14px', color: '#474F5E', margin: '0 0 2px 0' }}>{selectedCustomer.phone}</p>
+            <p style={{ fontSize: '14px', color: '#474F5E', margin: '0 0 2px 0' }}>{selectedCustomer.tel}</p>
             <p style={{ fontSize: '14px', color: '#356DFF', margin: '0' }}>{selectedCustomer.email}</p>
           </div>
         )}
@@ -148,45 +250,45 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
       <Divider />
       <Form>
         <TitleWrapper>
-          <Label>收获地址</Label>
+        <Label>收获地址</Label>
           <EditButton onClick={() => setIsDeliveryModalVisible(true)}>编辑</EditButton>
-          </TitleWrapper>
-  {/* Render the address if it exists */}
-  {deliveryAddress.address ? (
-    <PlaceholderText>
-      <div style={{fontSize:'14px',color:'#474F5E'}}>
-     { `${deliveryAddress.name}${deliveryAddress.familyname}`}<br />
-      {deliveryAddress.phone}<br />
-      { `${deliveryAddress.company},${deliveryAddress.address},${deliveryAddress.address2} 
-      ,${deliveryAddress.district}
-      ,${deliveryAddress.city}
-      ${deliveryAddress.province}`}<br />
-      {`${deliveryAddress.postalCode},${deliveryAddress.country}`}
-      </div>
-    </PlaceholderText>
-  ) : (
-    <PlaceholderText>暂无地址</PlaceholderText>
+        </TitleWrapper>
+        {/* Render the address if it exists */}
+        {originalDeliveryAddress.address ? (
+          <PlaceholderText>
+            <div style={{ fontSize: '14px', color: '#474F5E' }}>
+              {`${originalDeliveryAddress.realname}${originalDeliveryAddress.familyname}`}<br />
+              {originalDeliveryAddress.tel}<br />
+              {`${originalDeliveryAddress.company},${originalDeliveryAddress.address},${originalDeliveryAddress.address2} 
+              ,${originalDeliveryAddress.district}
+              ,${originalDeliveryAddress.city}
+              ${originalDeliveryAddress.province}`}<br />
+              {`${originalDeliveryAddress.postalCode},${originalDeliveryAddress.country}`}
+            </div>
+          </PlaceholderText>
+        ) : (
+          <PlaceholderText>暂无地址</PlaceholderText>
   )}
       </Form>
       <Divider />
       <Form>
         <TitleWrapper>
-          <Label>账单地址</Label>
+        <Label>账单地址</Label>
           <EditButton onClick={() => setIsBillingModalVisible(true)}>编辑</EditButton>
         </TitleWrapper>
-       {/* Render the address if it exists */}
-       {billingAddress.address ? (
-    <PlaceholderText>
-      <div style={{fontSize:'14px',color:'#474F5E'}}>
-     { `${billingAddress.name}${billingAddress.familyname}`}<br />
-      {billingAddress.phone}<br />
-      { `${billingAddress.company},${billingAddress.address},${billingAddress.address2} 
-      ,${billingAddress.district}
-      ,${billingAddress.city}
-      ${billingAddress.province}`}<br />
-      {`${billingAddress.postalCode},${billingAddress.country}`}
-      </div>
-    </PlaceholderText>
+        {/* Render the address if it exists */}
+        {originalBillingAddress.address ? (
+          <PlaceholderText>
+            <div style={{ fontSize: '14px', color: '#474F5E' }}>
+              {`${originalBillingAddress.realname}${originalBillingAddress.familyname}`}<br />
+              {originalBillingAddress.tel}<br />
+              {`${originalBillingAddress.company},${originalBillingAddress.address},${originalBillingAddress.address2} 
+              ,${originalBillingAddress.district}
+              ,${originalBillingAddress.city}
+              ${originalBillingAddress.province}`}<br />
+              {`${originalBillingAddress.postalCode},${originalBillingAddress.country}`}
+            </div>
+          </PlaceholderText>
         ) : (
           <PlaceholderText>暂无地址</PlaceholderText>
         )}
@@ -209,9 +311,9 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
             <Select
               showSearch
               optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
+              // filterOption={(input, option) =>
+              //   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              // }
               style={{ width: '100%' }}
               value={deliveryAddress.country}
               onChange={(value) => handleDeliveryAddressChange('country', value)}
@@ -228,8 +330,8 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
                 >
                   <label htmlFor="firstName">名</label>
                   <Input placeholder="名" style={{ marginTop: '4px' }} 
-                    value={deliveryAddress.name}
-                    onChange={(e) => handleDeliveryAddressChange('name', e.target.value)} />
+                    value={deliveryAddress.realname}
+                    onChange={(e) => handleDeliveryAddressChange('realname', e.target.value)} />
                 </Form.Item>
               </Col>
               <Col span={11}>
@@ -299,8 +401,8 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
           </Form.Item>
           <Form.Item label="手机">
             <Input placeholder="手机" style={{ width: '100%', height: '32px' }} 
-              value={deliveryAddress.phone}
-              onChange={(e) => handleDeliveryAddressChange('phone', e.target.value)}/>
+              value={deliveryAddress.tel}
+              onChange={(e) => handleDeliveryAddressChange('tel', e.target.value)}/>
           </Form.Item>
         </Form>
       </Modal>
@@ -328,9 +430,9 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
             <Select
               showSearch
               optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
+              // filterOption={(input, option) =>
+              //   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              // }
               style={{ width: '100%' }}
               value={billingAddress.country}
               onChange={(value) => handleBillingAddressChange('country', value)}
@@ -347,8 +449,8 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
                 >
                   <label htmlFor="firstName">名</label>
                   <Input placeholder="名" style={{ marginTop: '4px' }} 
-                    value={billingAddress.name}
-                    onChange={(e) => handleBillingAddressChange('name', e.target.value)} />
+                    value={billingAddress.realname}
+                    onChange={(e) => handleBillingAddressChange('tel', e.target.value)} />
                 </Form.Item>
               </Col>
               <Col span={11}>
@@ -418,8 +520,8 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
           </Form.Item>
           <Form.Item label="手机">
             <Input placeholder="手机" style={{ width: '100%', height: '32px' }} 
-              value={billingAddress.phone}
-              onChange={(e) => handleBillingAddressChange('phone', e.target.value)}/>
+              value={billingAddress.tel}
+              onChange={(e) => handleBillingAddressChange('tel', e.target.value)}/>
           </Form.Item>
         </Form>
       </Modal>
@@ -442,7 +544,7 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
                 >
                   <label htmlFor="firstName">名字</label>
                   <Input placeholder="请填写名字" style={{ marginTop: '4px' }} 
-                  value={newCustomerInfo.name} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, name: e.target.value }))} />
+                  value={newCustomerInfo.realname} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, realname: e.target.value }))} />
                 </Form.Item>
               </Col>
               <Col span={11}>
@@ -472,7 +574,7 @@ const [isNewCustomerModalVisible, setNewCustomerModalVisible] = useState(false);
     >
       <label htmlFor="lastName">手机</label>
       <Input placeholder="请填写手机号" style={{ marginTop: '4px' }} 
-     value={newCustomerInfo.phone} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, phone: e.target.value }))} />
+     value={newCustomerInfo.tel} onChange={e => setNewCustomerInfo(prevState => ({ ...prevState, tel: e.target.value }))} />
     </Form.Item>
         </Form>
       </Modal>
