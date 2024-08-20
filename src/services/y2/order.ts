@@ -53,18 +53,72 @@ export async function getOrderList(page?: number, limit?: number, finalCondition
   }
 
   // 添加订单
-export async function addOrder(orderData: any): Promise<any> {
-  return request('/api/ApiStore/order_add', {
+  import orderStore from '@/store/orderStore';
+  export async function addOrders(newOrder?: { id: number; products: never[]; discount: number; shippingFee: number; tax: number; createdAt: Date; updatedAt: Date; }) {
+    return request('/api/ApiStore/order_add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data: {
+            "domain_id": "433552",
+            "source_domain_name": "www.mate-mall.com",
+            "languages_id": "2",
+            "currency": "USD",
+            "order_total": "100.00",
+            "shipping_method": "Free Shipping",
+            "payment_method": "PayPal",
+            "payment_method_no": null,
+            "paypal_txt_id": null,
+            "date_purchased": "2023-05-11 15:19:05",
+            "tel": "904-444-6166",
+            "email": "2fc46331d334c1b011428b9c2cc00413@gmail.com",
+            "delivery_name": "Calamat Calamat",
+            "country": "United States",
+            "province": "Florida(FL)",
+            "city": "florida",
+            "postcode": "32204",
+            "address": "2306  Cherry Tree Drive",
+            "employee_id": "0",
+            "orders_status_id": "1",
+        
+            "delivery_status_id": "2",
+         
+            "payment_status_id":"8",
+         
+            "remark": null,
+            "ip_address": "3745957729",
+            "is_share": "0",
+            "status": "1",
+            "employee_realname": "\u7ba1\u7406\u5458",
+            "domain_name": "www.mate-mall.com",
+            "payment_time": "1970-01-01 08:00:00",
+            "delivery_time": "1970-01-01 08:00:00",
+            "productip": "223.70.199.97",
+            "settlement_status": "0",
+            "settlement_time": "1970-01-01 08:00:00",
+            "commission_currency": "CNY",
+            "commission_amount": "3.868620",
+            "product_text": "Name: ssss<br\/>Model: ssss | Qty: 1 | <br\/>",
+            "status_history_text": "Time: 2023-05-11 15:19:05     Status: Pending<br\/>Comments: 0<br\/><br\/>"
+      }
+    })
+  }
+
+
+// 删除产品
+export async function deleteOrders(id: string) {
+  return request('/api/ApiStore/order_del', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
     },
-    body: JSON.stringify(orderData),
-  });
+    data: {
+      id: id,
+      access_token: localStorage.getItem('access_token')
+    },
+  })
 }
-
-
-
 
 
 

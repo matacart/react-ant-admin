@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Checkbox, GetProp, Input, message, Modal, Popover, Radio, Switch, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
+import { Avatar, Button, Checkbox, GetProp, Input, message, Modal, Popover, Radio, Select, Switch, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { getOrderList } from '@/services/y2/order';
+import { getOrderList} from '@/services/y2/order';
 import { history, useIntl } from '@umijs/max';
 import Tag from 'antd/lib/tag';
 import styles from './OrdersListAjax.scss';
@@ -61,6 +61,8 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     },
   });
   const [data, setData] = useState<DataType[]>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
+  
   const renderCustomTag = (text: string) => (
     <Tag  className={styles[ovalShapeClass]}>
       {text}
@@ -218,28 +220,78 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     history.push(`/orders/${orderId}`);
   };
 
+// 新增的组件以显示选择的数量和操作按钮
+const { Option } = Select; // 解构出 Option 组件
+
+const SelectedActions = ({ selectedRowKeys, setSelectedRowKeys }: { selectedRowKeys: React.Key[]; setSelectedRowKeys: React.Dispatch<React.SetStateAction<React.Key[]>> }) => {
+  const selectedCount = selectedRowKeys.length;
+  if (selectedCount === 0) return null;
+
+  const handleClearSelection = () => {
+    setSelectedRowKeys([]);
+  };
+  const handleMoreActionsChange = (value: string) => {
+    console.log('Selected more action:', value);
+    // 根据 value 执行相应的操作
+  };
+
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Checkbox
+        checked={selectedCount > 0}
+        onClick={(e) => {
+          e.stopPropagation(); // 阻止点击事件冒泡到父元素
+          handleClearSelection();
+        }}
+        style={{ marginLeft: 7 }}
+      />
+      <span style={{marginLeft: 20}}>已选择 {selectedCount} 项</span>
+      <div style={{ margin: '10px' }}>
+        <Button>入账付款</Button>
+        <Button style={{ margin: '10px' }}>批量发货</Button>
+        <Select
+          placeholder="更多操作"
+          style={{ width: 120 }}
+          onChange={handleMoreActionsChange}
+        >
+          <Option value="archive">归档订单</Option>
+          <Option value="unarchive">取消归档订单</Option>
+          <Option value="add-tag">添加标签</Option>
+          <Option value="remove-tag">删除标签</Option>
+        </Select>
+      </div>
+    </div>
+    );
+  };
+
   return (
     <Scoped>
-      {/* 列表 */}
-      <Table
-        columns={columns}
-        rowKey={(record) => record.orderid}
-        dataSource={data}
-        pagination={tableParams.pagination}
-        loading={loading}
-        onChange={handleTableChange}
-        scroll={{ x: 1300 }}
-        onRow={(record) => ({
-          onClick: () => handleOrderClick(record.orderid), // 点击行时调用handleOrderClick
-        })}
-        rowSelection={{
-          type: 'checkbox',
-          onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          },
-        }}
-      />
-    </Scoped>
+    <SelectedActions selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} /> {/* 显示选择的数量和操作按钮 */}
+    {/* 列表 */}
+    <Table
+      columns={columns}
+      rowKey={(record) => record.orderid}
+      dataSource={data}
+      pagination={tableParams.pagination}
+      loading={loading}
+      onChange={handleTableChange}
+      scroll={{ x: 1300 }}
+      onRow={(record) => ({
+        onClick: () => handleOrderClick(record.orderid), // 点击行时调用handleOrderClick
+      })}
+      rowSelection={{
+        type: 'checkbox',
+        selectedRowKeys, // 使用状态来记录选中的行
+        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+          setSelectedRowKeys(selectedRowKeys); // 更新状态
+        },
+      }}
+      // 隐藏表头
+      showHeader={selectedRowKeys.length === 0}
+    />
+  </Scoped>
   );
 };
 

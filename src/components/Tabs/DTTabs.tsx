@@ -38,12 +38,16 @@ const todayStart = getTodayStart();
 const todayEnd = getTodayEnd();
 
 const filterCondition: FilterCondition[] = [
-  { id: '1', filter_group_id: '1', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '0', module: 'orders_list' },
+  { id: '1', filter_group_id: '1', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '2', filter_group_id: '2', filter_name: '发货状态: 待发货, 部分发货', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
+  { id: '2', filter_group_id: '2', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '3', filter_group_id: '3', filter_name: '订单状态: 已取消', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
+  { id: '3', filter_group_id: '3', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '4', filter_group_id: '4', filter_name: '订单状态: 处理中', filter_field: 'orders_status_id', filter_value: '1', module: 'orders_list' },
+  { id: '4', filter_group_id: '4', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'startDate', filter_value: `${todayStart}`, module: 'orders_list' },
-  { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
+  { id: '5', filter_group_id: '5', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
+  { id: '6', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
 ];
 
 const filteredArr = (id: string): FilterCondition[] => {

@@ -17,8 +17,12 @@ interface DataType {
   total: number; // 新增合计金额字段
   selected?: boolean;
 }
+interface AddProductCardProps {
+  onAddProduct: (products: any[]) => void;
+}
 
-const AddProductCard: React.FC<Props> = () => {
+
+const AddProductCard: React.FC<AddProductCardProps> = ({ onAddProduct, ...props }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<DataType[]>([]);
   const [showSelectedProducts, setShowSelectedProducts] = useState(false);
@@ -61,6 +65,8 @@ const AddProductCard: React.FC<Props> = () => {
   // 隐藏添加按钮
   setShouldHideAddButton(uniqueUpdatedSelectedProducts.length > 0);
   setShouldShowBottomAddButton(uniqueUpdatedSelectedProducts.length > 0);
+ // 通知父组件更新商品列表
+ onAddProduct(uniqueUpdatedSelectedProducts);
 
   };
   const [dataSource, setDataSource] = useState<DataType[]>([]);
@@ -430,9 +436,9 @@ const AddProductCard: React.FC<Props> = () => {
     onCancel={handleCancel}
     okText="选择"
     cancelText="取消"
-    headerClassName="custom-header-class"
+    // headerClassName="custom-header-class"
     bodyStyle={{ padding: '20px', backgroundColor: '#FFFFFF' }}
-    footerStyle={{ padding: '20px', textAlign: 'right' }}
+    // footerStyle={{ padding: '20px', textAlign: 'right' }}
   >
     <Form name="add-product-form">
       <div
