@@ -312,7 +312,14 @@ const AddProductCard: React.FC<AddProductCardProps> = ({ onAddProduct, ...props 
                           objectFit: 'cover',
                         }}
                       />
-                      <div>
+                      <div 
+                       style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}>
                         <p style={{ margin: 0 }}>{product.name}</p> {/* 修改为实际的商品名称 */}
                         <span style={{ margin: 0 }}>US${product.price}</span>
                       </div>

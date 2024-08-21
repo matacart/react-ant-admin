@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Button, Modal, Tag } from 'antd';
+import { Tabs, Button, Modal, Tag, Input } from 'antd';
 import { useIntl } from '@umijs/max';
 import OrdersSelectCard from '@/components/Card/OrdersSelectCard';
 import OrdersListAjax from '@/pages/Orders/OrderList/OrdersListAjax';
@@ -46,8 +46,8 @@ const filterCondition: FilterCondition[] = [
   { id: '4', filter_group_id: '4', filter_name: '订单状态: 处理中', filter_field: 'orders_status_id', filter_value: '1', module: 'orders_list' },
   { id: '4', filter_group_id: '4', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'startDate', filter_value: `${todayStart}`, module: 'orders_list' },
-  { id: '5', filter_group_id: '5', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
-  { id: '6', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
+  { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
+  { id: '6', filter_group_id: '6', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
 ];
 
 const filteredArr = (id: string): FilterCondition[] => {
@@ -116,6 +116,7 @@ const FilteredOrdersComponent = ({ id, activeKey }: { id: string; activeKey: str
 };
 
 function DTTabs() {
+  const [newTabName, setNewTabName] = useState('');
   const [activeKey, setActiveKey] = useState('1');
   const intl = useIntl();
   const [panes, setPanes] = useState([
@@ -125,17 +126,30 @@ function DTTabs() {
     { title: intl.formatMessage({ id: 'order.tabs.process' }), content: <FilteredOrdersComponent id={'4'} activeKey={activeKey} />, key: '4' },
     { title: intl.formatMessage({ id: 'order.tabs.neworders' }), content: <FilteredOrdersComponent id={'5'} activeKey={activeKey} />, key: '5' },
   ]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const addNewTab = () => {
-    Modal.info({
-      title: '自定义框',
-      content: <div></div>,
-      onOk() {
-        const newPanes = [...panes, { title: '新标签 ' + (panes.length + 1), content: <div></div>, key: (panes.length + 1).toString() }];
-        setPanes(newPanes);
-        setActiveKey((panes.length + 1).toString());
-      },
-    });
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    const newPanes = [
+      ...panes,
+      {
+        title: newTabName,
+        content: <FilteredOrdersComponent id={(panes.length + 1).toString()} activeKey={activeKey} />,
+        key: (panes.length + 1).toString(),
+        // filter_name: '归档订单: 展示已归档的订单',
+        // filter_field: 'archive_status'
+      }
+    ];
+    setPanes(newPanes);
+    setActiveKey((panes.length + 1).toString());
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   const onChange = (newActiveKey: string) => {
@@ -177,6 +191,18 @@ function DTTabs() {
           </TabPane>
         ))}
       </Tabs>
+      <Modal
+        title="创建新选项卡"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Input
+          placeholder="请输入选项卡名称"
+          value={newTabName}
+          onChange={e => setNewTabName(e.target.value)}
+        />
+      </Modal>
     </div>
   );
 }

@@ -9,6 +9,16 @@ export async function getCustomerList(page: any, limit: any) {
     })
   }
 
+  
+  export async function getAddressList(page: string, limit: number, additionalParams?: string) {
+    const params = additionalParams ? `${additionalParams}&page=${page}&limit=${limit}` : `?page=${page}&limit=${limit}`;
+    return request(`/api/ApiAppstore/address_info${params}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 
 export async function addCustomers(newCustomerInfo?: { realname: string; familyname: string; email: string; tel: string; }) {
   return request('/api/ApiAppstore/customer_add', {

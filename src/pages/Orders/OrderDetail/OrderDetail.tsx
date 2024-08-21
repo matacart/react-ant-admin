@@ -104,7 +104,7 @@ function OrderDetail() {
                 {order && translateStatus(`order.status.name_${order.payment_status_id}`)}
             </div>
             <div className="oval-shape" style={{ fontSize: '12px', marginLeft: '10px', color: '#474F5E' }}>
-                {order && translateStatus(`order.status.name_${order.delivery_status_id}`)}
+                {order && translateStatus(`order.status.name_${order.delivery_statu_id}`)}
             </div>
                           </div>
                           <div className="mc-time" style={{fontSize:'14px',color:'#474F5E'}}>
