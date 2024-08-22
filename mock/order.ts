@@ -361,8 +361,7 @@ export default {
     res.json({
     "code": 0,
     "msg": "",
-    "count": "3",
-    "data": [
+    "data": 
      
 
         {
@@ -475,7 +474,7 @@ export default {
             "status_history_text": "Time: 2023-05-11 15:31:38     Status: Pending<br\/>Comments: 0<br\/><br\/>"
         },
 
-    ]
+    
 
 
 

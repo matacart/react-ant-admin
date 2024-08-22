@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Timeline, Button } from 'antd';
 import { CaretDownOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
 
-interface historyinfo {
+interface historys {
   id: string;
   orders_id: string;
   orders_status_id: string; // 国际化标识符
   pid: string;
   time: string;
   comments: string; // 国际化标识符
-  children?: historyinfo[];
+  children?: historys[];
 }
 
-const OdersTimeline: React.FC<{ order: { historyinfo: historyinfo[] } }> = ({ order }) => {
+const OdersTimeline: React.FC<{ order: { historys: historys[] } }> = ({ order }) => {
   const intl = useIntl();
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
   const [itemsToShow, setItemsToShow] = useState(4);
@@ -29,12 +29,12 @@ const OdersTimeline: React.FC<{ order: { historyinfo: historyinfo[] } }> = ({ or
   };
 
   const handleLoadMore = () => {
-    setItemsToShow(order.historyinfo.length);
+    setItemsToShow(order.historys.length);
   };
 
   return (
     <Timeline>
-      {(order.historyinfo || []).slice(0, itemsToShow).map((item: historyinfo, index: number) => (
+      {(order.historys || []).slice(0, itemsToShow).map((item: historys, index: number) => (
         <Timeline.Item key={index}>
           <p onClick={() => handleExpand(index)}>
             {intl.formatMessage({ id: item.orders_status_id })}
@@ -43,7 +43,7 @@ const OdersTimeline: React.FC<{ order: { historyinfo: historyinfo[] } }> = ({ or
             {expandedItems.includes(index) && (
               <>
                 <p>{intl.formatMessage({ id: item.comments })}</p>
-                {item.children && item.children.map((childItem: historyinfo) => (
+                {item.children && item.children.map((childItem: historys) => (
                   <p key={childItem.id}>{intl.formatMessage({ id: childItem.comments })}</p>
                 ))}
               </>
@@ -51,7 +51,7 @@ const OdersTimeline: React.FC<{ order: { historyinfo: historyinfo[] } }> = ({ or
           </p>
         </Timeline.Item>
       ))}
-      {itemsToShow < order.historyinfo.length && (
+      {itemsToShow < order.historys.length && (
         <Button type="link" onClick={handleLoadMore}>
           {intl.formatMessage({ id: 'app.order.timeline.load-more' })}
         </Button>

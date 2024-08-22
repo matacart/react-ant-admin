@@ -145,33 +145,40 @@ export default function Orders() {
         okText="上传并导入"
         cancelText="取消"
         footer={[
-          <Button key="import-record" type="link" size="small" onClick={handleCancel}>
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button key="import-record" onClick={handleCancel}>
             导入记录
           </Button>,
+          <div style={{ display: 'flex', gap: '8px' }}>
           <Button key="cancel" onClick={handleCancel}>
             取消
           </Button>,
           <Button key="ok" type="primary" onClick={handleOk}>
             上传并导入
           </Button>,
+          </div>
+          </div>
         ]}
+        width={600} // 设置 Modal 宽度
       >
         <p>
           请先下载批量导入模版，并按导入模版规范填写订单相关信息，再在本页导入表格，以更新订单包裹的发货状态。
         </p>
-        <Upload
-          name="file"
-          multiple
-          action="your-upload-endpoint"
-          listType="picture-card"
-          beforeUpload={beforeUpload}
-          onChange={handleChange}
-        >
-          <div>
-            上传文件（或拖放上传）
-          
-          </div>
-        </Upload>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <Upload
+      name="file"
+      multiple
+      action="your-upload-endpoint"
+      listType="picture-card"
+      beforeUpload={beforeUpload}
+      onChange={handleChange}
+      style={{ width: '90%' }} // 尝试设置为模态框内容区域的 90%
+    >
+      <div>
+        上传文件（或拖放上传）                
+      </div>
+    </Upload>
+        </div>
       </Modal>
 
       {/* 模态框：更新订单追踪编号 */}
@@ -183,34 +190,184 @@ export default function Orders() {
         okText="上传并导入"
         cancelText="取消"
         footer={[
-          <Button key="export-history" type="link" size="small" onClick={handleUpdateTrackingCancel}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Button key="export-history" onClick={handleUpdateTrackingCancel} >
             导出历史记录
           </Button>,
-          <Button key="cancel" onClick={handleUpdateTrackingCancel}>
-            取消
-          </Button>,
-          <Button key="ok" type="primary" onClick={handleUpdateTrackingOk}>
-            上传并导入
-          </Button>,
+          <div style={{ display: 'flex', gap: '8px' }}>
+        <Button key="cancel" onClick={handleUpdateTrackingCancel} >
+          取消
+        </Button>,
+        <Button key="ok" type="primary" onClick={handleUpdateTrackingOk}>
+          上传并导入
+        </Button>,
+      </div>
+          </div>
         ]}
+        width={600} // 设置 Modal 宽度
       >
         <p>
           请先导出已发货订单，在表格中为订单包裹添加或修改运单号，再在本页导入表格，以更新订单包裹物流状态。
         </p>
-        <Upload
-          name="file"
-          multiple
-          action="your-upload-endpoint-for-tracking"
-          listType="picture-card"
-          beforeUpload={beforeUpload}
-          onChange={handleChange}
-        >
-          <div>
-            上传文件（或拖放上传）
-          
-          </div>
-        </Upload>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <Upload
+      name="file"
+      multiple
+      action="your-upload-endpoint"
+      listType="picture-card"
+      beforeUpload={beforeUpload}
+      onChange={handleChange}
+      style={{ width: '90%' }} // 尝试设置为模态框内容区域的 90%
+    >
+      <div>
+        上传文件（或拖放上传）                
+      </div>
+    </Upload>
+        </div>
       </Modal>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Badge, Button, Card, Divider, Form, Input, Tooltip } from "antd";
+// import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
+// import { observer } from "mobx-react-lite";
+// import order from "mock/order";
+// import { useEffect, useState } from "react";
+// import { useParams } from "react-router-dom";
+// import { getOrderDetail } from "@/services/y2/order";
+// import { useIntl } from "@umijs/max";
+// interface productinfo{
+
+//   id: string;
+//   orders_id: string;
+//   product_id: string;
+//   productModel: string;
+//   productImage: string;
+//   productName: string;
+//   productNum: string;
+//   product_prid: string;
+//   productOption: null | any;
+
+
+// }
+// interface OrderDetail {
+//   id: string; // 订单ID
+//   date_purchased:string;//订单日期
+//   orders_status_id:string;//订单状态
+//   delivery_status_id:string;//发货状态
+//   payment_status_id:string;//支付状态
+//   orders_name:string;
+//   orders_price:string;
+//   orders_total:string;
+//   orders_num:string;
+//   shipping_cost:string;
+//   delivery_name:string;
+//   email:string;
+//   tel:string;
+//   country:string;
+//   province:string;
+//   city:string;
+//   address:string;
+//   postcode:string;
+//   productinfo:productinfo[];
+// }
+// const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+//     console.log('Change:', e.target.value);
+// };
+// const {TextArea} = Input
+// interface OrdersShippedCardProps {
+//   order: OrderDetail;
+//   productInfo: productinfo[];
+// }
+
+// function OrdersShippedCard({ order, productInfo }: OrdersShippedCardProps) {
+//   const intl = useIntl();
+//   const translateStatus = (key: string) => {
+//     return intl.formatMessage({ id: key });
+//   };
+
+//     return (
+//       <Card
+//       style={{ width: '980px' }}
+//       title={
+//         <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px', color: '#474F5E', justifyContent: 'space-between' }}>
+//           <div>
+//             <CheckCircleTwoTone twoToneColor="#52c41a" style={{ margin: '10px' }} />
+//             {order && translateStatus(`order.status.name_${order.delivery_status_id}`)} #{order?.id}-F1
+//             <Tooltip title="复制">
+//               <CopyOutlined style={{ margin: '10px' }} />
+//             </Tooltip>
+//           </div>
+//           <EllipsisOutlined />
+//         </div>
+//       }
+//     >
+//       <Form>
+//         <div>
+//           <p style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id: 'order.detail.location' })}</p>
+//           <p style={{ fontSize: '14px', color: '#242833' }}>{intl.formatMessage({ id: 'order.detail.defaultlocation' })}</p>
+//           <p style={{ fontSize: '14px', color: '#7A8499' }}>{order?.delivery_status_id}</p>
+//           {/* <p style={{ fontSize: '14px', color: '#242833' }}>{order?.delivery_time}</p> */}
+
+//           {productInfo.map((product) => (
+//             <div key={product.id} style={{ display: 'flex', alignItems: 'center', marginTop: '10px', justifyContent: 'space-between' }}>
+//               <div style={{ display: 'flex', alignItems: 'center' }}>
+//                 <div style={{ width: '50px', height: '50px', backgroundColor: '#ccc', marginRight: '10px' }}></div>
+//                 <img src={product.productImage} alt={product.productName} style={{ width: '50px', height: '50px', marginRight: '10px' }} />
+//                 <div style={{ display: 'flex', flexDirection: 'column' }}>
+//                   <p style={{ fontSize: '14px', color: '#474F5E' }}>{product.productName}</p>
+//                 </div>
+//               </div>
+//               <div style={{ display: 'flex', flexDirection: 'column' }}>
+//                 <p style={{ fontSize: '14px', color: '#474F5E' }}>US${order?.orders_price}X {product.productNum}</p>
+//               </div>
+//               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+//                 <p style={{ fontSize: '14px', color: '#474F5E' }}>US${order?.orders_total}</p>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </Form>
+//       <Divider />
+//       <Form>
+//         <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px', justifyContent: 'space-between' }}>
+//           <div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id: 'order.detail.tracking' })}：无</div>
+//           <Button
+//             className='my-button'
+//             style={{
+//               marginTop: '10px',
+//               backgroundColor: '#356DFF',
+//               width: '116px',
+//               height: '36px',
+//               fontSize: '14px',
+//               color: 'white',
+//             }}
+//           >
+//             {intl.formatMessage({ id: 'order.detail.addtracking' })}
+//           </Button>
+//         </div>
+//       </Form>
+//     </Card>
+// );
+// }
+// export default observer(OrdersShippedCard);
