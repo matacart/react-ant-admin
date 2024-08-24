@@ -11,6 +11,9 @@ import orders from './../../pages/Orders/PascalCase';
 import { useIntl } from "@umijs/max";
 import DeliveryState from "@/pages/Orders/OrderActionButton/DeliveryState";
 import PaymentState from "@/pages/Orders/OrderActionButton/PaymentState";
+import Orders from './../../pages/Orders/OrderItem/index';
+import OrdersMoreSelect from "@/pages/Orders/OrderActionButton/OrdersMoreSelect";
+import TableEdit from "@/pages/Orders/OrderActionButton/TableEdit";
 
 
 
@@ -65,24 +68,29 @@ export default function OrdersSelectCard() {
         />
         <PaymentState />
         <DeliveryState />
-        <MoreSelect />
-        <Button size="large">{intl.formatMessage({ id: 'order.button.edittable' })}</Button>
+        <OrdersMoreSelect />
+        <TableEdit/>
+        {/* 修改的 Select 组件 */}
         <Select
-          size="large"
-          defaultValue={intl.formatMessage({ id: 'order.button.sorting' })}
-          style={{ width: 75 }}
-          listHeight={300}
-          options={[
-            { value: '订单号（升序）', label: '订单号（升序）' },
-            { value: '成单时间（最新到最旧）', label: '成单时间（最新到最旧）' },
-            { value: '支付时间（最新到最旧）', label: '支付时间（最新到最旧）' },
-            { value: '客服名称（A-Z)', label: '客服名称（A-Z)' },
-            { value: '付款状态（A-Z）', label: '付款状态（A-Z）' },
-            { value: '发货状态（A-Z）', label: '发货状态（A-Z）' },
-            { value: '售价（从高到低）', label: '售价（从高到低）' },
-            { value: '总价（高至低）', label: '总价（高至低）' },
-          ]}
-        />
+            size="large"
+            defaultValue={intl.formatMessage({ id: 'order.button.sorting' })}
+            style={{ width: 120 }}
+            listHeight={300}
+            options={[
+              { value: '订单号（升序）', label: '订单号（升序）' },
+              { value: '成单时间（最新到最旧）', label: '成单时间（最新到最旧）' },
+              { value: '支付时间（最新到最旧）', label: '支付时间（最新到最旧）' },
+              { value: '客服名称（A-Z)', label: '客服名称（A-Z)' },
+              { value: '付款状态（A-Z）', label: '付款状态（A-Z）' },
+              { value: '发货状态（A-Z）', label: '发货状态（A-Z）' },
+              { value: '售价（从高到低）', label: '售价（从高到低）' },
+              { value: '总价（高至低）', label: '总价（高至低）' },
+            ]}
+            showSearch
+            filterOption={(input, option) =>
+              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+          />
       </div>
     </div>
              

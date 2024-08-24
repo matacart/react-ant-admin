@@ -56,62 +56,43 @@ const filteredArr = (id: string): FilterCondition[] => {
 
 const FilteredOrdersComponent = ({ id, activeKey }: { id: string; activeKey: string }) => {
   const elementsById = filteredArr(id);
-  const [filterCondition, setFilterCondition] = useState<FilterCondition[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // 添加加载状态
-
-  // 更新 state
-  useEffect(() => {
-    setFilterCondition(elementsById.map(element => ({
-      ...element,
-      // 如果需要转换成其他形式，可以在这里添加转换逻辑
-    })));
-    setIsLoading(true); // 开始加载
-  }, [id, activeKey]); // 添加 activeKey 作为依赖项
-
-  useEffect(() => {
-    // 模拟数据加载逻辑
-    const fetchData = async () => {
-      try {
-        // 这里可以调用实际的数据加载函数
-        console.log(`Loading data for id ${id} with activeKey ${activeKey}`);
-        await new Promise(resolve => setTimeout(resolve, 1000)); // 模拟异步操作
-      } finally {
-        setIsLoading(false); // 完成加载
-      }
-    };
-
-    fetchData();
-  }, [id, activeKey, filterCondition]); // 监听 filterCondition 变化
+  const [filterCondition, setFilterCondition] = useState<FilterCondition[]>(elementsById);
 
   const handleRemoveCondition = (conditionId: string) => {
     const updatedConditions = filterCondition.filter(condition => condition.id !== conditionId);
     setFilterCondition(updatedConditions);
   };
 
+
+
+  function addNewTab(): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <div>
-    <div>
-      <OrdersSelectCard />
+      <div>
+        <OrdersSelectCard />
+      </div>
+      <div>
+        {filterCondition.map((element) => (
+          <Tag
+            key={element.id}
+            className='tag'
+            closable
+            onClose={() => handleRemoveCondition(element.id)}
+          >
+            {element.filter_name}
+          </Tag>
+        ))}
+        <Button className="button" type="primary" >
+          新建选项卡
+        </Button>
+      </div>
+      {filterCondition.length > 0 && (
+        <OrdersListAjax filterCondition={filterCondition} />
+      )}
     </div>
-    <div>
-      {filterCondition.map((element) => (
-        <Tag
-          key={element.id}
-          className='tag'
-          closable
-          onClose={() => handleRemoveCondition(element.id)}
-        >
-          {element.filter_name}
-        </Tag>
-      ))}
-      <Button className="button" type="primary">
-        新建选项卡
-      </Button>
-    </div>
-    {filterCondition.length > 0 && ( // 使用逻辑与运算符来控制渲染
-      <OrdersListAjax filterCondition={filterCondition} />
-    )}
-  </div>
   );
 };
 
@@ -139,8 +120,6 @@ function DTTabs() {
         title: newTabName,
         content: <FilteredOrdersComponent id={(panes.length + 1).toString()} activeKey={activeKey} />,
         key: (panes.length + 1).toString(),
-        // filter_name: '归档订单: 展示已归档的订单',
-        // filter_field: 'archive_status'
       }
     ];
     setPanes(newPanes);

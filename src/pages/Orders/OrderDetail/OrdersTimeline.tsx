@@ -51,12 +51,18 @@ const OdersTimeline: React.FC<{ order: { historys: historys[] } }> = ({ order })
           </p>
         </Timeline.Item>
       ))}
-      {itemsToShow < order.historys.length && (
+      {/* {itemsToShow < order.historys.length && (
         <Button type="link" onClick={handleLoadMore}>
           {intl.formatMessage({ id: 'app.order.timeline.load-more' })}
         </Button>
       )}
-    </Timeline>
+    </Timeline> */}
+      {itemsToShow < (order.historys || []).length && (
+        <Button type="link" onClick={handleLoadMore}>
+          {intl.formatMessage({ id: 'app.order.timeline.load-more' })}
+        </Button>
+      )}
+    </Timeline> 
   );
 };
 

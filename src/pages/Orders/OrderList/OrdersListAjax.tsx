@@ -3,10 +3,11 @@ import { Avatar, Button, Checkbox, GetProp, Input, message, Modal, Popover, Radi
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { getOrderList} from '@/services/y2/order';
+import { getOrderList,updateOrderStatus,batchdelOrders,batchshipOrders} from '@/services/y2/order';
 import { history, useIntl } from '@umijs/max';
 import Tag from 'antd/lib/tag';
 import styles from './OrdersListAjax.scss';
+import { stringify } from '@ant-design/pro-components';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;
@@ -86,6 +87,11 @@ export default function OrdersListAjax({ filterCondition }: Props) {
       title: intl.formatMessage({ id: 'order.tableheader.orderdata' }),
       dataIndex: 'orderdata',
       width: 100,
+      render: (text: string) => (
+        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {text}
+        </span>
+      ),
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.orderstate' }),
@@ -124,6 +130,11 @@ export default function OrdersListAjax({ filterCondition }: Props) {
       title: intl.formatMessage({ id: 'order.tableheader.tel' }),
       dataIndex: 'tel',
       width: 100,
+      render: (tel: string) => {
+        // 显示手机号的前两位和后两位，中间用星号(*)代替
+        const maskedTel = `${tel.substring(0, 2)}****${tel.substring(tel.length - 2)}`;
+        return <span>{maskedTel}</span>;
+      },
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.shippingmethod' }),
@@ -146,26 +157,27 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     const limit = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
     let finalCondition: FilterCondition[] = condition || [];
-
+  
     // 确保 finalCondition 包含了 filterCondition 中的过滤条件
     if (filterCondition && filterCondition.length > 0) {
       finalCondition = filterCondition;
     }
-
+  
     console.log('Fetching data with:', { page, limit, finalCondition });
-
+  
     // 构造查询字符串
     const searchParams = new URLSearchParams();
+    if (page) searchParams.set('page', page.toString());
+    if (limit) searchParams.set('limit', limit.toString());
     finalCondition.forEach(cond => {
       searchParams.set(cond.filter_field, cond.filter_value);
     });
-
-
-  getOrderList(page, limit, finalCondition)
-  .then((res) => {
-    console.log('Response from getOrderList:', res);
-
-    const newData: DataType[] = res.data?.map((item: any) => ({
+  
+    getOrderList(page, limit, finalCondition)
+      .then((res) => {
+        console.log('Response from getOrderList:', res);
+  
+        const newData: DataType[] = res.data?.map((item: any) => ({
           orderid: item.id,
           orderdata: item.date_purchased,
           orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
@@ -178,7 +190,7 @@ export default function OrdersListAjax({ filterCondition }: Props) {
           paymentchannel: item.payment_method,
           price: item.order_total,
         }));
-
+  
         console.log('New data after processing:', newData);
         setData(newData); // 使用过滤后的数据
         setLoading(false);
@@ -230,12 +242,90 @@ const SelectedActions = ({ selectedRowKeys, setSelectedRowKeys }: { selectedRowK
   const handleClearSelection = () => {
     setSelectedRowKeys([]);
   };
-  const handleMoreActionsChange = (value: string) => {
-    console.log('Selected more action:', value);
-    // 根据 value 执行相应的操作
+
+  const handleAccountPayment = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning('请选择至少一项进行操作');
+      return;
+    }
+  
+    try {
+      // 将所有选定项的键合并成一个字符串
+      const combinedKey = selectedRowKeys;
+      await updateOrderStatus(combinedKey);
+      message.success('订单状态更新成功');
+      // 可以在这里重新获取数据或执行其他逻辑
+    } catch (error) {
+      message.error('订单状态更新失败');
+    }
   };
 
 
+
+  const handleBatchShipOrders = async () => {
+    if (selectedRowKeys.length === 0) {
+      message.warning('请选择至少一项进行操作');
+      return;
+    }
+
+    try {
+      await batchshipOrders(selectedRowKeys as string[]);
+      message.success('批量发货成功');
+      // 清除选中状态
+      setSelectedRowKeys([]);
+      // 重新加载数据
+      fetchData();
+    } catch (error) {
+      message.error('批量发货失败');
+    }
+  };
+
+
+
+const handleMoreActionsChange = (value: string) => {
+  console.log('Selected more action:', value);
+  // 根据 value 执行相应的操作
+  if (value === 'delete-orders') {
+    handleDeleteOrders();
+  }
+};
+
+const handleDeleteOrders = async () => {
+  console.log('Selected Row Keys:', selectedRowKeys);
+  // 确保 selectedRowKeys 不为空
+  if (selectedRowKeys.length === 0) {
+    message.warning('请选择至少一项进行操作');
+    return;
+  }
+
+  try {
+  
+
+// 将数字数组转换为字符串数组
+const stringSelectedRowKeys = selectedRowKeys.map(String);
+  const response = await batchdelOrders(stringSelectedRowKeys);
+
+    if (response && response.code === 0) { // 后端成功状态码应为200
+      message.success('订单删除成功');
+      // 清除选中状态
+      setSelectedRowKeys([]);
+      // 重新加载数据
+      fetchData();
+    } else if (response && response.code === 201) {
+      message.error(`订单删除失败，后端返回错误：${response.msg}`);
+    } else {
+      message.error('订单删除失败，请检查后端响应');
+    }
+  } catch (error) {
+    let errorMessage = '订单删除失败';
+    if (error instanceof Error) {
+      errorMessage += `：${error.message}`;
+    }
+    message.error(errorMessage);
+  }
+};
+  
+  
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <Checkbox
@@ -246,10 +336,10 @@ const SelectedActions = ({ selectedRowKeys, setSelectedRowKeys }: { selectedRowK
         }}
         style={{ marginLeft: 7 }}
       />
-      <span style={{marginLeft: 20}}>已选择 {selectedCount} 项</span>
+      <span style={{ marginLeft: 20 }}>已选择 {selectedCount} 项</span>
       <div style={{ margin: '10px' }}>
-        <Button>入账付款</Button>
-        <Button style={{ margin: '10px' }}>批量发货</Button>
+        <Button onClick={handleAccountPayment}>入账付款</Button>
+        <Button style={{ margin: '10px' }} onClick={handleBatchShipOrders}>批量发货</Button> {/* 新增的批量发货按钮 */}
         <Select
           placeholder="更多操作"
           style={{ width: 120 }}
@@ -259,6 +349,7 @@ const SelectedActions = ({ selectedRowKeys, setSelectedRowKeys }: { selectedRowK
           <Option value="unarchive">取消归档订单</Option>
           <Option value="add-tag">添加标签</Option>
           <Option value="remove-tag">删除标签</Option>
+          <Option value="delete-orders">删除订单</Option>
         </Select>
       </div>
     </div>

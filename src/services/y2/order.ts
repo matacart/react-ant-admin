@@ -2,6 +2,16 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+/** 删除规则 DELETE /api/rule */
+export async function removeRule(options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/api/rule', {
+    method: 'POST',
+    data: {
+      method: 'delete',
+      ...(options || {}),
+    }
+  });
+}
 
 interface FilterCondition {  
   id: string;  
@@ -12,7 +22,7 @@ interface FilterCondition {
   module: string;  
 }  
 
-//  读取订单列表import { request } from 'your-request-library'; // 假设这是您的请求库
+//  读取订单列表
 
 export async function getOrderList(page?: number, limit?: number, finalCondition?: FilterCondition[]): Promise<any> {
   // 构造查询字符串
@@ -37,8 +47,6 @@ export async function getOrderList(page?: number, limit?: number, finalCondition
     },
   });
 }
-
-  
   //读取订单详情
 
 
@@ -53,7 +61,6 @@ export async function getOrderList(page?: number, limit?: number, finalCondition
   }
 
   // 添加订单
-  import orderStore from '@/store/orderStore';
   export async function addOrders(newOrder?: { id: number; products: never[]; discount: number; shippingFee: number; tax: number; createdAt: Date; updatedAt: Date; }) {
     return request('/api/ApiStore/order_add', {
       method: 'POST',
@@ -105,70 +112,92 @@ export async function getOrderList(page?: number, limit?: number, finalCondition
     })
   }
 
-
-// 删除产品
-export async function deleteOrders(id: string) {
-  return request('/api/ApiStore/order_del', {
+//批量 入账付款
+export async function updateOrderStatus(ids: string[]): Promise<any> {
+  return request(`/api/ApiStore/order_batchpay`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ids: ids.join(','), 
+      orders_status_id: 8, 
+      access_token: localStorage.getItem('access_token')
+    }),
+  });
+}
+
+// 批量删除订单
+export async function batchdelOrders(ids: string[]) {  
+  return request('/api/ApiStore/order_batchdel', {  
+    method: 'POST',  
+    headers: {  
+      'Content-Type': 'multipart/form-data',  
+    },  
+    data: {  
+      ids: ids.join(','), 
+    },  
+  });  
+}
+//批量发货
+export async function batchshipOrders(ids: string[]): Promise<any> {
+  return request('/api/ApiStore/order_batchship', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
     data: {
-      id: id,
+      ids: ids.join(','), 
+      delivery_status_id: 3,
       access_token: localStorage.getItem('access_token')
     },
-  })
+  });
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-// // @ts-ignore
-// /* eslint-disable */
-// import { request } from '@umijs/max';
-
-
-
-
-// //  读取订单列表
-// export async function getOrderList(page: any, limit: any) {
-//     return request(`/api/ApiStore/order_list?page=${page}`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     })
-//   }
+// case 'batchdel':
+//   if(!(admin.hasPerm('delete:/store/orderlist')||admin.hasPerm('is_merchant'))) {	
+//     layer.msg("鏃犲垹闄ゆ搷浣滄潈闄�!");
   
-//   //读取订单
+//   }else{
+//       var checkStatus = table.checkStatus('LAY-store-order-list')
+//       ,checkData = checkStatus.data; //寰楀埌閫変腑鐨勬暟鎹�
 
+//       if(checkData.length === 0){
+//         return layer.msg('璇烽€夋嫨鏁版嵁');
+//       }
+      
+//       layer.confirm('纭畾鍒犻櫎鍚楋紵', function(index) {
+//         var delList=[];
+//         checkData.forEach(function(n,i){
+//           delList.push(n.id);
+//         });
+      
+//         //鎵ц Ajax 鍚庨噸杞�  
+//         if(delList!=''){
+//           $.ajax({
+//             url: layui.setter.base_server + "ApiStore/order_batchdel",
+//             type:"POST",
+//             dataType:"json",
+//             data:{"ids":delList,"access_token":layui.setter.getToken().access_token},
+//             success:function (res) {
+//               if(res.code==0){
+//                 layer.msg("鍒犻櫎鎴愬姛");
+//                 table.reload("LAY-store-order-list",{});
+//               }else{
+//                 layer.msg("鍒犻櫎澶辫触");
+//               }
+//             },
+//             error:function () {
+//               layer.msg("绯荤粺閿欒");
+//             }
+//           })
+         
+//         }else{
+//           layer.tips("璇烽€夋嫨闇€瑕佸垹闄ょ殑琛�",$("#batchDel"),{
+//             tips:[3,"#5fb878"]
+//           })
+//         }		  
+//       });			
 
-//   export async function getOrderDetail(page: string | undefined) {
-//     return request(`/api/ApiStore/order_detail`, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ page}), // 将参数序列化为JSON字符串
-//     });
 //   }
-
-
-
-
-
-
-
-
-
-
