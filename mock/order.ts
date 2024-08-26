@@ -126,7 +126,7 @@ export default {
             "status_history_text": "Time: 2023-05-11 15:17:05     Status: Pending<br\/>Comments: 0<br\/><br\/>"
         },
         {
-            "id": "5517517682112480839",
+            "id": "5517517682112480840",
             "domain_id": "433552",
             "source_domain_name": "www.mate-mall.com",
             "languages_id": "2",
@@ -182,7 +182,7 @@ export default {
             "status_history_text": "Time: 2023-05-11 15:17:05     Status: Pending<br\/>Comments: 0<br\/><br\/>"
         },
         {
-            "id": "5517517682112480839",
+            "id": "5517517682112480841",
             "domain_id": "433552",
             "source_domain_name": "www.mate-mall.com",
             "languages_id": "2",
@@ -238,7 +238,7 @@ export default {
             "status_history_text": "Time: 2023-05-11 15:17:05     Status: Pending<br\/>Comments: 0<br\/><br\/>"
         },
         {
-            "id": "5517517682112480839",
+            "id": "5517517682112480842",
             "domain_id": "433552",
             "source_domain_name": "www.mate-mall.com",
             "languages_id": "2",
@@ -294,7 +294,7 @@ export default {
             "status_history_text": "Time: 2023-05-11 15:17:05     Status: Pending<br\/>Comments: 0<br\/><br\/>"
         },
         {
-            "id": "5517517682112480839",
+            "id": "5517517682112480843",
             "domain_id": "433552",
             "source_domain_name": "www.mate-mall.com",
             "languages_id": "2",
@@ -480,5 +480,83 @@ export default {
 
 
 })
-}
+},
+
+
+'POST  /api/ApiStore/order_batchpay': (req: Request, res: Response) => {
+    try {
+      // 模拟成功更新订单状态
+      const { ids } = req.body;
+  
+      if (!ids) {
+        return res.status(400).json({ code: -1, msg: 'Missing required parameter "ids"' });
+      }
+  
+      // 处理单个 ID 或多个 ID 的情况
+      const successIds = typeof ids === 'string' && ids.includes(',')
+        ? ids.split(',') // 多个 ID
+        : [ids]; // 单个 ID
+  
+      // 构造成功响应
+      const response = {
+        code: 0,
+        msg: 'Success',
+        data: {
+          updatedOrders: successIds.map(id => ({
+            id,
+            payment_status_id: 8, // 支付状态也更新为 8
+            message: `订单 ${id} 已成功完成入账付款`
+          }))
+        }
+      };
+  
+      res.json(response);
+    } catch (error) {
+      console.error('Error processing order_batchpay request:', error);
+      res.status(500).json({ code: -1, msg: 'Internal Server Error' });
+    }
+  },
+
+
+'POST  /api/ApiStore/order_batchship': (req: Request, res: Response) => {
+    try {
+      // Extract the IDs from the request body
+      const { ids } = req.body;
+  
+      if (!ids) {
+        return res.status(400).json({ code: -1, msg: 'Missing required parameter "ids"' });
+      }
+  
+      // Process single ID or multiple IDs
+      const successIds = typeof ids === 'string' && ids.includes(',')
+        ? ids.split(',') // Multiple IDs
+        : [ids]; // Single ID
+  
+      // Construct the success response
+      const response = {
+        code: 0,
+        msg: 'Success',
+        data: {
+          updatedOrders: successIds.map(id => ({
+            id,
+            delivery_status_id: 3, // Set delivery status to 3 (shipped)
+            message: `订单 ${id} 已成功发货`
+          }))
+        }
+      };
+  
+      res.json(response);
+    } catch (error) {
+      console.error('Error processing order_batchship request:', error);
+      res.status(500).json({ code: -1, msg: 'Internal Server Error' });
+    }
+  },
+
+
+
+
+
+
+
+
 }

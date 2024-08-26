@@ -182,6 +182,7 @@ export default function OrdersListAjax({ filterCondition }: Props) {
           orderdata: item.date_purchased,
           orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
           paymentmethod: item.payment_method,
+          payment_status_id: item.payment_status_id, // 确保这里使用的是最新的 payment_status_id
           paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
           deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
           deliveryname: item.delivery_name,
@@ -189,6 +190,7 @@ export default function OrdersListAjax({ filterCondition }: Props) {
           shippingmethod: item.shipping_method,
           paymentchannel: item.payment_method,
           price: item.order_total,
+          
         }));
   
         console.log('New data after processing:', newData);
@@ -242,44 +244,42 @@ const SelectedActions = ({ selectedRowKeys, setSelectedRowKeys }: { selectedRowK
   const handleClearSelection = () => {
     setSelectedRowKeys([]);
   };
-
-  const handleAccountPayment = async () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning('请选择至少一项进行操作');
-      return;
-    }
-  
-    try {
-      // 将所有选定项的键合并成一个字符串
-      const combinedKey = selectedRowKeys;
-      await updateOrderStatus(combinedKey);
-      message.success('订单状态更新成功');
-      // 可以在这里重新获取数据或执行其他逻辑
-    } catch (error) {
-      message.error('订单状态更新失败');
-    }
-  };
-
-
-
   const handleBatchShipOrders = async () => {
     if (selectedRowKeys.length === 0) {
       message.warning('请选择至少一项进行操作');
       return;
     }
-
-    try {
-      await batchshipOrders(selectedRowKeys as string[]);
-      message.success('批量发货成功');
-      // 清除选中状态
-      setSelectedRowKeys([]);
-      // 重新加载数据
-      fetchData();
-    } catch (error) {
-      message.error('批量发货失败');
-    }
+  
+    // 使用 Modal.confirm 弹出确认对话框
+    Modal.confirm({
+      title: '标记订单为已发货',
+      content: (
+        <div>
+          <p>这些订单将被标记为“已发货”。</p>
+          <div style={{ marginTop: '16px' }}>
+            <Checkbox>
+              给用户发送通知邮件
+            </Checkbox>
+          </div>
+        </div>
+      ),
+      onOk: async () => {
+        try {
+          await batchshipOrders(selectedRowKeys as string[]);
+          message.success('批量发货成功');
+          // 清除选中状态
+          setSelectedRowKeys([]);
+          // 重新加载数据
+          fetchData();
+        } catch (error) {
+          message.error('批量发货失败');
+        }
+      },
+      onCancel: () => {
+        console.log('Cancel');
+      },
+    });
   };
-
 
 
 const handleMoreActionsChange = (value: string) => {
@@ -298,34 +298,94 @@ const handleDeleteOrders = async () => {
     return;
   }
 
-  try {
-  
+  // 显示确认对话框
+  Modal.confirm({
+    title: '确认删除?',
+    content: '您确定要删除这些订单吗?',
+    onOk: async () => {
+      try {
+        // 将数字数组转换为字符串数组
+        const stringSelectedRowKeys = selectedRowKeys.map(String);
+        const response = await batchdelOrders(stringSelectedRowKeys);
 
-// 将数字数组转换为字符串数组
-const stringSelectedRowKeys = selectedRowKeys.map(String);
-  const response = await batchdelOrders(stringSelectedRowKeys);
-
-    if (response && response.code === 0) { // 后端成功状态码应为200
-      message.success('订单删除成功');
-      // 清除选中状态
-      setSelectedRowKeys([]);
-      // 重新加载数据
-      fetchData();
-    } else if (response && response.code === 201) {
-      message.error(`订单删除失败，后端返回错误：${response.msg}`);
-    } else {
-      message.error('订单删除失败，请检查后端响应');
-    }
-  } catch (error) {
-    let errorMessage = '订单删除失败';
-    if (error instanceof Error) {
-      errorMessage += `：${error.message}`;
-    }
-    message.error(errorMessage);
-  }
+        if (response && response.code === 0) { // 后端成功状态码应为200
+          message.success('订单删除成功');
+          // 清除选中状态
+          setSelectedRowKeys([]);
+          // 重新加载数据
+          fetchData();
+        } else if (response && response.code === 201) {
+          message.error(`订单删除失败，后端返回错误：${response.msg}`);
+        } else {
+          message.error('订单删除失败，请检查后端响应');
+        }
+      } catch (error) {
+        let errorMessage = '订单删除失败';
+        if (error instanceof Error) {
+          errorMessage += `：${error.message}`;
+        }
+        message.error(errorMessage);
+      }
+    },
+    onCancel: () => {
+      console.log('Cancel');
+    },
+  });
 };
   
-  
+
+
+
+const handleAccountPayment = async () => {
+  if (selectedRowKeys.length === 0) {
+    message.warning('请选择至少一项进行操作');
+    return;
+  }
+
+  // 使用 Modal.confirm 弹出确认对话框
+  Modal.confirm({
+    title: '标记订单为已付款',
+    content: (
+      <div>
+        <p>自定义支付的订单，付款状态将被标记为“已付款"</p>
+        <p>已授权未入账的订单，付款状态将标记为“已付款"</p>
+        <div style={{ marginTop: '16px' }}>
+          <Checkbox>
+            给用户发送通知邮件
+          </Checkbox>
+        </div>
+      </div>
+    ),
+    onOk: async () => {
+      try {
+        // 将所有选定项的键合并成一个字符串
+        const combinedKey = selectedRowKeys;
+        const response = await updateOrderStatus(combinedKey);
+        if (response.code === 0) {
+          message.success('订单状态更新成功');
+          // 重新获取数据并更新界面
+          fetchData(); // 直接调用 fetchData 来刷新数据
+        } else {
+          message.error('订单状态更新失败');
+        }
+      } catch (error) {
+        message.error('订单状态更新失败');
+      }
+    },
+    onCancel: () => {
+      console.log('Cancel');
+    },
+  });
+};
+
+
+
+
+
+
+
+
+
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <Checkbox

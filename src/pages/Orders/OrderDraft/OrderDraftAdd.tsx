@@ -27,6 +27,7 @@ interface Props {
     const [tax, setTax] = useState(0);
     const [products, setProducts] = useState<any[]>([]);
     const navigate = useNavigate(); // 使用 useNavigate 钩子
+   
     // 使用 setProducts 更新状态时，确保传递正确的类型
     const handleAddProduct = (newProduct: any) => {
       setProducts(prevProducts => [...prevProducts, newProduct]);
@@ -35,7 +36,15 @@ interface Props {
         
         try {
           // 创建一个新的订单
-          await orderStore.createOrder();
+          const newOrder = {
+            products: products,
+            discount: discount,
+            shippingFee: shippingFee,
+            tax: tax,
+            createdAt: new Date().toISOString(), // 使用 ISO 格式的时间字符串
+            updatedAt: new Date().toISOString(), // 使用 ISO 格式的时间字符串
+          };
+          await orderStore.createOrder(newOrder);
     
           // 清空产品列表和其他相关状态
           setProducts([]);
@@ -45,8 +54,7 @@ interface Props {
     
           // 显示成功消息
           message.success('订单已创建');
-    // 跳转到 orders/manages 路由
-      navigate('/orders/manages');
+          navigate('/orders/manages'); // 跳转到 orders/manages 路由
         } catch (error) {
           console.error('Error creating order:', error);
           message.error('创建订单失败，请重试');

@@ -100,7 +100,7 @@ const AddProductCard: React.FC<AddProductCardProps> = ({ onAddProduct, ...props 
         price: item.price,
         state: item.status === 1,
         inventory: item.quantity,
-        quantity: 2, // 初始化数量为 1
+        quantity: 1, // 初始化数量为 1
         total: parseFloat(item.price), // 初始化合计为价格
       }));
       setDataSource(newData);
@@ -190,6 +190,7 @@ const AddProductCard: React.FC<AddProductCardProps> = ({ onAddProduct, ...props 
     });
     setSelectedProducts(updatedProducts);
   };
+
   function showDeleteConfirmation(productKey: string) {
     Modal.confirm({
       title: '确认要将此商品从订单中移除吗？',
