@@ -16,6 +16,7 @@ import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
+import ProductStyleList from '@/components/Card/ProductStyleList';
 
 
 
@@ -47,6 +48,7 @@ function New(){
                             <StockCard/>
                             <CustomsDeclaration/>
                             <MultipleStylesCard/>
+                            <ProductStyleList/>
                         </div>
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>
