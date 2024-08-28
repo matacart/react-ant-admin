@@ -17,12 +17,16 @@ import newStore from '@/store/newStore';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import ProductStyleList from '@/components/Card/ProductStyleList';
+import { useState } from 'react';
 
 
 
 function New(){
-
-
+    const [styleId, setStyleId] = useState('');
+  // 实现 onSecondInputChange 函数
+  const handleSecondInputChange = (value: string) => {
+    setStyleId(value);
+};
     return (
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -47,8 +51,8 @@ function New(){
                             <PriceOrTransactionCard />
                             <StockCard/>
                             <CustomsDeclaration/>
-                            <MultipleStylesCard/>
-                            <ProductStyleList/>
+                            <MultipleStylesCard onSecondInputChange={handleSecondInputChange} />
+                            {styleId && <ProductStyleList styleId={styleId} />}
                         </div>
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>

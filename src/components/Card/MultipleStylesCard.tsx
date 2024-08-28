@@ -98,13 +98,35 @@ const options = [
   },
 ];
 
-export default function MultipleStylesCard() {
+interface MultipleStylesCardProps {
+  onSecondInputChange?: (value: string) => void;
+}
+export default function MultipleStylesCard(props: MultipleStylesCardProps) {
   const [checked, setChecked] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [specifications, setSpecifications] = useState([{ id: 1 }]);
   const [values, setValues] = useState<string[]>([]);
   const [tags, setTags] = useState<string[][]>([]); // 用于存储每个规格组的标签
+ // 处理回车键事件
+ function handleKeyDown(e: React.KeyboardEvent, index: number) {
+  if (e.key === 'Enter') {
+    const newTags = [...tags];
+    const currentTags = newTags[index] || [];
+    const newValue = values[index].trim();
 
+    if (newValue !== '') {
+      newTags[index] = [...currentTags, newValue];
+      setTags(newTags);
+      const newValues = [...values];
+      newValues[index] = ''; // 清空输入框
+      setValues(newValues);
+
+      // 收集所有输入值后调用父组件提供的回调函数
+      const allTagsFlat = newTags.flat();
+      props.onSecondInputChange?.(allTagsFlat.join(','));
+    }
+  }
+}
   return (
     <Scoped>
       <Card title="多款式">
@@ -138,23 +160,23 @@ export default function MultipleStylesCard() {
                     ))}
                   </div>
                   <Input
-                    className="input-text-area"
-                    placeholder="请输入多个选项，使用回车键分隔"
-                    style={{ width: "580px", height: "44px" }}
-                    value={values[index] ?? ""}
-                    onKeyDown={(e) => handleKeyDown(e, index)}
-                    onChange={(e) => handleTextAreaChange(e, index)}
-                    ref={(ref) => {
-                      if (ref) {
-                        setTimeout(() => {
-                          if (ref instanceof HTMLInputElement) {
-                            const value = values[index] ?? "";
-                            ref.setSelectionRange(value.length, value.length);
-                          }
-                        }, 0);
-                      }
-                    }}
-                  />
+          className="input-text-area"
+          placeholder="请输入多个选项，使用回车键分隔"
+          style={{ width: "580px", height: "44px" }}
+          value={values[index] ?? ""}
+          onKeyDown={(e) => handleKeyDown(e, index)}
+          onChange={(e) => handleTextAreaChange(e, index)}
+          ref={(ref) => {
+            if (ref) {
+              setTimeout(() => {
+                if (ref instanceof HTMLInputElement) {
+                  const value = values[index] ?? "";
+                  ref.setSelectionRange(value.length, value.length);
+                }
+              }, 0);
+            }
+          }}
+        />
                 </div>
 
                 {/* 添加图标 */}
@@ -203,22 +225,7 @@ function handleTextAreaChange(e: React.ChangeEvent<HTMLInputElement>, index: num
   setValues(newValues);
 }
 
-// 处理回车键事件
-function handleKeyDown(e: React.KeyboardEvent, index: number) {
-  if (e.key === 'Enter') {
-    const newTags = [...tags];
-    const currentTags = newTags[index] || []; // 确保 currentTags 是数组
-    const newValue = values[index].trim()||'';
 
-    if (newValue !== '') {
-      newTags[index] = [...currentTags, newValue];
-      setTags(newTags);
-      const newValues = [...values];
-      newValues[index] = ''; // 清空输入框
-      setValues(newValues);
-    }
-  }
-}
   // 移除标签
   function handleRemoveTag(index: number, tag: string) {
     const newTags = [...tags];
