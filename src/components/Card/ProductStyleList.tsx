@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber } from 'antd';
+import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio } from 'antd';
 
 interface StyleItem {
   id: number;
@@ -22,36 +22,36 @@ interface StyleItem {
 }
 
 function ProductStyleList ({ styleId }: { styleId: string }){
-  const [styles, setStyles] = useState<StyleItem[]>([
-    {
-      id: 1,
-      imageUrl: '',
-      style: '',
-      sku:'',
-      salePrice:0,
-      originalPrice:0,
-      costPrice:0,
-      tax: true,
-      inventoryPolicy: '',
-      hsCode: '',
-      country: '',
-      stock: 0,
-      weight: 0,
-      weightUnit: '克',
-      shipping: true,
-      barcode: '',
-      metaFields: '',
-    },
-    // 更多款式数据...
-  ]);
+  const [styles, setStyles] = useState<StyleItem[]>([]);
+
   useEffect(() => {
     if (styleId) {
-      // 根据styleId获取对应的款式数据并展示
-      // 示例：假设styleId为1，我们只展示第一个款式的数据
-      const updatedStyles = styles.filter(style => style.id === parseInt(styleId));
-      setStyles(updatedStyles);
+      // 解析 styleId 成标签数组
+      const tags = styleId.split(',').map(tag => tag.trim());
+      // 为每个标签生成一个 StyleItem
+      const newStyles = tags.map((tag, index) => ({
+        id: index + 1,
+        imageUrl: '',
+        style: tag,
+        sku: '',
+        salePrice: 0,
+        originalPrice: 0,
+        costPrice: 0,
+        tax: true,
+        inventoryPolicy: '',
+        hsCode: '',
+        country: '',
+        stock: 0,
+        weight: 0,
+        weightUnit: '克',
+        shipping: true,
+        barcode: '',
+        metaFields: '',
+      }));
+      setStyles(newStyles);
     }
   }, [styleId]);
+
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
   const [previewImage, setPreviewImage] = useState<string>('');
@@ -459,38 +459,142 @@ const handleWeightUnitChange = (id: number, unit: string) => {
   const handleChange = ({ fileList }: { fileList: any[]; }, id?: number) => {
     setFileList(fileList);
   };
+  const handleModifyPrice = () => {
+    // 实现更改价格的逻辑
+    message.info('更改价格');
+  };
 
+  const handleMoreActions = () => {
+    // 实现更多操作的逻辑
+    message.info('更多操作');
+  };
+
+  const handleDelete = () => {
+    // 实现删除的逻辑
+    message.info('删除');
+  };
+
+  const { Option } = Select;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedStyleCount] = useState(1); // 假设已选择的款式数量
+  const [newInventory] = useState<number | null>(null); // 新库存数量
+
+  // 模态框显示与隐藏的控制
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    // 处理提交逻辑
+    console.log('新库存数量:', newInventory);
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  const [adjustmentType, setAdjustmentType] = useState('0'); // 用户选择的调整类型
   return (
-    <Card
-    title={
-      <>
-        款式列表
-      </>
-    }
-  >
-    <div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 200px)' }}> {/* 添加溢出滚动 */}
-    <Checkbox.Group >
-          <Checkbox value="batchSelect">批量选择（满足任意一个条件）</Checkbox>
-          <Checkbox value="conditionFilter">条件筛选（满足以下全部条件）</Checkbox>
-        </Checkbox.Group>
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={styles} // 直接使用原始数据
-        rowSelection={rowSelection}
-        scroll={{ x: 2000 }} // 设置滚动宽度
-      />
+<Card
+  title={
+    <>
+      款式列表
+    </>
+  }
+>
+<div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 200px)', display: 'flex', flexDirection: 'column' }}>
+  <Checkbox.Group>
+    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Radio.Group >
+      <Radio value="or">
+        批量选择（满足任意一个条件）
+      </Radio>
+      <Radio value="and">
+        条件筛选（满足以下全部条件）
+      </Radio>
+    </Radio.Group>
+      </div>
+      {selectedRowKeys.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+          {/* <Checkbox checked={selectedRowKeys.length > 0} disabled> */}
+            已选择 {selectedRowKeys.length} 项
+          {/* </Checkbox> */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button  style={{marginRight:'10px'}} onClick={showModal}>
+        修改库存
+      </Button>
+      <Modal
+        title="修改库存"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>已选择{selectedStyleCount}个款式</p>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+  <input 
+    type="radio" 
+    value="0" 
+    checked={adjustmentType === '0'} 
+    onChange={() => setAdjustmentType('0')} 
+    style={{ marginRight: '8px' }} 
+  />
+  <p style={{ margin: 0 }}>修改为指定库存数量</p>
+</span>
+<span style={{ display: 'flex', alignItems: 'center' }}>
+<input 
+  type="radio" 
+  value="1" 
+  checked={adjustmentType === '1'} 
+  onChange={() => setAdjustmentType('1')} 
+  style={{ marginRight: '8px' }}
+/>
+<p style={{ margin: 0 }}>基于原库存调整</p>
+</span>
+        <Input
+         
+          width={400}
+        />
+      </Modal>
+            <Select
+          placeholder="更改价格"
+          onClick={handleModifyPrice} style={{marginRight:'10px'}}
+        >
+          <Option >修改售价</Option>
+          <Option >修改原价</Option>
+          <Option >修改成本价</Option>
+         
+        </Select>
+        <Select
+          placeholder="更多操作"
+          onClick={handleMoreActions} style={{marginRight:'10px'}}
+        >
+          <Option >修改重量</Option>
+          <Option >设置图片</Option>
+          <Option >库存追踪</Option>
+          <Option >税费</Option>
+          <Option >缺货后继续销售</Option>
+          <Option >修改SKU</Option>
+          <Option >修改HS编码</Option>
+          <Option >修改发货国家</Option>
+        </Select>
+            <Button danger onClick={handleDelete}>删除</Button>
+          </div>
+        </div>
+      )}
     </div>
+  </Checkbox.Group>
+  <Table
+    rowKey="id"
+    columns={columns}
+    dataSource={styles}
+    rowSelection={rowSelection}
+    scroll={{ x: 2000 }}
+  />
+</div>
 
-    <Modal
-      visible={previewOpen}
-      footer={null}
-      onCancel={() => setPreviewOpen(false)}
-    >
-      <img alt="example" style={{ width: '100%' }} src={previewImage} />
-    </Modal>
-  </Card>
+</Card>
   );
-};
+}
 
 export default ProductStyleList;

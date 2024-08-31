@@ -377,16 +377,7 @@ const handleAccountPayment = async () => {
     },
   });
 };
-
-
-
-
-
-
-
-
-
-  return (
+return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <Checkbox
         checked={selectedCount > 0}
