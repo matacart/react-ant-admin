@@ -1,4 +1,4 @@
-import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select } from "antd";
+import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -112,11 +112,11 @@ export default function MultipleStylesCard(props: MultipleStylesCardProps) {
   const [tags, setTags] = useState<string[][]>([]); // 用于存储每个规格组的标签
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
  // 收集所有输入值后调用父组件提供的回调函数
- const allTagsFlat = tags.flat();
- const styleId = allTagsFlat.join(',');
  useEffect(() => {
+  const allTagsFlat = tags.flat();
+  const styleId = allTagsFlat.join(',');
   props.onSecondInputChange?.(styleId);
-}, [styleId, props.onSecondInputChange]);
+}, [tags, props.onSecondInputChange]);
 
   // 处理回车键事件
   function handleKeyDown(e: React.KeyboardEvent, index: number) {
@@ -148,7 +148,33 @@ export default function MultipleStylesCard(props: MultipleStylesCardProps) {
   // 添加 useRef 来保存输入框的引用
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   inputRefs.current = Array(values.length).fill(null);
+  // 处理标签选择或输入变化
+  function handleTagChange(value: string[], index: number) {
+    const newTags = [...tags];
+    newTags[index] = value;
+    setTags(newTags);
 
+      // 更新所有标签的扁平化列表，并通知父组件
+  const allTagsFlat = newTags.flat();
+  const styleId = allTagsFlat.join(',');
+  props.onSecondInputChange?.(styleId);
+  }
+
+
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 控制模态框的显示状态
+    // 为编辑图标添加点击事件处理器
+    const handleEditClick = () => {
+      setIsEditModalVisible(true);
+    };
+    // 模态框确认按钮点击事件处理器
+    const handleOk = () => {
+      setIsEditModalVisible(false);
+    };
+  
+    // 模态框取消按钮点击事件处理器
+    const handleCancel = () => {
+      setIsEditModalVisible(false);
+    };
   return (
     <Scoped>
       <Card title="多款式">
@@ -191,12 +217,12 @@ export default function MultipleStylesCard(props: MultipleStylesCardProps) {
         <Checkbox onChange={(e) => handleHideOptionCheckboxChange(e)}>购买时隐藏此选项</Checkbox>
       </div>
     )}
-    {/* 添加图标 */}
-    <span className="edit-icon btn-icon__1h8Qx edit__3TiEz">
-      <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
-        <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
-      </svg>
-    </span>
+       {/* 添加图标 */}
+       <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" onClick={handleEditClick}>
+                  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
+                    <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
+                  </svg>
+                </span>
     <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={() => handleRemove(index)}>
       <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20">
         <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
@@ -217,6 +243,38 @@ export default function MultipleStylesCard(props: MultipleStylesCardProps) {
           </>
         )}
         
+        {/* 模态框 */}
+        <Modal
+          title="规格编辑"
+          visible={isEditModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="back" onClick={handleCancel}>
+              取消
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleOk}>
+              确定
+            </Button>,
+          ]}
+        >
+          <p>客户可在选择商品规格时看到已上传的图片</p>
+          <p>支持上传.jpg、.png、.gif格式的图片；最大限制4M；建议尺寸：96px * 96px</p>
+          <table>
+            <thead>
+              <tr>
+                <th>规格名称</th>
+                <th>规格图片</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </Modal>
               </Card>
     </Scoped>
   );
@@ -260,12 +318,7 @@ function handleHideOptionCheckboxChange(e: { target: { checked: boolean; }; }) {
     setValues(newValues);
   }
 
-  // 处理标签选择或输入变化
-  function handleTagChange(value: string[], index: number) {
-    const newTags = [...tags];
-    newTags[index] = value;
-    setTags(newTags);
-  }
+
 
   // 移除标签
   function handleRemoveTag(index: number, tag: string) {

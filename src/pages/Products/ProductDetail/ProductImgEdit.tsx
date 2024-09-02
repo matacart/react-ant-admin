@@ -6,7 +6,6 @@ import { message, Upload, Image } from 'antd';
 import styled from 'styled-components';
 import { values } from "lodash";
 import axios from "axios";
-import UploadCard from "./UploadLargeCard";
 import newStore from "@/store/newStore";
 const { Dragger } = Upload;
 
@@ -20,7 +19,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function ProductImgCard() {
+export default function ProductImgEdit() {
 
   // youtubeUrl
   const onFinish = (values: any) => {

@@ -40,14 +40,10 @@ const todayEnd = getTodayEnd();
 const filterCondition: FilterCondition[] = [
   { id: '1', filter_group_id: '1', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '2', filter_group_id: '2', filter_name: '发货状态: 待发货, 部分发货', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-  { id: '2', filter_group_id: '2', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '3', filter_group_id: '3', filter_name: '订单状态: 已取消', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-  { id: '3', filter_group_id: '3', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '4', filter_group_id: '4', filter_name: '订单状态: 处理中', filter_field: 'orders_status_id', filter_value: '1', module: 'orders_list' },
-  { id: '4', filter_group_id: '4', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
   { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'startDate', filter_value: `${todayStart}`, module: 'orders_list' },
-  { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
-  { id: '6', filter_group_id: '6', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
+  { id: '', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
 ];
 
 const filteredArr = (id: string): FilterCondition[] => {
@@ -63,16 +59,27 @@ const FilteredOrdersComponent = ({ id, activeKey }: { id: string; activeKey: str
     setFilterCondition(updatedConditions);
   };
 
+  const hasFilters = filterCondition.length > 0;
 
+ // 定义模态框的状态
+const [isModalVisible, setIsModalVisible] = useState(false);
+// 定义选项卡名称的状态
+const [tabName, setTabName] = useState('');
 
-  function addNewTab(): void {
-    throw new Error('Function not implemented.');
-  }
+// 处理点击事件，显示模态框
+const addNewTab = () => {
+  setIsModalVisible(true);
+};
+
+// 关闭模态框
+const handleCancel = () => {
+  setIsModalVisible(false);
+};
 
   return (
     <div>
       <div>
-        <OrdersSelectCard />
+      <OrdersSelectCard />
       </div>
       <div>
         {filterCondition.map((element) => (
@@ -85,12 +92,27 @@ const FilteredOrdersComponent = ({ id, activeKey }: { id: string; activeKey: str
             {element.filter_name}
           </Tag>
         ))}
-        <Button className="button" type="primary" >
+        <Button  onClick={addNewTab}>
           新建选项卡
         </Button>
+        <Modal
+  title="新建选项卡"
+  visible={isModalVisible}
+  onOk={() => {
+  
+    handleCancel();
+  }}
+  onCancel={handleCancel}
+>
+  
+<p>选项卡名称</p>
+<Input></Input>
+</Modal>
       </div>
-      {filterCondition.length > 0 && (
+      {hasFilters ? (
         <OrdersListAjax filterCondition={filterCondition} />
+      ) : (
+        <OrdersListAjax filterCondition={[]} /> // 展示所有订单列表项
       )}
     </div>
   );

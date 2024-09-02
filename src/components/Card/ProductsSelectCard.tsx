@@ -7,9 +7,8 @@ import { result } from "lodash";
 import { useEffect, useState } from 'react';
 import Nothing from "../Info/Nothing";
 import type { TableColumnsType, TableProps } from 'antd'
-import ProductList from "../List/ProductList";
-import ProductListAjax from "../List/ProductListAjax";
 import axios from "axios";
+import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
 
 
 const { Search } = Input;

@@ -445,6 +445,7 @@ const Scoped = styled.div`
   .ant-table-tbody > tr > td {
     padding: 10px;
   }
+  
 `;
 
 

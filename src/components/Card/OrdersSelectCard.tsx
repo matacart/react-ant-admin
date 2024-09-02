@@ -76,6 +76,8 @@ export default function OrdersSelectCard() {
             defaultValue={intl.formatMessage({ id: 'order.button.sorting' })}
             style={{ width: 120 }}
             listHeight={300}
+            dropdownMatchSelectWidth={false}
+          dropdownStyle={{ width: 190 }}
             options={[
               { value: '订单号（升序）', label: '订单号（升序）' },
               { value: '成单时间（最新到最旧）', label: '成单时间（最新到最旧）' },

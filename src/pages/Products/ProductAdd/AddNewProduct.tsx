@@ -1,27 +1,27 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd'
-import ProductDataCard from '@/components/Card/ProductDataCard';
-import ProductImgCard from '@/components/Card/ProductImgCard';
-import PriceOrTransactionCard from '@/components/Card/PriceOrTransactionCard';
-import StockCard from '@/components/Card/StockCard';
-import CustomsDeclaration from '@/components/Card/CustomsDeclaration';
-import MultipleStylesCard from '@/components/Card/MultipleStylesCard';
 import styled from 'styled-components';
-import ProductSettingsCard from '@/components/Card/ProductSettingsCard';
-import SEOCard from '@/components/Card/SEOCard';
-import ThirdPartyInfoCard from '@/components/Card/ThirdPartyInfoCard';
-import ThemeTemplateCard from '@/components/Card/ThemeTemplateCard';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import ProductStyleList from '@/components/Card/ProductStyleList';
 import { useState } from 'react';
+import CustomsDeclaration from './CustomsDeclaration';
+import MultipleStylesCard from './MultipleStylesCard';
+import PriceOrTransactionCard from './PriceOrTransactionCard';
+import ProductDataCard from './ProductDataCard';
+import ProductImgCard from './ProductImgCard';
+import ProductSettingsCard from './ProductSettingsCard';
+import ProductStyleList from './ProductStyleList';
+import SEOCard from './SEOCard';
+import StockCard from './StockCard';
+import ThemeTemplateCard from './ThemeTemplateCard';
+import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 
 
 
-function New(){
+function AddNewProduct(){
     const [styleId, setStyleId] = useState('');
   // 实现 onSecondInputChange 函数
   const handleSecondInputChange = (value: string) => {
@@ -79,7 +79,7 @@ function New(){
     )
 }
 
-export default observer(New);
+export default observer(AddNewProduct);
 
 const Scoped = styled.div`
 .mc-layout-wrap{

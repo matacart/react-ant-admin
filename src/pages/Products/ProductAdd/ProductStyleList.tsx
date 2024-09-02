@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio } from 'antd';
-
 interface StyleItem {
   id: number;
   imageUrl: string;
@@ -26,32 +25,46 @@ function ProductStyleList ({ styleId }: { styleId: string }){
 
   useEffect(() => {
     if (styleId) {
-      // 解析 styleId 成标签数组
-      const tags = styleId.split(',').map(tag => tag.trim());
-      // 为每个标签生成一个 StyleItem
-      const newStyles = tags.map((tag, index) => ({
-        id: index + 1,
-        imageUrl: '',
-        style: tag,
-        sku: '',
-        salePrice: 0,
-        originalPrice: 0,
-        costPrice: 0,
-        tax: true,
-        inventoryPolicy: '',
-        hsCode: '',
-        country: '',
-        stock: 0,
-        weight: 0,
-        weightUnit: '克',
-        shipping: true,
-        barcode: '',
-        metaFields: '',
-      }));
+      // 解析 styleId 成多行标签数组
+      const rows = styleId.split('\n').map(row => row.trim());
+
+      // 为每一行生成一个 StyleItem
+      const newStyles = rows.map((row, index) => {
+        const tags = row.split(',').map(tag => tag.trim());
+        return {
+          id: index + 1,
+          imageUrl: '',
+          style: tags.join(','),
+          sku: '',
+          salePrice: 0,
+          originalPrice: 0,
+          costPrice: 0,
+          tax: true,
+          inventoryPolicy: '',
+          hsCode: '',
+          country: '',
+          stock: 0,
+          weight: 0,
+          weightUnit: '克',
+          shipping: true,
+          barcode: '',
+          metaFields: '',
+        };
+      });
+
       setStyles(newStyles);
     }
   }, [styleId]);
-
+  // 添加处理 SKU 变化的函数
+  const handleSkuChange = (id: number, newValue: string) => {
+    const updatedStyles = styles.map((style) => {
+      if (style.id === id) {
+        return { ...style, sku: newValue };
+      }
+      return style;
+    });
+    setStyles(updatedStyles);
+  };
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
   const [previewImage, setPreviewImage] = useState<string>('');
@@ -312,16 +325,7 @@ function ProductStyleList ({ styleId }: { styleId: string }){
       fixed: 'right', // 将列固定在右侧
     },
   ];
-// 添加处理 SKU 变化的函数
-  const handleSkuChange = (id: number, newValue: string) => {
-    const updatedStyles = styles.map((style) => {
-      if (style.id === id) {
-        return { ...style, sku: newValue };
-      }
-      return style;
-    });
-    setStyles(updatedStyles);
-  };
+
   // 添加处理售价变化的函数
   const handleSalePriceChange = (id: number, newValue: string) => {
     const updatedStyles = styles.map((style) => {
@@ -440,10 +444,6 @@ const handleWeightUnitChange = (id: number, unit: string) => {
     onChange: onSelectChange,
   };
 
-  const handleUploadClick = (id: number) => {
-    setSelectedRowKeys([id]); // 选择当前行
-  };
-
   const handlePreview = async (file: any) => {
     if (!file.url && !file.preview) {
       file.preview = await new Promise((resolve) => {
@@ -461,12 +461,12 @@ const handleWeightUnitChange = (id: number, unit: string) => {
   };
   const handleModifyPrice = () => {
     // 实现更改价格的逻辑
-    message.info('更改价格');
+   
   };
 
   const handleMoreActions = () => {
     // 实现更多操作的逻辑
-    message.info('更多操作');
+   
   };
 
   const handleDelete = () => {
@@ -494,6 +494,24 @@ const handleWeightUnitChange = (id: number, unit: string) => {
     setIsModalVisible(false);
   };
   const [adjustmentType, setAdjustmentType] = useState('0'); // 用户选择的调整类型
+
+
+  const [selectedValue, setSelectedValue] = useState('or');
+  const [checkedList, setCheckedList] = useState<string[]>([]);
+
+  const handleRadioChange = (e: any) => {
+    setSelectedValue(e.target.value);
+  };
+
+  const handleCheckboxChange = (checkedValues: string[]) => {
+    setCheckedList(checkedValues);
+  };
+
+
+
+
+
+
   return (
 <Card
   title={
@@ -506,15 +524,22 @@ const handleWeightUnitChange = (id: number, unit: string) => {
   <Checkbox.Group>
     <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Radio.Group >
-      <Radio value="or">
-        批量选择（满足任意一个条件）
-      </Radio>
-      <Radio value="and">
-        条件筛选（满足以下全部条件）
-      </Radio>
-    </Radio.Group>
+      <Radio.Group onChange={handleRadioChange} value={selectedValue}>
+        <Radio value="or">
+          批量选择（满足任意一个条件）
+        </Radio>
+        <Radio value="and">
+          条件筛选（满足以下全部条件）
+        </Radio>
+      </Radio.Group>
       </div>
+      {selectedValue === 'or' ? (
+         <span style={{marginTop:'5px'}}>全部</span>
+      ) : (
+        <Button  style={{ marginTop: '1rem',width:'148px',height:'36px' }}>
+          选择规格
+        </Button>
+      )}
       {selectedRowKeys.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
           {/* <Checkbox checked={selectedRowKeys.length > 0} disabled> */}
@@ -559,6 +584,8 @@ const handleWeightUnitChange = (id: number, unit: string) => {
             <Select
           placeholder="更改价格"
           onClick={handleModifyPrice} style={{marginRight:'10px'}}
+          dropdownMatchSelectWidth={false}
+          dropdownStyle={{ width: 120 }}
         >
           <Option >修改售价</Option>
           <Option >修改原价</Option>
@@ -567,7 +594,9 @@ const handleWeightUnitChange = (id: number, unit: string) => {
         </Select>
         <Select
           placeholder="更多操作"
-          onClick={handleMoreActions} style={{marginRight:'10px'}}
+          onClick={handleMoreActions}   style={{  marginRight: '10px' }}
+          dropdownMatchSelectWidth={false}
+          dropdownStyle={{ width: 150 }}
         >
           <Option >修改重量</Option>
           <Option >设置图片</Option>

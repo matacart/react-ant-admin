@@ -4,8 +4,6 @@ import type { GetProp, MenuProps, RadioChangeEvent, SelectProps, TableColumnsTyp
 import qs from 'qs';
 import { CopyOutlined, DownOutlined, EyeOutlined, QuestionCircleOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import Product from './../../pages/Products/index';
-import ProductList from './ProductList';
 import { result } from 'lodash';
 import axios from 'axios';
 import { deleteProduct, getProductList } from '@/services/y2/api';
