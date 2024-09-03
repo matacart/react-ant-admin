@@ -7,9 +7,8 @@ import { result } from "lodash";
 import { useEffect, useState } from 'react';
 import Nothing from "../Info/Nothing";
 import type { TableColumnsType, TableProps } from 'antd'
-import ProductList from "../List/ProductList";
-import ProductListAjax from "../List/ProductListAjax";
 import axios from "axios";
+import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
 
 
 const { Search } = Input;
@@ -60,7 +59,7 @@ export default function ProductsSelectCard() {
     const resultList=useState([]);
     return (
         <>
-            <div className="products-select">
+            <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -97,44 +96,28 @@ export default function ProductsSelectCard() {
                         </Space.Compact>
                         {/* 2 */}
                         <Select
-                            size='large'
-                            showSearch
-                            style={{
-                                minWidth: 140,
-                            }}
-                            placeholder="商品分类"
-                            optionFilterProp="children"
-                            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                            filterSort={(optionA, optionB) =>
-                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                            }
-                            options={[
-                                {
-                                    value: '1',
-                                    label: 'Not Identified',
-                                },
-                                {
-                                    value: '2',
-                                    label: 'Closed',
-                                },
-                                {
-                                    value: '3',
-                                    label: 'Communicated',
-                                },
-                                {
-                                    value: '4',
-                                    label: 'Identified',
-                                },
-                                {
-                                    value: '5',
-                                    label: 'Resolved',
-                                },
-                                {
-                                    value: '6',
-                                    label: 'Cancelled',
-                                },
-                            ]}
-                        />
+    size='large'
+    showSearch
+    style={{
+        minWidth: 140,
+    }}
+    placeholder="商品分类"
+    optionFilterProp="children"
+    dropdownMatchSelectWidth={false}
+    dropdownStyle={{ width: 190 }}
+    filterOption={(input, option) => (option?.label ?? '').includes(input)}
+    filterSort={(optionA, optionB) =>
+        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+    }
+    options={[
+        {
+            value: '1',
+            label: '无分类商品',
+            style: { width: '100%' }, // 设置 option 宽度
+        },
+       
+    ]}
+/>
                         {/* 3 */}
                         <Select
                             size="large"

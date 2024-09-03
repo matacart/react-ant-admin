@@ -181,6 +181,15 @@ export async function getProductList(page: any, limit: any) {
   })
 }
 
+export async function getProductDetail(page: any, limit: any) {
+  return request(`/api/ApiStore/product_detail?page=${page}&limit=${limit}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
 export async function addProduct() {
   return request('/api/ApiStore/product_add', {
     method: 'POST',

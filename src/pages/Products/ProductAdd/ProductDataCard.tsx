@@ -1,9 +1,8 @@
 import { Card, Form, Input } from "antd";
-import './ProductDataCard.scss'
-import TinymceEditor from '../MCE/TinymceEditor'
 import newStore from '@/store/newStore'
 import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
+import TinymceEditor from "@/components/MCE/TinymceEditor";
 const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
 };

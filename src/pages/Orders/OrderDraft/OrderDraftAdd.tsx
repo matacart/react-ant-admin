@@ -4,8 +4,8 @@ import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } fr
 import styled from 'styled-components';
 
 import { Divider } from 'antd';
-import { history } from '@umijs/max';
-import newStore from '@/store/newStore';
+import { history, useNavigate } from '@umijs/max';
+import orderStore from '@/store/orderStore';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import AddProductCard from './AddProductCard';
@@ -14,12 +14,52 @@ import CustomInformationEdit from './CustomInformationEdit';
 import MaketCard from './MaketCard';
 import OrderDraftLabel from './OrderDraftLabel';
 import OrderNotesLable from './OrderNotesLable';
+import { useState } from 'react';
 
 
-
-function New(){
-
-
+interface Props {
+    onAddProduct: (products: any[]) => void;
+  }
+  
+  function OrderDraftAdd({ onAddProduct }: Props) {
+    const [discount, setDiscount] = useState(0);
+    const [shippingFee, setShippingFee] = useState(0);
+    const [tax, setTax] = useState(0);
+    const [products, setProducts] = useState<any[]>([]);
+    const navigate = useNavigate(); // 使用 useNavigate 钩子
+   
+    // 使用 setProducts 更新状态时，确保传递正确的类型
+    const handleAddProduct = (newProduct: any) => {
+      setProducts(prevProducts => [...prevProducts, newProduct]);
+    };
+    const handleCreateOrder = async () => {
+        
+        try {
+          // 创建一个新的订单
+          const newOrder = {
+            products: products,
+            discount: discount,
+            shippingFee: shippingFee,
+            tax: tax,
+            createdAt: new Date().toISOString(), // 使用 ISO 格式的时间字符串
+            updatedAt: new Date().toISOString(), // 使用 ISO 格式的时间字符串
+          };
+          await orderStore.createOrder(newOrder);
+    
+          // 清空产品列表和其他相关状态
+          setProducts([]);
+          setDiscount(0);
+          setShippingFee(0);
+          setTax(0);
+    
+          // 显示成功消息
+          message.success('订单已创建');
+          navigate('/orders/manages'); // 跳转到 orders/manages 路由
+        } catch (error) {
+          console.error('Error creating order:', error);
+          message.error('创建订单失败，请重试');
+        }
+      };
     return (
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -27,7 +67,7 @@ function New(){
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                history.push('/products/index')
+                                history.push('/orders/manages')
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
@@ -37,9 +77,19 @@ function New(){
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                        < AddProductCard />
-                         <DraftPaidCard/>
-
+                        <AddProductCard
+                onAddProduct={setProducts}
+                // products={products}
+              />
+              <DraftPaidCard
+                products={products}
+                discount={discount}
+                shippingFee={shippingFee}
+                tax={tax}
+                onUpdateDiscount={setDiscount}
+                onUpdateShippingFee={setShippingFee}
+                onUpdateTax={setTax}
+              />
                         </div>
                         <div className='mc-layout-extra'>
                            
@@ -49,27 +99,12 @@ function New(){
                       <OrderDraftLabel/>
 
 
-
-
-
-
-
-
-
-
                         </div>
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' onClick={()=>{
-                            newStore.submitAddProduct()
-                                .then(res=>{
-                                    if(res.code==0)message.success('okkk');
-                                    else message.error('noooo');
-                                    history.push('/products/index')
-                                })
-                            ;
-                        }}>创建</Button>
+                    <Button type='primary' onClick={handleCreateOrder}>创建</Button>
+                       
                     </div>
                 </div>
             </div>
@@ -77,7 +112,7 @@ function New(){
     )
 }
 
-export default observer(New);
+export default observer(OrderDraftAdd);
 
 const Scoped = styled.div`
 .mc-layout-wrap{

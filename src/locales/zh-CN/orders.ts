@@ -52,6 +52,9 @@ export default{
 "order.status.name_16": "已退款",
 "order.status.name_17": "待退款完成",
 "order.status.name_18": "已退货单完成",
+"order.status.name_19": "已归档成功",
+"order.status.name_20": "已取消归档",
+"order.status.name_21": "已备注",
 //订单详情
 'order.detail.dowloadvia':'通过店铺下单',
 'order.detail.location':'地点',

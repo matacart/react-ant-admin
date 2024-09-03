@@ -3,20 +3,21 @@
 .dropdown-content{
   
     position: absolute;  
-    top: 12%; /* 出现在按钮下方 */  
+    top: 13%; /* 出现在按钮下方 */  
     z-index: 2000;
-    width: 96px;
+    width: 118px;
     justify-content: center; 
     background-color: #fff;  
     border: 1px solid #ccc;  
-
-
+    align-items: center;
+    flex-direction: column;
+    display: flex;
 }
 
 //订单下拉按钮
 .dropdown-button{
     
-    width: 96px;
+    width: 118px;
     height: 40px;
     background-color: #FFFFFF;
     font-size: 16px;
@@ -37,11 +38,61 @@
 .Clear-button{
     border: none; /* 移除边框 */
     background-color: #FFFFFF; /* 设置背景颜色 */
- 
+    
     padding: 8px 16px; /* 设置内边距 */
     cursor: pointer; /* 改变鼠标光标为手形，提示可点击 */
-
     font-size: 12px; /* 设置字体大小 */
-
+    align-self: flex-start; /* 将按钮放置在左下角 */
 }
 
+.dropdown-item input[type="checkbox"] {
+    margin-right: 6px; /* 增加勾选框和文字之间的距离 */
+    vertical-align: middle; /* 确保复选框垂直居中 */
+}
+.dropdown-item {
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
+    padding: 8px;
+    width: 100%;
+    gap: 8px; /* 增加勾选框和文字之间的距离 */
+}
+/* 订单下拉选项列表 */
+.dropdown-content.scrollable-options {
+    max-height: 330px; /* 设置最大高度 */
+    overflow-y: auto; /* 启用垂直滚动 */
+}
+
+/* 自定义滚动条样式 */
+.dropdown-content.scrollable-options::-webkit-scrollbar {
+    width: 10px; /* 滚动条宽度 */
+}
+
+.dropdown-content.scrollable-options::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 滚动条轨道颜色 */
+}
+
+.dropdown-content.scrollable-options::-webkit-scrollbar-thumb {
+    background: #888; /* 滚动条拇指部分颜色 */
+    border-radius: 5px; /* 滚动条圆角 */
+}
+
+.dropdown-content.scrollable-options::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 鼠标悬停时的颜色 */
+}
+
+/* 添加滚动条上下箭头 */
+.dropdown-content.scrollable-options::-webkit-scrollbar-button {
+    width: 10px;
+    height: 10px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.dropdown-content.scrollable-options::-webkit-scrollbar-button:start:decrement {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><path fill='%23888' d='M5 1l-4 4 1 1 2-2 2 2 1-1z'/></svg>");
+}
+
+.dropdown-content.scrollable-options::-webkit-scrollbar-button:end:increment {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><path fill='%23888' d='M5 9l-4-4 1-1 2 2 2-2 1 1z'/></svg>");
+}

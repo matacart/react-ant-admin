@@ -31,10 +31,10 @@ function CustomsInformation({order}) {
                alignItems: 'flex-start',
                   gap: '0px', // Adjust the gap size as needed
 }}>
-                <p style={{fontSize:'14px',color:'#356DFF'}}>{order?.delivery_name}</p>
+                <p style={{fontSize:'14px',color:'#356DFF'}}>{order?.customer_name}</p>
                <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}：
                {intl.formatMessage({ id:'order.detail.sex_0'})}</p> 
-               <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}</p>
+             
                <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.benefitstext'})}</p>
                <p style={{fontSize:'14px',color:'#356DFF'}}>{intl.formatMessage({ id:'order.detail.historypurchase'})}
                ：2{intl.formatMessage({ id:'order.detail.numberpurchase'})}</p>
@@ -50,7 +50,7 @@ function CustomsInformation({order}) {
            <div> {intl.formatMessage({ id:'order.detail.contact'})}
         <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
        
-       <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap'}}>{order?.email}</div>
+       <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap'}}>{order?.customer_email_address}</div>
 
 
        < Tooltip title="复制">
@@ -63,7 +63,7 @@ function CustomsInformation({order}) {
        
         <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
        +86
-       <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap',marginLeft: '-80px'}}>{order?.tel}</div>
+       <div style={{fontSize:'14px',color:'#356DFF', wordBreak: 'break-word', whiteSpace: 'pre-wrap',marginLeft: '-80px'}}>{order?.customer_telephone}</div>
 
 
        < Tooltip title="复制">
@@ -93,11 +93,10 @@ function CustomsInformation({order}) {
 }}>
                 <p style={{fontSize:'14px',color:'#242833'}}>{intl.formatMessage({ id:'order.detail.deliveryaddress'})}</p>
                <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_name}</p> 
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.address}</p>
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.city}</p>
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.province}</p>
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.coutry}</p>
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.post}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_street_address}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_city}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_country_code_2}</p>
+               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.delivery_postcode}</p>
               
                < Tooltip title="复制">{intl.formatMessage({ id:'order.detail.copy'})}
                              <CopyOutlined style={{margin:'10PX'}}/>
@@ -112,14 +111,7 @@ function CustomsInformation({order}) {
                <p style={{fontSize:'14px',color:'#7A8499', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingtext'})}</p>
             </div>
         </Form>
-         <Divider/>
-         <Form>
-            <div>
-            <p style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.billingtext'})}</p> 
-               <p style={{fontSize:'14px',color:'#474F5E', margin:'0'}}>{order?.country}</p>
-    
-            </div>
-         </Form>
+         
     </Card>
 );
 }

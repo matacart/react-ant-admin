@@ -7,85 +7,6 @@ import { action, makeObservable, observable } from "mobx";
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
 
 class newStore {
-  // constructor(){
-  // 参数1：target 把谁变成响应式(可观察)；参数2：指定哪些属性或方法变成可观察
-  // makeObservable(this,{ // 设置观察模式
-
-  // title:observable, // 设置管理状态的数据
-  // resume: observable,
-  // desc: observable,
-  // selectedImg: observable,
-
-  // })
-  // }
-
-///appstore/ApiAppstore/doUploadPic
-
-
-// file: （二进制）
-// access_token: BQTXf8iNmvBjRrba0Ye=ATyPZ8DoQyCrKbdJsVaV-RbD42wQl7CL-rveYMW2iKw0g0z4Q7PCb162YMa-hKQOJXiR=vW3wbw7mdZJ1-UXE4TEPy=bS0bQvUYhcK712ZXxQh9XX5Ti2bc6p
-// oss_url: //img1.s.handingcdn.com
-// app_id: 19
-
-// {code: 0, msg: "成功上传",…}
-// code
-// : 
-// 0
-// data
-// : 
-// {src: "//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2024-06-07/6662b9649bac3.jpeg"}
-// src
-// : 
-// "//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2024-06-07/6662b9649bac3.jpeg"
-// msg
-// : 
-// "成功上传"
-
-  // 表单数据
-
-  // model: 123211231
-  // sku: 1112321
-  // categoryIds: 1280766382208
-  // product_image: 123
-  // product_video: "//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2022-09-12/631ee7556bfb8.jpg"
-  // additional_image: ["//img1.s.handingcdn.com/Uploads/Editor/Picture/mr/55/app/19/2022-09-13/632041ee769f4.jpg"]
-  // price: 213
-  // specialprice: 
-  // start_time: 
-  // end_time: 
-  // quantity: 1
-  // sales_count: 0
-  // minimum: 1
-  // weight: 1231
-  // weight_class_id: 2
-  // languages_id: 1
-  // title: 12321
-  // stock_status_id: 5
-  // subtract: 1
-  // shipping: 1
-  // is_best: 0
-  // is_new: 0
-  // is_hot: 0
-  // sort: 3
-  // is_share: 0
-  // is_sys: 0
-  // inquiry_status: 0
-  // ad_waf_status: 1
-  // ad_product_id: 
-  // ad_product_url: 
-  // divided_status: 0
-  // divided_country: 
-  // divided_url:   
-  // group_id: 0
-  // content1: 
-  // content: 
-  // product_url: 
-  // tag: 
-  // meta_title: 
-  // meta_keyword: 
-  // meta_description: 
-  // status: 1
-
 
   // 商品信息
 
@@ -256,23 +177,6 @@ class newStore {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

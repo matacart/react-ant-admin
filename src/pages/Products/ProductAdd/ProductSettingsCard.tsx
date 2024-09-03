@@ -2,8 +2,6 @@ import { PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Link } from "@umijs/max";
 import { Button, Card, Divider, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
 import styled from "styled-components";
-import MoreSelect from './../Select/MoreSelect';
-import Product from './../../pages/Products/index';
 import { useRef, useState } from "react";
 import newStore from "@/store/newStore";
 

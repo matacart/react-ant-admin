@@ -3,14 +3,12 @@ import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
-import Product from './../../pages/Products/index';
-// import ProductList from './ProductList';
 import { result } from 'lodash';
 import axios from 'axios';
 import { deleteProduct, getProductList } from '@/services/y2/api';
 import { Response } from 'express';
-
+import { history, useIntl } from '@umijs/max';
+import styled from 'styled-components';
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -22,6 +20,7 @@ interface DataType {
   price?: number;
   inventory?: number;
   state?: boolean;
+  productid:string;
 }
 
 // ToolTip内容
@@ -176,21 +175,7 @@ export default function ProductListAjax() {
                 </div>
               </Tooltip>
             </ButtonIcon>
-            <Button type="link" 
-              onClick={()=>{
-                deleteProduct(record.key.toString()).then((res)=>{
-                  console.log(res)
-                  if(res?.code==0){
-                    message.success(`删除成功`);
-                    fetchData();
-                  }else{
-                    message.error(`删除失败，请重试`)
-                  }
-                });
-              }}
-            danger>
-              Delete
-            </Button>
+           
           </div>
         )
       }
@@ -230,7 +215,7 @@ export default function ProductListAjax() {
             name: item.title,
             state: item.status==1,
             inventory: item.quantity,
-            
+            productid:item.id,
           })
         })
         setData(newData);
@@ -264,17 +249,28 @@ export default function ProductListAjax() {
     }
   };
 
+  const handleOrderClick = (productId: string) => {
+    console.log('Clicked product:', productId); // 添加调试日志
+    history.push(`/products/${productId}/edit`);
+  };
   return (
     <Scoped>
     {/* 商品列表 */}
       <Table
         columns={columns}
-        rowKey={(record) => record.key}
+        // rowKey={(record) => record.key}
         dataSource={data}
         pagination={tableParams.pagination}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 1300 }}
+        rowKey={(record) => record.productid}
+      onRow={(record) => ({
+        onClick: () => {
+          console.log('Row clicked:', record);
+          handleOrderClick(record.productid); // 点击行时调用handleOrderClick
+        },
+      })}
         rowSelection={{
           type: 'checkbox',
           onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
