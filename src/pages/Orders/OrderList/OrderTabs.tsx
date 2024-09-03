@@ -118,7 +118,7 @@ const handleCancel = () => {
   );
 };
 
-function DTTabs() {
+function OrderTabs() {
   const [newTabName, setNewTabName] = useState('');
   const [activeKey, setActiveKey] = useState('1');
   const intl = useIntl();
@@ -208,4 +208,4 @@ function DTTabs() {
   );
 }
 
-export default DTTabs;
+export default OrderTabs;

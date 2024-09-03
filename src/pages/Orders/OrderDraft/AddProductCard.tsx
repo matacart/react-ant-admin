@@ -4,6 +4,8 @@ import { getProductList } from '@/services/y2/api';
 import { ColumnsType } from 'antd/lib/table';
 import { Props } from '@/pages/Test/types';
 import { ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons/lib/icons';
+import type { SearchProps } from 'antd/es/input/Search';
+import type { SelectProps } from 'antd';
 
 // 假设的数据类型
 interface DataType {
@@ -20,7 +22,9 @@ interface DataType {
 interface AddProductCardProps {
   onAddProduct: (products: any[]) => void;
 }
-
+const { Search } = Input;
+const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+type TagRender = SelectProps['tagRender'];
 
 const AddProductCard: React.FC<AddProductCardProps> = ({ onAddProduct, ...props }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -456,25 +460,27 @@ const AddProductCard: React.FC<AddProductCardProps> = ({ onAddProduct, ...props 
           justifyContent: 'space-between',
         }}
       >
-        <Select
-          defaultValue="商品名称"
-          style={{ width: 101, height: 36, borderRadius: 0, marginRight: '-15px' }}
-          options={[
-            { value: '商品名称', label: '商品名称' },
-            { value: '商品SKU', label: '商品SKU' },
-          ]}
-        />
-        <Input
-          style={{
-            width: '200px',
-            height: '36px',
-            borderRadius: 0,
-            marginLeft: '0px',
-          }}
-          placeholder="请输入搜索关键词"
-          value={searchKeyword}
-          onChange={handleSearch} // 添加搜索框的 onChange 处理函数
-        />
+          <Space.Compact>
+                            <Select
+                                size='large'
+                                defaultValue={'全部'}
+                                style={{ width: 100 }}
+                                listHeight={230}
+                                options={[
+                                    { value: '全部', label: '全部' },
+                                    { value: '商品名称', label: '商品名称' },
+                                    { value: '商品SPU', label: '商品SPU' },
+                                    { value: '商品SKU', label: '商品SKU' },
+                                    { value: '商品厂商', label: '商品厂商' },
+                                    { value: '商品条码', label: '商品条码' },
+                                    { value: '规格名称', label: '规格名称' },
+                                    { value: '商品描述', label: '商品描述' },
+                                ]}
+                            />
+                            <Search
+                                size='large'
+                                placeholder="" onSearch={onSearch} style={{ width: 200 }} />
+                        </Space.Compact>
         <Input
           placeholder="商品分类"
           style={{

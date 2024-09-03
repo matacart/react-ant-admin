@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -16,27 +16,54 @@ import SEOEdit from './SEOEdit';
 import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
+import { getProductDetail } from '@/services/y2/api';
+import React from 'react';
+
+interface  ProductDetail {
+title:string;
+
+
+}
 
 function ProductDetail() {
     const [styleId, setStyleId] = useState('');
-
+    const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
+  
+    const fetchProductDetail = async () => {
+        try {
+          const response = await getProductDetail(1, 10); // 示例参数
+          if (Array.isArray(response.data) && response.data.length > 0) {
+            setProductDetail(response.data[0]);
+          } else {
+            console.error('Invalid data format:', response);
+          }
+        } catch (error) {
+          console.error('Error fetching product detail:', error);
+        }
+      };
+  
+    // 在组件加载时调用 fetchProductDetail
+    React.useEffect(() => {
+      fetchProductDetail();
+    }, []);
+  
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: string) => {
-        setStyleId(value);
+      setStyleId(value);
     };
-
+  
     return (
-        <StyledDiv>
-            <div className='mc-layout-wrap'>
-                <div className="mc-layout">
-                    <div className="mc-header">
-                        <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={() => {
-                                history.push('/products/index')
-                            }}>
-                                <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
-                            </div>
-                            <div className="mc-header-left-content">添加商品</div>
+      <StyledDiv>
+        <div className='mc-layout-wrap'>
+          <div className="mc-layout">
+            <div className="mc-header">
+              <div className="mc-header-left">
+                <div className="mc-header-left-secondary" onClick={() => {
+                  history.push('/products/index')
+                }}>
+                  <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                </div>
+                <div className="mc-header-left-content">{productDetail?.title}</div>
                         </div>
                         <div className='mc-header-right'>
                             <Select className='selector' defaultValue="分享" />
@@ -44,7 +71,7 @@ function ProductDetail() {
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                           <ProductDataEdit/>
+                        {productDetail && <ProductDataEdit productDetail={productDetail} />}
                            <ProductImgEdit/>
                            <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
                             {styleId && <ProductStyleListEdit styleId={styleId} />}

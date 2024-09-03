@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '@/components/Card/DropdownList.scss';
 import { useIntl } from '@umijs/max';
 
 const DeliveryState = () => {
   const [isOpen, setIsOpen] = useState(false); // 控制下拉框的显示状态
-  const [selectedValues, setSelectedValues] = useState([]); // 存储选中的值
+  const [selectedValues, setSelectedValues] = useState<string[]>([]); // 存储选中的值
+  const buttonRef = useRef<HTMLButtonElement>(null); // 引用按钮元素
+  const dropdownContentRef = useRef<HTMLDivElement>(null); // 引用下拉菜单元素
   const intl = useIntl();
 
   const toggleDropdown = () => {
@@ -12,12 +14,11 @@ const DeliveryState = () => {
   };
 
   const handleOptionChange = (option: string) => {
-    // 处理选项变化
-    // if (selectedValues.includes(option)) {
-    //   setSelectedValues(selectedValues.filter(val => val !== option));
-    // } else {
-    //   setSelectedValues([...selectedValues, option]);
-    // }
+    if (selectedValues.includes(option)) {
+      setSelectedValues(selectedValues.filter(val => val !== option));
+    } else {
+      setSelectedValues([...selectedValues, option]);
+    }
   };
 
   const handleClear = () => {
@@ -26,9 +27,10 @@ const DeliveryState = () => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    const dropdown = document.querySelector('.dropdown');
-    if (dropdown && !dropdown.contains(event.target as Node)) {
-      setIsOpen(false);
+    if (buttonRef.current && dropdownContentRef.current) {
+      if (!buttonRef.current.contains(event.target as Node) && !dropdownContentRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
     }
   };
 
@@ -42,7 +44,7 @@ const DeliveryState = () => {
   }, [isOpen]);
 
   const renderOptions = () => (
-    <div className={`dropdown-content ${isOpen ? 'show' : ''}`}>
+    <div className={`dropdown-content ${isOpen ? 'show' : ''}`} ref={dropdownContentRef}>
       {['待发货', '已发货', '发货中'].map((option, index) => (
         <div key={index} className="dropdown-item" onClick={() => handleOptionChange(option)}>
           <input
@@ -61,7 +63,7 @@ const DeliveryState = () => {
 
   return (
     <div className="dropdown">
-      <button className='dropdown-button' onClick={toggleDropdown}>
+      <button className='dropdown-button' onClick={toggleDropdown} ref={buttonRef}>
         {intl.formatMessage({ id: 'order.button.deliverystate' })}
       </button>
       {isOpen && renderOptions()}

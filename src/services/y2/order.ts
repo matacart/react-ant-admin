@@ -22,38 +22,38 @@ interface FilterCondition {
   module: string;  
 }  
 
-export async function getOrderList(page: any, limit: any) {
-  return request(`/api/ApiStore/order_list?page=${page}&limit=${limit}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
-// }
-// export async function getOrderList(page?: number, limit?: number, finalCondition?: FilterCondition[]): Promise<any> {
-//   // 构造查询字符串
-//   const searchParams = new URLSearchParams();
-
-//   // 添加分页参数
-//   if (page) searchParams.set('page', page.toString());
-//   if (limit) searchParams.set('limit', limit.toString());
-
-//   // 添加过滤条件
-//   if (finalCondition && finalCondition.length > 0) {
-//     finalCondition.forEach(condition => {
-//       searchParams.set(condition.filter_field, condition.filter_value);
-//     });
-//   }
-
-//   // 发送请求
-//   return request(`/api/ApiStore/order_list?${searchParams.toString()}`, {
-//     method: 'GET', // 使用 GET 请求，因为我们将过滤条件作为查询参数发送
+// export async function getOrderList(page: any, limit: any) {
+//   return request(`/api/ApiStore/order_list?page=${page}&limit=${limit}`, {
+//     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
 //     },
-//   });
+//   })
 // }
+// }
+export async function getOrderList(page?: number, limit?: number, finalCondition?: FilterCondition[]): Promise<any> {
+  // 构造查询字符串
+  const searchParams = new URLSearchParams();
+
+  // 添加分页参数
+  if (page) searchParams.set('page', page.toString());
+  if (limit) searchParams.set('limit', limit.toString());
+
+  // 添加过滤条件
+  if (finalCondition && finalCondition.length > 0) {
+    finalCondition.forEach(condition => {
+      searchParams.set(condition.filter_field, condition.filter_value);
+    });
+  }
+
+  // 发送请求
+  return request(`/api/ApiStore/order_list?${searchParams.toString()}`, {
+    method: 'GET', // 使用 GET 请求，因为我们将过滤条件作为查询参数发送
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
 
 
   // 添加订单

@@ -9,10 +9,10 @@ import styled from 'styled-components'
 import Icon, { ImportOutlined } from '@ant-design/icons';
 import TabPane from 'antd/es/tabs/TabPane';
 import tabs from 'antd/es/tabs';
-import { Card } from 'antd';
-import  DTTabs from '@/components/Tabs/DTTabs'  
+import { Card } from 'antd'; 
 import ReactDOM from 'react-dom'; 
 import { history, useIntl } from '@umijs/max';
+import OrderTabs from '../OrderList/OrderTabs';
 interface MenuItem {
   key: string;
   label: React.ReactNode;
@@ -130,7 +130,7 @@ export default function Orders() {
 
         <div className="create-content">
           <div>
-            <DTTabs />
+            <OrderTabs />
           </div>
           <Tabs defaultActiveKey="1" />
         </div>

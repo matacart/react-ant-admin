@@ -24,17 +24,12 @@ function ProductStyleList ({ styleId }: { styleId: string }){
   const [styles, setStyles] = useState<StyleItem[]>([]);
 
   useEffect(() => {
-    if (styleId) {
-      // 解析 styleId 成多行标签数组
-      const rows = styleId.split('\n').map(row => row.trim());
-
-      // 为每一行生成一个 StyleItem
-      const newStyles = rows.map((row, index) => {
-        const tags = row.split(',').map(tag => tag.trim());
-        return {
-          id: index + 1,
+    const generateStyles = (styleId: string) => {
+      const tags = styleId.split(',').map(tag => tag.trim());
+      const newStyles = tags.map((tag, index) => ({
+        id: index + 1,
           imageUrl: '',
-          style: tags.join(','),
+          style: tag,
           sku: '',
           salePrice: 0,
           originalPrice: 0,
@@ -49,10 +44,12 @@ function ProductStyleList ({ styleId }: { styleId: string }){
           shipping: true,
           barcode: '',
           metaFields: '',
-        };
-      });
-
+      }));
       setStyles(newStyles);
+    };
+
+    if (styleId) {
+      generateStyles(styleId);
     }
   }, [styleId]);
   // 添加处理 SKU 变化的函数
