@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": false, // 是否开启ts文件系统大小写敏感; to fix: mac上引入antd报错：类型文件名大小写不同错误。
+    "paths": {
+      "@/*": ["src/*"],
+      "@@/*": ["src/.umi/*"],
+      "@@test/*": ["./src/.umi-test/*"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-plugins-css-modules"
+      }
+    ]
+  },
+  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx"],
+  "suppressImplicitAnyIndexErrors":true
+}

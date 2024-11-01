@@ -1,0 +1,105 @@
+.wrapper{
+    background: linear-gradient(91.68deg, #f0f7ff 1.35%, rgba(240, 247, 255, 0) 98.51%);
+}
+
+
+.tab{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 16px 12px 16px 25px;
+    cursor: pointer;
+    background-color: white;
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 120%;
+    border-top: 2px solid rgba(190, 190, 190, 0.1);
+    width: 220px;
+    &:hover{
+        background-color: #f7f8fb;
+        // background-color: #f7f8fb;
+        color: #356dff;
+        
+    }
+    .icon{
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+        font-size: 24px;
+
+    }
+
+
+}
+
+
+
+.active{
+    background:transparent;
+    font-weight: 600;
+    color: #356dff;
+    &:hover{
+        background:transparent;
+    }
+}
+.pane{
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    width: 100%;
+    min-height: 100%;
+    background: rgba(0,0,0,0);
+    display: flex;
+    .content{
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        min-height: 100%;
+        padding: 40px 20px 40px 40px;
+        overflow: hidden;
+        min-width: 220px;
+        .title{
+                margin-bottom: 8px;
+                color: #242833;
+                font-size: 24px;
+                font-weight: 600;
+                line-height: 32px;
+        }
+        .desc{
+            margin-bottom: 20px;
+            color: #242833;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+        }
+        .buttonContainer{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            .link{
+                color:#356dff;
+                margin-left: 16px;
+                font-size: 14px;
+                &:hover{
+                    cursor: pointer;
+                }
+            }
+        }
+
+    }
+    .icon{
+        // height: 188px;
+        width: 100%;
+    }
+
+}

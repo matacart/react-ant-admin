@@ -1,0 +1,27 @@
+.item{
+    background: linear-gradient(240.87deg, rgba(247, 248, 251, 0.75) 0%, rgba(247, 248, 251, 0.375) 98.92%);
+    border: 1px solid #f0f3f9;
+    border-radius: 6px;
+    padding: 16px 20px;
+    .title{
+        margin-left: 8px;
+        color: #7a8499;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        border-bottom: 1px dashed #b8becc;
+        cursor: pointer;
+        word-break: break-words;
+    }
+
+    .value{
+        margin-top: 15px;
+        color: #242833;
+        font-weight: 500;
+        font-size: 28px;
+        line-height: 1;
+    }
+
+}
+
+

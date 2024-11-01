@@ -1,0 +1,36 @@
+.incense {  
+    position: relative;  
+    width: 5px; /* 根据需要调整 */  
+    height: 150px; /* 根据需要调整 */  
+    margin: 50px auto; /* 居中显示 */  
+  }  
+    
+  .stick {  
+    position: absolute;  
+    bottom: 0;  
+    width: 100%;  
+    height: 90%; /* 假设烟灰占整个香的10% */  
+    background: brown; /* 香的颜色 */  
+    border-radius: 5px;  
+  }  
+    
+  .ash {  
+    position: absolute;  
+    bottom: 0;  
+    width: 100%;  
+    height: 10%; /* 烟灰的高度 */  
+    background: grey; /* 烟灰的颜色 */  
+    border-radius: 0 0 5px 5px;  
+    animation: burn 5s linear infinite; /* 燃烧的动画 */  
+  }  
+    
+  @keyframes burn {  
+    0% {  
+      height: 10%; /* 开始时烟灰的高度 */  
+    }  
+    100% {  
+      height: 0%; /* 结束时烟灰的高度，模拟燃烧完 */  
+      opacity: 0; /* 完全透明，以便在视觉上消失 */  
+      transform: translateY(10%); /* 稍微向下移动，以便在视觉上更平滑地消失 */  
+    }  
+  }
