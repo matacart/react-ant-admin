@@ -162,7 +162,7 @@ class newStore {
     console.log(value)
   }
 
-  // 设置 tag
+  // 设置 tag 
   @action setTag(value: string) {
     this.tag = value;
   }

@@ -181,8 +181,11 @@ export async function getProductList(page: any, limit: any) {
   })
 }
 
-export async function getProductDetail(page: any, limit: any) {
-  return request(`/api/ApiStore/product_detail?page=${page}&limit=${limit}`, {
+// /api/ApiStore/product_detail?page=${page}&limit=${limit}  测试
+// 改用product_list
+// 根据id & languages_id获取产品详情
+export async function getProductDetail(id: any, languagesId: any) {
+  return request(`/api/ApiStore/product_detail?id=${id},languagesId=${languagesId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

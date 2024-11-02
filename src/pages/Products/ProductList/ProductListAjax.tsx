@@ -9,6 +9,7 @@ import { deleteProduct, getProductList } from '@/services/y2/api';
 import { Response } from 'express';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
+import { state } from 'config/myConfig';
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -21,6 +22,7 @@ interface DataType {
   inventory?: number;
   state?: boolean;
   productid:string;
+  languages_id:string
 }
 
 // ToolTip内容
@@ -47,6 +49,9 @@ const getRandomuserParams = (params: TableParams) => ({
   page: params.pagination?.current,
   ...params,
 });
+
+
+
 
 export default function ProductListAjax() {
   const [loading, setLoading] = useState(false);
@@ -215,7 +220,8 @@ export default function ProductListAjax() {
             name: item.title,
             state: item.status==1,
             inventory: item.quantity,
-            productid:item.id,
+            productid:item.id,  //产品id
+            languages_id:item.languages_id
           })
         })
         setData(newData);
@@ -249,9 +255,10 @@ export default function ProductListAjax() {
     }
   };
 
-  const handleOrderClick = (productId: string) => {
+  const handleOrderClick = (productId: string,languages_id:string) => {
     console.log('Clicked product:', productId); // 添加调试日志
-    history.push(`/products/${productId}/edit`);
+    // 
+    history.push(`/products/productId/edit`,{productId,languages_id})
   };
   return (
     <Scoped>
@@ -265,10 +272,10 @@ export default function ProductListAjax() {
         onChange={handleTableChange}
         scroll={{ x: 1300 }}
         rowKey={(record) => record.productid}
-      onRow={(record) => ({
+        onRow={(record) => ({
         onClick: () => {
-          console.log('Row clicked:', record);
-          handleOrderClick(record.productid); // 点击行时调用handleOrderClick
+          // console.log('Row clicked:', record);
+          handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
         },
       })}
         rowSelection={{

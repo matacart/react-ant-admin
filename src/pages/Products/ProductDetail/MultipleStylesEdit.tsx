@@ -115,6 +115,8 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
  useEffect(() => {
   const allTagsFlat = tags.flat();
   const styleId = allTagsFlat.join(',');
+  console.log(props.onSecondInputChange)
+  console.log(tags)
   props.onSecondInputChange?.(styleId);
 }, [tags, props.onSecondInputChange]);
 

@@ -17,7 +17,13 @@ import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
 import { getProductDetail } from '@/services/y2/api';
+// import ProductDataCard from './ProductDataEdit';
+
+
+
 import React from 'react';
+import CustomsDeclarationEdit from './CustomsDeclarationEdit';
+import StockEdit from './StockEdit';
 
 interface  ProductDetail {
 title:string;
@@ -25,15 +31,24 @@ title:string;
 
 }
 
+
 function ProductDetail() {
+
+    // const location = useLocation
+
     const [styleId, setStyleId] = useState('');
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
   
+    // 
+    const product_i:any = history.location.state;
+
     const fetchProductDetail = async () => {
         try {
-          const response = await getProductDetail(1, 10); // 示例参数
-          if (Array.isArray(response.data) && response.data.length > 0) {
-            setProductDetail(response.data[0]);
+          const response = await getProductDetail(product_i.productId, product_i.languages_id); // 参数
+          console.log(response);
+            //   Array.isArray(response.data) && response.data.length > 0
+          if (response.data) {
+            setProductDetail(response.data);
           } else {
             console.error('Invalid data format:', response);
           }
@@ -49,7 +64,8 @@ function ProductDetail() {
   
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: string) => {
-      setStyleId(value);
+        setStyleId(value);
+        // 需要有多款式的时候才显示
     };
   
     return (
@@ -69,10 +85,14 @@ function ProductDetail() {
                             <Select className='selector' defaultValue="分享" />
                         </div>
                     </div>
-                    <div className='mc-layout-main'>
+                    {/*  */}
+                    <div className='mc-layout-main'> 
                         <div className='mc-layout-content'>
                         {productDetail && <ProductDataEdit productDetail={productDetail} />}
                            <ProductImgEdit/>
+                            {/* 价格 */}
+                            <StockEdit></StockEdit>
+                            <CustomsDeclarationEdit></CustomsDeclarationEdit>
                            <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
                             {styleId && <ProductStyleListEdit styleId={styleId} />}
                         </div>
