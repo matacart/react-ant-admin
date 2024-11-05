@@ -1,9 +1,7 @@
 import { Line } from '@ant-design/plots';
-import { DatePicker, Button,Tooltip,Popover,Flex,Space  } from "antd";
+import { DatePicker, Button,Tooltip,Popover,Select  } from "antd";
 // // 
-
 {/* <script src="https://unpkg.com/@antv/g2plot@latest/dist/g2plot.js"></script> */}
-
 import { Masonry } from "react-masonry-component2";
 import { getAnalyse } from "@/services/analyse/api"
 import { ExpandOutlined,QuestionCircleOutlined,InfoCircleOutlined,CloseOutlined,RightOutlined} from '@ant-design/icons';
@@ -13,8 +11,21 @@ import './index.scss';
 import type { TimeRangePickerProps } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
-import { forEach, values } from 'lodash';
 
+// 格式化日期
+function formatDate(str:string) {
+  /*
+        replace第一个参数正则和上面的一样
+        
+        replace 第二个参数是一个函数，第一个入参就是匹配到的第一个参数，可以在函数内处理补0
+    */
+  return str.replace(
+    /(?<=\/|-|\.|:|\b|T)\d{1}(?=\/|-|\.|:|\b|T)/g,
+    function ($1) {
+      return "0" + $1;
+    }
+  );
+}
 
 // 是否全屏
 function DrivingScreen() {
@@ -52,111 +63,7 @@ function DrivingScreen() {
     </Button>
   );
 }
-
-// 筛选出对应的日期 重新渲染图表
-// 
-function screeningDate(res:any,chartList:any,f1:any,f2:any,f3:any,f4: any,f5:any,f6:any,f7:any){
-  
-  chartList.forEach((i:any)=>{
-    let temp:any = []
-    res.data.forEach((res: any) =>{
-      // 销售额
-      if(res.salesVolume && i.title == "销售额"){
-        temp.push(
-          {
-            year:res.date,
-            type:i.title,
-            value:res.salesVolume,
-          }
-        )
-      }
-      if(res.amountPaid && i.title == "已付款金额"){
-        temp.push(
-          {
-            year:res.date,
-            value:res.amountPaid,
-            type:i.title,
-          }
-        )
-      }
-      if(res.visitorsNum && i.title == "访客数"){
-        temp.push(
-          {
-            year:res.date,
-            value:res.visitorsNum,
-            type:i.title,
-          }
-        )
-      }
-      if(res.customer && i.title == "客单价"){
-        temp.push(
-          {
-            year:res.date,
-            value:res.customer,
-            type:i.title,
-          }
-        )
-      }
-      if(res.orders && i.title == "订单数"){
-        temp.push(
-          {
-            year:res.date,
-            value:res.orders,
-            type:i.title,
-          }
-        )
-      }
-      if(res.pageView && i.title == "浏览量"){
-        temp.push(
-          {
-            year:res.date,
-            value:res.pageView,
-            type:i.title,
-          }
-        )
-      }
-      if(res.refundAmount && i.title == "退款金额"){
-        temp.push(
-          {
-            year:res.date,
-            value:res.refundAmount,
-            type:i.title,
-          }
-        )
-      }
-      
-    })
-    if(i.title == "销售额"){
-      f1(temp)
-    }
-    if(i.title == "已付款金额"){
-      f2(temp)
-    }
-    if(i.title == "访客数"){
-      f3(temp)
-    }
-    if(i.title == "订单数"){
-      f5(temp)
-    }
-    if(i.title == "客单价"){
-      f4(temp)
-    }
-    if(i.title == "浏览量"){
-      f6(temp)
-    }
-    if(i.title == "退款金额"){
-      f7(temp)
-    }
-    console.log(temp)
-  })
-  
-  console.log(chartList);
-}
-
-
 // 对比 --- 根据范围获取
-// 
-
 function timeFrame(s:Date,d:Date){
   // 将 Date 对象转换为时间戳（毫秒数）
   const startTimestamp = s.getTime();
@@ -183,31 +90,105 @@ function timeFrame(s:Date,d:Date){
   // 2678400000 30天
 
 }
-
-
-// 
-let objList = getAnalyse();
-interface ChartDate {
-  year: string;
-  values: string;
-  type: string;
+// 获取全部产品
+const objList = getAnalyse();
+// 上一个月
+function getLastMonth(time:Date){
+  // console.log(time)
+  const currTime = time;
+  let lastTime = 0;
+  // 1 3 5 7 8 10 12
+  if(currTime.getMonth() == 0 ||currTime.getMonth() == 2 || currTime.getMonth() == 4 || currTime.getMonth() == 6 ||currTime.getMonth() ==7 ||currTime.getMonth() == 9 ||currTime.getMonth() ==11){
+    lastTime = currTime.getTime() - 1000*3600*24*31
+  }else if(currTime.getMonth() == 1){
+    lastTime = currTime.getTime() - 1000*3600*24*28
+  }else{
+    lastTime = currTime.getTime() - 1000*3600*24*30
+  }
+  const lastDate = new Date(lastTime)
+  // console.log(lastDate)
+  return formatDate((lastDate.getFullYear())+"-"+(lastDate.getMonth()+1)+"-"+(lastDate.getDate()))
 }
+// 上一年
+function getLastYear(time:Date){
+  const currTime = time
+  // console.log(currTime)
+  return formatDate((currTime.getFullYear()-1)+"-"+(currTime.getMonth()+1)+"-"+(currTime.getDate()));
+}
+export default function(this: any) {
+  let [flag,setFlag] = useState("0");
 
-export default function analys(this: any) {
-  
-  const [transformedData, setTransformedData] = useState<ChartDate[]>([]);
-  const [transformedData1, setTransformedData1] = useState<ChartDate[]>([]);
-  const [transformedData2, setTransformedData2] = useState<ChartDate[]>([]);
-  const [transformedData3, setTransformedData3] = useState<ChartDate[]>([]);
-  const [transformedData4, setTransformedData4] = useState<ChartDate[]>([]);
-  const [transformedData5, setTransformedData5] = useState<ChartDate[]>([]);
-  const [transformedData6, setTransformedData6] = useState<ChartDate[]>([]);
+  let [contrastTitle,setcontrastTitle] = useState("");
 
+  let [salesVolumeData,setSalesVolumeData] = useState([
+      { year: '1991-01-10', value: "3" },
+      { year: '1992-02-10', value: "4" },
+      { year: '1993-03-10', value: "3.5" },
+      { year: '1994-04-10', value: "5" },
+      { year: '1995-05-10', value: "4.9" },
+      { year: '1996-06-10', value: "7" }
+  ]);
+  let [amountPaid,setAmountPaid] = useState([
+      { year: '1993-02-03', value: 3 },
+      { year: '1994-02-03', value: 4 },
+      { year: '1995-02-03', value: 3.5 },
+      { year: '1996-02-03', value: 9 },
+      { year: '1999-02-03', value: 5 },
+      { year: '2002-02-03', value: 7 }
+  ]);
+  let [visitorsNum,setVisitorsNum] = useState([
+      { year: '1991-02-03', value: 3 },
+      { year: '1992-02-03', value: 5 },
+      { year: '1994-02-03', value: 5 },
+      { year: '1996-02-03', value: 6 },
+      { year: '1997-02-03', value: 6 },
+      { year: '1998-02-03', value: 9 },
+      { year: '1999-02-03', value: 10 }
+  ]);
+  let [customer,setSalesCustomer] = useState([
+      { year: '1991-02-03', value: 3 },
+      { year: '1992-02-03', value: 4 },
+      { year: '1993-02-03', value: 3.5 },
+      { year: '1994-02-03', value: 5 },
+      { year: '1995-02-03', value: 9.9 },
+      { year: '1996-02-03', value: 6 },
+      { year: '1997-02-03', value: 7 }
+  ]);
+  let [orders,setOrders] = useState([
+      { year: '1991-02-03', value: 3 },
+      { year: '1992-02-03', value: 4 },
+      { year: '1993-02-03', value: 2.5 },
+      { year: '1994-02-03', value: 5 },
+      { year: '1995-02-03', value: 4.9 },
+      { year: '1996-02-03', value: 6 },
+      { year: '1997-02-03', value: 7 }
+  ]);
+  let [pageView,setPageView] = useState([
+      { year: '1991-02-03', value: 3 },
+      { year: '1992-02-03', value: 4 },
+      { year: '1993-02-03', value: 3 },
+      { year: '1994-02-03', value: 5 },
+      { year: '1995-02-03', value: 4.9 },
+      { year: '1996-02-03', value: 9 },
+      { year: '1997-02-03', value: 7 }
+  ]);
+  let [refundAmount,setRefundAmount] = useState([
+      { year: '1991-02-03', value: 3 },
+      { year: '1992-02-03', value: 4 },
+      { year: '1993-02-03', value: 4.5 },
+      { year: '1994-02-03', value: 5 },
+      { year: '1995-02-03', value: 6.9 },
+      { year: '1996-02-03', value: 6 },
+      { year: '1997-02-03', value: 8 }
+  ]);
   // 当前时间段
   const [formDate, setFormDate] = useState<string | undefined>();
   const [toDate, setToDate] = useState<string | undefined>();
-  
-  // 
+  // 对比时间段
+  const [lastFormDate, setLastFormDate] = useState<string>();
+  const [lastToDate, setLastToDate] = useState<string | undefined>();
+
+  // 图表
   const chartList = 
     [
       {
@@ -215,7 +196,7 @@ export default function analys(this: any) {
           title : "访客数异动分析",
           statistics : "统计",
           amount : "0.00",
-          compare : "较去年同期",
+          // compare : contrastTitle,
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
         },
@@ -225,21 +206,68 @@ export default function analys(this: any) {
           amount : "US$0.00",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          lastForm :lastFormDate,
+          lastToDate:lastToDate,
+          compare : contrastTitle,
           config : {
-            forceFit: true,
-            data:transformedData,
+            data:salesVolumeData,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
             xField: 'year',
             yField: 'value',
-            // seriesField: 'type',
-            tooltip: {
-              itemTpl: `
-                <li class="g2-tooltip-list-item">
-                  <span class="g2-tooltip-value">{value}<span style="margin-left: 16px; color: #ccc">{rate}%</span></span>
-                </li>
-              `
+            interaction: {
+              tooltip: {
+                render:(e:any,{title, items}:any)=>{
+                  // let flag =0
+                  if(flag==="1"){
+                    // getLastMonth(title)
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>销售额</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>销售额[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>销售额</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>销售额[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>销售额</span>
+                        <span>US$0.00</span>
+                      </div>
+                    </div>
+                  }
+                }
+              },
             },
-            
           },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
@@ -250,18 +278,64 @@ export default function analys(this: any) {
           amount : "0.00",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          compare : contrastTitle,
           config : {
-            height: 300,
-            forceFit: true,
-            data:transformedData1,
+            data:amountPaid,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
             xField: 'year',
             yField: 'value',
-            label: {
-              visible: true,
-              type: 'point',
+            interaction: {
+              tooltip: {
+                render:(e:any,{title, items}:any)=>{
+                  if(flag==="1"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>已付款金额</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>已付款金额[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>已付款金额</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>已付款金额[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>已付款金额</span>
+                        <span>US$0.00</span>
+                      </div>
+                    </div>
+                  }
+                }
+              },
             },
-            seriesField: 'type',
           },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
@@ -272,19 +346,67 @@ export default function analys(this: any) {
           amount : "0",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          compare : contrastTitle,
           config : {
-          height: 300,
-          forceFit: true,
-          data:transformedData2,
-          xField: 'year',
-          yField: 'value',
-          label: {
-            visible: true,
-            type: 'point',
+            data:visitorsNum,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
+            xField: 'year',
+            yField: 'value',
+            interaction: {
+              tooltip: {
+                render:(e:any,{title, items}:any)=>{
+                  if(flag==="1"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>访客数</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>访客数[对比]</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>访客数</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>访客数[对比]</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>访客数</span>
+                        <span>0</span>
+                      </div>
+                    </div>
+                  }
+                 
+                }
+              },
+            },
           },
           seriesField: 'type',
-          },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
         },
@@ -292,18 +414,7 @@ export default function analys(this: any) {
           title : "转化率",
           statistics : "统计",
           amount : "0.00",
-          compare : "较去年同期",
-          config : {
-          height: 300,
-          forceFit: true,
-          data:[],
-          xField: 'year',
-          yField: 'value',
-          label: {
-            visible: true,
-            type: 'point',
-          },
-          },
+          compare : contrastTitle,
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
         },
@@ -313,18 +424,65 @@ export default function analys(this: any) {
           amount : "US$0.00",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          compare : contrastTitle,
           config : {
-          height: 300,
-          forceFit: true,
-          data:transformedData3,
-          xField: 'year',
-          yField: 'value',
-          label: {
-            visible: true,
-            type: 'point',
-          },
-          seriesField: 'type',
+            data:customer,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
+            xField: 'year',
+            yField: 'value',
+            interaction: {
+              tooltip: {
+                render:(e:any,{title, items}:any)=>{
+                  if(flag==="1"){
+                    // getLastMonth(title)
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>客单价</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>客单价[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>客单价</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>客单价[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>客单价</span>
+                        <span>US$0.00</span>
+                      </div>
+                    </div>
+                  }
+                }
+              },
+            },
           },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
@@ -335,18 +493,66 @@ export default function analys(this: any) {
           amount : "0",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          compare : contrastTitle,
           config : {
-          height: 300,
-          forceFit: true,
-          data:transformedData4,
-          xField: 'year',
-          yField: 'value',
-          label: {
-            visible: true,
-            type: 'point',
-          },
-          seriesField: 'type',
+            data:orders,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
+            xField: 'year',
+            yField: 'value',
+            interaction: {
+              tooltip: {
+                render:(e:any,{title, items}:any)=>{
+                  if(flag==="1"){
+                    // getLastMonth(title)
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>订单数</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>订单数[对比]</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>订单数</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>订单数[对比]</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>订单数</span>
+                        <span>0</span>
+                      </div>
+                    </div>
+                  }
+                 
+                }
+              },
+            },
           },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
@@ -357,18 +563,64 @@ export default function analys(this: any) {
           amount : "0",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          compare : contrastTitle,
           config : {
-          height: 300,
-          forceFit: true,
-          data:transformedData5,
-          xField: 'year',
-          yField: 'value',
-          label: {
-            visible: true,
-            type: 'point',
-          },
-          seriesField: 'type',
+            data:pageView,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
+            xField: 'year',
+            yField: 'value',
+            interaction: {
+              tooltip: {
+                render:(e:any,{title, items}:any)=>{
+                  if(flag==="1"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>浏览量</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>浏览量[对比]</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>浏览量</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>浏览量[对比]</span>
+                          <span>0</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>浏览量</span>
+                        <span>0</span>
+                      </div>
+                    </div>
+                  }
+                }
+              },
+            },
           },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
@@ -379,79 +631,206 @@ export default function analys(this: any) {
           amount : "US$0.00",
           formDate : formDate,
           toDate : toDate,
-          compare : "较去年同期",
+          compare : contrastTitle,
           config : {
-          height: 300,
-          forceFit: true,
-          data:transformedData6,
-          xField: 'year',
-          yField: 'value',
-          label: {
-            visible: true,
-            type: 'point',
-          },
-          seriesField: 'type',
+            data:refundAmount,
+            title: {
+              visible: true,
+              text: '带数据点的折线图',
+            },
+            xField: 'year',
+            yField: 'value',
+            interaction: {
+              tooltip: {
+                // render: (event, { title, items }) => {
+                //   <div>Your custom render content here.</div>,
+                // }
+                render:(e:any,{title, items}:any)=>{
+                  if(flag==="1"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>退款金额</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastMonth(new Date(title))}</div>
+                        <div>
+                          <span>退款金额[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else if(flag === "2"){
+                    return <div style={{color:"#000"}}>
+                      <div>
+                        <div>{title}</div>
+                        <div>
+                          <span>退款金额</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>{getLastYear(new Date(title))}</div>
+                        <div>
+                          <span>退款金额[对比]</span>
+                          <span>US$0.00</span>
+                        </div>
+                      </div>
+                    </div>
+                  }else{
+                    return <div>
+                      <div>{title}</div>
+                      <div>
+                        <span>退款金额</span>
+                        <span>US$0.00</span>
+                      </div>
+                    </div>
+                  }
+                 
+                }
+              },
+            },
           },
           description : "下单成单的订单金额。包含商品税、运费、优惠金额和退回的金额等，包括所有销售渠道的订单以及导入订单。",
           formula : "销售额=小计金额-优惠金额+商品税+运费+运费税+小费-积分抵扣金额+舍入调整金额+关税-退款金额"
         }
   ]
-  // 
-  useEffect(() => {
-    objList.then(res=>{ 
-      screeningDate(res,chartList,setTransformedData,setTransformedData1,setTransformedData2,setTransformedData3,setTransformedData4,setTransformedData5,setTransformedData6)
-    });
-  }, [])
-  
   // 日期
   const { RangePicker } = DatePicker;
-  
+
+  // 对比
+  const compareHandleChange = (value: string) => {
+    // 0 1 2
+    setFlag(value)
+    if(value == "0"){
+      setcontrastTitle("")
+    }
+    if(value == "1"){
+      setcontrastTitle("较上月同期")
+    }
+    if(value == "2"){
+      setcontrastTitle("较去年同期")
+    }
+  };
+  // 根据时间筛选修改图表数据  ---
+  function chartDate (startTime:any,endTime:any,key:number){
+    let tempList:any = [];
+    objList.then(res=>{
+      if(res.code == 0){
+        switch (key) {
+          // 销售数据
+          case 1:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    // { year: '1992', value: 4 },
+                    {year:item.date,value:item.salesVolume}
+                  )
+              }
+            })
+            setSalesVolumeData(tempList)
+          break;
+          case 2:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    {year:item.date,value:item.amountPaid}
+                  )
+              }
+            })
+            setAmountPaid(tempList)
+          break;
+          case 3:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    {year:item.date,value:item.visitorsNum}
+                  )
+              }
+            })
+            setVisitorsNum(tempList)
+          break;
+          case 4:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    {year:item.date,values:item.customer}
+                  )
+              }
+            })
+            setSalesCustomer(tempList)
+          break;
+          case 5:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    {year:item.date,value:item.orders}
+                  )
+              }
+            })
+            setOrders(tempList)
+          break;
+          case 6:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    {year:item.date,value:item.pageView}
+                  )
+              }
+            })
+            setPageView(tempList)
+          break;
+          case 7:
+            res.data.forEach((item:any)=>{
+              if(new Date(item.date)>startTime && new Date(item.date)<endTime){
+                  tempList.push(
+                    {year:item.date,value:item.refundAmount}
+                  )
+              }
+            })
+            setRefundAmount(tempList)
+          break;
+        }
+      }
+    })
+  }
+
   const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
     if (dates) {
-      // 
+      // chartList[1].data =["2020-10-10","1"];
       let startDate = new Date(dateStrings[0]);
       let endDate = new Date(dateStrings[1]);
-
+      for(let i=1;i<=7;i++){
+        chartDate(startDate,endDate,i);
+        // console.log(chartList)
+      }
+      // 
       setFormDate((startDate.getMonth()+1)+"/"+(startDate.getDate()));
       setToDate((endDate.getMonth()+1)+"/"+(endDate.getDate()));
 
-      // 时间
-      objList.then(res=>{
-        let xList: any = [[],[],[],[],[],[],[]];
-        res.data.forEach((e:any) => {
-          if (new Date(e.date) >= startDate && new Date(e.date) <= endDate) {
-            console.log('当前日期在指定范围内');
-            xList[0].push({ year: e.date, value: e.salesVolume,type:"销售额"})
-            xList[1].push({ year: e.date, type:"已付款金额",value: e.amountPaid})
-            xList[2].push({ year: e.date, value: e.visitorsNum,type:"访客数" })
-            xList[3].push({ year: e.date, value: e.customer,type:"客单价" })
-            xList[4].push({ year: e.date, value: e.orders,type:"订单数" })
-            xList[5].push({ year: e.date, value: e.pageView,type:"浏览量" })
-            xList[6].push({ year: e.date, value: e.refundAmount,type:"退款金额" })
-          }else{
-            console.log("no")
-          }
-        });
-        console.log(xList);
-        // console.log(chartList)
-        setTransformedData(xList[0])
-        setTransformedData1(xList[1])
-        setTransformedData2(xList[2])
-        setTransformedData3(xList[3])
-        setTransformedData4(xList[4])
-        setTransformedData5(xList[5])
-        setTransformedData6(xList[6])
-            
-        // console.log(res.data)
-      })
-      console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
-
-
-
-      // startDate endDate
-
-      timeFrame(startDate,endDate)
-
+      //  0 ---  1 --- yue   2-----nian
+      console.log(startDate)
+      console.log(endDate)
+      // setLastFormDate(getLastMonth(startDate))
+      console.log(getLastMonth(startDate))
+      // 2024-10-05  -- 1
+      if(flag == "1"){
+        let tempTime = new Date(getLastMonth(startDate));
+        let tempTime2 = new Date(getLastMonth(endDate));
+        //  (+"-"+(tempTime2.getMonth()+1)+"/"+tempTime.getDate()
+        setLastFormDate((tempTime.getMonth()+1)+"/"+tempTime.getDate())
+        setLastToDate((tempTime2.getMonth()+1)+"/"+tempTime2.getDate())
+      }
+      if(flag == "2"){
+        // 格式化为 /
+        let tempTime = new Date(getLastYear(startDate));
+        let tempTime2 = new Date(getLastYear(endDate));
+        setLastFormDate(tempTime.getFullYear()+"/"+(tempTime.getMonth()+1)+"/"+tempTime.getDate())
+        setLastToDate(tempTime2.getFullYear()+"/"+(tempTime2.getMonth()+1)+"/"+tempTime2.getDate())
+      }
     } else {
       // console.log('Clear');
     }
@@ -487,7 +866,16 @@ export default function analys(this: any) {
           <RangePicker presets={rangePresets} onChange={onRangeChange} />
           <div style={{display:"inline-block",width:"10px"}}></div>
           {/* 对比 */}
-          
+          <Select
+            defaultValue="对比"
+            style={{ width: 120 }}
+            onChange={compareHandleChange}
+            options={[
+              { value: '0', label: '无对比' },
+              { value: '1', label: '上一月' },
+              { value: '2', label: '上一年' },
+            ]}
+          />
         </div>
         
         
@@ -561,7 +949,7 @@ export default function analys(this: any) {
                         </div>
                         <div style={{height:"10px", width:"100%"}}></div>
                         <div className='contributionDegree'>
-                          <div><span style={{borderBottom:"1px dashed #b8becc"}}>推荐来源名称正向贡献数</span><span style={{fontSize:"10px",marginLeft:"8px"}}><RightOutlined /></span></div>
+                          <div><span style={{borderBottom:"1px dashed #b8becc"}}>推荐来源名称负向贡献数</span><span style={{fontSize:"10px",marginLeft:"8px"}}><RightOutlined /></span></div>
                           <div className='num'>0</div>
                         </div>
                       </div>
@@ -608,13 +996,14 @@ export default function analys(this: any) {
                           <span style={{ display: 'inline-block', verticalAlign: 'top', color: 'rgb(36, 40, 51)' }}></span>
                           <span style={{ display: 'inline-block', verticalAlign: 'top', color: 'rgb(36, 40, 51)' }}>{item.amount}</span>
                         </div>
-                        <div className="shadow-3-item">
+                        {
+                          item.compare !== "" && <div className="shadow-3-item">
                           <span style={{ marginRight: '4px', color: '#474f5e' }}>{item.compare}</span>
                           <div style={{ display: 'inline-block' }}>
                             <div style={{ display: 'inline-block', paddingLeft: '2px' }}>-</div>
                           </div>
                         </div>
-                        {/*  */}
+                        }
                         <div className='rate'>
                           <div>
                             <Popover placement="topLeft" content={content2}>
@@ -681,10 +1070,9 @@ export default function analys(this: any) {
                                 <span className="shandow-1-item-title">{item.title}</span>
                               </span>
                             </Popover>
-                              
                             </div>
-                          </div>
-                          <div style={{ paddingLeft: '8px' }}>
+                        </div>
+                        <div style={{ paddingLeft: '8px' }}>
                             <a style={{ marginLeft: '8px', whiteSpace: 'nowrap' }}>
                               <span>{item.statistics}</span>
                             </a>
@@ -694,21 +1082,22 @@ export default function analys(this: any) {
                           <span style={{ display: 'inline-block', verticalAlign: 'top', color: 'rgb(36, 40, 51)' }}></span>
                           <span style={{ display: 'inline-block', verticalAlign: 'top', color: 'rgb(36, 40, 51)' }}>{item.amount}</span>
                         </div>
-                        <div className="shadow-3-item">
+                        { item.compare !=="" && <div className="shadow-3-item">
                           <span style={{ marginRight: '4px', color: '#474f5e' }}>{item.compare}</span>
                           <div style={{ display: 'inline-block' }}>
                             <div style={{ display: 'inline-block', paddingLeft: '2px' }}>-</div>
                           </div>
-                        </div>
+                        </div> }
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {/*  */}
-              <Line {...chartList[index].config} />
+              {/* { item.data?.length&& <EchartsPage dataList={item.data}/>} */}
+              {/* <EchartsPage dataList={salesVolumeData}/> */}
+              <Line {...item.config} />
               <div style={{ display: 'none' }}></div>
-              <div className="legendWrapper">
+              { flag !== "0" && <div className="legendWrapper">
                 <div className="container_1B">
                   <div className="legend_k">
                     <div className="iconWrapper">
@@ -719,11 +1108,11 @@ export default function analys(this: any) {
                   <div className="legend_k">
                     <div className="iconWrapper">
                       <i className="lineIcon" style={{ borderColor: 'rgb(53,109,255)', borderStyle: 'dotted' }}></i>
-                      <div>213</div>
+                      <div>{lastFormDate}-{lastToDate}</div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> }
               </div>
             </div>
           )
@@ -735,5 +1124,3 @@ export default function analys(this: any) {
     </div>
   )
 }
-
-// export default LineBarChart;

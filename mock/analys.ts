@@ -29,7 +29,7 @@ export default{
                     "refundAmount":"223"
                 },
                 {
-                    "date": "2023-08-01",
+                    "date": "2023-06-22",
                     "salesVolume": "1000",
                     "amountPaid": "6000",
                     "visitorsNum":"2",
@@ -39,7 +39,7 @@ export default{
                     "refundAmount":"221"
                 },
                 {
-                    "date": "2023-06-12",
+                    "date": "2023-07-12",
                     "salesVolume": "2000",
                     "amountPaid": "2000",
                     "visitorsNum":"1",
@@ -49,7 +49,7 @@ export default{
                     "refundAmount":"123"
                 },
                 {
-                    "date": "2023-10-01",
+                    "date": "2023-07-30",
                     "salesVolume": "4000",
                     "amountPaid": "3000",
                     "visitorsNum":"1",
@@ -59,7 +59,7 @@ export default{
                     "refundAmount":"4445"
                 },
                 {
-                    "date": "2023-06-22",
+                    "date": "2023-08-22",
                     "salesVolume": "1000",
                     "amountPaid": "2000",
                     "visitorsNum":"1",
@@ -69,13 +69,23 @@ export default{
                     "refundAmount":"333"
                 },
                 {
-                    "date": "2024-10-31",
+                    "date": "2023-08-31",
                     "salesVolume": "1000",
                     "amountPaid": "2000",
                     "visitorsNum":"1",
                     "customer": "30",
                     "orders":"60",
                     "pageView":"23",
+                    "refundAmount":"222"
+                },
+                {
+                    "date": "2024-09-30",
+                    "salesVolume": "6000",
+                    "amountPaid": "7000",
+                    "visitorsNum":"7",
+                    "customer": "50",
+                    "orders":"90",
+                    "pageView":"1",
                     "refundAmount":"222"
                 },
                 {
@@ -87,6 +97,16 @@ export default{
                     "orders":"70",
                     "pageView":"2",
                     "refundAmount":"132"
+                },
+                {
+                    "date": "2024-10-31",
+                    "salesVolume": "6000",
+                    "amountPaid": "4800",
+                    "visitorsNum":"4",
+                    "customer": "90",
+                    "orders":"40",
+                    "pageView":"2",
+                    "refundAmount":"666"
                 },
                 
             ]

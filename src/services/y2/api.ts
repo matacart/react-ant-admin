@@ -204,46 +204,77 @@ export async function addProduct() {
       "sku": newStore.SKU,
       "categoryIds": newStore.productType,
       "product_image": newStore.selectedImgList[0] ,
-      "product_video": '',
+      "product_video": '',  // 视频
       "additional_image": newStore.selectedImgList,
       "price": newStore.price,
+      // 特殊价
       "specialprice": newStore.costPrice,
       "start_time": null,
       "end_time": null,
       "quantity": newStore.inventory,
+      // 销量
       "sales_count": 0,
+      // 
       "minimum": 1,
       "weight": newStore.weight,
-      "weight_class_id": newStore.productType,
+      // 重量单位
+      "weight_class_id": 0,
       "languages_id": 2,
       "title": newStore.title,
-      "stock_status_id": 5,
+      // 库存状态 1-有库存，2-无库存
+      "stock_status_id": 1,
+      // 是否库存减一 1-是，0-否
       "subtract": 1,
+      // 运费
       "shipping": 1,
+      // 加入推荐
       "is_best": 0,
       "is_new": 0,
       "is_hot": 0,
+      // 
       "sort": 3,
+      // 询盘开关：
       "is_share": 0,
       "is_sys": 0,
+      // 
       "inquiry_status": 0,
+      // 
       "ad_waf_status": 1,
       "ad_product_id": null,
       "ad_product_url": "",
+      // 
       "divided_status": 0,
       "divided_country": "",
       "divided_url": "",
       "group_id": 0,
-      "content1": "",
-      "content": "呃呃呃呃呃呃呃呃呃呃呃呃呃",
+      // 描述
+      "content1": newStore.resume,
+      // 内容
+      "content": newStore.desc,
       "product_url": "",
-      "tag": "",
-      "meta_title": "啊啊啊啊啊啊啊啊啊",
+      // 标签
+      "tag": newStore.tag,
+      // seo
+      "meta_title": "",
       "meta_keyword": "",
-      "meta_description":"日日日日日日日日日日",
-      "status": 1
+      "meta_description":"",
+      // 商品状态
+      "status": newStore.onPutProduct ? "1" : "0",
     }
   })
+}
+
+//更新商品 
+export async function submitRenewalProduct(){
+  // return
+  // return request('/api/ApiStore/product_add', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'multipart/form-data',
+  //   },
+  //   data: {
+  //   }
+  // })
 }
 
 

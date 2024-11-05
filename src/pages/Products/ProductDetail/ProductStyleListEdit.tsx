@@ -20,14 +20,13 @@ interface StyleItem {
   metaFields: string;
 }
 
-function ProductStyleListEdit ({ styleId }: { styleId: string }){
+function ProductStyleListEdit ({ styleId }: { styleId: string}){
   const [styles, setStyles] = useState<StyleItem[]>([]);
 
   useEffect(() => {
     if (styleId) {
       // 解析 styleId 成多行标签数组
       const rows = styleId.split('\n').map(row => row.trim());
-
       // 为每一行生成一个 StyleItem
       const newStyles = rows.map((row, index) => {
         const tags = row.split(',').map(tag => tag.trim());

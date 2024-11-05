@@ -1,59 +1,104 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd';
+import { Button, Divider,message, Select,SelectProps, UploadFile } from 'antd';
 import styled from 'styled-components';
-import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
 import ProductImgEdit from './ProductImgEdit';
 import MultipleStylesEdit from './MultipleStylesEdit';
-import ProductStyleListEdit from './ProductStyleListEdit';
+import ProductStyleListEdit2 from './ProductStyleListEdit2';
 import ProductSettingsEdit from './ProductSettingsEdit';
 import SEOEdit from './SEOEdit';
 import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
-import { getProductDetail } from '@/services/y2/api';
+import { getProductDetail,submitRenewalProduct } from '@/services/y2/api';
 // import ProductDataCard from './ProductDataEdit';
-
-
 
 import React from 'react';
 import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
+import { valueType } from 'antd/es/statistic/utils';
 
+
+
+
+
+// 更新状态
 interface  ProductDetail {
-title:string;
+    title:string;
 
+    content1:string;
+
+    content:string;
+    // 商品图片/视频
+    selectedImgList: UploadFile[];
+    price:valueType;
+    
+    originPrice:valueType;
+    specialprice:valueType;
+
+    sku:string;
+    ISBN:string;
+    quantity:number;
+    inventoryTracking:boolean;
+    continueSell:boolean;
+    status:string;
+
+    weight:string;
+    tag:string;
+}
+
+
+
+
+function newStores(res:ProductDetail){
+    console.log("--------------")
+    console.log(res)
+
+    newStore.setTitle(res.title);
+
+    newStore.resume = res.content1;
+    newStore.desc = res.content;
+    newStore.setPrice(res.price);
+    // newStore.setOriginPrice(res.originPrice);
+    newStore.setCostPrice(res.specialprice);
+    newStore.setSKU(res.sku)
+    newStore.setInventory(res.quantity)
+
+    // console.log(typeof(res.status))
+
+    newStore.setOnPutProduct(res.status == "1"?true:false)
+    newStore.setWeight(res.weight)
+    // 单位
+    // weight_class_id  1
+    // 标签
+    newStore.setTag(res.tag)
+    // 类型
 
 }
 
 
+
+
 function ProductDetail() {
-
     // const location = useLocation
-
-    const [styleId, setStyleId] = useState('');
+    const [styleId, setStyleId] = useState('111');
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-  
     // 
     const product_i:any = history.location.state;
-
     const fetchProductDetail = async () => {
         try {
-          const response = await getProductDetail(product_i.productId, product_i.languages_id); // 参数
-          console.log(response);
-            //   Array.isArray(response.data) && response.data.length > 0
-          if (response.data) {
-            setProductDetail(response.data);
-          } else {
+            const response = await getProductDetail(product_i.productId, product_i.languages_id); // 参数
+            if (response.data) {
+                newStores(response.data)
+            } else {
             console.error('Invalid data format:', response);
-          }
+            }
         } catch (error) {
-          console.error('Error fetching product detail:', error);
+            console.error('Error fetching product detail:', error);
         }
       };
   
@@ -88,13 +133,15 @@ function ProductDetail() {
                     {/*  */}
                     <div className='mc-layout-main'> 
                         <div className='mc-layout-content'>
-                        {productDetail && <ProductDataEdit productDetail={productDetail} />}
-                           <ProductImgEdit/>
+                            {/* {productDetail && <ProductDataEdit productDetail={productDetail} />} */}
+                            <ProductDataEdit/>
+                            <ProductImgEdit/>
                             {/* 价格 */}
+                            <ProductStyleListEdit2/>
                             <StockEdit></StockEdit>
                             <CustomsDeclarationEdit></CustomsDeclarationEdit>
-                           <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
-                            {styleId && <ProductStyleListEdit styleId={styleId} />}
+                            <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
+                            {/* {styleId && <ProductStyleListEdit styleId={styleId} />} */}
                         </div>
                         <div className='mc-layout-extra'>
                            <ProductSettingsEdit/>
@@ -109,12 +156,13 @@ function ProductDetail() {
                         <Button>删除该商品</Button>
                         <Button style={{marginLeft:-900}}>将商品存档</Button>
                         <Button type='primary' onClick={() => {
-                            newStore.submitAddProduct()
-                                .then(res => {
-                                    if (res.code === 0) message.success('okkk');
-                                    else message.error('noooo');
-                                    history.push('/products/index')
-                                });
+                            submitRenewalProduct().then(res => {
+                                console.log(newStore)
+
+                                // if (res.code === 0) message.success('okkk');
+                                // else message.error('noooo');
+                                // history.push('/products/index')
+                            });
                         }}>更新</Button>
                     </div>
                 </div>

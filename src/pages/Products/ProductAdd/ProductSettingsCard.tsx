@@ -103,6 +103,9 @@ export default function ProductSettingsCard() {
     };
 
 
+
+
+
     return (
         <Scoped>
             <Card title='商品设置' className="card">
@@ -143,6 +146,7 @@ export default function ProductSettingsCard() {
                 </div>
                 <Form layout="vertical">
                     <Form.Item
+                    
                         style={{
                             fontWeight: 600
                         }} label={
@@ -157,7 +161,7 @@ export default function ProductSettingsCard() {
                         } >
                         <Input
                             onChange={(e)=>{
-                                newStore.setSPU(e.target.value)
+                                
                             }}
                             defaultValue={1000}
                             className="ant-input"
@@ -206,9 +210,7 @@ export default function ProductSettingsCard() {
                             mode="tags"
                             style={{ width: '100%', padding: '0' }}
                             placeholder="添加标签（例如：复古/夏季）"
-                            onChange={(e)=>{
-                                console.log(newStore.setTag(e))
-                            }}
+                            onChange={handleTagChange}
                             options={options}
                             className="ant-input"
                         />
@@ -244,9 +246,6 @@ export default function ProductSettingsCard() {
                                 </>
                             )}
                             options={items.map((item) => ({ label: item, value: item }))}
-                            onChange={(e)=>{
-                                newStore.setProductType(e)
-                            }}
                         />
                     </Form.Item>
                     <Form.Item

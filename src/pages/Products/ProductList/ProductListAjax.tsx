@@ -274,7 +274,7 @@ export default function ProductListAjax() {
         rowKey={(record) => record.productid}
         onRow={(record) => ({
         onClick: () => {
-          // console.log('Row clicked:', record);
+          console.log('Row clicked:', record);
           handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
         },
       })}

@@ -2,8 +2,6 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
 import newStore from "@/store/newStore";
-import { valueType } from "antd/es/statistic/utils";
-import { values } from 'lodash';
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
     newStore.setPrice(value==null?0:value);
@@ -13,12 +11,16 @@ const originPriceOnChange: InputNumberProps['onChange'] = (value) => {
 };
 const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
     newStore.setCostPrice(value==null?0:value);
-
 };
 
 
 
-export default function PriceOrTransactionCard() {
+
+
+
+
+
+export default function ProductStyleListEdit2() {
     return (
         <Scoped>
             <Card title='价格/交易'>
@@ -39,7 +41,7 @@ export default function PriceOrTransactionCard() {
                             } name='price' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={1000}
+                                    defaultValue={typeof newStore.price === 'number'?newStore.price:0}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={priceOnChange}
@@ -61,7 +63,7 @@ export default function PriceOrTransactionCard() {
                             } name='originPrice' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={1000}
+                                    defaultValue={typeof newStore.originPrice === 'number'?newStore.originPrice:0}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={originPriceOnChange}

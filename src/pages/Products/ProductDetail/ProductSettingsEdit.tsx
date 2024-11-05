@@ -1,9 +1,10 @@
 import { PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Link } from "@umijs/max";
+// import { Link } from "@umijs/max";
 import { Button, Card, Divider, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
 import styled from "styled-components";
 import { useRef, useState } from "react";
 import newStore from "@/store/newStore";
+import { Link } from "react-router-dom";
 
 
 // 上架商品
@@ -109,7 +110,7 @@ export default function ProductSettingsEdit() {
     return (
         <Scoped>
             <Card title='商品设置' className="card">
-                <div className="item between">
+                <div className="item between">m 
                     <span>上架商品</span>
                     <Switch defaultChecked onChange={onPutProduct} />
                 </div>

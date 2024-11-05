@@ -126,7 +126,7 @@ class newStore {
 
   // 商品设置
 
-  // 上架商品
+  // 上架商品 -- status
   @observable onPutProduct: boolean = false;
   // SPU
   @observable SPU: string = '';
@@ -153,13 +153,13 @@ class newStore {
   // 设置 weight  
   @action setWeight(value: string) {
     this.weight = value;
-    console.log(value)
+    // console.log(value)
   }
 
   // 设置 manufactuer  
   @action setManufactuer(value: string) {
     this.manufactuer = value;
-    console.log(value)
+    // console.log(value)
   }
 
   // 设置 tag 
@@ -172,9 +172,9 @@ class newStore {
     this.productType = value;
   }
 
-  @action submitAddProduct() {
-    return addProduct()
-  }
+  // @action submitAddProduct() {
+  //   return addProduct()
+  // }
 
 }
 

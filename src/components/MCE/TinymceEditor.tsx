@@ -1,14 +1,22 @@
 import React, { useRef } from 'react';  
 import { Editor } from '@tinymce/tinymce-react';  
 import newStore from '@/store/newStore';
+import { values } from 'lodash';
+
   
 // 假设这是TinyMCE实例的正确类型，您可能需要从@tinymce/tinymce-react包中导入它  
 // 如果包没有直接导出类型，您可能需要自己定义或使用any作为临时解决方案  
 type EditorInstance = any; // 替换为实际的类型  
   
 export default function App() {  
-  const editorRef = useRef<EditorInstance>(null);  
-
+  const editorRef = useRef<EditorInstance>(null); 
+  
+  // 初始化回调函数
+  const initData = () => {
+    if(newStore.desc){
+      editorRef.current.setContent(newStore.desc)
+    }
+  };
   return (  
     <>  
       <Editor  
@@ -55,8 +63,9 @@ export default function App() {
           'blockquote hr code superscript subscript | fullscreen ', 
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           // toolbar_sticky: true,
-          promotion:false //去除upgrade按钮
-
+          promotion:false, //去除upgrade按钮
+          // 
+          init_instance_callback:initData
         }}  
       />  
       {/* <button onClick={log}>Log editor content</button>   */}

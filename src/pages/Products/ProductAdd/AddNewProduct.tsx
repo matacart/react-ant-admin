@@ -23,9 +23,11 @@ import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 
 function AddNewProduct(){
     const [styleId, setStyleId] = useState('');
+    newStore.desc = "";
   // 实现 onSecondInputChange 函数
   const handleSecondInputChange = (value: string) => {
     setStyleId(value);
+    // 初始化参数
 };
     return (
         <Scoped>
@@ -64,14 +66,14 @@ function AddNewProduct(){
                     <Divider/>
                     <div className='mc-footer'>
                         <Button type='primary' onClick={()=>{
-                            console.log(newStore)
-                            // newStore.submitAddProduct()
-                            //     .then(res=>{
-                            //         if(res.code==0)message.success('okkk');
-                            //         else message.error('noooo');
-                            //         history.push('/products/index')
-                            //     })
-                            // ;
+                            // console.log(styleId)
+                            newStore.submitAddProduct()
+                                .then(res=>{
+                                    if(res.code==0)message.success('okkk');
+                                    else message.error('noooo');
+                                    history.push('/products/index')
+                                })
+                            ;
                         }}>创建</Button>
                     </div>
                 </div>
