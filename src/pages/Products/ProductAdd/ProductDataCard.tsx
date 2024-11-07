@@ -3,6 +3,7 @@ import newStore from '@/store/newStore'
 import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import TinymceEditor from "@/components/MCE/TinymceEditor";
+import { context } from './../../../.umi-production/core/helmetContext';
 const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
 };
@@ -30,19 +31,19 @@ function ProductDataCard() {
                 required
                 label='商品摘要'>
                     <TextArea showCount maxLength={400} onBlur={(e)=>{
-                        newStore.resume=e.target.value;
+                        newStore.content=e.target.value;
                     }}
                         style={{
                             resize: 'none'
                         }}
-                        value={newStore.resume}
+                        value={newStore.content}
                         placeholder='请用简短的文字描述本商品'
                     >
                     </TextArea>
                 </Form.Item>
                 <Form.Item label='商品描述'>
                     {/* 富文本编辑器 */}
-                    <TinymceEditor/>
+                    <TinymceEditor prop={newStore} />
                 </Form.Item>
             </Form>
 

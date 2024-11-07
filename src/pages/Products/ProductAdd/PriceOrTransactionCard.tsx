@@ -141,8 +141,9 @@ export default function PriceOrTransactionCard() {
                         }}
                         name="needTaxes">
                         <Checkbox onChange={(e)=>{
-                            newStore.setInventoryTracking(e.target.value)
-                        }}>开启库存追踪</Checkbox>
+                            console.log(e.target.checked)
+                            newStore.setNeedTax(e.target.checked)
+                        }}>是否需要税费</Checkbox>
                     </Form.Item>
                 </Form>
             </Card>

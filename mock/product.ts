@@ -634,74 +634,93 @@ export default {
 
 
 //产品详情
-'POST  /api/ApiStore/product_detail': (req: Request, res: Response) => {
-    res.json({
-      "code": 0,
-      "msg": "ok",
-      "count": "1356",
-      "data": [
-        {
-          "id": "1276451318963",
-          "model": "45557",
-          "sku": "",
-          "product_image": "\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb0d391c.jpg",
-          "product_video": "",
-          "additional_image": "[\"\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb69b57f.jpg\",\"\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb6e88b3.jpg\",\"\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb6e5d8a.jpg\",\"\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb7081c8.jpg\"]",
-          "price": "2333.0000",
-          "quantity": "2332",
-          "sales_count": "0",
-          "minimum": "1",
-          "subtract": "1",
-          "stock_status_id": "7",
-          "shipping": "1",
-          "weight": "1.00000000",
-          "weight_class_id": "1",
-          "sort": "0",
-          "is_best": "1",
-          "is_new": "1",
-          "is_hot": "1",
-          "is_sys": "0",
-          "update_time": "1645102429",
-          "create_time": "2022-02-13 22:20:18",
-          "employee_id": "7816664",
-          "inquiry_status": "0",
-          "ad_waf_status": "1",
-          "ad_product_id": "0",
-          "ad_product_url": null,
-          "group_id": "0",
-          "divided_status": "0",
-          "divided_country": null,
-          "divided_url": null,
-          "is_share": "0",
-          "status": "1",
-          "employee_realname": "\u90b9\u96c4",
-          "domain_id": 0,
-          "checked": 0,
-          "languages_id": "2",
-          "title": "Manchester United Away Retro Jersey 98\/99",
-          "content1": "      ",
-          "content": "      ",
-          "languages_name": "English",
-          "meta_title": "",
-          "meta_keyword": "",
-          "meta_description": "",
-          "product_url": "",
-          "tag": "",
-          "specialprice": "123.0000",
-          "start_time": "2022-02-13 22:03:38",
-          "end_time": "2022-03-13 22:03:38",
-          "categorys": [
-            {
-              "id": "1276449176618",
-              "status": "1",
-              "create_time": "1644759875",
-              "update_time": "1645101956"
-            }
-          ]
-        },
-    ]
-})}
+// 'POST  /api/ApiStore/product_detail': (req: Request, res: Response) => {
+//     res.json({
+//       "code": 0,
+//       "msg": "ok",
+//       "count": "1356",
+//       "data": 
+//         {
+//           "id": "1276451318963",
+//           "needTax":"1",
+//           // 缺货继续销售
+//           "continueSell":"1",
+//           "notion":"0",  // 0 1 2 3 4 5
+//           "HSCode":"未设置",
+//           "model": "45557",
+//           "sku": "123",
+//           "ISBN":"123456",
+//           "SPU": "123345",
+//           "manufactuer":"Cook",
+//           "product_image": "\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb0d391c.jpg",
+//           "product_video": "",
+//           "additional_image": ["\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb0d391c.jpg","\/\/img1.s.handingcdn.com\/Uploads\/Editor\/Picture\/mr\/55\/app\/19\/2022-02-13\/62090fb0d391c.jpg"],
+//           "price": "2333.0000",
+//           "originPrice":"20",
+//           "costPrice":"20",
+//           "quantity": "2332",
+//           "sales_count": "0",
+//           "minimum": "1",
+//           "subtract": "1",
+//           "stock_status_id": "7",
+//           "shipping": "1",
+//           "weight": "1.00000000",
+//           "weight_class_id": "1",
+//           "sort": "0",
+//           "is_best": "1",
+//           "is_new": "1",
+//           "is_hot": "1",
+//           "is_sys": "0",
+//           "update_time": "1645102429",
+//           "create_time": "2022-02-13 22:20:18",
+//           "employee_id": "7816664",
+//           "inquiry_status": "0",
+//           "ad_waf_status": "1",
+//           "ad_product_id": "0",
+//           "ad_product_url": null,
+//           "group_id": "0",
+//           "divided_status": "0",
+//           "divided_country": null,
+//           "divided_url": null,
+//           "is_share": "0",
+//           "status": "1",
+//           "employee_realname": "\u90b9\u96c4",
+//           "domain_id": 0,
+//           "checked": 0,
+//           "languages_id": "2",
+//           "title": "Manchester United Away Retro Jersey 98\/99",
+//           "content1": "这是内容",
+//           "content": "这是描述",
+//           "languages_name": "English",
+//           "meta_title": "",
+//           "meta_keyword": "",
+//           "meta_description": "",
+//           "product_url": "",
+//           "tag": "111,222,333",
+//           "product_type":"毛衣",
+//           "specialprice": "123.0000",
+//           "start_time": "2022-02-13 22:03:38",
+//           "end_time": "2022-03-13 22:03:38",
+//           "categorys": [
+//             {
+//               "id": "1276449176618",
+//               "status": "1",
+//               "create_time": "1644759875",
+//               "update_time": "1645101956"
+//             }
+//           ]
+//         },
+    
+// })},
 
 
+//更新产品 
+
+'POST /api/ApiAppstore/product_reset':(req: Request, res: Response)=>{
+  res.json({
+    code: 0,
+    id: req?.body?.id,
+  })
+}
 
 }

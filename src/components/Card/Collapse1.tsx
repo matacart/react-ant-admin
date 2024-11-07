@@ -1,4 +1,4 @@
-import React from 'react';
+  import React from 'react';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
 import Tabs from './Tabs1'

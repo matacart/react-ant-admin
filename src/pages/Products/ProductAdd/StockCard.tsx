@@ -2,9 +2,18 @@ import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
+import { type } from './../../Test/types';
 
 
-const onChange: InputProps['onChange'] = (value) => {
+// const onChangeSKU = (value) => {
+//     console.log('changed', value);
+//     // newStore.setSKU(value)
+// };
+
+const onChangeISBN = (value:string) => {
+    console.log('changed', value);
+};
+const onChange = (value:string) => {
     console.log('changed', value);
 };
 
@@ -19,17 +28,22 @@ export default function StockCard() {
                             <Form.Item
                             required
                             label="SKU"
-                                name='SKU'>
+                            name='SKU'
+                                >
                                 <Input
-                                    onChange={onChange}
+                                    onChange={(e)=>{
+                                        newStore.setSKU(e.target.value)
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
                             <Form.Item label="条码(ISBN、UPC、GTIN等)"
-                                name='SKU'>
+                                name='ISBN'>
                                 <Input
-                                    onChange={onChange}
+                                    onChange={(e)=>{
+                                        newStore.setISBN(e.target.value)
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
@@ -39,7 +53,10 @@ export default function StockCard() {
                             <Form.Item label="库存数量"
                                 name='stockQuantity'>
                                 <Input
-                                    onChange={onChange}
+                                    type='number'
+                                    onChange={(e)=>{
+                                        newStore.setInventory(Number(e.target.value))
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
@@ -51,14 +68,17 @@ export default function StockCard() {
                             marginBottom: 0
                         }}
                         >
-                        <Checkbox>开启库存追踪</Checkbox>
+                        <Checkbox onChange={(e)=>{
+                            console.log(e.target.checked)
+                            newStore.setInventoryTracking(e.target.checked)
+                        }}>开启库存追踪</Checkbox>
                     </Form.Item>
                     <Form.Item
                         valuePropName="checked"
                         name="continueSelling">
                         <Checkbox
                         onChange={(e)=>{
-                            newStore.setContinueSell(e.target.value)
+                            newStore.setContinueSell(e.target.checked)
                         }}
                         
                         >缺货后继续销售

@@ -4,9 +4,8 @@ import { InboxOutlined, LoadingOutlined, PlusOutlined, SearchOutlined, ShopOutli
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { message, Upload, Image } from 'antd';
 import styled from 'styled-components';
-import { values } from "lodash";
 import axios from "axios";
-import newStore from "@/store/newStore";
+import oldStore from "@/store/oldStore";
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -30,7 +29,8 @@ export default function ProductImgEdit() {
   const [addImgModalOpen, setAddImgModalOpen] = useState(false)
   const [form] = Form.useForm();
 
-
+  // 
+  // console.log(oldStore.product_image)
 
 // ##################### 添加多媒体文件 ###############################
 
@@ -54,7 +54,7 @@ export default function ProductImgEdit() {
   }
   // 是否已被之前选中
   const isBeforeSelected = (img: any) => {
-    return newStore.isIncludeSelectedImgList(img);
+    return oldStore.isIncludeSelectedImgList(img);
   }
   // 是否现在被选中
   const isCurrentSelected = (img: any) => {
@@ -77,13 +77,25 @@ export default function ProductImgEdit() {
   const { Dragger } = Upload;
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-  const [fileList, setFileList] = useState<UploadFile[]>([
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  let temp:any = [];
+
+  // oldStore.selectedImgList.forEach((res)=>{
+  //   temp.push({
+  //     url:res
+  //   })
+  // })
+
+  useEffect(()=>{
+    setFileList(temp)
+  },[])
     // {
     //   uid: '-1',
     //   name: 'image.png',
     //   status: 'done',
     //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
+    // }
     // {
     //   uid: '-2',
     //   name: 'image.png',
@@ -114,21 +126,35 @@ export default function ProductImgEdit() {
     //   name: 'image.png',
     //   status: 'error',
     // },
-  ]);
 
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as FileType);
-    }
-
-    setPreviewImage(file.url || (file.preview as string));
-    setPreviewOpen(true);
-  };
+  // const handlePreview = async (file: UploadFile) => {
+  //   console.log(file)
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getBase64(file.originFileObj as FileType);
+  //   }
+  //   setPreviewImage(file.url || (file.preview as string));
+  //   setPreviewOpen(true);
+  // };
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>{
-    console.log(newFileList);
+    // 
+    // atob(thumbUrl)
     setFileList(newFileList);
-    newStore.setSelectedImgList(newFileList);
+    let tempList:any = [];
+    // console.log(newFileList);
+    newFileList.forEach((r)=>{
+      // 判断是否有url
+      if(r.url){
+        tempList.push(r.url)
+      }else if(r.thumbUrl){
+        // 转格式
+        // console.log(r.thumbUrl)
+        // console.log(r.thumbUrl.split(","))
+        // console.log(atob(r.thumbUrl))
+      }
+    })
+    oldStore.setSelectedImgList(tempList)
+    // oldStore.setSelectedImgList(newFileList);
   }
 
 
@@ -153,7 +179,7 @@ export default function ProductImgEdit() {
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
-        newStore.addSelectedImgList(response?.fileUrl)
+        oldStore.addSelectedImgList(response?.fileUrl)
         console.log('llllllllllllllll' +
           '    id:' +
           response?.fileId,
@@ -222,7 +248,6 @@ export default function ProductImgEdit() {
             listType="picture-card"
             multiple={true}
             fileList={fileList}
-            onPreview={handlePreview}
             onChange={handleChange}
           >
             {fileList.length >= 8 ? null : uploadButton}
@@ -313,7 +338,7 @@ export default function ProductImgEdit() {
           open={addImgModalOpen}
           onOk={() => {
             setAddImgModalOpen(false)
-            newStore.setSelectedImgList([...newStore.getSelectedImgList(), ...tempSelectedImg]);
+            oldStore.setSelectedImgList([...oldStore.getSelectedImgList(), ...tempSelectedImg]);
             tempSelectedImg.length = 0;
           }}
           onCancel={() => setAddImgModalOpen(false)}

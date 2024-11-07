@@ -8,7 +8,7 @@ import newStore from "@/store/newStore";
 
 // 上架商品
 const onPutProduct = (checked: boolean) => {
-    newStore.setContinueSell(checked);
+    newStore.setOnPutProduct(newStore.onPutProduct);
 };
 
 type WebChannel = {
@@ -77,7 +77,9 @@ for (let i = 10; i < 36; i++) {
 
 
 const handleTagChange = (value: string) => {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
+    newStore.setTag(value.toString())
+
 };
 
 
@@ -91,6 +93,9 @@ export default function ProductSettingsCard() {
 
     const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
+
+        console.log(event)
+
     };
 
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
@@ -161,9 +166,8 @@ export default function ProductSettingsCard() {
                         } >
                         <Input
                             onChange={(e)=>{
-                                
+                                newStore.setSPU(e.target.value)
                             }}
-                            defaultValue={1000}
                             className="ant-input"
                         />
                     </Form.Item>
@@ -245,6 +249,9 @@ export default function ProductSettingsCard() {
                                     </Space>
                                 </>
                             )}
+                            onChange={(e)=>{
+                                newStore.setProductType(e)
+                            }}
                             options={items.map((item) => ({ label: item, value: item }))}
                         />
                     </Form.Item>

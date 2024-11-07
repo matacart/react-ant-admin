@@ -1,3 +1,4 @@
+import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select, Tooltip } from "antd";
 import styled from "styled-components";
@@ -23,6 +24,7 @@ export default function CustomsDeclarationEdit() {
                             showSearch
                             placeholder="Search to Select"
                             optionFilterProp="children"
+                            value={oldStore.notion}
                             filterOption={(input, option) => (option?.label ?? '').includes(input)}
                             filterSort={(optionA, optionB) =>
                                 (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
@@ -52,13 +54,17 @@ export default function CustomsDeclarationEdit() {
                                     value: '6',
                                     label: 'Cancelled',
                                 },
+                                {
+                                    value: '0',
+                                    label: '未设置'
+                                }
                             ]}
                         />
                     </Form.Item>
                     <Form.Item
                     required                    
                     label="HS(协调制度) 代码">
-                        <Input placeholder="请输入HS编码" />
+                        <Input value={oldStore.HSCode} placeholder="请输入HS编码" />
                     </Form.Item>
                 </Form>
             </Card>

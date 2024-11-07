@@ -1,4 +1,4 @@
-import { addProduct } from "@/services/y2/api";
+import { addProduct, getProductDetail } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
 import { valueType } from "antd/es/statistic/utils";
 import { action, makeObservable, observable } from "mobx";
@@ -6,7 +6,57 @@ import { action, makeObservable, observable } from "mobx";
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
 
+// interface ImageItem {
+//   url?: string;
+// }
+
  class newStore {
+
+  // 旧属性  兼容旧系统
+
+  @observable additional_image = '';
+  @observable categorys = [];
+  @observable checked = 0;
+  @observable create_time = '';
+  @observable domain_id = 0;
+  @observable employee_id = 0;
+  @observable employee_realname = '';
+  @observable id = "";
+  @observable languages_name = "";
+  @observable model = "";
+  @observable update_time = "";
+  @observable specialprice = "";
+  @observable start_time = "";
+  @observable end_time = "";
+  @observable weight_class_id = "";
+  @observable languages_id = "";
+  @observable stock_status_id = "";
+  @observable subtract = 0;
+  @observable shipping = 0;
+  @observable is_best = 0;
+  @observable is_new = 0
+  @observable is_hot = 0
+  @observable sort = 0;
+  @observable is_share = 0;
+  @observable is_sys = 0;
+  @observable inquiry_status = 0;
+  @observable ad_waf_status = "0";
+  @observable ad_product_id = "0";
+  @observable ad_product_url = "";
+  @observable divided_status = 0;
+  @observable divided_country = "0";
+  @observable divided_url = "0";
+  @observable group_id = "0";
+  @observable meta_title = null;
+  @observable meta_keyword = null;
+  @observable meta_description = "";
+  @observable minimum = "0";
+  @observable sales_count = "";
+  @observable product_video = "";
+  // @observable imgTempList:any = [];
+  // @action setImgTempList = (res: any) => {
+  //   this.imgTempList = res;
+  // }
   // 商品信息
 
   // 商品标题 
@@ -15,13 +65,22 @@ import { action, makeObservable, observable } from "mobx";
   @observable content = '';
   // 商品描述
   @observable content1 = '';
-  // 商品图片/视频
+  // 商品图片/视频  
   @observable selectedImgList: UploadFile[] = [];
-
+  // -- 封面
+  @observable additionalImage:UploadFile[] = [];
   @action setTitle = (title: string) => {
     this.title = title;
   }
-
+  @action setContent = (content: string) => {
+    this.content = content
+  }
+  @action setContent1 = (content1: string) => {
+    this.content = content1
+  }
+  // @action setContent1 = (content1: string) => {
+  //   this.content = content1
+  // }
   // 操作选中的图片数组
   @action getSelectedImgList = () => {
     return this.selectedImgList;
@@ -43,10 +102,7 @@ import { action, makeObservable, observable } from "mobx";
   @action isIncludeSelectedImgList = (img: any) => {
     return this.selectedImgList.indexOf(img) > -1;
   }
-
-
   // 价格/交易
-
   // 售价
   @observable price: valueType = 0;
   // 原价
@@ -54,7 +110,7 @@ import { action, makeObservable, observable } from "mobx";
   // 成本价
   @observable costPrice: valueType = 0;
   // 需要收取税费
-  @observable needTax: boolean = false;
+  @observable needTax: boolean = false;  //0
 
   @action setPrice = (value: valueType) => {
     this.price = value;
@@ -65,12 +121,11 @@ import { action, makeObservable, observable } from "mobx";
   @action setCostPrice = (value: valueType) => {
     this.costPrice = value;
   }
+  // 税费
   @action setNeedTax = (value: boolean) => {
     this.needTax = value;
   }
-
   // 库存
-
   // SKU
   @observable SKU: string = '';
   // 条码
@@ -93,7 +148,7 @@ import { action, makeObservable, observable } from "mobx";
   @action setInventory = (value: number) => {
     this.inventory = value;
   }
-
+  
   @action setInventoryTracking = (value: boolean) => {
     this.inventoryTracking = value;
   }
@@ -103,7 +158,6 @@ import { action, makeObservable, observable } from "mobx";
   }
 
   // 海关信息
-
   // 发货国家/地区
   @observable notion: string = '';
   // HS(协调制度)代码
@@ -124,9 +178,8 @@ import { action, makeObservable, observable } from "mobx";
   }
 
   // 商品设置
-
   // 上架商品 -- status
-  @observable onPutProduct: boolean = true;
+  @observable onPutProduct: boolean = false;
   // SPU
   @observable SPU: string = '';
   // 重量
@@ -171,16 +224,16 @@ import { action, makeObservable, observable } from "mobx";
     this.productType = value;
   }
 
-  @action submitAddProduct() {
-    return addProduct()
-  }
-
+  // @action submitAddProduct() {
+  //   return addProduct()
+  // }
+  // 加载初始数据
 }
 
 
-
 // eslint-disable-next-line import/no-anonymous-default-export
-export default new newStore()
+export default new newStore();
+
 
 
 

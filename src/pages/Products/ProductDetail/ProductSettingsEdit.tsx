@@ -5,18 +5,18 @@ import styled from "styled-components";
 import { useRef, useState } from "react";
 import newStore from "@/store/newStore";
 import { Link } from "react-router-dom";
-
+import oldStore from "@/store/oldStore";
 
 // 上架商品
 const onPutProduct = (checked: boolean) => {
-    newStore.setContinueSell(checked);
+    oldStore.setOnPutProduct(!oldStore.onPutProduct);
 };
 
-type WebChannel = {
-    name: string;
-    linkText?: string;
-    url?: string;
-}
+// type WebChannel = {
+//     name: string;
+//     linkText?: string;
+//     url?: string;
+// }
 
 const WebChannelArray: WebChannel[] = [
     {
@@ -79,19 +79,29 @@ for (let i = 10; i < 36; i++) {
 
 const handleTagChange = (value: string) => {
     console.log(`selected ${value}`);
+    oldStore.setTag(value.toString())
 };
 
 
 let index = 0;
 
 export default function ProductSettingsEdit() {
-
     const [items, setItems] = useState(['jack', 'lucy']);
     const [name, setName] = useState('');
     const inputRef = useRef<InputRef>(null);
+    let [productType,setProductType] = useState(oldStore.productType);
+    // let [productStatus,setProductStatus] = useState(oldStore.onPutProduct)
+    let tag:any=[];
+    if(oldStore.tag){
+        tag = oldStore.tag.split(",")
+    }
+    // 
+    // let productType = oldStore.productType.split(",")
+    console.log(tag)
 
     const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
+        console.log(name)
     };
 
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
@@ -110,9 +120,9 @@ export default function ProductSettingsEdit() {
     return (
         <Scoped>
             <Card title='商品设置' className="card">
-                <div className="item between">m 
+                <div className="item between">
                     <span>上架商品</span>
-                    <Switch defaultChecked onChange={onPutProduct} />
+                    <Switch defaultChecked={oldStore.onPutProduct} onChange={onPutProduct} />
                 </div>
                 <div className="item">
                     <div>发货</div>
@@ -147,7 +157,6 @@ export default function ProductSettingsEdit() {
                 </div>
                 <Form layout="vertical">
                     <Form.Item
-                    
                         style={{
                             fontWeight: 600
                         }} label={
@@ -162,9 +171,11 @@ export default function ProductSettingsEdit() {
                         } >
                         <Input
                             onChange={(e)=>{
-                                
+                                // console.log(e.target.value)
+                                oldStore.setSPU(e.target.value)
                             }}
-                            defaultValue={1000}
+                            // value={oldStore.SPU}
+                            defaultValue={oldStore.SPU}
                             className="ant-input"
                         />
                     </Form.Item>
@@ -175,9 +186,9 @@ export default function ProductSettingsEdit() {
                     } >
                         <Input
                             onChange={(e)=>{
-                                newStore.setWeight(e.target.value)
+                                oldStore.setWeight(e.target.value)
                             }}
-                            defaultValue={1000}
+                            defaultValue={oldStore.weight}
                             className="ant-input"
                             addonAfter={selectAfter}
                             style={{
@@ -193,8 +204,10 @@ export default function ProductSettingsEdit() {
                         <Input
                             placeholder="例如：Zara"
                             className="ant-input"
+                            // value={oldStore.manufactuer}
+                            defaultValue={oldStore.manufactuer}
                             onChange={(e)=>{
-                                newStore.setManufactuer(e.target.value);
+                                oldStore.setManufactuer(e.target.value);
                             }}
                         ></Input>
                     </Form.Item>
@@ -214,11 +227,11 @@ export default function ProductSettingsEdit() {
                             onChange={handleTagChange}
                             options={options}
                             className="ant-input"
+                            defaultValue={tag}
                         />
                     </Form.Item>
                     <Form.Item
                         className="moreLink"
-
                         label={
                             <div className="label-content between">
                                 <span>商品类型</span>
@@ -247,6 +260,13 @@ export default function ProductSettingsEdit() {
                                 </>
                             )}
                             options={items.map((item) => ({ label: item, value: item }))}
+                            onChange={(e)=>{
+                                // console.log(e)
+                                // console.log() 
+                                // oldStore.setTag(e)
+                                oldStore.setProductType(e)
+                            }}
+                            defaultValue={oldStore.productType}
                         />
                     </Form.Item>
                     <Form.Item

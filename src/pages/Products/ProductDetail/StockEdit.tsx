@@ -1,4 +1,5 @@
 import newStore from "@/store/newStore";
+import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
 import e from "express";
@@ -22,28 +23,29 @@ export default function StockEdit() {
                             <Form.Item
                             required
                             label="SKU"
+                            initialValue={oldStore.SKU}
                                 name='SKU'>
                                 <Input
-                                    onChange={(e) => newStore.setSKU(e.target.value)}
+                                    onChange={(e) => oldStore.setSKU(e.target.value)}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
                             <Form.Item label="条码(ISBN、UPC、GTIN等)"
-                                name='ISBN'>
+                                name='ISBN' initialValue={oldStore.ISBN}>
                                 <Input
-                                    onChange={(e)=>newStore.setISBN(e.target.value)}
+                                    onChange={(e)=>oldStore.setISBN(e.target.value)}
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Row>
                         <Col span={11}>
-                            <Form.Item label="库存数量"
+                            <Form.Item initialValue={oldStore.inventory} label="库存数量"
                                 name='quantity'>
                                 <Input
                                     onChange={(e=>{
-                                        newStore.setInventory(Number(e.target.value))
+                                        oldStore.setInventory(Number(e.target.value))
                                     })}
                                 />
                             </Form.Item>
@@ -55,17 +57,19 @@ export default function StockEdit() {
                         style={{
                             marginBottom: 0
                         }}
+                        initialValue={oldStore.inventoryTracking}
                         >
                         <Checkbox onChange={(e)=>{
-                            newStore.setInventoryTracking(e.target.checked)
+                            oldStore.setInventoryTracking(e.target.checked)
                         }}>开启库存追踪</Checkbox>
                     </Form.Item>
                     <Form.Item
                         valuePropName="checked"
+                        initialValue={oldStore.continueSell}
                         name="continueSelling">
                         <Checkbox
                         onChange={(e)=>{
-                            newStore.setContinueSell(e.target.checked)
+                            oldStore.setContinueSell(e.target.checked)
                         }}
                         
                         >缺货后继续销售

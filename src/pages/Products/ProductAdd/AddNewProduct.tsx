@@ -67,13 +67,14 @@ function AddNewProduct(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={()=>{
                             // console.log(styleId)
+                            // 
+                            console.log(newStore)
                             newStore.submitAddProduct()
                                 .then(res=>{
                                     if(res.code==0)message.success('okkk');
                                     else message.error('noooo');
                                     history.push('/products/index')
-                                })
-                            ;
+                            });
                         }}>创建</Button>
                     </div>
                 </div>

@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Oauth2 } from '../../../config/myConfig'
 import newStore from '@/store/newStore';
 import TableList from './../../pages/TableList/index';
+import { dataTool } from 'echarts';
+import oldStore from '@/store/oldStore';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -180,19 +182,25 @@ export async function getProductList(page: any, limit: any) {
     },
   })
 }
-
 // /api/ApiStore/product_detail?page=${page}&limit=${limit}  测试
 // 改用product_list
 // 根据id & languages_id获取产品详情
-export async function getProductDetail(id: any, languagesId: any) {
-  return request(`/api/ApiStore/product_detail?id=${id},languagesId=${languagesId}`, {
+export async function getProductDetail(id: string, languagesId: string) {
+  return request(`/api/ApiStore/product_detail`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      // params
+      id: id,
+      languages_id: languagesId
     },
   })
 }
 
+
+// 
 export async function addProduct() {
   return request('/api/ApiStore/product_add', {
     method: 'POST',
@@ -200,82 +208,165 @@ export async function addProduct() {
       'Content-Type': 'multipart/form-data',
     },
     data: {
-      "model": newStore.title,
+      "model":newStore.title,
       "sku": newStore.SKU,
-      "categoryIds": newStore.productType,
-      "product_image": newStore.selectedImgList[0] ,
-      "product_video": '',  // 视频
-      "additional_image": newStore.selectedImgList,
       "price": newStore.price,
-      // 特殊价
-      "specialprice": newStore.costPrice,
-      "start_time": null,
-      "end_time": null,
+      "specialprice": oldStore.specialprice,
+      "start_time":"",
+      "end_time":"",
       "quantity": newStore.inventory,
-      // 销量
-      "sales_count": 0,
-      // 
-      "minimum": 1,
+      "sales_count":"",
+      "minimum":"",
       "weight": newStore.weight,
-      // 重量单位
-      "weight_class_id": 0,
-      "languages_id": 2,
+      "weight_class_id": "",
       "title": newStore.title,
-      // 库存状态 1-有库存，2-无库存
-      "stock_status_id": 1,
-      // 是否库存减一 1-是，0-否
-      "subtract": 1,
-      // 运费
-      "shipping": 1,
-      // 加入推荐
+      "stock_status_id":"",
+      "subtract":"",
+      "shipping":"",
       "is_best": 0,
       "is_new": 0,
       "is_hot": 0,
-      // 
-      "sort": 3,
-      // 询盘开关：
-      "is_share": 0,
-      "is_sys": 0,
-      // 
-      "inquiry_status": 0,
-      // 
-      "ad_waf_status": 1,
-      "ad_product_id": null,
-      "ad_product_url": "",
-      // 
-      "divided_status": 0,
-      "divided_country": "",
-      "divided_url": "",
-      "group_id": 0,
-      // 描述
-      "content1": newStore.resume,
+      "is_share":0,
+      "sort" : 0,
+      "product_url" : '',
+      "meta_title" : '',
+      "meta_keyword" : '',
+      "meta_description" : '',
+      "inquiry_status" : 0,
+      "ad_waf_status" : 1,
+      "ad_product_id" : 0,
+      "ad_product_url" : '',
+      "group_id" : 0,
+      "divided_status" : 0,
+      "divided_country" : '',
+      "divided_url" : '',
+      // 摘要
+      "content": newStore.content,
       // 内容
-      "content": newStore.desc,
-      "product_url": "",
-      // 标签
-      "tag": newStore.tag,
-      // seo
-      "meta_title": "",
-      "meta_keyword": "",
-      "meta_description":"",
+      "content1": newStore.content1,
+      "originPrice":newStore.originPrice,
+      "costPrice":newStore.costPrice,
+      "needTax":newStore.needTax?"1":"0",
+      "ISBN": newStore.ISBN,
+      "inventory_tracking":newStore.inventoryTracking?"1":"0",
+      "continueSell":newStore.continueSell?"1":"0",
+      // 
+      "notion":newStore.notion,  // 0 1 2 3 4 5
+      "HSCode":newStore.HSCode,
+      // 
       // 商品状态
       "status": newStore.onPutProduct ? "1" : "0",
+      "SPU": newStore.SPU,
+      "manufactuer":newStore.manufactuer,
+      "tag": newStore.tag,
+      "categoryIds": newStore.productType,
+      // 封面
+      "product_image": newStore.selectedImgList[0] ,
+      "product_video": '',  // 视频
+      // 图片
+      "additional_image": newStore.selectedImgList,
+      "languages_id": 1,
+      "languages_name": "Chinese"
     }
   })
 }
 
 //更新商品 
-export async function submitRenewalProduct(){
+export async function submitRenewalProduct(res:any){
   // return
-  // return request('/api/ApiStore/product_add', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //   },
-  //   data: {
-  //   }
-  // })
+  return request('/api/ApiStore/product_reset', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      // 旧属性
+      "additional_image": oldStore.additional_image,
+      "categorys": oldStore.categorys,
+      "checked":oldStore.checked,
+      "create_time": oldStore.create_time,
+      "domain_id": oldStore.domain_id,
+      "employee_id": oldStore.employee_id,
+      "employee_realname": oldStore.employee_realname,
+      "id": oldStore.id,
+      "languages_name": oldStore.languages_name,
+      "model": oldStore.model,
+      "update_time": oldStore.update_time,
+      // 特殊价
+      "specialprice": oldStore.specialprice,
+      "start_time": oldStore.start_time,
+      "end_time": oldStore.end_time,
+      "weight_class_id": oldStore.weight_class_id,
+      "languages_id": oldStore.languages_id,
+      // 库存状态 1-有库存，2-无库存
+      "stock_status_id": oldStore.stock_status_id,
+      // 是否库存减一 1-是，0-否
+      "subtract": oldStore.subtract,
+      // 运费
+      "shipping": oldStore.shipping,
+      // 加入推荐
+      "is_best": oldStore.is_best,
+      "is_new": oldStore.is_new,
+      "is_hot": oldStore.is_hot,
+      // 
+      "sort": oldStore.sort,
+      // 询盘开关：
+      "is_share": oldStore.is_share,
+      "is_sys": oldStore.is_sys,
+      // 
+      "inquiry_status": oldStore.inquiry_status,
+      // 
+      "ad_waf_status": oldStore.ad_waf_status,
+      "ad_product_id": oldStore.ad_product_id,
+      "ad_product_url": oldStore.ad_product_url,
+      // 
+      "divided_status": oldStore.divided_status,
+      "divided_country": oldStore.divided_country,
+      "divided_url": oldStore.divided_url,
+      "group_id": oldStore.group_id,
+      // seo
+      "meta_title": oldStore.meta_title,
+      "meta_keyword": oldStore.meta_keyword,
+      "meta_description":oldStore.meta_description,
+      "minimum": oldStore.minimum,
+      // 
+      "title": oldStore.title,
+      // 新增属性
+      "needTax":oldStore.needTax?"1":"0",
+      "ISBN":oldStore.ISBN,
+      "SPU": oldStore.SPU,
+      "manufactuer":oldStore.manufactuer,
+      "inventory_tracking":oldStore.inventoryTracking?"1":"0",
+      // 缺货继续销售
+      "continueSell":oldStore.continueSell?"1":"0",
+      "notion":oldStore.notion,  // 0 1 2 3 4 5
+      "HSCode":oldStore.HSCode,
+      "sku": oldStore.SKU,
+      "categoryIds": oldStore.productType,
+      "product_image": oldStore.selectedImgList,
+      "product_video": oldStore.product_video,  // 视频
+      // "additional_image": oldStore.selectedImgList,
+      "price": oldStore.price,
+      // 原价
+      "originPrice":oldStore.originPrice,
+      // 成本价
+      "costPrice":oldStore.costPrice,
+      "quantity": oldStore.inventory,
+      // 销量
+      "sales_count": oldStore.sales_count,
+      "weight": oldStore.weight,
+      // 描述
+      "content1": oldStore.content1,
+      // 内容
+      "content": oldStore.content,
+      // 标签
+      "tag": oldStore.tag,
+      // 商品状态
+      "status": oldStore.onPutProduct ? "1" : "0"
+    }
+  })
 }
+
 
 
 // 店铺列表

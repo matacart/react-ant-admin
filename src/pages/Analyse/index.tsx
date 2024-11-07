@@ -812,10 +812,10 @@ export default function(this: any) {
       setToDate((endDate.getMonth()+1)+"/"+(endDate.getDate()));
 
       //  0 ---  1 --- yue   2-----nian
-      console.log(startDate)
-      console.log(endDate)
+      // console.log(startDate)
+      // console.log(endDate)
       // setLastFormDate(getLastMonth(startDate))
-      console.log(getLastMonth(startDate))
+      // console.log(getLastMonth(startDate))
       // 2024-10-05  -- 1
       if(flag == "1"){
         let tempTime = new Date(getLastMonth(startDate));

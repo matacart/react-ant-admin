@@ -1,26 +1,22 @@
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
-import newStore from "@/store/newStore";
+import oldStore from "@/store/oldStore";
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
-    newStore.setPrice(value==null?0:value);
+    oldStore.setPrice(value==null?0:value);
 };
 const originPriceOnChange: InputNumberProps['onChange'] = (value) => {
-    newStore.setOriginPrice(value==null?0:value);
+    oldStore.setOriginPrice(value==null?0:value);
 };
 const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
-    newStore.setCostPrice(value==null?0:value);
+    oldStore.setCostPrice(value==null?0:value);
 };
 
 
+export default function ProductStyleListEdit2(productDetail:any) {
 
-
-
-
-
-
-export default function ProductStyleListEdit2() {
+    // oldStore.setPrice(productDetail.productDetail.price)
     return (
         <Scoped>
             <Card title='价格/交易'>
@@ -29,6 +25,7 @@ export default function ProductStyleListEdit2() {
                         <Col span={11}>
                             <Form.Item 
                             required
+                            initialValue={oldStore.price}
                             label={
                                 <>
                                     售价
@@ -41,7 +38,7 @@ export default function ProductStyleListEdit2() {
                             } name='price' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={typeof newStore.price === 'number'?newStore.price:0}
+                                    defaultValue={typeof oldStore.price === 'number'?oldStore.price:0}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={priceOnChange}
@@ -51,7 +48,7 @@ export default function ProductStyleListEdit2() {
                         </Col>
 
                         <Col offset={2} span={11}>
-                            <Form.Item label={
+                            <Form.Item initialValue={oldStore.originPrice} label={
                                 <>
                                     原价
                                     <Tooltip title="这里是关于用户名的额外信息">
@@ -63,7 +60,7 @@ export default function ProductStyleListEdit2() {
                             } name='originPrice' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={typeof newStore.originPrice === 'number'?newStore.originPrice:0}
+                                    defaultValue={typeof oldStore.originPrice === 'number'?oldStore.originPrice:0}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={originPriceOnChange}
@@ -74,7 +71,7 @@ export default function ProductStyleListEdit2() {
                     </Row>
                     <Row>
                         <Col span={11}>
-                            <Form.Item label={
+                            <Form.Item initialValue={oldStore.costPrice} label={
                                 <>
                                     成本价
                                     <Tooltip title="这里是关于用户名的额外信息">
@@ -86,7 +83,7 @@ export default function ProductStyleListEdit2() {
                             } name='costPrice' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={1000}
+                                    // defaultValue={1000}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={costPriceOnChange}
@@ -141,10 +138,11 @@ export default function ProductStyleListEdit2() {
                         wrapperCol={{
                             span: 5,
                         }}
+                        initialValue={oldStore.needTax}
                         name="needTaxes">
                         <Checkbox onChange={(e)=>{
-                            newStore.setInventoryTracking(e.target.value)
-                        }}>开启库存追踪</Checkbox>
+                            oldStore.setNeedTax(e.target.value)
+                        }}>需要收取税费</Checkbox>
                     </Form.Item>
                 </Form>
             </Card>
