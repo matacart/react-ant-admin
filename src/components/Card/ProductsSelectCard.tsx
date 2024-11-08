@@ -56,9 +56,9 @@ const tagRender: TagRender = (props) => {
     );
 };
 export default function ProductsSelectCard() {
-    const resultList=useState([]);
+
     return (
-        <>
+        <>  
             <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
                     display: 'flex',
@@ -72,7 +72,6 @@ export default function ProductsSelectCard() {
                         flexWrap: 'wrap',
                         gap: '12px 12px',
                     }}>
-                        {/* 1 */}
                         <Space.Compact>
                             <Select
                                 size='large'
@@ -96,28 +95,28 @@ export default function ProductsSelectCard() {
                         </Space.Compact>
                         {/* 2 */}
                         <Select
-    size='large'
-    showSearch
-    style={{
-        minWidth: 140,
-    }}
-    placeholder="商品分类"
-    optionFilterProp="children"
-    dropdownMatchSelectWidth={false}
-    dropdownStyle={{ width: 190 }}
-    filterOption={(input, option) => (option?.label ?? '').includes(input)}
-    filterSort={(optionA, optionB) =>
-        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-    }
-    options={[
-        {
-            value: '1',
-            label: '无分类商品',
-            style: { width: '100%' }, // 设置 option 宽度
-        },
-       
-    ]}
-/>
+                            size='large'
+                            showSearch
+                            style={{
+                                minWidth: 140,
+                            }}
+                            placeholder="商品分类"
+                            optionFilterProp="children"
+                            dropdownMatchSelectWidth={false}
+                            dropdownStyle={{ width: 190 }}
+                            filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                            filterSort={(optionA, optionB) =>
+                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                            }
+                            options={[
+                                {
+                                    value: '1',
+                                    label: '无分类商品',
+                                    style: { width: '100%' }, // 设置 option 宽度
+                                },
+                            
+                            ]}
+                        />
                         {/* 3 */}
                         <Select
                             size="large"
@@ -165,8 +164,7 @@ export default function ProductsSelectCard() {
                     </div>
                 </div>
             </div>
-            <ProductListAjax/>
-
+            <ProductListAjax />
         </>
     );
 }

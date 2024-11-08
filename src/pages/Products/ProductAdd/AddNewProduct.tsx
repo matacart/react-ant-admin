@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import CustomsDeclaration from './CustomsDeclaration';
@@ -23,7 +22,7 @@ import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 
 function AddNewProduct(){
     const [styleId, setStyleId] = useState('');
-    newStore.desc = "";
+    // newStore.desc = "";
   // 实现 onSecondInputChange 函数
   const handleSecondInputChange = (value: string) => {
     setStyleId(value);

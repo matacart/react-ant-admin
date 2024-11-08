@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Divider, Form, Cascader, Input, Select, Space, Button, Dropdown, Tabs, Modal } from 'antd';
 import './index.scss';
 import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone, DownOutlined } from '@ant-design/icons';
@@ -7,10 +7,15 @@ import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
+import productStore from '@/store/productStore';
+import { autorun } from 'mobx';
 
 const TabLabel = styled.div`
     font-size: 16px;
 `;
+
+
+
 
 const aItems: MenuProps['items'] = [
     {
@@ -37,7 +42,22 @@ const aItems: MenuProps['items'] = [
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
-const initialItems = [
+
+
+type PositionType = 'left' | 'right';
+
+const OperationsSlot: Record<PositionType, React.ReactNode> = {
+  left: <Button className="tabs-extra-demo-button">Left Extra Action</Button>,
+  right: <Button>Right Extra Action</Button>,
+};
+
+
+
+const App: React.FC = () => {
+
+  let [language,setLanguage] = useState(2);
+
+  const initialItems = [
     {
       label: <TabLabel>全部</TabLabel>,
       children: (<ProductsSelectCard />),
@@ -46,30 +66,61 @@ const initialItems = [
     },
     {
       label: <TabLabel>已上架</TabLabel>,
-      children:  (<ProductsSelectCard />),
+      children:  (<ProductsSelectCard/>),
       key: '2',
       closable: false,
     },
     {
       label: <TabLabel>已下架</TabLabel>,
-      children:  (<ProductsSelectCard />),
+      children:  (<ProductsSelectCard/>),
       key: '3',
       closable: false,
     },
     {
       label: <TabLabel>已存档</TabLabel>,
-      children:  (<ProductsSelectCard />),
+      children:  (<ProductsSelectCard/>),
       key: '4',
       closable: false,
     }
-];
+  ];
 
-const App: React.FC = () => {
   const [activeKey, setActiveKey] = useState(initialItems[0].key);
   const [items, setItems] = useState(initialItems);
   const newTabIndex = useRef(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newTabName, setNewTabName] = useState('');
+
+  const switchLanguages = (value: number) => {
+    productStore.setLanguage(value);
+    console.log(productStore.language);
+  };
+
+  autorun(() => {
+    console.log(productStore.language)
+  })
+
+
+  const operations = <Select
+    defaultValue={2}
+    style={{ width: 120 }}
+    onChange={switchLanguages}
+    options={[
+      { value: 1, label: '简体中文' },
+      { value: 2, label: 'English' },
+      { value: 3, label: '日本語' },
+      { value: 4, label: '한글' },
+    ]}
+  />;
+  const [position, setPosition] = useState<PositionType[]>(['left', 'right']);
+  const slot = useMemo(() => {
+    if (position.length === 0) {
+      return null;
+    }
+    return position.reduce(
+      (acc, direction) => ({ ...acc, [direction]: OperationsSlot[direction] }),
+      {},
+    );
+  }, [position]);
 
   const onChange = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
@@ -159,6 +210,7 @@ const App: React.FC = () => {
             activeKey={activeKey}
             onEdit={onEdit}
             items={items}
+            tabBarExtraContent={operations}
           />
         </div>
       </div>

@@ -2,7 +2,6 @@ import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
-import { type } from './../../Test/types';
 
 
 // const onChangeSKU = (value) => {
@@ -56,6 +55,16 @@ export default function StockCard() {
                                     type='number'
                                     onChange={(e)=>{
                                         newStore.setInventory(Number(e.target.value))
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                            <Form.Item label="模型"
+                                name='model'>
+                                <Input
+                                    onChange={(e)=>{
+                                        newStore.setModel(e.target.value)
                                     }}
                                 />
                             </Form.Item>

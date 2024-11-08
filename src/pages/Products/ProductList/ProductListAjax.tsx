@@ -1,15 +1,16 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { result } from 'lodash';
-import axios from 'axios';
 import { deleteProduct, getProductList } from '@/services/y2/api';
-import { Response } from 'express';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
-import { state } from 'config/myConfig';
+import productStore from '@/store/productStore';
+import { observer } from 'mobx-react';
+
+
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -50,12 +51,15 @@ const getRandomuserParams = (params: TableParams) => ({
   ...params,
 });
 
-
-
-
-export default function ProductListAjax() {
+function ProductListAjax() {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+
+  console.log(productStore.language);
+
+  // 
+  // let [lan,setLan] = useState();
+
 
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -213,18 +217,24 @@ export default function ProductListAjax() {
       .then((res) => {
         let newData:DataType[] = [];
         res.data?.forEach((item:any)=>{
-          newData.push({
-            key:item.id,
-            imgUrl: item.product_image,
-            price: item.price,
-            name: item.title,
-            state: item.status==1,
-            inventory: item.quantity,
-            productid:item.id,  //产品id
-            languages_id:item.languages_id
-          })
+          // if(parseInt(item.languages_id) == productStore.language){
+            newData.push({
+              key:item.id,
+              imgUrl: item.product_image,
+              price: item.price,
+              name: item.title,
+              state: item.status==1,
+              inventory: item.quantity,
+              productid:item.id,  //产品id
+              languages_id:item.languages_id
+            })
+          // }
         })
-        setData(newData);
+
+        console.log(newData);
+        console.log(productStore.language);
+        // console.log(parseInt(newData[0].languages_id));
+        // setData(newData);
         setLoading(false)
         setTableParams({
           ...tableParams,
@@ -236,11 +246,15 @@ export default function ProductListAjax() {
           }
         });
       })
-
   };
 
   useEffect(() => {
     fetchData();
+    // console.log(productStore.language);
+
+     
+    console.log(productStore.language);
+    
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
@@ -344,6 +358,9 @@ export default function ProductListAjax() {
 
   );
 };
+
+
+export default observer(ProductListAjax);
 
 const Scoped = styled.div`
   .ant-table-tbody > tr > td {

@@ -207,8 +207,76 @@ export async function addProduct() {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+
+    // 
+    
+// "1362129239148"
+// inquiry_status
+// : 
+// "0"
+// is_best
+// : 
+// "0"
+// is_hot
+// : 
+// "0"
+// is_new
+// : 
+// "0"
+// is_share
+// : 
+// "0"
+// languages_id
+// : 
+// "2"
+// meta_description
+// : 
+// "日日日日日日日日日日"
+// meta_keyword
+// : 
+// ""
+// meta_title
+// : 
+// "啊啊啊啊啊啊啊啊啊"
+// minimum
+// : 
+// "1"
+// model
+// : 
+// "1111"
+// price
+// : 
+// "0.0000"
+// product_image
+// : 
+// ""
+// product_url
+// : 
+// ""
+// product_video
+// : 
+// ""
+// quantity
+// : 
+// "2147483647"
+// sales_count
+// : 
+// "0"
+// shipping
+// : 
+// "1"
+// sku
+// : 
+// "11133"
+// sort
+// : 
+// "3"
+// status
+// : 
+
+
     data: {
-      "model":newStore.title,
+      "model":newStore.model,
       "sku": newStore.SKU,
       "price": newStore.price,
       "specialprice": oldStore.specialprice,
@@ -265,8 +333,67 @@ export async function addProduct() {
       "product_video": '',  // 视频
       // 图片
       "additional_image": newStore.selectedImgList,
-      "languages_id": 1,
+      "languages_id": 2,
       "languages_name": "Chinese"
+      // "model":newStore.model,
+      // "sku": newStore.SKU,
+      // "price": newStore.price,
+      // "specialprice": oldStore.specialprice,
+      // "start_time":"",
+      // "end_time":"",
+      // "quantity": newStore.inventory,
+      // "sales_count":"",
+      // "minimum":"",
+      // "weight": newStore.weight,
+      // "weight_class_id": "",
+      // "title": newStore.title,
+      // "stock_status_id":"",
+      // "subtract":"",
+      // "shipping":"",
+      // "is_best": 0,
+      // "is_new": 0,
+      // "is_hot": 0,
+      // "is_share":0,
+      // "sort" : 0,
+      // "product_url" : '',
+      // "meta_title" : '',
+      // "meta_keyword" : '',
+      // "meta_description" : '',
+      // "inquiry_status" : 0,
+      // "ad_waf_status" : 1,
+      // "ad_product_id" : 0,
+      // "ad_product_url" : '',
+      // "group_id" : 0,
+      // "divided_status" : 0,
+      // "divided_country" : '',
+      // "divided_url" : '',
+      // // 摘要
+      // "content": newStore.content,
+      // // 内容
+      // "content1": newStore.content1,
+      // "originPrice":newStore.originPrice,
+      // "costPrice":newStore.costPrice,
+      // "needTax":newStore.needTax?"1":"0",
+      // "ISBN": newStore.ISBN,
+      // "inventory_tracking":newStore.inventoryTracking?"1":"0",
+      // "continueSell":newStore.continueSell?"1":"0",
+      // // 
+      // "notion":newStore.notion,  // 0 1 2 3 4 5
+      // "HSCode":newStore.HSCode,
+      // // 
+      // // 商品状态
+      // "status": newStore.onPutProduct ? "1" : "0",
+      // "SPU": newStore.SPU,
+      // "manufactuer":newStore.manufactuer,
+      // "tag": newStore.tag,
+      // "categoryIds": newStore.productType,
+      // // 封面
+      // "product_image": newStore.selectedImgList[0] ,
+      // "product_video": '',  // 视频
+      // // 图片
+      // "additional_image": newStore.selectedImgList,
+      // "languages_id": 1,
+      // "languages_name": "Chinese"
     }
   })
 }

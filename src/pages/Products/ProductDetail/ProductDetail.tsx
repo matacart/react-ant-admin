@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Button, Divider,message, Select,SelectProps, Spin, UploadFile } from 'antd';
+import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Divider,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
 import styled from 'styled-components';
 // 引入
 import { useState } from 'react';
@@ -18,7 +18,6 @@ import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
 import { history } from '@umijs/max';
 import oldStore from '@/store/oldStore';
-import product from 'mock/product';
 // 信息
 interface ProductDetail {
     title:string;
@@ -39,22 +38,40 @@ interface ProductDetail {
     // tag:string;
 }
 
-
-
 // 
 function productDel(id:any){
     console.log(id)
     return deleteProduct(id).then(res=>{
-        if(res.code==0)message.success('okkk');
+        if(res.code==0)message.success('删除成功');
         else message.error('noooo');
         history.push('/products/index')
     })
 }
 
+
 function ProductDetail() {
     // 获取商品详情
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
     const product_i:any = history.location.state;
+
+
+
+    // 提示
+    const [modal, contextHolder] = Modal.useModal();
+    const confirm = () => {
+        modal.confirm({
+            title: "确定删除吗？",
+            icon: <ExclamationCircleOutlined />,
+            content: '删除后将不能找回请谨慎操作！',
+            okText: '确认',
+            cancelText: '取消',
+            onOk(){
+                productDel(oldStore.id)
+            }
+        });
+    };
+
+  
     const fetchProductDetail = async () => {
         try {
             console.log(product_i.productId)
@@ -205,7 +222,8 @@ function ProductDetail() {
                         </div>
                         <Divider />
                         <div className='mc-footer'>
-                            <Button onClick={()=>productDel(oldStore.id)}>删除该商品</Button>
+                            <Button type="primary" danger onClick={confirm}>将商品删除</Button>
+                            {contextHolder}
                             <Button style={{marginLeft:-900}}>将商品存档</Button>
                             <Button type='primary' onClick={() => {
                             //     let temp:any = [];

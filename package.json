@@ -61,6 +61,7 @@
     "fs-extra": "^11.2.0",
     "i18n-replace": "^0.1.0",
     "mobx": "^6.12.3",
+    "mobx-react": "^9.1.1",
     "mobx-react-lite": "^4.0.7",
     "omit.js": "^2.0.2",
     "querystring": "^0.2.1",

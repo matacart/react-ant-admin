@@ -8,7 +8,7 @@ import { action, makeObservable, observable } from "mobx";
 
  class newStore {
   // 商品信息
-
+  @observable model = '';
   // 商品标题 
   @observable title = '';
   // 商品摘要
@@ -21,6 +21,12 @@ import { action, makeObservable, observable } from "mobx";
   @action setTitle = (title: string) => {
     this.title = title;
   }
+
+  @action setModel = (model: string) => {
+    this.model = model;
+  }
+
+
 
   // 操作选中的图片数组
   @action getSelectedImgList = () => {
@@ -177,10 +183,10 @@ import { action, makeObservable, observable } from "mobx";
 
 }
 
-
+export default new newStore();
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default new newStore()
+// export default new newStore(import { model_1 } from 'C:/Users/Administrator/Desktop/react-ant-admin-main/src/.umi-production/plugin-initialState/@@initialState';
 
 
 
