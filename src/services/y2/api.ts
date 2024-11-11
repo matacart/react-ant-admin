@@ -279,7 +279,7 @@ export async function addProduct() {
       "model":newStore.model,
       "sku": newStore.SKU,
       "price": newStore.price,
-      "specialprice": oldStore.specialprice,
+      "specialprice": "",
       "start_time":"",
       "end_time":"",
       "quantity": newStore.inventory,
@@ -332,9 +332,9 @@ export async function addProduct() {
       "product_image": newStore.selectedImgList[0] ,
       "product_video": '',  // 视频
       // 图片
-      "additional_image": newStore.selectedImgList,
-      "languages_id": 2,
-      "languages_name": "Chinese"
+      "additional_image": JSON.stringify(newStore.selectedImgList),
+      "languages_id": newStore.language,
+      // "languages_name": "Chinese"
       // "model":newStore.model,
       // "sku": newStore.SKU,
       // "price": newStore.price,

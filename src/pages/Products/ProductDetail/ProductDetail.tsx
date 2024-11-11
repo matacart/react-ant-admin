@@ -81,7 +81,7 @@ function ProductDetail() {
                 console.log(response.data)
                 setProductDetail(response.data);
                 console.log(response.data)
-                oldStore.title=response.data.model
+                oldStore.title=response.data.title
                 oldStore.content=response.data.content
                 oldStore.content1=response.data.content1
                 oldStore.price=response.data.price
@@ -96,7 +96,8 @@ function ProductDetail() {
                 oldStore.tag=response.data.tag
                 oldStore.productType=response.data.product_type
                 // oldStore.setSelectedImgList(
-                oldStore.setSelectedImgList(response.data.additional_image)
+                oldStore.setSelectedImgList(JSON.parse(response.data.additional_image))
+                console.log(JSON.parse(response.data.additional_image))
                 // 税费
                 oldStore.setNeedTax(response.data.needTax == 0 ? false : true)
                 // 
@@ -212,8 +213,7 @@ function ProductDetail() {
                                 {/* {styleId && <ProductStyleListEdit styleId={styleId} />} */}
                             </div>
                             <div className='mc-layout-extra'>
-                                {productDetail && <ProductSettingsEdit/>}
-                            
+                            {productDetail && <ProductSettingsEdit/>}
                             <TradingRecords/>
                             <SEOEdit/>
                             <ThirdPartyInfoEdit/>

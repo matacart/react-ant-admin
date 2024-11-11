@@ -116,6 +116,10 @@ export default function ProductImgCard() {
     // },
   ]);
 
+  let imageMap = new Map();
+  // 图片集合
+
+  // 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -124,13 +128,51 @@ export default function ProductImgCard() {
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
-
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>{
-    console.log(newFileList);
-    setFileList(newFileList);
-    newStore.setSelectedImgList(newFileList);
-  }
-
+  // 上传
+  // const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>{
+  //   console.log(newFileList);
+  //   // console.log(file);
+  //   // console.log(newFileList);
+  //   // formData.append('file', fileList);
+  //   if(newFileList.length>0){
+  //     for (let i = 0; i < newFileList.length; i++) {
+  //       let formData = new FormData()
+  //       formData.append(i.toString(), newFileList[i].originFileObj as FileType);
+  //       axios.post('/api/ApiAppstore/doUploadPic', formData).then((req: any) => {
+  //         console.log(req)
+  //       })
+  //     }
+  //   }
+  //   setFileList(newFileList); 
+  //   // console.log(formData.get("file"))
+  //   newStore.setSelectedImgList(newFileList);
+  // }
+  const handleChange = async (info: any) => {
+    // let fileListUrl = [];
+    console.log(info.file)
+    if(info.file.status == "uploading"){
+      // 上传
+      let formData = new FormData()
+      formData.append("1", info.file.originFileObj as FileType)
+      axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
+        if(req.data.code == 0){
+          // uid --- src  
+          message.success("上传成功", 1)
+          newStore.temp.set(info.file.uid, req.data.data.src)
+        }else{
+          message.error("上传失败", 1)
+        }
+      })
+    }else if(info.file.status == "removed"){
+      newStore.temp.delete(info.file.uid)
+      // 移除
+    }else if(info.file.status == "done"){
+      // 失败
+    }else{
+      // 其它
+    }
+    setFileList(info.fileList);
+  };
 
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
@@ -139,36 +181,36 @@ export default function ProductImgCard() {
     </button>
   );
 
-  const props: UploadProps = {
-    name: 'file',
-    listType: "picture-card",
-    fileList: fileList,
-    showUploadList: false,
-    multiple: true,
-    action: '/api/ApiAppstore/doUploadPic',
-    onChange(info) {
-      const { status, response } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-        newStore.addSelectedImgList(response?.fileUrl)
-        console.log('llllllllllllllll' +
-          '    id:' +
-          response?.fileId,
-          '    name:' + response?.fileName,
-          '     url:' + response?.fileUrl);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
+  // const props: UploadProps = {
+  //   name: 'file',
+  //   listType: "picture-card",
+  //   fileList: fileList,
+  //   showUploadList: false,
+  //   multiple: true,
+  //   action: '/api/ApiAppstore/doUploadPic',
+  //   onChange(info) {
+  //     const { status, response } = info.file;
+  //     if (status !== 'uploading') {
+  //       console.log(info.file, info.fileList);
+  //     }
+  //     if (status === 'done') {
+  //       message.success(`${info.file.name} file uploaded successfully.`);
+  //       newStore.addSelectedImgList(response?.fileUrl)
+  //       console.log('llllllllllllllll' +
+  //         '    id:' +
+  //         response?.fileId,
+  //         '    name:' + response?.fileName,
+  //         '     url:' + response?.fileUrl);
+  //     } else if (status === 'error') {
+  //       message.error(`${info.file.name} file upload failed.`);
+  //     }
 
 
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files);
-    },
-  };
+  //   },
+  //   onDrop(e) {
+  //     console.log('Dropped files', e.dataTransfer.files);
+  //   },
+  // };
 
 
 
@@ -218,7 +260,7 @@ export default function ProductImgCard() {
             })
           } */}
           <Upload
-            action="/appstore/ApiAppstore/doUploadPic"
+            action="#"
             listType="picture-card"
             multiple={true}
             fileList={fileList}

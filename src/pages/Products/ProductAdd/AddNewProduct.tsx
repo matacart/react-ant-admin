@@ -20,14 +20,16 @@ import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 
 
 
+
+
 function AddNewProduct(){
     const [styleId, setStyleId] = useState('');
     // newStore.desc = "";
-  // 实现 onSecondInputChange 函数
-  const handleSecondInputChange = (value: string) => {
-    setStyleId(value);
-    // 初始化参数
-};
+    // 实现 onSecondInputChange 函数
+    const handleSecondInputChange = (value: string) => {
+        setStyleId(value);
+        // 初始化参数
+    };
     return (
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -66,13 +68,17 @@ function AddNewProduct(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={()=>{
                             // console.log(styleId)
-                            // 
-                            console.log(newStore)
+                            newStore.setSelectedImgList(Array.from(newStore.temp.values()))
+                            // console.log(JSON.stringify(Array.from(newStore.temp.values())))
                             newStore.submitAddProduct()
                                 .then(res=>{
-                                    if(res.code==0)message.success('okkk');
-                                    else message.error('noooo');
-                                    history.push('/products/index')
+                                    if(res.code==0){
+                                        message.success('创建成功')
+                                        newStore.reset()
+                                        history.push('/products/index')
+                                    }else{
+                                        message.error('noooo');
+                                    }
                             });
                         }}>创建</Button>
                     </div>

@@ -11,7 +11,7 @@ type EditorInstance = any; // 替换为实际的类型
   
 export default function App(prop: any){  
   const editorRef = useRef<EditorInstance>(null); 
-  console.log(prop.prop)
+  // console.log(prop.prop)
   // 初始化回调函数
   const initData = () => {
     if(oldStore.content1){
@@ -37,6 +37,7 @@ export default function App(prop: any){
           menubar: false,  // 显示菜单栏
           // 工具栏是否换行
           toolbar_mode: 'wrap',
+          branding: false,
           // 插件
           plugins: [
             'advlist',

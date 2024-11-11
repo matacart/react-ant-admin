@@ -7,14 +7,19 @@ import { action, makeObservable, observable } from "mobx";
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
 
  class newStore {
-  // 商品信息
+  // 模型唯一
   @observable model = '';
+  // 语言
+  @observable language = '2';
   // 商品标题 
   @observable title = '';
   // 商品摘要
   @observable content = '';
   // 商品描述
   @observable content1 = '';
+
+  @observable temp = new Map();
+
   // 商品图片/视频
   @observable selectedImgList: UploadFile[] = [];
 
@@ -25,8 +30,9 @@ import { action, makeObservable, observable } from "mobx";
   @action setModel = (model: string) => {
     this.model = model;
   }
-
-
+  @action setLanguage = (language: string) => {
+    this.language = language;
+  }
 
   // 操作选中的图片数组
   @action getSelectedImgList = () => {
@@ -179,6 +185,34 @@ import { action, makeObservable, observable } from "mobx";
 
   @action submitAddProduct() {
     return addProduct()
+  }
+
+
+  // 重置状态
+  reset(){
+    this.title = '';
+    this.content = '';
+    this.content1 = '';
+    this.selectedImgList = [];
+    this.price = 0;
+    this.originPrice = 0;
+    this.costPrice = 0;
+    this.needTax = false;
+    this.SKU = '';
+    this.ISBN = '';
+    this.inventory = 0;
+    this.inventoryTracking = false;
+    this.continueSell = false;
+    this.notion = '';
+    this.HSCode = '';
+    this.multipleStyles = false;
+    this.onPutProduct = true;
+    this.SPU = '';
+    this.weight = '';
+    this.manufactuer = '';
+    this.tag = '';
+    this.productType = '';
+    this.temp.clear();
   }
 
 }

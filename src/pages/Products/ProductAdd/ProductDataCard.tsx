@@ -1,16 +1,49 @@
-import { Card, Form, Input } from "antd";
+import { Card, Form, Input, Select } from "antd";
 import newStore from '@/store/newStore'
 import { ConsoleSqlOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import TinymceEditor from "@/components/MCE/TinymceEditor";
-import { context } from './../../../.umi-production/core/helmetContext';
+import { useEffect, useState } from "react";
+import { getLanguages } from "@/services/y2/api";
 const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
 };
 const {TextArea} = Input
 function ProductDataCard() {
+    const [language, setLanguage] = useState("2");
+    const [languageData, setLanguageData] = useState([]);
+    // 语言选择
+    const languageChange= (value: string) => {
+        // setLanguage(value)
+        newStore.setLanguage(value)
+    };
+
+    useEffect(()=>{
+        let tempList = [];
+        if(languageData.length==0){
+            getLanguages().then(res=>{
+                tempList = res.data.map((item:any)=>{
+                    return {
+                        value: item.id,
+                        label: item.name
+                    }
+                })
+                setLanguageData(tempList)
+            })
+        }
+    })
     return (
-        <Card title="商品信息" className='product-data-card'>
+        <Card title="商品信息" className='product-data-card' extra={
+            <Select
+                // size='large'
+                defaultValue="English"
+                style={{ width: 100 }}
+                listHeight={200}
+                onChange={languageChange}
+                options={languageData}
+            />
+        }>
+            
             <Form layout='vertical' className='product-form'>
                 <Form.Item
                 name="title"
@@ -25,6 +58,7 @@ function ProductDataCard() {
                         newStore.setTitle(e.target.value);
                     }}
                     placeholder="例如：冬季，毛衣" />
+                    {/* 5 */}
                 </Form.Item>
                 <Form.Item 
                 name="resume"
