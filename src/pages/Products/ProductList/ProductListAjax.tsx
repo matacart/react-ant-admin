@@ -1,15 +1,14 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { result } from 'lodash';
+import { result, set } from 'lodash';
 import { deleteProduct, getProductList } from '@/services/y2/api';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import productStore from '@/store/productStore';
 import { observer } from 'mobx-react';
-
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -51,15 +50,9 @@ const getRandomuserParams = (params: TableParams) => ({
   ...params,
 });
 
-function ProductListAjax() {
+function ProductListAjax(selectProps:any) {
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
-  console.log(productStore.language);
-
-  // 
-  // let [lan,setLan] = useState();
-
 
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -194,47 +187,42 @@ function ProductListAjax() {
 
   const fetchData = () => {
     setLoading(true);
-    fetch(`/api/product/query/${qs.stringify(getRandomuserParams(tableParams))}`)
-    fetch(`/api/product/query`)
-      .then((res) => res.json())
-      .then(({ results }) => {
-        setData(results);
-        setLoading(false);
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: 200,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
-          },
-        });
-        console.log(result);
-      });
+    // fetch(`/api/product/query/${qs.stringify(getRandomuserParams(tableParams))}`)
+    // fetch(`/api/product/query`)
+    //   .then((res) => res.json())
+    //   .then(({ results }) => {
+    //     setData(results);
+    //     setLoading(false);
+    //     setTableParams({
+    //       ...tableParams,
+    //       pagination: {
+    //         ...tableParams.pagination,
+    //         total: 200,
+    //         // 200 is mock data, you should read it from server
+    //         // total: data.totalCount,
+    //       },
+    //     });
+    //     console.log(result);
+    //   });
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    getProductList(page,limit)
+    getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language)
       .then((res) => {
         let newData:DataType[] = [];
         res.data?.forEach((item:any)=>{
-          // if(parseInt(item.languages_id) == productStore.language){
-            newData.push({
-              key:item.id,
-              imgUrl: item.product_image,
-              price: item.price,
-              name: item.title,
-              state: item.status==1,
-              inventory: item.quantity,
-              productid:item.id,  //产品id
-              languages_id:item.languages_id
-            })
-          // }
+          newData.push({
+            key:item.id,
+            imgUrl: item.product_image,
+            price: item.price,
+            name: item.title,
+            state: item.status==1,
+            inventory: item.quantity,
+            productid:item.id,  //产品id
+            languages_id:item.languages_id
+          })
         })
-
-        console.log(newData);
-        console.log(productStore.language);
-        // console.log(parseInt(newData[0].languages_id));
-        // setData(newData);
+        // console.log(newData);
+        setData(newData);
         setLoading(false)
         setTableParams({
           ...tableParams,
@@ -247,15 +235,15 @@ function ProductListAjax() {
         });
       })
   };
-
+  // const ref = useRef({language,title,model });
+  const [a, setA] = useState("");
+  const [b, setB] = useState("");
+  const [c, setC] = useState("");
+  const ref = useRef({ a, b, c});
   useEffect(() => {
+    console.log(selectProps.selectProps);
     fetchData();
-    // console.log(productStore.language);
-
-     
-    console.log(productStore.language);
-    
-  }, [tableParams.pagination?.current, tableParams.pagination?.pageSize]);
+  }, [tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -264,9 +252,9 @@ function ProductListAjax() {
       ...sorter,
     });
     // `dataSource` is useless since `pageSize` changed
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
-    }
+    // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+    //   setData([]);
+    // }
   };
 
   const handleOrderClick = (productId: string,languages_id:string) => {
@@ -360,14 +348,13 @@ function ProductListAjax() {
 };
 
 
-export default observer(ProductListAjax);
+export default ProductListAjax;
 
 const Scoped = styled.div`
   .ant-table-tbody > tr > td {
     padding: 10px; 
   }
 `
-
 const ButtonIcon = styled.div`
 .wrap{
     height:36px;

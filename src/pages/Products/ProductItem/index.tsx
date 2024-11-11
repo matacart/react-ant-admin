@@ -1,21 +1,20 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Divider, Form, Cascader, Input, Select, Space, Button, Dropdown, Tabs, Modal } from 'antd';
 import './index.scss';
 import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone, DownOutlined } from '@ant-design/icons';
 import { ImportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
-import styled from 'styled-components';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import productStore from '@/store/productStore';
 import { autorun } from 'mobx';
+import styled from 'styled-components';
+import { get } from 'lodash';
+import { getLanguages } from '@/services/y2/api';
 
 const TabLabel = styled.div`
     font-size: 16px;
 `;
-
-
-
 
 const aItems: MenuProps['items'] = [
     {
@@ -46,21 +45,20 @@ type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
 type PositionType = 'left' | 'right';
 
-const OperationsSlot: Record<PositionType, React.ReactNode> = {
-  left: <Button className="tabs-extra-demo-button">Left Extra Action</Button>,
-  right: <Button>Right Extra Action</Button>,
-};
+// const OperationsSlot: Record<PositionType, React.ReactNode> = {
+//   left: <Button className="tabs-extra-demo-button">Left Extra Action</Button>,
+//   right: <Button>Right Extra Action</Button>,
+// };
 
 
 
 const App: React.FC = () => {
 
-  let [language,setLanguage] = useState(2);
-
+  // const [language,setLanguage] = useState(2);
   const initialItems = [
     {
       label: <TabLabel>全部</TabLabel>,
-      children: (<ProductsSelectCard />),
+      children: (<ProductsSelectCard/>),
       key: '1',
       closable: false,
     },
@@ -90,41 +88,39 @@ const App: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newTabName, setNewTabName] = useState('');
 
-  const switchLanguages = (value: number) => {
-    productStore.setLanguage(value);
-    console.log(productStore.language);
-  };
-
-  autorun(() => {
-    console.log(productStore.language)
-  })
-
-
-  const operations = <Select
-    defaultValue={2}
-    style={{ width: 120 }}
-    onChange={switchLanguages}
-    options={[
-      { value: 1, label: '简体中文' },
-      { value: 2, label: 'English' },
-      { value: 3, label: '日本語' },
-      { value: 4, label: '한글' },
-    ]}
-  />;
-  const [position, setPosition] = useState<PositionType[]>(['left', 'right']);
-  const slot = useMemo(() => {
-    if (position.length === 0) {
-      return null;
-    }
-    return position.reduce(
-      (acc, direction) => ({ ...acc, [direction]: OperationsSlot[direction] }),
-      {},
-    );
-  }, [position]);
-
   const onChange = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
   };
+
+  // const switchLanguages = (value: number) => {
+  //   // productStore.setLanguage(value);
+  //   // setLanguage(value);
+  //   // console.log(productStore.language);
+  // };
+  // let [languagesData,setlanguagesData] = useState([]);
+  // const operations = <Select
+  //   defaultValue={2}
+  //   style={{ width: 120 }}
+  //   onChange={switchLanguages}
+  //   options={languagesData}
+  // />;
+
+  
+
+  
+  
+  // const [position, setPosition] = useState<PositionType[]>(['left', 'right']);
+  // const slot = useMemo(() => {
+  //   if (position.length === 0) {
+  //     return null;
+  //   }
+  //   return position.reduce(
+  //     (acc, direction) => ({ ...acc, [direction]: OperationsSlot[direction] }),
+  //     {},
+  //   );
+  // }, [position]);
+
+  
 
   const add = () => {
     setIsModalVisible(true);
@@ -182,6 +178,22 @@ const App: React.FC = () => {
     }
   };
 
+  // useEffect(()=>{
+  //   let temp:any = []
+    
+  //   getLanguages().then((res)=>{
+  //     // console.log(res.data);
+  //     res.data.forEach((item:any)=>{
+  //       temp.push({
+  //         value: item.id,
+  //         label: item.name
+  //       })
+  //       })
+  //     })
+  //     console.log(temp);
+  //     // setlanguagesData(temp)
+  // }]);
+
   return (
     <div className='create-warp-flex' style={{ width: "100%" }}>
       <div className="create-warp">
@@ -210,10 +222,13 @@ const App: React.FC = () => {
             activeKey={activeKey}
             onEdit={onEdit}
             items={items}
-            tabBarExtraContent={operations}
+            // tabBarExtraContent={operations}
           />
         </div>
       </div>
+      {/* <div style={{display:"none"}}>
+        <ProductsSelectCard  lang={language}></ProductsSelectCard>
+      </div> */}
 
       {/* Modal for adding new tab */}
       <Modal
@@ -232,6 +247,7 @@ const App: React.FC = () => {
 </Modal>
     </div>
   );
-};
+}
 
 export default App;
+

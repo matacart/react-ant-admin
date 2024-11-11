@@ -9,11 +9,6 @@ import { result } from 'lodash';
 import { useIntl } from '@umijs/max';
 
 
-
-
-
-
-
 // 定义一个函数来高亮搜索词  
 function highlightSearchTerm(text: string, term: string) {
     // 使用正则表达式来匹配搜索词，并替换为带有<mark>标签的文本
@@ -68,23 +63,23 @@ export default function SelectDomain() {
     }
 
 
-    // useEffect(() => {
-    //     getDomainList().then((res) => {
-    //         console.log(res)
-    //         res?.data?.forEach((item: any, index: any) => {
-    //             domainList.push({
-    //                 id: item.id,
-    //                 domainName: item.domain_name,
-    //                 secondDomain: item.second_domain,
-    //                 status: item.status,
-    //             })
-    //         })
-    //         setDomainListCurrent(domainList);
-    //         setDefaultDomain(res.data[0]?.id);
-    //     }).catch((error) => {
-    //         message.error('未获取到店铺列表，请检查网络')
-    //     })
-    // }, [])
+    useEffect(() => {
+        getDomainList().then((res) => {
+            console.log(res)
+            res?.data?.forEach((item: any, index: any) => {
+                domainList.push({
+                    id: item.id,
+                    domainName: item.domain_name,
+                    secondDomain: item.second_domain,
+                    status: item.status,
+                })
+            })
+            setDomainListCurrent(domainList);
+            setDefaultDomain(res.data[0]?.id);
+        }).catch((error) => {
+            message.error('未获取到店铺列表，请检查网络')
+        })
+    }, [])
 
     const content = (
         <ContentWrap>

@@ -7,7 +7,6 @@ import { getOrderList,updateOrderStatus,batchdelOrders,batchshipOrders} from '@/
 import { history, useIntl } from '@umijs/max';
 import Tag from 'antd/lib/tag';
 import styles from './OrdersListAjax.scss';
-import { stringify } from '@ant-design/pro-components';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;

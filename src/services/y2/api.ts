@@ -174,14 +174,14 @@ export async function deleteProduct(id: string) {
 }
 
 // 产品列表
-export async function getProductList(page: any, limit: any) {
-  return request(`/api/ApiStore/product_list?page=${page}&limit=${limit}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
+// export async function getProductList(page: any, limit: any) {
+//   return request(`/api/ApiStore/product_list?page=${page}&limit=${limit}`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   })
+// }
 // /api/ApiStore/product_detail?page=${page}&limit=${limit}  测试
 // 改用product_list
 // 根据id & languages_id获取产品详情
@@ -514,5 +514,40 @@ export async function getFileList(page: any, limit: any) {
     headers: {
       'Content-Type': 'application/json',
     },
+  })
+}
+
+// 语言
+export async function getLanguages() {
+  return await request(`/api/ApiAppstore/languages_select`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
+// 查询
+// page: 1
+// limit: 10
+// domain_id: 
+// languages_id: 
+// model: 1
+// title: 
+export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string) {
+  return await request(`/api/ApiStore/product_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    // languages_id: 1
+    data: {
+      // params
+      page:page,
+      limit:limit,
+      title:title,
+      model:model,
+      languages_id:languagesId
+    }
   })
 }

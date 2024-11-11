@@ -3,16 +3,19 @@ import type { SearchProps } from 'antd/es/input/Search';
 import type { SelectProps } from 'antd';
 import PriceRangeSelector from "../Select/PriceRangeSelector";
 import MoreSelect from "../Select/MoreSelect";
-import { result } from "lodash";
-import { useEffect, useState } from 'react';
-import Nothing from "../Info/Nothing";
-import type { TableColumnsType, TableProps } from 'antd'
-import axios from "axios";
+// import { useEffect, useState } from 'react';
 import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
+
+import { useEffect, useImperativeHandle, useState } from "react"
+import { getLanguages } from "@/services/y2/api";
+import { set } from "lodash";
 
 
 const { Search } = Input;
-const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+
+
+
+
 type TagRender = SelectProps['tagRender'];
 
 
@@ -37,6 +40,9 @@ const options: SelectProps['options'] = [
 
 
 
+
+
+
 const tagRender: TagRender = (props) => {
     const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -44,7 +50,8 @@ const tagRender: TagRender = (props) => {
         event.stopPropagation();
     };
     return (
-        <Tag
+        <div>
+            <Tag
             color={value}
             onMouseDown={onPreventMouseDown}
             closable={closable}
@@ -53,12 +60,75 @@ const tagRender: TagRender = (props) => {
         >
             {label}
         </Tag>
+        </div>
+        
     );
 };
-export default function ProductsSelectCard() {
 
+export default function ProductsSelectCard(){
+    const [language, setLanguage] = useState("2");
+    const [languageData, setLanguageData] = useState([]);
+    const [searchType,setSearchType] = useState(0);
+    // const [selectProps,setSelectProps] = useState({
+    //     languagesId: "2",
+    //     title: "",
+    //     model: ""
+    // })
+    const [title,setTitle] = useState("");
+    const [model,setModel] = useState("");
+
+    useEffect(()=>{
+        let tempList = [];
+        if(languageData.length==0){
+            getLanguages().then(res=>{
+                tempList = res.data.map((item:any)=>{
+                    return {
+                        value: item.id,
+                        label: item.name
+                    }
+                })
+                // console.log(tempList);
+                setLanguageData(tempList)
+            })
+        }
+    })
+    // 搜索 0 - 7
+    const selectSearch = (value: number) => {
+        // console.log(`selected ${value}`);
+        setSearchType(value)
+    };
+
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+        // console.log(info?.source, value);
+        switch(searchType){
+            case 0:
+                console.log("search")
+                break;
+            case 1:
+                console.log("search by name"+value)
+                setTitle(value)
+                break;
+            case 2:
+                console.log("search by spu")
+                break;
+            case 3:
+                console.log("search by sku")
+                break;
+            case 4:
+                console.log("search by manufacturer")
+                break;
+            case 5:
+                console.log("search by barcode")
+                break;
+        }
+    }
+
+    // 语言选择
+    const languageChange= (value: string) => {
+        setLanguage(value)
+    };
     return (
-        <>  
+        <> 
             <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
                     display: 'flex',
@@ -75,19 +145,20 @@ export default function ProductsSelectCard() {
                         <Space.Compact>
                             <Select
                                 size='large'
-                                defaultValue={'全部'}
-                                style={{ width: 100 }}
+                                defaultValue={0}
+                                style={{ width: 100}}
                                 listHeight={230}
                                 options={[
-                                    { value: '全部', label: '全部' },
-                                    { value: '商品名称', label: '商品名称' },
-                                    { value: '商品SPU', label: '商品SPU' },
-                                    { value: '商品SKU', label: '商品SKU' },
-                                    { value: '商品厂商', label: '商品厂商' },
-                                    { value: '商品条码', label: '商品条码' },
-                                    { value: '规格名称', label: '规格名称' },
-                                    { value: '商品描述', label: '商品描述' },
+                                    { value: 0, label: '全部' },
+                                    { value: 1, label: '商品名称' },
+                                    { value: 2, label: '商品SPU' },
+                                    { value: 3, label: '商品SKU' },
+                                    { value: 4, label: '商品厂商' },
+                                    { value: 5, label: '商品条码' },
+                                    { value: 6, label: '规格名称' },
+                                    { value: 7, label: '商品描述' },
                                 ]}
+                                onChange={selectSearch}
                             />
                             <Search
                                 size='large'
@@ -122,7 +193,7 @@ export default function ProductsSelectCard() {
                             size="large"
                             placeholder='标签'
                             mode="multiple"
-                            tagRender={tagRender}
+                            // tagRender={tagRender}
                             defaultValue={['gold', 'cyan']}
                             style={{
                                 minWidth: 140
@@ -139,6 +210,16 @@ export default function ProductsSelectCard() {
                             flexWrap: 'wrap',
                             gap: '12px 12px',
                         }}>
+
+                        {/*  */}
+                        <Select
+                            size='large'
+                            defaultValue="English"
+                            style={{ width: 100 }}
+                            listHeight={230}
+                            onChange={languageChange}
+                            options={languageData}
+                            />
                         {/* 5 */}
                         <MoreSelect />
                         {/* 6 */}
@@ -164,7 +245,14 @@ export default function ProductsSelectCard() {
                     </div>
                 </div>
             </div>
-            <ProductListAjax />
+            <ProductListAjax selectProps={{language:language,title:title,model:model}}  />
         </>
     );
 }
+// // 测试 ----- 
+// export default function ProductsSelectCard(lan:any){
+//     useEffect(()=>{
+//         console.log(lan)
+//     },[lan])
+//     return <div>{lan.lan}</div>
+// }
