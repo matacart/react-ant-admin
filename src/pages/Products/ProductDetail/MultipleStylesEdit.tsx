@@ -1,4 +1,6 @@
-import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal } from "antd";
+import { addProduct, addStyle, addStyleContent, addStyleName, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
+import oldStore from "@/store/oldStore";
+import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -104,22 +106,81 @@ const options = [
 interface MultipleStylesEditProps {
   onSecondInputChange?: (value: string) => void;
 }
+
+
+
 export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
   const [checked, setChecked] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [specifications, setSpecifications] = useState([{ id: 1 }]);
   const [values, setValues] = useState<string[]>([]);
+  const [values2, setValues2] = useState<string[]>([]);
   const [tags, setTags] = useState<string[][]>([]); // 用于存储每个规格组的标签
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
- // 收集所有输入值后调用父组件提供的回调函数
- useEffect(() => {
-  const allTagsFlat = tags.flat();
-  const styleId = allTagsFlat.join(',');
-  // console.log(props.onSecondInputChange)
-  // console.log(tags)
-  props.onSecondInputChange?.(styleId);
-}, [tags, props.onSecondInputChange]);
+  
+  // 
+  const [styleDate,setStyleDate] = useState<any>([]);
+  
+  // 收集所有输入值后调用父组件提供的回调函数
+  useEffect(() => {
+    const allTagsFlat = tags.flat();
+    const styleId = allTagsFlat.join(',');
+    props.onSecondInputChange?.(styleDate);
+    
+  }, [tags,styleDate]);
 
+// 添加款式
+// const addProductStyle = ()=>{
+//   if(values2.length>0){
+//     values2.forEach((v,index)=>{
+//       tags[index].forEach(async e=>{
+//         let styleNameId = 0;
+//         // 创建款式名称
+//         await addStyleName(oldStore.language,v).then(res=>{
+//           if(res.code==0){
+//               styleNameId = res.id
+//           }
+//         });
+//         // 创建款式内容
+//         if(styleNameId!==0){
+//           await addStyleContent(oldStore.language,e,styleNameId).then(async res=>{
+//             let styleContentId = 0;
+//             if(res.code==0){
+//                 styleContentId = res.id
+//             }else{
+//               // 查询所有款式
+//               await getProductStyleValueList().then(r=>{
+//                 r.data.forEach((style:any)=>{
+//                   if(style.option_values_name == e && style.option_id == styleNameId){
+//                     styleContentId = style.id
+//                   }
+//                 })
+//               })
+//             }
+//             // 通过产品id关联
+//             await addStyle(styleNameId,styleContentId,oldStore.productId).then((res:any)=>{
+//               // console.log(res)
+//               if(res.code==0){
+//                 message.success('产品款式添加成功');
+//               }else{
+//                 message.error('产品款式失败');
+//               }
+//             })
+//             // // 通过模型查找款式列表
+//             await getProductStyleList(oldStore.model,oldStore.language).then((res:any)=>{
+//               // console.log(res)
+//               if(res.code==0){
+//                 setStyleDate(res.data)
+//               }else{
+//                 console.log("获取款式列表失败")
+//               }
+//             })
+//           })
+//         }
+//       })
+//     })
+//   }
+// } 
   // 处理回车键事件
   function handleKeyDown(e: React.KeyboardEvent, index: number) {
     if (e.key === 'Enter') {
@@ -136,7 +197,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
 
         // 收集所有输入值后调用父组件提供的回调函数
         const allTagsFlat = newTags.flat();
-        props.onSecondInputChange?.(allTagsFlat.join('.'));
+        // props.onSecondInputChange?.(allTagsFlat.join('.'));
 
         // 确保光标在输入框末尾
         const inputRef = inputRefs.current[index];
@@ -155,94 +216,104 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
     const newTags = [...tags];
     newTags[index] = value;
     setTags(newTags);
-
-      // 更新所有标签的扁平化列表，并通知父组件
-  const allTagsFlat = newTags.flat();
-  const styleId = allTagsFlat.join(',');
-  props.onSecondInputChange?.(styleId);
+    // 更新所有标签的扁平化列表，并通知父组件
+    const allTagsFlat = newTags.flat();
+    const styleId = allTagsFlat.join(',');
+    // props.onSecondInputChange?.(styleId);
   }
+  // 
+ 
 
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 控制模态框的显示状态
-    // 为编辑图标添加点击事件处理器
-    const handleEditClick = () => {
-      setIsEditModalVisible(true);
-    };
-    // 模态框确认按钮点击事件处理器
-    const handleOk = () => {
-      setIsEditModalVisible(false);
-    };
-  
-    // 模态框取消按钮点击事件处理器
-    const handleCancel = () => {
-      setIsEditModalVisible(false);
-    };
+  // 为编辑图标添加点击事件处理器
+  const handleEditClick = () => {
+    setIsEditModalVisible(true);
+  };
+  // 模态框确认按钮点击事件处理器
+  const handleOk = () => {
+    setIsEditModalVisible(false);
+  };
+
+  // 模态框取消按钮点击事件处理器
+  const handleCancel = () => {
+    setIsEditModalVisible(false);
+  };
   return (
     <Scoped>
       <Card title="多款式">
-        <Checkbox value="1" onChange={handleCheckboxChange}>
+        {!checked &&<Checkbox value="1" onChange={handleCheckboxChange}>
           此商品有多个款式
         </Checkbox>
+        }
         {checked && (
           <>
-           {specifications.map((spec, index) => (
-  <div key={spec.id} className="select-input icon-container">
-    <AutoComplete
-      placeholder="请输入属性"
-      style={{ width: "160px", height: "44px" }}
-      options={options.map(opt => ({ value: opt.value, label: opt.label }))}
-      filterOption={(inputValue, option) =>
-        option.value.toUpperCase().includes(inputValue.toUpperCase())
-      }
-      onChange={(value) => handleChange(value, index)}
-    />
-      {errors[index] && (
-      <div className="error-message">
-        {errors[index]}
-      </div>
-    )}
-    <div className="custom-input">
-      <Select
-        mode="tags"
-        allowClear
-        style={{ width: "580px", height: "44px" }}
-        placeholder={tags[index]?.length > 0 ? "" : "请输入多个选项，使用回车键添加新标签"}
-        value={tags[index]}
-        onChange={(value) => handleTagChange(value, index)}
-        onSearch={(searchText) => handleSearch(searchText, index)}
-        onKeyDown={(e) => handleKeyDown(e, index)}
-        className="input-text-area"
-      />
-    </div>
-    {index === 0 && ( // 只在第一个规格组中显示复选框
-      <div className="hide-option-checkbox">
-        <Checkbox onChange={(e) => handleHideOptionCheckboxChange(e)}>购买时隐藏此选项</Checkbox>
-      </div>
-    )}
-       {/* 添加图标 */}
-       <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" onClick={handleEditClick}>
-                  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
-                    <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
-                  </svg>
-                </span>
-    <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={() => handleRemove(index)}>
-      <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20">
-        <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
-      </svg>
-    </span>
-  </div>
-))}
-            
-            {specifications.length < 5 && ( // 限制最多添加四个规格组
-              <Button
-                type="primary"
-                className="add-specification-button"
-                onClick={addSpecification}
-              >
-                添加商品规格
-              </Button>
+          {specifications.map((spec, index) => (
+          <div key={spec.id} className="select-input icon-container">
+            <AutoComplete
+              placeholder="请输入属性"
+              style={{ width: "160px", height: "44px" }}
+              options={options.map(opt => ({ value: opt.value, label: opt.label }))}
+              filterOption={(inputValue, option) =>
+                option.value.toUpperCase().includes(inputValue.toUpperCase())
+              }
+              onChange={(value) => handleChange(value, index)}
+            />
+              {errors[index] && (
+              <div className="error-message">
+                {errors[index]}
+              </div>
             )}
-          </>
+            <div className="custom-input">
+              <Select
+                mode="tags"
+                allowClear
+                style={{ width: "580px", height: "44px" }}
+                placeholder={tags[index]?.length > 0 ? "" : "请输入多个选项，使用回车键添加新标签"}
+                value={tags[index]}
+                onChange={(value) => handleTagChange(value, index)}
+                onSearch={(searchText) => handleSearch(searchText, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                className="input-text-area"
+              />
+            </div>
+            {/* {index === 0 && ( // 只在第一个规格组中显示复选框
+              <div className="hide-option-checkbox">
+                <Checkbox onChange={(e) => handleHideOptionCheckboxChange(e)}>购买时隐藏此选项</Checkbox>
+              </div>
+            )} */}
+            {/* 添加图标 */}
+            <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" onClick={handleEditClick}>
+              <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
+                <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
+              </svg>
+            </span>
+            <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={() => handleRemove(index)}>
+              <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20">
+                <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
+              </svg>
+            </span>
+          </div>
+          ))}
+          {specifications.length < 5 && ( // 限制最多添加四个规格组
+            <span style={{marginRight: "20px"}}>
+               <Button
+              type="primary"
+              className="add-specification-button"
+              onClick={addSpecification}
+            >
+              添加商品规格
+            </Button>
+            </span>
+          )}
+          <Button
+              type="primary"
+              className="add-specification-button"
+              onClick={addProductStyle}
+            >
+              添加款式
+            </Button>
+        </>
         )}
         
         {/* 模态框 */}
@@ -277,7 +348,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
             </tbody>
           </table>
         </Modal>
-              </Card>
+      </Card>
     </Scoped>
   );
 // 新增处理复选框变化的函数
@@ -292,10 +363,17 @@ function handleHideOptionCheckboxChange(e: { target: { checked: boolean; }; }) {
 
   // 处理第一个搜索框的选择变化
   function handleChange(value: string, index: number) {
+    
     const newValues = [...values];
     newValues[index] = value;
     setValues(newValues);
-  
+    
+    // 
+    const newValues2 = [...values2];
+    newValues2[index] = value;
+    setValues2(newValues2);
+
+    
     // 检查是否有重复值
     const hasDuplicate = new Set(newValues).size !== newValues.length;
     if (hasDuplicate) {
@@ -339,6 +417,12 @@ function handleHideOptionCheckboxChange(e: { target: { checked: boolean; }; }) {
 
     const newTags = tags.filter((_, i) => i !== index);
     setTags(newTags);
+
+
+    // 判断
+    if(newSpecifications.length === 0){
+      setChecked(false)
+    }
   }
 
   // 添加新的规格组

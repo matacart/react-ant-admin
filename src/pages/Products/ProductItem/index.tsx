@@ -6,11 +6,7 @@ import { ImportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
-import productStore from '@/store/productStore';
-import { autorun } from 'mobx';
 import styled from 'styled-components';
-import { get } from 'lodash';
-import { getLanguages } from '@/services/y2/api';
 
 const TabLabel = styled.div`
     font-size: 16px;
@@ -87,7 +83,6 @@ const App: React.FC = () => {
   const newTabIndex = useRef(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newTabName, setNewTabName] = useState('');
-
   const onChange = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
   };
@@ -232,19 +227,19 @@ const App: React.FC = () => {
 
       {/* Modal for adding new tab */}
       <Modal
-  title="创建选项卡"
-  visible={isModalVisible}
-  onOk={handleOk}
-  onCancel={handleCancel}
->
-  <Form.Item label="选项卡名称" style={{ marginBottom: '16px' }}>
-    <Input
-      value={newTabName}
-      onChange={(e) => setNewTabName(e.target.value)}
-      placeholder="请输入选项卡名称"
-    />
-  </Form.Item>
-</Modal>
+        title="创建选项卡"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Form.Item label="选项卡名称" style={{ marginBottom: '16px' }}>
+          <Input
+            value={newTabName}
+            onChange={(e) => setNewTabName(e.target.value)}
+            placeholder="请输入选项卡名称"
+          />
+        </Form.Item>
+      </Modal>
     </div>
   );
 }

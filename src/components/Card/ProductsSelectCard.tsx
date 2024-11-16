@@ -194,7 +194,7 @@ export default function ProductsSelectCard(){
                             placeholder='标签'
                             mode="multiple"
                             // tagRender={tagRender}
-                            defaultValue={['gold', 'cyan']}
+                            defaultValue={[]}
                             style={{
                                 minWidth: 140
                             }}

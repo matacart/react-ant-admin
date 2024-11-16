@@ -79,54 +79,16 @@ export default function ProductImgEdit() {
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+  // 初始化
   let temp:any = [];
-
-  // oldStore.selectedImgList.forEach((res)=>{
-  //   temp.push({
-  //     url:res
-  //   })
-  // })
-
   useEffect(()=>{
+    oldStore.selectedImgList.forEach((res)=>{
+      temp.push({
+        url:res
+      })
+    })
     setFileList(temp)
   },[])
-    // {
-    //   uid: '-1',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // }
-    // {
-    //   uid: '-2',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-3',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-4',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-xxx',
-    //   percent: 50,
-    //   name: 'image.png',
-    //   status: 'uploading',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-5',
-    //   name: 'image.png',
-    //   status: 'error',
-    // },
-
   // const handlePreview = async (file: UploadFile) => {
   //   console.log(file)
   //   if (!file.url && !file.preview) {
@@ -195,8 +157,6 @@ export default function ProductImgEdit() {
       console.log('Dropped files', e.dataTransfer.files);
     },
   };
-
-
 
   return (
     <Scoped>

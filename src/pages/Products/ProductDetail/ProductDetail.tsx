@@ -1,6 +1,5 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Divider,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
-import styled from 'styled-components';
 // 引入
 import { useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
@@ -18,6 +17,9 @@ import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
 import { history } from '@umijs/max';
 import oldStore from '@/store/oldStore';
+import MultipleStylesEdit from './MultipleStylesEdit';
+import ProductStyleListEdit from './ProductStyleListEdit';
+import { styled } from 'styled-components';
 // 信息
 interface ProductDetail {
     title:string;
@@ -53,25 +55,24 @@ function ProductDetail() {
     // 获取商品详情
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
     const product_i:any = history.location.state;
-
-
-
     // 提示
     const [modal, contextHolder] = Modal.useModal();
+    const [style, setStyleId] = useState([]);
+
+    
     const confirm = () => {
         modal.confirm({
             title: "确定删除吗？",
+            centered:true,
             icon: <ExclamationCircleOutlined />,
             content: '删除后将不能找回请谨慎操作！',
             okText: '确认',
             cancelText: '取消',
             onOk(){
-                productDel(oldStore.id)
+                productDel(oldStore.productId)
             }
         });
     };
-
-  
     const fetchProductDetail = async () => {
         try {
             console.log(product_i.productId)
@@ -97,7 +98,7 @@ function ProductDetail() {
                 oldStore.productType=response.data.product_type
                 // oldStore.setSelectedImgList(
                 oldStore.setSelectedImgList(JSON.parse(response.data.additional_image))
-                console.log(JSON.parse(response.data.additional_image))
+                // console.log(JSON.parse(response.data.additional_image))
                 // 税费
                 oldStore.setNeedTax(response.data.needTax == 0 ? false : true)
                 // 
@@ -107,6 +108,7 @@ function ProductDetail() {
                 oldStore.setHSCode(response.data.HSCode)
                 oldStore.setNotion(response.data.notion)
                 // 
+                oldStore.setProductId(response.data.id);
                 // 旧属性
                 oldStore.additional_image = response.data.additional_image
                 oldStore.categorys = response.data.categorys
@@ -115,7 +117,6 @@ function ProductDetail() {
                 oldStore.domain_id = response.data.domain_id
                 oldStore.employee_id = response.data.employee_id
                 oldStore.employee_realname = response.data.employee_realname
-                oldStore.id = response.data.id
                 oldStore.languages_name = response.data.languages_name
                 oldStore.model = response.data.model
                 oldStore.update_time = response.data.update_time
@@ -171,86 +172,75 @@ function ProductDetail() {
     // 在组件加载时调用 fetchProductDetail
     React.useEffect(() => {
       fetchProductDetail();
-      
     }, []);
-    
     // 实现 onSecondInputChange 函数
-    const handleSecondInputChange = (value: string) => {
-        // setStyleId(value);
+    const handleSecondInputChange = (value: any) => {
+        setStyleId(value);
         // 需要有多款式的时候才显示
     };
 
   
     return (
-      <StyledDiv>
+        <div>
+        { productDetail && 
+        <StyledDiv>
         <div className='mc-layout-wrap'>
-          <div className="mc-layout">
+        <div className="mc-layout">
             <div className="mc-header">
-              <div className="mc-header-left">
+            <div className="mc-header-left">
                 <div className="mc-header-left-secondary" onClick={() => {
-                  history.push('/products/index')
+                history.push('/products/index')
                 }}>
-                  <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                 </div>
                 <div className="mc-header-left-content">{productDetail?.title}</div>
-                        </div>
-                        <div className='mc-header-right'>
-                            <Select className='selector' defaultValue="分享" />
-                        </div>
                     </div>
-                    {/*  */}
-                    {/* <Spin> */}
-                        <div className='mc-layout-main'> 
-                            <div className='mc-layout-content'>
-                                {productDetail && <ProductDataEdit/>}
-                                {/* <ProductDataEdit productData={{title:productDetail?.title,content:productDetail?.content,content1:productDetail?.content1}} /> */}
-                                {productDetail && <ProductImgEdit/>}
-                                {/* 价格 */}
-                                {productDetail && <ProductStyleListEdit2 productDetail={productDetail}/>}
-                                {productDetail &&<StockEdit></StockEdit>}
-                                {productDetail && <CustomsDeclarationEdit />}
-                                {/* <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} /> */}
-                                {/* {styleId && <ProductStyleListEdit styleId={styleId} />} */}
-                            </div>
-                            <div className='mc-layout-extra'>
-                            {productDetail && <ProductSettingsEdit/>}
-                            <TradingRecords/>
-                            <SEOEdit/>
-                            <ThirdPartyInfoEdit/>
-                            <ThemeTemplateEdit/>
-                            </div>
-                        </div>
-                        <Divider />
-                        <div className='mc-footer'>
-                            <Button type="primary" danger onClick={confirm}>将商品删除</Button>
-                            {contextHolder}
-                            <Button style={{marginLeft:-900}}>将商品存档</Button>
-                            <Button type='primary' onClick={() => {
-                            //     let temp:any = [];
-                            //     oldStore.imgTempList.forEach((r:any)=>{
-                            //     console.log(r)
-                            //     if(r.url){
-                            //         temp.push(r.url)
-                            //     }
-                            //     if(r.thumbUrl){
-                            //         console.log(r.thumbUrl.split(",")[1])
-                            //         console.log(atob(r.thumbUrl.split(",")[1]))
-                            //     }
-                            //    })
-                            //    oldStore.setSelectedImgList(temp)
-                                console.log(oldStore)
-                                submitRenewalProduct(oldStore).then(res => {
-                                // if (res.code === 0) message.success('okkk');
-                                // else message.error('noooo');
-                                // history.push('/products/index')
-                                console.log(res)
-                                });
-                            }}>更新</Button>
-                        </div>
-                    {/* </Spin> */}
+                    <div className='mc-header-right'>
+                        <Select className='selector' defaultValue="分享" />
+                    </div>
                 </div>
-            </div>
+                {/* <Spin> */}
+                <div className='mc-layout-main'> 
+                    <div className='mc-layout-content'>
+                        <ProductDataEdit/>
+                        {/* <ProductDataEdit productData={{title:productDetail?.title,content:productDetail?.content,content1:productDetail?.content1}} /> */}
+                        <ProductImgEdit/>
+                        {/* 价格 */}
+                        {/* {productDetail && <ProductStyleListEdit2 productDetail={productDetail}/>} */}
+                        <StockEdit />
+                        <CustomsDeclarationEdit />
+                        <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
+                        {style.length>0 && <ProductStyleListEdit styledData={style} />} 
+                    </div>
+                    <div className='mc-layout-extra'>
+                        <ProductSettingsEdit/>
+                        <TradingRecords/>
+                        <SEOEdit/>
+                        <ThirdPartyInfoEdit/>
+                        <ThemeTemplateEdit/>
+                    </div>
+                </div>
+                <Divider />
+                <div className='mc-footer'>
+                    <Button type="primary" danger onClick={confirm}>将商品删除</Button>
+                    {contextHolder}
+                    <Button style={{marginLeft:-900}}>将商品存档</Button>
+                    <Button type='primary' onClick={() => {
+                        console.log(oldStore)
+                        submitRenewalProduct(oldStore).then(res => {
+                        // if (res.code === 0) message.success('okkk');
+                        // else message.error('noooo');
+                        // history.push('/products/index')
+                        console.log(res)
+                        });
+                    }}>更新</Button>
+                </div>
+            {/* </Spin> */} 
+                </div>
+        </div>
         </StyledDiv>
+        }
+        </div>
     )
 }
 
@@ -360,6 +350,10 @@ const StyledDiv = styled.div`
 
 
 
+
+function setStyleId(value: any) {
+    throw new Error('Function not implemented.');
+}
 // function newStores(res:ProductDetail){
 //     console.log("--------------")
 //     console.log(res)

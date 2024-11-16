@@ -8,7 +8,7 @@ import { action, makeObservable, observable } from "mobx";
 
  class newStore {
   // 模型唯一
-  @observable model = '';
+  @observable model = '12332222111';
   // 语言
   @observable language = '2';
   // 商品标题 
@@ -183,11 +183,22 @@ import { action, makeObservable, observable } from "mobx";
     this.productType = value;
   }
 
+  // 款式名称
+  @observable styleName: string[] = [];
+  // 商品类型
+  @observable styleValue: string[][] = [];
+  // 款式内容
+  @action setStyleName(styleName:string[]) {
+    this.styleName = styleName
+  }
+  @action setStyleValue(styleValue:string[][]) {
+    this.styleValue = styleValue
+  }
+  
+
   @action submitAddProduct() {
     return addProduct()
   }
-
-
   // 重置状态
   reset(){
     this.title = '';
@@ -214,6 +225,8 @@ import { action, makeObservable, observable } from "mobx";
     this.productType = '';
     this.temp.clear();
   }
+
+  
 
 }
 

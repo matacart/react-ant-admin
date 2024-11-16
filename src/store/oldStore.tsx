@@ -12,8 +12,16 @@ import { action, makeObservable, observable } from "mobx";
 
  class newStore {
 
-  // 旧属性  兼容旧系统
+  
+  // 产品id
+  @observable productId = "";
+  @action setProductId = (productId: string) => {
+    this.productId = productId;
+  }
+  
 
+
+  // 旧属性  兼容旧系统
   @observable additional_image = '';
   @observable categorys = [];
   @observable checked = 0;
@@ -21,7 +29,6 @@ import { action, makeObservable, observable } from "mobx";
   @observable domain_id = 0;
   @observable employee_id = 0;
   @observable employee_realname = '';
-  @observable id = "";
   @observable languages_name = "";
   @observable model = "";
   @observable update_time = "";
@@ -65,6 +72,8 @@ import { action, makeObservable, observable } from "mobx";
   @observable content = '';
   // 商品描述
   @observable content1 = '';
+  // 商品标题 
+  @observable language = '2';
   // 商品图片/视频  
   @observable selectedImgList: UploadFile[] = [];
   // -- 封面

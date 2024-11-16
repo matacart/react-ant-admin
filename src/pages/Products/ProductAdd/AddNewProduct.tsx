@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomsDeclaration from './CustomsDeclaration';
 import MultipleStylesCard from './MultipleStylesCard';
 import PriceOrTransactionCard from './PriceOrTransactionCard';
@@ -17,14 +18,121 @@ import SEOCard from './SEOCard';
 import StockCard from './StockCard';
 import ThemeTemplateCard from './ThemeTemplateCard';
 import ThirdPartyInfoCard from './ThirdPartyInfoCard';
+import { addStyle, addStyleContent, addStyleName, getProductStyleList, getProductStyleValueList, updateProductStyle } from '@/services/y2/api';
 
 
 
+// const createStyled = (productId:string)=>{
+//     setInterval(()=>{
+//         // 通过产品id添加款式
+//         console.log(newStore.styleName)
+//         if(newStore.styleName.length>0){
+//             newStore.styleName.forEach((e,i) => {
+//                 newStore.styleValue[i].forEach(async styleValue=>{
+//                     let styleNameId = 0;
+//                     let styleContentId = 0;
+//                     // 创建款式名称
+//                     await addStyleName(newStore.language,e).then(res=>{
+//                         console.log(res)
+//                         if(res.code==0){
+//                             // 创建成功
+//                             // 创建款式内容
+//                             // 通过产品id关联
+//                             styleNameId = res.id
+//                         }else{
+//                             // message.error('noooo');
+//                         }
+//                     });
+//                     // 创建款式内容
+//                     await addStyleContent(newStore.language,styleValue,styleNameId).then(async res=>{
+//                         console.log(res)
+//                         if(res.code==0){
+//                             styleContentId = res.id
+//                         }else{
+//                             // 款式存在 -- 查询所有款式获取款式内容id
+//                             // message.error('noooo');
+//                             await getProductStyleValueList().then(styleData=>{
+//                                 styleData.data.forEach((style:any)=>{
+//                                     if(style.option_values_name == styleValue && style.option_id == styleNameId){
+//                                         styleContentId = style.id
+//                                     }
+//                                 })
+//                             })
+//                         }
+//                     })
+//                     // 通过产品id关联
+//                     await addStyle(styleNameId,styleContentId,productId).then((res:any)=>{
+//                         console.log(res)
+//                         if(res.code==0){
+//                             console.log("产品款式添加成功")
+//                             newStore.setStyleName([]);
+//                         }else if(res.code==201){
+//                             // 款式产品已存在
+//                             newStore.setStyleName([]);
+//                         }
+//                     })
+//                 })
+//             });
+//         }
+//         // 给产品添加款式成功，通过模型获取到所有的产品款式，将内容添加进去
+//         if(newStore.styleName.length == 0){
+//             // // 通过模型查找款式列表
+//             getProductStyleList(newStore.model,newStore.language).then((res:any)=>{
+//                 // console.log(res)
+//                 if(res.code==0){
+//                     console.log(res.data)
+//                     // 通过for循环将所有数据提交
+//                     res.data.forEach((res:any)=>{
+//                         updateProductStyle(res.id,"200","100").then(result=>{
+//                             if(result.code == 0){
+//                                 // success
+                                
+//                             }
+//                         })
+//                     })
+//                 }else{
+//                   console.log("获取款式列表失败")
+//                 }
+//             })
+//         }
+//     },10000)
+// }
+interface LocationState {
+    copyProduct?:object;
+    copyProductImage?: boolean;
+    copyProductInventory?: boolean;
+    radioValue?:number;
+    // 可以根据实际需求添加其他字段
+  }
 
 
 function AddNewProduct(){
+    
     const [styleId, setStyleId] = useState('');
-    // newStore.desc = "";
+    
+
+    let productInfo = history.location.state as LocationState;
+    
+    useEffect(()=>{
+        if(productInfo){
+
+            if(productInfo.copyProductImage){
+                
+            }
+            if(productInfo.copyProductInventory){
+                
+            }
+
+            // 商品状态
+            productInfo.radioValue == 1? newStore.setOnPutProduct(true):newStore.setOnPutProduct(false);
+            // if(productInfo.radioValue)
+            console.log()
+        }
+    },[])
+
+
+
+    
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: string) => {
         setStyleId(value);
@@ -67,18 +175,75 @@ function AddNewProduct(){
                     <Divider/>
                     <div className='mc-footer'>
                         <Button type='primary' onClick={()=>{
-                            // console.log(styleId)
                             newStore.setSelectedImgList(Array.from(newStore.temp.values()))
-                            // console.log(JSON.stringify(Array.from(newStore.temp.values())))
-                            newStore.submitAddProduct()
-                                .then(res=>{
-                                    if(res.code==0){
-                                        message.success('创建成功')
-                                        newStore.reset()
-                                        history.push('/products/index')
-                                    }else{
-                                        message.error('noooo');
-                                    }
+                            // console.log(newStore)
+                            // console.log(newStore.styleName)
+                            // console.log(newStore.styleValue)
+                            // 通过产品id添加款式
+                            // if(newStore.styleName.length>0){
+                            //     newStore.styleName.forEach((e,i) => {
+                            //         newStore.styleValue[i].forEach(async res=>{
+                            //             let styleNameId = 0;
+                            //             // 创建款式名称
+                            //             await addStyleName(newStore.language,e).then(res=>{
+                            //                 console.log(res)
+                            //                 if(res.code==0){
+                            //                     // 创建成功
+                            //                     // 创建款式内容
+                            //                     // 通过产品id关联
+                            //                     styleNameId = res.id
+                            //                 }else{
+                            //                     message.error('noooo');
+                            //                 }
+                            //             });
+                            //             // 创建款式内容
+                            //             let styleContentId = 0;
+                            //             await addStyleContent(newStore.language,res,styleNameId).then(res=>{
+                            //                 console.log(res)
+                            //                 if(res.code==0){
+                            //                     styleContentId = res.id
+                            //                 }else{
+                            //                     message.error('noooo');
+                            //                 }
+                            //             })
+                            //             let productId = 1363020924714;
+                            //             // 通过产品id关联
+                            //             await addStyle(styleNameId,styleContentId,productId).then((res:any)=>{
+                            //                 console.log(res)
+                            //                 if(res.code==0){
+                            //                     console.log("产品款式添加成功")
+                            //                 }else{
+                            //                     message.error('noooo');
+                            //                 }
+                            //             })
+                            //         })
+                            //         // console.log(newStore.styleValue[i].join(","))
+                            //         // 创建成功
+                            //     });
+                            // }
+                            // // 通过模型查找 -- 获取对应的商品款式id -- 
+                            // // model: 12332222111
+                            // let model = 12332222111
+                            // // languages_id
+                            // getProductStyleList(newStore.model,newStore.language).then(res=>{
+                            //     console.log(res)
+                            // })
+                            // 通过模型id获取
+
+
+                            
+
+                            newStore.submitAddProduct().then(res=>{
+                                message.success('创建成功')
+                                history.push('/products/index')
+                                if(res.code==0){
+                                    message.success('创建成功')
+                                    // newStore.reset()
+                                    history.push('/products/index')
+                                    // 返回产品id 根据产品id在本地自动请求款式直到成功
+                                }else{
+                                    message.error('noooo');
+                                }
                             });
                         }}>创建</Button>
                     </div>

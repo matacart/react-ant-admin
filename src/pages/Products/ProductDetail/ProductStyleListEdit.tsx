@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio } from 'antd';
+import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space } from 'antd';
+import oldStore from '@/store/oldStore';
+import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 interface StyleItem {
   id: number;
   imageUrl: string;
@@ -20,40 +23,87 @@ interface StyleItem {
   metaFields: string;
 }
 
-function ProductStyleListEdit ({ styleId }: { styleId: string}){
+
+
+// 获取
+
+
+
+function ProductStyleListEdit (styledData:any){
   const [styles, setStyles] = useState<StyleItem[]>([]);
-
+  const [modal, contextHolder] = Modal.useModal();
   useEffect(() => {
-    if (styleId) {
-      // 解析 styleId 成多行标签数组
-      const rows = styleId.split('\n').map(row => row.trim());
-      // 为每一行生成一个 StyleItem
-      const newStyles = rows.map((row, index) => {
-        const tags = row.split(',').map(tag => tag.trim());
-        return {
-          id: index + 1,
-          imageUrl: '',
-          style: tags.join(','),
-          sku: '',
-          salePrice: 0,
-          originalPrice: 0,
-          costPrice: 0,
-          tax: true,
-          inventoryPolicy: '',
-          hsCode: '',
-          country: '',
-          stock: 0,
-          weight: 0,
-          weightUnit: '克',
-          shipping: true,
-          barcode: '',
-          metaFields: '',
-        };
-      });
-
-      setStyles(newStyles);
-    }
-  }, [styleId]);
+    let styleList = getProductStyleList(oldStore.model,oldStore.language)
+    styleList.then((res:any) => {
+      console.log(res.data)
+      // res.data.forEach((s:any)=>{
+      //   console.log(s)
+      //   setStyles([...styles,{
+      //     id:s.id,
+      //     imageUrl:s.imageUrl,
+      //     style:s.style,
+      //     sku:s.sku,
+      //     salePrice:s.salePrice,
+      //     originalPrice:s.originalPrice,
+      //     costPrice:s.costPrice,
+      //     tax:s.tax,
+      //     inventoryPolicy:s.inventoryPolicy,
+      //   }])
+      // })
+    })
+    // if (styledData) {
+    //   // 解析 styleId 成多行标签数组
+    //   // const rows = styleId.split('\n').map(row => row.trim());
+    //   // // 为每一行生成一个 StyleItem
+    //   // const newStyles = rows.map((row, index) => {
+    //   //   const tags = row.split(',').map(tag => tag.trim());
+    //   //   return {
+    //   //     id: index + 1,
+    //   //     imageUrl: '',
+    //   //     style: tags.join(','),
+    //   //     sku: '',
+    //   //     salePrice: 0,
+    //   //     originalPrice: 0,
+    //   //     costPrice: 0,
+    //   //     tax: true,
+    //   //     inventoryPolicy: '',
+    //   //     hsCode: '',
+    //   //     country: '',
+    //   //     stock: 0,
+    //   //     weight: 0,
+    //   //     weightUnit: '克',
+    //   //     shipping: true,
+    //   //     barcode: '',
+    //   //     metaFields: '',
+    //   //   };
+    //   // });
+    //   let newStyles:any = [];
+    //   styledData.styledData.forEach((element:any) => {
+    //     console.log(element);
+    //     newStyles.push({
+    //       id: element.id,
+    //       imageUrl: element.option_name,
+    //       style: element.option_values_name,
+    //       sku: '',
+    //       salePrice: 0,
+    //       originalPrice: 0,
+    //       costPrice: 0,
+    //       tax: true,
+    //       inventoryPolicy: '',
+    //       hsCode: '',
+    //       country: '',
+    //       stock: 0,
+    //       weight: 0,
+    //       weightUnit: '克',
+    //       shipping: true,
+    //       barcode: '',
+    //       metaFields: '',
+    //     })
+    //   });
+    //   setStyles(newStyles);
+    // }
+    
+  }, []);
   // 添加处理 SKU 变化的函数
   const handleSkuChange = (id: number, newValue: string) => {
     const updatedStyles = styles.map((style) => {
@@ -70,33 +120,39 @@ function ProductStyleListEdit ({ styleId }: { styleId: string}){
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   const columns = [
+    // {
+    //   title: '图片',
+    //   dataIndex: 'imageUrl',
+    //   fixed: 'left', // 固定左侧
+    //   width: 130, // 设置宽度以适应图片
+    //   render: (imageUrl: string, record: StyleItem) => (
+    //     <Upload
+    //       action="/appstore/ApiAppstore/doUploadPic"
+    //       listType="picture-card"
+    //       multiple={true}
+    //       fileList={fileList.filter((file) => file.uid === record.id)}
+    //       onPreview={handlePreview}
+    //       onChange={(info) => handleChange(info, record.id)}
+    //     >
+    //       {fileList.filter((file) => file.uid === record.id).length >= 8 ? null : (
+    //         <div>
+    //           <div className="ant-upload-picture-card-wrapper">
+    //             <div className="ant-upload-picture-card">
+    //               <div>+</div>
+    //             </div>
+    //           </div>
+    //           <div className="ant-upload-text">上传图片</div>
+    //         </div>
+    //       )}
+    //       {imageUrl && <img src={imageUrl} alt="example" style={{ width: '100%' }} />}
+    //     </Upload>
+    //   ),
+    // },
     {
-      title: '图片',
+      title: '规格',
       dataIndex: 'imageUrl',
       fixed: 'left', // 固定左侧
-      width: 130, // 设置宽度以适应图片
-      render: (imageUrl: string, record: StyleItem) => (
-        <Upload
-          action="/appstore/ApiAppstore/doUploadPic"
-          listType="picture-card"
-          multiple={true}
-          fileList={fileList.filter((file) => file.uid === record.id)}
-          onPreview={handlePreview}
-          onChange={(info) => handleChange(info, record.id)}
-        >
-          {fileList.filter((file) => file.uid === record.id).length >= 8 ? null : (
-            <div>
-              <div className="ant-upload-picture-card-wrapper">
-                <div className="ant-upload-picture-card">
-                  <div>+</div>
-                </div>
-              </div>
-              <div className="ant-upload-text">上传图片</div>
-            </div>
-          )}
-          {imageUrl && <img src={imageUrl} alt="example" style={{ width: '100%' }} />}
-        </Upload>
-      ),
+      width: 80, // 设置宽度以适应文字
     },
     {
       title: '款式',
@@ -313,12 +369,30 @@ function ProductStyleListEdit ({ styleId }: { styleId: string}){
     {
       title: '',
       dataIndex: 'delete',
-      render: (record: StyleItem) => (
-        <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={() => handleRemove(record.id)}>
-          <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
-            <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
-          </svg>
-        </span>
+      render: (metaFields: string,record: StyleItem) => (
+        <Space>
+          {/* <LocalizedModal /> */}
+          {/* <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=> handleRemove(record.id)}> */}
+          <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=>{
+            modal.confirm({
+              title: '确认删除',
+              icon: <ExclamationCircleOutlined />,
+              content: '该多属性删除后无法恢复，是否要继续',
+              okText: '确认',
+              cancelText: '取消',
+              centered:true,
+              destroyOnClose:true,
+              onOk:()=>{
+                handleRemove(record.id)
+              }
+            });
+            // console.log(111111)
+          }}>
+            <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
+              <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
+            </svg>
+          </span>
+        </Space>
       ),
       width: 50,
       fixed: 'right', // 将列固定在右侧
@@ -372,7 +446,14 @@ const handleStockChange = (record: StyleItem) => {
 // 添加处理删除的函数
 const handleRemove = (id: number) => {
   const updatedStyles = styles.filter((style) => style.id !== id);
-  setStyles(updatedStyles);
+  deleteProductStyle(id).then(res=>{
+    if(res.code == 0){
+      message.success('款式删除成功')
+      setStyles(updatedStyles);
+    }else{
+      message.error('款式删除失败')
+    }
+  })
 };
 
 const handleHsCodeChange = (recordId: number, value: string) => {
@@ -505,20 +586,14 @@ const handleWeightUnitChange = (id: number, unit: string) => {
   const handleCheckboxChange = (checkedValues: string[]) => {
     setCheckedList(checkedValues);
   };
-
-
-
-
-
-
   return (
-<Card
-  title={
-    <>
-      款式列表
-    </>
-  }
->
+  <Card
+    title={
+      <>
+        款式列表
+      </>
+    }
+  >
 <div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 200px)', display: 'flex', flexDirection: 'column' }}>
   <Checkbox.Group>
     <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
@@ -556,25 +631,25 @@ const handleWeightUnitChange = (id: number, unit: string) => {
       >
         <p>已选择{selectedStyleCount}个款式</p>
         <span style={{ display: 'flex', alignItems: 'center' }}>
-  <input 
-    type="radio" 
-    value="0" 
-    checked={adjustmentType === '0'} 
-    onChange={() => setAdjustmentType('0')} 
-    style={{ marginRight: '8px' }} 
-  />
-  <p style={{ margin: 0 }}>修改为指定库存数量</p>
-</span>
-<span style={{ display: 'flex', alignItems: 'center' }}>
-<input 
-  type="radio" 
-  value="1" 
-  checked={adjustmentType === '1'} 
-  onChange={() => setAdjustmentType('1')} 
-  style={{ marginRight: '8px' }}
-/>
-<p style={{ margin: 0 }}>基于原库存调整</p>
-</span>
+        <input 
+          type="radio" 
+          value="0" 
+          checked={adjustmentType === '0'} 
+          onChange={() => setAdjustmentType('0')} 
+          style={{ marginRight: '8px' }} 
+        />
+        <p style={{ margin: 0 }}>修改为指定库存数量</p>
+      </span>
+      <span style={{ display: 'flex', alignItems: 'center' }}>
+      <input 
+        type="radio" 
+        value="1" 
+        checked={adjustmentType === '1'} 
+        onChange={() => setAdjustmentType('1')} 
+        style={{ marginRight: '8px' }}
+      />
+      <p style={{ margin: 0 }}>基于原库存调整</p>
+      </span>
         <Input
          
           width={400}
@@ -619,6 +694,7 @@ const handleWeightUnitChange = (id: number, unit: string) => {
     rowSelection={rowSelection}
     scroll={{ x: 2000 }}
   />
+  {contextHolder}
 </div>
 
 </Card>

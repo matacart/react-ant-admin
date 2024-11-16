@@ -1,5 +1,5 @@
 import { Card, Form, Input } from "antd";
-import TinymceEditor from "@/components/MCE/TinymceEditor";
+import TinymceEditor from "@/components/MCE/TinymceEditor2";
 import { useEffect } from "react";
 import oldStore from "@/store/oldStore";
 import tinymce from "public/tinymce/tinymce";

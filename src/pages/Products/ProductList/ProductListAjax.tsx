@@ -2,13 +2,10 @@ import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
-import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { result, set } from 'lodash';
-import { deleteProduct, getProductList } from '@/services/y2/api';
+import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { deleteProduct, getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
-import productStore from '@/store/productStore';
-import { observer } from 'mobx-react';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -43,6 +40,9 @@ interface TableParams {
   sortOrder?: string;
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
+// 商品复制
+
+
 
 const getRandomuserParams = (params: TableParams) => ({
   results: params.pagination?.pageSize,
@@ -52,8 +52,12 @@ const getRandomuserParams = (params: TableParams) => ({
 
 function ProductListAjax(selectProps:any) {
   const [loading, setLoading] = useState(false);
+  // 控制开关加载防止重复点击  --- 开关之间独立
+  const [onLoadingList, setOnLoadingList] = useState<any>([]);
+  // 
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [productStatusModal, contextProductStatusModal] = Modal.useModal();
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -61,21 +65,56 @@ function ProductListAjax(selectProps:any) {
       pageSize: 10,
     },
   });
-
   // 复制商品模态框
-  const [radioValue, setRadioValue] = useState(0)
-
+  const [radioValue, setRadioValue] = useState(1)
+  // 复制商品的数据
+  const [copyProduct, setCopyProduct] = useState<any>({});
+  // 是否复制商品图片
+  const [copyProductImage, setCopyProductImage] = useState(false);
+  // 是否复制商品库存
+  const [copyProductInventory, setCopyProductInventory] = useState(false);
+  // 商品状态弹窗
+  const productStatusConfirm = (productData:any,index:number) => {
+    const tempModal = productStatusModal.info({
+      title: '确认上架此商品？',
+      icon: <InfoCircleFilled />,
+      content: '已上架的商品会在网店中展示，可供你的客户浏览及购买',
+      centered:true,
+      footer:<div style={{textAlign:"right"}}>
+        <Button onClick={()=>{
+          tempModal.destroy();
+          let tempSwitchList = [...onLoadingList];
+          tempSwitchList[index] = false;
+          setOnLoadingList(tempSwitchList);
+        }}>取消</Button>
+        <Button type="primary" style={{marginLeft:"10px",marginTop:"10px"}} onClick={()=>{
+          tempModal.destroy();
+          // 修改商品状态
+          upDateProductStatus(productData.productid,!productData.state?"1":"0").then(res=>{
+            if(res.code == 0){
+              onChangeSwich(index)
+            }else{
+              message.error("修改状态失败")
+            }
+            let tempSwitchList = [...onLoadingList];
+            tempSwitchList[index] = false;
+            setOnLoadingList(tempSwitchList);
+          })
+        }}>确认</Button>
+      </div>,
+    });
+  };
   // 
   const onChangeRadio = (e: RadioChangeEvent) => {
     console.log('radio checked', e.target.value);
     setRadioValue(e.target.value);
   };
-
   //列表数据
   const [data, setData] = useState<DataType[]>([]);
 
   // 状态
   const onChangeSwich = (index: number) => {
+    // 改变商品的状态
     let oldDataItem = data[index]
     let newDataItem = {
       ...oldDataItem,
@@ -85,7 +124,6 @@ function ProductListAjax(selectProps:any) {
     newData[index].state = !oldDataItem.state
     setData(newData);
   };
-
   // 表头
   const columns: TableColumnsType<DataType> = [
     {
@@ -111,6 +149,11 @@ function ProductListAjax(selectProps:any) {
       </div>
     },
     {
+      title: '型号',
+      dataIndex: 'model',
+      width: 120,
+    },
+    {
       title: '售价',
       dataIndex: 'price',
       width: 150,
@@ -120,8 +163,6 @@ function ProductListAjax(selectProps:any) {
           {`US$ ${num.toFixed(2)}`}
         </>
       } 
-        
-      
     },
     {
       title: '库存数',
@@ -139,10 +180,17 @@ function ProductListAjax(selectProps:any) {
           gap: 9,
           alignContent: 'center',
         }}>
-          <Switch style={{
+          <Switch loading={onLoadingList[index]} style={{
             position: 'relative',
             top: "3px",
-          }} size='small' checked={data[index].state} onChange={() => { onChangeSwich(index) }} />
+          }} size='small' checked={data[index].state} onChange={(checked,event) => { 
+            event.stopPropagation();
+            let tempList = [...onLoadingList];
+            tempList[index] = true;
+            setOnLoadingList(tempList);
+            // onLoadingList.splice(index)
+            productStatusConfirm(record,index);
+          }} />
           <Popover content={content} title="销售渠道" style={{
             width: '20px'
           }} trigger="click">
@@ -154,7 +202,6 @@ function ProductListAjax(selectProps:any) {
       title: '操作',
       width: 100,
       fixed: 'right',
-
       render: (index,record) => {
         return (
           <div style={{
@@ -164,7 +211,10 @@ function ProductListAjax(selectProps:any) {
 
           }} >
             <ButtonIcon>
-              <div className='wrap'>
+              <div className='wrap' onClick={(e) => {
+                  e.stopPropagation()
+                  history.push(`https://mall.live.hdyshop.cn/h-product-detail-p`+record.productid+`.html`);
+                }}>
                 <Tooltip title="预览">
                   <EyeOutlined />
                 </Tooltip>
@@ -172,12 +222,15 @@ function ProductListAjax(selectProps:any) {
             </ButtonIcon>
             <ButtonIcon>
               <Tooltip title="复制">
-                <div className='wrap' onClick={() => setModalOpen(true)}>
+                <div className='wrap' onClick={(e) => {
+                  e.stopPropagation()
+                  setCopyProduct(record)
+                  setModalOpen(true);
+                }}>
                   <CopyOutlined />
                 </div>
               </Tooltip>
             </ButtonIcon>
-           
           </div>
         )
       }
@@ -209,19 +262,24 @@ function ProductListAjax(selectProps:any) {
     getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language)
       .then((res) => {
         let newData:DataType[] = [];
+        let switchList:boolean[] = [];
         res.data?.forEach((item:any)=>{
           newData.push({
             key:item.id,
+            model: item.model,
             imgUrl: item.product_image,
             price: item.price,
             name: item.title,
             state: item.status==1,
             inventory: item.quantity,
             productid:item.id,  //产品id
-            languages_id:item.languages_id
+            languages_id:item.languages_id,
+            // 获取所有数据
           })
+          switchList.push(false)
         })
-        // console.log(newData);
+        // 初始化开关数组
+        setOnLoadingList(switchList);
         setData(newData);
         setLoading(false)
         setTableParams({
@@ -235,12 +293,8 @@ function ProductListAjax(selectProps:any) {
         });
       })
   };
-  // const ref = useRef({language,title,model });
-  const [a, setA] = useState("");
-  const [b, setB] = useState("");
-  const [c, setC] = useState("");
-  const ref = useRef({ a, b, c});
   useEffect(() => {
+    // 
     console.log(selectProps.selectProps);
     fetchData();
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model]);
@@ -284,7 +338,6 @@ function ProductListAjax(selectProps:any) {
           type: 'checkbox',
           onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-
           },
         }}
       />
@@ -294,16 +347,25 @@ function ProductListAjax(selectProps:any) {
         centered
         title="复制商品"
         open={modalOpen}
-        onOk={() => setModalOpen(false)}
-        onCancel={() => setModalOpen(false)}
+        onOk={()=>{
+          setModalOpen(false)
+          history.push('/products/new',{copyProduct:copyProduct,copyProductImage:copyProductImage,copyProductInventory:copyProductInventory,radioValue:radioValue})
+        }}
+        onCancel={() => {
+          setModalOpen(false);
+          // 重置
+          setRadioValue(1);
+          setCopyProductImage(false);
+          setCopyProductInventory(false);
+        }}
       >
         <Content>
           <div>商品名称</div>
           <div>
-            <Input />
+            <Input value={`[Copy]`+copyProduct.name} />
           </div>
           <div>
-            <Checkbox className='selectItem' >
+            <Checkbox className='selectItem' checked={copyProductImage} onChange={(e)=>{setCopyProductImage(e.target.checked)}}>
               <span style={{
                   marginRight: '3px',
                   display: 'flex',
@@ -315,18 +377,16 @@ function ProductListAjax(selectProps:any) {
                   marginRight: '3px',
                 }}>复制商品图片</span>
                 <Tooltip title="prompt text">
-                    <QuestionCircleOutlined />
-              </Tooltip>
+                  <QuestionCircleOutlined />
+                </Tooltip>
               </span>
-
             </Checkbox>
           </div>
           <div>
-            <Checkbox>
+            <Checkbox checked={copyProductInventory} onChange={(e)=>{setCopyProductInventory(e.target.checked)}}>
               <span>复制商品库存</span>
             </Checkbox>
           </div>
-
           <div>商品状态</div>
           <Radio.Group onChange={onChangeRadio} value={radioValue}>
             <div>
@@ -335,13 +395,24 @@ function ProductListAjax(selectProps:any) {
               </Radio>
             </div>
             <div>
-              <Radio value={2}>
+              <Radio value={0}>
                 <span>已下架</span>
               </Radio>
             </div>
           </Radio.Group>
         </Content>
       </Modal>
+              
+
+      {/* 商品状态提示 */}
+      {contextProductStatusModal}
+      {/* <Modal title={<div><span><InfoCircleFilled style={{display:"inlineBlock",width:"20px",marginRight:"10px"}} /></span><span>确认下架此商品？</span></div>} centered open={productStatusModalOpen} onOk={()=>{
+        setProductStatusModalOpen(false);
+      }} onCancel={()=>{
+        setProductStatusModalOpen(false);
+      }}>
+        <p>已上架的商品会在网店中展示，可供你的客户浏览及购买</p>
+      </Modal> */}
     </Scoped>
 
   );
