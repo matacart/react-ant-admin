@@ -17,6 +17,7 @@ import { action, makeObservable, observable } from "mobx";
   @observable productId = "";
   @action setProductId = (productId: string) => {
     this.productId = productId;
+    
   }
   
 
