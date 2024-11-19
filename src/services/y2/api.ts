@@ -311,14 +311,15 @@ export async function addProduct() {
       // 内容
       "content1": newStore.content1,
       "originPrice":newStore.originPrice,
-      "costPrice":newStore.costPrice,
+      "cost_price":newStore.costPrice,
       "needTax":newStore.needTax?"1":"0",
-      "ISBN": newStore.ISBN,
+      // 条码
+      "barcode": newStore.ISBN,
       "inventory_tracking":newStore.inventoryTracking?"1":"0",
       "continueSell":newStore.continueSell?"1":"0",
-      // 
-      "notion":newStore.notion,  // 0 1 2 3 4 5
-      "HSCode":newStore.HSCode,
+      // 发货地区
+      "shipping_country_id":newStore.notion,  // 0 1 2 3 4 5
+      "hs_code":newStore.HSCode,
       // 
       // 商品状态
       "status": newStore.onPutProduct ? "1" : "0",
@@ -413,7 +414,7 @@ export async function submitRenewalProduct(res:any){
       "domain_id": oldStore.domain_id,
       "employee_id": oldStore.employee_id,
       "employee_realname": oldStore.employee_realname,
-      "id": oldStore.id,
+      "id": oldStore.productId,
       "languages_name": oldStore.languages_name,
       "model": oldStore.model,
       "update_time": oldStore.update_time,
@@ -532,7 +533,8 @@ export async function getLanguages() {
 // languages_id: 
 // model: 1
 // title: 
-export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string) {
+// tags
+export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string,tags:string,status:string|undefined) {
   return await request(`/api/ApiStore/product_list`, {
     method: 'POST',
     headers: {
@@ -545,7 +547,9 @@ export async function getProductList(page: any, limit: any, title: string, model
       limit:limit,
       title:title,
       model:model,
-      languages_id:languagesId
+      languages_id:languagesId,
+      tags:tags,
+      status:status
     }
   })
 }
@@ -689,6 +693,58 @@ export async function getProductStyleValueList(){
     data:{
       "page":1,
       "limit":100
+    }
+  })
+}
+
+// 添加标签
+export async function addTags(languagesId:string,tag:string){
+  return await request('/api/ApiStore/tags_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:languagesId,
+      tag:tag
+    }
+  })
+}
+// 删除标签
+export async function removeTags(languagesId:string,tag:string){
+  return await request('/api/ApiStore/tags_del',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:languagesId,
+      tag:tag
+    }
+  })
+}
+// 查询标签
+export async function selectTags(languagesId:string){
+  return await request('/api/ApiStore/tags_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:languagesId,
+    }
+  })
+}
+// 国家
+export async function getCountryList(){
+  return await request('/api/ApiAppstore/country_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      page:1,
+      limit:100
     }
   })
 }

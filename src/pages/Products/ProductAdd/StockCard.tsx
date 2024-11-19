@@ -1,6 +1,7 @@
 import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
+import { useEffect } from "react";
 import styled from "styled-components"
 
 
@@ -9,30 +10,32 @@ import styled from "styled-components"
 //     // newStore.setSKU(value)
 // };
 
-const onChangeISBN = (value:string) => {
-    console.log('changed', value);
-};
+// const onChangeISBN = (value:string) => {
+//     console.log('changed', value);
+// };
 const onChange = (value:string) => {
     console.log('changed', value);
 };
 
 
+
 export default function StockCard() {
+    useEffect(()=>{
+        console.log(newStore)
+    })
     return (
         <Scoped>
             <Card title='库存' >
                 <Form layout="vertical">
                     <Row>
                         <Col span={11}>
-                            <Form.Item
-                            required
-                            label="SKU"
-                            name='SKU'
-                                >
+                            <Form.Item label="模型"
+                                name='model' required initialValue={newStore.model}>
                                 <Input
                                     onChange={(e)=>{
-                                        newStore.setSKU(e.target.value)
+                                        newStore.setModel(e.target.value)
                                     }}
+                                    value={newStore.model}
                                 />
                             </Form.Item>
                         </Col>
@@ -40,6 +43,7 @@ export default function StockCard() {
                             <Form.Item label="条码(ISBN、UPC、GTIN等)"
                                 name='ISBN'>
                                 <Input
+                                    defaultValue={newStore.ISBN}
                                     onChange={(e)=>{
                                         newStore.setISBN(e.target.value)
                                     }}
@@ -49,23 +53,27 @@ export default function StockCard() {
                     </Row>
                     <Row>
                         <Col span={11}>
+                            <Form.Item
+                            label="SKU"
+                            name='SKU'
+                                >
+                                <Input
+                                    onChange={(e)=>{
+                                        newStore.setSKU(e.target.value)
+                                    }}
+                                    value={newStore.SKU}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
                             <Form.Item label="库存数量"
-                                name='stockQuantity'>
+                                name='stockQuantity' initialValue={newStore.inventory}>
                                 <Input
                                     type='number'
                                     onChange={(e)=>{
                                         newStore.setInventory(Number(e.target.value))
                                     }}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col offset={2} span={11}>
-                            <Form.Item label="模型"
-                                name='model'>
-                                <Input
-                                    onChange={(e)=>{
-                                        newStore.setModel(e.target.value)
-                                    }}
+                                    value={newStore.inventory}
                                 />
                             </Form.Item>
                         </Col>
@@ -91,7 +99,7 @@ export default function StockCard() {
                         }}
                         
                         >缺货后继续销售
-                            <Tooltip title="这里是关于用户名的额外信息">
+                            <Tooltip title="此设置适用MataCart后台管理">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                     <QuestionCircleOutlined />
                                 </span>

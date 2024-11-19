@@ -1,6 +1,6 @@
-import { Card, Form, Input, Select } from "antd";
+import { Card, Form, Input, Select, Tooltip } from "antd";
 import newStore from '@/store/newStore'
-import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { ConsoleSqlOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import TinymceEditor from "@/components/MCE/TinymceEditor";
 import { useEffect, useState } from "react";
@@ -34,16 +34,22 @@ function ProductDataCard() {
     })
     return (
         <Card title="商品信息" className='product-data-card' extra={
-            <Select
-                // size='large'
-                defaultValue="English"
-                style={{ width: 100 }}
-                listHeight={200}
-                onChange={languageChange}
-                options={languageData}
-            />
+            <>
+                <Select
+                    // size='large'
+                    defaultValue="English"
+                    style={{ width: 100,borderStyle:"none" }}
+                    listHeight={200}
+                    onChange={languageChange}
+                    options={languageData}
+                />
+                <Tooltip title="商品支持多种语言，请选择某种语言后再操作。">
+                    <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                        <QuestionCircleOutlined />
+                    </span>
+                </Tooltip>
+            </>
         }>
-            
             <Form layout='vertical' className='product-form'>
                 <Form.Item
                 name="title"
@@ -53,7 +59,8 @@ function ProductDataCard() {
                         { validator: (_, value) => value ? Promise.resolve() : Promise.reject(new Error('请输入商品标题')) },
                     ]}
                 >
-                    <Input 
+                    <Input
+                    defaultValue={newStore.title}
                     onChange={(e) => {
                         newStore.setTitle(e.target.value);
                     }}
@@ -61,19 +68,20 @@ function ProductDataCard() {
                     {/* 5 */}
                 </Form.Item>
                 <Form.Item 
-                name="resume"
-                required
-                label='商品摘要'>
+                    name="resume"
+                    required
+                    
+                    label='商品摘要'>
                     <TextArea showCount maxLength={400} onBlur={(e)=>{
                         newStore.content=e.target.value;
                     }}
-                        style={{
-                            resize: 'none'
-                        }}
-                        value={newStore.content}
-                        placeholder='请用简短的文字描述本商品'
-                    >
-                    </TextArea>
+                    style={{
+                        resize: 'none'
+                    }}
+                    defaultValue={newStore.content}
+                    value={newStore.content}
+                    placeholder='请用简短的文字描述本商品'
+                    />
                 </Form.Item>
                 <Form.Item label='商品描述'>
                     {/* 富文本编辑器 */}

@@ -30,7 +30,7 @@ export default function PriceOrTransactionCard() {
                             label={
                                 <>
                                     售价
-                                    <Tooltip title="这里是关于用户名的额外信息">
+                                    <Tooltip title="当商品参与各类促销活动时，可能不会使用此价格进行结账，具体以实际活动售价为准">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
@@ -39,7 +39,7 @@ export default function PriceOrTransactionCard() {
                             } name='price' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={1000}
+                                    defaultValue={newStore.price}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={priceOnChange}
@@ -52,7 +52,7 @@ export default function PriceOrTransactionCard() {
                             <Form.Item label={
                                 <>
                                     原价
-                                    <Tooltip title="这里是关于用户名的额外信息">
+                                    <Tooltip title="请输入一个高于当前价格的数值显示降价。降价前的价格通常会显示为划线价。（例如$20.00）">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
@@ -75,7 +75,7 @@ export default function PriceOrTransactionCard() {
                             <Form.Item label={
                                 <>
                                     成本价
-                                    <Tooltip title="这里是关于用户名的额外信息">
+                                    <Tooltip title="成本价信息不会展示给消费者">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
@@ -84,7 +84,7 @@ export default function PriceOrTransactionCard() {
                             } name='costPrice' className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={1000}
+                                    defaultValue={newStore.costPrice}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={costPriceOnChange}
@@ -98,7 +98,7 @@ export default function PriceOrTransactionCard() {
                             <Form.Item label={
                                 <>
                                     利润
-                                    <Tooltip title="这里是关于用户名的额外信息">
+                                    <Tooltip title="利润=售价 - 成本价">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
@@ -118,7 +118,7 @@ export default function PriceOrTransactionCard() {
                             <Form.Item label={
                                 <>
                                     利润率
-                                    <Tooltip title="这里是关于用户名的额外信息">
+                                    <Tooltip title="利润率=利润 / 售价">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>

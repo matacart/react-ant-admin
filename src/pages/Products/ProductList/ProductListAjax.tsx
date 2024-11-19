@@ -3,9 +3,11 @@ import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { deleteProduct, getProductList, upDateProductStatus } from '@/services/y2/api';
+import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
+import newStore from '@/store/newStore';
+import globalStore from '@/store/globalStore';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -13,10 +15,17 @@ type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>
 // 表单项商品数据类型
 interface DataType {
   key: React.Key;
+  model?: string;
   imgUrl?: string;
-  name?: string;
+  product_image?: string;
+  title?: string;
+  content?: string;
   price?: number;
+  costPrice?: number;
+  ISBN?: string;
   inventory?: number;
+  HSCode?:string;
+  notion?: string;
   state?: boolean;
   productid:string;
   languages_id:string
@@ -76,9 +85,9 @@ function ProductListAjax(selectProps:any) {
   // 商品状态弹窗
   const productStatusConfirm = (productData:any,index:number) => {
     const tempModal = productStatusModal.info({
-      title: '确认上架此商品？',
+      title: productData.state?"确认下架此商品？":"确认上架此商品？",
       icon: <InfoCircleFilled />,
-      content: '已上架的商品会在网店中展示，可供你的客户浏览及购买',
+      content: productData.state?"已下架的商品将在网店中隐藏，无法被客户看到":"已上架的商品会在网店中展示，可供你的客户浏览及购买",
       centered:true,
       footer:<div style={{textAlign:"right"}}>
         <Button onClick={()=>{
@@ -128,7 +137,7 @@ function ProductListAjax(selectProps:any) {
   const columns: TableColumnsType<DataType> = [
     {
       title: '商品',
-      dataIndex: 'name',
+      dataIndex: 'title',
       width: 180,
       render: (value, record, index) => <div style={{
         display: 'flex',
@@ -145,7 +154,7 @@ function ProductListAjax(selectProps:any) {
           textOverflow: 'ellipsis',
           
           maxWidth:"100%"
-        }}>{record.name}</span>
+        }}>{record.title}</span>
       </div>
     },
     {
@@ -213,7 +222,11 @@ function ProductListAjax(selectProps:any) {
             <ButtonIcon>
               <div className='wrap' onClick={(e) => {
                   e.stopPropagation()
-                  history.push(`https://mall.live.hdyshop.cn/h-product-detail-p`+record.productid+`.html`);
+                  if(globalStore.shop.length>0){
+                    history.push(`https://`+globalStore.shop[0].domainName+`/h-product-detail-p`+record.productid+`.html`);
+                  }else{
+                    message.error("请先设置店铺")
+                  }
                 }}>
                 <Tooltip title="预览">
                   <EyeOutlined />
@@ -259,23 +272,30 @@ function ProductListAjax(selectProps:any) {
     //   });
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language)
+    getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag)
       .then((res) => {
         let newData:DataType[] = [];
         let switchList:boolean[] = [];
         res.data?.forEach((item:any)=>{
-          newData.push({
-            key:item.id,
-            model: item.model,
-            imgUrl: item.product_image,
-            price: item.price,
-            name: item.title,
-            state: item.status==1,
-            inventory: item.quantity,
-            productid:item.id,  //产品id
-            languages_id:item.languages_id,
-            // 获取所有数据
-          })
+            newData.push({
+              key:item.id,
+              model: item.model,
+              imgUrl: item.product_image,  //封面
+              product_image: item.additional_image,
+              price: item.price,
+              costPrice:item.cost_price,
+              title: item.title,
+              content:item.content,
+              state: item.status==1,
+              inventory: item.quantity,
+              ISBN:item.barcode,
+              HSCode:item.hs_code,
+              notion:item.shipping_country_id,
+              productid:item.id,  //产品id
+              languages_id:item.languages_id,
+              // 获取所有数据
+            })
+          // 
           switchList.push(false)
         })
         // 初始化开关数组
@@ -294,10 +314,12 @@ function ProductListAjax(selectProps:any) {
       })
   };
   useEffect(() => {
-    // 
-    console.log(selectProps.selectProps);
+    // 初始化商品的状态
+    newStore.reset();
     fetchData();
-  }, [tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model]);
+    // console.log(selectProps.selectProps)
+    // console.log(globalStore.shop[0].domainName)
+  }, [newStore.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.tags]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -362,7 +384,7 @@ function ProductListAjax(selectProps:any) {
         <Content>
           <div>商品名称</div>
           <div>
-            <Input value={`[Copy]`+copyProduct.name} />
+            <Input value={`[Copy]`+copyProduct.title} />
           </div>
           <div>
             <Checkbox className='selectItem' checked={copyProductImage} onChange={(e)=>{setCopyProductImage(e.target.checked)}}>
@@ -376,7 +398,7 @@ function ProductListAjax(selectProps:any) {
                 <span style={{
                   marginRight: '3px',
                 }}>复制商品图片</span>
-                <Tooltip title="prompt text">
+                <Tooltip title="勾选该选项后，商品主图、属性值图、SKU图将会被一并复制">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -402,19 +424,8 @@ function ProductListAjax(selectProps:any) {
           </Radio.Group>
         </Content>
       </Modal>
-              
-
-      {/* 商品状态提示 */}
       {contextProductStatusModal}
-      {/* <Modal title={<div><span><InfoCircleFilled style={{display:"inlineBlock",width:"20px",marginRight:"10px"}} /></span><span>确认下架此商品？</span></div>} centered open={productStatusModalOpen} onOk={()=>{
-        setProductStatusModalOpen(false);
-      }} onCancel={()=>{
-        setProductStatusModalOpen(false);
-      }}>
-        <p>已上架的商品会在网店中展示，可供你的客户浏览及购买</p>
-      </Modal> */}
     </Scoped>
-
   );
 };
 

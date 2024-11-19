@@ -11,7 +11,7 @@ export default function SEOCard(){
                         <a>编辑</a>
                     </span>
                 </div>
-                <div className="webUrl">https://qiuqiuqiu-6b3j.myshopline.com/products/</div>
+                <div className="webUrl">https://merchant.matacart.com/</div>
                 <div className="webTitle">未填写标题</div>
                 <div className="webDesc">未填写描述</div>
             </Card>

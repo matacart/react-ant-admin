@@ -1,8 +1,36 @@
+import { getCountryList } from "@/services/y2/api";
+import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select, Tooltip } from "antd";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
+interface CountryOption {
+    label: string;
+    value: string | number;
+}
+
 export default function CustomsDeclaration() {
+    
+    const [countryList,setCountryList] =  useState<CountryOption[]>([]);
+    let country:any = [];
+    useEffect(()=>{
+        Array.length
+        if(countryList.length==0){
+            getCountryList().then((res)=>{
+                // console.log(res)
+                if(res.code == 0){
+                    res.data.forEach((item:any)=>{
+                        country.push({
+                            label:item.country_name,
+                            value:item.country_id
+                        })
+                    })
+                }
+                setCountryList(country)
+            })
+        }
+    })
     return (
         <Scoped>
             <Card title="海关信息">
@@ -12,7 +40,7 @@ export default function CustomsDeclaration() {
                     label={
                         <>
                             发货国家/地区
-                            <Tooltip title="这里是关于用户名的额外信息">
+                            <Tooltip title="产品制造或组装的地点">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                     <QuestionCircleOutlined />
                                 </span>
@@ -21,44 +49,23 @@ export default function CustomsDeclaration() {
                     }>
                         <Select
                             showSearch
-                            placeholder="Search to Select"
+                            placeholder="选择国家"
                             optionFilterProp="children"
                             filterOption={(input, option) => (option?.label ?? '').includes(input)}
                             filterSort={(optionA, optionB) =>
                                 (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                             }
-                            options={[
-                                {
-                                    value: '1',
-                                    label: 'Not Identified',
-                                },
-                                {
-                                    value: '2',
-                                    label: 'Closed',
-                                },
-                                {
-                                    value: '3',
-                                    label: 'Communicated',
-                                },
-                                {
-                                    value: '4',
-                                    label: 'Identified',
-                                },
-                                {
-                                    value: '5',
-                                    label: 'Resolved',
-                                },
-                                {
-                                    value: '6',
-                                    label: 'Cancelled',
-                                },
-                            ]}
+                            options={countryList}
+                            defaultValue={newStore.notion}
+                            onChange={(value)=>{
+                                newStore.setNotion(value)
+                            }}
                         />
                     </Form.Item>
                     <Form.Item
-                    required                    
-                    label="HS(协调制度) 代码">
-                        <Input placeholder="请输入HS编码" />
+                        required                    
+                        label="HS(协调制度) 代码">
+                        <Input defaultValue={newStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>newStore.setHSCode(e.target.value)} />
                     </Form.Item>
                 </Form>
             </Card>

@@ -14,9 +14,7 @@ export default function DrawerComponent(props:{
     styles?:React.CSSProperties
 
 }) {
-
     let { title,open,onClose,children,styles } = props;
-    
     return (
         <Drawer
             open={open}
@@ -47,7 +45,6 @@ export default function DrawerComponent(props:{
             <div className='drawer-content'>
                 {children}
             </div>
-            
         </Drawer>
     );
 }

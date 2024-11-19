@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { result } from 'lodash';
 import { useIntl } from '@umijs/max';
+import globalStore from "@/store/globalStore";
 
 
 // 定义一个函数来高亮搜索词  
@@ -75,6 +76,8 @@ export default function SelectDomain() {
                 })
             })
             setDomainListCurrent(domainList);
+            // 缓存店铺数据
+            globalStore.setShop(domainList);
             setDefaultDomain(res.data[0]?.id);
         }).catch((error) => {
             message.error('未获取到店铺列表，请检查网络')

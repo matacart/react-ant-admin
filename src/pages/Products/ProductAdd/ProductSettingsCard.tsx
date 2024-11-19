@@ -1,15 +1,13 @@
 import { PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Link } from "@umijs/max";
-import { Button, Card, Divider, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
+import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tag, theme, Tooltip } from "antd";
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import newStore from "@/store/newStore";
+import { addTags, removeTags } from "@/services/y2/api";
 
 
-// 上架商品
-const onPutProduct = (checked: boolean) => {
-    newStore.setOnPutProduct(newStore.onPutProduct);
-};
+
 
 type WebChannel = {
     name: string;
@@ -82,22 +80,91 @@ const handleTagChange = (value: string) => {
 
 };
 
-
 let index = 0;
+
+const tagInputStyle: React.CSSProperties = {
+    width: 64,
+    height: 22,
+    marginInlineEnd: 8,
+    verticalAlign: 'top',
+};
+
 
 export default function ProductSettingsCard() {
 
     const [items, setItems] = useState(['jack', 'lucy']);
+    // const [productItems,setProductItems] = useState(['毛衣', '帽子']);
     const [name, setName] = useState('');
     const inputRef = useRef<InputRef>(null);
 
+    const { token } = theme.useToken();
+    const [tags, setTags] = useState<string[]>([]);
+    const [inputVisible, setInputVisible] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [editInputIndex, setEditInputIndex] = useState(-1);
+    const [editInputValue, setEditInputValue] = useState('');
+    const inputTagRef = useRef<InputRef>(null);
+    const editInputRef = useRef<InputRef>(null);
+    
+    // 商品状态
+    const [productStatus,setProductStatus] = useState(true);
+    // 上架商品
+    const onPutProduct = (checked: boolean) => {
+        // set
+        setProductStatus(checked)
+        newStore.setOnPutProduct(checked);
+    };
+    
+    // 标签
+    const handleClose = (removedTag: string) => {
+        const newTags = tags.filter((tag) => tag !== removedTag);
+        setTags(newTags);
+        removeTags(newStore.language,removedTag)
+        newStore.setTag(newTags.join(","))
+      };
+      const showInput = () => {
+        setInputVisible(true);
+      };
+    
+      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+      };
+    
+      const handleInputConfirm = () => {
+        if (inputValue && !tags.includes(inputValue)) {
+            setTags([...tags, inputValue]);
+            // 添加标签
+            addTags(newStore.language,inputValue)
+            newStore.setTag([...tags, inputValue].join(","))
+        }
+        setInputVisible(false);
+        setInputValue('');
+      };
+      const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditInputValue(e.target.value);
+      };
+      const handleEditInputConfirm = () => {
+        const newTags = [...tags];
+        newTags[editInputIndex] = editInputValue;
+        setTags(newTags);
+        // console.log(1111);
+        // newStore.setTag(newTags.join(","))
+        setEditInputIndex(-1);
+        setEditInputValue('');
+      };
+    
+      const tagPlusStyle: React.CSSProperties = {
+        height: 22,
+        background: token.colorBgContainer,
+        borderStyle: 'dashed',
+      };
+    
+
+    
     const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
-
-        console.log(event)
-
+        // console.log(event)
     };
-
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
         setItems([...items, name || `New item ${index++}`]);
@@ -106,9 +173,20 @@ export default function ProductSettingsCard() {
             inputRef.current?.focus();
         }, 0);
     };
+    useEffect(() => {
+        if (inputVisible) {
+          inputTagRef.current?.focus();
+        }
+    }, [inputVisible]);
 
+    useEffect(() => {
+        editInputRef.current?.focus();
+    }, [editInputValue]);
 
-
+    useEffect(()=>{
+        // console.log(newStore.onPutProduct)
+        setProductStatus(newStore.onPutProduct);
+    },[])
 
 
     return (
@@ -116,10 +194,14 @@ export default function ProductSettingsCard() {
             <Card title='商品设置' className="card">
                 <div className="item between">
                     <span>上架商品</span>
-                    <Switch defaultChecked onChange={onPutProduct} />
+                    <Switch checked={productStatus} onChange={onPutProduct} />
                 </div>
                 <div className="item">
                     <div>发货</div>
+                    <Checkbox onChange={(e)=>{
+                        console.log(e.target.checked)
+                        // newStore.setNeedTax(e.target.checked)
+                    }}>需要运输</Checkbox>
                 </div>
                 <div className="item webChannelContent" >
                     <div className="between">
@@ -151,13 +233,12 @@ export default function ProductSettingsCard() {
                 </div>
                 <Form layout="vertical">
                     <Form.Item
-                    
                         style={{
                             fontWeight: 600
                         }} label={
                             <>
                                 SPU
-                                <Tooltip title="这里是关于用户名的额外信息">
+                                <Tooltip title="标准化产品单元，如：属性值、特性相同的商品可以称为一个 SPU">
                                     <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                         <QuestionCircleOutlined />
                                     </span>
@@ -209,15 +290,80 @@ export default function ProductSettingsCard() {
                                 <a>查看所有标签</a>
                             </div>
                         }
-                    >
-                        <Select
+                    >   
+                    
+                        {/* <Select
                             mode="tags"
                             style={{ width: '100%', padding: '0' }}
                             placeholder="添加标签（例如：复古/夏季）"
                             onChange={handleTagChange}
                             options={options}
                             className="ant-input"
-                        />
+                        /> */}
+                        <Flex gap="4px 0" wrap>
+                            {tags.map<React.ReactNode>((tag, index) => {
+                                if (editInputIndex === index) {
+                                return (
+                                    <Input
+                                    ref={editInputRef}
+                                    key={tag}
+                                    size="small"
+                                    style={tagInputStyle}
+                                    value={editInputValue}
+                                    onChange={handleEditInputChange}
+                                    onBlur={handleEditInputConfirm}
+                                    onPressEnter={handleEditInputConfirm}
+                                    />
+                                );
+                                }
+                                const isLongTag = tag.length > 20;
+                                const tagElem = (
+                                <Tag
+                                    key={tag}
+                                    closable
+                                    color= "processing"
+                                    bordered={false}
+                                    style={{ userSelect: 'none',color: '#000'}}
+                                    onClose={() => handleClose(tag)}
+                                >
+                                    <span
+                                    onDoubleClick={(e) => {
+                                        if (index !== 0) {
+                                        setEditInputIndex(index);
+                                        setEditInputValue(tag);
+                                        e.preventDefault();
+                                        }
+                                    }}
+                                    >
+                                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                    </span>
+                                </Tag>
+                                );
+                                return isLongTag ? (
+                                <Tooltip title={tag} key={tag}>
+                                    {tagElem}
+                                </Tooltip>
+                                ) : (
+                                tagElem
+                                );
+                            })}
+                            {inputVisible ? (
+                                <Input
+                                ref={inputRef}
+                                type="text"
+                                size="small"
+                                style={tagInputStyle}
+                                value={inputValue}
+                                onChange={handleInputChange}
+                                onBlur={handleInputConfirm}
+                                onPressEnter={handleInputConfirm}
+                                />
+                            ) : (
+                                <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
+                                    标签
+                                </Tag>
+                            )}
+                        </Flex>
                     </Form.Item>
                     <Form.Item
                         className="moreLink"

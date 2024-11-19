@@ -7,6 +7,9 @@ import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import styled from 'styled-components';
+import newStore from '@/store/newStore';
+import ProductsSelectCardOn from '@/components/Card/ProductsSelectCardOn';
+import { Switch } from 'antd/lib';
 
 const TabLabel = styled.div`
     font-size: 16px;
@@ -49,7 +52,8 @@ type PositionType = 'left' | 'right';
 
 
 const App: React.FC = () => {
-
+  // const [activeKey, setActiveKey] = useState("1");
+  
   // const [language,setLanguage] = useState(2);
   const initialItems = [
     {
@@ -77,14 +81,24 @@ const App: React.FC = () => {
       closable: false,
     }
   ];
-
   const [activeKey, setActiveKey] = useState(initialItems[0].key);
   const [items, setItems] = useState(initialItems);
   const newTabIndex = useRef(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newTabName, setNewTabName] = useState('');
+  
   const onChange = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
+    switch(newActiveKey){
+      case '1':
+        return newStore.setFlag("");
+      case '2':
+        return newStore.setFlag("1");
+      case '3':
+        return newStore.setFlag("0");
+      case '4':
+        return newStore.setFlag("");
+    }
   };
 
   // const switchLanguages = (value: number) => {
@@ -130,7 +144,7 @@ const App: React.FC = () => {
     const newPanes = [...items];
     newPanes.push({
       label: <TabLabel>{newTabName}</TabLabel>,
-      children: <ProductsSelectCard />,
+      children: <ProductsSelectCard key={newActiveKey} />,
       key: newActiveKey,
       closable: true
     });
@@ -173,21 +187,9 @@ const App: React.FC = () => {
     }
   };
 
-  // useEffect(()=>{
-  //   let temp:any = []
-    
-  //   getLanguages().then((res)=>{
-  //     // console.log(res.data);
-  //     res.data.forEach((item:any)=>{
-  //       temp.push({
-  //         value: item.id,
-  //         label: item.name
-  //       })
-  //       })
-  //     })
-  //     console.log(temp);
-  //     // setlanguagesData(temp)
-  // }]);
+  useEffect(()=>{
+    // console.log(1111)
+  },[]);
 
   return (
     <div className='create-warp-flex' style={{ width: "100%" }}>
@@ -217,6 +219,8 @@ const App: React.FC = () => {
             activeKey={activeKey}
             onEdit={onEdit}
             items={items}
+            // !默认不销毁
+            destroyInactiveTabPane
             // tabBarExtraContent={operations}
           />
         </div>

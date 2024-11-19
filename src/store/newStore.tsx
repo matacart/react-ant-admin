@@ -1,20 +1,29 @@
 import { addProduct } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
-import { valueType } from "antd/es/statistic/utils";
 import { action, makeObservable, observable } from "mobx";
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
 
+
+// 12332222111
  class newStore {
+
+
+  // tab切换
+  @observable flag:string|undefined = '';
+  @action setFlag = (flag: string|undefined) => {
+    this.flag = flag;
+  }
+  
   // 模型唯一
-  @observable model = '12332222111';
+  @observable model:string|undefined = '';
   // 语言
   @observable language = '2';
   // 商品标题 
-  @observable title = '';
+  @observable title:string | undefined = '';
   // 商品摘要
-  @observable content = '';
+  @observable content:string | undefined = '';
   // 商品描述
   @observable content1 = '';
 
@@ -23,11 +32,14 @@ import { action, makeObservable, observable } from "mobx";
   // 商品图片/视频
   @observable selectedImgList: UploadFile[] = [];
 
-  @action setTitle = (title: string) => {
+  @action setTitle = (title: string|undefined) => {
     this.title = title;
   }
+  @action setContent = (content: string|undefined) => {
+    this.content = content;
+  }
 
-  @action setModel = (model: string) => {
+  @action setModel = (model: string|undefined) => {
     this.model = model;
   }
   @action setLanguage = (language: string) => {
@@ -60,21 +72,21 @@ import { action, makeObservable, observable } from "mobx";
   // 价格/交易
 
   // 售价
-  @observable price: valueType = 0;
+  @observable price: number|undefined = 1000;
   // 原价
-  @observable originPrice: valueType = 0;
+  @observable originPrice: number|undefined = 0;
   // 成本价
-  @observable costPrice: valueType = 0;
+  @observable costPrice: number|undefined = 1000;
   // 需要收取税费
   @observable needTax: boolean = false;
 
-  @action setPrice = (value: valueType) => {
+  @action setPrice = (value: number|undefined) => {
     this.price = value;
   }
-  @action setOriginPrice = (value: valueType) => {
+  @action setOriginPrice = (value: number) => {
     this.originPrice = value;
   }
-  @action setCostPrice = (value: valueType) => {
+  @action setCostPrice = (value: number|undefined) => {
     this.costPrice = value;
   }
   @action setNeedTax = (value: boolean) => {
@@ -86,9 +98,9 @@ import { action, makeObservable, observable } from "mobx";
   // SKU
   @observable SKU: string = '';
   // 条码
-  @observable ISBN: string = '';
+  @observable ISBN: string|undefined = '';
   // 库存数量
-  @observable inventory: number = 0;
+  @observable inventory: number|undefined = 0;
   // 库存追踪
   @observable inventoryTracking: boolean = false;
 
@@ -98,11 +110,11 @@ import { action, makeObservable, observable } from "mobx";
   @action setSKU = (value: string) => {
     this.SKU = value;
   }
-  @action setISBN = (value: string) => {
+  @action setISBN = (value: string|undefined) => {
     this.ISBN = value;
   };
 
-  @action setInventory = (value: number) => {
+  @action setInventory = (value: number|undefined) => {
     this.inventory = value;
   }
 
@@ -117,14 +129,14 @@ import { action, makeObservable, observable } from "mobx";
   // 海关信息
 
   // 发货国家/地区
-  @observable notion: string = '';
+  @observable notion: string|undefined = '';
   // HS(协调制度)代码
-  @observable HSCode: string = '';
+  @observable HSCode: string|undefined = '';
 
-  @action setNotion = (value: string) => {
+  @action setNotion = (value: string|undefined) => {
     this.notion = value;
   }
-  @action setHSCode = (value: string) => {
+  @action setHSCode = (value: string|undefined) => {
     this.HSCode = value;
   }
 
@@ -201,11 +213,12 @@ import { action, makeObservable, observable } from "mobx";
   }
   // 重置状态
   reset(){
+    this.model = '';
     this.title = '';
     this.content = '';
     this.content1 = '';
     this.selectedImgList = [];
-    this.price = 0;
+    this.price = 1000;
     this.originPrice = 0;
     this.costPrice = 0;
     this.needTax = false;

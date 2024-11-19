@@ -1,4 +1,4 @@
-import { Space, Select, Input, Tag, Button } from "antd";
+import { Space, Select, Input, Tag, Button, ConfigProvider } from "antd";
 import type { SearchProps } from 'antd/es/input/Search';
 import type { SelectProps } from 'antd';
 import PriceRangeSelector from "../Select/PriceRangeSelector";
@@ -7,77 +7,72 @@ import MoreSelect from "../Select/MoreSelect";
 import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
 
 import { useEffect, useImperativeHandle, useState } from "react"
-import { getLanguages } from "@/services/y2/api";
+import { getLanguages, selectTags } from "@/services/y2/api";
 import { set } from "lodash";
-
+import DrawerComponent from "../Drawer/Drawer";
+import Drawer from "../Drawer/Drawer";
+import EditTableHead from './../Select/EditTableHead';
 
 const { Search } = Input;
-
-
-
 
 type TagRender = SelectProps['tagRender'];
 
 
-const options: SelectProps['options'] = [
-    {
-        value: 'gold',
-        label: undefined
-    },
-    {
-        value: 'lime',
-        label: undefined
-    },
-    {
-        value: 'green',
-        label: undefined
-    },
-    {
-        value: 'cyan',
-        label: undefined
-    },
-];
-
-
-
-
-
-
-const tagRender: TagRender = (props) => {
-    const { label, value, closable, onClose } = props;
-    const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
-    };
-    return (
-        <div>
-            <Tag
-            color={value}
-            onMouseDown={onPreventMouseDown}
-            closable={closable}
-            onClose={onClose}
-            style={{ marginInlineEnd: 4 }}
-        >
-            {label}
-        </Tag>
-        </div>
+// const tagRender: TagRender = (props) => {
+//     const { label, value, closable, onClose } = props;
+//     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
+//         event.preventDefault();
+//         event.stopPropagation();
+//     };
+//     return (
+//         <div>
+//             <Tag
+//             color={value}
+//             onMouseDown={onPreventMouseDown}
+//             closable={closable}
+//             onClose={onClose}
+//             style={{ marginInlineEnd: 4 }}
+//         >
+//             {label}
+//         </Tag>
+//         </div>
         
-    );
-};
+//     );
+// };
 
 export default function ProductsSelectCard(){
     const [language, setLanguage] = useState("2");
     const [languageData, setLanguageData] = useState([]);
     const [searchType,setSearchType] = useState(0);
-    // const [selectProps,setSelectProps] = useState({
-    //     languagesId: "2",
-    //     title: "",
-    //     model: ""
-    // })
+    
+    let timeTags:object[] = [];
+    const [tags,setTags] = useState("");
+    const [tagsList, setTagsList] = useState<object[]>([]);
+   
     const [title,setTitle] = useState("");
     const [model,setModel] = useState("");
-
+    // 标签列表
+    const options: SelectProps['options'] = tagsList;
+    const [openTagsList,setOpenTagsList] = useState(false);
+    // 添加标签 
+    function getTags(language:string){
+        selectTags(language).then(res=>{
+            // console.log(res)
+            if(res.code == 0){
+                res.data.forEach((element:any) => {
+                    timeTags.push({
+                        label: element.tag,
+                        value: element.id
+                    })
+                });
+                setTagsList(timeTags)
+            }else if(res.code == 201){
+                setTagsList([])
+            }
+        })
+    }
     useEffect(()=>{
+        // 添加语言
         let tempList = [];
         if(languageData.length==0){
             getLanguages().then(res=>{
@@ -90,8 +85,11 @@ export default function ProductsSelectCard(){
                 // console.log(tempList);
                 setLanguageData(tempList)
             })
+        };
+        if(timeTags.length == 0){
+            getTags(language)
         }
-    })
+    },[])
     // 搜索 0 - 7
     const selectSearch = (value: number) => {
         // console.log(`selected ${value}`);
@@ -122,13 +120,27 @@ export default function ProductsSelectCard(){
                 break;
         }
     }
-
+    
     // 语言选择
     const languageChange= (value: string) => {
         setLanguage(value)
+        getTags(value)
     };
+    
+    let str = ""
+    // 标签选择
+    const handleTagChange = (value: string,option:any)=>{
+        console.log(option)
+        str = ""
+        option.forEach((element:any) => {
+            // console.log(element.label)
+            str+=","+element.label
+        });
+        // setTags(str.slice(1))
+    }
     return (
         <> 
+            
             <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
                     display: 'flex',
@@ -189,17 +201,50 @@ export default function ProductsSelectCard(){
                             ]}
                         />
                         {/* 3 */}
-                        <Select
-                            size="large"
-                            placeholder='标签'
-                            mode="multiple"
-                            // tagRender={tagRender}
-                            defaultValue={[]}
-                            style={{
-                                minWidth: 140
-                            }}
-                            options={options}
-                        />
+                        <ConfigProvider
+                            theme={{
+                                // 2. 组合使用暗色算法与紧凑算法
+                                // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+                                components: {
+                                    Select: {
+                                        // optionPadding: '0px 0px',
+                                        // showArrowPaddingInlineEnd: '0px',
+                                    }
+                                },
+                            }}>
+                            <Select
+                                size="large"
+                                placeholder='标签'
+                                mode="multiple"
+                                style={{
+                                    minWidth: 200
+                                }}
+                                open={openTagsList}
+                                dropdownStyle={{padding:"0px"}}
+                                dropdownRender={(menu) => (
+                                    <>
+                                    {menu}
+                                    {/* 1px solid #d7dbe7 */}
+                                        <div style={{width:"100%",height:"1px",backgroundColor:"#d7dbe7"}}></div>
+                                        <div style={{textAlign:"right",padding:"10px"}}>
+                                            {/* 解决失去焦点事件优先级较高的问题 */}
+                                            <Button onMouseDown={()=>{
+                                                setOpenTagsList(false)
+                                                setTags(str.slice(1))
+                                            }} type="primary">
+                                            确认
+                                            </Button>
+                                        </div>
+                                        
+                                    </>
+                                )}
+                                options={options}
+                                onChange={handleTagChange}
+                                onFocus={()=>{setOpenTagsList(true)}}
+                                onBlur={()=>{setOpenTagsList(false)}}
+                            ></Select>
+                        </ConfigProvider>
+                        
                         {/* 4 */}
                         <PriceRangeSelector />
                     </div>
@@ -212,7 +257,7 @@ export default function ProductsSelectCard(){
                         }}>
 
                         {/*  */}
-                        <Select
+                        <Select 
                             size='large'
                             defaultValue="English"
                             style={{ width: 100 }}
@@ -223,7 +268,7 @@ export default function ProductsSelectCard(){
                         {/* 5 */}
                         <MoreSelect />
                         {/* 6 */}
-                        <Button size="large">编辑表头</Button>
+                        <EditTableHead />
                         {/* 7 */}
                         <Select
                             size='large'
@@ -245,7 +290,7 @@ export default function ProductsSelectCard(){
                     </div>
                 </div>
             </div>
-            <ProductListAjax selectProps={{language:language,title:title,model:model}}  />
+            <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  />
         </>
     );
 }

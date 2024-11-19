@@ -119,6 +119,16 @@ export default function ProductImgCard() {
   let imageMap = new Map();
   // 图片集合
 
+  useEffect(() => {
+    let tempList = Array.from(newStore.getSelectedImgList(),(res,index)=>{
+      return {
+        uid:index,
+        url:res,
+      }
+    })
+    setFileList(tempList as any)
+  }, [])
+  
   // 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {

@@ -18,7 +18,7 @@ import SEOCard from './SEOCard';
 import StockCard from './StockCard';
 import ThemeTemplateCard from './ThemeTemplateCard';
 import ThirdPartyInfoCard from './ThirdPartyInfoCard';
-import { addStyle, addStyleContent, addStyleName, getProductStyleList, getProductStyleValueList, updateProductStyle } from '@/services/y2/api';
+import { addProduct, addStyle, addStyleContent, addStyleName, addTags, getProductStyleList, getProductStyleValueList, updateProductStyle } from '@/services/y2/api';
 
 
 
@@ -97,42 +97,66 @@ import { addStyle, addStyleContent, addStyleName, getProductStyleList, getProduc
 //         }
 //     },10000)
 // }
+// 表单项商品数据类型
+interface DataType {
+    key: React.Key;
+    imgUrl?: string;
+    product_image?: string;
+    title?: string;
+    content?: string;
+    price?: number;
+    costPrice?: number;
+    ISBN?: string;
+    inventory?: number;
+    HSCode?:string;
+    notion?: string;
+    model?: string;
+    state?: boolean;
+    productid:string;
+    languages_id:string
+}
+
 interface LocationState {
-    copyProduct?:object;
+    copyProduct:DataType;
     copyProductImage?: boolean;
     copyProductInventory?: boolean;
     radioValue?:number;
     // 可以根据实际需求添加其他字段
-  }
-
+}
 
 function AddNewProduct(){
-    
     const [styleId, setStyleId] = useState('');
-    
-
     let productInfo = history.location.state as LocationState;
-    
-    useEffect(()=>{
-        if(productInfo){
-
-            if(productInfo.copyProductImage){
-                
-            }
-            if(productInfo.copyProductInventory){
-                
-            }
-
-            // 商品状态
-            productInfo.radioValue == 1? newStore.setOnPutProduct(true):newStore.setOnPutProduct(false);
-            // if(productInfo.radioValue)
-            console.log()
+    if(productInfo){
+        // 复制图片
+        if(productInfo.copyProductImage){
+            newStore.setSelectedImgList(JSON.parse(productInfo.copyProduct.product_image as string))
         }
+        // 库存
+        if(productInfo.copyProductInventory){
+            newStore.setInventory(productInfo.copyProduct.inventory)
+        }
+        if(productInfo.radioValue == 1){
+            newStore.setOnPutProduct(true)
+        }else{
+            newStore.setOnPutProduct(false);
+        }
+        // 
+        newStore.setTitle('[Copy]'+productInfo.copyProduct.title)
+        newStore.setContent(productInfo.copyProduct.content)
+        newStore.setPrice(productInfo.copyProduct.price)
+        newStore.setCostPrice(productInfo.copyProduct.costPrice)
+        newStore.setModel(productInfo.copyProduct.model)
+        // 新增 11-19
+        newStore.setHSCode(productInfo.copyProduct.HSCode)
+        newStore.setISBN(productInfo.copyProduct.ISBN)
+        newStore.setNotion(productInfo.copyProduct.notion)
+    }
+    console.log(productInfo)
+    // 复制
+    useEffect(()=>{
+        
     },[])
-
-
-
-    
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: string) => {
         setStyleId(value);
@@ -176,7 +200,8 @@ function AddNewProduct(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={()=>{
                             newStore.setSelectedImgList(Array.from(newStore.temp.values()))
-                            // console.log(newStore)
+                            console.log(newStore)
+                            // 获取商品id
                             // console.log(newStore.styleName)
                             // console.log(newStore.styleValue)
                             // 通过产品id添加款式
@@ -229,22 +254,18 @@ function AddNewProduct(){
                             //     console.log(res)
                             // })
                             // 通过模型id获取
-
-
-                            
-
-                            newStore.submitAddProduct().then(res=>{
-                                message.success('创建成功')
-                                history.push('/products/index')
-                                if(res.code==0){
-                                    message.success('创建成功')
-                                    // newStore.reset()
-                                    history.push('/products/index')
-                                    // 返回产品id 根据产品id在本地自动请求款式直到成功
-                                }else{
-                                    message.error('noooo');
-                                }
-                            });
+                            // newStore.submitAddProduct().then(res=>{
+                            //     // message.success('创建成功')
+                            //     // history.push('/products/index')
+                            //     if(res.code==0){
+                            //         message.success('创建成功')
+                            //         // newStore.reset()
+                            //         history.push('/products/index')
+                            //         // 返回产品id 根据产品id在本地自动请求款式直到成功
+                            //     }else{
+                            //         message.error('noooo');
+                            //     }
+                            // });
                         }}>创建</Button>
                     </div>
                 </div>
