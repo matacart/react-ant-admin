@@ -1,15 +1,17 @@
-import { PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 // import { Link } from "@umijs/max";
-import { Button, Card, Divider, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
+import { Button, Card, Checkbox, Divider, Form, Input, InputRef, message, Modal, Select, SelectProps, Space, Switch, Tooltip } from "antd";
 import styled from "styled-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import newStore from "@/store/newStore";
 import { Link } from "react-router-dom";
 import oldStore from "@/store/oldStore";
+import { upDateProductStatus } from "@/services/y2/api";
+import { observer } from "mobx-react";
 
 // 上架商品
 const onPutProduct = (checked: boolean) => {
-    oldStore.setOnPutProduct(!oldStore.onPutProduct);
+    // oldStore.setOnPutProduct(!oldStore.onPutProduct);
 };
 
 // type WebChannel = {
@@ -85,10 +87,13 @@ const handleTagChange = (value: string) => {
 
 let index = 0;
 
-export default function ProductSettingsEdit() {
+function ProductSettingsEdit(props:any) {
     const [items, setItems] = useState(['jack', 'lucy']);
     const [name, setName] = useState('');
     const inputRef = useRef<InputRef>(null);
+
+    const [status,setStatus] = useState("");
+    
     let [productType,setProductType] = useState(oldStore.productType);
     // let [productStatus,setProductStatus] = useState(oldStore.onPutProduct)
     let tag:any=[];
@@ -114,18 +119,61 @@ export default function ProductSettingsEdit() {
     };
 
 
+    // 取消弹窗
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    // 待优化
+    const handleOk = () => {
+        upDateProductStatus(oldStore.productId,"0").then(res=>{
+            if(res.code == 0){
+                setStatus("0");
+                props.upProductStatus("0")
+                oldStore.setProductStatus("0")
+                message.success('取消商品存档成功');
+            }else{
+                message.error('取消商品存档失败');
+            }
+        })
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
+    useEffect(()=>{
+        setStatus(props.productStatus)
+    },[props.productStatus])
 
 
     return (
         <Scoped>
             <Card title='商品设置' className="card">
+                {/* 对话窗 */}
+                <Modal centered title="取消商品存档" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                    <p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>
+                </Modal>
+                {status == "-1"?<div>
+                    <div style={{backgroundColor:"#EEF1F6",display:'flex',justifyContent:"space-between",padding:"8px"}}>
+                        <div>
+                            <ClockCircleOutlined /><span style={{marginLeft:"8px"}}>已存档</span>
+                        </div>
+                        <div style={{color:"#1677FF",cursor:"pointer"}} onClick={showModal}>取消</div>
+                    </div>
+                    <div style={{marginTop:"6px",color:"#7A8499"}}>取消存档后商品将变为下架状态，您可以进行上架售卖</div>
+                    
+                </div>:
                 <div className="item between">
                     <span>上架商品</span>
-                    <Switch defaultChecked={oldStore.onPutProduct} onChange={onPutProduct} />
-                </div>
+                    <Switch defaultChecked={oldStore.productStatus=="1"?true:false} onChange={(checked)=>{
+                        checked?oldStore.setProductStatus("1"):oldStore.setProductStatus("0")
+                    }} />
+                </div>}
                 <div className="item">
-                    <div>发货</div>
+                    <div style={{marginBottom:"4px"}}>发货</div>
+                    <Checkbox onChange={(e)=>{
+                    }}>需要运输</Checkbox>
                 </div>
                 <div className="item webChannelContent" >
                     <div className="between">
@@ -162,7 +210,7 @@ export default function ProductSettingsEdit() {
                         }} label={
                             <>
                                 SPU
-                                <Tooltip title="这里是关于用户名的额外信息">
+                                <Tooltip title="标准化产品单元，如：属性值、特性相同的商品可以称为一个 SPU">
                                     <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                         <QuestionCircleOutlined />
                                     </span>
@@ -171,10 +219,8 @@ export default function ProductSettingsEdit() {
                         } >
                         <Input
                             onChange={(e)=>{
-                                // console.log(e.target.value)
                                 oldStore.setSPU(e.target.value)
                             }}
-                            // value={oldStore.SPU}
                             defaultValue={oldStore.SPU}
                             className="ant-input"
                         />
@@ -290,6 +336,7 @@ export default function ProductSettingsEdit() {
     )
 }
 
+export default ProductSettingsEdit
 
 const Scoped = styled.div`
     .card{

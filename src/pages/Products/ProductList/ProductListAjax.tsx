@@ -4,7 +4,7 @@ import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'an
 import qs from 'qs';
 import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
-import { history, useIntl } from '@umijs/max';
+import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
 import globalStore from '@/store/globalStore';
@@ -189,22 +189,25 @@ function ProductListAjax(selectProps:any) {
           gap: 9,
           alignContent: 'center',
         }}>
-          <Switch loading={onLoadingList[index]} style={{
-            position: 'relative',
-            top: "3px",
-          }} size='small' checked={data[index].state} onChange={(checked,event) => { 
-            event.stopPropagation();
-            let tempList = [...onLoadingList];
-            tempList[index] = true;
-            setOnLoadingList(tempList);
-            // onLoadingList.splice(index)
-            productStatusConfirm(record,index);
-          }} />
-          <Popover content={content} title="销售渠道" style={{
-            width: '20px'
-          }} trigger="click">
-            {data[index].state ? '上架' : '下架'}
-          </Popover>
+          {newStore.flag !=="-1"?<>
+            <Switch loading={onLoadingList[index]} style={{
+              position: 'relative',
+              top: "3px",
+            }} size='small' checked={data[index].state} onChange={(checked,event) => { 
+              event.stopPropagation();
+              let tempList = [...onLoadingList];
+              tempList[index] = true;
+              setOnLoadingList(tempList);
+              // onLoadingList.splice(index)
+              productStatusConfirm(record,index);
+            }} />
+            <Popover content={content} title="销售渠道" style={{
+              width: '20px'
+            }} trigger="click">
+              {data[index].state ? '上架' : '下架'}
+            </Popover>
+          </>:<div>已存档</div>}
+          
         </div>,
     },
     {
@@ -220,18 +223,20 @@ function ProductListAjax(selectProps:any) {
 
           }} >
             <ButtonIcon>
-              <div className='wrap' onClick={(e) => {
-                  e.stopPropagation()
-                  if(globalStore.shop.length>0){
-                    history.push(`https://`+globalStore.shop[0].domainName+`/h-product-detail-p`+record.productid+`.html`);
-                  }else{
-                    message.error("请先设置店铺")
-                  }
-                }}>
-                <Tooltip title="预览">
-                  <EyeOutlined />
-                </Tooltip>
-              </div>
+              {/* <Link to={`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`} target='_blank'> */}
+                <div className='wrap' onClick={(e) => {
+                    e.stopPropagation()
+                    if(globalStore.shop.domainName && globalStore.shop.domainName!==""){
+                      window.open(`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`)
+                    }else{
+                      message.error("请先设置店铺")
+                    }
+                  }}>
+                  <Tooltip title="预览">
+                    <EyeOutlined />
+                  </Tooltip>
+                </div>
+              {/* </Link> */}
             </ButtonIcon>
             <ButtonIcon>
               <Tooltip title="复制">
@@ -314,7 +319,7 @@ function ProductListAjax(selectProps:any) {
       })
   };
   useEffect(() => {
-    // 初始化商品的状态
+    // 初始化商品
     newStore.reset();
     fetchData();
     // console.log(selectProps.selectProps)

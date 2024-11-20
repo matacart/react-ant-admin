@@ -10,7 +10,7 @@ import { action, makeObservable, observable } from "mobx";
 //   url?: string;
 // }
 
- class newStore {
+ class oldStore {
 
   
   // 产品id
@@ -31,13 +31,12 @@ import { action, makeObservable, observable } from "mobx";
   @observable employee_id = 0;
   @observable employee_realname = '';
   @observable languages_name = "";
-  @observable model = "";
+
   @observable update_time = "";
   @observable specialprice = "";
   @observable start_time = "";
   @observable end_time = "";
   @observable weight_class_id = "";
-  @observable languages_id = "";
   @observable stock_status_id = "";
   @observable subtract = 0;
   @observable shipping = 0;
@@ -66,25 +65,33 @@ import { action, makeObservable, observable } from "mobx";
   //   this.imgTempList = res;
   // }
   // 商品信息
-
-  // 商品标题 
-  @observable title = '';
-  // 商品摘要
-  @observable content = '';
-  // 商品描述
-  @observable content1 = '';
-  // 商品标题 
+  @observable model = "";
+  @action setModel = (model: string) => {
+    this.model = model;
+  }
+  
   @observable language = '2';
+  @action setLanguage = (language: string) => {
+    this.language = language;
+  }
   // 商品图片/视频  
   @observable selectedImgList: UploadFile[] = [];
   // -- 封面
   @observable additionalImage:UploadFile[] = [];
+
+  @observable temp = new Map();
+  // 商品标题 
+  @observable title = '';
   @action setTitle = (title: string) => {
     this.title = title;
   }
+  // 商品摘要
+  @observable content = '';
   @action setContent = (content: string) => {
     this.content = content
   }
+  // 商品描述
+  @observable content1 = '';
   @action setContent1 = (content1: string) => {
     this.content = content1
   }
@@ -114,21 +121,21 @@ import { action, makeObservable, observable } from "mobx";
   }
   // 价格/交易
   // 售价
-  @observable price: valueType = 0;
+  @observable price: number|undefined = 1000;
   // 原价
-  @observable originPrice: valueType = 0;
+  @observable originPrice: number|undefined = 0;
   // 成本价
-  @observable costPrice: valueType = 0;
+  @observable costPrice: number|undefined = 1000;
   // 需要收取税费
   @observable needTax: boolean = false;  //0
 
-  @action setPrice = (value: valueType) => {
+  @action setPrice = (value: number|undefined) => {
     this.price = value;
   }
-  @action setOriginPrice = (value: valueType) => {
+  @action setOriginPrice = (value: number|undefined) => {
     this.originPrice = value;
   }
-  @action setCostPrice = (value: valueType) => {
+  @action setCostPrice = (value: number|undefined) => {
     this.costPrice = value;
   }
   // 税费
@@ -189,7 +196,7 @@ import { action, makeObservable, observable } from "mobx";
 
   // 商品设置
   // 上架商品 -- status
-  @observable onPutProduct: boolean = false;
+  @observable productStatus = "";
   // SPU
   @observable SPU: string = '';
   // 重量
@@ -203,8 +210,8 @@ import { action, makeObservable, observable } from "mobx";
 
 
   // 设置 onPutProduct  
-  @action setOnPutProduct(value: boolean) {
-    this.onPutProduct = value;
+  @action setProductStatus(value: string) {
+    this.productStatus = value;
   }
 
   // 设置 SPU  
@@ -234,6 +241,35 @@ import { action, makeObservable, observable } from "mobx";
     this.productType = value;
   }
 
+
+  // 重置商品
+  reset(){
+    this.model = '';
+    this.title = '';
+    this.content = '';
+    this.content1 = '';
+    this.selectedImgList = [];
+    this.price = 1000;
+    this.originPrice = 0;
+    this.costPrice = 0;
+    this.needTax = false;
+    this.SKU = '';
+    this.ISBN = '';
+    this.inventory = 0;
+    this.inventoryTracking = false;
+    this.continueSell = false;
+    this.notion = '';
+    this.HSCode = '';
+    this.multipleStyles = false;
+    this.productStatus = "";
+    this.SPU = '';
+    this.weight = '';
+    this.manufactuer = '';
+    this.tag = '';
+    this.productType = '';
+    this.temp.clear();
+  }
+
   // @action submitAddProduct() {
   //   return addProduct()
   // }
@@ -242,7 +278,7 @@ import { action, makeObservable, observable } from "mobx";
 
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default new newStore();
+export default new oldStore();
 
 
 

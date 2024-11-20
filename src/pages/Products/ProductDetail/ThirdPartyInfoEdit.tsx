@@ -10,7 +10,7 @@ export default function ThirdPartyInfoEdit() {
             <Card>
                 <div className="title">
                     绑定第三方商品
-                    <Tooltip title="这里是关于用户名的额外信息">
+                    <Tooltip title="客户可以从商品详情页访问已绑定的第三方商品链接">
                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                             <QuestionCircleOutlined />
                         </span>

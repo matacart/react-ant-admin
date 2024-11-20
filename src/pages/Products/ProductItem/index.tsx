@@ -8,8 +8,9 @@ import { history } from '@umijs/max';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
-import ProductsSelectCardOn from '@/components/Card/ProductsSelectCardOn';
 import { Switch } from 'antd/lib';
+import { setFlag } from 'mobx/dist/internal';
+import oldStore from '@/store/oldStore';
 
 const TabLabel = styled.div`
     font-size: 16px;
@@ -97,7 +98,7 @@ const App: React.FC = () => {
       case '3':
         return newStore.setFlag("0");
       case '4':
-        return newStore.setFlag("");
+        return newStore.setFlag("-1");
     }
   };
 
@@ -189,6 +190,8 @@ const App: React.FC = () => {
 
   useEffect(()=>{
     // console.log(1111)
+    // 重新渲染初始化状态
+    newStore.setFlag("");
   },[]);
 
   return (

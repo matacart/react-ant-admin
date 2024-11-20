@@ -1,17 +1,15 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Button, Divider,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
 // 引入
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
 import ProductImgEdit from './ProductImgEdit';
-import ProductStyleListEdit2 from './ProductStyleListEdit2';
-// import ProductSettingsEdit from './ProductSettingsEdit';
 import ProductSettingsEdit from './ProductSettingsEdit';
 import SEOEdit from './SEOEdit';
 import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
-import { deleteProduct, getProductDetail,submitRenewalProduct } from '@/services/y2/api';
+import { deleteProduct, getProductDetail,submitRenewalProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
 import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
@@ -20,6 +18,7 @@ import oldStore from '@/store/oldStore';
 import MultipleStylesEdit from './MultipleStylesEdit';
 import ProductStyleListEdit from './ProductStyleListEdit';
 import { styled } from 'styled-components';
+import PriceOrTransactionCardEdit from './PriceOrTransactionCardEdit';
 // 信息
 interface ProductDetail {
     title:string;
@@ -40,7 +39,7 @@ interface ProductDetail {
     // tag:string;
 }
 
-// 
+// 删除
 function productDel(id:any){
     console.log(id)
     return deleteProduct(id).then(res=>{
@@ -59,7 +58,40 @@ function ProductDetail() {
     const [modal, contextHolder] = Modal.useModal();
     const [style, setStyleId] = useState([]);
 
+    // 商品存档
+    const [productStatus,setProductStatus] = useState("");
+
+    const [onFile,setOnFile] = useState(false);
     
+    // 
+    const [isLoading,setIsLoading] = useState(false);
+
+    
+    const onFileOk = () => {
+        setOnFile(false);
+        if(productStatus == "-1"){
+            setProductStatus('0');
+            oldStore.setProductStatus('0');
+            upDateProductStatus(oldStore.productId, '0').then(res=>{
+                if(res.code == 0){
+                    message.success('取消存档成功');
+                }else{
+                    message.error('取消存档失败');
+                }
+            })
+        }else{
+            setProductStatus('-1');
+            oldStore.setProductStatus('-1');
+            upDateProductStatus(oldStore.productId, '-1').then(res=>{
+                if(res.code == 0){
+                    message.success('存档成功');
+                }else{
+                    message.error('存档失败');
+                }
+            })
+        }
+    };
+
     const confirm = () => {
         modal.confirm({
             title: "确定删除吗？",
@@ -79,16 +111,15 @@ function ProductDetail() {
             console.log(product_i.languages_id)
             const response = await getProductDetail(product_i.productId, product_i.languages_id); // 参数
             if (response.data) {
-                console.log(response.data)
+                // console.log(response.data)
                 setProductDetail(response.data);
-                console.log(response.data)
                 oldStore.title=response.data.title
                 oldStore.content=response.data.content
                 oldStore.content1=response.data.content1
                 oldStore.price=response.data.price
                 oldStore.originPrice=response.data.originPrice
-                oldStore.costPrice=response.data.costPrice
-                oldStore.setISBN(response.data.ISBN)
+                oldStore.costPrice=response.data.cost_price
+                oldStore.setISBN(response.data.barcode)
                 oldStore.setSKU(response.data.sku)
                 oldStore.inventory=response.data.quantity
                 oldStore.SPU=response.data.SPU
@@ -96,17 +127,22 @@ function ProductDetail() {
                 oldStore.manufactuer=response.data.manufactuer
                 oldStore.tag=response.data.tag
                 oldStore.productType=response.data.product_type
-                // oldStore.setSelectedImgList(
+                // 图片  
                 oldStore.setSelectedImgList(JSON.parse(response.data.additional_image))
-                // console.log(JSON.parse(response.data.additional_image))
+                JSON.parse(response.data.additional_image).forEach((value:any,index:any) => {
+                    oldStore.temp.set(index,value)
+                });
                 // 税费
                 oldStore.setNeedTax(response.data.needTax == 0 ? false : true)
                 // 
                 oldStore.setInventoryTracking(response.data.inventoryTracking == 0 ? false : true)
                 oldStore.setContinueSell(response.data.continueSell == 0 ? false : true)
-                oldStore.setOnPutProduct(response.data.status === 0 ? false : true)
-                oldStore.setHSCode(response.data.HSCode)
-                oldStore.setNotion(response.data.notion)
+                oldStore.setProductStatus(response.data.status)
+                // 
+                setProductStatus(response.data.status)
+                oldStore.setHSCode(response.data.hs_code)
+                oldStore.setNotion(response.data.shipping_country_id)
+                oldStore.setLanguage(response.data.languages_id)
                 // 
                 oldStore.setProductId(response.data.id);
                 // 旧属性
@@ -124,7 +160,6 @@ function ProductDetail() {
                 oldStore.start_time = response.data.start_time
                 oldStore.end_time = response.data.end_time
                 oldStore.weight_class_id = response.data.weight_class_id
-                oldStore.languages_id = response.data.languages_id
                 oldStore.stock_status_id = response.data.stock_status_id
                 oldStore.subtract = response.data.subtract
                 oldStore.shipping = response.data.shipping
@@ -170,18 +205,25 @@ function ProductDetail() {
     };
   
     // 在组件加载时调用 fetchProductDetail
-    React.useEffect(() => {
-      fetchProductDetail();
+    useEffect(() => {
+        oldStore.reset();
+        fetchProductDetail();
     }, []);
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: any) => {
         setStyleId(value);
         // 需要有多款式的时候才显示
     };
-
-  
+    
+    const updateData = (status:string)=>{
+        setProductStatus(status)
+    }
     return (
         <div>
+            {/* 弹窗 */}
+            <Modal centered title={productStatus == "-1"?"取消商品存档":"将商品存档"} open={onFile} onOk={onFileOk} onCancel={()=>{setOnFile(false)}}>
+                {productStatus == "-1"?<p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>:<p>存档后销售渠道不再展示此商品，可通过商品管理进行查看</p>}
+            </Modal>
         { productDetail && 
         <StyledDiv>
         <div className='mc-layout-wrap'>
@@ -199,21 +241,21 @@ function ProductDetail() {
                         <Select className='selector' defaultValue="分享" />
                     </div>
                 </div>
-                {/* <Spin> */}
+            <Spin spinning={isLoading}>
                 <div className='mc-layout-main'> 
                     <div className='mc-layout-content'>
                         <ProductDataEdit/>
                         {/* <ProductDataEdit productData={{title:productDetail?.title,content:productDetail?.content,content1:productDetail?.content1}} /> */}
                         <ProductImgEdit/>
                         {/* 价格 */}
-                        {/* {productDetail && <ProductStyleListEdit2 productDetail={productDetail}/>} */}
+                        <PriceOrTransactionCardEdit />
                         <StockEdit />
                         <CustomsDeclarationEdit />
                         <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
                         {style.length>0 && <ProductStyleListEdit styledData={style} />} 
                     </div>
                     <div className='mc-layout-extra'>
-                        <ProductSettingsEdit/>
+                        <ProductSettingsEdit productStatus={productStatus} upProductStatus={updateData} />
                         <TradingRecords/>
                         <SEOEdit/>
                         <ThirdPartyInfoEdit/>
@@ -224,18 +266,23 @@ function ProductDetail() {
                 <div className='mc-footer'>
                     <Button type="primary" danger onClick={confirm}>将商品删除</Button>
                     {contextHolder}
-                    <Button style={{marginLeft:-900}}>将商品存档</Button>
+                    {productStatus !== "-1"?<Button style={{marginLeft:"-900px"}} onClick={()=>{
+                        setOnFile(true);
+                    }}>将商品存档</Button>:<Button style={{marginLeft:"-880px"}} onClick={()=>{
+                        setOnFile(true);
+                    }}>将商品取消存档</Button>}
                     <Button type='primary' onClick={() => {
+                        setIsLoading(true)
+                        oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
                         console.log(oldStore)
                         submitRenewalProduct(oldStore).then(res => {
-                        // if (res.code === 0) message.success('okkk');
-                        // else message.error('noooo');
-                        // history.push('/products/index')
-                        console.log(res)
+                            if (res.code === 0) message.success('修改内容已更新');
+                            // history.push('/products/index')
+                            setIsLoading(false);
                         });
                     }}>更新</Button>
                 </div>
-            {/* </Spin> */} 
+            </Spin> 
                 </div>
         </div>
         </StyledDiv>

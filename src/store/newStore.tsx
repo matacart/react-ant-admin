@@ -1,6 +1,6 @@
 import { addProduct } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
@@ -8,9 +8,13 @@ import { action, makeObservable, observable } from "mobx";
 
 // 12332222111
  class newStore {
+  
 
-
-  // tab切换
+  constructor() {
+    makeAutoObservable(this)
+  }
+  
+  // 状态切换
   @observable flag:string|undefined = '';
   @action setFlag = (flag: string|undefined) => {
     this.flag = flag;
@@ -211,7 +215,7 @@ import { action, makeObservable, observable } from "mobx";
   @action submitAddProduct() {
     return addProduct()
   }
-  // 重置状态
+  // 重置商品
   reset(){
     this.model = '';
     this.title = '';

@@ -20,6 +20,30 @@ export default function StockEdit() {
                 <Form layout="vertical">
                     <Row>
                         <Col span={11}>
+                            <Form.Item label="模型"
+                                name='model' required initialValue={oldStore.model}>
+                                <Input
+                                    onChange={(e)=>{
+                                        oldStore.setModel(e.target.value)
+                                    }}
+                                    value={oldStore.model}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                        <Form.Item label="条码(ISBN、UPC、GTIN等)"
+                                name='ISBN'>
+                                <Input
+                                    defaultValue={oldStore.ISBN}
+                                    onChange={(e)=>{
+                                        oldStore.setISBN(e.target.value)
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
                             <Form.Item
                             required
                             label="SKU"
@@ -31,16 +55,6 @@ export default function StockEdit() {
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                            <Form.Item label="条码(ISBN、UPC、GTIN等)"
-                                name='ISBN' initialValue={oldStore.ISBN}>
-                                <Input
-                                    onChange={(e)=>oldStore.setISBN(e.target.value)}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={11}>
                             <Form.Item initialValue={oldStore.inventory} label="库存数量"
                                 name='quantity'>
                                 <Input
@@ -73,7 +87,7 @@ export default function StockEdit() {
                         }}
                         
                         >缺货后继续销售
-                            <Tooltip title="这里是关于用户名的额外信息">
+                            <Tooltip title="此设置同时适用MataCart后台管理">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                     <QuestionCircleOutlined />
                                 </span>

@@ -60,6 +60,8 @@ export default function SelectDomain() {
     
     const changeDomain = (item: any) => {
         setDefaultDomain(item.id)
+        // console.log(item)
+        globalStore.setShop(item)
         setIsActive(false);
     }
 
@@ -77,7 +79,7 @@ export default function SelectDomain() {
             })
             setDomainListCurrent(domainList);
             // 缓存店铺数据
-            globalStore.setShop(domainList);
+            globalStore.setShop(domainList[0]);
             setDefaultDomain(res.data[0]?.id);
         }).catch((error) => {
             message.error('未获取到店铺列表，请检查网络')
@@ -139,7 +141,6 @@ export default function SelectDomain() {
                                     <div className="shopTitle" dangerouslySetInnerHTML={{
                                         __html: item?.id
                                     }}>
-                                        
                                     </div>
                                     <Tag className="tag tag-success" style={{
                                         display: 'flex',

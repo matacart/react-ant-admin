@@ -400,14 +400,13 @@ export async function addProduct() {
 //更新商品 
 export async function submitRenewalProduct(res:any){
   // return
-  return request('/api/ApiStore/product_reset', {
+  return request('/api/ApiStore/product_add', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data: {
       // 旧属性
-      "additional_image": oldStore.additional_image,
       "categorys": oldStore.categorys,
       "checked":oldStore.checked,
       "create_time": oldStore.create_time,
@@ -423,7 +422,7 @@ export async function submitRenewalProduct(res:any){
       "start_time": oldStore.start_time,
       "end_time": oldStore.end_time,
       "weight_class_id": oldStore.weight_class_id,
-      "languages_id": oldStore.languages_id,
+      "languages_id": oldStore.language,
       // 库存状态 1-有库存，2-无库存
       "stock_status_id": oldStore.stock_status_id,
       // 是否库存减一 1-是，0-否
@@ -459,24 +458,26 @@ export async function submitRenewalProduct(res:any){
       "title": oldStore.title,
       // 新增属性
       "needTax":oldStore.needTax?"1":"0",
-      "ISBN":oldStore.ISBN,
+      "barcode":oldStore.ISBN,
       "SPU": oldStore.SPU,
       "manufactuer":oldStore.manufactuer,
       "inventory_tracking":oldStore.inventoryTracking?"1":"0",
+      "status":oldStore.productStatus,
       // 缺货继续销售
       "continueSell":oldStore.continueSell?"1":"0",
-      "notion":oldStore.notion,  // 0 1 2 3 4 5
-      "HSCode":oldStore.HSCode,
+      "shipping_country_id":oldStore.notion,  // 0 1 2 3 4 5
+      "hs_code":oldStore.HSCode,
       "sku": oldStore.SKU,
       "categoryIds": oldStore.productType,
-      "product_image": oldStore.selectedImgList,
+      "product_image": oldStore.selectedImgList[0],
       "product_video": oldStore.product_video,  // 视频
       // "additional_image": oldStore.selectedImgList,
+      "additional_image": JSON.stringify(oldStore.selectedImgList),
       "price": oldStore.price,
       // 原价
       "originPrice":oldStore.originPrice,
       // 成本价
-      "costPrice":oldStore.costPrice,
+      "cost_price":oldStore.costPrice,
       "quantity": oldStore.inventory,
       // 销量
       "sales_count": oldStore.sales_count,
@@ -488,7 +489,7 @@ export async function submitRenewalProduct(res:any){
       // 标签
       "tag": oldStore.tag,
       // 商品状态
-      "status": oldStore.onPutProduct ? "1" : "0"
+      // "status": oldStore.onPutProduct ? "1" : "0"
     }
   })
 }
@@ -554,7 +555,7 @@ export async function getProductList(page: any, limit: any, title: string, model
   })
 }
 
-// 修改产品的状态 0：下架 1
+// 修改产品的状态 0：下架 1 -1:存档
 export async function upDateProductStatus(productId: string, status: string) {
   return await request('/api/ApiStore/product_status_update', {
     method: 'POST',

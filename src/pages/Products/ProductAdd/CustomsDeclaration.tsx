@@ -15,7 +15,6 @@ export default function CustomsDeclaration() {
     const [countryList,setCountryList] =  useState<CountryOption[]>([]);
     let country:any = [];
     useEffect(()=>{
-        Array.length
         if(countryList.length==0){
             getCountryList().then((res)=>{
                 // console.log(res)

@@ -1,23 +1,36 @@
+// import globalStore from "@/store/globalStore"
+// import newStore from "@/store/newStore"
+// import { Card } from "antd"
+// import { observer } from "mobx-react"
+// import styled from "styled-components"
+
+import SEOEdit from "@/components/Select/SEOEdit"
+import globalStore from "@/store/globalStore"
+import newStore from "@/store/newStore"
 import { Card } from "antd"
+import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 
-export default function SEOCard(){
+
+ function SEOCard(){
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <a>编辑</a>
+                        <SEOEdit />
                     </span>
                 </div>
-                <div className="webUrl">https://merchant.matacart.com/</div>
-                <div className="webTitle">未填写标题</div>
-                <div className="webDesc">未填写描述</div>
+                <div className="webUrl">{globalStore.shop.domainName}</div>
+                <div className="webTitle">{newStore.title == ""?"未填写标题":newStore.title}</div>
+                {/* 未填写标题 */}
+                <div className="webDesc">{newStore.content1==""?"未填写描述":newStore.content1}</div>
             </Card>
         </Scoped>
     )
 }
+export default observer(SEOCard)
 
 const Scoped = styled.div`
 .gap{
@@ -55,9 +68,5 @@ a{
     color: #474f5e;
     font-size: 12px;
     -webkit-line-clamp: 3;
-}
+}`
 
-
-
-
-`

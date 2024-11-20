@@ -131,6 +131,10 @@ function AddNewProduct(){
         // 复制图片
         if(productInfo.copyProductImage){
             newStore.setSelectedImgList(JSON.parse(productInfo.copyProduct.product_image as string))
+            // 存储给map
+            JSON.parse(productInfo.copyProduct.product_image as string).forEach((value:any,index:any) => {
+                newStore.temp.set(index,value)
+            });
         }
         // 库存
         if(productInfo.copyProductInventory){
@@ -200,7 +204,7 @@ function AddNewProduct(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={()=>{
                             newStore.setSelectedImgList(Array.from(newStore.temp.values()))
-                            console.log(newStore)
+                            // console.log(newStore)
                             // 获取商品id
                             // console.log(newStore.styleName)
                             // console.log(newStore.styleValue)
@@ -254,18 +258,18 @@ function AddNewProduct(){
                             //     console.log(res)
                             // })
                             // 通过模型id获取
-                            // newStore.submitAddProduct().then(res=>{
-                            //     // message.success('创建成功')
-                            //     // history.push('/products/index')
-                            //     if(res.code==0){
-                            //         message.success('创建成功')
-                            //         // newStore.reset()
-                            //         history.push('/products/index')
-                            //         // 返回产品id 根据产品id在本地自动请求款式直到成功
-                            //     }else{
-                            //         message.error('noooo');
-                            //     }
-                            // });
+                            newStore.submitAddProduct().then(res=>{
+                                // message.success('创建成功')
+                                // history.push('/products/index')
+                                if(res.code==0){
+                                    message.success('创建成功')
+                                    // newStore.reset()
+                                    history.push('/products/index')
+                                    // 返回产品id 根据产品id在本地自动请求款式直到成功
+                                }else{
+                                    message.error('noooo');
+                                }
+                            });
                         }}>创建</Button>
                     </div>
                 </div>
