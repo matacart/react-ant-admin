@@ -535,7 +535,7 @@ export async function getLanguages() {
 // model: 1
 // title: 
 // tags
-export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string,tags:string,status:string|undefined) {
+export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string,tag:string,status:string|undefined) {
   return await request(`/api/ApiStore/product_list`, {
     method: 'POST',
     headers: {
@@ -549,7 +549,7 @@ export async function getProductList(page: any, limit: any, title: string, model
       title:title,
       model:model,
       languages_id:languagesId,
-      tags:tags,
+      tag:tag,
       status:status
     }
   })
@@ -736,6 +736,21 @@ export async function selectTags(languagesId:string){
     }
   })
 }
+// 查询标签  -- 排序
+export async function selectTagsSort(languagesId:string,sortArgument:string,sortWay:string){
+  return await request('/api/ApiStore/tags_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:languagesId,
+      order_field:sortArgument,
+      order_direction:sortWay,
+    }
+  })
+}
+
 // 国家
 export async function getCountryList(){
   return await request('/api/ApiAppstore/country_select',{

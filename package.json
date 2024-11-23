@@ -58,6 +58,7 @@
     "blueimp-md5": "^2.19.0",
     "classnames": "^2.5.1",
     "echarts": "^5.5.1",
+    "fetch-jsonp": "^1.3.0",
     "fs-extra": "^11.2.0",
     "i18n-replace": "^0.1.0",
     "mobx": "^6.12.3",

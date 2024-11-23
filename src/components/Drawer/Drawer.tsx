@@ -5,6 +5,8 @@ import { CloseOutlined } from '@ant-design/icons';
 
 /**
  * 对Drawer组件的二次封装
+ * 新增宽度选择 -- wc
+ * 
  */
 export default function DrawerComponent(props:{
     title:string,
@@ -12,11 +14,12 @@ export default function DrawerComponent(props:{
     onClose:()=>void,
     children:React.ReactNode
     styles?:React.CSSProperties
-
+    width?:number
 }) {
-    let { title,open,onClose,children,styles } = props;
+    let { title,open,onClose,children,styles,width } = props;
     return (
         <Drawer
+            width={width}
             open={open}
             closeIcon={false}
             maskClosable={true}

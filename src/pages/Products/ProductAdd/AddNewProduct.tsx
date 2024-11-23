@@ -112,6 +112,7 @@ interface DataType {
     notion?: string;
     model?: string;
     state?: boolean;
+    tag?: string;
     productid:string;
     languages_id:string
 }
