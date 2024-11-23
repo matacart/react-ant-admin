@@ -23,11 +23,7 @@ interface StyleItem {
   metaFields: string;
 }
 
-
-
 // 获取
-
-
 
 function ProductStyleListEdit (styledData:any){
   const [styles, setStyles] = useState<StyleItem[]>([]);

@@ -26,7 +26,7 @@ interface DataType {
   inventory?: number;
   HSCode?:string;
   notion?: string;
-  state?: boolean;
+  state?: string;
   productid:string;
   languages_id:string
 }
@@ -83,11 +83,11 @@ function ProductListAjax(selectProps:any) {
   // 是否复制商品库存
   const [copyProductInventory, setCopyProductInventory] = useState(false);
   // 商品状态弹窗
-  const productStatusConfirm = (productData:any,index:number) => {
+  const productStatusConfirm = (productData:any,index:number,checked:boolean) => {
     const tempModal = productStatusModal.info({
-      title: productData.state?"确认下架此商品？":"确认上架此商品？",
+      title: productData.state == "1"?"确认下架此商品？":"确认上架此商品？",
       icon: <InfoCircleFilled />,
-      content: productData.state?"已下架的商品将在网店中隐藏，无法被客户看到":"已上架的商品会在网店中展示，可供你的客户浏览及购买",
+      content: productData.state == "1"?"已下架的商品将在网店中隐藏，无法被客户看到":"已上架的商品会在网店中展示，可供你的客户浏览及购买",
       centered:true,
       footer:<div style={{textAlign:"right"}}>
         <Button onClick={()=>{
@@ -99,9 +99,9 @@ function ProductListAjax(selectProps:any) {
         <Button type="primary" style={{marginLeft:"10px",marginTop:"10px"}} onClick={()=>{
           tempModal.destroy();
           // 修改商品状态
-          upDateProductStatus(productData.productid,!productData.state?"1":"0").then(res=>{
+          upDateProductStatus(productData.productid,checked?"1":"0").then(res=>{
             if(res.code == 0){
-              onChangeSwich(index)
+              onChangeSwich(index,checked)
             }else{
               message.error("修改状态失败")
             }
@@ -121,17 +121,20 @@ function ProductListAjax(selectProps:any) {
   //列表数据
   const [data, setData] = useState<DataType[]>([]);
 
+  const [tempTest,setTempTest] = useState("1");
+
   // 状态
-  const onChangeSwich = (index: number) => {
+  const onChangeSwich = (index: number,checked:boolean) => {
     // 改变商品的状态
-    let oldDataItem = data[index]
-    let newDataItem = {
-      ...oldDataItem,
-      state: !oldDataItem.state
-    }
+    // let oldDataItem = data[index]
+    // let newDataItem = {
+    //   ...oldDataItem,
+    //   state: !oldDataItem.state
+    // }
     let newData = [...data];
-    newData[index].state = !oldDataItem.state
+    newData[index].state = checked?"1":"0"
     setData(newData);
+    
   };
   // 表头
   const columns: TableColumnsType<DataType> = [
@@ -189,25 +192,23 @@ function ProductListAjax(selectProps:any) {
           gap: 9,
           alignContent: 'center',
         }}>
-          {newStore.flag !=="-1"?<>
+          {data[index].state !=="2"?<>
             <Switch loading={onLoadingList[index]} style={{
               position: 'relative',
               top: "3px",
-            }} size='small' checked={data[index].state} onChange={(checked,event) => { 
+            }} size='small' checked={data[index].state == "1"?true:false} onChange={(checked,event) => { 
               event.stopPropagation();
               let tempList = [...onLoadingList];
               tempList[index] = true;
               setOnLoadingList(tempList);
-              // onLoadingList.splice(index)
-              productStatusConfirm(record,index);
+              productStatusConfirm(record,index,checked);
             }} />
             <Popover content={content} title="销售渠道" style={{
               width: '20px'
             }} trigger="click">
-              {data[index].state ? '上架' : '下架'}
+              {data[index].state == "1" ? '下架' : '上架'}
             </Popover>
           </>:<div>已存档</div>}
-          
         </div>,
     },
     {
@@ -291,7 +292,7 @@ function ProductListAjax(selectProps:any) {
               costPrice:item.cost_price,
               title: item.title,
               content:item.content,
-              state: item.status==1,
+              state: item.status,
               inventory: item.quantity,
               ISBN:item.barcode,
               HSCode:item.hs_code,

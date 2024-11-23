@@ -19,6 +19,7 @@ import MultipleStylesEdit from './MultipleStylesEdit';
 import ProductStyleListEdit from './ProductStyleListEdit';
 import { styled } from 'styled-components';
 import PriceOrTransactionCardEdit from './PriceOrTransactionCardEdit';
+import ProductStyleList from '../ProductAdd/ProductStyleList';
 // 信息
 interface ProductDetail {
     title:string;
@@ -69,7 +70,8 @@ function ProductDetail() {
     
     const onFileOk = () => {
         setOnFile(false);
-        if(productStatus == "-1"){
+        console.log(oldStore)
+        if(productStatus == "2"){
             setProductStatus('0');
             oldStore.setProductStatus('0');
             upDateProductStatus(oldStore.productId, '0').then(res=>{
@@ -80,9 +82,9 @@ function ProductDetail() {
                 }
             })
         }else{
-            setProductStatus('-1');
-            oldStore.setProductStatus('-1');
-            upDateProductStatus(oldStore.productId, '-1').then(res=>{
+            setProductStatus('2');
+            oldStore.setProductStatus('2');
+            upDateProductStatus(oldStore.productId, '2').then(res=>{
                 if(res.code == 0){
                     message.success('存档成功');
                 }else{
@@ -107,12 +109,11 @@ function ProductDetail() {
     };
     const fetchProductDetail = async () => {
         try {
-            console.log(product_i.productId)
-            console.log(product_i.languages_id)
             const response = await getProductDetail(product_i.productId, product_i.languages_id); // 参数
             if (response.data) {
                 // console.log(response.data)
                 setProductDetail(response.data);
+                // oldStore.setProductInfo(response.data)
                 oldStore.title=response.data.title
                 oldStore.content=response.data.content
                 oldStore.content1=response.data.content1
@@ -182,7 +183,6 @@ function ProductDetail() {
                 oldStore.meta_description=response.data.meta_description
                 oldStore.minimum=response.data.minimum
                 oldStore.product_video = response.data.product_video
-                
                 // @observable ad_product_id = "0";
                 // @observable ad_product_url = "";
                 // @observable divided_status = 0;
@@ -193,9 +193,8 @@ function ProductDetail() {
                 // @observable meta_keyword = null;
                 // @observable meta_description = "";
                 // @observable minimum = "0";
-                // oldStore.costPrice=response.data[0].costPrice
-                // oldStore.content1=response.data[0].content1
-                console.log(oldStore)
+                oldStore.costPrice=response.data[0].costPrice
+                oldStore.content1=response.data[0].content1
             } else {
             console.error('Invalid data format:', response);
             }
@@ -221,8 +220,8 @@ function ProductDetail() {
     return (
         <div>
             {/* 弹窗 */}
-            <Modal centered title={productStatus == "-1"?"取消商品存档":"将商品存档"} open={onFile} onOk={onFileOk} onCancel={()=>{setOnFile(false)}}>
-                {productStatus == "-1"?<p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>:<p>存档后销售渠道不再展示此商品，可通过商品管理进行查看</p>}
+            <Modal centered title={productStatus == "2"?"取消商品存档":"将商品存档"} open={onFile} onOk={onFileOk} onCancel={()=>{setOnFile(false)}}>
+                {productStatus == "2"?<p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>:<p>存档后销售渠道不再展示此商品，可通过商品管理进行查看</p>}
             </Modal>
         { productDetail && 
         <StyledDiv>
@@ -252,7 +251,7 @@ function ProductDetail() {
                         <StockEdit />
                         <CustomsDeclarationEdit />
                         <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
-                        {style.length>0 && <ProductStyleListEdit styledData={style} />} 
+                        {/* {style.length>0 && <ProductStyleList styleId={styleId} />}  */}
                     </div>
                     <div className='mc-layout-extra'>
                         <ProductSettingsEdit productStatus={productStatus} upProductStatus={updateData} />
@@ -266,7 +265,7 @@ function ProductDetail() {
                 <div className='mc-footer'>
                     <Button type="primary" danger onClick={confirm}>将商品删除</Button>
                     {contextHolder}
-                    {productStatus !== "-1"?<Button style={{marginLeft:"-900px"}} onClick={()=>{
+                    {productStatus !== "2"?<Button style={{marginLeft:"-900px"}} onClick={()=>{
                         setOnFile(true);
                     }}>将商品存档</Button>:<Button style={{marginLeft:"-880px"}} onClick={()=>{
                         setOnFile(true);
@@ -275,7 +274,7 @@ function ProductDetail() {
                         setIsLoading(true)
                         oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
                         console.log(oldStore)
-                        submitRenewalProduct(oldStore).then(res => {
+                        oldStore.updateProduct().then(res => {
                             if (res.code === 0) message.success('修改内容已更新');
                             // history.push('/products/index')
                             setIsLoading(false);

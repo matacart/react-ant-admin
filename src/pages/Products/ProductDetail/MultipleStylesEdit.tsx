@@ -130,57 +130,57 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
   }, [tags,styleDate]);
 
 // 添加款式
-// const addProductStyle = ()=>{
-//   if(values2.length>0){
-//     values2.forEach((v,index)=>{
-//       tags[index].forEach(async e=>{
-//         let styleNameId = 0;
-//         // 创建款式名称
-//         await addStyleName(oldStore.language,v).then(res=>{
-//           if(res.code==0){
-//               styleNameId = res.id
-//           }
-//         });
-//         // 创建款式内容
-//         if(styleNameId!==0){
-//           await addStyleContent(oldStore.language,e,styleNameId).then(async res=>{
-//             let styleContentId = 0;
-//             if(res.code==0){
-//                 styleContentId = res.id
-//             }else{
-//               // 查询所有款式
-//               await getProductStyleValueList().then(r=>{
-//                 r.data.forEach((style:any)=>{
-//                   if(style.option_values_name == e && style.option_id == styleNameId){
-//                     styleContentId = style.id
-//                   }
-//                 })
-//               })
-//             }
-//             // 通过产品id关联
-//             await addStyle(styleNameId,styleContentId,oldStore.productId).then((res:any)=>{
-//               // console.log(res)
-//               if(res.code==0){
-//                 message.success('产品款式添加成功');
-//               }else{
-//                 message.error('产品款式失败');
-//               }
-//             })
-//             // // 通过模型查找款式列表
-//             await getProductStyleList(oldStore.model,oldStore.language).then((res:any)=>{
-//               // console.log(res)
-//               if(res.code==0){
-//                 setStyleDate(res.data)
-//               }else{
-//                 console.log("获取款式列表失败")
-//               }
-//             })
-//           })
-//         }
-//       })
-//     })
-//   }
-// } 
+const addProductStyle = ()=>{
+  // if(values2.length>0){
+  //   values2.forEach((v,index)=>{
+  //     tags[index].forEach(async e=>{
+  //       let styleNameId = 0;
+  //       // 创建款式名称
+  //       await addStyleName(oldStore.language,v).then(res=>{
+  //         if(res.code==0){
+  //             styleNameId = res.id
+  //         }
+  //       });
+  //       // 创建款式内容
+  //       if(styleNameId!==0){
+  //         await addStyleContent(oldStore.language,e,styleNameId).then(async res=>{
+  //           let styleContentId = 0;
+  //           if(res.code==0){
+  //               styleContentId = res.id
+  //           }else{
+  //             // 查询所有款式
+  //             await getProductStyleValueList().then(r=>{
+  //               r.data.forEach((style:any)=>{
+  //                 if(style.option_values_name == e && style.option_id == styleNameId){
+  //                   styleContentId = style.id
+  //                 }
+  //               })
+  //             })
+  //           }
+  //           // 通过产品id关联
+  //           await addStyle(styleNameId,styleContentId,oldStore.productId).then((res:any)=>{
+  //             // console.log(res)
+  //             if(res.code==0){
+  //               message.success('产品款式添加成功');
+  //             }else{
+  //               message.error('产品款式失败');
+  //             }
+  //           })
+  //           // // 通过模型查找款式列表
+  //           await getProductStyleList(oldStore.model,oldStore.language).then((res:any)=>{
+  //             // console.log(res)
+  //             if(res.code==0){
+  //               setStyleDate(res.data)
+  //             }else{
+  //               console.log("获取款式列表失败")
+  //             }
+  //           })
+  //         })
+  //       }
+  //     })
+  //   })
+  // }
+} 
   // 处理回车键事件
   function handleKeyDown(e: React.KeyboardEvent, index: number) {
     if (e.key === 'Enter') {

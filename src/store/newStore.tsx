@@ -1,4 +1,4 @@
-import { addProduct } from "@/services/y2/api";
+import { addProduct, addTags } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
 import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 
@@ -7,9 +7,7 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 
 
 // 12332222111
- class newStore {
-  
-
+class newStore {
   constructor() {
     makeAutoObservable(this)
   }
@@ -162,7 +160,7 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
   // 商品厂商
   @observable manufactuer: string = '';
   // 标签
-  @observable tag = '';
+  @observable tags = '';
   // 商品类型
   @observable productType = '';
 
@@ -190,8 +188,8 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
   }
 
   // 设置 tag 
-  @action setTag(value: string) {
-    this.tag = value;
+  @action setTags(value: string) {
+    this.tags = value;
   }
 
   // 设置 productType（这里假设你可以传入任何类型的数组）  
@@ -213,8 +211,18 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
   
 
   @action submitAddProduct() {
-    return addProduct()
+    // 提价产品
+    addTags(this.language,this.tags).then(res=>{
+      console.log(res);
+    })
+    return addProduct();
   }
+  // 新增标签
+  @observable newTagList = [];
+  @action setNewTagList(newTagList:any) {
+    this.newTagList = newTagList
+  }
+
   // 重置商品
   reset(){
     this.model = '';
@@ -238,7 +246,7 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
     this.SPU = '';
     this.weight = '';
     this.manufactuer = '';
-    this.tag = '';
+    this.tags = '';
     this.productType = '';
     this.temp.clear();
   }
@@ -251,6 +259,5 @@ export default new newStore();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 // export default new newStore(import { model_1 } from 'C:/Users/Administrator/Desktop/react-ant-admin-main/src/.umi-production/plugin-initialState/@@initialState';
-
 
 

@@ -98,7 +98,7 @@ const App: React.FC = () => {
       case '3':
         return newStore.setFlag("0");
       case '4':
-        return newStore.setFlag("-1");
+        return newStore.setFlag("2");
     }
   };
 

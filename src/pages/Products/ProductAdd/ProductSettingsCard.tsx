@@ -98,27 +98,14 @@ export default function ProductSettingsCard() {
 
     const [tagName, setTagName] = useState('');
     const inputTagRef = useRef<InputRef>(null);
-    // const [options, setOptions] = useState([
-    //     { 
-    //         label: '标签一',
-    //         value: '1',
-    //     },
-    //     {
-    //         label: '标签二',
-    //         value: '2',
-    //     }
-    // ]);
+   
     const [options, setOptions] = useState([
         '标签一','标签二'
     ]);
 
     const handleTagChange = (value: string[]) => {
-        // console.log(`selected ${value}`);
-        // newStore.setTag(value.toString())
-        // console.log(value)
         setTags(value)
-        // console.log(tags)
-        
+        newStore.setTags(value.join(","))
     };
     // 
     const [value, setValue] = useState(['0-0-0']);
@@ -141,30 +128,28 @@ export default function ProductSettingsCard() {
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
         setTags(newTags);
-        // removeTags(newStore.language,removedTag)
-        newStore.setTag(newTags.join(","))
-        console.log(tags)
+        newStore.setTags(newTags.join(","))
     };
     const showInput = () => {
-    setInputVisible(true);
+        setInputVisible(true);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+        setInputValue(e.target.value);
     };
 
     const handleInputConfirm = () => {
-    if (inputValue && !tags.includes(inputValue)) {
-        setTags([...tags, inputValue]);
-        // 添加标签
-        addTags(newStore.language,inputValue)
-        newStore.setTag([...tags, inputValue].join(","))
-    }
-    setInputVisible(false);
-    setInputValue('');
+        if (inputValue && !tags.includes(inputValue)) {
+            setTags([...tags, inputValue]);
+            // 添加标签
+            addTags(newStore.language,inputValue)
+            newStore.setTags([...tags, inputValue].join(","))
+        }
+        setInputVisible(false);
+        setInputValue('');
     };
     const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditInputValue(e.target.value);
+        setEditInputValue(e.target.value);
     };
     const handleEditInputConfirm = () => {
         const newTags = [...tags];
@@ -185,7 +170,6 @@ export default function ProductSettingsCard() {
     
     const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
-        // console.log(event)
     };
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
@@ -196,13 +180,11 @@ export default function ProductSettingsCard() {
         }, 0);
     };
 
-
     const onTagChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTagName(event.target.value);
     };
     const addItemTag = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
-        addTags(newStore.language,tagName)
         setOptions([...options, tagName || `New item ${index++}`]);
         setTagName('');
         setTimeout(() => {
@@ -339,7 +321,7 @@ export default function ProductSettingsCard() {
                         label={
                             <div className="label-content between">
                                 <span>标签</span>
-                                <TagsModal tags={tags} updatetag={updatetags}/>
+                                <TagsModal tags={tags} language={newStore.language} updatetag={updatetags}/>
                             </div>
                         }
                     >   
@@ -349,26 +331,27 @@ export default function ProductSettingsCard() {
                             placeholder="添加标签（例如：复古/夏季）"
                             onChange={handleTagChange}
                             showSearch={false}
-                            // className="ant-input"
                             tagRender={(props) => <></>}
                             dropdownRender={(menu) => (
                                 <>
-                                  {menu}
-                                    <Divider style={{ margin: '8px 0' }} />
-                                    <Space style={{ padding: '0 8px 4px' }}>
-                                        <Input
-                                            placeholder="Please enter item"
-                                            ref={inputTagRef}
-                                            value={tagName}
-                                            onChange={onTagChange}
-                                            onKeyDown={(e) => e.stopPropagation()}
-                                        />
-                                        <Button type="text" icon={<PlusOutlined />} onClick={addItemTag}>
-                                            标签
-                                        </Button>
-                                    </Space>
+                                {menu}
+                                {/* 舍弃 */}
+                                {/* <Divider style={{ margin: '8px 0' }} />
+                                <Space style={{ padding: '0 8px 4px' }}>
+                                    <Input
+                                        placeholder="Please enter item"
+                                        ref={inputTagRef}
+                                        value={tagName}
+                                        onChange={onTagChange}
+                                        onKeyDown={(e) => e.stopPropagation()}
+                                    />
+                                    <Button type="text" icon={<PlusOutlined />} onClick={addItemTag}>
+                                        标签
+                                    </Button>
+                                </Space> */}
                                 </>
                               )}
+                              value={tags}
                               options={options.map((item) => ({ label: item, value: item }))}
                         />
                         <div style={{height:"10px"}}></div>

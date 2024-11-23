@@ -325,7 +325,7 @@ export async function addProduct() {
       "status": newStore.onPutProduct ? "1" : "0",
       "SPU": newStore.SPU,
       "manufactuer":newStore.manufactuer,
-      "tag": newStore.tag,
+      "tags": newStore.tags,
       "categoryIds": newStore.productType,
       // 封面
       "product_image": newStore.selectedImgList[0] ,
@@ -487,7 +487,7 @@ export async function submitRenewalProduct(res:any){
       // 内容
       "content": oldStore.content,
       // 标签
-      "tag": oldStore.tag,
+      "tag": oldStore.tags,
       // 商品状态
       // "status": oldStore.onPutProduct ? "1" : "0"
     }
@@ -707,7 +707,7 @@ export async function addTags(languagesId:string,tag:string){
     },
     data:{
       languages_id:languagesId,
-      tag:tag
+      tags:tag
     }
   })
 }

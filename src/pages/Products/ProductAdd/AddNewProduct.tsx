@@ -165,6 +165,7 @@ function AddNewProduct(){
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: string) => {
         setStyleId(value);
+        console.log(value)
         // 初始化参数
     };
     return (
@@ -192,7 +193,7 @@ function AddNewProduct(){
                             <StockCard/>
                             <CustomsDeclaration/>
                             <MultipleStylesCard onSecondInputChange={handleSecondInputChange} />
-                            {styleId && <ProductStyleList styleId={styleId} />}
+                            {/* {styleId && <ProductStyleList styleId={styleId} />} */}
                         </div>
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>
@@ -259,9 +260,8 @@ function AddNewProduct(){
                             //     console.log(res)
                             // })
                             // 通过模型id获取
+                            console.log(newStore);
                             newStore.submitAddProduct().then(res=>{
-                                // message.success('创建成功')
-                                // history.push('/products/index')
                                 if(res.code==0){
                                     message.success('创建成功')
                                     // newStore.reset()

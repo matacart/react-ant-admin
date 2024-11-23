@@ -1,4 +1,4 @@
-import { addProduct, getProductDetail } from "@/services/y2/api";
+import { addProduct, addTags, getProductDetail, submitRenewalProduct } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
 import { valueType } from "antd/es/statistic/utils";
 import { action, makeObservable, observable } from "mobx";
@@ -19,8 +19,11 @@ import { action, makeObservable, observable } from "mobx";
     this.productId = productId;
     
   }
-  
-
+  // 
+  productInfo = {}
+  setProductInfo = (res: object) => {
+    this.productInfo = res;
+  }
 
   // 旧属性  兼容旧系统
   @observable additional_image = '';
@@ -204,7 +207,7 @@ import { action, makeObservable, observable } from "mobx";
   // 商品厂商
   @observable manufactuer: string = '';
   // 标签
-  @observable tag = '';
+  @observable tags = '';
   // 商品类型
   @observable productType = '';
 
@@ -232,8 +235,8 @@ import { action, makeObservable, observable } from "mobx";
   }
 
   // 设置 tag 
-  @action setTag(value: string) {
-    this.tag = value;
+  @action setTags(value: string) {
+    this.tags = value;
   }
 
   // 设置 productType（这里假设你可以传入任何类型的数组）  
@@ -241,6 +244,15 @@ import { action, makeObservable, observable } from "mobx";
     this.productType = value;
   }
 
+  // 更新
+  // 提价产品
+  
+  updateProduct(){
+    addTags(this.language,this.tags).then(res=>{
+      console.log(res);
+    })
+    return submitRenewalProduct(this)
+  }
 
   // 重置商品
   reset(){
@@ -265,7 +277,6 @@ import { action, makeObservable, observable } from "mobx";
     this.SPU = '';
     this.weight = '';
     this.manufactuer = '';
-    this.tag = '';
     this.productType = '';
     this.temp.clear();
   }

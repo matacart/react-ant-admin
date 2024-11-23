@@ -1,13 +1,14 @@
 import { ClockCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 // import { Link } from "@umijs/max";
-import { Button, Card, Checkbox, Divider, Form, Input, InputRef, message, Modal, Select, SelectProps, Space, Switch, Tooltip } from "antd";
+import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputRef, message, Modal, Select, SelectProps, Space, Switch, Tag, theme, Tooltip } from "antd";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import newStore from "@/store/newStore";
 import { Link } from "react-router-dom";
 import oldStore from "@/store/oldStore";
-import { upDateProductStatus } from "@/services/y2/api";
+import { selectTags, upDateProductStatus } from "@/services/y2/api";
 import { observer } from "mobx-react";
+import TagsModal from "@/components/Modal/TagsModal";
+import { lang_bnBD0 } from 'C:/Users/Administrator/Desktop/react-ant-admin-main/src/locales/bn-BD.ts';
 
 // 上架商品
 const onPutProduct = (checked: boolean) => {
@@ -79,13 +80,18 @@ for (let i = 10; i < 36; i++) {
 
 
 
-const handleTagChange = (value: string) => {
-    console.log(`selected ${value}`);
-    oldStore.setTag(value.toString())
-};
+
 
 
 let index = 0;
+
+const tagInputStyle: React.CSSProperties = {
+    width: 64,
+    height: 22,
+    marginInlineEnd: 8,
+    verticalAlign: 'top',
+};
+
 
 function ProductSettingsEdit(props:any) {
     const [items, setItems] = useState(['jack', 'lucy']);
@@ -94,21 +100,49 @@ function ProductSettingsEdit(props:any) {
 
     const [status,setStatus] = useState("");
     
+    const [tags, setTags] = useState<string[]>([]);
+    const [inputVisible, setInputVisible] = useState(false);
+    const [editInputIndex, setEditInputIndex] = useState(-1);
+    const [editInputValue, setEditInputValue] = useState('');
+    // const inputTagRef = useRef<InputRef>(null);
+    const editInputRef = useRef<InputRef>(null);
+
+    const [tagName, setTagName] = useState('');
+    const inputTagRef = useRef<InputRef>(null);
+   
+    const [options, setOptions] = useState([
+        '标签一','标签二'
+    ]);
+    
     let [productType,setProductType] = useState(oldStore.productType);
-    // let [productStatus,setProductStatus] = useState(oldStore.onPutProduct)
     let tag:any=[];
-    if(oldStore.tag){
-        tag = oldStore.tag.split(",")
+    if(oldStore.tags){
+        tag = oldStore.tags.split(",")
     }
-    // 
     // let productType = oldStore.productType.split(",")
-    console.log(tag)
+    // console.log(tag)
 
-    const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-        console.log(name)
+    // 标签
+    const handleClose = (removedTag: string) => {
+        const newTags = tags.filter((tag) => tag !== removedTag);
+        setTags(newTags);
+        oldStore.setTags(newTags.join(","))
     };
-
+    const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditInputValue(e.target.value);
+    };
+    const handleEditInputConfirm = () => {
+        const newTags = [...tags];
+        newTags[editInputIndex] = editInputValue;
+        setTags(newTags);
+        console.log(newTags)
+        setEditInputIndex(-1);
+        setEditInputValue('');
+    };
+    const handleTagChange = (value: string[]) => {
+        setTags(value)
+        oldStore.setTags(value.join(","))
+    };
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
         setItems([...items, name || `New item ${index++}`]);
@@ -117,6 +151,15 @@ function ProductSettingsEdit(props:any) {
             inputRef.current?.focus();
         }, 0);
     };
+
+    const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
+        console.log(name)
+    };
+    // 
+    const updatetags = (tag:string[]) =>{
+        setTags(tag)
+    } 
 
 
     // 取消弹窗
@@ -143,8 +186,29 @@ function ProductSettingsEdit(props:any) {
     };
 
     useEffect(()=>{
+        // 获取标签
+        selectTags(oldStore.language).then(res=>{
+            console.log(res)
+            let tempList:any = [];
+            res.data.forEach((element:any) => {
+                tempList.push(element.tag)
+            });
+            setOptions(tempList);
+        })
         setStatus(props.productStatus)
+        setTags(oldStore.tags.split(','))
     },[props.productStatus])
+    useEffect(() => {
+        if (inputVisible) {
+          inputTagRef.current?.focus();
+        }
+    }, [inputVisible]);
+
+    useEffect(() => {
+        editInputRef.current?.focus();
+    }, [editInputValue]);
+
+    
 
 
     return (
@@ -154,7 +218,7 @@ function ProductSettingsEdit(props:any) {
                 <Modal centered title="取消商品存档" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                     <p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>
                 </Modal>
-                {status == "-1"?<div>
+                {status == "2"?<div>
                     <div style={{backgroundColor:"#EEF1F6",display:'flex',justifyContent:"space-between",padding:"8px"}}>
                         <div>
                             <ClockCircleOutlined /><span style={{marginLeft:"8px"}}>已存档</span>
@@ -162,7 +226,6 @@ function ProductSettingsEdit(props:any) {
                         <div style={{color:"#1677FF",cursor:"pointer"}} onClick={showModal}>取消</div>
                     </div>
                     <div style={{marginTop:"6px",color:"#7A8499"}}>取消存档后商品将变为下架状态，您可以进行上架售卖</div>
-                    
                 </div>:
                 <div className="item between">
                     <span>上架商品</span>
@@ -257,24 +320,75 @@ function ProductSettingsEdit(props:any) {
                             }}
                         ></Input>
                     </Form.Item>
+                    {/*  */}
                     <Form.Item
                         className="moreLink"
                         label={
                             <div className="label-content between">
                                 <span>标签</span>
-                                <a>查看所有标签</a>
+                                <TagsModal tags={tags} language={oldStore.language} updatetag={updatetags}/>
                             </div>
                         }
-                    >
+                    >   
                         <Select
                             mode="tags"
-                            style={{ width: '100%', padding: '0' }}
+                            // style={{ width: '100%', padding: '0' }}
                             placeholder="添加标签（例如：复古/夏季）"
                             onChange={handleTagChange}
-                            options={options}
-                            className="ant-input"
-                            defaultValue={tag}
+                            showSearch={false}
+                            tagRender={(props) => <></>}
+                            value={tags}
+                            options={options.map((item) => ({ label: item, value: item }))}
                         />
+                        <div style={{height:"10px"}}></div>
+                        <Flex gap="4px 0" wrap>
+                            {tags.map<React.ReactNode>((tag, index) => {
+                                if (editInputIndex === index) {
+                                    return (
+                                        <Input
+                                        ref={editInputRef}
+                                        key={tag}
+                                        size="small"
+                                        style={tagInputStyle}
+                                        value={editInputValue}
+                                        onChange={handleEditInputChange}
+                                        onBlur={handleEditInputConfirm}
+                                        onPressEnter={handleEditInputConfirm}
+                                        />
+                                    );
+                                }
+                                const isLongTag = tag.length > 20;
+                                const tagElem = (
+                                <Tag
+                                    key={tag}
+                                    closable
+                                    color= "processing"
+                                    bordered={false}
+                                    style={{ userSelect: 'none',color: '#000',padding: '2px 6px'}}
+                                    onClose={() => handleClose(tag)}
+                                >
+                                    <span
+                                    onDoubleClick={(e) => {
+                                        if (index !== 0) {
+                                        setEditInputIndex(index);
+                                        setEditInputValue(tag);
+                                        e.preventDefault();
+                                        }
+                                    }}
+                                    >
+                                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+                                    </span>
+                                </Tag>
+                                );
+                                return isLongTag ? (
+                                <Tooltip title={tag} key={tag}>
+                                    {tagElem}
+                                </Tooltip>
+                                ) : (
+                                tagElem
+                                );
+                            })}
+                        </Flex>
                     </Form.Item>
                     <Form.Item
                         className="moreLink"
@@ -330,7 +444,6 @@ function ProductSettingsEdit(props:any) {
                         </div>
                     </Form.Item>
                 </Form>
-
             </Card>
         </Scoped>
     )
