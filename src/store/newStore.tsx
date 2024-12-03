@@ -11,13 +11,32 @@ class newStore {
   constructor() {
     makeAutoObservable(this)
   }
+
+  // 产品路由跳转提示 -- 页面确定跳转时清除
+  unBlock!: () => void;
+
+  @observable editStatus:boolean = false;
+
+  @action setEditStatus = (value:boolean) => {
+    this.editStatus = value;
+  }
   
   // 状态切换
   @observable flag:string|undefined = '';
   @action setFlag = (flag: string|undefined) => {
     this.flag = flag;
   }
-  
+  // 精选
+  isAlliance:string|undefined = ''
+  setIsAlliance = (value: string|undefined) => {
+    this.isAlliance = value;
+  }
+  isHosted:string|undefined = ''
+  setIsHosted = (value: string|undefined) => {
+    this.isHosted = value;
+  }
+
+  // ---------------------------------商品信息-----------------------------------------
   // 模型唯一
   @observable model:string|undefined = '';
   // 语言
@@ -25,9 +44,9 @@ class newStore {
   // 商品标题 
   @observable title:string | undefined = '';
   // 商品摘要
-  @observable content:string | undefined = '';
+  @observable content1:string | undefined = '';
   // 商品描述
-  @observable content1 = '';
+  @observable content:string | undefined = '';
 
   @observable temp = new Map();
 
@@ -39,6 +58,9 @@ class newStore {
   }
   @action setContent = (content: string|undefined) => {
     this.content = content;
+  }
+  @action setContent1 = (content1: string|undefined) => {
+    this.content1 = content1;
   }
 
   @action setModel = (model: string|undefined) => {
@@ -164,10 +186,29 @@ class newStore {
   // 商品类型
   @observable productType = '';
 
+  // 商品类型
+  @observable productCategories = '';
+
+  @action setProductCategories(value: string) {
+    this.productCategories = value;
+  }
+  
+  // 品库
+  partsWarehouse = "0"
+
+  setPartsWarehouse(value: string) {
+    this.partsWarehouse = value;
+  }
 
   // 设置 onPutProduct  
   @action setOnPutProduct(value: boolean) {
     this.onPutProduct = value;
+  }
+  // 发货
+  @observable isShipping = true;
+  @action setIsShipping(value: boolean) {
+    this.isShipping = value;
+    // console.log(value)
   }
 
   // 设置 SPU  
@@ -187,10 +228,17 @@ class newStore {
     // console.log(value)
   }
 
+  // 重量单位
+  @observable weightClassId = "1";
+  @action setWeightClassId(value: string) {
+    this.weightClassId = value;
+  }
+
   // 设置 tag 
   @action setTags(value: string) {
     this.tags = value;
   }
+
 
   // 设置 productType（这里假设你可以传入任何类型的数组）  
   @action setProductType(value: string) {
@@ -209,6 +257,80 @@ class newStore {
     this.styleValue = styleValue
   }
   
+  // 新增标签
+  @observable newTagList = [];
+  @action setNewTagList(newTagList:any) {
+    this.newTagList = newTagList
+  }
+
+  // seo设置
+  @observable metaTitle = "";
+  @observable metaKeyword = "";
+  @observable metaDescription = "";
+  @observable productUrl = "";
+  @action setMetaTitle(value: string) {
+    this.metaTitle = value;
+  }
+
+  @action setMetaKeyword(value: string) {
+    this.metaKeyword = value;
+  }
+  @action setMetaDescription(value: string) {
+    this.metaDescription = value;
+  }
+  @action setProductUrl(value: string) {
+    this.productUrl = value;
+  }
+
+
+  // 联盟托管
+  allianceStatus = "0"
+  setAllianceStatus(value:string){
+    this.allianceStatus = value
+  }
+  // 商品托管
+  hostedStatus = "0"
+  setHostedStatus(value:string){
+    this.hostedStatus = value
+  }
+
+  // seo 默认数据 -- 创建时
+  copySeo = {};
+  setCopySeo(value: string) {
+    this.copySeo = value;
+  }
+
+  @observable validate = {
+    title:"success",
+    model:"success",
+    language:"success",
+    productStatus:"success",
+    productType:"success",
+    weightClassId:"success",
+    weight:"success",
+    inventory:"success",
+    SKU:"success",
+    ISBN:"success",
+    originPrice:"success",
+    costPrice:"success",
+    content:"success",
+    content1:"success",
+    metaTitle:"success",
+    metaKeyword:"success",
+    metaDescription:"success"
+  }
+
+
+  // 数据验证 -- 状态
+  validateForm(){
+    this.title == ""?this.validate.title = "error":this.validate.title = "success";
+    this.model == ""?this.validate.model = "error":this.validate.model = "success";
+    if(this.validate.title=="success" && this.validate.model == "success"){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   @action submitAddProduct() {
     // 提价产品
@@ -217,14 +339,11 @@ class newStore {
     })
     return addProduct();
   }
-  // 新增标签
-  @observable newTagList = [];
-  @action setNewTagList(newTagList:any) {
-    this.newTagList = newTagList
-  }
+  
 
   // 重置商品
   reset(){
+    this.editStatus = false;
     this.model = '';
     this.title = '';
     this.content = '';
@@ -248,6 +367,11 @@ class newStore {
     this.manufactuer = '';
     this.tags = '';
     this.productType = '';
+    this.productCategories = '';
+    this.productUrl = "";
+    this.metaTitle = "";
+    this.metaKeyword = "";
+    this.metaDescription = "";
     this.temp.clear();
   }
 
@@ -259,5 +383,6 @@ export default new newStore();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 // export default new newStore(import { model_1 } from 'C:/Users/Administrator/Desktop/react-ant-admin-main/src/.umi-production/plugin-initialState/@@initialState';
+import { values } from 'lodash';
 
 

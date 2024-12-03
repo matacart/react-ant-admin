@@ -9,14 +9,8 @@ type EditorInstance = any; // 替换为实际的类型
   
 export default function App(prop: any){  
   const editorRef = useRef<EditorInstance>(null); 
-  // console.log(prop.prop)
   // 初始化回调函数
-  const initData = () => {
-    if(oldStore.content1){
-      // console.log(oldStore.desc)
-      editorRef.current.setContent(oldStore.content1)
-    }
-  };
+  const initData = () => {};
   return (  
     <>  
       <Editor  
@@ -24,10 +18,10 @@ export default function App(prop: any){
         licenseKey='gpl'
         // 获取内容
         onBlur={()=>{
-          prop.prop.content1 = editorRef.current?.getContent()
+          prop.prop.content = editorRef.current?.getContent()
         }}
         onInit={(_evt, editor) => (editorRef.current = editor)}  
-        initialValue=''  
+        initialValue={oldStore.content}
         init={{
           language_url: '/langs/zh_CN.js',
           language: 'zh_CN',
@@ -55,7 +49,7 @@ export default function App(prop: any){
             'table',
             'preview',
             'wordcount',
-        ],
+          ],
           toolbar:
           'undo redo | blocks fontsize | ' +
           'bold italic strikethrough underline removeformat | forecolor backcolor | ' +

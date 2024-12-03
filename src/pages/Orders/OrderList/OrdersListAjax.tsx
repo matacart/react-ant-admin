@@ -175,7 +175,6 @@ export default function OrdersListAjax({ filterCondition }: Props) {
     getOrderList(page, limit, finalCondition)
       .then((res) => {
         console.log('Response from getOrderList:', res);
-  
         const newData: DataType[] = res.data?.map((item: any) => ({
           orderid: item.id,
           orderdata: item.date_purchased,

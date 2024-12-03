@@ -1,4 +1,4 @@
-import { Badge, Card, Flex, Form, Input, Modal, Select } from "antd";
+import { Badge, Card, Flex, Form, Input, Modal, Select, Spin } from "antd";
 import React, { useEffect, useMemo, useState } from 'react';
 import { InboxOutlined, LoadingOutlined, PlusOutlined, SearchOutlined, ShopOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
@@ -21,6 +21,8 @@ const getBase64 = (file: FileType): Promise<string> =>
 
 export default function ProductImgCard() {
 
+
+  const [loading,setLoading] = useState(false);
   // youtubeUrl
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
@@ -159,15 +161,17 @@ export default function ProductImgCard() {
   // }
   const handleChange = async (info: any) => {
     // let fileListUrl = [];
-    console.log(info.file)
-    if(info.file.status == "uploading"){
-      // 上传
+    if(info.file.status == "done"){
+      console.log(info.file)
+    // 上传
+      setLoading(true)
       let formData = new FormData()
       formData.append("1", info.file.originFileObj as FileType)
       axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
         if(req.data.code == 0){
           // uid --- src  
           message.success("上传成功", 1)
+          setLoading(false)
           newStore.temp.set(info.file.uid, req.data.data.src)
         }else{
           message.error("上传失败", 1)
@@ -245,6 +249,29 @@ export default function ProductImgCard() {
           display: "flex",
           height: "auto",
         }}>
+          <Spin spinning={loading}>
+            <Upload
+              action="#"
+              listType="picture-card"
+              multiple={true}
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+            >
+              {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+            {previewImage && (
+              <Image
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                }}
+                src={previewImage}
+              />
+            )}
+          </Spin>
           {/* 图片展示 */}
           {/* {
             newStore.getSelectedImgList()?.map((img: any, index: any) => {
@@ -269,28 +296,7 @@ export default function ProductImgCard() {
                 </div>)
             })
           } */}
-          <Upload
-            action="#"
-            listType="picture-card"
-            multiple={true}
-            fileList={fileList}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= 8 ? null : uploadButton}
-          </Upload>
-          {previewImage && (
-            <Image
-              wrapperStyle={{ display: 'none' }}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-                afterOpenChange: (visible) => !visible && setPreviewImage(''),
-              }}
-              src={previewImage}
-            />
-          )}
-
+          
 
         </div>
         {/* 图片上传-外 */}

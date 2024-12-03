@@ -1,23 +1,25 @@
+
 import { Card } from "antd"
 import styled from "styled-components"
+import { useEffect, useState } from 'react';
 
-export default function SEOEdit(){
+
+ function SalesChannel(){
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">搜索引擎优化</span>
+                    <span className="title">销售渠道</span>
                     <span className="more">
-                        <a>编辑</a>
+                        <span style={{color:"#1677ff",cursor:"pointer"}} onClick={()=>{}}>编辑</span>
                     </span>
                 </div>
-                <div className="webUrl">roducts/</div>
-                <div className="webTitle">未填写标题</div>
-                <div className="webDesc">未填写描述</div>
+                <div className="webUrl">上线于在线商店, Telegram</div>
             </Card>
         </Scoped>
     )
 }
+export default SalesChannel
 
 const Scoped = styled.div`
 .gap{
@@ -27,7 +29,7 @@ const Scoped = styled.div`
 .header{
     display:flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
     .title{
         color: #000;
         font-size: 16px;
@@ -55,9 +57,5 @@ a{
     color: #474f5e;
     font-size: 12px;
     -webkit-line-clamp: 3;
-}
+}`
 
-
-
-
-`

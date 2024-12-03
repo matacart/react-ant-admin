@@ -1,7 +1,7 @@
 import { addProduct, addTags, getProductDetail, submitRenewalProduct } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
 import { valueType } from "antd/es/statistic/utils";
-import { action, makeObservable, observable } from "mobx";
+import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
@@ -12,9 +12,24 @@ import { action, makeObservable, observable } from "mobx";
 
  class oldStore {
 
+  constructor() {
+    makeAutoObservable(this)
+  }
   
   // 产品id
   @observable productId = "";
+
+  nextProductId = ""
+
+  setNextProductId = (value:string) => {
+    this.nextProductId = value;
+  }
+
+  prevProductId = ""
+
+  setPrevProductId = (value: string) => {
+    this.prevProductId = value;
+  }
   @action setProductId = (productId: string) => {
     this.productId = productId;
     
@@ -26,7 +41,6 @@ import { action, makeObservable, observable } from "mobx";
   }
 
   // 旧属性  兼容旧系统
-  @observable additional_image = '';
   @observable categorys = [];
   @observable checked = 0;
   @observable create_time = '';
@@ -34,15 +48,12 @@ import { action, makeObservable, observable } from "mobx";
   @observable employee_id = 0;
   @observable employee_realname = '';
   @observable languages_name = "";
-
   @observable update_time = "";
   @observable specialprice = "";
   @observable start_time = "";
   @observable end_time = "";
-  @observable weight_class_id = "";
   @observable stock_status_id = "";
   @observable subtract = 0;
-  @observable shipping = 0;
   @observable is_best = 0;
   @observable is_new = 0
   @observable is_hot = 0
@@ -57,9 +68,6 @@ import { action, makeObservable, observable } from "mobx";
   @observable divided_country = "0";
   @observable divided_url = "0";
   @observable group_id = "0";
-  @observable meta_title = null;
-  @observable meta_keyword = null;
-  @observable meta_description = "";
   @observable minimum = "0";
   @observable sales_count = "";
   @observable product_video = "";
@@ -88,15 +96,15 @@ import { action, makeObservable, observable } from "mobx";
   @action setTitle = (title: string) => {
     this.title = title;
   }
-  // 商品摘要
+  // 商品描述
   @observable content = '';
   @action setContent = (content: string) => {
     this.content = content
   }
-  // 商品描述
+  // 商品摘要
   @observable content1 = '';
-  @action setContent1 = (content1: string) => {
-    this.content = content1
+  @action setContent1 = (value: string) => {
+    this.content1 = value
   }
   // @action setContent1 = (content1: string) => {
   //   this.content = content1
@@ -210,13 +218,27 @@ import { action, makeObservable, observable } from "mobx";
   @observable tags = '';
   // 商品类型
   @observable productType = '';
+  // 商品类型
+  @observable productCategories = '';
+  
+  // 重量单位
+  @observable weightClassId = "1";
 
+  // 品库
+  partsWarehouse = "0"
 
+  setPartsWarehouse(value: string) {
+    this.partsWarehouse = value;
+  }
   // 设置 onPutProduct  
   @action setProductStatus(value: string) {
     this.productStatus = value;
   }
-
+  // 发货
+  @observable isShipping = true;
+  @action setIsShipping(value: boolean) {
+    this.isShipping = value;
+  }
   // 设置 SPU  
   @action setSPU(value: string) {
     this.SPU = value;
@@ -225,8 +247,11 @@ import { action, makeObservable, observable } from "mobx";
   // 设置 weight  
   @action setWeight(value: string) {
     this.weight = value;
-    // console.log(value)
   }
+  @action setWeightClassId(value: string) {
+    this.weightClassId = value;
+  }
+
 
   // 设置 manufactuer  
   @action setManufactuer(value: string) {
@@ -243,10 +268,45 @@ import { action, makeObservable, observable } from "mobx";
   @action setProductType(value: string) {
     this.productType = value;
   }
+  @action setProductCategories(value: string) {
+    this.productCategories = value;
+  }
 
-  // 更新
-  // 提价产品
+
+  // seo设置
+  @observable metaTitle = "";
+  @observable metaKeyword = "";
+  @observable metaDescription = "";
+  @observable productUrl = "";
+
+
+  @action setMetaTitle(value: string) {
+    this.metaTitle = value;
+  }
+
+  @action setMetaKeyword(value: string) {
+    this.metaKeyword = value;
+  }
+  @action setMetaDescription(value: string) {
+    this.metaDescription = value;
+  }
+  @action setProductUrl(value: string) {
+    this.productUrl = value;
+  }
   
+  // 联盟托管
+  allianceStatus = "0"
+  setAllianceStatus(value:string){
+    this.allianceStatus = value
+  }
+  // 商品托管
+  hostedStatus = "0"
+  setHostedStatus(value:string){
+    this.hostedStatus = value
+  }
+
+
+  // 更新产品
   updateProduct(){
     addTags(this.language,this.tags).then(res=>{
       console.log(res);
@@ -254,8 +314,96 @@ import { action, makeObservable, observable } from "mobx";
     return submitRenewalProduct(this)
   }
 
+  // 初始化
+  productInit(data:any){
+    this.setTitle(data.title)
+    this.setContent(data.content)
+    this.setContent1(data.content1)
+    this.setModel(data.model)
+    this.setPrice(data.price)
+    this.setOriginPrice(data.originPrice)
+    this.setISBN(data.barcode)
+    this.setSKU(data.sku)
+    this.setInventory(data.quantity)
+    this.costPrice=data.cost_price
+    this.SPU=data.SPU
+    this.weight=data.weight
+    this.manufactuer=data.manufactuer
+    // this.tags=data.tag
+    this.productType=data.product_type
+    // 图片  
+    this.setSelectedImgList(JSON.parse(data.additional_image))
+    JSON.parse(data.additional_image).forEach((value:any,index:any) => {
+        this.temp.set(index.toString(),value)
+    });
+    // 税费
+    this.setNeedTax(data.needTax == 0 ? false : true)
+    // 
+    this.setInventoryTracking(data.inventoryTracking == 0 ? false : true)
+    this.setContinueSell(data.continueSell == 0 ? false : true)
+    this.setProductStatus(data.status)
+    // 
+    this.setProductStatus(data.status)
+    this.setHSCode(data.hs_code)
+    this.setNotion(data.shipping_country_id)
+    this.setLanguage(data.languages_id)
+    // 
+    this.setProductId(data.id);
+    this.setNextProductId(data.nextProductId);
+    this.setPrevProductId(data.prevProductId);
+    this.setProductType(data.platform_category_id);
+    this.setProductCategories(data.categoryIds)
+    this.setIsShipping(data.shipping == "0" ? false : true)
+    this.setTags(data.tag)
+    this.setWeightClassId(data.weight_class_id)
+    this.setMetaTitle(data.meta_title)
+    this.setMetaKeyword(data.meta_keyword)
+    this.setMetaDescription(data.meta_description)
+    this.setProductUrl(data.product_url)
+
+    this.setAllianceStatus(data.alliance_status)
+    this.setHostedStatus(data.hosted_status)
+
+    // 旧属性
+    // this.additional_image = data.additional_image
+    this.categorys = data.categorys
+    this.checked = data.checked
+    this.create_time = data.create_time
+    this.domain_id = data.domain_id
+    this.employee_id = data.employee_id
+    this.employee_realname = data.employee_realname
+    this.languages_name = data.languages_name
+    this.update_time = data.update_time
+    this.specialprice = data.specialprice
+    this.start_time = data.start_time
+    this.end_time = data.end_time
+    
+    this.stock_status_id = data.stock_status_id
+    this.subtract = data.subtract
+    this.is_best = data.is_best
+    this.is_new = data.is_new
+    this.is_hot = data.is_hot
+    this.sort = data.sort
+    this.is_share = data.is_share
+    this.is_sys = data.is_sys
+    this.inquiry_status = data.inquiry_status
+    this.ad_waf_status = data.ad_waf_status
+    this.ad_product_id = data.ad_product_id
+    this.ad_product_url=data.ad_product_url
+    this.divided_status=data.divided_status
+    this.divided_country=data.divided_country
+    this.divided_url=data.divided_url
+    this.group_id=data.group_id
+    this.minimum=data.minimum
+    this.product_video = data.product_video
+  }
+
+
   // 重置商品
   reset(){
+    this.productId = '';
+    this.nextProductId = '';
+    this.prevProductId = '';
     this.model = '';
     this.title = '';
     this.content = '';
@@ -276,8 +424,17 @@ import { action, makeObservable, observable } from "mobx";
     this.productStatus = "";
     this.SPU = '';
     this.weight = '';
+    this.weightClassId = "";
     this.manufactuer = '';
     this.productType = '';
+    this.productUrl = "";
+    this.metaTitle = "";
+    this.metaKeyword = "";
+    this.metaDescription = "";
+// 
+    this.allianceStatus = "";
+    this.hostedStatus = "";
+
     this.temp.clear();
   }
 
@@ -290,7 +447,3 @@ import { action, makeObservable, observable } from "mobx";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new oldStore();
-
-
-
-

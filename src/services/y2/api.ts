@@ -183,7 +183,7 @@ export async function deleteProduct(id: string) {
 // 改用product_list
 // 根据id & languages_id获取产品详情
 export async function getProductDetail(id: string, languagesId: string) {
-  return request(`/api/ApiStore/product_detail`, {
+  return request(`/api/ApiStore/product`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -205,74 +205,6 @@ export async function addProduct() {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-
-    // 
-    
-// "1362129239148"
-// inquiry_status
-// : 
-// "0"
-// is_best
-// : 
-// "0"
-// is_hot
-// : 
-// "0"
-// is_new
-// : 
-// "0"
-// is_share
-// : 
-// "0"
-// languages_id
-// : 
-// "2"
-// meta_description
-// : 
-// "日日日日日日日日日日"
-// meta_keyword
-// : 
-// ""
-// meta_title
-// : 
-// "啊啊啊啊啊啊啊啊啊"
-// minimum
-// : 
-// "1"
-// model
-// : 
-// "1111"
-// price
-// : 
-// "0.0000"
-// product_image
-// : 
-// ""
-// product_url
-// : 
-// ""
-// product_video
-// : 
-// ""
-// quantity
-// : 
-// "2147483647"
-// sales_count
-// : 
-// "0"
-// shipping
-// : 
-// "1"
-// sku
-// : 
-// "11133"
-// sort
-// : 
-// "3"
-// status
-// : 
-
-
     data: {
       "model":newStore.model,
       "sku": newStore.SKU,
@@ -284,11 +216,11 @@ export async function addProduct() {
       "sales_count":"",
       "minimum":"",
       "weight": newStore.weight,
-      "weight_class_id": "",
+      "weight_class_id": newStore.weightClassId,
       "title": newStore.title,
       "stock_status_id":"",
       "subtract":"",
-      "shipping":"",
+      "shipping":newStore.isShipping?"1":"0",
       "is_best": 0,
       "is_new": 0,
       "is_hot": 0,
@@ -326,13 +258,21 @@ export async function addProduct() {
       "SPU": newStore.SPU,
       "manufactuer":newStore.manufactuer,
       "tags": newStore.tags,
-      "categoryIds": newStore.productType,
+      "platform_category_id": newStore.productType,
+      "categoryIds":newStore.productCategories,
+      // 品库
+      "is_sys":newStore.partsWarehouse,
       // 封面
       "product_image": newStore.selectedImgList[0] ,
       "product_video": '',  // 视频
       // 图片
       "additional_image": JSON.stringify(newStore.selectedImgList),
       "languages_id": newStore.language,
+
+      // 联盟
+      "alliance_status": newStore.allianceStatus,
+      // 直营
+      "hosted_status": newStore.hostedStatus,
       // "languages_name": "Chinese"
       // "model":newStore.model,
       // "sku": newStore.SKU,
@@ -421,14 +361,16 @@ export async function submitRenewalProduct(res:any){
       "specialprice": oldStore.specialprice,
       "start_time": oldStore.start_time,
       "end_time": oldStore.end_time,
-      "weight_class_id": oldStore.weight_class_id,
+      "weight_class_id": oldStore.weightClassId,
       "languages_id": oldStore.language,
       // 库存状态 1-有库存，2-无库存
       "stock_status_id": oldStore.stock_status_id,
       // 是否库存减一 1-是，0-否
       "subtract": oldStore.subtract,
       // 运费
-      "shipping": oldStore.shipping,
+      "shipping": oldStore.isShipping?"1":"0",
+      // 品库
+      "is_sys": oldStore.partsWarehouse,
       // 加入推荐
       "is_best": oldStore.is_best,
       "is_new": oldStore.is_new,
@@ -437,7 +379,6 @@ export async function submitRenewalProduct(res:any){
       "sort": oldStore.sort,
       // 询盘开关：
       "is_share": oldStore.is_share,
-      "is_sys": oldStore.is_sys,
       // 
       "inquiry_status": oldStore.inquiry_status,
       // 
@@ -450,9 +391,10 @@ export async function submitRenewalProduct(res:any){
       "divided_url": oldStore.divided_url,
       "group_id": oldStore.group_id,
       // seo
-      "meta_title": oldStore.meta_title,
-      "meta_keyword": oldStore.meta_keyword,
-      "meta_description":oldStore.meta_description,
+      "meta_title": oldStore.metaTitle,
+      "meta_keyword": oldStore.metaKeyword,
+      "meta_description":oldStore.metaDescription,
+      "product_url": "/"+oldStore.productUrl,
       "minimum": oldStore.minimum,
       // 
       "title": oldStore.title,
@@ -468,12 +410,14 @@ export async function submitRenewalProduct(res:any){
       "shipping_country_id":oldStore.notion,  // 0 1 2 3 4 5
       "hs_code":oldStore.HSCode,
       "sku": oldStore.SKU,
-      "categoryIds": oldStore.productType,
+      // 商品类型 -- 平台
+      "platform_category_id": oldStore.productType,
+      "categoryIds":oldStore.productCategories,
       "product_image": oldStore.selectedImgList[0],
       "product_video": oldStore.product_video,  // 视频
       // "additional_image": oldStore.selectedImgList,
       "additional_image": JSON.stringify(oldStore.selectedImgList),
-      "price": oldStore.price,
+      "price": oldStore.price,      
       // 原价
       "originPrice":oldStore.originPrice,
       // 成本价
@@ -488,6 +432,11 @@ export async function submitRenewalProduct(res:any){
       "content": oldStore.content,
       // 标签
       "tag": oldStore.tags,
+      // 联盟
+      "alliance_status": oldStore.allianceStatus,
+      // 直营
+      "hosted_status": oldStore.hostedStatus,
+      // 品库
       // 商品状态
       // "status": oldStore.onPutProduct ? "1" : "0"
     }
@@ -535,7 +484,7 @@ export async function getLanguages() {
 // model: 1
 // title: 
 // tags
-export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string,tag:string,status:string|undefined) {
+export async function getProductList(page: any, limit: any, title: string, model: string, languagesId: string,tag:string,status:string|undefined,allianceStatus:string|undefined,hostedStatus:string|undefined) {
   return await request(`/api/ApiStore/product_list`, {
     method: 'POST',
     headers: {
@@ -550,7 +499,9 @@ export async function getProductList(page: any, limit: any, title: string, model
       model:model,
       languages_id:languagesId,
       tag:tag,
-      status:status
+      status:status,
+      alliance_status:allianceStatus,
+      hosted_status:hostedStatus
     }
   })
 }
@@ -761,6 +712,124 @@ export async function getCountryList(){
     data:{
       page:1,
       limit:100
+    }
+  })
+}
+// 平台分类
+export async function getPlatformCategorySelect(language:string){
+  return await request('/api/ApiStore/platform_category_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      page:1,
+      limit:100,
+      language_id:language
+    }
+  })
+}
+
+export async function getCategorySelect(){
+  return await request('/api/ApiStore/category_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      // page:1,
+      // limit:100
+    }
+  })
+}
+
+
+// ------------分类
+
+// 分类查询
+export async function getCategoryList(){
+  return await request('/api/ApiStore/category_list',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      page:1,
+      limit:100
+    }
+  })
+}
+
+
+// 创建分类
+
+export async function addCategory(res:any){
+  return await request('/api/ApiStore/category_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id: res.languages,
+      category_name: res.title,
+      category_description: res.description,
+      category_image: res.coverImg,
+      category_pid: res.categoryPid,
+      sort: 1,
+      status: 1,
+      meta_title:res.metaTitle,
+      meta_keyword: res.metaKeyword,
+      meta_description: res.metaDescription
+    }
+  })
+}
+
+// 详情
+export async function getCategoryDetail(res:any){
+  return await request('/api/ApiStore/category',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:res.id,
+      languages_id: res.languages,
+    }
+  })
+}
+
+
+// 更新分类
+export async function upCategory(res:any){
+  return await request('/api/ApiStore/category_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:res.id,
+      languages_id: res.languages,
+      category_name: res.title,
+      category_description: res.content,
+      category_image: res.coverImg,
+      category_pid: res.categoryPid,
+      sort: 1,
+      status: 1,
+      meta_title:res.metaTitle,
+      meta_keyword: res.metaKeyword,
+      meta_description: res.metaDescription
+    }
+  })
+}
+
+export async function deleteCategory(id:string){
+  return await request('/api/ApiStore/category_del',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id
     }
   })
 }

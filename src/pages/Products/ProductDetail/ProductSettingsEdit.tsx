@@ -5,10 +5,11 @@ import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import oldStore from "@/store/oldStore";
-import { selectTags, upDateProductStatus } from "@/services/y2/api";
-import { observer } from "mobx-react";
+import { getCategorySelect, getPlatformCategorySelect, selectTags, upDateProductStatus } from "@/services/y2/api";
 import TagsModal from "@/components/Modal/TagsModal";
-import { lang_bnBD0 } from 'C:/Users/Administrator/Desktop/react-ant-admin-main/src/locales/bn-BD.ts';
+import { set, values } from 'lodash';
+import ProductCategoryModal from "@/components/Modal/ProductCategoryModal";
+import { observer } from "mobx-react-lite";
 
 // 上架商品
 const onPutProduct = (checked: boolean) => {
@@ -56,16 +57,7 @@ const managerArray: market[] = [
     }
 ]
 
-// 重量
-const { Option } = Select;
-const selectAfter = (
-    <Select defaultValue=".com">
-        <Option value=".com">千克</Option>
-        <Option value=".jp">克</Option>
-        <Option value=".cn">磅</Option>
-        <Option value=".org">盎司</Option>
-    </Select>
-);
+
 
 // 标签
 
@@ -77,14 +69,7 @@ for (let i = 10; i < 36; i++) {
         label: i.toString(36) + i,
     });
 }
-
-
-
-
-
-
 let index = 0;
-
 const tagInputStyle: React.CSSProperties = {
     width: 64,
     height: 22,
@@ -101,6 +86,8 @@ function ProductSettingsEdit(props:any) {
     const [status,setStatus] = useState("");
     
     const [tags, setTags] = useState<string[]>([]);
+    // 分类
+    const [categoryTags, setCategoryTags] = useState<any[]>([]);
     const [inputVisible, setInputVisible] = useState(false);
     const [editInputIndex, setEditInputIndex] = useState(-1);
     const [editInputValue, setEditInputValue] = useState('');
@@ -114,7 +101,32 @@ function ProductSettingsEdit(props:any) {
         '标签一','标签二'
     ]);
     
-    let [productType,setProductType] = useState(oldStore.productType);
+    // let [productType,setProductType] = useState(oldStore.productType);
+
+    // 重量单位
+    const [weightClassId,setWeightClassId] = useState("1");
+
+    const [isShipping,setIsShipping] = useState(true);
+
+    // 商品类型 -- 平台
+    const [productTypeOptions,setProductTypeOptions] = useState<any>();
+    
+
+    // 重量
+    const { Option } = Select;
+    const selectAfter = (
+        <Select value={weightClassId} onSelect={(value)=>{
+            setWeightClassId(value)
+            oldStore.setWeightClassId(value)
+        }}>
+            <Option value="1">千克</Option>
+            <Option value="2">克</Option>
+            <Option value="5">磅</Option>
+            <Option value="6">盎司</Option>
+        </Select>
+    );
+
+
     let tag:any=[];
     if(oldStore.tags){
         tag = oldStore.tags.split(",")
@@ -127,6 +139,12 @@ function ProductSettingsEdit(props:any) {
         const newTags = tags.filter((tag) => tag !== removedTag);
         setTags(newTags);
         oldStore.setTags(newTags.join(","))
+    };
+    // 分类
+    const handleTypeClose = (removedTag: any) => {
+        const newTags = categoryTags.filter((tag) => tag.id !== removedTag.id);
+        setCategoryTags(newTags);
+        oldStore.setProductCategories(Array.from(newTags,(e)=>{return e.id}).join(","))
     };
     const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditInputValue(e.target.value);
@@ -143,6 +161,8 @@ function ProductSettingsEdit(props:any) {
         setTags(value)
         oldStore.setTags(value.join(","))
     };
+
+
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
         setItems([...items, name || `New item ${index++}`]);
@@ -156,11 +176,16 @@ function ProductSettingsEdit(props:any) {
         setName(event.target.value);
         console.log(name)
     };
-    // 
+    // 更新标签
     const updatetags = (tag:string[]) =>{
         setTags(tag)
+        oldStore.setTags(tag.join(","))
     } 
-
+    // 更新商品分类
+    const upDateCategoryTags = (tag:any[]) =>{
+        setCategoryTags(tag)
+        oldStore.setProductCategories(Array.from(tag,(e)=>{return e.id}).join(","))
+    }
 
     // 取消弹窗
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -186,6 +211,17 @@ function ProductSettingsEdit(props:any) {
     };
 
     useEffect(()=>{
+        // 平台类型
+        getPlatformCategorySelect(oldStore.language).then(res=>{
+            console.log(res.data)
+            let tempList = Array.from(res.data,(obj:any)=>{
+                return {
+                    value: obj.id,
+                    label: obj.category_name
+                }
+            })
+            setProductTypeOptions(tempList)
+        })
         // 获取标签
         selectTags(oldStore.language).then(res=>{
             console.log(res)
@@ -196,20 +232,34 @@ function ProductSettingsEdit(props:any) {
             setOptions(tempList);
         })
         setStatus(props.productStatus)
-        setTags(oldStore.tags.split(','))
+        setWeightClassId(oldStore.weightClassId)
+        setTags(oldStore.tags == ""?[]:oldStore.tags.split(','))
+        setIsShipping(oldStore.isShipping)
+        // console.log(oldStore.tags.split(','))
     },[props.productStatus])
     useEffect(() => {
         if (inputVisible) {
           inputTagRef.current?.focus();
         }
     }, [inputVisible]);
+    useEffect(() => {
+        let temp:any = [];
+        getCategorySelect().then(res=>{
+            res.data.forEach((res:any)=>{
+                if(oldStore.productCategories.split(",").includes(res.id)){
+                    temp.push({
+                        id:res.id,
+                        name:res.category_name
+                    })
+                }
+            })
+            setCategoryTags(temp)
+        })
+    }, []);
 
     useEffect(() => {
         editInputRef.current?.focus();
     }, [editInputValue]);
-
-    
-
 
     return (
         <Scoped>
@@ -235,7 +285,9 @@ function ProductSettingsEdit(props:any) {
                 </div>}
                 <div className="item">
                     <div style={{marginBottom:"4px"}}>发货</div>
-                    <Checkbox onChange={(e)=>{
+                    <Checkbox checked={isShipping} onChange={(e)=>{
+                        setIsShipping(e.target.checked)
+                        oldStore.setIsShipping(e.target.checked)
                     }}>需要运输</Checkbox>
                 </div>
                 <div className="item webChannelContent" >
@@ -400,33 +452,32 @@ function ProductSettingsEdit(props:any) {
                         } >
                         <Select
                             style={{ width: "100%", height: "36px" }}
-                            placeholder="custom dropdown render"
-                            dropdownRender={(menu) => (
-                                <>
-                                    {menu}
-                                    <Divider style={{ margin: '8px 0' }} />
-                                    <Space style={{ padding: '0 8px 4px' }}>
-                                        <Input
-                                            placeholder="Please enter item"
-                                            ref={inputRef}
-                                            value={name}
-                                            onChange={onTypeChange}
-                                            onKeyDown={(e) => e.stopPropagation()}
-                                        />
-                                        <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
-                                            Add item
-                                        </Button>
-                                    </Space>
-                                </>
-                            )}
-                            options={items.map((item) => ({ label: item, value: item }))}
+                            placeholder="搜索类型"
+                            options={productTypeOptions}
                             onChange={(e)=>{
-                                // console.log(e)
-                                // console.log() 
-                                // oldStore.setTag(e)
                                 oldStore.setProductType(e)
                             }}
                             defaultValue={oldStore.productType}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="moreLink"
+                        label={
+                            <div className="label-content between">
+                                <span>数据归属</span>
+                            </div>
+                        } >
+                        <Select
+                            style={{ width: "100%", height: "36px" }}
+                            placeholder="数据归属"
+                            defaultValue={oldStore.partsWarehouse}
+                            options={[
+                                { value: '0', label: '商户自建' },
+                                { value: '1', label: '平台自建' },
+                            ]}
+                            onChange={(e)=>{
+                                oldStore.setPartsWarehouse(e)
+                            }}
                         />
                     </Form.Item>
                     <Form.Item
@@ -436,12 +487,27 @@ function ProductSettingsEdit(props:any) {
                         className="moreLink"
                         label={<div className="label-content between">
                             <span>商品分类</span>
-                            <a>选择</a>
+                            <ProductCategoryModal tags={categoryTags} language={oldStore.language} upDateCategoryTags={upDateCategoryTags} />
                         </div>}
                     >
                         <div className="desc">
                             选择商品所属分类。智能分类将按规则自动匹配，无法手动选择
                         </div>
+                        <div style={{height:"10px"}}></div>
+                        <Flex gap="4px 0" wrap>
+                            {categoryTags.map((tag) => (
+                                <Tag
+                                    color="processing"
+                                    style={{color:"#000",padding:"2px 6px"}}
+                                    key={tag.id}
+                                    bordered={false}
+                                    closable
+                                    onClose={() => handleTypeClose(tag)}
+                                    >
+                                    {tag.name}
+                                </Tag>
+                            ))}
+                        </Flex>
                     </Form.Item>
                 </Form>
             </Card>
@@ -449,7 +515,7 @@ function ProductSettingsEdit(props:any) {
     )
 }
 
-export default ProductSettingsEdit
+export default observer(ProductSettingsEdit)
 
 const Scoped = styled.div`
     .card{

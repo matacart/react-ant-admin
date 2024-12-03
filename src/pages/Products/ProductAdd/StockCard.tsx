@@ -1,6 +1,7 @@
 import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
+import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components"
 
@@ -19,9 +20,9 @@ const onChange = (value:string) => {
 
 
 
-export default function StockCard() {
+function StockCard() {
     useEffect(()=>{
-        console.log(newStore)
+        // console.log(newStore)
     })
     return (
         <Scoped>
@@ -30,10 +31,15 @@ export default function StockCard() {
                     <Row>
                         <Col span={11}>
                             <Form.Item label="模型"
+                                // rules={[{ required: true, message: 'Please input model!' }]}
+                                validateStatus={newStore.validate.model as any}
+                                help={newStore.validate.model == "success"?"":<span style={{ color: '#F86140' }}>请输入商品模型</span>}
                                 name='model' required initialValue={newStore.model}>
                                 <Input
                                     onChange={(e)=>{
                                         newStore.setModel(e.target.value)
+                                        newStore.validate.model = "success"
+                                        newStore.setEditStatus(true)
                                     }}
                                     value={newStore.model}
                                 />
@@ -46,6 +52,7 @@ export default function StockCard() {
                                     defaultValue={newStore.ISBN}
                                     onChange={(e)=>{
                                         newStore.setISBN(e.target.value)
+                                        newStore.setEditStatus(true)
                                     }}
                                 />
                             </Form.Item>
@@ -60,6 +67,7 @@ export default function StockCard() {
                                 <Input
                                     onChange={(e)=>{
                                         newStore.setSKU(e.target.value)
+                                        newStore.setEditStatus(true)
                                     }}
                                     value={newStore.SKU}
                                 />
@@ -72,6 +80,7 @@ export default function StockCard() {
                                     type='number'
                                     onChange={(e)=>{
                                         newStore.setInventory(Number(e.target.value))
+                                        newStore.setEditStatus(true)
                                     }}
                                     value={newStore.inventory}
                                 />
@@ -112,6 +121,7 @@ export default function StockCard() {
     )
 }
 
+export default observer(StockCard)
 
 const Scoped = styled.div`
 .ant{

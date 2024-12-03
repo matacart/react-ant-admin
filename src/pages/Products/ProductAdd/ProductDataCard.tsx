@@ -55,14 +55,16 @@ function ProductDataCard() {
                 name="title"
                 required
                 label="商品标题"
-                    rules={[
-                        { validator: (_, value) => value ? Promise.resolve() : Promise.reject(new Error('请输入商品标题')) },
-                    ]}
+                validateStatus={newStore.validate.title as any}
+                help={newStore.validate.title == "success"?"":<span style={{ color: '#F86140' }}>请输入商品标题</span>}
                 >
                     <Input
                     defaultValue={newStore.title}
                     onChange={(e) => {
+                        // 清除
+                        newStore.validate.title = "success"
                         newStore.setTitle(e.target.value);
+                        newStore.setEditStatus(true);
                     }}
                     placeholder="例如：冬季，毛衣" />
                     {/* 5 */}
@@ -70,16 +72,18 @@ function ProductDataCard() {
                 <Form.Item 
                     name="resume"
                     required
-                    
                     label='商品摘要'>
                     <TextArea showCount maxLength={400} onBlur={(e)=>{
-                        newStore.content=e.target.value;
+                        newStore.setContent1(e.target.value);
                     }}
                     style={{
                         resize: 'none'
                     }}
-                    defaultValue={newStore.content}
-                    value={newStore.content}
+                    onChange={()=>{
+                        newStore.setEditStatus(true);
+                    }}
+                    defaultValue={newStore.content1}
+                    value={newStore.content1}
                     placeholder='请用简短的文字描述本商品'
                     />
                 </Form.Item>

@@ -80,6 +80,18 @@ const App: React.FC = () => {
       children:  (<ProductsSelectCard/>),
       key: '4',
       closable: false,
+    },
+    {
+      label: <TabLabel>已精选</TabLabel>,
+      children:  (<ProductsSelectCard/>),
+      key: '5',
+      closable: false,
+    },
+    {
+      label: <TabLabel>已托管</TabLabel>,
+      children:  (<ProductsSelectCard/>),
+      key: '6',
+      closable: false,
     }
   ];
   const [activeKey, setActiveKey] = useState(initialItems[0].key);
@@ -90,15 +102,27 @@ const App: React.FC = () => {
   
   const onChange = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
-    switch(newActiveKey){
-      case '1':
-        return newStore.setFlag("");
-      case '2':
-        return newStore.setFlag("1");
-      case '3':
-        return newStore.setFlag("0");
-      case '4':
-        return newStore.setFlag("2");
+    if(newActiveKey == "5"){
+      newStore.setFlag("")
+      newStore.setIsAlliance("1")
+      newStore.setIsHosted("")
+    }else if(newActiveKey == "6"){
+      newStore.setFlag("")
+      newStore.setIsAlliance("")
+      newStore.setIsHosted("1")
+    }else{
+      newStore.setIsAlliance("0")
+      newStore.setIsHosted("0")
+      switch(newActiveKey){
+        case '1':
+          return newStore.setFlag("");
+        case '2':
+          return newStore.setFlag("1");
+        case '3':
+          return newStore.setFlag("0");
+        case '4':
+          return newStore.setFlag("2");
+      }
     }
   };
 
@@ -188,10 +212,13 @@ const App: React.FC = () => {
     }
   };
 
+ 
+
   useEffect(()=>{
-    // console.log(1111)
     // 重新渲染初始化状态
     newStore.setFlag("");
+    newStore.setIsAlliance("");
+    newStore.setIsHosted("");
   },[]);
 
   return (

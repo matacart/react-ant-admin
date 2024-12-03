@@ -59,6 +59,8 @@ export default {
 'menu.search.none': '該当の店舗はありません',  
 'menu.stores.manage': '店舗管理',
 //
+'menu.products.index': '商品リストです',  
+// 
 'menu.orders': '注文',  
 'menu.orders.manages': '注文管理',  
 'menu.orders.recallOrders': 'キャンセルした注文',  

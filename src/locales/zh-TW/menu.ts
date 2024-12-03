@@ -50,9 +50,10 @@ export default {
   'menu.editor.mind': '腦圖編輯器',
   'menu.editor.koni': '拓撲編輯器',
   //1
-  'menu.products': '商品',  
-"menu.stores": '店餪',  
-'menu.stores.create': '創建店餪',
+  'menu.products': '商品',
+  'menu.products.index': '商品列表',
+  "menu.stores": '店餪',  
+  'menu.stores.create': '創建店餪',
 //
 'menu.search.stores': "搜尋店餪名稱/子域名/主域名",  
 'menu.stores.running': "營業中",  

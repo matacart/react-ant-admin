@@ -46,7 +46,7 @@ export default [
   {
     path: '/home',
     name: 'home',
-    icon: 'crown',
+    icon: 'HomeOutlined',
     // access: 'canAdmin',//权限
     component: './Admin/index',
   },
@@ -95,7 +95,7 @@ export default [
       routes: [
         {
           path: 'index',
-          name: '商品',
+          name: 'index',
           component: './Products/ProductItem/index',
         },
         {  
@@ -109,19 +109,51 @@ export default [
           name: 'new',
           menu: false,
           component: './Products/ProductAdd/AddNewProduct',
-        },{
+        },
+        {
           path: 'inventory',
           name: 'inventory',
-        },{
+          // component: './Products/Inventory/BlankPage',
+        },
+        {
           path: 'transfers',
-          name: 'transfers'
-        },{
+          name: 'transfers',
+          component: './Products/Transfers/BlankPage',
+        },
+        {
           path: 'purchase_orders',
           name: 'purchase_orders',
-        },{
+          component: './Products/PurchaseOrder/BlankPage',
+        },
+        // {
+        //   path: 'purchase_orders',
+        //   name: 'purchase_orders',
+        // },
+        // 分类
+        {
           path: 'categories',
-          name: 'categories'
-        },{
+          name: 'categories',
+          component: './Products/ProductCategories/Index',
+        },
+        {
+            path: 'categories/new',
+            name: 'categories/new',
+            menu: false,
+            component: './Products/ProductCategories/ProductCategoriesAdd/NewProductCategories',
+        },
+        {
+          path: 'categories/edit',
+          name: 'categories/edit',
+          menu: false,
+          component: './Products/ProductCategories/ProductCategoriesEdit/EditProductCategories',
+        },
+        // {
+        //   path: 'categories/blankPage',
+        //   name: '商品分类',
+        //   component: './Products/ProductCategories/BlankPage',
+        // },
+        
+        {
           path: 'gift-cards',
           name: 'gift-cards'
         }
@@ -133,11 +165,11 @@ export default [
     path: '/customer',
     icon: 'UserOutlined',
     routes: [
-      {
-        path: 'management',
-        name: '客户',
-        component: './Customer/index',
-      },
+      // {
+      //   path: 'management',
+      //   name: 'management',
+      //   component: './Customer/index',
+      // },
       {
         path: 'persona',
         name: 'persona',
@@ -208,6 +240,7 @@ export default [
   // 设置
   {
     path: '/settings',
+    // name: 'settings',
     routes: [
       {
         path: 'index',

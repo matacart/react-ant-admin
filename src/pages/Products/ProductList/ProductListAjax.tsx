@@ -2,12 +2,14 @@ import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
-import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
 import globalStore from '@/store/globalStore';
+import SelectedActions from './SelectedActions';
+import oldStore from '@/store/oldStore';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -64,6 +66,9 @@ function ProductListAjax(selectProps:any) {
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [onLoadingList, setOnLoadingList] = useState<any>([]);
   // 
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
+
   const [modalOpen, setModalOpen] = useState(false);
 
   const [productStatusModal, contextProductStatusModal] = Modal.useModal();
@@ -134,7 +139,6 @@ function ProductListAjax(selectProps:any) {
     let newData = [...data];
     newData[index].state = checked?"1":"0"
     setData(newData);
-    
   };
   // 表头
   const columns: TableColumnsType<DataType> = [
@@ -147,7 +151,7 @@ function ProductListAjax(selectProps:any) {
         flexWrap: 'nowrap',
         alignContent: 'center',
       }}>
-        <Avatar shape="square" size="large" src={record.imgUrl} icon={<UserOutlined />} />
+        <Avatar shape="square" size="large" src={record.imgUrl} icon={<PictureOutlined />} />
         <span style={{
           marginLeft: 10,
           alignContent: 'center',
@@ -278,7 +282,7 @@ function ProductListAjax(selectProps:any) {
     //   });
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag)
+    getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag,newStore.isAlliance,newStore.isHosted)
       .then((res) => {
         let newData:DataType[] = [];
         let switchList:boolean[] = [];
@@ -322,10 +326,13 @@ function ProductListAjax(selectProps:any) {
   useEffect(() => {
     // 初始化商品
     newStore.reset();
+    oldStore.reset();
     fetchData();
+    // console.log(newStore.flag)
     // console.log(selectProps.selectProps)
     // console.log(globalStore.shop[0].domainName)
-  }, [newStore.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.tags]);
+    // newStore.isAlliance
+  }, [newStore.isAlliance,newStore.isHosted,newStore.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.tags]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -344,9 +351,11 @@ function ProductListAjax(selectProps:any) {
     // 
     history.push(`/products/productId/edit`,{productId,languages_id})
   };
+  
   return (
     <Scoped>
     {/* 商品列表 */}
+      <SelectedActions selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} /> {/* 显示选择的数量和操作按钮 */}
       <Table
         columns={columns}
         // rowKey={(record) => record.key}
@@ -357,17 +366,21 @@ function ProductListAjax(selectProps:any) {
         scroll={{ x: 1300 }}
         rowKey={(record) => record.productid}
         onRow={(record) => ({
-        onClick: () => {
-          console.log('Row clicked:', record);
-          handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
-        },
-      })}
+          onClick: () => {
+            console.log('Row clicked:', record);
+            handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
+          },
+        })}
         rowSelection={{
           type: 'checkbox',
+          selectedRowKeys, // 使用状态来记录选中的行
           onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            setSelectedRowKeys(selectedRowKeys); // 更新状态
           },
         }}
+        // 隐藏表头
+        showHeader={selectedRowKeys.length === 0}
       />
       
       {/* 复制商品模态框 */}

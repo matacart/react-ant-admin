@@ -58,13 +58,17 @@ export default function CustomsDeclaration() {
                             defaultValue={newStore.notion}
                             onChange={(value)=>{
                                 newStore.setNotion(value)
+                                newStore.setEditStatus(true)
                             }}
                         />
                     </Form.Item>
                     <Form.Item
                         required                    
                         label="HS(协调制度) 代码">
-                        <Input defaultValue={newStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>newStore.setHSCode(e.target.value)} />
+                        <Input defaultValue={newStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>{
+                            newStore.setHSCode(e.target.value)
+                            newStore.setEditStatus(true)
+                        }} />
                     </Form.Item>
                 </Form>
             </Card>

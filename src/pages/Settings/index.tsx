@@ -118,7 +118,6 @@ export default function Settings() {
                                 </div>
                             </Link>
                         </Col>
-
                     ))}
                 </Row>
             </LittleLayout>

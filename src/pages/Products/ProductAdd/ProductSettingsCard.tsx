@@ -4,8 +4,9 @@ import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputNumber, InputR
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import newStore from "@/store/newStore";
-import { addTags, removeTags, selectTags } from "@/services/y2/api";
+import { addTags, getPlatformCategorySelect, removeTags, selectTags } from "@/services/y2/api";
 import TagsModal from "@/components/Modal/TagsModal";
+import ProductCategoryModal from "@/components/Modal/ProductCategoryModal";
 
 
 
@@ -51,16 +52,7 @@ const managerArray: market[] = [
     }
 ]
 
-// 重量
-const { Option } = Select;
-const selectAfter = (
-    <Select defaultValue=".com">
-        <Option value=".com">千克</Option>
-        <Option value=".jp">克</Option>
-        <Option value=".cn">磅</Option>
-        <Option value=".org">盎司</Option>
-    </Select>
-);
+
 
 // 标签
 
@@ -93,7 +85,9 @@ export default function ProductSettingsCard() {
     // const inputTagRef = useRef<InputRef>(null);
     const editInputRef = useRef<InputRef>(null);
 
-
+    // 分类
+    const [categoryTags, setCategoryTags] = useState<any[]>([]);
+    
 
 
     const [tagName, setTagName] = useState('');
@@ -103,9 +97,27 @@ export default function ProductSettingsCard() {
         '标签一','标签二'
     ]);
 
+   // 重量单位
+   const [weightClassId,setWeightClassId] = useState("1");
+
+   // 重量
+   const { Option } = Select;
+   const selectAfter = (
+       <Select value={weightClassId} onSelect={(value)=>{
+           setWeightClassId(value)
+           newStore.setWeightClassId(value)
+       }}>
+           <Option value="1">千克</Option>
+           <Option value="2">克</Option>
+           <Option value="5">磅</Option>
+           <Option value="6">盎司</Option>
+       </Select>
+   );
+
     const handleTagChange = (value: string[]) => {
         setTags(value)
         newStore.setTags(value.join(","))
+        newStore.setEditStatus(true)
     };
     // 
     const [value, setValue] = useState(['0-0-0']);
@@ -122,13 +134,24 @@ export default function ProductSettingsCard() {
         // set
         setProductStatus(checked)
         newStore.setOnPutProduct(checked);
+        newStore.setEditStatus(true)
     };
+    
+    // 商品类型
+    const [productTypeOptions,setProductTypeOptions] = useState<any>();
     
     // 标签
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
         setTags(newTags);
         newStore.setTags(newTags.join(","))
+    };
+
+    // 分类
+    const handleTypeClose = (removedTag: string) => {
+        const newTags = categoryTags.filter((tag) => tag.id !== removedTag.id);
+        setCategoryTags(newTags);
+        newStore.setProductCategories(Array.from(newTags,(e)=>{return e.id}).join(","))
     };
     const showInput = () => {
         setInputVisible(true);
@@ -191,8 +214,6 @@ export default function ProductSettingsCard() {
             inputRef.current?.focus();
         }, 0);
     };
-
-
     useEffect(() => {
         if (inputVisible) {
           inputTagRef.current?.focus();
@@ -214,14 +235,28 @@ export default function ProductSettingsCard() {
             setOptions(tempList);
         })
         setProductStatus(newStore.onPutProduct);
+        // 平台类型
+        getPlatformCategorySelect(newStore.language).then(res=>{
+            console.log(res.data)
+            let tempList = Array.from(res.data,(obj:any)=>{
+                return {
+                    value: obj.id,
+                    label: obj.category_name
+                }
+            })
+            setProductTypeOptions(tempList)
+        })
     },[])
-
-
-    // 
+    // 标签
     const updatetags = (tag:string[]) =>{
         setTags(tag)
+        newStore.setTags(tag.join(","))
     }
-
+    // 商品分类
+    const upDateCategoryTags = (tag:any[]) =>{
+        setCategoryTags(tag)
+        newStore.setProductCategories(Array.from(tag,(e)=>{return e.id}).join(","))
+    }
 
     return (
         <Scoped>
@@ -232,9 +267,10 @@ export default function ProductSettingsCard() {
                 </div>
                 <div className="item">
                     <div>发货</div>
-                    <Checkbox onChange={(e)=>{
-                        console.log(e.target.checked)
-                        // newStore.setNeedTax(e.target.checked)
+                    <Checkbox defaultChecked={true} onChange={(e)=>{
+                        // console.log(e.target.checked)
+                        newStore.setIsShipping(e.target.checked)
+                        newStore.setEditStatus(true)
                     }}>需要运输</Checkbox>
                 </div>
                 <div className="item webChannelContent" >
@@ -282,6 +318,7 @@ export default function ProductSettingsCard() {
                         <Input
                             onChange={(e)=>{
                                 newStore.setSPU(e.target.value)
+                                newStore.setEditStatus(true)
                             }}
                             className="ant-input"
                         />
@@ -294,6 +331,7 @@ export default function ProductSettingsCard() {
                         <Input
                             onChange={(e)=>{
                                 newStore.setWeight(e.target.value)
+                                newStore.setEditStatus(true)
                             }}
                             defaultValue={1000}
                             className="ant-input"
@@ -313,6 +351,7 @@ export default function ProductSettingsCard() {
                             className="ant-input"
                             onChange={(e)=>{
                                 newStore.setManufactuer(e.target.value);
+                                newStore.setEditStatus(true)
                             }}
                         ></Input>
                     </Form.Item>
@@ -422,38 +461,41 @@ export default function ProductSettingsCard() {
                     </Form.Item>
                     <Form.Item
                         className="moreLink"
-
                         label={
                             <div className="label-content between">
-                                <span>商品类型</span>
+                                <span>平台分类</span>
                                 {/* <a>+自定义</a> */}
                             </div>
                         } >
                         <Select
                             style={{ width: "100%", height: "36px" }}
-                            placeholder="custom dropdown render"
-                            dropdownRender={(menu) => (
-                                <>
-                                    {menu}
-                                    <Divider style={{ margin: '8px 0' }} />
-                                    <Space style={{ padding: '0 8px 4px' }}>
-                                        <Input
-                                            placeholder="Please enter item"
-                                            ref={inputRef}
-                                            value={name}
-                                            onChange={onTypeChange}
-                                            onKeyDown={(e) => e.stopPropagation()}
-                                        />
-                                        <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
-                                            Add item
-                                        </Button>
-                                    </Space>
-                                </>
-                            )}
+                            placeholder="搜索类型"
+                            options={productTypeOptions}
                             onChange={(e)=>{
                                 newStore.setProductType(e)
+                                newStore.setEditStatus(true)
                             }}
-                            options={items.map((item) => ({ label: item, value: item }))}
+                            defaultValue={newStore.productType}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        className="moreLink"
+                        label={
+                            <div className="label-content between">
+                                <span>数据归属</span>
+                            </div>
+                        } >
+                        <Select
+                            style={{ width: "100%", height: "36px" }}
+                            placeholder="数据归属"
+                            defaultValue={newStore.partsWarehouse}
+                            options={[
+                                { value: '0', label: '商户自建' },
+                                { value: '1', label: '平台自建' },
+                            ]}
+                            onChange={(e)=>{
+                                newStore.setPartsWarehouse(e)
+                            }}
                         />
                     </Form.Item>
                     <Form.Item
@@ -463,12 +505,27 @@ export default function ProductSettingsCard() {
                         className="moreLink"
                         label={<div className="label-content between">
                             <span>商品分类</span>
-                            <a>选择</a>
+                            <ProductCategoryModal tags={categoryTags} language={newStore.language} upDateCategoryTags={upDateCategoryTags} />
                         </div>}
                     >
                         <div className="desc">
                             选择商品所属分类。智能分类将按规则自动匹配，无法手动选择
                         </div>
+                        <div style={{height:"10px"}}></div>
+                        <Flex gap="4px 0" wrap>
+                            {categoryTags.map((tag) => (
+                                <Tag
+                                    color="processing"
+                                    style={{color:"#000",padding:"2px 6px"}}
+                                    key={tag.id}
+                                    bordered={false}
+                                    closable
+                                    onClose={() => handleTypeClose(tag)}
+                                    >
+                                    {tag.name}
+                                </Tag>
+                            ))}
+                        </Flex>
                     </Form.Item>
                 </Form>
 

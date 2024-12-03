@@ -7,13 +7,15 @@ import { values } from 'lodash';
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
     newStore.setPrice(value==null?0:value);
+    newStore.setEditStatus(true)
 };
 const originPriceOnChange: InputNumberProps['onChange'] = (value) => {
     newStore.setOriginPrice(value==null?0:value);
+    newStore.setEditStatus(true)
 };
 const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
     newStore.setCostPrice(value==null?0:value);
-
+    newStore.setEditStatus(true)
 };
 
 
@@ -143,6 +145,7 @@ export default function PriceOrTransactionCard() {
                         <Checkbox onChange={(e)=>{
                             console.log(e.target.checked)
                             newStore.setNeedTax(e.target.checked)
+                            newStore.setEditStatus(true)
                         }}>是否需要税费</Checkbox>
                     </Form.Item>
                 </Form>

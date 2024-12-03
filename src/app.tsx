@@ -23,6 +23,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Orders from './pages/Orders';
 import React, { useState } from 'react';
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
+// 
 
 
 
@@ -33,6 +34,10 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
+
+
+  
+
   // fetchUserInfo    方法 从接口获取用户信息，没有则跳转登录页
   const fetchUserInfo = async () => {
     //调用(mock中的)接口获取用户信息
@@ -79,15 +84,15 @@ export async function getInitialState(): Promise<{
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
+// 请求商铺
 const getDomainList = () => {
   return axios.post('/api/ApiAppstore/domain_select')
 }
+
+
 // layout
+import { FormattedMessage } from 'umi';  //多语言
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-
-
-
-
   return {
     //菜单栏
     actionsRender: () => [
@@ -95,8 +100,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       <Question key="doc" />,
       <SelectLang key="SelectLang" />,
       <Ping key="Ping" />,
-
-
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,
@@ -143,7 +146,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // </Link>,
       <Link key="openapi" to="/settings/index">
         <SettingOutlined />
-        <span>设置</span>
+        <span>
+          <FormattedMessage id="settings.title"  />
+        </span>
       </Link>,
     ],
     menuHeaderRender: undefined,
@@ -261,10 +266,7 @@ export const request: RequestConfig = {
       }
       if(res.code==1001)history.push(loginPath);
       else return res;
+      // return res
     }
   ],
-
-
-};
-
-
+}

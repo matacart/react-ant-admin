@@ -7,13 +7,12 @@ export default {
 
 // 订单列表
 
-'POST  /api/ApiStore/order_list': (req: Request, res: Response) => {
+'GET  /api/ApiStore/order_list': (req: Request, res: Response) => {
     res.json({
     "code": 0,
     "msg": "",
     "count": "3",
     "data": [
-     
         {
             "id": "5517518188058789080",
             "domain_id": "433552",
@@ -36,11 +35,8 @@ export default {
             "address": "2306  Cherry Tree Drive",
             "employee_id": "0",
             "orders_status_id": "1",
-        
             "delivery_status_id": "2",
-         
             "payment_status_id":"8",
-         
             "remark": null,
             "ip_address": "3745957729",
             "is_share": "0",

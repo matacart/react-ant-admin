@@ -405,7 +405,7 @@
 // } 
 // `
 
-import { Badge, Card, Flex, Form, Input, Modal, Select } from "antd";
+import { Badge, Card, Flex, Form, Input, Modal, Select, Spin } from "antd";
 import React, { useEffect, useMemo, useState } from 'react';
 import { InboxOutlined, LoadingOutlined, PlusOutlined, SearchOutlined, ShopOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
@@ -432,6 +432,8 @@ export default function ProductImgCard() {
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
   };
+
+  const [loading,setLoading] = useState(false);
 
   const [addUrlModalOpen, setAddUrlModalOpen] = useState(false)
   const [addImgModalOpen, setAddImgModalOpen] = useState(false)
@@ -477,8 +479,6 @@ export default function ProductImgCard() {
       return "img-mask"
     }
   }
-
-
 // ###########   图片上传  ######################
 
   const { Dragger } = Upload;
@@ -527,9 +527,16 @@ export default function ProductImgCard() {
   // 图片集合
 
   useEffect(() => {
-    let tempList = Array.from(oldStore.getSelectedImgList(),(res,index)=>{
+    // let tempList:any = [];
+    // oldStore.selectedImgList.forEach((res,index) => {
+    //   tempList.push({
+    //     uid:index.toString(),
+    //     url:res,
+    //   })
+    // });
+    let tempList = Array.from(oldStore.selectedImgList,(res,index)=>{
       return {
-        uid:index,
+        uid:index.toString(),
         url:res,
       }
     })
@@ -547,16 +554,17 @@ export default function ProductImgCard() {
   };
   const handleChange = async (info: any) => {
     // let fileListUrl = [];
-    console.log(info.file)
-    if(info.file.status == "uploading"){
+    if(info.file.status == "done"){
+      setLoading(true)
       // 上传
       let formData = new FormData()
       formData.append("1", info.file.originFileObj as FileType)
       axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
         if(req.data.code == 0){
-          // uid --- src  
-          message.success("上传成功", 1)
+          // uid --- src
+          // message.success("上传成功", 1)
           oldStore.temp.set(info.file.uid, req.data.data.src)
+          setLoading(false);
         }else{
           message.error("上传失败", 1)
         }
@@ -601,52 +609,29 @@ export default function ProductImgCard() {
           height: "auto",
         }}>
           {/* 图片展示 */}
-          {/* {
-            oldStore.getSelectedImgList()?.map((img: any, index: any) => {
-              let tempSelectedImgIndex = tempSelectedImg.indexOf(img);
-             return (
-                <div style={{
-                  height: 150,
-                  width: 128,
-                  borderRadius: 8,
-                  overflow: "hidden"
-                }}>
-                  <img
-                    style={{
-                      height: 128,
-                      width: 128,
-                      overflow: 'hidden',
-                      objectFit: "contain",
-                      background: "rgb(247, 248, 251)",
-                      cursor: "default",
-                    }}
-                    src={img?.fileUrl} key={img?.fileId} />
-                </div>)
-            })
-          } */}
-          <Upload
-            action="#"
-            listType="picture-card"
-            multiple={true}
-            fileList={fileList}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= 8 ? null : uploadButton}
-          </Upload>
-          {previewImage && (
-            <Image
-              wrapperStyle={{ display: 'none' }}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-                afterOpenChange: (visible) => !visible && setPreviewImage(''),
-              }}
-              src={previewImage}
-            />
-          )}
-
-
+          <Spin spinning={loading}>
+            <Upload
+              action="#"
+              listType="picture-card"
+              multiple={true}
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+            >
+              {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+            {previewImage && (
+              <Image
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                }}
+                src={previewImage}
+              />
+            )}
+          </Spin>
         </div>
         {/* 图片上传-外 */}
         {/* <Dragger {...props} height={200} >

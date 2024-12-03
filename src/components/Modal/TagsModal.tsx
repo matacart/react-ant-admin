@@ -207,8 +207,11 @@ export default function TagsModal(prop:any){
         cleanTags.forEach((tag)=>{
             removeTags(prop.language,tag)
         })
+        // 只考虑删除成功
         prop.updatetag(tags);
-        //
+        let result = searchTags.filter(item => !cleanTags.includes(item));
+        setTagCount(result)
+        setTagList(result)
     }
     // 返回上一层
     const handleBackTags = ()=>{
@@ -227,9 +230,6 @@ export default function TagsModal(prop:any){
         setSearchTags(newTags);
         setCleanInputText(e.target.value)
     }
-
-    
-
     useEffect(()=>{
         setTags(prop.tags)
         // 获取标签
@@ -245,6 +245,7 @@ export default function TagsModal(prop:any){
             setSearchTags(tempList);
             setTagList(tempList);
             setSelectedTags(tempList.filter((v:any)=>prop.tags.includes(v)))
+            // console.log(tempList.filter((v:any)=>prop.tags.includes(v)))
         })
     },[prop.tags])
     return(

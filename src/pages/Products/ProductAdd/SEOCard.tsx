@@ -10,22 +10,25 @@ import newStore from "@/store/newStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
+import { useEffect, useState } from 'react';
+import oldStore from "@/store/oldStore"
 
 
  function SEOCard(){
+    
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit />
+                        <SEOEdit seo={newStore}/>
                     </span>
                 </div>
                 <div className="webUrl">{globalStore.shop.domainName}</div>
-                <div className="webTitle">{newStore.title == ""?"未填写标题":newStore.title}</div>
+                <div className="webTitle">{newStore.metaTitle==""?(newStore.title==""?"未填写标题":newStore.title):newStore.metaTitle}</div>
                 {/* 未填写标题 */}
-                <div className="webDesc">{newStore.content1==""?"未填写描述":newStore.content1}</div>
+                <div className="webDesc">{newStore.metaDescription==""?(newStore.content==""?"未填写描述":newStore.content?.replace(/<[^>]*>/g,"")):newStore.metaDescription}</div>
             </Card>
         </Scoped>
     )

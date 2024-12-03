@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';  
 import { Editor } from '@tinymce/tinymce-react';  
+import newStore from '@/store/newStore';
 // 假设这是TinyMCE实例的正确类型，您可能需要从@tinymce/tinymce-react包中导入它  
 // 如果包没有直接导出类型，您可能需要自己定义或使用any作为临时解决方案  
 type EditorInstance = any; // 替换为实际的类型  
@@ -9,10 +10,6 @@ export default function App(prop: any){
   // console.log(prop.prop)
   // 初始化回调函数
   const initData = () => {
-    // if(oldStore.content1){
-    //   // console.log(oldStore.desc)
-    //   editorRef.current.setContent(oldStore.content1)
-    // }
   };
   return (  
     <>  
@@ -20,10 +17,14 @@ export default function App(prop: any){
         tinymceScriptSrc='/tinymce/tinymce.min.js'  
         licenseKey='gpl'
         onBlur={()=>{
-          prop.prop.content1 = editorRef.current?.getContent()
+          prop.prop.content = editorRef.current?.getContent()
         }}
-        onInit={(_evt, editor) => (editorRef.current = editor)}  
-        initialValue=''  
+        onInit={(_evt, editor) => (editorRef.current = editor)}
+        initialValue={newStore.content}
+
+        onEditorChange={(newValue, editor) => {
+          prop.prop.setEditStatus(true)
+        }}
         init={{
           language_url: '/langs/zh_CN.js',
           language: 'zh_CN',

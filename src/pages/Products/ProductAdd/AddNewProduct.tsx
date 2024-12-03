@@ -6,7 +6,7 @@ import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomsDeclaration from './CustomsDeclaration';
 import MultipleStylesCard from './MultipleStylesCard';
 import PriceOrTransactionCard from './PriceOrTransactionCard';
@@ -18,9 +18,10 @@ import SEOCard from './SEOCard';
 import StockCard from './StockCard';
 import ThemeTemplateCard from './ThemeTemplateCard';
 import ThirdPartyInfoCard from './ThirdPartyInfoCard';
-import { addProduct, addStyle, addStyleContent, addStyleName, addTags, getProductStyleList, getProductStyleValueList, updateProductStyle } from '@/services/y2/api';
-
-
+import ProductOverlay from '@/components/Overlay/ProductOverlay';
+import RefreshModel from '@/components/Modal/RefreshModel';
+import Winnow from './Winnow';
+import PlatformHosting from './PlatformHosting';
 
 // const createStyled = (productId:string)=>{
 //     setInterval(()=>{
@@ -168,6 +169,13 @@ function AddNewProduct(){
         console.log(value)
         // 初始化参数
     };
+
+    // 离开提示
+    window.onbeforeunload = () => {
+        // 弹出提示框
+        return '您确定要离开页面吗？'
+    }
+    
     return (
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -176,6 +184,7 @@ function AddNewProduct(){
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
                                 history.push('/products/index')
+                                
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
@@ -198,83 +207,39 @@ function AddNewProduct(){
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>
                             <SEOCard/>
+                            <Winnow />
+                            <PlatformHosting />
                             <ThirdPartyInfoCard/>
                             <ThemeTemplateCard/>
                         </div>
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' onClick={()=>{
-                            newStore.setSelectedImgList(Array.from(newStore.temp.values()))
+                        <Button type='primary' onClick={async ()=>{
+                            await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
                             // console.log(newStore)
-                            // 获取商品id
-                            // console.log(newStore.styleName)
-                            // console.log(newStore.styleValue)
-                            // 通过产品id添加款式
-                            // if(newStore.styleName.length>0){
-                            //     newStore.styleName.forEach((e,i) => {
-                            //         newStore.styleValue[i].forEach(async res=>{
-                            //             let styleNameId = 0;
-                            //             // 创建款式名称
-                            //             await addStyleName(newStore.language,e).then(res=>{
-                            //                 console.log(res)
-                            //                 if(res.code==0){
-                            //                     // 创建成功
-                            //                     // 创建款式内容
-                            //                     // 通过产品id关联
-                            //                     styleNameId = res.id
-                            //                 }else{
-                            //                     message.error('noooo');
-                            //                 }
-                            //             });
-                            //             // 创建款式内容
-                            //             let styleContentId = 0;
-                            //             await addStyleContent(newStore.language,res,styleNameId).then(res=>{
-                            //                 console.log(res)
-                            //                 if(res.code==0){
-                            //                     styleContentId = res.id
-                            //                 }else{
-                            //                     message.error('noooo');
-                            //                 }
-                            //             })
-                            //             let productId = 1363020924714;
-                            //             // 通过产品id关联
-                            //             await addStyle(styleNameId,styleContentId,productId).then((res:any)=>{
-                            //                 console.log(res)
-                            //                 if(res.code==0){
-                            //                     console.log("产品款式添加成功")
-                            //                 }else{
-                            //                     message.error('noooo');
-                            //                 }
-                            //             })
-                            //         })
-                            //         // console.log(newStore.styleValue[i].join(","))
-                            //         // 创建成功
-                            //     });
-                            // }
-                            // // 通过模型查找 -- 获取对应的商品款式id -- 
-                            // // model: 12332222111
-                            // let model = 12332222111
-                            // // languages_id
-                            // getProductStyleList(newStore.model,newStore.language).then(res=>{
-                            //     console.log(res)
-                            // })
-                            // 通过模型id获取
-                            console.log(newStore);
-                            newStore.submitAddProduct().then(res=>{
-                                if(res.code==0){
-                                    message.success('创建成功')
-                                    // newStore.reset()
+                            if(newStore.partsWarehouse == "0"){
+                                if(newStore.validateForm()){
+                                    newStore.unBlock();
+                                    newStore.submitAddProduct().then(res=>{
+                                        if(res.code==0){
+                                            message.success('创建成功')
+                                            // 返回产品id 根据产品id在本地自动请求款式直到成功
+                                        }else{
+                                            message.error('创建失败');
+                                        }
+                                    });
                                     history.push('/products/index')
-                                    // 返回产品id 根据产品id在本地自动请求款式直到成功
-                                }else{
-                                    message.error('noooo');
                                 }
-                            });
+                            }else{
+                                message.error('抱歉！非品库管理员，平台产品不可创建！');
+                            }
                         }}>创建</Button>
                     </div>
                 </div>
             </div>
+            {/* 编辑提示 */}
+            {newStore.editStatus && <ProductOverlay />}
         </Scoped>
     )
 }

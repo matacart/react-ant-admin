@@ -49,7 +49,7 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
-  'menu.products': 'Products',  
+  
 "menu.stores": 'Stores',  
 'menu.stores.create': 'Create Store',
 //
@@ -63,7 +63,9 @@ export default {
 'menu.orders.manages': 'Order Management',  
 'menu.orders.recallOrders': 'Cancelled Orders',  
 'menu.orders.draftOrders': 'Draft Orders',  
-  
+// 
+'menu.products': 'Products',  
+'menu.products.index': 'ProductList',
 'menu.products.inventory': 'Inventory',  
 'menu.products.transfers': 'Transfers',  
 'menu.products.purchase_orders':'Purchase Orders',  
@@ -71,6 +73,7 @@ export default {
 'menu.products.gift-cards':'Gift Cards',  
   
 'menu.customer': 'Customers',  
+'menu.customer.management': 'Customers',
 'menu.customer.persona': 'Segmentation',  
   
 'menu.discount': 'Discount',  
@@ -83,4 +86,6 @@ export default {
 'menu.analyse.reports': 'Reports',  
 'menu.analyse.realtime': 'Realtime Analysis',
 
+// 设置
+// 'menu.setting': 'Setting',
 }
