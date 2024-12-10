@@ -5,8 +5,8 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
 
-
 // 12332222111
+
 class newStore {
   constructor() {
     makeAutoObservable(this)
@@ -192,13 +192,6 @@ class newStore {
   @action setProductCategories(value: string) {
     this.productCategories = value;
   }
-  
-  // 品库
-  partsWarehouse = "0"
-
-  setPartsWarehouse(value: string) {
-    this.partsWarehouse = value;
-  }
 
   // 设置 onPutProduct  
   @action setOnPutProduct(value: boolean) {
@@ -294,12 +287,46 @@ class newStore {
     this.hostedStatus = value
   }
 
+  // 上架信息
+  // 品库
+  partsWarehouse = "0"
+
+  setPartsWarehouse(value: string) {
+    this.partsWarehouse = value;
+  }
+  isShare = "0"
+  setIsShare(value: string) {
+    this.isShare = value;
+  }
+
   // seo 默认数据 -- 创建时
   copySeo = {};
   setCopySeo(value: string) {
     this.copySeo = value;
   }
 
+
+  // Third-party platform
+  thirdPartyPlatform = {
+    amazonUrl: '',
+    amazonSort: '0',
+    amazonStatus: '0',
+    eBayUrl: '',
+    eBaySort: '0',
+    eBayStatus: '0',
+    tmallUrl: '',
+    tmallSort: '0',
+    tmallStatus: '0',
+    aliExpressUrl:'',
+    aliExpressSort:'0',
+    aliExpressStatus:'0'
+  }
+
+  setThirdPartyPlatform(value: any) {
+    this.thirdPartyPlatform = value;
+  }
+
+  // 验证
   @observable validate = {
     title:"success",
     model:"success",
@@ -372,6 +399,12 @@ class newStore {
     this.metaTitle = "";
     this.metaKeyword = "";
     this.metaDescription = "";
+    this.allianceStatus = "0";
+    this.hostedStatus = "0";
+
+    this.partsWarehouse = "0";
+    this.isShare = "0";
+
     this.temp.clear();
   }
 

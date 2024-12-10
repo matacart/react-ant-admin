@@ -178,7 +178,7 @@ export default function ProductSettingsCard() {
         const newTags = [...tags];
         newTags[editInputIndex] = editInputValue;
         setTags(newTags);
-        console.log(newTags)
+        // console.log(newTags)
         // console.log(1111);
         // newStore.setTag(newTags.join(","))
         setEditInputIndex(-1);
@@ -463,7 +463,7 @@ export default function ProductSettingsCard() {
                         className="moreLink"
                         label={
                             <div className="label-content between">
-                                <span>平台分类</span>
+                                <span>商品大类</span>
                                 {/* <a>+自定义</a> */}
                             </div>
                         } >
@@ -476,26 +476,6 @@ export default function ProductSettingsCard() {
                                 newStore.setEditStatus(true)
                             }}
                             defaultValue={newStore.productType}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        className="moreLink"
-                        label={
-                            <div className="label-content between">
-                                <span>数据归属</span>
-                            </div>
-                        } >
-                        <Select
-                            style={{ width: "100%", height: "36px" }}
-                            placeholder="数据归属"
-                            defaultValue={newStore.partsWarehouse}
-                            options={[
-                                { value: '0', label: '商户自建' },
-                                { value: '1', label: '平台自建' },
-                            ]}
-                            onChange={(e)=>{
-                                newStore.setPartsWarehouse(e)
-                            }}
                         />
                     </Form.Item>
                     <Form.Item

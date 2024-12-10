@@ -27,7 +27,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
             <Card className="gap">
                 <div className="header">
                     <span className="title">平台托管
-                        <Tooltip title="功能未开放">
+                        <Tooltip title="客户可以将商品交给平台托管，平台会负责商品的发布、库存、价格、物流等管理，客户只需要关注商品详情页的编辑。">
                             <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                 <QuestionCircleOutlined />
                             </span>

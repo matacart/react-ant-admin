@@ -183,6 +183,7 @@ export async function deleteProduct(id: string) {
 // 改用product_list
 // 根据id & languages_id获取产品详情
 export async function getProductDetail(id: string, languagesId: string) {
+  console.log(id, languagesId)
   return request(`/api/ApiStore/product`, {
     method: 'POST',
     headers: {
@@ -191,6 +192,7 @@ export async function getProductDetail(id: string, languagesId: string) {
     data: {
       // params
       id: id,
+      // languages_id: "2"
       languages_id: languagesId
     },
   })
@@ -224,7 +226,6 @@ export async function addProduct() {
       "is_best": 0,
       "is_new": 0,
       "is_hot": 0,
-      "is_share":0,
       "sort" : 0,
       "product_url" : '',
       "meta_title" : '',
@@ -238,6 +239,8 @@ export async function addProduct() {
       "divided_status" : 0,
       "divided_country" : '',
       "divided_url" : '',
+      // 询盘开关：
+      "is_share": oldStore.isShare,
       // 摘要
       "content": newStore.content,
       // 内容
@@ -378,7 +381,7 @@ export async function submitRenewalProduct(res:any){
       // 
       "sort": oldStore.sort,
       // 询盘开关：
-      "is_share": oldStore.is_share,
+      "is_share": oldStore.isShare,
       // 
       "inquiry_status": oldStore.inquiry_status,
       // 
@@ -438,6 +441,9 @@ export async function submitRenewalProduct(res:any){
       "hosted_status": oldStore.hostedStatus,
       // 品库
       // 商品状态
+      // 
+      // "attributes":[{option_name:"111",option_values_name:"123"}]
+      "attributes":JSON.stringify(Array.from(oldStore.attributes))
       // "status": oldStore.onPutProduct ? "1" : "0"
     }
   })
@@ -520,7 +526,18 @@ export async function upDateProductStatus(productId: string, status: string) {
   })
 }
 
-
+// 批量删除
+export async function deleteProductList(ids:string) {
+  return await request('/api/ApiStore/product_batchdel', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      "ids": ids
+    }
+  })
+}
 
 
 // 创建款式名称 languages_id product_option_name sort product_option_type_id status

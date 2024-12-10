@@ -66,8 +66,7 @@ function ProductListAjax(selectProps:any) {
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [onLoadingList, setOnLoadingList] = useState<any>([]);
   // 
-
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -120,7 +119,7 @@ function ProductListAjax(selectProps:any) {
   };
   // 
   const onChangeRadio = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value);
+    // console.log('radio checked', e.target.value);
     setRadioValue(e.target.value);
   };
   //列表数据
@@ -355,7 +354,7 @@ function ProductListAjax(selectProps:any) {
   return (
     <Scoped>
     {/* 商品列表 */}
-      <SelectedActions selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} /> {/* 显示选择的数量和操作按钮 */}
+      <SelectedActions selectedRowKeys={selectedRowKeys} onFetchData={fetchData} setSelectedRowKeys={setSelectedRowKeys} /> {/* 显示选择的数量和操作按钮 */}
       <Table
         columns={columns}
         // rowKey={(record) => record.key}

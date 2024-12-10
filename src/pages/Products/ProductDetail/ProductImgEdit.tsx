@@ -540,6 +540,7 @@ export default function ProductImgCard() {
         url:res,
       }
     })
+    // console.log(tempList)
     setFileList(tempList as any)
   }, [])
   

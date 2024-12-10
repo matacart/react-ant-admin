@@ -12,7 +12,6 @@ import { deleteProduct, getPlatformCategorySelect, getProductDetail, upDateProdu
 import React from 'react';
 import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
-import { history, useParams } from '@umijs/max';
 import oldStore from '@/store/oldStore';
 import MultipleStylesEdit from './MultipleStylesEdit';
 import ProductStyleListEdit from './ProductStyleListEdit';
@@ -23,6 +22,12 @@ import ProductSeoEdit from './ProductSeoEdit';
 import { observer } from 'mobx-react-lite';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
+import Subnumber from './Subnumber';
+
+import { useLocation, useNavigate } from 'umi'
+// import { history } from '@umijs/max';
+
+
 // 信息
 interface ProductDetail {
     title:string;
@@ -43,21 +48,14 @@ interface ProductDetail {
     // tag:string;
 }
 
-// 删除
-function productDel(id:any){
-    console.log(id)
-    return deleteProduct(id).then(res=>{
-        if(res.code==0)message.success('删除成功');
-        else message.error('noooo');
-        history.push('/products/index')
-    })
-}
-
-
 function ProductDetail() {
     // 获取商品详情
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-    const product_i:any = history.location.state;
+
+    const navigate = useNavigate(); // 使用 useNavigate 钩子
+
+    const product:any = useLocation().state
+
     // 提示
     const [modal, contextHolder] = Modal.useModal();
     const [style, setStyleId] = useState([]);
@@ -67,12 +65,20 @@ function ProductDetail() {
 
     const [onFile,setOnFile] = useState(false);
     
-    // 
     const [isLoading,setIsLoading] = useState(false);
     const [saveLoading,setSaveLoading] = useState(false);
 
     const [language,setLanguage] = useState("");
 
+    // 删除
+    function productDel(id:any){
+        console.log(id)
+        return deleteProduct(id).then(res=>{
+            if(res.code==0)message.success('删除成功');
+            else message.error('noooo');
+            navigate('/products/index')
+        })
+    }
     
     const onFileOk = () => {
         setOnFile(false);
@@ -116,12 +122,11 @@ function ProductDetail() {
     const fetchProductDetail = async (language?:string) => {
         setIsLoading(true)
         try {
-            const response = await getProductDetail(product_i.productId, language!==""?language:product_i.languages_id); // 参数
-            // console.log(response.data)
+            const response = await getProductDetail(product.productId, language!==""?language:product.language); // 参数
             setProductDetail(response.data);
-            if (response.data) {
+            if(response.data){
                 setProductDetail(response.data);
-                await oldStore.productInit(response.data)
+                oldStore.productInit(response.data);
             } else {
                 console.error('Invalid data format:', response);
             }
@@ -133,7 +138,8 @@ function ProductDetail() {
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
         fetchProductDetail();
-    },[history.location.state]);
+        console.log(product)
+    },[product]);
     // 实现 onSecondInputChange 函数
     const handleSecondInputChange = (value: any) => {
         setStyleId(value);
@@ -149,8 +155,7 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是第一个商品")
         }else{
-            history.replace('/products/productId/edit',{productId:id,language:oldStore.language})
-            console.log(history.location.state)
+            navigate('/products/productId/edit',{state:{productId:id,language:oldStore.language}})
         }
     }
     const nextProduct=(id:string)=>{
@@ -158,25 +163,23 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是最后一个商品")
         }else{
-            history.replace('/products/productId/edit',{productId:id,language:oldStore.language})
+            navigate('/products/productId/edit',{state:{productId:id,language:oldStore.language}})
         }
     }
-
     return (
         <div>
             {/* 弹窗 */}
             <Modal centered title={productStatus == "2"?"取消商品存档":"将商品存档"} open={onFile} onOk={onFileOk} onCancel={()=>{setOnFile(false)}}>
                 {productStatus == "2"?<p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>:<p>存档后销售渠道不再展示此商品，可通过商品管理进行查看</p>}
             </Modal>
-            { productDetail && 
-            <StyledDiv>
+            { productDetail && <StyledDiv>
                 <Spin spinning={isLoading}>
                     <div className='mc-layout-wrap'>
                         <div className="mc-layout">
                             <div className="mc-header">
                                 <div className="mc-header-left">
                                     <div className="mc-header-left-secondary" onClick={() => {
-                                    history.push('/products/index')
+                                        navigate('/products/index')
                                     }}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                     </div>
@@ -204,7 +207,7 @@ function ProductDetail() {
                                     <Select className='selector' defaultValue="分享" /> 
                                 </div>
                             </div>
-                                <div className='mc-layout-main'> 
+                                <div className='mc-layout-main'>
                                     <div className='mc-layout-content'>
                                         <ProductDataEdit setLanguage={setLanguage} />
                                         {/* <ProductDataEdit productData={{title:productDetail?.title,content:productDetail?.content,content1:productDetail?.content1}} /> */}
@@ -222,6 +225,7 @@ function ProductDetail() {
                                         <ProductSeoEdit/>
                                         <Winnow />
                                         <PlatformHosting />
+                                        <Subnumber />
                                         <ThirdPartyInfoEdit/>
                                         <ThemeTemplateEdit/>
                                     </div>
@@ -237,7 +241,7 @@ function ProductDetail() {
                                     }}>将商品取消存档</Button>}
                                     <Button type='primary' onClick={async () => {
                                         await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
-                                        console.log(oldStore)
+                                        console.log(Array.from(oldStore.attributes))
                                         setIsLoading(true)
                                         if(oldStore.partsWarehouse == "0"){
                                             oldStore.updateProduct().then(res => {

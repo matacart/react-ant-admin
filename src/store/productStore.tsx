@@ -7,27 +7,32 @@ import { action, observable,makeAutoObservable } from "mobx";
 class ProductStore {
 
     // 
-    @observable limit = 10;
-    @action setLimit = (limit: number) => {
-        this.limit = limit;
-    }
+    // @observable limit = 10;
+    // @action setLimit = (limit: number) => {
+    //     this.limit = limit;
+    // }
     
-    @observable page = 1;
-    @action setPage = (page: number) => {
-        this.page = page;
-    }
+    // @observable page = 1;
+    // @action setPage = (page: number) => {
+    //     this.page = page;
+    // }
 
 
-    @observable language = 2;
-    @action setLanguage = (language: any) => {
-        this.language = language;
-    }
+    // @observable language = 2;
+    // @action setLanguage = (language: any) => {
+    //     this.language = language;
+    // }
 
 
-    // 
-    @observable productList: any[] = [];
+    // // 
+    // @observable productList: any[] = [];
 
-    
+    // 款式
+  attributes = []
+
+  setAttributes(value:[]){
+    this.attributes = value
+  }
 
 }
 

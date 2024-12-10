@@ -22,6 +22,7 @@ import ProductOverlay from '@/components/Overlay/ProductOverlay';
 import RefreshModel from '@/components/Modal/RefreshModel';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
+import Subnumber from './Subnumber';
 
 // const createStyled = (productId:string)=>{
 //     setInterval(()=>{
@@ -209,6 +210,7 @@ function AddNewProduct(){
                             <SEOCard/>
                             <Winnow />
                             <PlatformHosting />
+                            <Subnumber />
                             <ThirdPartyInfoCard/>
                             <ThemeTemplateCard/>
                         </div>
@@ -217,7 +219,7 @@ function AddNewProduct(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={async ()=>{
                             await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
-                            // console.log(newStore)
+                            console.log(newStore)
                             if(newStore.partsWarehouse == "0"){
                                 if(newStore.validateForm()){
                                     newStore.unBlock();

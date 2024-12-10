@@ -1,7 +1,8 @@
 import { addProduct, addTags, getProductDetail, submitRenewalProduct } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
 import { valueType } from "antd/es/statistic/utils";
-import { action, makeAutoObservable, makeObservable, observable } from "mobx";
+import { action, makeAutoObservable, makeObservable, observable, toJS } from "mobx";
+import productStore from "./productStore";
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
@@ -224,12 +225,7 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
   // 重量单位
   @observable weightClassId = "1";
 
-  // 品库
-  partsWarehouse = "0"
-
-  setPartsWarehouse(value: string) {
-    this.partsWarehouse = value;
-  }
+  
   // 设置 onPutProduct  
   @action setProductStatus(value: string) {
     this.productStatus = value;
@@ -305,6 +301,25 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
     this.hostedStatus = value
   }
 
+  // 品库
+  partsWarehouse = "0"
+  setPartsWarehouse(value: string) {
+    this.partsWarehouse = value;
+  }
+  // is_share
+  isShare = "0"
+  setIsShare(value: string) {
+    this.isShare = value;
+  }
+
+  // 款式
+  attributes = []
+
+  setAttributes(value:[]){
+    this.attributes = value
+  }
+
+
 
   // 更新产品
   updateProduct(){
@@ -325,17 +340,24 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
     this.setISBN(data.barcode)
     this.setSKU(data.sku)
     this.setInventory(data.quantity)
+    this.weight=data.weight
     this.costPrice=data.cost_price
     this.SPU=data.SPU
-    this.weight=data.weight
     this.manufactuer=data.manufactuer
-    // this.tags=data.tag
+    this.tags=data.tag
     this.productType=data.product_type
-    // 图片  
-    this.setSelectedImgList(JSON.parse(data.additional_image))
-    JSON.parse(data.additional_image).forEach((value:any,index:any) => {
+    //  图片  
+    this.setSelectedImgList(data.additional_image == ""?[]:JSON.parse(data.additional_image))
+    this.selectedImgList.forEach((value:any,index:any) => {
         this.temp.set(index.toString(),value)
     });
+    // console.log(JSON.parse(data.additional_image))
+    // data.additional_image === ""?[]:
+    // console.log(JSON.parse(data.additional_image))
+    // // this.setSelectedImgList()
+    // JSON.parse(data.additional_image).forEach((value:any,index:any) => {
+    //   this.temp.set(index.toString(),value)
+    // });
     // 税费
     this.setNeedTax(data.needTax == 0 ? false : true)
     // 
@@ -343,59 +365,60 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
     this.setContinueSell(data.continueSell == 0 ? false : true)
     this.setProductStatus(data.status)
     // 
-    this.setProductStatus(data.status)
     this.setHSCode(data.hs_code)
     this.setNotion(data.shipping_country_id)
     this.setLanguage(data.languages_id)
-    // 
+    
     this.setProductId(data.id);
     this.setNextProductId(data.nextProductId);
     this.setPrevProductId(data.prevProductId);
     this.setProductType(data.platform_category_id);
     this.setProductCategories(data.categoryIds)
     this.setIsShipping(data.shipping == "0" ? false : true)
-    this.setTags(data.tag)
+    this.setTags(data.tag == null?"":data.tag)
     this.setWeightClassId(data.weight_class_id)
     this.setMetaTitle(data.meta_title)
     this.setMetaKeyword(data.meta_keyword)
     this.setMetaDescription(data.meta_description)
-    this.setProductUrl(data.product_url)
-
+    if(data.product_url !== null){
+      this.setProductUrl(data.product_url)
+    }
     this.setAllianceStatus(data.alliance_status)
     this.setHostedStatus(data.hosted_status)
+    this.setIsShare(data.is_share)
+    this.setPartsWarehouse(data.is_sys)
+    this.setAttributes(data.attributes==null?[]:data.attributes)
+    productStore.setAttributes(data.attributes==null?[]:data.attributes)
 
     // 旧属性
     // this.additional_image = data.additional_image
-    this.categorys = data.categorys
-    this.checked = data.checked
-    this.create_time = data.create_time
-    this.domain_id = data.domain_id
-    this.employee_id = data.employee_id
-    this.employee_realname = data.employee_realname
-    this.languages_name = data.languages_name
-    this.update_time = data.update_time
-    this.specialprice = data.specialprice
-    this.start_time = data.start_time
-    this.end_time = data.end_time
-    
-    this.stock_status_id = data.stock_status_id
-    this.subtract = data.subtract
-    this.is_best = data.is_best
-    this.is_new = data.is_new
-    this.is_hot = data.is_hot
-    this.sort = data.sort
-    this.is_share = data.is_share
-    this.is_sys = data.is_sys
-    this.inquiry_status = data.inquiry_status
-    this.ad_waf_status = data.ad_waf_status
-    this.ad_product_id = data.ad_product_id
-    this.ad_product_url=data.ad_product_url
-    this.divided_status=data.divided_status
-    this.divided_country=data.divided_country
-    this.divided_url=data.divided_url
-    this.group_id=data.group_id
-    this.minimum=data.minimum
-    this.product_video = data.product_video
+    // this.categorys = data.categorys
+    // this.checked = data.checked
+    // this.create_time = data.create_time
+    // this.domain_id = data.domain_id
+    // this.employee_id = data.employee_id
+    // this.employee_realname = data.employee_realname
+    // this.languages_name = data.languages_name
+    // this.update_time = data.update_time
+    // this.specialprice = data.specialprice
+    // this.start_time = data.start_time
+    // this.end_time = data.end_time
+    // this.stock_status_id = data.stock_status_id
+    // this.subtract = data.subtract
+    // this.is_best = data.is_best
+    // this.is_new = data.is_new
+    // this.is_hot = data.is_hot
+    // this.sort = data.sort
+    // this.inquiry_status = data.inquiry_status
+    // this.ad_waf_status = data.ad_waf_status
+    // this.ad_product_id = data.ad_product_id
+    // this.ad_product_url=data.ad_product_url
+    // this.divided_status=data.divided_status
+    // this.divided_country=data.divided_country
+    // this.divided_url=data.divided_url
+    // this.group_id=data.group_id
+    // this.minimum=data.minimum
+    // this.product_video = data.product_video
   }
 
 
@@ -434,7 +457,7 @@ import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 // 
     this.allianceStatus = "";
     this.hostedStatus = "";
-
+    this.isShare = "";
     this.temp.clear();
   }
 

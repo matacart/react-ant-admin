@@ -80,9 +80,14 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: 'MataCart',
+  // title: 'MataCart',
+  favicons: [
+    '',
+  ],
   layout: {
     locale: true,
+    name: 'MataCart',
+    // logo: './img/logo-bak-01.jpg',
     ...defaultSettings,
   },
   /**

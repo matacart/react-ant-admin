@@ -5,9 +5,16 @@ import DataCard from '@/components/Card/DataCard';
 import TextCard, {ButtonContent,CardContent} from '@/components/Card/TextCard'
 import Time from '@/components/Admin/Time';
 import ShopTimeDisplay from '@/components/Admin/Time';
+import { useEffect } from 'react';
+import globalStore from '@/store/globalStore';
 
 export default () => {
-
+  // home
+  useEffect(()=>{
+    // console.log(localStorage.getItem('access_token'))
+    // 请求平台分类
+    globalStore.getPlatformCategory();
+  },[])
 
 
   return (

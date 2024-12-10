@@ -213,7 +213,7 @@ function ProductSettingsEdit(props:any) {
     useEffect(()=>{
         // 平台类型
         getPlatformCategorySelect(oldStore.language).then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             let tempList = Array.from(res.data,(obj:any)=>{
                 return {
                     value: obj.id,
@@ -446,7 +446,7 @@ function ProductSettingsEdit(props:any) {
                         className="moreLink"
                         label={
                             <div className="label-content between">
-                                <span>商品类型</span>
+                                <span>商品大类</span>
                                 {/* <a>+自定义</a> */}
                             </div>
                         } >
@@ -458,26 +458,6 @@ function ProductSettingsEdit(props:any) {
                                 oldStore.setProductType(e)
                             }}
                             defaultValue={oldStore.productType}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        className="moreLink"
-                        label={
-                            <div className="label-content between">
-                                <span>数据归属</span>
-                            </div>
-                        } >
-                        <Select
-                            style={{ width: "100%", height: "36px" }}
-                            placeholder="数据归属"
-                            defaultValue={oldStore.partsWarehouse}
-                            options={[
-                                { value: '0', label: '商户自建' },
-                                { value: '1', label: '平台自建' },
-                            ]}
-                            onChange={(e)=>{
-                                oldStore.setPartsWarehouse(e)
-                            }}
                         />
                     </Form.Item>
                     <Form.Item

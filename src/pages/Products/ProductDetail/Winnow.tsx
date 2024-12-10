@@ -28,7 +28,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
             <Card className="gap">
                 <div className="header">
                     <span className="title">精选联盟
-                        <Tooltip title="功能未开放">
+                        <Tooltip title="客户可以把商品添加到精选联盟商品库，供达人选品推广">
                             <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                 <QuestionCircleOutlined />
                             </span>

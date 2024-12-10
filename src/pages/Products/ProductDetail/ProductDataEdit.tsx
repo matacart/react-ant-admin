@@ -53,7 +53,7 @@ function ProductDataEdit(prop:any){
     return (
       <Card title="商品信息" className='product-data-card' extra={
         <>
-          <span>ID:{oldStore.productId}</span>
+          <span>SPU ID:{oldStore.productId}</span>
           <span style={{marginLeft:"6px",marginRight:"8px"}}>
             <span style={{cursor:"pointer"}} onClick={()=>{
               copy(oldStore.productId)
@@ -70,7 +70,7 @@ function ProductDataEdit(prop:any){
           />
           <Tooltip title="商品支持多种语言，请选择某种语言后再操作。">
               <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                  <QuestionCircleOutlined />
+                  <QuestionCircleOutlined />  
               </span>
           </Tooltip>
         </>

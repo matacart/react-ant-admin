@@ -22,6 +22,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import ProductListAjax from './components/List/OrderListAjax';
 import Orders from './pages/Orders';
 import React, { useState } from 'react';
+
+// 在 app.tsx 文件顶部添加导入语句
+import globalStore from './store/globalStore';
+
+
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 // 
 
@@ -90,6 +95,7 @@ const getDomainList = () => {
 }
 
 
+
 // layout
 import { FormattedMessage } from 'umi';  //多语言
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
@@ -104,6 +110,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
+      // logo: '',
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },

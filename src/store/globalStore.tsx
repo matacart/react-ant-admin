@@ -21,12 +21,13 @@ class globalStore {
         this.shop = shop
     }
 
-    @observable platformCategory = {}
+    @observable platformCategory = []
 
     getPlatformCategory(){
-        // getPlatformCategorySelect().then((res:any) => {
-        //     this.platformCategory = res.data
-        // })
+        getPlatformCategorySelect("1").then((res:any) => {
+            this.platformCategory = res.data
+            // console.log(res)
+        })
     }
     // 语言
     categorylist = [];
