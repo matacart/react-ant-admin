@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { result } from 'lodash';
 import { useIntl } from '@umijs/max';
 import globalStore from "@/store/globalStore";
+import cookie from 'react-cookies';
 
 
 // 定义一个函数来高亮搜索词  
@@ -59,31 +60,35 @@ export default function SelectDomain() {
     const intl = useIntl();// 多语言
     
     const changeDomain = (item: any) => {
+        cookie.save('domain', item, { path: '/' });
         setDefaultDomain(item.id)
-        // console.log(item)
-        globalStore.setShop(item)
         setIsActive(false);
     }
-
-
     useEffect(() => {
-        getDomainList().then((res) => {
-            console.log(res)
-            res?.data?.forEach((item: any, index: any) => {
-                domainList.push({
-                    id: item.id,
-                    domainName: item.domain_name,
-                    secondDomain: item.second_domain,
-                    status: item.status,
+        // 判断会话中是否存在店铺数据
+        if(sessionStorage["domain"]){
+            setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
+            setDefaultDomain(cookie.load("domain")?.id);
+        }else{
+            getDomainList().then((res) => {
+                console.log(res)
+                res?.data?.forEach((item: any, index: any) => {
+                    domainList.push({
+                        id: item.id,
+                        domainName: item.domain_name,
+                        secondDomain: item.second_domain,
+                        status: item.status,
+                    })
                 })
+                setDomainListCurrent(domainList);
+                // 缓存店铺数据
+                sessionStorage["domain"] = JSON.stringify(domainList);
+                cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
+                setDefaultDomain(res.data[0]?.id);
+            }).catch((error) => {
+                message.error('未获取到店铺列表，请检查网络')
             })
-            setDomainListCurrent(domainList);
-            // 缓存店铺数据
-            globalStore.setShop(domainList[0]);
-            setDefaultDomain(res.data[0]?.id);
-        }).catch((error) => {
-            message.error('未获取到店铺列表，请检查网络')
-        })
+        }
     }, [])
 
     const content = (

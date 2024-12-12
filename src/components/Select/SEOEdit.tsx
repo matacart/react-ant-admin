@@ -6,7 +6,7 @@ import globalStore from "@/store/globalStore";
 import { observer } from "mobx-react-lite"
 import { lastIndexOf, set } from "lodash";
 // 
-
+import cookie from 'react-cookies';
 
 function SEOEdit(prop:any){
     
@@ -76,7 +76,7 @@ function SEOEdit(prop:any){
                     <div className="contentCard">
                         <div className="preview">
                             <div>预览</div>
-                            <div>{globalStore.shop.domainName}</div>
+                            <div>{cookie.load("domain").domainName}</div>
                             <div>{title==""?(prop.seo.title==""?"未填写标题":prop.seo.title):title}</div>
                             <div>{description==""?(prop.seo.content==""?"未填写描述":prop.seo.content.replace(/<[^>]*>/g,"")):description}</div>
                         </div>

@@ -7,9 +7,9 @@ import { deleteProduct, getCountryList, getProductList, upDateProductStatus } fr
 import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
-import globalStore from '@/store/globalStore';
 import SelectedActions from './SelectedActions';
 import oldStore from '@/store/oldStore';
+import cookie from 'react-cookies';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -230,8 +230,8 @@ function ProductListAjax(selectProps:any) {
               {/* <Link to={`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`} target='_blank'> */}
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    if(globalStore.shop.domainName && globalStore.shop.domainName!==""){
-                      window.open(`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`)
+                    if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
+                      window.open(`https://`+cookie.load("domain").domainName+`/h-product-detail-p`+record.productid+`.html`)
                     }else{
                       message.error("请先设置店铺")
                     }

@@ -3,8 +3,9 @@ import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumbe
 import oldStore from '@/store/oldStore';
 import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { observer } from 'mobx-react-lite';
 interface StyleItem {
-  id: number;
+  keyId: number;
   imageUrl: string;
   style: string;
   sku: string;
@@ -25,85 +26,78 @@ interface StyleItem {
 
 // 获取
 
-function ProductStyleListEdit (styledData:any){
+function ProductStyleListEdit (props:any){
   const [styles, setStyles] = useState<StyleItem[]>([]);
   const [modal, contextHolder] = Modal.useModal();
+  function generateSku(attrValue){
+    // 开始构建sku 
+    let skus: any[] = []
+    // 笛卡尔积算法（注意，我们的reduce没有指定第二个参数，则第一次循环中，col是数组第一位，set是数组第二位）
+    skus = attrValue.reduce((col: any[], set) => {
+      let res: any[] = []
+        // 对于每个属性值集合，依次与当前已有的结果集做笛卡尔积
+        col.forEach((c) => {
+          set.forEach((s) => {
+            // 将两个属性值合并为一个字符串，并存入结果集中
+            let t = c + ',' + s
+            // 寻找销售属性指定的图片
+            res.push(t)
+          })
+        })
+        // 将笛卡尔积后的结果集返回，作为下一轮的结果集
+        return res
+      })
+        // 将结果存储起来
+      return skus
+  }
   useEffect(() => {
-    let styleList = getProductStyleList(oldStore.model,oldStore.language)
-    styleList.then((res:any) => {
-      console.log(res.data)
-      // res.data.forEach((s:any)=>{
-      //   console.log(s)
-      //   setStyles([...styles,{
-      //     id:s.id,
-      //     imageUrl:s.imageUrl,
-      //     style:s.style,
-      //     sku:s.sku,
-      //     salePrice:s.salePrice,
-      //     originalPrice:s.originalPrice,
-      //     costPrice:s.costPrice,
-      //     tax:s.tax,
-      //     inventoryPolicy:s.inventoryPolicy,
-      //   }])
+
+    // 默认数据
+    console.log(oldStore.variants)
+
+    const generateStyles = (sku: []) => {
+      const newStyles = sku.map((tag, index) => ({
+          keyId: index + 1,
+          image: '',
+          option_values_ids: "",
+          option_values_names:tag,
+          price:"",
+          status:"1",
+          sort:"1",
+          sku: '',
+          originalPrice: 0,
+          costPrice: 0,
+          tax: true,
+          inventoryPolicy: '',
+          hsCode: '',
+          country: '',
+          stock: 0,
+          weight: 0,
+          weightUnit: '克',
+          shipping: true,
+          barcode: '',
+          metaFields: '',
+      }));
+
+      // console.log([...oldStore.variants,...newStyles])
+      setStyles(newStyles);
+      // // oldStore.setVariant(newStyles)
+
+      // newStyles.filter(item=>{
+      //   oldStore.forEach(element => {
+          
+      //   });
       // })
-    })
-    // if (styledData) {
-    //   // 解析 styleId 成多行标签数组
-    //   // const rows = styleId.split('\n').map(row => row.trim());
-    //   // // 为每一行生成一个 StyleItem
-    //   // const newStyles = rows.map((row, index) => {
-    //   //   const tags = row.split(',').map(tag => tag.trim());
-    //   //   return {
-    //   //     id: index + 1,
-    //   //     imageUrl: '',
-    //   //     style: tags.join(','),
-    //   //     sku: '',
-    //   //     salePrice: 0,
-    //   //     originalPrice: 0,
-    //   //     costPrice: 0,
-    //   //     tax: true,
-    //   //     inventoryPolicy: '',
-    //   //     hsCode: '',
-    //   //     country: '',
-    //   //     stock: 0,
-    //   //     weight: 0,
-    //   //     weightUnit: '克',
-    //   //     shipping: true,
-    //   //     barcode: '',
-    //   //     metaFields: '',
-    //   //   };
-    //   // });
-    //   let newStyles:any = [];
-    //   styledData.styledData.forEach((element:any) => {
-    //     console.log(element);
-    //     newStyles.push({
-    //       id: element.id,
-    //       imageUrl: element.option_name,
-    //       style: element.option_values_name,
-    //       sku: '',
-    //       salePrice: 0,
-    //       originalPrice: 0,
-    //       costPrice: 0,
-    //       tax: true,
-    //       inventoryPolicy: '',
-    //       hsCode: '',
-    //       country: '',
-    //       stock: 0,
-    //       weight: 0,
-    //       weightUnit: '克',
-    //       shipping: true,
-    //       barcode: '',
-    //       metaFields: '',
-    //     })
-    //   });
-    //   setStyles(newStyles);
-    // }
-    
-  }, []);
+    };
+    if(props.style.length>0) {
+      let sku = generateSku(props.style)
+      generateStyles(sku)
+    }
+  }, [props.style]);
   // 添加处理 SKU 变化的函数
   const handleSkuChange = (id: number, newValue: string) => {
     const updatedStyles = styles.map((style) => {
-      if (style.id === id) {
+      if (style.keyId === id) {
         return { ...style, sku: newValue };
       }
       return style;
@@ -116,43 +110,37 @@ function ProductStyleListEdit (styledData:any){
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   const columns = [
-    // {
-    //   title: '图片',
-    //   dataIndex: 'imageUrl',
-    //   fixed: 'left', // 固定左侧
-    //   width: 130, // 设置宽度以适应图片
-    //   render: (imageUrl: string, record: StyleItem) => (
-    //     <Upload
-    //       action="/appstore/ApiAppstore/doUploadPic"
-    //       listType="picture-card"
-    //       multiple={true}
-    //       fileList={fileList.filter((file) => file.uid === record.id)}
-    //       onPreview={handlePreview}
-    //       onChange={(info) => handleChange(info, record.id)}
-    //     >
-    //       {fileList.filter((file) => file.uid === record.id).length >= 8 ? null : (
-    //         <div>
-    //           <div className="ant-upload-picture-card-wrapper">
-    //             <div className="ant-upload-picture-card">
-    //               <div>+</div>
-    //             </div>
-    //           </div>
-    //           <div className="ant-upload-text">上传图片</div>
-    //         </div>
-    //       )}
-    //       {imageUrl && <img src={imageUrl} alt="example" style={{ width: '100%' }} />}
-    //     </Upload>
-    //   ),
-    // },
     {
-      title: '规格',
-      dataIndex: 'imageUrl',
+      title: '图片',
+      dataIndex: 'image',
       fixed: 'left', // 固定左侧
-      width: 80, // 设置宽度以适应文字
+      width: 130, // 设置宽度以适应图片
+      render: (imageUrl: string, record: StyleItem) => (
+        <Upload
+          action="/appstore/ApiAppstore/doUploadPic"
+          listType="picture-card"
+          multiple={true}
+          fileList={fileList.filter((file) => file.uid === record.id)}
+          onPreview={handlePreview}
+          onChange={(info) => handleChange(info, record.id)}
+        >
+          {fileList.filter((file) => file.uid === record.id).length >= 8 ? null : (
+            <div>
+              <div className="ant-upload-picture-card-wrapper">
+                <div className="ant-upload-picture-card">
+                  <div>+</div>
+                </div>
+              </div>
+              <div className="ant-upload-text">上传图片</div>
+            </div>
+          )}
+          {imageUrl && <img src={imageUrl} alt="example" style={{ width: '100%' }} />}
+        </Upload>
+      ),
     },
     {
       title: '款式',
-      dataIndex: 'style',
+      dataIndex: 'option_values_names',
       fixed: 'left', // 固定左侧
       width: 80, // 设置宽度以适应文字
     },
@@ -170,13 +158,13 @@ function ProductStyleListEdit (styledData:any){
     },
     {
       title: '售价',
-      dataIndex: 'salePrice',
-      render: (salePrice: number, record: StyleItem) => (
+      dataIndex: 'price',
+      render: (price: number, record: StyleItem) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ marginRight: 4 }}>US$</span>
           <Input
-            value={salePrice === 0 ? '' : salePrice.toString()}
-            onChange={(e) => handleSalePriceChange(record.id, e.target.value)}
+            value={price === 0 ? '' : price.toString()}
+            onChange={(e) => handleSalePriceChange(record.keyId, e.target.value)}
             placeholder="售价"
             style={{ width: 150}}
           />
@@ -184,80 +172,80 @@ function ProductStyleListEdit (styledData:any){
       ),
       width: 152,
     },
-    {
-      title: '原价',
-      dataIndex: 'originalPrice',
-      render: (originalPrice: number, record: StyleItem) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
-          <Input
-            value={originalPrice === 0 ? '' : originalPrice.toString()}
-            onChange={(e) => handleOriginalPriceChange(record.id, e.target.value)}
-            placeholder="原价"
-            style={{ width: 150 }}
-          />
-        </div>
-      ),
-      width: 152,
-    },
-    {
-      title: '成本价',
-      dataIndex: 'costPrice',
-      render: (costPrice: number, record: StyleItem) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
-          <Input
-            value={costPrice === 0 ? '' : costPrice.toString()}
-            onChange={(e) => handleCostPriceChange(record.id, e.target.value)}
-            placeholder="成本价"
-            style={{ width: 150}}
-          />
-        </div>
-      ),
-      width: 132,
-    },
-    {
-      title: '税收',
-      dataIndex: 'tax',
-      render: (tax: boolean, record: StyleItem) => (
-        <span style={{ whiteSpace: 'nowrap' }}>
-          <Checkbox
-            checked={tax}
-            onChange={(e) => handleTaxChange(record.id, e.target.checked)}
-          />
-      需要收取税费
-        </span>
-      ),
-      width:130,
-    },
-    {
-      title: '库存策略',
-      dataIndex: 'inventoryPolicy',
-      render: (tax: boolean, record: StyleItem) => (
-        <span style={{ whiteSpace: 'nowrap' }}>
-          <Checkbox
-            checked={tax}
-          />
-   开启库存策略
-        </span>
-      ),
-      width:130,
-    },
-    {
-      title: 'HS（协调制度）代码',
-      dataIndex: 'hsCode',
-      render: (hsCode: string, record: StyleItem) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Input
-            value={hsCode || ''} 
-            onChange={(e) => handleHsCodeChange(record.id, e.target.value)}
-            placeholder="请输入HS编码"
-            style={{ width: 150,  }}
-          />
-        </div>
-      ),
-      width:152,
-    },
+    // {
+    //   title: '原价',
+    //   dataIndex: 'originalPrice',
+    //   render: (originalPrice: number, record: StyleItem) => (
+    //     <div style={{ display: 'flex', alignItems: 'center' }}>
+    //       <span style={{ marginRight: 4 }}>US$</span>
+    //       <Input
+    //         value={originalPrice === 0 ? '' : originalPrice.toString()}
+    //         onChange={(e) => handleOriginalPriceChange(record.id, e.target.value)}
+    //         placeholder="原价"
+    //         style={{ width: 150 }}
+    //       />
+    //     </div>
+    //   ),
+    //   width: 152,
+    // },
+    // {
+    //   title: '成本价',
+    //   dataIndex: 'costPrice',
+    //   render: (costPrice: number, record: StyleItem) => (
+    //     <div style={{ display: 'flex', alignItems: 'center' }}>
+    //       <span style={{ marginRight: 4 }}>US$</span>
+    //       <Input
+    //         value={costPrice === 0 ? '' : costPrice.toString()}
+    //         onChange={(e) => handleCostPriceChange(record.id, e.target.value)}
+    //         placeholder="成本价"
+    //         style={{ width: 150}}
+    //       />
+    //     </div>
+    //   ),
+    //   width: 132,
+    // },
+    // {
+    //   title: '税收',
+    //   dataIndex: 'tax',
+    //   render: (tax: boolean, record: StyleItem) => (
+    //     <span style={{ whiteSpace: 'nowrap' }}>
+    //       <Checkbox
+    //         checked={tax}
+    //         onChange={(e) => handleTaxChange(record.id, e.target.checked)}
+    //       />
+    //   需要收取税费
+    //     </span>
+    //   ),
+    //   width:130,
+    // },
+  //   {
+  //     title: '库存策略',
+  //     dataIndex: 'inventoryPolicy',
+  //     render: (tax: boolean, record: StyleItem) => (
+  //       <span style={{ whiteSpace: 'nowrap' }}>
+  //         <Checkbox
+  //           checked={tax}
+  //         />
+  //  开启库存策略
+  //       </span>
+  //     ),
+  //     width:130,
+  //   },
+  //   {
+  //     title: 'HS（协调制度）代码',
+  //     dataIndex: 'hsCode',
+  //     render: (hsCode: string, record: StyleItem) => (
+  //       <div style={{ display: 'flex', alignItems: 'center' }}>
+  //         <Input
+  //           value={hsCode || ''} 
+  //           onChange={(e) => handleHsCodeChange(record.id, e.target.value)}
+  //           placeholder="请输入HS编码"
+  //           style={{ width: 150,  }}
+  //         />
+  //       </div>
+  //     ),
+  //     width:152,
+  //   },
     {
       title: '国家',
       dataIndex: 'country',
@@ -296,46 +284,46 @@ function ProductStyleListEdit (styledData:any){
       ),
       width: 132,
     },
-    {
-      title: '重量',
-      dataIndex: 'weight',
-      render: (weight: number, record: StyleItem) => (
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <InputNumber
-            value={weight}
-            onChange={(newValue) => handleWeightChange(record.id, Math.max(0, newValue))}
-            min={0} // 设置最小值为0
-            style={{ width: 160 }}
-          />
-          <Select
-            value={record.weightUnit}
-            onChange={(unit) => handleWeightUnitChange(record.id, unit)}
-            style={{ width: 70 }}
-          >
-            <Select.Option value="克">克</Select.Option>
-            <Select.Option value="千克">千克</Select.Option>
-            <Select.Option value="磅">磅</Select.Option>
-            <Select.Option value="蛊司">蛊司</Select.Option>
-          </Select>
-        </div>
-      ),
-      width: 162,
-    },
-    {
-      title: '发货',
-      dataIndex: 'shipping',
-      render: (shipping: boolean, record: StyleItem) => (
-        <span style={{ whiteSpace: 'nowrap' }}>
-          <Checkbox
-            checked={shipping}
-            onChange={(e) => handleShippingChange(record.id, e.target.checked)}
-          >
-            需要运输发货
-          </Checkbox>
-        </span>
-      ),
-      width: 150,
-    },
+    // {
+    //   title: '重量',
+    //   dataIndex: 'weight',
+    //   render: (weight: number, record: StyleItem) => (
+    //     <div style={{ display: 'flex', alignItems: 'center' }}>
+    //       <InputNumber
+    //         value={weight}
+    //         onChange={(newValue) => handleWeightChange(record.id, Math.max(0, newValue))}
+    //         min={0} // 设置最小值为0
+    //         style={{ width: 160 }}
+    //       />
+    //       <Select
+    //         value={record.weightUnit}
+    //         onChange={(unit) => handleWeightUnitChange(record.id, unit)}
+    //         style={{ width: 70 }}
+    //       >
+    //         <Select.Option value="克">克</Select.Option>
+    //         <Select.Option value="千克">千克</Select.Option>
+    //         <Select.Option value="磅">磅</Select.Option>
+    //         <Select.Option value="蛊司">蛊司</Select.Option>
+    //       </Select>
+    //     </div>
+    //   ),
+    //   width: 162,
+    // },
+    // {
+    //   title: '发货',
+    //   dataIndex: 'shipping',
+    //   render: (shipping: boolean, record: StyleItem) => (
+    //     <span style={{ whiteSpace: 'nowrap' }}>
+    //       <Checkbox
+    //         checked={shipping}
+    //         onChange={(e) => handleShippingChange(record.id, e.target.checked)}
+    //       >
+    //         需要运输发货
+    //       </Checkbox>
+    //     </span>
+    //   ),
+    //   width: 150,
+    // },
     {
       title: '条码',
       dataIndex: 'barcode',
@@ -362,50 +350,51 @@ function ProductStyleListEdit (styledData:any){
       ),
       width: 100,
     },
-    {
-      title: '',
-      dataIndex: 'delete',
-      render: (metaFields: string,record: StyleItem) => (
-        <Space>
-          {/* <LocalizedModal /> */}
-          {/* <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=> handleRemove(record.id)}> */}
-          <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=>{
-            modal.confirm({
-              title: '确认删除',
-              icon: <ExclamationCircleOutlined />,
-              content: '该多属性删除后无法恢复，是否要继续',
-              okText: '确认',
-              cancelText: '取消',
-              centered:true,
-              destroyOnClose:true,
-              onOk:()=>{
-                handleRemove(record.id)
-              }
-            });
-            // console.log(111111)
-          }}>
-            <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
-              <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
-            </svg>
-          </span>
-        </Space>
-      ),
-      width: 50,
-      fixed: 'right', // 将列固定在右侧
-    },
+    // {
+    //   title: '',
+    //   dataIndex: 'delete',
+    //   render: (metaFields: string,record: StyleItem) => (
+    //     <Space>
+    //       {/* <LocalizedModal /> */}
+    //       {/* <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=> handleRemove(record.id)}> */}
+    //       <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=>{
+    //         modal.confirm({
+    //           title: '确认删除',
+    //           icon: <ExclamationCircleOutlined />,
+    //           content: '该多属性删除后无法恢复，是否要继续',
+    //           okText: '确认',
+    //           cancelText: '取消',
+    //           centered:true,
+    //           destroyOnClose:true,
+    //           onOk:()=>{
+    //             handleRemove(record.id)
+    //           }
+    //         });
+    //         // console.log(111111)
+    //       }}>
+    //         <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
+    //           <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
+    //         </svg>
+    //       </span>
+    //     </Space>
+    //   ),
+    //   width: 50,
+    //   fixed: 'right', // 将列固定在右侧
+    // },
   ];
 
   // 添加处理售价变化的函数
   const handleSalePriceChange = (id: number, newValue: string) => {
     const updatedStyles = styles.map((style) => {
-      if (style.id === id) {
+      if (style.keyId === id) {
         // 如果输入为空字符串，则设置为 0
-        const salePrice = newValue.trim() === '' ? 0 : parseFloat(newValue);
-        return { ...style, salePrice };
+        const price = newValue.trim() === '' ? 0 : parseFloat(newValue);
+        return { ...style, price };
       }
       return style;
     });
     setStyles(updatedStyles);
+    oldStore.setVariants(updatedStyles);
   };
   // 添加处理发货状态变化的函数
 const handleShippingChange = (id: number, newShipping: boolean) => {
@@ -442,14 +431,18 @@ const handleStockChange = (record: StyleItem) => {
 // 添加处理删除的函数
 const handleRemove = (id: number) => {
   const updatedStyles = styles.filter((style) => style.id !== id);
-  deleteProductStyle(id).then(res=>{
-    if(res.code == 0){
-      message.success('款式删除成功')
-      setStyles(updatedStyles);
-    }else{
-      message.error('款式删除失败')
-    }
-  })
+  setStyles(updatedStyles);
+  // deleteProductStyle(id).then(res=>{
+  //   if(res.code == 0){
+  //     message.success('款式删除成功')
+  //   }else{
+  //     message.error('款式删除失败')
+  //   }
+  // })
+  // console.log(updatedStyles)
+  if(updatedStyles.length==0){
+    props.setStyle(updatedStyles)
+  }
 };
 
 const handleHsCodeChange = (recordId: number, value: string) => {
@@ -590,111 +583,111 @@ const handleWeightUnitChange = (id: number, unit: string) => {
       </>
     }
   >
-<div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 200px)', display: 'flex', flexDirection: 'column' }}>
-  <Checkbox.Group>
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Radio.Group onChange={handleRadioChange} value={selectedValue}>
-        <Radio value="or">
-          批量选择（满足任意一个条件）
-        </Radio>
-        <Radio value="and">
-          条件筛选（满足以下全部条件）
-        </Radio>
-      </Radio.Group>
-      </div>
-      {selectedValue === 'or' ? (
-         <span style={{marginTop:'5px'}}>全部</span>
-      ) : (
-        <Button  style={{ marginTop: '1rem',width:'148px',height:'36px' }}>
-          选择规格
-        </Button>
-      )}
-      {selectedRowKeys.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-          {/* <Checkbox checked={selectedRowKeys.length > 0} disabled> */}
-            已选择 {selectedRowKeys.length} 项
-          {/* </Checkbox> */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button  style={{marginRight:'10px'}} onClick={showModal}>
-        修改库存
-      </Button>
-      <Modal
-        title="修改库存"
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>已选择{selectedStyleCount}个款式</p>
-        <span style={{ display: 'flex', alignItems: 'center' }}>
-        <input 
-          type="radio" 
-          value="0" 
-          checked={adjustmentType === '0'} 
-          onChange={() => setAdjustmentType('0')} 
-          style={{ marginRight: '8px' }} 
-        />
-        <p style={{ margin: 0 }}>修改为指定库存数量</p>
-      </span>
-      <span style={{ display: 'flex', alignItems: 'center' }}>
-      <input 
-        type="radio" 
-        value="1" 
-        checked={adjustmentType === '1'} 
-        onChange={() => setAdjustmentType('1')} 
-        style={{ marginRight: '8px' }}
-      />
-      <p style={{ margin: 0 }}>基于原库存调整</p>
-      </span>
-        <Input
-         
-          width={400}
-        />
-      </Modal>
-            <Select
-          placeholder="更改价格"
-          onClick={handleModifyPrice} style={{marginRight:'10px'}}
-          dropdownMatchSelectWidth={false}
-          dropdownStyle={{ width: 120 }}
-        >
-          <Option >修改售价</Option>
-          <Option >修改原价</Option>
-          <Option >修改成本价</Option>
-         
-        </Select>
-        <Select
-          placeholder="更多操作"
-          onClick={handleMoreActions}   style={{  marginRight: '10px' }}
-          dropdownMatchSelectWidth={false}
-          dropdownStyle={{ width: 150 }}
-        >
-          <Option >修改重量</Option>
-          <Option >设置图片</Option>
-          <Option >库存追踪</Option>
-          <Option >税费</Option>
-          <Option >缺货后继续销售</Option>
-          <Option >修改SKU</Option>
-          <Option >修改HS编码</Option>
-          <Option >修改发货国家</Option>
-        </Select>
-            <Button danger onClick={handleDelete}>删除</Button>
+    <div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 200px)', display: 'flex', flexDirection: 'column' }}>
+      <Checkbox.Group>
+        <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Radio.Group onChange={handleRadioChange} value={selectedValue}>
+            <Radio value="or">
+              批量选择（满足任意一个条件）
+            </Radio>
+            <Radio value="and">
+              条件筛选（满足以下全部条件）
+            </Radio>
+          </Radio.Group>
           </div>
+          {selectedValue === 'or' ? (
+            <span style={{marginTop:'5px'}}>全部</span>
+          ) : (
+            <Button  style={{ marginTop: '1rem',width:'148px',height:'36px' }}>
+              选择规格
+            </Button>
+          )}
+          {selectedRowKeys.length > 0 && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+              {/* <Checkbox checked={selectedRowKeys.length > 0} disabled> */}
+                已选择 {selectedRowKeys.length} 项
+              {/* </Checkbox> */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Button  style={{marginRight:'10px'}} onClick={showModal}>
+            修改库存
+          </Button>
+          <Modal
+            title="修改库存"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <p>已选择{selectedStyleCount}个款式</p>
+            <span style={{ display: 'flex', alignItems: 'center' }}>
+            <input 
+              type="radio" 
+              value="0" 
+              checked={adjustmentType === '0'} 
+              onChange={() => setAdjustmentType('0')} 
+              style={{ marginRight: '8px' }} 
+            />
+            <p style={{ margin: 0 }}>修改为指定库存数量</p>
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+          <input 
+            type="radio" 
+            value="1" 
+            checked={adjustmentType === '1'} 
+            onChange={() => setAdjustmentType('1')} 
+            style={{ marginRight: '8px' }}
+          />
+          <p style={{ margin: 0 }}>基于原库存调整</p>
+          </span>
+            <Input
+            
+              width={400}
+            />
+          </Modal>
+                <Select
+              placeholder="更改价格"
+              onClick={handleModifyPrice} style={{marginRight:'10px'}}
+              dropdownMatchSelectWidth={false}
+              dropdownStyle={{ width: 120 }}
+            >
+              <Option >修改售价</Option>
+              <Option >修改原价</Option>
+              <Option >修改成本价</Option>
+            
+            </Select>
+            <Select
+              placeholder="更多操作"
+              onClick={handleMoreActions}   style={{  marginRight: '10px' }}
+              dropdownMatchSelectWidth={false}
+              dropdownStyle={{ width: 150 }}
+            >
+              <Option >修改重量</Option>
+              <Option >设置图片</Option>
+              <Option >库存追踪</Option>
+              <Option >税费</Option>
+              <Option >缺货后继续销售</Option>
+              <Option >修改SKU</Option>
+              <Option >修改HS编码</Option>
+              <Option >修改发货国家</Option>
+            </Select>
+                <Button danger onClick={handleDelete}>删除</Button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </Checkbox.Group>
+      <Table
+        rowKey="keyId"
+        columns={columns}
+        dataSource={styles}
+        // rowSelection={rowSelection}
+        scroll={{ x: 2000 }}
+      />
+      {contextHolder}
     </div>
-  </Checkbox.Group>
-  <Table
-    rowKey="id"
-    columns={columns}
-    dataSource={styles}
-    rowSelection={rowSelection}
-    scroll={{ x: 2000 }}
-  />
-  {contextHolder}
-</div>
 
 </Card>
   );
 }
 
-export default ProductStyleListEdit;
+export default ProductStyleListEdit

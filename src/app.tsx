@@ -1,8 +1,8 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { LinkOutlined, SettingOutlined } from '@ant-design/icons';
+import { GlobalOutlined, LinkOutlined, SettingOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
-import type { RunTimeLayoutConfig } from '@umijs/max';
+import { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 // import { errorConfig } from './requestErrorConfig';
@@ -110,7 +110,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: <AvatarName />,
-      // logo: '',
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
       },
@@ -183,7 +182,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
+    // 默认配置应放在最前面防止覆盖
     ...initialState?.settings,
+    title: 'MataCart',
+    logo: <GlobalOutlined />,
   };
 };
 

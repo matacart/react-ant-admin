@@ -254,6 +254,10 @@ export default [
         path: 'bill',
         component: './Settings/Bill'
       },
+      {
+        path:"base",
+        component:"./Settings/Base/Base"
+      }
       
     ]
   },

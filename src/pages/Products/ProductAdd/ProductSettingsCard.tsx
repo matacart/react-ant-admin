@@ -114,6 +114,13 @@ export default function ProductSettingsCard() {
        </Select>
    );
 
+//    const Recommendedoptions = [
+//     { label: '首页', value: 'Apple' },
+//     { label: '热销', value: 'Pear' },
+//     { label: '精品', value: 'Pear' },
+//     { label: '新品', value: 'Orange' }
+//   ];
+
     const handleTagChange = (value: string[]) => {
         setTags(value)
         newStore.setTags(value.join(","))

@@ -55,16 +55,9 @@ import productStore from "./productStore";
   @observable end_time = "";
   @observable stock_status_id = "";
   @observable subtract = 0;
-  @observable is_best = 0;
-  @observable is_new = 0
-  @observable is_hot = 0
   @observable sort = 0;
-  @observable is_share = 0;
-  @observable is_sys = 0;
+  // @observable is_sys = 0;
   @observable inquiry_status = 0;
-  @observable ad_waf_status = "0";
-  @observable ad_product_id = "0";
-  @observable ad_product_url = "";
   @observable divided_status = 0;
   @observable divided_country = "0";
   @observable divided_url = "0";
@@ -268,6 +261,45 @@ import productStore from "./productStore";
     this.productCategories = value;
   }
 
+  // 推荐
+  // 推荐
+  isHome = false;
+  isHot = false;
+  isBest = false;
+  isNew = false;
+
+  setIsHome(value: boolean) {
+    this.isHome = value;
+  }
+  setIsHot(value: boolean) {
+    this.isHot = value;
+  }
+  setIsBest(value: boolean) {
+    this.isBest = value;
+  }
+  setIsNew(value: boolean) {
+    this.isNew = value;
+  }
+
+
+  // 防护
+  adWafStatus = "1";
+  adProductId = "";
+  adProductUrl = "";
+  adGroupId = "0";
+
+  setAdWafStatus(value: string) {
+    this.adWafStatus = value;
+  }
+  setAdProductId(value: string) {
+    this.adProductId = value;
+  }
+  setAdProductUrl(value: string) {
+    this.adProductUrl = value;
+  }
+  setAdGroupId(value: string) {
+    this.adGroupId = value;
+  }
 
   // seo设置
   @observable metaTitle = "";
@@ -319,6 +351,11 @@ import productStore from "./productStore";
     this.attributes = value
   }
 
+  // variant
+  variants = []
+  setVariants(value:any){
+    this.variants = value
+  }
 
 
   // 更新产品
@@ -375,6 +412,16 @@ import productStore from "./productStore";
     this.setProductType(data.platform_category_id);
     this.setProductCategories(data.categoryIds)
     this.setIsShipping(data.shipping == "0" ? false : true)
+    this.setIsHome(data.is_home.toString() == "0" ? false : true)
+    this.setIsHot(data.is_hot == "0" ? false : true)
+    this.setIsBest(data.is_best == "0" ? false : true)
+    this.setIsNew(data.is_new == "0" ? false : true)
+    // 防护
+    this.setAdWafStatus(data.ad_waf_status)
+    this.setAdProductId(data.ad_product_id)
+    this.setAdProductUrl(data.ad_product_url)
+    this.setAdGroupId(data.group_id)
+
     this.setTags(data.tag == null?"":data.tag)
     this.setWeightClassId(data.weight_class_id)
     this.setMetaTitle(data.meta_title)
@@ -388,6 +435,7 @@ import productStore from "./productStore";
     this.setIsShare(data.is_share)
     this.setPartsWarehouse(data.is_sys)
     this.setAttributes(data.attributes==null?[]:data.attributes)
+    this.setVariants(data.variants==null?[]:data.variants)
     productStore.setAttributes(data.attributes==null?[]:data.attributes)
 
     // 旧属性
@@ -458,6 +506,11 @@ import productStore from "./productStore";
     this.allianceStatus = "";
     this.hostedStatus = "";
     this.isShare = "";
+    this.isHome = false;
+    this.isBest = false;
+    this.isHot = false;
+    this.isNew = false;
+    this.attributes = [];
     this.temp.clear();
   }
 

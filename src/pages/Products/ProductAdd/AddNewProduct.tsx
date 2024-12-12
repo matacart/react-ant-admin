@@ -19,10 +19,11 @@ import StockCard from './StockCard';
 import ThemeTemplateCard from './ThemeTemplateCard';
 import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 import ProductOverlay from '@/components/Overlay/ProductOverlay';
-import RefreshModel from '@/components/Modal/RefreshModel';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
+import ProtectionInformation from './ProtectionInformation';
+import Recommendation from './Recommendation';
 
 // const createStyled = (productId:string)=>{
 //     setInterval(()=>{
@@ -176,6 +177,10 @@ function AddNewProduct(){
         // 弹出提示框
         return '您确定要离开页面吗？'
     }
+
+    function sleep(ms:number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
     
     return (
         <Scoped>
@@ -207,7 +212,9 @@ function AddNewProduct(){
                         </div>
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>
+                            <Recommendation />
                             <SEOCard/>
+                            <ProtectionInformation />
                             <Winnow />
                             <PlatformHosting />
                             <Subnumber />
@@ -220,22 +227,23 @@ function AddNewProduct(){
                         <Button type='primary' onClick={async ()=>{
                             await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
                             console.log(newStore)
-                            if(newStore.partsWarehouse == "0"){
-                                if(newStore.validateForm()){
-                                    newStore.unBlock();
-                                    newStore.submitAddProduct().then(res=>{
-                                        if(res.code==0){
-                                            message.success('创建成功')
-                                            // 返回产品id 根据产品id在本地自动请求款式直到成功
-                                        }else{
-                                            message.error('创建失败');
-                                        }
-                                    });
-                                    history.push('/products/index')
-                                }
-                            }else{
-                                message.error('抱歉！非品库管理员，平台产品不可创建！');
-                            }
+                            // if(newStore.partsWarehouse == "0"){
+                            //     if(newStore.validateForm()){
+                            //         newStore.unBlock();
+                            //         newStore.submitAddProduct().then(res=>{
+                            //             if(res.code==0){
+                            //                 message.success('创建成功')
+                            //                 // 返回产品id 根据产品id在本地自动请求款式直到成功
+                            //             }else{
+                            //                 message.error('创建失败');
+                            //             }
+                            //         });
+                            //         await sleep(1000);
+                            //         history.push('/products/index')
+                            //     }
+                            // }else{
+                            //     message.error('抱歉！非品库管理员，平台产品不可创建！');
+                            // }
                         }}>创建</Button>
                     </div>
                 </div>

@@ -23,8 +23,10 @@ import { observer } from 'mobx-react-lite';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
-
 import { useLocation, useNavigate } from 'umi'
+import cookie from 'react-cookies';
+import ProtectionInformationEdit from './ProtectionInformationEdit';
+import RecommendationEdit from './RecommendationEdit';
 // import { history } from '@umijs/max';
 
 
@@ -58,7 +60,7 @@ function ProductDetail() {
 
     // 提示
     const [modal, contextHolder] = Modal.useModal();
-    const [style, setStyleId] = useState([]);
+    const [style, setStyle] = useState([]);
 
     // 商品存档
     const [productStatus,setProductStatus] = useState("");
@@ -122,7 +124,7 @@ function ProductDetail() {
     const fetchProductDetail = async (language?:string) => {
         setIsLoading(true)
         try {
-            const response = await getProductDetail(product.productId, language!==""?language:product.language); // 参数
+            const response = await getProductDetail(product.productId,language!==""?language:product.language); // 参数
             setProductDetail(response.data);
             if(response.data){
                 setProductDetail(response.data);
@@ -141,10 +143,11 @@ function ProductDetail() {
         console.log(product)
     },[product]);
     // 实现 onSecondInputChange 函数
-    const handleSecondInputChange = (value: any) => {
-        setStyleId(value);
-        // 需要有多款式的时候才显示
-    };
+    // const handleSecondInputChange = (value: any) => {
+    //     setStyle(value);
+    //     console.log(value)
+    //     // 需要有多款式的时候才显示
+    // };
     
     // 更新商品状态 -- 存档
     const updateData = (status:string)=>{
@@ -216,13 +219,15 @@ function ProductDetail() {
                                         <PriceOrTransactionCardEdit />
                                         <StockEdit />
                                         <CustomsDeclarationEdit />
-                                        <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
-                                        {/* {style.length>0 && <ProductStyleList styleId={styleId} />}  */}
+                                        <MultipleStylesEdit style = {style} setStyle={setStyle} />
+                                        {style.length>0 && <ProductStyleListEdit style = {style} setStyle={setStyle}  />}
                                     </div>
                                     <div className='mc-layout-extra'>
                                         <ProductSettingsEdit productStatus={productStatus} upProductStatus={updateData} />
                                         <TradingRecords/>
+                                        <RecommendationEdit />
                                         <ProductSeoEdit/>
+                                        <ProtectionInformationEdit />
                                         <Winnow />
                                         <PlatformHosting />
                                         <Subnumber />
@@ -240,8 +245,9 @@ function ProductDetail() {
                                         setOnFile(true);
                                     }}>将商品取消存档</Button>}
                                     <Button type='primary' onClick={async () => {
+                                        // console.log(Array.from(oldStore.attributes))
                                         await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
-                                        console.log(Array.from(oldStore.attributes))
+                                        console.log(oldStore.variants)
                                         setIsLoading(true)
                                         if(oldStore.partsWarehouse == "0"){
                                             oldStore.updateProduct().then(res => {

@@ -238,6 +238,25 @@ class newStore {
     this.productType = value;
   }
 
+  // 推荐
+  isHome = false;
+  isHot = false;
+  isBest = false;
+  isNew = false;
+
+  setIsHome(value: boolean) {
+    this.isHome = value;
+  }
+  setIsHot(value: boolean) {
+    this.isHot = value;
+  }
+  setIsBest(value: boolean) {
+    this.isBest = value;
+  }
+  setIsNew(value: boolean) {
+    this.isNew = value;
+  }
+
   // 款式名称
   @observable styleName: string[] = [];
   // 商品类型
@@ -297,6 +316,29 @@ class newStore {
   isShare = "0"
   setIsShare(value: string) {
     this.isShare = value;
+  }
+  // 款式
+  attributes = []
+  setAttributes(value:[]){
+    this.attributes = value
+  }
+
+  // 防护
+  adWafStatus = "1";
+  adProductId = "";
+  adProductUrl = "";
+  adGroupId = "0";
+  setAdWafStatus(value: string) {
+    this.adWafStatus = value;
+  }
+  setAdProductId(value: string) {
+    this.adProductId = value;
+  }
+  setAdProductUrl(value: string) {
+    this.adProductUrl = value;
+  }
+  setAdGroupId(value: string) {
+    this.adGroupId = value;
   }
 
   // seo 默认数据 -- 创建时
@@ -401,9 +443,9 @@ class newStore {
     this.metaDescription = "";
     this.allianceStatus = "0";
     this.hostedStatus = "0";
-
     this.partsWarehouse = "0";
     this.isShare = "0";
+    this.attributes = []
 
     this.temp.clear();
   }

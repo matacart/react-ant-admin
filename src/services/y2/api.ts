@@ -4,6 +4,7 @@ import { request } from '@umijs/max';
 import { Oauth2 } from '../../../config/myConfig'
 import newStore from '@/store/newStore';
 import oldStore from '@/store/oldStore';
+import cookie from 'react-cookies';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -182,7 +183,7 @@ export async function deleteProduct(id: string) {
 // /api/ApiStore/product_detail?page=${page}&limit=${limit}  测试
 // 改用product_list
 // 根据id & languages_id获取产品详情
-export async function getProductDetail(id: string, languagesId: string) {
+export async function getProductDetail(id: string,languagesId: string) {
   console.log(id, languagesId)
   return request(`/api/ApiStore/product`, {
     method: 'POST',
@@ -191,9 +192,9 @@ export async function getProductDetail(id: string, languagesId: string) {
     },
     data: {
       // params
-      id: id,
-      // languages_id: "2"
-      languages_id: languagesId
+      "id": id,
+      "domain_id": cookie.load("domain").id,
+      "languages_id": languagesId
     },
   })
 }
@@ -208,6 +209,7 @@ export async function addProduct() {
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      "domain_id": cookie.load("domain")?.id,
       "model":newStore.model,
       "sku": newStore.SKU,
       "price": newStore.price,
@@ -223,9 +225,10 @@ export async function addProduct() {
       "stock_status_id":"",
       "subtract":"",
       "shipping":newStore.isShipping?"1":"0",
-      "is_best": 0,
-      "is_new": 0,
-      "is_hot": 0,
+      "is_home": newStore.isHome?"1":"0",
+      "is_best": newStore.isBest?"1":"0",
+      "is_new": newStore.isNew?"1":"0",
+      "is_hot": newStore.isHot?"1":"0",
       "sort" : 0,
       "product_url" : '',
       "meta_title" : '',
@@ -276,6 +279,7 @@ export async function addProduct() {
       "alliance_status": newStore.allianceStatus,
       // 直营
       "hosted_status": newStore.hostedStatus,
+      "attributes":JSON.stringify(Array.from(newStore.attributes))
       // "languages_name": "Chinese"
       // "model":newStore.model,
       // "sku": newStore.SKU,
@@ -349,11 +353,11 @@ export async function submitRenewalProduct(res:any){
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      "domain_id": cookie.load("domain")?.id,
       // 旧属性
       "categorys": oldStore.categorys,
       "checked":oldStore.checked,
       "create_time": oldStore.create_time,
-      "domain_id": oldStore.domain_id,
       "employee_id": oldStore.employee_id,
       "employee_realname": oldStore.employee_realname,
       "id": oldStore.productId,
@@ -375,9 +379,10 @@ export async function submitRenewalProduct(res:any){
       // 品库
       "is_sys": oldStore.partsWarehouse,
       // 加入推荐
-      "is_best": oldStore.is_best,
-      "is_new": oldStore.is_new,
-      "is_hot": oldStore.is_hot,
+      "is_best": oldStore.isBest?"1":"0",
+      "is_new": oldStore.isNew?"1":"0",
+      "is_hot": oldStore.isHot?"1":"0",
+      "is_home": oldStore.isHome?"1":"0",
       // 
       "sort": oldStore.sort,
       // 询盘开关：
@@ -385,14 +390,14 @@ export async function submitRenewalProduct(res:any){
       // 
       "inquiry_status": oldStore.inquiry_status,
       // 
-      "ad_waf_status": oldStore.ad_waf_status,
-      "ad_product_id": oldStore.ad_product_id,
-      "ad_product_url": oldStore.ad_product_url,
+      "ad_waf_status": oldStore.adWafStatus,
+      "ad_product_id": oldStore.adProductId,
+      "ad_product_url": oldStore.adProductUrl,
+      "group_id": oldStore.adGroupId,
       // 
       "divided_status": oldStore.divided_status,
       "divided_country": oldStore.divided_country,
       "divided_url": oldStore.divided_url,
-      "group_id": oldStore.group_id,
       // seo
       "meta_title": oldStore.metaTitle,
       "meta_keyword": oldStore.metaKeyword,
@@ -443,7 +448,8 @@ export async function submitRenewalProduct(res:any){
       // 商品状态
       // 
       // "attributes":[{option_name:"111",option_values_name:"123"}]
-      "attributes":JSON.stringify(Array.from(oldStore.attributes))
+      "attributes":JSON.stringify(Array.from(oldStore.attributes)),
+      "variants":JSON.stringify(oldStore.variants)
       // "status": oldStore.onPutProduct ? "1" : "0"
     }
   })

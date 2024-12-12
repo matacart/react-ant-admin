@@ -1,5 +1,6 @@
 import { getCategoryList, getCategorySelect, getPlatformCategorySelect } from "@/services/y2/api";
 import { action, makeAutoObservable, observable } from "mobx";
+import cookie from 'react-cookies';
 
 
 
@@ -7,18 +8,6 @@ class globalStore {
 
     constructor() {
         makeAutoObservable(this)
-    }
-
-    // 店铺
-    @observable shop = {
-        id: "",
-        domainName: "test",
-        secondDomain: "",
-        status: "",
-    };
-    // 款式内容
-    @action setShop(shop:any) {
-        this.shop = shop
     }
 
     @observable platformCategory = []

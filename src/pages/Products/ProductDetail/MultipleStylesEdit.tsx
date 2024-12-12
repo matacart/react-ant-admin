@@ -4,17 +4,14 @@ import oldStore from "@/store/oldStore";
 import productStore from "@/store/productStore";
 import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message, Tooltip, SelectProps, Table, TableProps, Space } from "antd";
+import e from "express";
 import { set } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-
-
-
-
-interface MultipleStylesEditProps {
-  onSecondInputChange?: (value: string) => void;
-}
+// interface MultipleStylesEditProps {
+//   onSecondInputChange?: (value: string) => void;
+// }
 
 type TagRender = SelectProps['tagRender'];
 
@@ -39,23 +36,24 @@ const options = [
 
 const { Option } = Select;
 
-export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
-  const [checked, setChecked] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+export default function MultipleStylesEdit(props:any) {
+  // const [checked, setChecked] = useState(false);
+  // const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [specifications, setSpecifications] = useState([{ id: 1,attributes:""}]);
   const [values, setValues] = useState<string[]>([]);
   const [tags, setTags] = useState<any[][]>([]); // 用于存储每个规格组的标签
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+
+  // 展开变体
+  const [onVariant,setOnVariant] = useState(true);
   // 原始数据
   const [info,setInfo] = useState<any>([]);
   // 表格数据
   const [tagData,setTagData] = useState<any>([]);
   // 表格行
   const [flag,setFlag] = useState();
-
   const [styleDate,setStyleDate] = useState<any>([]);
-
   const [attributesModal, setAttributesModal] = useState(false);
   // 自定义标签
   const tagRender = (props:any,index:any) => {
@@ -73,7 +71,6 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
         onClick={()=>{
           setAttributesModal(true)
           setTagData(info[index])
-          console.log(info[index])
           setFlag(index)
         }}
         onClose={onClose}
@@ -83,10 +80,24 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
       </Tag>
     );
   };
-
+  // 修改
   const editTagData = (value:any,i:number)=>{
-    info[i] = value
-    oldStore.setAttributes(info.flat())
+    let newInfo:any = [...info]
+    newInfo[i] = value
+    setInfo(newInfo)
+    oldStore.setAttributes(newInfo.flat())
+    let temp:any = []
+    // 重新赋值
+    value.forEach((e:any)=>{
+      if(e.status !== "9"){
+        temp.push((e.id == null || e.id == "") ?e.option_values_name:e.id)
+      }
+    })
+    let newTags = [...tags];
+    newTags[i] = temp
+    setTags(newTags)
+    // 更新所有标签的扁平化列表，并通知父组件
+    props.setStyle(newTags)
   }
 
   // 收集所有输入值后调用父组件提供的回调函数
@@ -127,60 +138,13 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
     setTags(tempTags)
     // 原始数据
     setInfo(tempInfo)
-  }, [styleDate]);
-  // 添加款式
-  const addProductStyle = ()=>{
-    // if(values2.length>0){
-    //   values2.forEach((v,index)=>{
-    //     tags[index].forEach(async e=>{
-    //       let styleNameId = 0;
-    //       // 创建款式名称
-    //       await addStyleName(oldStore.language,v).then(res=>{
-    //         if(res.code==0){
-    //             styleNameId = res.id
-    //         }
-    //       });
-    //       // 创建款式内容
-    //       if(styleNameId!==0){
-    //         await addStyleContent(oldStore.language,e,styleNameId).then(async res=>{
-    //           let styleContentId = 0;
-    //           if(res.code==0){
-    //               styleContentId = res.id
-    //           }else{
-    //             // 查询所有款式
-    //             await getProductStyleValueList().then(r=>{
-    //               r.data.forEach((style:any)=>{
-    //                 if(style.option_values_name == e && style.option_id == styleNameId){
-    //                   styleContentId = style.id
-    //                 }
-    //               })
-    //             })
-    //           }
-    //           // 通过产品id关联
-    //           await addStyle(styleNameId,styleContentId,oldStore.productId).then((res:any)=>{
-    //             // console.log(res)
-    //             if(res.code==0){
-    //               message.success('产品款式添加成功');
-    //             }else{
-    //               message.error('产品款式失败');
-    //             }
-    //           })
-    //           // // 通过模型查找款式列表
-    //           await getProductStyleList(oldStore.model,oldStore.language).then((res:any)=>{
-    //             // console.log(res)
-    //             if(res.code==0){
-    //               setStyleDate(res.data)
-    //             }else{
-    //               console.log("获取款式列表失败")
-    //             }
-    //           })
-    //         })
-    //       }
-    //     })
-    //   })
-    // }
-  } 
-  // 处理回车键事件
+  }, []);
+  // useEffect(()=>{
+  //   if(props.style.length == 0){
+  //     setOnVariant(true)
+  //   }
+  // },[props.style])
+  // 处理回车键事件  ---待
   function handleKeyDown(e: React.KeyboardEvent, index: number) {
     if (e.key === 'Enter') {
       const newTags = [...tags];
@@ -210,42 +174,67 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   inputRefs.current = Array(values.length).fill(null);
   // 处理标签选择或输入变化 -- 新增
-  function handleTagChange(value: any,index:number) {
-    console.log("添加")
+  async function handleTagChange(value: any,index:number) {
     info[index].push({
       option_name:values[index],
       option_values_name:value.value
     })
     oldStore.setAttributes(info.flat())
-    console.log(info[index])
-    console.log(tags)
-    tags[index] = [...tags[index],value.value]
-    // setTags([...tags,[value.value]]);
+    let newTags = [...tags];
+    newTags[index] = [...newTags[index],value.value]
+    setTags(newTags)
     // 更新所有标签的扁平化列表，并通知父组件
+
+
+    // 数据分流
+    let tagsId:any = [...newTags];
+    let tagsValues:any = [...newTags];
+    newTags.forEach((res,index) => {
+      if(res.length>0){
+        res.forEach(e => {
+          Array.from(info.flat(),(x:any)=>{
+            if(x.id == e){
+              tagsValues[index] = tagsValues[index].map(value => {
+                if (value == e) {
+                  return x.option_values_name; // 将3替换为'three'
+                }
+                return value; // 其他值保持不变
+              })
+            }
+          })
+        })
+      }
+    });
+    // console.log(tagsId)
+    props.setStyle(tagsValues)
     // const allTagsFlat = newTags.flat();
     // const styleId = allTagsFlat.join(',');
     // props.onSecondInputChange?.(styleId);
   }
-
-  // 编辑标签
-  // function handleEditTag(){
-  //   setAttributesModal(true)
-  // }
-
   // 删除
   function handleTagRemove(value: any,index:number){
     // 先根据id删除 ，后根据option_values_name删除
     info[index] = Array.from(info[index],(v:any)=>{
-      // 将status 改为 9 代表删除
-      if(v.id == value.value){
-        v.status = "9"
-      }
-      if(v.option_values_name !== value.value ){
+      if(v.id == null || v.id == ""){
+        if(v.option_values_name == value.value){
+        }else{
+          return v
+        }
+      }else{
+        if(v.id == value.value){
+          console.log(11111)
+          v.status = "9"
+        }
         return v
       }
     }).filter(e => e !== undefined)
+    // console.log(info[index])
     oldStore.setAttributes(info.flat())
-    console.log("删除")
+    const newTags = [...tags];
+    newTags[index] = newTags[index].filter(t => t !== value.value);
+    setTags(newTags);
+    // 更新所有标签的扁平化列表，并通知父组件
+    props.setStyle(newTags)
   } 
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 控制模态框的显示状态
@@ -269,27 +258,24 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
     // 这里可以添加更多的逻辑来处理复选框的变化
   }
   // 处理复选框变化
-  function handleCheckboxChange(e: { target: { checked: boolean; }; }) {
-    setChecked(e.target.checked);
-    if(e.target.checked && specifications.length == 0){
-      addSpecification()
-    }
-  }
+  // function handleCheckboxChange(e: { target: { checked: boolean; }; }) {
+  //   if(e.target.checked && specifications.length == 0){
+  //     addSpecification()
+  //   }
+  // }
 
   // 处理第一个搜索框的选择变化
   function handleChange(value: string, index: number) {
     const newValues = [...values];
     newValues[index] = value;
-    
-    setValues(newValues);
+    setValues(newValues)
     info[index].forEach(element => {
       element.option_name = value
     });
-    oldStore.setAttributes(info.flat())
-    
-
-    console.log(`selected ${value}`);
     console.log(newValues)
+    oldStore.setAttributes(info.flat())
+    // console.log(`selected ${value}`);
+    // console.log(newValues)
     // 检查是否有重复值
     const hasDuplicate = new Set(newValues).size !== newValues.length;
     if (hasDuplicate) {
@@ -318,9 +304,6 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
   function handleRemoveTag(index: number, tag: string) {
     const newTags = [...tags];
     newTags[index] = newTags[index].filter(t => t !== tag);
-
-    console.log(tag+"--"+index)
-
     setTags(newTags);
   }
 
@@ -330,7 +313,6 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
       element.status = "9"
     })
     oldStore.setAttributes(info.flat())
-
     const newSpecifications = specifications.filter((_, i) => i !== index);
     setSpecifications(newSpecifications);
     const newValues = values.filter((_, i) => i !== index);
@@ -338,10 +320,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
 
     const newTags = tags.filter((_, i) => i !== index);
     setTags(newTags);
-    // 判断
-    if(newSpecifications.length === 0){
-      setChecked(false)
-    }
+   
   }
 
   // 添加新的规格组 -- attributes属性
@@ -351,22 +330,30 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
     setValues([...values, ""]);
     setTags([...tags, []]); // 添加一个新的空数组作为新的标签集合
     // console.log([...specifications, { id: newId,attributes:''}])
-    console.log([...values, ""])
-    console.log([...tags, []])
+    // console.log([...values, ""])
+    // console.log([...tags, []])
     info.push([])
     // // 更新输入框引用
     // inputRefs.current = [...inputRefs.current, null];
   }
+  // 控制款式列表
+  const isVariant = () => {
+    // if(tags.length>0){
+    //   props.setStyle(tags)
+    //   setOnVariant(false)
+    // }else{
+    //   message.info("请先添加款式")
+    // }
 
-  
+  }
 
   return (
     <Scoped>
-      <Card title="多款式">
-        <Checkbox checked={checked} onChange={handleCheckboxChange}>
+      <Card title="多款式" extra={onVariant?<a onClick={isVariant}>展开变体</a>:""}>
+        {/* <Checkbox checked={checked} onChange={handleCheckboxChange}>
           此商品有多个款式
-        </Checkbox>
-        {checked && (
+        </Checkbox> */}
+        {(
           <>
           {specifications.map((spec, index) => (
           <div key={spec.id} className="select-input icon-container">
@@ -378,8 +365,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
                 option.value.toUpperCase().includes(inputValue.toUpperCase())
               }
               onChange={(value) => handleChange(value, index)}
-              defaultValue={spec.attributes}
-              // defaultValue={oldStore.attributes.length == 0 ?"":oldStore.attributes[spec.id-1].option_name}
+              value={values[index]}
             />
               {errors[index] && (
               <div className="error-message">
@@ -393,18 +379,20 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
                 open={false}
                 labelInValue
                 style={{ width: "100%", height: "100%" }}
-                placeholder={tags[index]?.length > 0 ? "" : "请输入多个选项，使用回车键添加新标签"}
-                defaultValue={tags[index]}
+                placeholder={tags[index]?.length > 0 ? "" : "请输入款式值"}
+                value={tags[index]}
                 tagRender={(props)=>tagRender(props,index)}
-                // onChange={(value) => handleTagChange(value, index)}
                 onSelect={(value) => handleTagChange(value,index)}
                 onDeselect={(value) => handleTagRemove(value, index)}
                 onSearch={(searchText) => handleSearch(searchText, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 className="input-text-area"
               >
-                {info[index]?.map((option) => (
+                {info[index]?.map((option:any) => (
                   <Option value={option.id == undefined?option.option_values_name:option.id}>
+                    {(option.attribute_image == null || option.attribute_image == "")?'':<div style={{marginRight: '6px',width:"16px",display:"inline-block",position:"relative",top:"-1px"}}>
+                      <img style={{width:"100%",height:"100%", objectFit:"contain"}} src={option.attribute_image} />
+                    </div>}
                     {option.option_values_name}
                   </Option>
                 ))}
@@ -497,18 +485,21 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
 const Scoped = styled.div`
   .ant-card-body {
     padding: 20px;
+    
   }
   .ant-select-arrow{
     display: none;
   }
   .select-input {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 25px;
-  position: relative; /* 添加相对定位 */
-}
-
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    position: relative; /* 添加相对定位 */
+  }
+  .select-input:first-child{
+    margin-top: 10px;
+  }
 .error-message {
   position: absolute;
   bottom: -24px; /* 调整距离 */
@@ -551,6 +542,7 @@ const Scoped = styled.div`
   .ant-tag-close-icon{
       color: #000 !important;
   }
+
   .ant-input {
     padding-right: 8px; 
   }

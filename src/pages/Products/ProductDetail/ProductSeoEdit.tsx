@@ -89,13 +89,13 @@
 // import styled from "styled-components"
 
 import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
 import newStore from "@/store/newStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
 import oldStore from "@/store/oldStore"
+import cookie from 'react-cookies';
 
 
  function productSeoEdit(){
@@ -105,8 +105,6 @@ import oldStore from "@/store/oldStore"
     // useEffect(()=>{
     //     console.log(oldStore)
     // },[])
-
-    
     // const handleEditTitle = (value:string) => {
     //     setTitle(value)
     // }
@@ -123,7 +121,7 @@ import oldStore from "@/store/oldStore"
                         <SEOEdit seo={oldStore} />
                     </span>
                 </div>
-                <div className="webUrl">{globalStore.shop.domainName}</div>
+                <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{oldStore.metaTitle==""?(oldStore.title==""?"未填写标题":oldStore.title):oldStore.metaTitle}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{oldStore.metaDescription==""?(oldStore.content==""?"未填写描述":oldStore.content.replace(/<[^>]*>/g,"")):oldStore.metaDescription}</div>

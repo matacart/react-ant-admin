@@ -5,14 +5,12 @@
 // import styled from "styled-components"
 
 import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
 import newStore from "@/store/newStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
-
+import cookie from 'react-cookies';
 
  function SEOCard(){
     
@@ -25,7 +23,7 @@ import oldStore from "@/store/oldStore"
                         <SEOEdit seo={newStore}/>
                     </span>
                 </div>
-                <div className="webUrl">{globalStore.shop.domainName}</div>
+                <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{newStore.metaTitle==""?(newStore.title==""?"未填写标题":newStore.title):newStore.metaTitle}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{newStore.metaDescription==""?(newStore.content==""?"未填写描述":newStore.content?.replace(/<[^>]*>/g,"")):newStore.metaDescription}</div>

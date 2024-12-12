@@ -110,7 +110,6 @@ export default function ProductCategoryModal(prop:any) {
             // setSelectedTags(prop.tags)
             setTreeData(buildTree(res.data))
         })
-        console.log(prop.tags)
         setValue(Array.from(prop.tags,(res:any)=>{
             return res.id
         }))
