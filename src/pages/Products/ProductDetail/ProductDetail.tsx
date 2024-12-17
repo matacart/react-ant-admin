@@ -25,8 +25,10 @@ import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
 import { useLocation, useNavigate } from 'umi'
 import cookie from 'react-cookies';
+import { history } from '@umijs/max';
 import ProtectionInformationEdit from './ProtectionInformationEdit';
 import RecommendationEdit from './RecommendationEdit';
+import RelevanceEdit from './RelevanceEdit';
 // import { history } from '@umijs/max';
 
 
@@ -56,8 +58,10 @@ function ProductDetail() {
 
     const navigate = useNavigate(); // 使用 useNavigate 钩子
 
-    const product:any = useLocation().state
-
+    // const product:any = useLocation().state
+    const params = new URL(location.href).searchParams
+    let productId = params.get("productId")
+    let languageId = params.get("languagesId")
     // 提示
     const [modal, contextHolder] = Modal.useModal();
     const [style, setStyle] = useState([]);
@@ -124,7 +128,8 @@ function ProductDetail() {
     const fetchProductDetail = async (language?:string) => {
         setIsLoading(true)
         try {
-            const response = await getProductDetail(product.productId,language!==""?language:product.language); // 参数
+            const lang = language !== "" ? language : languageId;
+            const response = await getProductDetail(productId == null?"":productId,lang ?? ''); // 参数
             setProductDetail(response.data);
             if(response.data){
                 setProductDetail(response.data);
@@ -140,8 +145,8 @@ function ProductDetail() {
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
         fetchProductDetail();
-        console.log(product)
-    },[product]);
+        // console.log(product)
+    },[productId]);
     // 实现 onSecondInputChange 函数
     // const handleSecondInputChange = (value: any) => {
     //     setStyle(value);
@@ -158,7 +163,8 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是第一个商品")
         }else{
-            navigate('/products/productId/edit',{state:{productId:id,language:oldStore.language}})
+            // navigate('/products/productId/edit?',language:oldStore.language}})
+            history.push(`/products/productId/edit?productId=`+id+`&languagesId=`+oldStore.language)
         }
     }
     const nextProduct=(id:string)=>{
@@ -166,7 +172,8 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是最后一个商品")
         }else{
-            navigate('/products/productId/edit',{state:{productId:id,language:oldStore.language}})
+            // navigate('/products/productId/edit',{state:{productId:id,language:oldStore.language}})
+            history.push(`/products/productId/edit?productId=`+id+`&languagesId=`+oldStore.language)
         }
     }
     return (
@@ -220,11 +227,12 @@ function ProductDetail() {
                                         <StockEdit />
                                         <CustomsDeclarationEdit />
                                         <MultipleStylesEdit style = {style} setStyle={setStyle} />
-                                        {style.length>0 && <ProductStyleListEdit style = {style} setStyle={setStyle}  />}
+                                        {style.length>0 && <ProductStyleListEdit style = {style} setStyle={setStyle}  />} 
                                     </div>
                                     <div className='mc-layout-extra'>
                                         <ProductSettingsEdit productStatus={productStatus} upProductStatus={updateData} />
                                         <TradingRecords/>
+                                        <RelevanceEdit />
                                         <RecommendationEdit />
                                         <ProductSeoEdit/>
                                         <ProtectionInformationEdit />
@@ -247,7 +255,7 @@ function ProductDetail() {
                                     <Button type='primary' onClick={async () => {
                                         // console.log(Array.from(oldStore.attributes))
                                         await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
-                                        console.log(oldStore.variants)
+                                        console.log(oldStore)
                                         setIsLoading(true)
                                         if(oldStore.partsWarehouse == "0"){
                                             oldStore.updateProduct().then(res => {

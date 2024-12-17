@@ -1,7 +1,6 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { GlobalOutlined, LinkOutlined, SettingOutlined } from '@ant-design/icons';
+import { DashboardOutlined, GlobalOutlined, LinkOutlined, ProfileOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
 import { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -10,7 +9,7 @@ import { currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
-import { Divider, message, Select } from 'antd';
+import { Divider, message, Popover, Select } from 'antd';
 import { Ping } from './components/RightContent';
 import access from './access';
 import { Oauth2 } from '../config/myConfig'
@@ -18,13 +17,10 @@ import { getAccessToken } from '@/services/y2/api';
 import type { RequestConfig } from '@umijs/max';
 import { errorConfig } from './requestErrorConfig';
 import SelectDomain from './components/RightContent/SelectDomain';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 // import ProductListAjax from './components/List/OrderListAjax';
-import Orders from './pages/Orders';
 import React, { useState } from 'react';
-
+import cookie from 'react-cookies'
 // 在 app.tsx 文件顶部添加导入语句
-import globalStore from './store/globalStore';
 
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
@@ -40,15 +36,14 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
 
-
   
-
   // fetchUserInfo    方法 从接口获取用户信息，没有则跳转登录页
   const fetchUserInfo = async () => {
     //调用(mock中的)接口获取用户信息
     try {
       const msg = await queryCurrentUser({
       });
+     
       return msg.data; // 返回用户信息
     } catch (error) {
       console.log(error);
@@ -59,10 +54,18 @@ export async function getInitialState(): Promise<{
 
 
   // access_token 初始化
-  let access_token = localStorage.getItem('access_token')
+  // let access_token = localStorage.getItem('access_token')
+  let access_token = cookie.load('access_token')
   if (!access_token) {
+    let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
     getAccessToken().then((res) => {
-      localStorage.setItem('access_token', res.access_token)
+      // localStorage.setItem('access_token', res.access_token)
+      if(window.location.hostname.startsWith("localhost")){
+        cookie.save("access_token",res.access_token,{path:"/"})
+      }else{
+        cookie.save("access_token",res.access_token,{domain:test,path:"/"})
+      }
+      // localStorage.setItem('access_token', res.access_token)
       // console.log(res)
     }).catch((err) => {
       message.error(err.message)
@@ -90,19 +93,24 @@ export async function getInitialState(): Promise<{
   };
 }
 // 请求商铺
-const getDomainList = () => {
-  return axios.post('/api/ApiAppstore/domain_select')
-}
 
-
+// 语言
+axios.post('/api/ApiAppstore/languages_select').then((res) => {
+  if(res.data.code == 0){
+    sessionStorage["languages"] = JSON.stringify(res.data.data)
+  }
+})
 
 // layout
 import { FormattedMessage } from 'umi';  //多语言
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+
+  // console.log(initialState)
+  const stores = window.location.pathname.slice(0,8)
   return {
     //菜单栏
     actionsRender: () => [
-      <SelectDomain/>,
+      stores == "stores"?<></>:<SelectDomain/>,
       <Question key="doc" />,
       <SelectLang key="SelectLang" />,
       <Ping key="Ping" />,
@@ -157,7 +165,26 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </span>
       </Link>,
     ],
-    menuHeaderRender: undefined,
+    // 修改菜单数据
+    menuDataRender: (menuDataItem) => {
+      return (stores == "/stores/" ? [
+        {
+          path: '/stores/list',
+          icon: <ShopOutlined />,
+          name: '店铺管理',
+        },
+        {
+          path: '/stores/bills',
+          icon: <ProfileOutlined />,
+          name: '账单管理',
+        },
+        {
+          path: '/stores/data',
+          icon: <DashboardOutlined />,
+          name: '数据管理',
+        }
+      ]:menuDataItem)
+    },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
@@ -186,6 +213,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ...initialState?.settings,
     title: 'MataCart',
     logo: <GlobalOutlined />,
+    
   };
 };
 
@@ -252,12 +280,13 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (config: any) => {
       // 在请求拦截器中带token（除登录接口）
-      const token = localStorage.getItem('token')
+      const token = cookie.load("token")
       if (token && config.url != loginPath)
         config.headers['token'] = token;
         // config['token'] = token;
-      // 携带access_token
-      config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+        // 携带access_token
+        // config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+        config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
       return config;
     },
 
@@ -268,9 +297,16 @@ export const request: RequestConfig = {
     // access_token 过期
     (res:any) =>{
       // console.log(res);
+      let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
       if(res.data.code==40013){
           getAccessToken().then(res => {
-          localStorage.setItem('access_token',  res.access_token)
+            if(window.location.hostname.startsWith("localhost")){
+              console.log(window.location.hostname.startsWith("localhost"))
+              cookie.save("access_token",res.access_token,{path:"/"})
+            }else{
+              cookie.save('access_token', res.access_token, { domain:test,path: '/' });
+            }
+          // localStorage.setItem('access_token',  res.access_token)
         }).catch((err) => { console.log(err) });
       }
       if(res.code==1001)history.push(loginPath);
@@ -279,3 +315,4 @@ export const request: RequestConfig = {
     }
   ],
 }
+

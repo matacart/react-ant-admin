@@ -16,7 +16,8 @@ import { Link, Outlet } from '@umijs/max';
  * @param icon 配置路由的图标，取值参考 https://ant.design/components/icon-cn， 注意去除风格后缀和大小写，如想要配置图标为 <StepBackwardOutlined /> 则取值应为 stepBackward 或 StepBackward，如想要配置图标为 <UserOutlined /> 则取值应为 user 或者 User
  * @doc https://umijs.org/docs/guides/routes
  */
-export default [
+
+export default  [
   {
     path: '/',
     redirect: '/home'
@@ -220,22 +221,41 @@ export default [
   {
     path: '/stores',
     icon: 'crown',
+    // component: './Stores/Index',
     routes:[
       {
         path: 'create',
         name: 'create',
         component: './Stores/Create',
-      }
+      },
+      {
+        path: 'list',
+        name: 'list',
+        component: './Stores/List',
+      },
+      {
+        path: 'bills',
+        name: 'bills',
+        component: './Stores/List',
+      },
+      {
+        path: 'data',
+        name: 'data',
+        component: './Stores/List',
+      },
     ]
   },
   {
-    path: '/stores-subscriptions',
-    routes:[
-      {
-        path: 'list/paid',
-        component: './stores-subscriptions/list/Paid' ,
-      }
-    ]
+    path: '/stores-subscriptions/list/paid',
+    menuRender: false,
+    component: './stores-subscriptions/list/Paid',
+    // icon: 'crown',
+    // routes:[
+    //   {
+    //     path: 'list/paid',
+    //     component: './stores-subscriptions/list/Paid' ,
+    //   }
+    // ]
   },
   // 设置
   {
@@ -272,5 +292,7 @@ export default [
     layout: false,
     component: './404',
   },
-  
 ];
+
+
+

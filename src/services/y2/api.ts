@@ -229,6 +229,7 @@ export async function addProduct() {
       "is_best": newStore.isBest?"1":"0",
       "is_new": newStore.isNew?"1":"0",
       "is_hot": newStore.isHot?"1":"0",
+      "is_bind":newStore.isBind,
       "sort" : 0,
       "product_url" : '',
       "meta_title" : '',
@@ -243,7 +244,7 @@ export async function addProduct() {
       "divided_country" : '',
       "divided_url" : '',
       // 询盘开关：
-      "is_share": oldStore.isShare,
+      "is_share": newStore.isShare,
       // 摘要
       "content": newStore.content,
       // 内容
@@ -378,6 +379,7 @@ export async function submitRenewalProduct(res:any){
       "shipping": oldStore.isShipping?"1":"0",
       // 品库
       "is_sys": oldStore.partsWarehouse,
+      "is_bind": oldStore.isBind,
       // 加入推荐
       "is_best": oldStore.isBest?"1":"0",
       "is_new": oldStore.isNew?"1":"0",
@@ -479,14 +481,14 @@ export async function getFileList(page: any, limit: any) {
 }
 
 // 语言
-export async function getLanguages() {
-  return await request(`/api/ApiAppstore/languages_select`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
+// export async function getLanguages() {
+//   return await request(`/api/ApiAppstore/languages_select`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   })
+// }
 
 // 查询  ----产品列表
 // page: 1
@@ -505,6 +507,7 @@ export async function getProductList(page: any, limit: any, title: string, model
     // languages_id: 1
     data: {
       // params
+      "domain_id": cookie.load("domain")?.id,
       page:page,
       limit:limit,
       title:title,
@@ -777,8 +780,9 @@ export async function getCategoryList(){
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      page:1,
-      limit:100
+      "domain_id": cookie.load("domain")?.id,
+      "page":1,
+      "limit":100
     }
   })
 }
@@ -793,13 +797,22 @@ export async function addCategory(res:any){
       'Content-Type': 'multipart/form-data',
     },
     data:{
+      "domain_id": cookie.load("domain")?.id,
       languages_id: res.languages,
-      category_name: res.title,
-      category_description: res.description,
+      title: res.title,
+      content: res.content,
       category_image: res.coverImg,
-      category_pid: res.categoryPid,
+      pid: res.categoryPid,
       sort: 1,
-      status: 1,
+      status: res.status,
+      is_bind: res.isBind,
+      // 加入推荐
+      is_best: res.isBest?"1":"0",
+      is_new: res.isNew?"1":"0",
+      is_hot: res.isHot?"1":"0",
+      is_home: res.isHome?"1":"0",
+      is_share:res.isShare,
+      is_sys:res.partsWarehouse,
       meta_title:res.metaTitle,
       meta_keyword: res.metaKeyword,
       meta_description: res.metaDescription
@@ -808,15 +821,16 @@ export async function addCategory(res:any){
 }
 
 // 详情
-export async function getCategoryDetail(res:any){
+export async function getCategoryDetail(id:string,languageId:string){
   return await request('/api/ApiStore/category',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      id:res.id,
-      languages_id: res.languages,
+      "domain_id": cookie.load("domain")?.id,
+      "id":id,
+      "languages_id": languageId,
     }
   })
 }
@@ -831,13 +845,22 @@ export async function upCategory(res:any){
     },
     data:{
       id:res.id,
+      "domain_id": cookie.load("domain")?.id,
       languages_id: res.languages,
-      category_name: res.title,
-      category_description: res.content,
+      title: res.title,
+      content: res.content,
       category_image: res.coverImg,
-      category_pid: res.categoryPid,
+      pid: res.categoryPid,
       sort: 1,
-      status: 1,
+      status: res.status,
+      // 加入推荐
+      is_best: res.isBest?"1":"0",
+      is_new: res.isNew?"1":"0",
+      is_hot: res.isHot?"1":"0",
+      is_home: res.isHome?"1":"0",
+      is_bind: res.isBind,
+      is_share:res.isShare,
+      is_sys:res.partsWarehouse,
       meta_title:res.metaTitle,
       meta_keyword: res.metaKeyword,
       meta_description: res.metaDescription

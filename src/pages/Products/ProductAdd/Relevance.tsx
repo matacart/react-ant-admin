@@ -6,38 +6,28 @@ import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
 
 
- function Recommendation(){
-    
-    // const onChange = (checked: boolean) => {
-    //     console.log(`switch to ${checked}`);
-    //     newStore.setAllianceStatus(checked?'1':'0')
-    // };
-
+ function Relevance(){
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">显示位置
-                        {/* <Tooltip title="客户可以把商品添加到精选联盟商品库，供达人选品推广">
+                    <span className="title">店铺关联
+                        <Tooltip title="商品在多个店铺中展示">
                             <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                 <QuestionCircleOutlined />
                             </span>
-                        </Tooltip> */}
+                        </Tooltip>
                     </span>
                 </div>
                 <div className="item between">
-                    <Flex gap="8px 8px" wrap>
-                        <span><Checkbox defaultChecked={newStore.isHome} onChange={(e)=>{newStore.setIsHome(e.target.checked)}}>首页</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isHot} onChange={(e)=>{newStore.setIsHot(e.target.checked)}}>热销</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isBest} onChange={(e)=>{newStore.setIsBest(e.target.checked)}}>精品</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isNew} onChange={(e)=>{newStore.setIsNew(e.target.checked)}}>新品</Checkbox></span>
-                    </Flex>
+                    <span>数据关联</span>
+                    <Switch onChange={(e) => {newStore.setIsBind(e ? '1' : '0')}} checked={newStore.isBind == '1'?true:false}  />
                 </div>
             </Card>
         </Scoped>
     )
 }
-export default Recommendation
+export default observer(Relevance)
 
 const Scoped = styled.div`
 .gap{

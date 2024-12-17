@@ -24,6 +24,7 @@ import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
 import ProtectionInformation from './ProtectionInformation';
 import Recommendation from './Recommendation';
+import Relevance from './Relevance';
 
 // const createStyled = (productId:string)=>{
 //     setInterval(()=>{
@@ -212,6 +213,7 @@ function AddNewProduct(){
                         </div>
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>
+                            <Relevance />
                             <Recommendation />
                             <SEOCard/>
                             <ProtectionInformation />
@@ -227,23 +229,23 @@ function AddNewProduct(){
                         <Button type='primary' onClick={async ()=>{
                             await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
                             console.log(newStore)
-                            // if(newStore.partsWarehouse == "0"){
-                            //     if(newStore.validateForm()){
-                            //         newStore.unBlock();
-                            //         newStore.submitAddProduct().then(res=>{
-                            //             if(res.code==0){
-                            //                 message.success('创建成功')
-                            //                 // 返回产品id 根据产品id在本地自动请求款式直到成功
-                            //             }else{
-                            //                 message.error('创建失败');
-                            //             }
-                            //         });
-                            //         await sleep(1000);
-                            //         history.push('/products/index')
-                            //     }
-                            // }else{
-                            //     message.error('抱歉！非品库管理员，平台产品不可创建！');
-                            // }
+                            if(newStore.partsWarehouse == "0"){
+                                if(newStore.validateForm()){
+                                    newStore.unBlock();
+                                    newStore.submitAddProduct().then(res=>{
+                                        if(res.code==0){
+                                            message.success('创建成功')
+                                            // 返回产品id 根据产品id在本地自动请求款式直到成功
+                                        }else{
+                                            message.error('创建失败');
+                                        }
+                                    });
+                                    await sleep(1000);
+                                    history.push('/products/index')
+                                }
+                            }else{
+                                message.error('抱歉！非品库管理员，平台产品不可创建！');
+                            }
                         }}>创建</Button>
                     </div>
                 </div>

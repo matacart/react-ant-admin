@@ -4,11 +4,15 @@ import oldStore from '@/store/oldStore';
 import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
+import e from 'express';
+import { set } from 'lodash';
+// import _ from 'lodash';
 interface StyleItem {
   keyId: number;
   imageUrl: string;
   style: string;
   sku: string;
+  price: string;
   salePrice: number;
   originalPrice: number;
   costPrice: number;
@@ -28,6 +32,9 @@ interface StyleItem {
 
 function ProductStyleListEdit (props:any){
   const [styles, setStyles] = useState<StyleItem[]>([]);
+  // 
+  const [copyStyles, setCopyStyles] = useState<StyleItem[]>([]);
+
   const [modal, contextHolder] = Modal.useModal();
   function generateSku(attrValue){
     // 开始构建sku 
@@ -51,13 +58,9 @@ function ProductStyleListEdit (props:any){
       return skus
   }
   useEffect(() => {
-
-    // 默认数据
-    console.log(oldStore.variants)
-
-    const generateStyles = (sku: []) => {
+    console.log('style', props.style);
+    const generateStyles = async (sku:any) => {
       const newStyles = sku.map((tag, index) => ({
-          keyId: index + 1,
           image: '',
           option_values_ids: "",
           option_values_names:tag,
@@ -78,20 +81,21 @@ function ProductStyleListEdit (props:any){
           barcode: '',
           metaFields: '',
       }));
-
-      // console.log([...oldStore.variants,...newStyles])
-      setStyles(newStyles);
-      // // oldStore.setVariant(newStyles)
-
-      // newStyles.filter(item=>{
-      //   oldStore.forEach(element => {
-          
-      //   });
-      // })
+      // 默认数据
+      let oldData = oldStore.variants.filter(item => (item.status !== "9" && item?.id))
+      // console.log('oldData', oldData)
+      const valueSet = new Set(oldData.map(item => item.option_values_names));
+      const filteredArray = newStyles.filter(item => !valueSet.has(item.option_values_names))
+      setStyles([...oldData,...filteredArray])
+      console.log('oldData', oldData)
+      setCopyStyles([...oldData,...filteredArray])
+      oldStore.setVariants([...oldData,...filteredArray])
     };
     if(props.style.length>0) {
       let sku = generateSku(props.style)
       generateStyles(sku)
+    }else{
+      generateStyles([])
     }
   }, [props.style]);
   // 添加处理 SKU 变化的函数
@@ -159,12 +163,12 @@ function ProductStyleListEdit (props:any){
     {
       title: '售价',
       dataIndex: 'price',
-      render: (price: number, record: StyleItem) => (
+      render: (price: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span style={{ marginRight: 4 }}>US$</span>
           <Input
             value={price === 0 ? '' : price.toString()}
-            onChange={(e) => handleSalePriceChange(record.keyId, e.target.value)}
+            onChange={(e) => handleSalePriceChange(index,record,e.target.value)}
             placeholder="售价"
             style={{ width: 150}}
           />
@@ -350,51 +354,63 @@ function ProductStyleListEdit (props:any){
       ),
       width: 100,
     },
-    // {
-    //   title: '',
-    //   dataIndex: 'delete',
-    //   render: (metaFields: string,record: StyleItem) => (
-    //     <Space>
-    //       {/* <LocalizedModal /> */}
-    //       {/* <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=> handleRemove(record.id)}> */}
-    //       <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=>{
-    //         modal.confirm({
-    //           title: '确认删除',
-    //           icon: <ExclamationCircleOutlined />,
-    //           content: '该多属性删除后无法恢复，是否要继续',
-    //           okText: '确认',
-    //           cancelText: '取消',
-    //           centered:true,
-    //           destroyOnClose:true,
-    //           onOk:()=>{
-    //             handleRemove(record.id)
-    //           }
-    //         });
-    //         // console.log(111111)
-    //       }}>
-    //         <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
-    //           <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
-    //         </svg>
-    //       </span>
-    //     </Space>
-    //   ),
-    //   width: 50,
-    //   fixed: 'right', // 将列固定在右侧
-    // },
+    {
+      title: '',
+      dataIndex: 'delete',
+      render: (metaFields: string,record: StyleItem,index:number) => (
+        <Space>
+          {/* <LocalizedModal /> */}
+          {/* <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=> handleRemove(record.id)}> */}
+          <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=>{
+            modal.confirm({
+              title: '确认删除',
+              icon: <ExclamationCircleOutlined />,
+              content: '该多属性删除后无法恢复，是否要继续',
+              okText: '确认',
+              cancelText: '取消',
+              centered:true,
+              destroyOnClose:true,
+              onOk:()=>{
+                handleRemove(record,index)
+              }
+            });
+            // console.log(111111)
+          }}>
+            <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
+              <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
+            </svg>
+          </span>
+        </Space>
+      ),
+      width: 50,
+      fixed: 'right', // 将列固定在右侧
+    },
   ];
 
   // 添加处理售价变化的函数
-  const handleSalePriceChange = (id: number, newValue: string) => {
-    const updatedStyles = styles.map((style) => {
-      if (style.keyId === id) {
-        // 如果输入为空字符串，则设置为 0
-        const price = newValue.trim() === '' ? 0 : parseFloat(newValue);
-        return { ...style, price };
+  const handleSalePriceChange = (index: number,item:any,newValue: string) => {
+    let newStyles = [...styles]
+    newStyles[index].price = newValue
+    setStyles(newStyles)
+
+    let newCopyStyles = [...copyStyles]
+    newCopyStyles.forEach(res=>{
+      if(item.option_values_names == res.option_values_names){
+        res.price = newValue
       }
-      return style;
-    });
-    setStyles(updatedStyles);
-    oldStore.setVariants(updatedStyles);
+    })
+    setCopyStyles(newCopyStyles)
+    oldStore.setVariants(newCopyStyles)
+    // const updatedStyles = styles.map((style) => {
+    //   if (style.keyId === id) {
+    //     // 如果输入为空字符串，则设置为 0
+    //     const price = newValue.trim() === '' ? 0 : parseFloat(newValue);
+    //     return { ...style, price };
+    //   }
+    //   return style;
+    // });
+    // setStyles(updatedStyles);
+    // oldStore.setVariants(updatedStyles);
   };
   // 添加处理发货状态变化的函数
 const handleShippingChange = (id: number, newShipping: boolean) => {
@@ -429,9 +445,28 @@ const handleStockChange = (record: StyleItem) => {
   setStyles(updatedStyles);
 };
 // 添加处理删除的函数
-const handleRemove = (id: number) => {
-  const updatedStyles = styles.filter((style) => style.id !== id);
-  setStyles(updatedStyles);
+const handleRemove = (item:any,index:number) => {
+  let newStyles = [...styles]
+  newStyles.splice(index,1)
+  setStyles(newStyles)
+  let newCopyStyles = [...copyStyles]
+  if(item.id){
+    console.log(item.id)
+    newCopyStyles.forEach(res=>{
+      if(res.id && item.id == res.id){
+        res.status = "9"
+      }
+    })
+    setCopyStyles(newCopyStyles)
+    oldStore.setVariants(newCopyStyles)
+  }else{
+    setCopyStyles(newCopyStyles.filter(res=>item.option_values_names !== res.option_values_names))
+    oldStore.setVariants(newCopyStyles.filter(res=>item.option_values_names !== res.option_values_names))
+    console.log(newCopyStyles.filter(res=>item.option_values_names !== res.option_values_names))
+  }
+  // const updatedStyles = styles.filter((style) => style.id !== id);
+
+  // setStyles(updatedStyles);
   // deleteProductStyle(id).then(res=>{
   //   if(res.code == 0){
   //     message.success('款式删除成功')
@@ -440,9 +475,9 @@ const handleRemove = (id: number) => {
   //   }
   // })
   // console.log(updatedStyles)
-  if(updatedStyles.length==0){
-    props.setStyle(updatedStyles)
-  }
+  // if(updatedStyles.length==0){
+  //   props.setStyle(updatedStyles)
+  // }
 };
 
 const handleHsCodeChange = (recordId: number, value: string) => {
@@ -605,9 +640,9 @@ const handleWeightUnitChange = (id: number, unit: string) => {
           )}
           {selectedRowKeys.length > 0 && (
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-              {/* <Checkbox checked={selectedRowKeys.length > 0} disabled> */}
+              <Checkbox checked={selectedRowKeys.length > 0} disabled>
                 已选择 {selectedRowKeys.length} 项
-              {/* </Checkbox> */}
+              </Checkbox>
               <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <Button  style={{marginRight:'10px'}} onClick={showModal}>
             修改库存
@@ -677,15 +712,14 @@ const handleWeightUnitChange = (id: number, unit: string) => {
         </div>
       </Checkbox.Group>
       <Table
-        rowKey="keyId"
+        rowKey={(record,index)=>index}
         columns={columns}
         dataSource={styles}
-        // rowSelection={rowSelection}
+        rowSelection={rowSelection}
         scroll={{ x: 2000 }}
       />
       {contextHolder}
     </div>
-
 </Card>
   );
 }

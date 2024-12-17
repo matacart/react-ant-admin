@@ -1,5 +1,4 @@
-import { Button, Form, Input, Tag } from "antd";
-import Drawer from "../Drawer/Drawer";
+import { Button, Drawer, Form, Input, Tag } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import globalStore from "@/store/globalStore";
@@ -78,7 +77,7 @@ function SEOEdit(prop:any){
                             <div>预览</div>
                             <div>{cookie.load("domain").domainName}</div>
                             <div>{title==""?(prop.seo.title==""?"未填写标题":prop.seo.title):title}</div>
-                            <div>{description==""?(prop.seo.content==""?"未填写描述":prop.seo.content.replace(/<[^>]*>/g,"")):description}</div>
+                            <div>{description==""?((prop.seo.content=="")?"未填写描述":prop.seo.content.replace(/<[^>]*>/g,"")):description}</div>
                         </div>
                         <Form
                             layout="vertical"

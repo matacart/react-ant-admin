@@ -4,22 +4,20 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import SEOCard from '../../ProductAdd/SEOCard';
-import ThirdPartyInfoCard from '../../ProductAdd/ThirdPartyInfoCard';
 import ThemeTemplateCard from '../../ProductAdd/ThemeTemplateCard';
 import CategoriesInfo from './CategoriesInfo';
 import SalesChannel from './SalesChannel';
 import CategoriesCover from './CategoriesCover';
 import CategoriesBanner from './CategoriesBanner';
 import { getCategoryDetail, upCategory } from '@/services/y2/api';
-import newCategories from '@/store/categories/newCategories';
 import editCategories from '@/store/categories/editCategories';
 import { observer } from 'mobx-react-lite';
 import EditSeo from './EditSeo';
-
-
-
-
+import RelevanceEdit from './RelevanceEdit';
+import RecommendationEdit from './RecommendationEdit';
+import CategoriesSettingsEdit from './CategoriesSettingsEdit';
+import CategoriesSubnumber from './CategoriesSubnumber';
+import { setFlag } from 'mobx/dist/internal';
 // 表单项商品数据类型
 interface DataType {
     key: React.Key;
@@ -47,30 +45,23 @@ interface LocationState {
     radioValue?:number;
     // 可以根据实际需求添加其他字段
 }
-
 function EditProductCategories(){
     const [styleId, setStyleId] = useState('');
 
 
     const [isLoading,setIsLoading] = useState(false);
-    const categories = history.location.state;
+    const [flag,setFlag] = useState(false);
+    const categories = history.location
 
     // 复制
     useEffect(()=>{
-        // console.log(categories)
-        getCategoryDetail(categories).then(res=>{
-            console.log(res)
-            editCategories.setId(res.data.id)
-            editCategories.setCategoryPid(res.data.pid)
-            editCategories.setCategoriesData(res.data)
-            editCategories.setTitle(res.data.title)
-            editCategories.setContent(res.data.content)
-            editCategories.setCoverImg(res.data.category_image)
-
-            editCategories.setMetaTitle(res.data.meta_title)
-            editCategories.setMetaKeyword(res.data.meta_keyword)
-            editCategories.setMetaDescription(res.data.meta_description)
-
+        console.log(categories)
+        const params = new URL(location.href).searchParams
+        let id = params.get("id")
+        let languageId = params.get("languages_id")
+        let flag = getCategoryDetail(id,languageId).then(async res=>{
+            await editCategories.categoriesInit(res.data)
+            setFlag(true)
         })
     },[])
     // 实现 onSecondInputChange 函数
@@ -82,7 +73,7 @@ function EditProductCategories(){
     return (
         <Scoped>
             <Spin spinning={isLoading}>
-            {editCategories.title!==""&& <div className='mc-layout-wrap'>
+            {flag && <div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -102,10 +93,14 @@ function EditProductCategories(){
                             <CategoriesInfo/>
                         </div>
                         <div className='mc-layout-extra'>
-                            <SalesChannel />
-                            <EditSeo />
+                            {/* <SalesChannel /> */}
+                            <CategoriesSettingsEdit />
                             <CategoriesCover />
                             <CategoriesBanner />
+                            <RecommendationEdit />
+                            <RelevanceEdit />
+                            <CategoriesSubnumber />
+                            <EditSeo />
                             {/* <ThirdPartyInfoCard/> */}
                             <ThemeTemplateCard/>
                         </div>
@@ -133,7 +128,7 @@ function EditProductCategories(){
     )
 }
 
-export default observer(EditProductCategories);
+export default EditProductCategories
 
 const Scoped = styled.div`
 .mc-layout-wrap{

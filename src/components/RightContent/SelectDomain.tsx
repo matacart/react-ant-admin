@@ -58,20 +58,83 @@ export default function SelectDomain() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searching, setSearching] = useState(false)
     const intl = useIntl();// 多语言
+
+    function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
+        try {
+          // 创建一个新的URL对象
+          const urlObj = new URL(url);
+          
+          // 获取主机名（包括子域名）
+          const hostname = urlObj.hostname;
+          
+          // 使用replace方法替换子域名
+          // 注意：这里使用正则表达式来确保只替换完整的子域名部分
+          // 假设子域名和主域名之间只有一个点分隔
+          const newHostname = hostname.replace(new RegExp(`^${oldSubdomain}\\.`), `${newSubdomain}.`);
+          
+          // 如果替换成功（即新的主机名与旧的不同），则更新URL对象的主机名
+          if (newHostname !== hostname) {
+            // 由于URL对象的hostname属性是只读的，我们需要创建一个新的URL对象
+            // 这里通过重新设置协议、主机名、端口（如果有）、以及路径名来构建新URL
+            const newUrlObj = new URL(urlObj.protocol + '//' + newHostname +
+              (urlObj.port ? ':' + urlObj.port : '') + urlObj.pathname + urlObj.search + urlObj.hash);
+            
+            // 返回新的URL字符串
+            return newUrlObj.toString();
+          }
+          
+          // 如果替换失败（即没有找到要替换的子域名），则返回原始URL
+          return url;
+        } catch (error) {
+          // 如果URL无效，抛出错误或返回null/undefined等
+          console.error('Invalid URL:', error);
+          return null;
+        }
+      }
+
     
     const changeDomain = (item: any) => {
-        cookie.save('domain', item, { path: '/' });
-        setDefaultDomain(item.id)
+        // if(){
+        if(!window.location.hostname.startsWith("localhost")){
+            const newUrl = replaceSubdomain(window.location.href,item.secondDomain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
+            // const newUrl= cookie.load("domain").secondDomain+window.location.hostname.slice(window.location.hostname.indexOf("."))
+            window.open(newUrl)
+        }
+        
+        // cookie.save('domain', item, { path: '/' });
+        // setDefaultDomain(item.id)
         setIsActive(false);
     }
     useEffect(() => {
         // 判断会话中是否存在店铺数据
         if(sessionStorage["domain"]){
-            setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
-            setDefaultDomain(cookie.load("domain")?.id);
+            if(JSON.parse(sessionStorage["domain"]).length !== 0){
+                setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
+                setDefaultDomain(cookie.load("domain")?.id);
+            }else{
+                getDomainList().then((res) => {
+                    console.log(res)
+                    res?.data?.forEach((item: any, index: any) => {
+                        domainList.push({
+                            id: item.id,
+                            domainName: item.domain_name,
+                            secondDomain: item.second_domain,
+                            status: item.status,
+                        })
+                    })
+                    setDomainListCurrent(domainList);
+                    // 缓存店铺数据
+                    sessionStorage["domain"] = JSON.stringify(domainList);
+                    cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
+                    setDefaultDomain(res.data[0]?.id);
+                }).catch((error) => {
+                    message.error('未获取到店铺列表，请检查网络')
+                })
+            }
         }else{
             getDomainList().then((res) => {
                 console.log(res)
+                let flag:any = [];
                 res?.data?.forEach((item: any, index: any) => {
                     domainList.push({
                         id: item.id,
@@ -79,12 +142,28 @@ export default function SelectDomain() {
                         secondDomain: item.second_domain,
                         status: item.status,
                     })
+                    if(item.second_domain == window.location.hostname.slice(0,window.location.hostname.indexOf("."))){
+                        flag.push({
+                            id: item.id,
+                            domainName: item.domain_name,
+                            secondDomain: item.second_domain,
+                            status: item.status,
+                        })
+                    }
                 })
                 setDomainListCurrent(domainList);
                 // 缓存店铺数据
                 sessionStorage["domain"] = JSON.stringify(domainList);
-                cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
-                setDefaultDomain(res.data[0]?.id);
+                if(flag.length == 0){
+                    cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
+                    setDefaultDomain(res.data[0]?.id);
+                }else{
+                    cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
+                    setDefaultDomain(flag[0].id);
+                }
+                // console.log()
+               
+                
             }).catch((error) => {
                 message.error('未获取到店铺列表，请检查网络')
             })

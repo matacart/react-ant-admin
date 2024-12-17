@@ -44,19 +44,17 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
     const handleChange = async (info:any) => {
         // 添加图片默认移除鼠标效果
         setLoading(true)
-        if(info.file.status == "done"){
-            // 上传
-            let formData = new FormData()
-            formData.append("1", info.file.originFileObj as FileType)
-            axios.post('/api/ApiAppstore/doUploadPic',formData).then((res: any) => {
-                if(res.data.code == 0){
-                    setImageUrl(res.data.data.src)
-                    setLoading(false);
-                }else{
-                    message.error("上传失败", 1)
-                }
-            })
-        }
+        // 上传
+        let formData = new FormData()
+        formData.append("1", info as FileType)
+        axios.post('/api/ApiAppstore/doUploadPic',formData).then((res: any) => {
+            if(res.data.code == 0){
+                setImageUrl(res.data.data.src)
+                setLoading(false);
+            }else{
+                message.error("上传失败", 1)
+            }
+        })
         let newIsHovering = [...isHovering]
         newIsHovering[selectImgIndex] = false
         await setIsHovering(newIsHovering)
@@ -165,10 +163,13 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             {/* {...props} */}
             {imageUrl == ""?<Dragger 
                 listType="picture-card"
+                beforeUpload={(info)=>{
+                    // 手动上传
+                    handleChange(info)
+                    return false
+                }}
                 className="avatar-uploader"
                 showUploadList={false}
-                action="#"
-                onChange={(info)=>handleChange(info)}
             >
                 <div style={{padding:"60px 0"}}>
                     <p className="ant-upload-drag-icon">
@@ -276,7 +277,6 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
                 let newData = [...data];
                 newData[selectImgIndex].attribute_image = imageUrl
                 setData(newData)
-                
                 setImageUrl("")
             }}
             onCancel={()=>{

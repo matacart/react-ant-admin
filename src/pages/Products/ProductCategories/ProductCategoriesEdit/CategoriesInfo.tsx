@@ -30,7 +30,7 @@ function CategoriesInfo() {
     const [treeData,setTreeData] = useState([]);
 
     const onChange = (newValue: string) => {
-        setValue(newValue);
+        // setValue(newValue);
         editCategories.setCategoryPid(newValue)
     };
 
@@ -42,17 +42,15 @@ function CategoriesInfo() {
 
     useEffect(()=>{
         let tempList = [];
-        // if(languageData.length==0){
-        //     getLanguages().then(res=>{
-        //         tempList = res.data.map((item:any)=>{
-        //             return {
-        //                 value: item.id,
-        //                 label: item.name
-        //             }
-        //         })
-        //         setLanguageData(tempList)
-        //     })
-        // }
+        if(languageData.length==0){
+            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: item.name
+                }
+            })
+            setLanguageData(tempList)
+        }
 
         if(globalStore.categorylist.length==0){
             globalStore.getCategory().then(res=>{
@@ -63,7 +61,6 @@ function CategoriesInfo() {
         }else{
             setTreeData(globalStore.categorylist)
         }
-
     },[])
     return (
         <Card title="分类信息" className='product-data-card' extra={
@@ -85,14 +82,14 @@ function CategoriesInfo() {
         }>
             <Form layout='vertical' form={form} className='product-form'>
                 <Form.Item
-                    name="parentName"
+                    // name="parentName"
                     label="父分类"
-                    initialValue={editCategories.categoryPid=="0"?"":editCategories.categoryPid}
+                    // initialValue={treeData.length>0?(editCategories.categoryPid=="0"?"":editCategories.categoryPid):""}
                 >
                     <TreeSelect
                         showSearch
                         style={{ width: '100%' }}
-                        value={value}
+                        value={treeData.length>0?(editCategories.categoryPid=="0"?"":editCategories.categoryPid):""}
                         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                         placeholder="Please select"
                         allowClear
@@ -101,6 +98,7 @@ function CategoriesInfo() {
                         treeData={treeData}
                         // onPopupScroll={onPopupScroll}
                     />
+                    
                 </Form.Item>
                 <Form.Item
                     name="title"
@@ -110,7 +108,7 @@ function CategoriesInfo() {
                     // help={newStore.validate.title == "success"?"":<span style={{ color: '#F86140' }}>请输入商品标题</span>}
                 >
                     <Input
-                        defaultValue={editCategories.title}
+                        // defaultValue={editCategories.title}
                         value={editCategories.title}
                         onChange={(e) => {
                             // 清除

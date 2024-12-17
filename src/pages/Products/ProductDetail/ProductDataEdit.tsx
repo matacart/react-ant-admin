@@ -1,7 +1,7 @@
 import { Card, Form, Input, message, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import oldStore from "@/store/oldStore";
-import { getLanguages, getProductDetail } from "@/services/y2/api";
+import { getProductDetail } from "@/services/y2/api";
 import { CopyOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import copy from 'copy-to-clipboard';
 import { observer } from "mobx-react-lite";
@@ -38,15 +38,13 @@ function ProductDataEdit(prop:any){
     useEffect(()=>{
       let tempList = [];
       if(languageData.length==0){
-          getLanguages().then(res=>{
-              tempList = res.data.map((item:any)=>{
-                  return {
-                      value: item.id,
-                      label: item.name
-                  }
-              })
-              setLanguageData(tempList)
-          })
+        tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+            return {
+                value: item.id,
+                label: item.name
+            }
+        })
+        setLanguageData(tempList)
       }
     },[])
 

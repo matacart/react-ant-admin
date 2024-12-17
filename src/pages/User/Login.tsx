@@ -6,7 +6,7 @@ import { FormattedMessage, Link, history, useIntl, useModel } from '@umijs/max';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import './Login.scss';
-
+import cookie from 'react-cookies'
 
 
 
@@ -38,8 +38,15 @@ export default  function Login() {
         // 登录
         const msg = await login({ ...values, type });
         if (msg.code === 0) {
+          let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
           const token = msg.token;
-          localStorage.setItem('token', token);
+          if(window.location.hostname.startsWith("localhost")){
+            cookie.save("token",token,{path:"/"})
+          }else{
+            cookie.save("token",token,{domain:test,path:"/"})
+          }
+          // localStorage.setItem('token', token);
+          
           const defaultLoginSuccessMessage = intl.formatMessage({
             id: 'pages.login.success',
             defaultMessage: '登录成功！',

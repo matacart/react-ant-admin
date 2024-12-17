@@ -323,6 +323,12 @@ class newStore {
     this.attributes = value
   }
 
+  // 店铺关联
+  isBind = "1";
+  setIsBind(value: string) {
+    this.isBind = value;
+  }
+
   // 防护
   adWafStatus = "1";
   adProductId = "";
@@ -445,6 +451,15 @@ class newStore {
     this.hostedStatus = "0";
     this.partsWarehouse = "0";
     this.isShare = "0";
+    this.isHome = false;
+    this.isBest = false;
+    this.isHot = false;
+    this.isNew = false;
+    this.isBind = "1";
+    this.adWafStatus = "1";
+    this.adProductId = "";
+    this.adProductUrl = "";
+    this.adGroupId = "0";
     this.attributes = []
 
     this.temp.clear();

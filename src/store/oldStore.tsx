@@ -281,6 +281,12 @@ import productStore from "./productStore";
     this.isNew = value;
   }
 
+  // 店铺关联
+  isBind = "1";
+
+  setIsBind(value: string) {
+    this.isBind = value;
+  }
 
   // 防护
   adWafStatus = "1";
@@ -369,7 +375,7 @@ import productStore from "./productStore";
   // 初始化
   productInit(data:any){
     this.setTitle(data.title)
-    this.setContent(data.content)
+    this.setContent(data.content == null ? "" : data.content)
     this.setContent1(data.content1)
     this.setModel(data.model)
     this.setPrice(data.price)
@@ -416,6 +422,7 @@ import productStore from "./productStore";
     this.setIsHot(data.is_hot == "0" ? false : true)
     this.setIsBest(data.is_best == "0" ? false : true)
     this.setIsNew(data.is_new == "0" ? false : true)
+    this.setIsBind(data.is_bind)
     // 防护
     this.setAdWafStatus(data.ad_waf_status)
     this.setAdProductId(data.ad_product_id)

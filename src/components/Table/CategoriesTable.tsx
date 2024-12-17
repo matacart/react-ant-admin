@@ -6,9 +6,8 @@ import { CopyOutlined, DeleteOutlined, ExclamationCircleOutlined, EyeOutlined, I
 import { deleteCategory, deleteProduct, getCategoryList, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
-import newStore from '@/store/newStore';
-import globalStore from '@/store/globalStore';
 import modal from 'antd/es/modal';
+import cookie from 'react-cookies';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -129,7 +128,7 @@ function CategoriesTable() {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           maxWidth:"100%"
-        }}>{record.delimiter+""+record.category_name}</span>
+        }}>{record.delimiter+""+record.title}</span>
       </div>
     },
     {
@@ -169,6 +168,11 @@ function CategoriesTable() {
                     // }else{
                     //   message.error("请先设置店铺")
                     // }
+                    if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
+                      window.open(`https://`+cookie.load("domain").domainName+`/`+record.title.replace(new RegExp(" ","gm"),"-")+`-c`+record.id+`.html`)
+                    }else{
+                      message.error("请先设置店铺")
+                    }
                   }}>
                   <Tooltip title="预览">
                     <EyeOutlined />
@@ -223,7 +227,7 @@ function CategoriesTable() {
   const handleOrderClick = (id: string,languages_id:string) => {
     console.log('Clicked product:', id); // 添加调试日志
     // 
-    history.push(`/products/categories/edit`,{id,languages_id})
+    history.push(`/products/categories/edit?id=`+id+`&languages_id=`+languages_id)
   };
 
   useEffect(()=>{

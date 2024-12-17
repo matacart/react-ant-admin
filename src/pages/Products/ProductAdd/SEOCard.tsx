@@ -4,13 +4,13 @@
 // import { observer } from "mobx-react"
 // import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import newStore from "@/store/newStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
+import newStore from "@/store/newStore";
+import SEOEdit from "../components/SEOEdit";
 
  function SEOCard(){
     

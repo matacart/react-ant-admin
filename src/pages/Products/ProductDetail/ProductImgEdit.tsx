@@ -554,30 +554,35 @@ export default function ProductImgCard() {
     setPreviewOpen(true);
   };
   const handleChange = async (info: any) => {
-    // let fileListUrl = [];
-    if(info.file.status == "done"){
-      setLoading(true)
-      // 上传
-      let formData = new FormData()
-      formData.append("1", info.file.originFileObj as FileType)
-      axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
-        if(req.data.code == 0){
-          // uid --- src
-          // message.success("上传成功", 1)
-          oldStore.temp.set(info.file.uid, req.data.data.src)
-          setLoading(false);
-        }else{
-          message.error("上传失败", 1)
-        }
-      })
-    }else if(info.file.status == "removed"){
+
+    // 删除
+    if(info.file.status == "removed"){
+      setFileList(info.fileList);
       oldStore.temp.delete(info.file.uid)
-      // 移除
-    }else if(info.file.status == "done"){
-      // 失败
-    }else{
-      // 其它
+      return
     }
+    setLoading(true)
+    // 上传
+    let formData = new FormData()
+    formData.append("1", info.file as FileType)
+    axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
+      if(req.data.code == 0){
+        // uid --- src
+        // message.success("上传成功", 1)
+        oldStore.temp.set(info.file.uid, req.data.data.src)
+        setLoading(false);
+      }else{
+        message.error("上传失败", 1)
+      }
+    })
+    // }else if(info.file.status == "removed"){
+    //   oldStore.temp.delete(info.file.uid)
+    //   // 移除
+    // }else if(info.file.status == "done"){
+    //   // 失败
+    // }else{
+    //   // 其它
+    // }
     setFileList(info.fileList);
   };
 
@@ -612,8 +617,10 @@ export default function ProductImgCard() {
           {/* 图片展示 */}
           <Spin spinning={loading}>
             <Upload
-              action="#"
               listType="picture-card"
+              beforeUpload={()=>{
+                return false
+              }}
               multiple={true}
               fileList={fileList}
               onPreview={handlePreview}

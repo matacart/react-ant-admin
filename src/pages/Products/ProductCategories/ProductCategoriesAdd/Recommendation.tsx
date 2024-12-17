@@ -1,9 +1,7 @@
-import newStore from "@/store/newStore"
+import newCategories from "@/store/categories/newCategories"
 import { Card, Checkbox, Flex, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
 
 
  function Recommendation(){
@@ -27,17 +25,17 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                 </div>
                 <div className="item between">
                     <Flex gap="8px 8px" wrap>
-                        <span><Checkbox defaultChecked={newStore.isHome} onChange={(e)=>{newStore.setIsHome(e.target.checked)}}>首页</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isHot} onChange={(e)=>{newStore.setIsHot(e.target.checked)}}>热销</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isBest} onChange={(e)=>{newStore.setIsBest(e.target.checked)}}>精品</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isNew} onChange={(e)=>{newStore.setIsNew(e.target.checked)}}>新品</Checkbox></span>
+                        <span><Checkbox defaultChecked={newCategories.isHome} onChange={(e)=>{newCategories.setIsHome(e.target.checked)}}>首页</Checkbox></span>
+                        <span><Checkbox defaultChecked={newCategories.isHot} onChange={(e)=>{newCategories.setIsHot(e.target.checked)}}>热销</Checkbox></span>
+                        <span><Checkbox defaultChecked={newCategories.isBest} onChange={(e)=>{newCategories.setIsBest(e.target.checked)}}>精品</Checkbox></span>
+                        <span><Checkbox defaultChecked={newCategories.isNew} onChange={(e)=>{newCategories.setIsNew(e.target.checked)}}>新品</Checkbox></span>
                     </Flex>
                 </div>
             </Card>
         </Scoped>
     )
 }
-export default Recommendation
+export default observer(Recommendation)
 
 const Scoped = styled.div`
 .gap{

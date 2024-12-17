@@ -508,7 +508,7 @@ ul {
                 align-items: center;
                 justify-content: center;
                 width: 100%;
-                padding:0 40px;
+                padding:10px 40px;
                 background: linear-gradient(180deg, #e8eff7 0%, #fafcff 100%, rgba(233, 240, 248, 0) 100%);
                 line-height: 150%;
             }

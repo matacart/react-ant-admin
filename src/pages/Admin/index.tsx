@@ -8,12 +8,18 @@ import ShopTimeDisplay from '@/components/Admin/Time';
 import { useEffect } from 'react';
 import globalStore from '@/store/globalStore';
 
+
 export default () => {
+
   // home
   useEffect(()=>{
     // console.log(localStorage.getItem('access_token'))
     // 请求平台分类
     globalStore.getPlatformCategory();
+
+
+    
+
   },[])
 
 

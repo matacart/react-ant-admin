@@ -87,8 +87,6 @@
 // import { Card } from "antd"
 // import { observer } from "mobx-react"
 // import styled from "styled-components"
-
-import SEOEdit from "@/components/Select/SEOEdit"
 import newStore from "@/store/newStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
@@ -96,6 +94,7 @@ import styled from "styled-components"
 import { useEffect, useState } from 'react';
 import oldStore from "@/store/oldStore"
 import cookie from 'react-cookies';
+import SEOEdit from "../components/SEOEdit";
 
 
  function productSeoEdit(){
@@ -124,7 +123,7 @@ import cookie from 'react-cookies';
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{oldStore.metaTitle==""?(oldStore.title==""?"未填写标题":oldStore.title):oldStore.metaTitle}</div>
                 {/* 未填写标题 */}
-                <div className="webDesc">{oldStore.metaDescription==""?(oldStore.content==""?"未填写描述":oldStore.content.replace(/<[^>]*>/g,"")):oldStore.metaDescription}</div>
+                <div className="webDesc">{oldStore.metaDescription==""?((oldStore.content==""||oldStore.content == null)?"未填写描述":oldStore.content.replace(/<[^>]*>/g,"")):oldStore.metaDescription}</div>
             </Card>
         </Scoped>
     )

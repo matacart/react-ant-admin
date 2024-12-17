@@ -7,7 +7,7 @@ import MoreSelect from "../Select/MoreSelect";
 import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
 
 import { useEffect, useImperativeHandle, useState } from "react"
-import { getLanguages, selectTags } from "@/services/y2/api";
+import { selectTags } from "@/services/y2/api";
 import { set } from "lodash";
 import DrawerComponent from "../Drawer/Drawer";
 import Drawer from "../Drawer/Drawer";
@@ -75,16 +75,13 @@ export default function ProductsSelectCard(){
         // 添加语言
         let tempList = [];
         if(languageData.length==0){
-            getLanguages().then(res=>{
-                tempList = res.data.map((item:any)=>{
-                    return {
-                        value: item.id,
-                        label: item.name
-                    }
-                })
-                // console.log(tempList);
-                setLanguageData(tempList)
+            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: item.name
+                }
             })
+            setLanguageData(tempList)
         };
         if(timeTags.length == 0){
             getTags(language)

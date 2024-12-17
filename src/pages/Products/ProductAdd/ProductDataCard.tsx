@@ -4,7 +4,6 @@ import { ConsoleSqlOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import TinymceEditor from "@/components/MCE/TinymceEditor";
 import { useEffect, useState } from "react";
-import { getLanguages } from "@/services/y2/api";
 const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
 };
@@ -21,15 +20,13 @@ function ProductDataCard() {
     useEffect(()=>{
         let tempList = [];
         if(languageData.length==0){
-            getLanguages().then(res=>{
-                tempList = res.data.map((item:any)=>{
-                    return {
-                        value: item.id,
-                        label: item.name
-                    }
-                })
-                setLanguageData(tempList)
+            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: item.name
+                }
             })
+            setLanguageData(tempList)
         }
     })
     return (

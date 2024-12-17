@@ -97,15 +97,33 @@ export default function MultipleStylesEdit(props:any) {
     newTags[i] = temp
     setTags(newTags)
     // 更新所有标签的扁平化列表，并通知父组件
-    props.setStyle(newTags)
+    // 数据分流  ---- 修改
+    let tagsId:any = [...newTags];
+    let tagsValues:any = [...newTags];
+    newTags.forEach((res,index) => {
+      if(res.length>0){
+        res.forEach(e => {
+          Array.from(newInfo.flat(),(x:any)=>{
+            if(x.id == e){
+              tagsValues[index] = tagsValues[index].map(value => {
+                if (value == e) {
+                  return x.option_values_name; // 将3替换为'three'
+                }
+                return value; // 其他值保持不变
+              })
+            }
+          })
+        })
+      }
+    });
+    props.setStyle(tagsValues)
   }
 
   // 收集所有输入值后调用父组件提供的回调函数
   useEffect(() => {
-    const allTagsFlat = tags.flat();
-    const styleId = allTagsFlat.join(',');
-    props.onSecondInputChange?.(styleDate);
-    
+    // const allTagsFlat = tags.flat();
+    // const styleId = allTagsFlat.join(',');
+    // props.onSecondInputChange?.(styleDate);
     const optionMap = {};
     // 遍历数组
     productStore.attributes.forEach(item => {
@@ -121,10 +139,12 @@ export default function MultipleStylesEdit(props:any) {
     let tempList:any = [];
     let tempTags:any = [];
     let tempInfo:any = [];
+    let tempValues:any = [];
     let index = 0;
     for(let item in optionMap){
       // value ---- id
       tempTags.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'id')))
+      tempValues.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'option_values_name')))
       // 款式
       tempList.push(
         {id: index+1,attributes:item}
@@ -136,6 +156,7 @@ export default function MultipleStylesEdit(props:any) {
     setSpecifications(tempList)
     // 值
     setTags(tempTags)
+    props.setStyle(tempValues)
     // 原始数据
     setInfo(tempInfo)
   }, []);
@@ -184,8 +205,6 @@ export default function MultipleStylesEdit(props:any) {
     newTags[index] = [...newTags[index],value.value]
     setTags(newTags)
     // 更新所有标签的扁平化列表，并通知父组件
-
-
     // 数据分流
     let tagsId:any = [...newTags];
     let tagsValues:any = [...newTags];
@@ -222,7 +241,6 @@ export default function MultipleStylesEdit(props:any) {
         }
       }else{
         if(v.id == value.value){
-          console.log(11111)
           v.status = "9"
         }
         return v
@@ -234,7 +252,26 @@ export default function MultipleStylesEdit(props:any) {
     newTags[index] = newTags[index].filter(t => t !== value.value);
     setTags(newTags);
     // 更新所有标签的扁平化列表，并通知父组件
-    props.setStyle(newTags)
+    // 数据分流
+    // let tagsId:any = [...newTags];
+    let tagsValues:any = [...newTags];
+    newTags.forEach((res,index) => {
+      if(res.length>0){
+        res.forEach(e => {
+          Array.from(info.flat(),(x:any)=>{
+            if(x.id == e){
+              tagsValues[index] = tagsValues[index].map(value => {
+                if (value == e) {
+                  return x.option_values_name; // 将3替换为'three'
+                }
+                return value; // 其他值保持不变
+              })
+            }
+          })
+        })
+      }
+    });
+    props.setStyle(tagsValues)
   } 
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 控制模态框的显示状态

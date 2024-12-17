@@ -5,6 +5,7 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin } from "antd"
 import axios from "axios";
 import { set } from "lodash";
+import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 
@@ -52,19 +53,23 @@ import styled from "styled-components"
     });
 
     const handleChange: UploadProps['onChange'] = (info) => {
-    // 上传图片
-    if(info.file.status=="done"){
+        if(info.file.status == "removed"){
+            setFileList(info.fileList);
+            editCategories.setCoverImg("")
+            return
+        }
+        // 上传图片
         setIsUpload(true)
+        console.log(info)
         let formData = new FormData()
-        formData.append("1", info.file.originFileObj as FileType)
+        formData.append("1", info.file as FileType)
         axios.post('/api/ApiAppstore/doUploadPic',formData).then(res=>{
             if(res.data.code == 0){
                 editCategories.setCoverImg(res.data.data.src)
             }
             setIsUpload(false)
         })
-    }
-    setFileList(info.fileList);
+        setFileList(info.fileList);
     }
 
     const handlePreview = async (file: UploadFile) => {
@@ -82,12 +87,14 @@ import styled from "styled-components"
         </button>
     )
     useEffect(()=>{
-        setFileList([{
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: editCategories.coverImg
-        }])
+        if(editCategories.coverImg!==null){
+            setFileList([{
+                uid: '-1',
+                name: 'image.png',
+                status: 'done',
+                url: editCategories.coverImg
+            }])
+        }
     },[])
 
     return (
@@ -110,9 +117,11 @@ import styled from "styled-components"
                             {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                         </Upload> */}
                         {<Upload
-                                action="#"
                                 listType="picture-card"
                                 fileList={fileList}
+                                beforeUpload={()=>{
+                                    return false
+                                }}
                                 onPreview={handlePreview}
                                 onChange={handleChange}
                                 maxCount={1}
@@ -137,7 +146,7 @@ import styled from "styled-components"
         </Scoped>
     )
 }
-export default CategoriesCover
+export default observer(CategoriesCover)
 
 const Scoped = styled.div`
 .gap{

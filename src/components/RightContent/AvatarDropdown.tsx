@@ -1,13 +1,15 @@
 import { logout } from '@/services/y2/api';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel,useIntl } from '@umijs/max';
-import { Spin } from 'antd';
+import { Popover, Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
+import UserCard from './../Card/UserCard';
+import styled from 'styled-components';
 
 
 export type GlobalHeaderRightProps = {
@@ -66,7 +68,6 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   const intl = useIntl();
 
   const onMenuClick = useCallback(
-
     (event: MenuInfo) => {
       const { key } = event;
       if (key === 'logout') {
@@ -105,39 +106,42 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   }
 
   const menuItems = [
-    ...(menu
-      ? [
-          {
-            key: 'center',
-            icon: <UserOutlined />,
-            label: intl.formatMessage({id:'pages.user.center'}),
-          },
-          {
-            key: 'settings',
-            icon: <SettingOutlined />,
-            label: intl.formatMessage({id:'pages.user.settings'}),
-          },
-          {
-            type: 'divider' as const,
-          },
-        ]
-      : []),
+    // ...(menu
+    //   ? [
+    //       {
+    //         key: 'center',
+    //         icon: <UserOutlined />,
+    //         label: intl.formatMessage({id:'pages.user.center'}),
+    //       },
+    //       {
+    //         key: 'settings',
+    //         icon: <SettingOutlined />,
+    //         label: intl.formatMessage({id:'pages.user.settings'}),
+    //       },
+    //       {
+    //         type: 'divider' as const,
+    //       },
+    //     ]
+    //   : []),
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: intl.formatMessage({id:'pages.user.logout'}),
+      label: "123",
     },
-  ];
 
+  ];
+  const content = (
+    <UserCard currentUser={currentUser}/>
+  );
   return (
-    <HeaderDropdown
-      menu={{
-        selectedKeys: [],
-        onClick: onMenuClick,
-        items: menuItems,
-      }}
-    >
-      {children}
-    </HeaderDropdown>
+    // <HeaderDropdown
+    //   menu={{
+    //     selectedKeys: [],
+    //     onClick: onMenuClick,
+    //     items: menuItems,
+    //   }}
+    // >
+    // </HeaderDropdown>
+    <Popover trigger="hover" overlayInnerStyle={{padding: "0"}} arrow={false} content={content}><div>{children}</div></Popover>
   );
 };

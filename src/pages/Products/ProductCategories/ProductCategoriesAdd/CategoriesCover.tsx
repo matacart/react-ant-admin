@@ -32,21 +32,25 @@ import styled from "styled-components"
       });
 
       const handleChange: UploadProps['onChange'] = (info) => {
-        // 上传图片
-        if(info.file.status=="done"){
-            setIsUpload(true)
-            let formData = new FormData()
-            formData.append("1", info.file.originFileObj as FileType)
-            axios.post('/api/ApiAppstore/doUploadPic',formData).then(res=>{
-                if(res.data.code == 0){
-                    message.success("上传成功")
-                    newCategories.setCoverImg(res.data.data.src)
-                }
-                setIsUpload(false)
-            })
+        // 删除
+        if(info.file.status == "removed"){
+            setFileList(info.fileList);
+            newCategories.setCoverImg("")
+            return
         }
+        // 上传图片
+        setIsUpload(true)
+        let formData = new FormData()
+        formData.append("1", info.file as FileType)
+        axios.post('/api/ApiAppstore/doUploadPic',formData).then(res=>{
+            if(res.data.code == 0){
+                message.success("上传成功")
+                newCategories.setCoverImg(res.data.data.src)
+            }
+            setIsUpload(false)
+        })
         setFileList(info.fileList);
-      }
+    }
 
     const handlePreview = async (file: UploadFile) => {
         if (!file.url && !file.preview) {
@@ -72,7 +76,9 @@ import styled from "styled-components"
                 <div className="webUrl">
                     <Spin spinning={isUpload}>
                         {<Upload
-                                action="#"
+                                beforeUpload={()=>{
+                                    return false
+                                }}
                                 listType="picture-card"
                                 fileList={fileList}
                                 onPreview={handlePreview}

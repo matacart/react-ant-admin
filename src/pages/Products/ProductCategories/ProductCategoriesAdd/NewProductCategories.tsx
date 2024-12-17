@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import ThirdPartyInfoCard from '../../ProductAdd/ThirdPartyInfoCard';
 import ThemeTemplateCard from '../../ProductAdd/ThemeTemplateCard';
 import CategoriesInfo from './CategoriesInfo';
 import SalesChannel from './SalesChannel';
@@ -13,8 +12,10 @@ import CategoriesBanner from './CategoriesBanner';
 import newCategories from '@/store/categories/newCategories';
 import { addCategory } from '@/services/y2/api';
 import NewSeo from './NewSeo';
-
-
+import Relevance from './Relevance';
+import CategoriesSettings from './CategoriesSettiings';
+import Recommendation from './Recommendation';
+import CategoriesSubnumber from './CategoriesSubnumber';
 
 
 // 表单项商品数据类型
@@ -82,10 +83,15 @@ function NewProductCategories(){
                             <CategoriesInfo/>
                         </div>
                         <div className='mc-layout-extra'>
-                            <SalesChannel />
-                            <NewSeo />
+                            <CategoriesSettings />
+                            {/* <SalesChannel /> */}
                             <CategoriesCover />
                             <CategoriesBanner />
+                            <Recommendation />
+                            <Relevance />
+                            {/* <RelevanceEdit /> */}
+                            <CategoriesSubnumber />
+                            <NewSeo />
                             {/* <ThirdPartyInfoCard/> */}
                             <ThemeTemplateCard/>
                         </div>
@@ -94,7 +100,7 @@ function NewProductCategories(){
                     <div className='mc-footer'>
                         <Button type='primary' loading={btnLoading} onClick={async ()=>{
                             setBtnLoading(true);
-                            console.log(newCategories);
+                            // console.log(newCategories);
                             addCategory(newCategories).then(res=>{
                                 if(res.code == 0){
                                     message.success('创建成功');

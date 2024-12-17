@@ -4,29 +4,24 @@
 // import { observer } from "mobx-react"
 // import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
 import oldStore from "@/store/oldStore"
 import newCategories from "@/store/categories/newCategories"
-
+import cookie from 'react-cookies';
 
  function NewSeo(){
-    
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit seo={newCategories}/>
+                        {/* <SEOEdit seo={newCategories}/> */}
                     </span>
                 </div>
-                <div className="webUrl">{globalStore.shop.domainName}</div>
+                <div className="webUrl">{cookie.load("domain")?.domainName}</div>
                 <div className="webTitle">{newCategories.metaTitle==""?(newCategories.title==""?"未填写标题":newCategories.title):newCategories.metaTitle}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{newCategories.metaDescription==""?(newCategories.content==""?"未填写描述":newCategories.content?.replace(/<[^>]*>/g,"")):newCategories.metaDescription}</div>

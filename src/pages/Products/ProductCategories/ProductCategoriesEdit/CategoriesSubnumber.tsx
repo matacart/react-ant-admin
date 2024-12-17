@@ -1,18 +1,18 @@
 
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
 import { Card, Form, Select, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
+import editCategories from "@/store/categories/editCategories";
 
 
- function Subnumber(){
+ function CategoriesSubnumber(){
+    
     const onChange = (checked: boolean) => {
-        newStore.setIsShare(checked?'1':'0')
+        console.log(`switch to ${checked}`);
+        editCategories.setIsShare(checked?'1':'0')
     };
+
     return (
         <Scoped>
             <Card className="gap">
@@ -37,20 +37,20 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                         <Select
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
-                            defaultValue={newStore.partsWarehouse}
+                            defaultValue={editCategories.partsWarehouse}
                             options={[
                                 { value: '0', label: '商户自建' },
                                 { value: '1', label: '平台自建' },
                             ]}
                             onChange={(e)=>{
-                                newStore.setPartsWarehouse(e)
+                                editCategories.setPartsWarehouse(e)
                             }}
                         />
                     </Form.Item>
                     <Form.Item>
                         <div className="item between">
                             <span>子号共享</span>
-                            <Switch onChange={onChange} />
+                            <Switch defaultChecked={editCategories.isShare == "1"?true:false} onChange={onChange} />
                         </div>
                     </Form.Item>
                 </Form>
@@ -58,7 +58,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
         </Scoped>
     )
 }
-export default observer(Subnumber)
+export default observer(CategoriesSubnumber)
 
 const Scoped = styled.div`
 .gap{

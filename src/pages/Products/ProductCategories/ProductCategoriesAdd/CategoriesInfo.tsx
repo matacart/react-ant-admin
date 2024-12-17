@@ -32,22 +32,20 @@ function CategoriesInfo() {
     // 语言选择
     const languageChange= (value: string) => {
         // setLanguage(value)
-        // newCategories.setLanguage(value)
+        newCategories.setLanguage(value)
     };
 
     useEffect(()=>{
         let tempList = [];
-        // if(languageData.length==0){
-        //     getLanguages().then(res=>{
-        //         tempList = res.data.map((item:any)=>{
-        //             return {
-        //                 value: item.id,
-        //                 label: item.name
-        //             }
-        //         })
-        //         setLanguageData(tempList)
-        //     })
-        // }
+        if(languageData.length==0){
+            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: item.name
+                }
+            })
+            setLanguageData(tempList)
+        }
 
         if(globalStore.categorylist.length==0){
             globalStore.getCategory().then(res=>{

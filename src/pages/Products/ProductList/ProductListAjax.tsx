@@ -346,9 +346,15 @@ function ProductListAjax(selectProps:any) {
   };
 
   const handleOrderClick = (productId: string,languages_id:string) => {
-    console.log('Clicked product:', productId); // 添加调试日志
+    // console.log('Clicked product:', productId); // 添加调试日志
     // 
-    history.push(`/products/productId/edit`,{productId,languages_id})
+    // history.push(`/products/productId/edit`,{
+    //   query: {
+    //     productId:productId,
+    //     languages_id:languages_id
+    //   }
+    // })
+    history.push(`/products/productId/edit?productId=`+productId+`&languagesId=`+languages_id)
   };
   
   return (

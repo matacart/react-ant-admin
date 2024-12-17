@@ -20,7 +20,7 @@ import oldStore from "@/store/oldStore";
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">上架信息
+                    <span className="title">共享信息
                         {/* <Tooltip title="上架信息">
                             <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                 <QuestionCircleOutlined />

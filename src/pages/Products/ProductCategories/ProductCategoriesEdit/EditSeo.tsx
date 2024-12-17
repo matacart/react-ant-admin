@@ -1,11 +1,10 @@
-import SEOEdit from "@/components/Select/SEOEdit"
 import globalStore from "@/store/globalStore"
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import oldStore from "@/store/oldStore"
 import editCategories from "@/store/categories/editCategories"
-
+import cookie from 'react-cookies';
  function EditSeo(){
     return (
         <Scoped>
@@ -13,10 +12,10 @@ import editCategories from "@/store/categories/editCategories"
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit seo={editCategories} />
+                        {/* <SEOEdit seo={editCategories} /> */}
                     </span>
                 </div>
-                <div className="webUrl">{globalStore.shop.domainName}</div>
+                <div className="webUrl">{cookie.load("domain")?.domainName}</div>
                 <div className="webTitle">{editCategories.metaTitle==""?(editCategories.title==""?"未填写标题":editCategories.title):editCategories.metaTitle}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{editCategories.metaDescription==""?(editCategories.content==""?"未填写描述":editCategories.content.replace(/<[^>]*>/g,"")):editCategories.metaDescription}</div>
