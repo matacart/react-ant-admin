@@ -1,7 +1,7 @@
 import ProductThirdTripartite from "@/components/Modal/ProductThirdTripartite";
 import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Tooltip } from "antd";
+import { Card, Switch, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
@@ -20,32 +20,12 @@ function ThirdPartyInfoCard() {
                             </span>
                         </Tooltip>
                     </div>
-                    <ProductThirdTripartite />
+                    <ProductThirdTripartite product={newStore} />
                 </div>
                 <div className="content">
-                    <div>
-                        <div className="between">
-                            <div className="item-name">亚马逊</div>
-                        </div>
-                        <div className="twoLineUrl">{newStore.thirdPartyPlatform.amazonUrl==""?"未绑定":newStore.thirdPartyPlatform.amazonUrl}</div>
-                    </div>
-                    <div>
-                        <div className="between">
-                            <div className="item-name">eBay</div>
-                        </div>
-                        <div className="twoLineUrl">{newStore.thirdPartyPlatform.eBayUrl==""?"未绑定":newStore.thirdPartyPlatform.eBayUrl}</div>
-                    </div>
-                    <div>
-                        <div className="between">
-                            <div className="item-name">天猫</div>
-                        </div>
-                        <div className="twoLineUrl">{newStore.thirdPartyPlatform.tmallUrl==""?"未绑定":newStore.thirdPartyPlatform.tmallUrl}</div>
-                    </div>
-                    <div>
-                        <div className="between">
-                            <div className="item-name">AliExpress</div>
-                        </div>
-                        <div className="twoLineUrl">{newStore.thirdPartyPlatform.aliExpressUrl==""?"未绑定":newStore.thirdPartyPlatform.aliExpressUrl}</div>
+                    <div className="item between">
+                        <span>绑定状态</span>
+                        <Switch onChange={(e) => {newStore.setThirdPartyPlatform({...newStore.thirdPartyPlatform,status:e?"1":"0"})}} checked={newStore.thirdPartyPlatform.status == '1'?true:false} />
                     </div>
                 </div>
             </Card>

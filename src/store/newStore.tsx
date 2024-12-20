@@ -330,7 +330,7 @@ class newStore {
   }
 
   // 防护
-  adWafStatus = "1";
+  adWafStatus = "0";
   adProductId = "";
   adProductUrl = "";
   adGroupId = "0";
@@ -367,7 +367,11 @@ class newStore {
     tmallStatus: '0',
     aliExpressUrl:'',
     aliExpressSort:'0',
-    aliExpressStatus:'0'
+    aliExpressStatus:'0',
+    whatsappUrl: '',
+    whatsappSort: '0',
+    whatsappStatus: '0',
+    status:"0"
   }
 
   setThirdPartyPlatform(value: any) {
@@ -456,11 +460,29 @@ class newStore {
     this.isHot = false;
     this.isNew = false;
     this.isBind = "1";
-    this.adWafStatus = "1";
+    this.adWafStatus = "0";
     this.adProductId = "";
     this.adProductUrl = "";
     this.adGroupId = "0";
-    this.attributes = []
+    this.attributes = [];
+    this.thirdPartyPlatform = {
+      amazonUrl: '',
+      amazonSort: '0',
+      amazonStatus: '0',
+      eBayUrl: '',
+      eBaySort: '0',
+      eBayStatus: '0',
+      tmallUrl: '',
+      tmallSort: '0',
+      tmallStatus: '0',
+      aliExpressUrl:'',
+      aliExpressSort:'0',
+      aliExpressStatus:'0',
+      whatsappUrl: '',
+      whatsappSort: '0',
+      whatsappStatus: '0',
+      status:"0"
+    }
 
     this.temp.clear();
   }

@@ -123,7 +123,7 @@ import SEOEdit from "../components/SEOEdit";
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{oldStore.metaTitle==""?(oldStore.title==""?"未填写标题":oldStore.title):oldStore.metaTitle}</div>
                 {/* 未填写标题 */}
-                <div className="webDesc">{oldStore.metaDescription==""?((oldStore.content==""||oldStore.content == null)?"未填写描述":oldStore.content.replace(/<[^>]*>/g,"")):oldStore.metaDescription}</div>
+                <div className="webDesc">{oldStore.metaDescription==""?"未填写描述":oldStore.metaDescription}</div>
             </Card>
         </Scoped>
     )

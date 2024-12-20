@@ -77,7 +77,7 @@ function SEOEdit(prop:any){
                             <div>预览</div>
                             <div>{cookie.load("domain").domainName}</div>
                             <div>{title==""?(prop.seo.title==""?"未填写标题":prop.seo.title):title}</div>
-                            <div>{description==""?((prop.seo.content=="")?"未填写描述":prop.seo.content.replace(/<[^>]*>/g,"")):description}</div>
+                            <div>{description==""?"未填写描述":description}</div>
                         </div>
                         <Form
                             layout="vertical"
@@ -93,12 +93,12 @@ function SEOEdit(prop:any){
                                 }} placeholder={prop.seo.title} />
                             </Form.Item>
                             <Form.Item label="描述" tooltip="建议详细描述商品特性或页面内容以吸引客户访问，不要堆砌关键词。">
-                                <Input.TextArea value={description} defaultValue={prop.seo.metaDescription == ""?prop.seo.content.replace(/<[^>]*>/g,""):prop.seo.metaDescription} style={{height:"200px"}} placeholder={prop.seo.content==""?"添加描述使页面在搜索引擎中获得更高的排名":prop.seo.content.replace(/<[^>]*>/g,"")} showCount maxLength={320} onChange={(e)=>{
+                                <Input.TextArea value={description} defaultValue={prop.seo.metaDescription} style={{height:"200px"}} placeholder={"添加描述使页面在搜索引擎中获得更高的排名"} showCount maxLength={320} onChange={(e)=>{
                                     setDescription(e.target.value)
                                 }} onBlur={(e)=>{
-                                    if(e.target.value == ""){
-                                        setDescription(prop.seo.content.replace(/<[^>]*>/g,""))
-                                    }
+                                    // if(e.target.value == ""){
+                                    //     setDescription(prop.seo.content.replace(/<[^>]*>/g,""))
+                                    // }
                                 }} />
                             </Form.Item>
                             <Form.Item label="链接" tooltip="描述性URL，例：product-item">

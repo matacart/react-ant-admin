@@ -7,7 +7,6 @@
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
 import newStore from "@/store/newStore";
 import SEOEdit from "../components/SEOEdit";
@@ -26,7 +25,7 @@ import SEOEdit from "../components/SEOEdit";
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{newStore.metaTitle==""?(newStore.title==""?"未填写标题":newStore.title):newStore.metaTitle}</div>
                 {/* 未填写标题 */}
-                <div className="webDesc">{newStore.metaDescription==""?(newStore.content==""?"未填写描述":newStore.content?.replace(/<[^>]*>/g,"")):newStore.metaDescription}</div>
+                <div className="webDesc">{newStore.metaDescription==""?"未填写描述":newStore.metaDescription}</div>
             </Card>
         </Scoped>
     )

@@ -53,6 +53,11 @@ export default {
   'menu.products': '商品',
   'menu.products.index': '商品列表',
   "menu.stores": '店餪',  
+
+  "menu.stores_list":"店鋪管理",
+  "menu.stores_bills":"賬單管理",
+  "menu.stores_data":"數據管理",
+
   'menu.stores.create': '創建店餪',
 //
 'menu.search.stores': "搜尋店餪名稱/子域名/主域名",  

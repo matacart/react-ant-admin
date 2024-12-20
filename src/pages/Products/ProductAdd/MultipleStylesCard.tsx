@@ -389,7 +389,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
                 open={false}
                 labelInValue
                 style={{ width: "100%", height: "100%" }}
-                placeholder={tags[index]?.length > 0 ? "" : "请输入款式值"}
+                placeholder={tags[index]?.length > 0 ? "" : "请输入款式值，多个用逗号分隔"}
                 value={tags[index]}
                 tagRender={(props)=>tagRender(props,index)}
                 // onChange={(value) => handleTagChange(value, index)}

@@ -160,6 +160,50 @@ export default function MultipleStylesEdit(props:any) {
     // 原始数据
     setInfo(tempInfo)
   }, []);
+
+  
+  // 方案修改补充
+  // 去除id相同的数据 保留第一个
+  function removeDuplicatesById(arr) {
+    const seenIds = new Set(); // 使用Set来存储已经见过的id
+    return arr.filter(obj => {
+      if (seenIds.has(obj.id)) {
+        return false; // 如果已经见过这个id，则排除该对象
+      } else {
+        seenIds.add(obj.id); // 否则，将该id添加到已见集合中
+        return true; // 保留该对象
+      }
+    });
+  }
+
+  useEffect(()=>{
+
+    // 提取 - value 和 id
+    let optionNameList:any = [];
+    let valuesNameList:any = [];
+    getProductStyleValueList().then(res=>{
+      res.data.forEach((item:any)=>{
+        if(item.status == "1"){
+          if(item.option_id!==undefined){
+            optionNameList.push({
+              id:item.option_id,
+              value:item.option_name
+            })
+          }
+          if(item.id !== undefined){
+            valuesNameList.push({
+              id:item.id,
+              value:item.option_values_name
+            })
+          }
+        }
+      })
+      console.log(removeDuplicatesById(optionNameList))
+      console.log(removeDuplicatesById(valuesNameList))
+    })
+   
+  },[])
+
   // useEffect(()=>{
   //   if(props.style.length == 0){
   //     setOnVariant(true)
@@ -413,7 +457,7 @@ export default function MultipleStylesEdit(props:any) {
               <Select
                 mode="tags"
                 allowClear
-                open={false}
+                // open={false}
                 labelInValue
                 style={{ width: "100%", height: "100%" }}
                 placeholder={tags[index]?.length > 0 ? "" : "请输入款式值"}

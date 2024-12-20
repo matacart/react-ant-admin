@@ -6,6 +6,16 @@ import oldStore from '@/store/oldStore';
 // 假设这是TinyMCE实例的正确类型，您可能需要从@tinymce/tinymce-react包中导入它  
 // 如果包没有直接导出类型，您可能需要自己定义或使用any作为临时解决方案  
 type EditorInstance = any; // 替换为实际的类型  
+
+
+// 过滤emoji
+function removeEmojis(str:string) {
+  // Regular expression to match emojis.
+  // Note: This regex is not exhaustive and may miss some edge cases.
+  const emojiRegex = /[\uD83C\uDC00-\uD83C\uDFFF]|[\uD83D\uDC00-\uD83D\uDFFF]|[\u2600-\u27FF]|[\uF000-\uF8FF]|\u200D|\u200E/ug;
+  // Replace matched emojis with an empty string.
+  return str.replace(emojiRegex, '');
+}
   
 export default function App(prop: any){  
   const editorRef = useRef<EditorInstance>(null); 

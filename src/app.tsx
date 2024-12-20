@@ -5,7 +5,7 @@ import { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 // import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/y2/api';
+import { getDomainList, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
@@ -92,7 +92,7 @@ export async function getInitialState(): Promise<{
     settings: defaultSettings as Partial<LayoutSettings>,
   };
 }
-// 请求商铺
+
 
 // 语言
 axios.post('/api/ApiAppstore/languages_select').then((res) => {
@@ -105,12 +105,12 @@ axios.post('/api/ApiAppstore/languages_select').then((res) => {
 import { FormattedMessage } from 'umi';  //多语言
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
-  // console.log(initialState)
+
   const stores = window.location.pathname.slice(0,8)
   return {
     //菜单栏
     actionsRender: () => [
-      stores == "stores"?<></>:<SelectDomain/>,
+      stores == "/stores/"?<></>:<SelectDomain/>,
       <Question key="doc" />,
       <SelectLang key="SelectLang" />,
       <Ping key="Ping" />,
@@ -166,24 +166,29 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       </Link>,
     ],
     // 修改菜单数据
-    menuDataRender: (menuDataItem) => {
-      return (stores == "/stores/" ? [
-        {
-          path: '/stores/list',
-          icon: <ShopOutlined />,
-          name: '店铺管理',
-        },
-        {
-          path: '/stores/bills',
-          icon: <ProfileOutlined />,
-          name: '账单管理',
-        },
-        {
-          path: '/stores/data',
-          icon: <DashboardOutlined />,
-          name: '数据管理',
-        }
-      ]:menuDataItem)
+    menuDataRender: (menuData) => {
+      if(stores == "/stores/"){
+        return menuData.filter(item => item.path == '/stores/create' || item.path == '/stores/list' || item.path == '/stores/bills' || item.path == '/stores/data' )
+      }else{
+        return menuData.filter(item => item.path !== '/stores/list' && item.path !== '/stores/bills' && item.path !== '/stores/data' )
+      }
+      // return (stores == "/stores/" ? [
+      //   {
+      //     path: '/stores/list',
+      //     icon: <ShopOutlined />,
+      //     name: '店铺管理',
+      //   },
+      //   {
+      //     path: '/stores/bills',
+      //     icon: <ProfileOutlined />,
+      //     name: '账单管理',
+      //   },
+      //   {
+      //     path: '/stores/data',
+      //     icon: <DashboardOutlined />,
+      //     name: '数据管理',
+      //   }
+      // ]:menuData)
     },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -296,7 +301,7 @@ export const request: RequestConfig = {
     (response: any) => response,
     // access_token 过期
     (res:any) =>{
-      // console.log(res);
+      // console.log(res.data.code == 1001);
       let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
       if(res.data.code==40013){
           getAccessToken().then(res => {
@@ -309,7 +314,12 @@ export const request: RequestConfig = {
           // localStorage.setItem('access_token',  res.access_token)
         }).catch((err) => { console.log(err) });
       }
-      if(res.code==1001)history.push(loginPath);
+      if(res.data.code==1001){
+        history.push(loginPath);
+        return res;
+      }
+      // if()
+      // res.code==
       else return res;
       // return res
     }

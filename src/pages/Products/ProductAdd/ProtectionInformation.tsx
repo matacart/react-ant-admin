@@ -1,18 +1,9 @@
-// import globalStore from "@/store/globalStore"
-// import newStore from "@/store/newStore"
-// import { Card } from "antd"
-// import { observer } from "mobx-react"
-// import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
 import newStore from "@/store/newStore"
 import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
-import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import ProductDefenseModal from "@/components/Modal/ProductDefenseModal"
 

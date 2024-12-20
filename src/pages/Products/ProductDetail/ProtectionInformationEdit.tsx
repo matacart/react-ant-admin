@@ -3,9 +3,6 @@
 // import { Card } from "antd"
 // import { observer } from "mobx-react"
 // import styled from "styled-components"
-
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
 import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"

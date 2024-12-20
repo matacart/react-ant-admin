@@ -1,4 +1,3 @@
-import newStore from "@/store/newStore";
 import { Col, Flex, Form, Input, Modal, Radio, Select, Switch } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -56,10 +55,10 @@ export default function ProductDefenseModal(props:any) {
                                             defaultValue={'0'}
                                             options={[
                                                 { value: '0', label: '默认' },
-                                                { value: '1', label: '一组' },
-                                                { value: '3', label: '二组' },
-                                                { value: '4', label: '三组' },
-                                                { value: '5', label: '四组' },
+                                                { value: '1', label: '一正' },
+                                                { value: '3', label: '二防' },
+                                                { value: '4', label: '三正' },
+                                                { value: '5', label: '四防' },
                                             ]}
                                         />
                                     </Form.Item>
@@ -76,7 +75,7 @@ export default function ProductDefenseModal(props:any) {
                                     </Form.Item>
                                 </Col>
                             </Flex>
-                            <Form.Item name="productId" label={<span className="label">投品ID</span>} 
+                            <Form.Item name="productId" label={<span className="label">投防ID</span>} 
                                 // validateStatus={amazonRule}
                                 // help={amazonRule == "success"?"":<span style={{ color: '#F86140' }}>请输入正确的链接格式</span>}
                             >
@@ -86,7 +85,7 @@ export default function ProductDefenseModal(props:any) {
                                     // setAmazonRule("error")
                                 }} placeholder="投放的产品id" />
                             </Form.Item>
-                            <Form.Item name="productUrl" label={<span className="label">投品URL</span>} 
+                            <Form.Item name="productUrl" label={<span className="label">投防URL</span>} 
                                 // validateStatus={amazonRule}
                                 // help={amazonRule == "success"?"":<span style={{ color: '#F86140' }}>请输入正确的链接格式</span>}
                             >

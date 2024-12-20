@@ -155,7 +155,7 @@ function AddNewProduct(){
         newStore.setContent(productInfo.copyProduct.content)
         newStore.setPrice(productInfo.copyProduct.price)
         newStore.setCostPrice(productInfo.copyProduct.costPrice)
-        newStore.setModel(productInfo.copyProduct.model)
+        newStore.setModel(productInfo.copyProduct.model+"-1")
         // 新增 11-19
         newStore.setHSCode(productInfo.copyProduct.HSCode)
         newStore.setISBN(productInfo.copyProduct.ISBN)
@@ -216,10 +216,10 @@ function AddNewProduct(){
                             <Relevance />
                             <Recommendation />
                             <SEOCard/>
-                            <ProtectionInformation />
                             <Winnow />
                             <PlatformHosting />
                             <Subnumber />
+                            <ProtectionInformation />
                             <ThirdPartyInfoCard/>
                             <ThemeTemplateCard/>
                         </div>

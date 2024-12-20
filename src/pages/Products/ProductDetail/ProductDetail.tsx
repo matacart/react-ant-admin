@@ -29,6 +29,7 @@ import { history } from '@umijs/max';
 import ProtectionInformationEdit from './ProtectionInformationEdit';
 import RecommendationEdit from './RecommendationEdit';
 import RelevanceEdit from './RelevanceEdit';
+import copy from 'copy-to-clipboard';
 // import { history } from '@umijs/max';
 
 
@@ -208,10 +209,15 @@ function ProductDetail() {
                                     </Button>
                                     {/* 分 */}
                                     <div style={{borderRight:"1px solid #d7dbe7",height:"36px",marginRight:'8px'}}></div>
-                                    <Button size="large" autoInsertSpace={false}>
+                                    <Button onClick={()=>{
+                                        copy(`https://`+cookie.load("domain").domainName+`/`+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`)
+                                        message.success('复制成功')
+                                    }} size="large" autoInsertSpace={false}>
                                         复制
                                     </Button>
-                                    <Button size="large" autoInsertSpace={false}>
+                                    <Button onClick={()=>{
+                                        window.open(`https://`+cookie.load("domain").domainName+`/`+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`)
+                                    }} size="large" autoInsertSpace={false}>
                                         预览
                                     </Button>
                                     <Select className='selector' defaultValue="分享" /> 
@@ -235,10 +241,10 @@ function ProductDetail() {
                                         <RelevanceEdit />
                                         <RecommendationEdit />
                                         <ProductSeoEdit/>
-                                        <ProtectionInformationEdit />
                                         <Winnow />
                                         <PlatformHosting />
                                         <Subnumber />
+                                        <ProtectionInformationEdit />
                                         <ThirdPartyInfoEdit/>
                                         <ThemeTemplateEdit/>
                                     </div>

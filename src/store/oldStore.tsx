@@ -289,7 +289,7 @@ import productStore from "./productStore";
   }
 
   // 防护
-  adWafStatus = "1";
+  adWafStatus = "0";
   adProductId = "";
   adProductUrl = "";
   adGroupId = "0";
@@ -362,6 +362,32 @@ import productStore from "./productStore";
   setVariants(value:any){
     this.variants = value
   }
+
+  // Third-party platform
+  thirdPartyPlatform = {
+    amazonUrl: '',
+    amazonSort: '0',
+    amazonStatus: '0',
+    eBayUrl: '',
+    eBaySort: '0',
+    eBayStatus: '0',
+    tmallUrl: '',
+    tmallSort: '0',
+    tmallStatus: '0',
+    aliExpressUrl:'',
+    aliExpressSort:'0',
+    aliExpressStatus:'0',
+    whatsappUrl: '',
+    whatsappSort: '0',
+    whatsappStatus: '0',
+    // 状态
+    status:"0"
+  }
+
+  setThirdPartyPlatform(value: any) {
+    this.thirdPartyPlatform = value;
+  }
+
 
 
   // 更新产品
@@ -444,6 +470,60 @@ import productStore from "./productStore";
     this.setAttributes(data.attributes==null?[]:data.attributes)
     this.setVariants(data.variants==null?[]:data.variants)
     productStore.setAttributes(data.attributes==null?[]:data.attributes)
+    this.setThirdPartyPlatform({
+      amazonUrl: data.diversion.url_amazon,
+      amazonSort: data.diversion.sort_amazon,
+      amazonStatus: data.diversion.status_amazon,
+      eBayUrl: data.diversion.url_ebay,
+      eBaySort: data.diversion.sort_ebay,
+      eBayStatus: data.diversion.status_ebay,
+      tmallUrl: data.diversion.url_tmall,
+      tmallSort: data.diversion.sort_tmall,
+      tmallStatus: data.diversion.status_tmall,
+      aliExpressUrl:data.diversion.url_aliexpress,
+      aliExpressSort:data.diversion.sort_aliexpress,
+      aliExpressStatus:data.diversion.status_aliexpress,
+      whatsappUrl: data.diversion.url_whatsapp,
+      whatsappSort: data.diversion.sort_whatsapp,
+      whatsappStatus: data.diversion.status_whatsapp,
+      status:data.diversion.status
+    })
+    // this.setThirdPartyPlatform({
+    //   data:[
+    //     {
+    //       title: "Amazon",
+    //       amazonUrl: data.diversion.url_amazon,
+    //       amazonSort: data.diversion.sort_amazon,
+    //       amazonStatus: data.status_amazon,
+    //     },
+    //     {
+    //       title: "eBay",
+    //      eBayUrl: data.diversion.url_ebay,
+    //       eBaySort: data.diversion.sort_ebay,
+    //       eBayStatus: data.diversion.status_ebay,
+    //     },
+    //     {
+    //       title: "Tmall",
+    //       tmallUrl: data.diversion.url_tmall,
+    //       tmallSort: data.diversion.sort_tmall,
+    //       tmallStatus: data.diversion.status_tmall,
+    //     },
+    //     {
+    //       title: "AliExpress",
+    //       aliExpressUrl:data.diversion.url_aliexpress,
+    //       aliExpressSort:data.diversion.status_aliexpress,
+    //       aliExpressStatus:data.diversion.sort_aliexpress,
+    //     },
+    //     {
+    //       title: "Whatsapp",
+    //       whatsappUrl: data.diversion.url_whatsapp,
+    //       whatsappSort: data.diversion.sort_whatsapp,
+    //       whatsappStatus: data.diversion.status_whatsapp,
+    //     }
+    //   ],
+    //   status:data.diversion.status
+    // })
+    // 状态
 
     // 旧属性
     // this.additional_image = data.additional_image

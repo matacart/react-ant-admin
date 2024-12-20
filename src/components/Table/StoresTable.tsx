@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
+import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tag, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import { CopyOutlined, DeleteOutlined, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
+import { getDomainList } from '@/services/y2/api';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -37,8 +38,9 @@ function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
       // 由于URL对象的hostname属性是只读的，我们需要创建一个新的URL对象
       // 这里通过重新设置协议、主机名、端口（如果有）、以及路径名来构建新URL
       const newUrlObj = new URL(urlObj.protocol + '//' + newHostname +
-        (urlObj.port ? ':' + urlObj.port : '') + urlObj.pathname + urlObj.search + urlObj.hash);
-      
+        (urlObj.port ? ':' + urlObj.port : '') + '/home' + urlObj.search + urlObj.hash);
+        // urlObj.pathname
+      // console.log(urlObj.pathname)
       // 返回新的URL字符串
       return newUrlObj.toString();
     }
@@ -75,8 +77,15 @@ function StoresTable() {
   const columns: TableColumnsType<DataType> = [
     {
         title: '店铺名称',
+        render: (_, record) => (
+          <div>
+            <img style={{width:"38px",marginLeft:"8px"}} src='/img/storeLogo.png' className="storeLogo" />
+            <span style={{marginLeft:"8px"}}>{record.secondDomain}</span>
+          </div>
+        ),
+
         dataIndex: 'secondDomain',
-        width: 120,
+        width: 160,
       },
     {
       title: 'handle',
@@ -86,7 +95,7 @@ function StoresTable() {
     {
       title: '域名',
       dataIndex: 'domainName',
-      width: 120,
+      width: 200,
     },
   //   <Tag className="tag tag-success" style={{
   //     display: 'flex',
@@ -112,14 +121,27 @@ function StoresTable() {
           </span>
         </Tooltip>
       </div>,
-      dataIndex: 'status',
-      // render: (_, record) => (
-      //   <div className="item between">
-      //     <span>{(record?.status == 1) ? intl.formatMessage({ id: "menu.stores.running" }) : intl.formatMessage({ id: "menu.stores.stop" })}</span>
-      //     <Switch defaultChecked={record?.status == 1 ? true : false} onChange={(checked) => {
-      //       // console.log(checked);          }}/>
-      //   </div>
-      // )
+      // dataIndex: 'status',
+      render: (_, record) => (
+        <div className="item between">
+          <TagStyle>
+            <Tag className="tag tag-success" style={{
+              display: 'flex',
+              alignContent: 'center'
+            }}>
+                <span className="tag-right">
+                    <span className={"tag-dot " + ((record?.status == 1) ? 'tag-dot-success ' : 'tag-dot-error')} />
+                </span>
+                {(record?.status == 1) ?"营业中": "已停用"}
+            </Tag>
+          </TagStyle>
+          {/* <span>{(record?.status == 1) ? intl.formatMessage({ id: "menu.stores.running" }) : intl.formatMessage({ id: "menu.stores.stop" })}</span>
+          <Switch defaultChecked={record?.status == 1 ? true : false}
+          onChange={(checked) => {
+            console.log(checked)
+          }}/> */}
+        </div>
+      ),
       width: 120,
     },
     {
@@ -236,8 +258,27 @@ function StoresTable() {
   };
 
   useEffect(()=>{
-    console.log(JSON.parse(sessionStorage["domain"]))
-    setData(JSON.parse(sessionStorage["domain"]))
+    // 获取店铺数据
+    setLoading(true)
+    getDomainList().then(res=>{
+      if(res.code == 0){
+        let domainList:any = [];
+        res?.data?.forEach((item: any, index: any) => {
+          domainList.push({
+              id: item.id,
+              domainName: item.domain_name,
+              secondDomain: item.second_domain,
+              status: item.status,
+          })
+        })
+        sessionStorage["domain"] = JSON.stringify(domainList)
+        setData(domainList)
+        setLoading(false)
+      }
+    })
+    // 刷新
+    // console.log(JSON.parse(sessionStorage["domain"]))
+    
     // getCategoryList().then(res=>{
     //     console.log(res.data)
     //     setData([...res.data])
@@ -255,7 +296,7 @@ function StoresTable() {
         dataSource={data}
         pagination={tableParams.pagination}
         loading={loading}
-        // onChange={handleTableChange}
+        onChange={handleTableChange}
         scroll={{ x: 1300 }}
         rowKey={(record) => record.id}
         onRow={(record) => ({
@@ -301,6 +342,40 @@ const ButtonIcon = styled.div`
     }
 }
 `
+const TagStyle = styled.div`
+  width: 72px;
+  .tag{
+    border-radius: 9999px;
+    font-weight:400;
+    .tag-right{
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center ;
+        .tag-dot{
+            display:inline-block;
+            border-radius: 50%;
+            margin-right: 5px;
+            height: 4px;
+            width: 4px;
+        }
+        .tag-dot-error{
+            background-color: #f86140;
+        }
+        .tag-dot-success{
+            background-color: #35c08e;
+        }
+    }
+  }
+  .tag-success{
+    background-color: #d6fae7;
+    border: 1px solid rgba(53,192,142,.2);
+  }
+  .tag-error{
+    background-color: #ffebe7;
+    border: 1px solid rgba(248,97,64,.2);
+  }
+`
+
 const Content = styled.div`
   display:flex;
   flex-direction: column;

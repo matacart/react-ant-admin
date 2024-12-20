@@ -1,42 +1,31 @@
+import ProductThirdTripartite from "@/components/Modal/ProductThirdTripartite";
+import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Tooltip } from "antd";
+import { Card, Switch, Tooltip } from "antd";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 
-export default function ThirdPartyInfoEdit() {
+function ThirdPartyInfoEdit() {
 
     return (
         <Scoped>
-            <Card>
-                <div className="title">
-                    绑定第三方商品
-                    <Tooltip title="客户可以从商品详情页访问已绑定的第三方商品链接">
-                        <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                            <QuestionCircleOutlined />
-                        </span>
-                    </Tooltip>
+            <Card className="gap">
+                <div className="header">
+                    <div className="title">
+                        绑定第三方商品
+                        <Tooltip title="客户可以从商品详情页访问已绑定的第三方商品链接">
+                            <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                                <QuestionCircleOutlined />
+                            </span>
+                        </Tooltip>
+                    </div>
+                    <ProductThirdTripartite product={oldStore} />
                 </div>
                 <div className="content">
-                    <div>
-                        <div className="between">
-                            <div className="item-name">亚马逊</div>
-                            <a>编辑</a>
-                        </div>
-                        <div className="twoLineUrl">未绑定</div>
-                    </div>
-                    <div>
-                        <div className="between">
-                            <div className="item-name">乐天</div>
-                            <a>编辑</a>
-                        </div>
-                        <div className="twoLineUrl">未绑定</div>
-                    </div>
-                    <div>
-                        <div className="between">
-                            <div className="item-name">雅虎</div>
-                            <a>编辑</a>
-                        </div>
-                        <div className="twoLineUrl">未绑定</div>
+                    <div className="item between">
+                        <span>绑定状态</span>
+                        <Switch onChange={(e) => {oldStore.setThirdPartyPlatform({...oldStore.thirdPartyPlatform,status:e?"1":"0"})}} checked={oldStore.thirdPartyPlatform.status == '1'?true:false} />
                     </div>
                 </div>
             </Card>
@@ -44,25 +33,36 @@ export default function ThirdPartyInfoEdit() {
     )
 }
 
+export default observer(ThirdPartyInfoEdit)
+
 const Scoped = styled.div`
+
+.gap{
+    display: flex;
+    flex-direction: column;
+}
+.header{
+    display:flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    .title{
+        color: #000;
+        font-size: 16px;
+        font-weight:600;
+    }
+}
 .between{
     display:flex;
     justify-content: space-between;
-}
-.title{
-    color: #000;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 15px
 }
 .content{
     display:flex;
     flex-direction: column;
     gap: 15px;
 }
-a{
+/* a{
     font-weight: 400;
-}
+} */
 .item-name{
     color: #242833;
     margin-bottom: 8px;
@@ -72,4 +72,5 @@ a{
 }
 
 `
+
 

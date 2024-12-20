@@ -244,7 +244,7 @@ export default function ProductSettingsCard() {
         setProductStatus(newStore.onPutProduct);
         // 平台类型
         getPlatformCategorySelect(newStore.language).then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             let tempList = Array.from(res.data,(obj:any)=>{
                 return {
                     value: obj.id,

@@ -61,9 +61,6 @@ export default  [
         path: 'manages',  
         name: 'manages',  
         component: './Orders/OrderItem/index', // 假设您的 Orders/index 组件位于 src/pages/Orders/OrderItem/index.jsx 或类似的路径  
-      
-      
-    
       },  
       {  
         path: ':orderId',  
@@ -216,35 +213,51 @@ export default  [
       }
     ]
   },
-
-  // stores
+  // 店铺
   {
-    path: '/stores',
-    icon: 'crown',
-    // component: './Stores/Index',
-    routes:[
-      {
-        path: 'create',
-        name: 'create',
-        component: './Stores/Create',
-      },
-      {
-        path: 'list',
-        name: 'list',
-        component: './Stores/List',
-      },
-      {
-        path: 'bills',
-        name: 'bills',
-        component: './Stores/List',
-      },
-      {
-        path: 'data',
-        name: 'data',
-        component: './Stores/List',
-      },
-    ]
+    path: '/stores/create',
+    menuRender: false,
+    component: './Stores/Create',
   },
+  {
+    path: '/stores/list',
+    name: 'stores_list',
+    icon: 'ShopOutlined',
+    component: './Stores/List',
+  },
+  {
+    path: '/stores/bills',
+    name: 'stores_bills',
+    icon: 'ProfileOutlined',
+    component: './Stores/Bills',
+  },
+  {
+    path: '/stores/data',
+    name: 'stores_data',
+    icon: 'DashboardOutlined',
+    component: './Stores/Data',
+  },
+  // stores
+  // {
+  //   path: '/stores',
+  //   icon: 'crown',
+  //   name: 'stores',
+  //   // component: './Stores/Index',
+  //   routes:[
+      
+  //     {
+  //       path: 'list',
+  //       name: 'list',
+  //       component: './Stores/List',
+  //     },
+      
+  //     {
+  //       path: 'subscriptions/order/paid/pre',
+  //       name: 'subscriptions/order/paid/pre',
+  //       component: './Stores/List',
+  //     },
+  //   ]
+  // },
   {
     path: '/stores-subscriptions/list/paid',
     menuRender: false,

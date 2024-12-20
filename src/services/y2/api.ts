@@ -275,12 +275,32 @@ export async function addProduct() {
       // 图片
       "additional_image": JSON.stringify(newStore.selectedImgList),
       "languages_id": newStore.language,
-
       // 联盟
       "alliance_status": newStore.allianceStatus,
       // 直营
       "hosted_status": newStore.hostedStatus,
-      "attributes":JSON.stringify(Array.from(newStore.attributes))
+      "attributes":JSON.stringify(Array.from(newStore.attributes)),
+      // 第三方链接
+      "diversion":JSON.stringify([
+        {
+          url_amazon:newStore.thirdPartyPlatform.amazonUrl,
+          status_amazon:newStore.thirdPartyPlatform.amazonStatus,
+          sort_amazon:newStore.thirdPartyPlatform.amazonSort,
+          url_ebay:newStore.thirdPartyPlatform.eBayUrl,
+          status_ebay:newStore.thirdPartyPlatform.eBayStatus,
+          sort_ebay:newStore.thirdPartyPlatform.eBaySort,
+          url_tmall:newStore.thirdPartyPlatform.tmallUrl,
+          status_tmall:newStore.thirdPartyPlatform.tmallStatus,
+          sort_tmall:newStore.thirdPartyPlatform.tmallSort,
+          url_aliexpress:newStore.thirdPartyPlatform.aliExpressUrl,
+          status_aliexpress:newStore.thirdPartyPlatform.aliExpressStatus,
+          sort_aliexpress:newStore.thirdPartyPlatform.aliExpressSort,
+          url_whatsapp:newStore.thirdPartyPlatform.whatsappUrl,
+          status_whatsapp:newStore.thirdPartyPlatform.whatsappStatus,
+          sort_whatsapp:newStore.thirdPartyPlatform.whatsappSort,
+          status:newStore.thirdPartyPlatform.status
+        }
+      ])
       // "languages_name": "Chinese"
       // "model":newStore.model,
       // "sku": newStore.SKU,
@@ -451,7 +471,28 @@ export async function submitRenewalProduct(res:any){
       // 
       // "attributes":[{option_name:"111",option_values_name:"123"}]
       "attributes":JSON.stringify(Array.from(oldStore.attributes)),
-      "variants":JSON.stringify(oldStore.variants)
+      "variants":JSON.stringify(oldStore.variants),
+      // 第三方链接
+      "diversion":JSON.stringify([
+        {
+          url_amazon:oldStore.thirdPartyPlatform.amazonUrl,
+          status_amazon:oldStore.thirdPartyPlatform.amazonStatus,
+          sort_amazon:oldStore.thirdPartyPlatform.amazonSort,
+          url_ebay:oldStore.thirdPartyPlatform.eBayUrl,
+          status_ebay:oldStore.thirdPartyPlatform.eBayStatus,
+          sort_ebay:oldStore.thirdPartyPlatform.eBaySort,
+          url_tmall:oldStore.thirdPartyPlatform.tmallUrl,
+          status_tmall:oldStore.thirdPartyPlatform.tmallStatus,
+          sort_tmall:oldStore.thirdPartyPlatform.tmallSort,
+          url_aliexpress:oldStore.thirdPartyPlatform.aliExpressUrl,
+          status_aliexpress:oldStore.thirdPartyPlatform.aliExpressStatus,
+          sort_aliexpress:oldStore.thirdPartyPlatform.aliExpressSort,
+          url_whatsapp:oldStore.thirdPartyPlatform.whatsappUrl,
+          status_whatsapp:oldStore.thirdPartyPlatform.whatsappStatus,
+          sort_whatsapp:oldStore.thirdPartyPlatform.whatsappSort,
+          status:oldStore.thirdPartyPlatform.status
+        }
+      ])
       // "status": oldStore.onPutProduct ? "1" : "0"
     }
   })

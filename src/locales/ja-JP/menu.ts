@@ -50,7 +50,10 @@ export default {
   'menu.editor.mind': 'マインドエディター',
   'menu.editor.koni': 'コニエディター',
   'menu.products': '商品',  
-"menu.stores": '店舗',  
+  "menu.stores": '店舗',
+  "menu.stores_list":"てんぽかんり",
+  "menu.stores_bills":"請求書管理",
+  "menu.stores_data":"データ管理",
 'menu.stores.create': '店舗を作成',
 //
 'menu.search.stores': "店舗名/サブドメイン/メインドメインを検索",  

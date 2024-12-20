@@ -50,8 +50,11 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
   
-"menu.stores": 'Stores',  
-'menu.stores.create': 'Create Store',
+  "menu.stores": 'Stores',
+  "menu.stores_list":"Store management",
+  "menu.stores_bills":"Bill management",
+  "menu.stores_data":"Data management",
+  'menu.stores.create': 'Create Store',
 //
 'menu.search.stores': "Search Store Name/Subdomain/Main Domain",  
 'menu.stores.running': "Open",  

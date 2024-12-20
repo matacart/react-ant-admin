@@ -1,15 +1,12 @@
 import { getDomainList } from "@/services/y2/api";
 import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Divider, Input, message, Popover, Select, Spin, Tag } from "antd";
-import Search from "antd/lib/input/Search";
-import axios from "axios";
+import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { result } from 'lodash';
 import { useIntl } from '@umijs/max';
-import globalStore from "@/store/globalStore";
 import cookie from 'react-cookies';
-
+import { history } from 'umi';
 
 // 定义一个函数来高亮搜索词  
 function highlightSearchTerm(text: string, term: string) {
@@ -94,15 +91,10 @@ export default function SelectDomain() {
 
     
     const changeDomain = (item: any) => {
-        // if(){
         if(!window.location.hostname.startsWith("localhost")){
             const newUrl = replaceSubdomain(window.location.href,item.secondDomain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
-            // const newUrl= cookie.load("domain").secondDomain+window.location.hostname.slice(window.location.hostname.indexOf("."))
             window.open(newUrl)
         }
-        
-        // cookie.save('domain', item, { path: '/' });
-        // setDefaultDomain(item.id)
         setIsActive(false);
     }
     useEffect(() => {
@@ -160,10 +152,8 @@ export default function SelectDomain() {
                 }else{
                     cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
                     setDefaultDomain(flag[0].id);
+                    console.log(flag[0].id)
                 }
-                // console.log()
-               
-                
             }).catch((error) => {
                 message.error('未获取到店铺列表，请检查网络')
             })
@@ -250,20 +240,16 @@ export default function SelectDomain() {
                     id:'menu.search.none'
                 })} </div>
             }
-            
             </div>}
-
-
-
-
             <div className="popover_footer">
-                <Button type="primary" size='large' block>
+                <Button onClick={()=>{
+                    history.push('/stores/list')
+                }} type="primary" size='large' block>
                 {intl.formatMessage({
                     id:'menu.stores.manage'
                 })} 
                 </Button>
             </div>
-
         </ContentWrap>
     )
 
