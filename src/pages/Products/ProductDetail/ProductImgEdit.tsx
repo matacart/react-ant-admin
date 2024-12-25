@@ -414,6 +414,7 @@ import styled from 'styled-components';
 import { values } from "lodash";
 import axios from "axios";
 import oldStore from "@/store/oldStore";
+import { observer } from "mobx-react-lite";
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -426,7 +427,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function ProductImgCard() {
+function ProductImgEdit() {
 
   // youtubeUrl
   const onFinish = (values: any) => {
@@ -542,7 +543,7 @@ export default function ProductImgCard() {
     })
     // console.log(tempList)
     setFileList(tempList as any)
-  }, [])
+  }, [oldStore.productId])
   
   // 
   const handlePreview = async (file: UploadFile) => {
@@ -774,6 +775,7 @@ export default function ProductImgCard() {
   )
 }
 
+export default observer(ProductImgEdit)
 
 const UploadTipDesc = styled.div`
   margin-top: 12px;

@@ -7,6 +7,14 @@ import { observer } from 'mobx-react-lite';
 import e from 'express';
 import { set } from 'lodash';
 // import _ from 'lodash';
+
+
+// 默认数据
+// 
+// setStyles([...oldData,...filteredArray])
+// setCopyStyles([...oldData,...filteredArray])
+// oldStore.setVariants([...oldData,...filteredArray])
+
 interface StyleItem {
   keyId: number;
   imageUrl: string;
@@ -28,9 +36,12 @@ interface StyleItem {
   metaFields: string;
 }
 
-// 获取
+
 
 function ProductStyleListEdit (props:any){
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const [styles, setStyles] = useState<StyleItem[]>([]);
   // 
   const [copyStyles, setCopyStyles] = useState<StyleItem[]>([]);
@@ -38,32 +49,52 @@ function ProductStyleListEdit (props:any){
   const [modal, contextHolder] = Modal.useModal();
   function generateSku(attrValue){
     // 开始构建sku 
+    // let attrValue: any[] = []
+    // skuAttribute.map((item) => attrValue.push(item.option_values_name)) // 获取所有属性名称 => [['S','M'], ['白','黑']]
     let skus: any[] = []
     // 笛卡尔积算法（注意，我们的reduce没有指定第二个参数，则第一次循环中，col是数组第一位，set是数组第二位）
     skus = attrValue.reduce((col: any[], set) => {
       let res: any[] = []
-        // 对于每个属性值集合，依次与当前已有的结果集做笛卡尔积
-        col.forEach((c) => {
-          set.forEach((s) => {
-            // 将两个属性值合并为一个字符串，并存入结果集中
-            let t = c + ',' + s
-            // 寻找销售属性指定的图片
-            res.push(t)
+      // 对于每个属性值集合，依次与当前已有的结果集做笛卡尔积
+      col.forEach((c) => {
+        set.forEach((s) => {
+          // 将两个属性值合并为一个字符串，并存入结果集中
+          let t = c.option_values_name + ',' + s.option_values_name
+          let ids = c.option_values_id + ',' + s.option_values_id
+          // let t = c.option_values_name + ',' + s.option_values_name
+          // 寻找销售属性指定的图片
+          res.push({
+            option_values_id:ids,
+            option_values_name:t
           })
         })
-        // 将笛卡尔积后的结果集返回，作为下一轮的结果集
-        return res
       })
-        // 将结果存储起来
-      return skus
+      // 将笛卡尔积后的结果集返回，作为下一轮的结果集
+      return res
+    })
+    if(attrValue.length == 1){
+      let t = [];
+      attrValue[0].forEach(element => {
+        t.push({
+          option_values_name:element.option_values_name,
+          option_values_id:element.option_values_id,
+        })
+      });
+      skus = t
+    }
+    // 将结果存储起来
+    return skus
   }
+
   useEffect(() => {
-    console.log('style', props.style);
+    console.log('props',props.style)
     const generateStyles = async (sku:any) => {
-      const newStyles = sku.map((tag, index) => ({
+      setIsLoading(true);
+      console.log('sku',sku)
+      const newStyles = sku.map((item, index) => ({
           image: '',
-          option_values_ids: "",
-          option_values_names:tag,
+          option_values_ids:item.option_values_id,
+          option_values_names:item.option_values_name,
           price:"",
           status:"1",
           sort:"1",
@@ -81,23 +112,103 @@ function ProductStyleListEdit (props:any){
           barcode: '',
           metaFields: '',
       }));
-      // 默认数据
-      let oldData = oldStore.variants.filter(item => (item.status !== "9" && item?.id))
-      // console.log('oldData', oldData)
-      const valueSet = new Set(oldData.map(item => item.option_values_names));
-      const filteredArray = newStyles.filter(item => !valueSet.has(item.option_values_names))
-      setStyles([...oldData,...filteredArray])
-      console.log('oldData', oldData)
-      setCopyStyles([...oldData,...filteredArray])
-      oldStore.setVariants([...oldData,...filteredArray])
+      console.log('newStyles',newStyles)
+      // setStyles(newStyles)
+      // oldStore.variants
+      // setStyles([...newStyles,...oldStore.variants])
+      let temp = [...newStyles]
+      console.log('oldStore.variants',oldStore.variants)
+      if(oldStore.variants.length<newStyles.length){
+        // 增加
+        temp.forEach((res,index) => {
+          oldStore.variants.forEach(element => {
+            if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
+              temp[index] = element
+            }
+          })
+        })
+      }else{
+        const commonElements = oldStore.variants.filter(item1 => 
+          temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
+        )
+        const commonElementsRemove = oldStore.variants.filter(item1 => 
+          !temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
+        )
+        console.log('commonElements',commonElements)
+        console.log('commonElementsRemove',commonElementsRemove)
+        temp.forEach((res,index) => {
+          commonElements.forEach(element => {
+            if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
+              temp[index] = element
+            }
+          })
+        })
+        commonElementsRemove.forEach(res=>{
+          if(res.id!==undefined){
+            oldStore.removeVariantData.push({...res,status:"9"})
+          }
+        })
+      }
+      // else if(oldStore.variants.length == newStyles.length){
+      //   console.log('oldStore.variants',oldStore.variants)
+      //   const commonElements = oldStore.variants.filter(item1 => 
+      //     temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
+      //   )
+      //   console.log('commonElements',commonElements)
+      //   oldStore.variants.forEach(element => {
+
+      //     // if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
+      //     //   temp[index] = element
+      //     // }
+      //     if(element.id!==undefined){
+      //       oldStore.removeVariantData.push({...element,status:"9"})
+      //     }
+      //   })
+      // }
+      setStyles(temp)
+      console.log('temp',temp)
+      oldStore.setVariants(temp)
+      setIsLoading(false);
+      // temp.forEach((res,index) => {
+      //   oldStore.variants.forEach(element => {
+      //     if(element.status !== "9" && element.option_values_names == res.option_values_names){
+      //       temp[index] = element
+      //     }else{
+      //       // 状态
+      //       // removeData()
+      //       temp.push({...element,status:"9"})
+      //     }
+      //   })
+      // });
+      // console.log('temp',temp)
+      // setStyles(temp)
+      
     };
     if(props.style.length>0) {
       let sku = generateSku(props.style)
       generateStyles(sku)
     }else{
-      generateStyles([])
+      // generateStyles([])
+      setStyles([])
+      // let reVariants = []
+      // oldStore.variants.forEach(item=>{
+      //   if(item.id!==undefined){
+      //     reVariants.push({...item,status:"9"})
+      //   }
+      // })
+      // oldStore.setVariants([])
+      // oldStore.removeVariantData.push(...reVariants)
+      
     }
   }, [props.style]);
+
+  // 默认数据
+  useEffect(()=>{
+    setStyles(oldStore.variants)
+    setCopyStyles(oldStore.variants)
+  },[oldStore.productId])
+
+
   // 添加处理 SKU 变化的函数
   const handleSkuChange = (id: number, newValue: string) => {
     const updatedStyles = styles.map((style) => {
@@ -112,7 +223,6 @@ function ProductStyleListEdit (props:any){
   const [fileList, setFileList] = useState<any[]>([]);
   const [previewImage, setPreviewImage] = useState<string>('');
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-
   const columns = [
     {
       title: '图片',
@@ -145,7 +255,6 @@ function ProductStyleListEdit (props:any){
     {
       title: '款式',
       dataIndex: 'option_values_names',
-      fixed: 'left', // 固定左侧
       width: 80, // 设置宽度以适应文字
     },
     {
@@ -465,7 +574,6 @@ const handleRemove = (item:any,index:number) => {
     console.log(newCopyStyles.filter(res=>item.option_values_names !== res.option_values_names))
   }
   // const updatedStyles = styles.filter((style) => style.id !== id);
-
   // setStyles(updatedStyles);
   // deleteProductStyle(id).then(res=>{
   //   if(res.code == 0){
@@ -712,6 +820,7 @@ const handleWeightUnitChange = (id: number, unit: string) => {
         </div>
       </Checkbox.Group>
       <Table
+        loading={isLoading}
         rowKey={(record,index)=>index}
         columns={columns}
         dataSource={styles}

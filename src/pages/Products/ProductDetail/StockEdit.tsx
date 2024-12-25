@@ -3,6 +3,7 @@ import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
 import e from "express";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components"
 
 
@@ -13,7 +14,7 @@ const onChange: InputProps['onChange'] = (value) => {
 };
 
 
-export default function StockEdit() {
+function StockEdit(){
     return (
         <Scoped>
             <Card title='库存' >
@@ -21,7 +22,7 @@ export default function StockEdit() {
                     <Row>
                         <Col span={11}>
                             <Form.Item label="模型"
-                                name='model' required initialValue={oldStore.model}>
+                                required initialValue={oldStore.model}>
                                 <Input
                                     onChange={(e)=>{
                                         oldStore.setModel(e.target.value)
@@ -31,9 +32,9 @@ export default function StockEdit() {
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                        <Form.Item label="条码(ISBN、UPC、GTIN等)"
-                                name='ISBN'>
+                        <Form.Item label="条码(ISBN、UPC、GTIN等)">
                                 <Input
+                                    value={oldStore.ISBN}
                                     defaultValue={oldStore.ISBN}
                                     onChange={(e)=>{
                                         oldStore.setISBN(e.target.value)
@@ -45,19 +46,19 @@ export default function StockEdit() {
                     <Row>
                         <Col span={11}>
                             <Form.Item
-                            required
-                            label="SKU"
-                            initialValue={oldStore.SKU}
-                                name='SKU'>
+                                required
+                                label="SKU"
+                            >
                                 <Input
+                                    value={oldStore.SKU}
                                     onChange={(e) => oldStore.setSKU(e.target.value)}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                            <Form.Item initialValue={oldStore.inventory} label="库存数量"
-                                name='quantity'>
+                            <Form.Item initialValue={oldStore.inventory} label="库存数量">
                                 <Input
+                                    value={oldStore.inventory}
                                     onChange={(e=>{
                                         oldStore.setInventory(Number(e.target.value))
                                     })}
@@ -67,21 +68,19 @@ export default function StockEdit() {
                     </Row>
                     <Form.Item
                         valuePropName="checked"
-                        name="enableInventoryTracking"
                         style={{
                             marginBottom: 0
                         }}
-                        initialValue={oldStore.inventoryTracking}
                         >
-                        <Checkbox onChange={(e)=>{
+                        <Checkbox checked={oldStore.inventoryTracking} onChange={(e)=>{
                             oldStore.setInventoryTracking(e.target.checked)
                         }}>开启库存追踪</Checkbox>
                     </Form.Item>
                     <Form.Item
                         valuePropName="checked"
-                        initialValue={oldStore.continueSell}
-                        name="continueSelling">
+                    >
                         <Checkbox
+                        checked={oldStore.continueSell}
                         onChange={(e)=>{
                             oldStore.setContinueSell(e.target.checked)
                         }}
@@ -99,6 +98,9 @@ export default function StockEdit() {
         </Scoped>
     )
 }
+
+
+export default observer(StockEdit)
 
 
 const Scoped = styled.div`

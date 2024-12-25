@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined, ExclamationCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Divider,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
+import { ArrowLeftOutlined, ExclamationCircleOutlined, FacebookFilled, LeftOutlined, RightOutlined, YahooFilled } from '@ant-design/icons';
+import { Button, Divider,Dropdown,MenuProps,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
 // 引入
 import { useEffect, useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
@@ -58,7 +58,6 @@ function ProductDetail() {
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
 
     const navigate = useNavigate(); // 使用 useNavigate 钩子
-
     // const product:any = useLocation().state
     const params = new URL(location.href).searchParams
     let productId = params.get("productId")
@@ -66,7 +65,6 @@ function ProductDetail() {
     // 提示
     const [modal, contextHolder] = Modal.useModal();
     const [style, setStyle] = useState([]);
-
     // 商品存档
     const [productStatus,setProductStatus] = useState("");
 
@@ -77,9 +75,79 @@ function ProductDetail() {
 
     const [language,setLanguage] = useState("");
 
+    // 分享链接
+    const items: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href={"https://www.facebook.com/share_channel/?type=reshare&link=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%3Futm_source%3DFacebook%26utm_medium%3Dproduct-links%26utm_content%3Dweb&app_id=966242223397117&source_surface=external_reshare&display&hashtag"}>
+                    <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareFacebook.97f9a.svg"/><span style={{marginLeft:"8px"}}>Facebook</span></div>
+                </a>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href={"https://twitter.com/share?text="+oldStore.title.trim()+"%26url%3Dhttps%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DTwitter%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                    <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareTwitter.f35cb.svg"/><span style={{marginLeft:"8px"}}>Twitter</span></div>
+                </a>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href={"https://social-plugins.line.me/lineit/share?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DLine%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                    <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLine.8cbc7.svg"/><span style={{marginLeft:"8px"}}>Line</span></div>
+                </a>
+            ),
+        },
+        {
+            key: '4',
+            label: (
+              <a target="_blank" rel="noopener noreferrer" href={"https://api.whatsapp.com/send/?text=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DWhatsapp%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareWhatsapp.60743.svg"/><span style={{marginLeft:"8px"}}>Whatsapp</span></div>
+              </a>
+            ),
+        },
+        {
+            key: '5',
+            label: (
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DTumblr%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareTumblr.b0ed6.svg"/><span style={{marginLeft:"8px"}}>Tumblr</span></div>
+              </a>
+            ),
+        },
+        {
+            key: '6',
+            label: (
+                <a target="_blank" rel="noopener noreferrer" href={"https://pinterest.com/pin/create/button/?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"&media=undefined&description="+oldStore.title+"&utm_source%3DPinterest%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                    <div style={{display:"flex",alignItems:"center"}}><img src="/icons/SharePinterest.e96e2.svg"/><span style={{marginLeft:"8px"}}>Pinterest</span></div>
+                </a>
+            ),
+        },
+        {
+            key: '7',
+            label: (
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.reddit.com/submit?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%3Futm_source%3DReddit%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareReddit.d1395.svg"/><span style={{marginLeft:"8px"}}>Reddit</span></div>
+              </a>
+            ),
+        },
+        {
+            key: '8',
+            label: (
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLinkedin.4a174.svg"/><span style={{marginLeft:"8px"}}>Linkedin</span></div>
+              </a>
+            ),
+        },
+    ];
+
+    // 变体---控制变体组合
+    const [onVariant,setOnVariant] = useState(false);
+
     // 删除
     function productDel(id:any){
-        console.log(id)
         return deleteProduct(id).then(res=>{
             if(res.code==0)message.success('删除成功');
             else message.error('noooo');
@@ -146,6 +214,7 @@ function ProductDetail() {
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
         fetchProductDetail();
+
         // console.log(product)
     },[productId]);
     // 实现 onSecondInputChange 函数
@@ -154,7 +223,7 @@ function ProductDetail() {
     //     console.log(value)
     //     // 需要有多款式的时候才显示
     // };
-    
+
     // 更新商品状态 -- 存档
     const updateData = (status:string)=>{
         setProductStatus(status)
@@ -220,7 +289,9 @@ function ProductDetail() {
                                     }} size="large" autoInsertSpace={false}>
                                         预览
                                     </Button>
-                                    <Select className='selector' defaultValue="分享" /> 
+                                    <Dropdown menu={{ items }} placement="bottom">
+                                        <Button>分享</Button>
+                                    </Dropdown>
                                 </div>
                             </div>
                                 <div className='mc-layout-main'>
@@ -232,13 +303,14 @@ function ProductDetail() {
                                         <PriceOrTransactionCardEdit />
                                         <StockEdit />
                                         <CustomsDeclarationEdit />
-                                        <MultipleStylesEdit style = {style} setStyle={setStyle} />
-                                        {style.length>0 && <ProductStyleListEdit style = {style} setStyle={setStyle}  />} 
+                                        <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style = {style} setStyle={setStyle} />
+                                        {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}
                                     </div>
                                     <div className='mc-layout-extra'>
                                         <ProductSettingsEdit productStatus={productStatus} upProductStatus={updateData} />
                                         <TradingRecords/>
                                         <RelevanceEdit />
+                                        {/* <InquiryEdit /> */}
                                         <RecommendationEdit />
                                         <ProductSeoEdit/>
                                         <Winnow />
@@ -261,12 +333,15 @@ function ProductDetail() {
                                     <Button type='primary' onClick={async () => {
                                         // console.log(Array.from(oldStore.attributes))
                                         await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
-                                        console.log(oldStore)
+                                        // console.log(oldStore)
+                                        // console.log(JSON.stringify([...oldStore.variants,...oldStore.removeVariantData]))
                                         setIsLoading(true)
                                         if(oldStore.partsWarehouse == "0"){
-                                            oldStore.updateProduct().then(res => {
+                                            oldStore.updateProduct().then(async res => {
                                                 if (res.code === 0) message.success('修改内容已更新');
+                                                // await globalStore.sleep(2000)
                                                 // history.push('/products/index')
+                                                
                                                 setIsLoading(false);
                                             });
                                         }else{
@@ -383,6 +458,11 @@ const StyledDiv = styled.div`
             }
         }
     }
+
+    /* .b{
+        display: flex;
+        height: 100px;
+    } */
 
     a {
         font-weight: 400;

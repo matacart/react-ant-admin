@@ -317,10 +317,18 @@ class newStore {
   setIsShare(value: string) {
     this.isShare = value;
   }
+  
   // 款式
-  attributes = []
-  setAttributes(value:[]){
+  attributes:any[] = []
+
+  setAttributes(value: any[]){
     this.attributes = value
+  }
+
+  // variant
+  variants = []
+  setVariants(value:any){
+    this.variants = value
   }
 
   // 店铺关联
@@ -353,6 +361,19 @@ class newStore {
     this.copySeo = value;
   }
 
+  // 临时数据
+  removeData = [];
+
+  removeVariantData = [];
+
+  setRemoveData(value: any) {
+    this.removeData = value;
+  }
+
+  setRemoveVariantData(value: any) {
+    this.removeVariantData = value;
+  }
+  
 
   // Third-party platform
   thirdPartyPlatform = {
@@ -398,7 +419,6 @@ class newStore {
     metaKeyword:"success",
     metaDescription:"success"
   }
-
 
   // 数据验证 -- 状态
   validateForm(){
@@ -483,6 +503,11 @@ class newStore {
       whatsappStatus: '0',
       status:"0"
     }
+
+    this.attributes = [];
+    this.variants = [];
+    this.removeData = [];
+    this.removeVariantData = [];
 
     this.temp.clear();
   }

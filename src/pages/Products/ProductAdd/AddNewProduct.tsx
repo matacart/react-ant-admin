@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import newStore from '@/store/newStore';
-import { observable } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 import CustomsDeclaration from './CustomsDeclaration';
@@ -25,6 +24,7 @@ import Subnumber from './Subnumber';
 import ProtectionInformation from './ProtectionInformation';
 import Recommendation from './Recommendation';
 import Relevance from './Relevance';
+import globalStore from '@/store/globalStore';
 
 // const createStyled = (productId:string)=>{
 //     setInterval(()=>{
@@ -130,7 +130,11 @@ interface LocationState {
 }
 
 function AddNewProduct(){
-    const [styleId, setStyleId] = useState('');
+
+    // 变体---控制变体组合
+    const [onVariant,setOnVariant] = useState(false);
+    const [style, setStyle] = useState([]);
+
     let productInfo = history.location.state as LocationState;
     if(productInfo){
         // 复制图片
@@ -166,12 +170,12 @@ function AddNewProduct(){
     useEffect(()=>{
         
     },[])
-    // 实现 onSecondInputChange 函数
-    const handleSecondInputChange = (value: string) => {
-        setStyleId(value);
-        console.log(value)
-        // 初始化参数
-    };
+    // // 实现 onSecondInputChange 函数
+    // const handleSecondInputChange = (value: string) => {
+    //     setStyleId(value);
+    //     console.log(value)
+    //     // 初始化参数
+    // };
 
     // 离开提示
     window.onbeforeunload = () => {
@@ -179,10 +183,6 @@ function AddNewProduct(){
         return '您确定要离开页面吗？'
     }
 
-    function sleep(ms:number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    
     return (
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -208,8 +208,8 @@ function AddNewProduct(){
                             <PriceOrTransactionCard />
                             <StockCard/>
                             <CustomsDeclaration/>
-                            <MultipleStylesCard onSecondInputChange={handleSecondInputChange} />
-                            {/* {styleId && <ProductStyleList styleId={styleId} />} */}
+                            <MultipleStylesCard style = {style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
+                            {onVariant && <ProductStyleList style = {style} setStyle={setStyle} />}
                         </div>
                         <div className='mc-layout-extra'>
                             <ProductSettingsCard/>
@@ -228,7 +228,8 @@ function AddNewProduct(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={async ()=>{
                             await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
-                            console.log(newStore)
+                            // console.log(newStore)
+                            history.push('/products/index')
                             if(newStore.partsWarehouse == "0"){
                                 if(newStore.validateForm()){
                                     newStore.unBlock();
@@ -240,7 +241,7 @@ function AddNewProduct(){
                                             message.error('创建失败');
                                         }
                                     });
-                                    await sleep(1000);
+                                    await globalStore.sleep(1000);
                                     history.push('/products/index')
                                 }
                             }else{
@@ -267,7 +268,6 @@ const Scoped = styled.div`
         width: 100%;
         max-width: 1200px;
         margin: '0 auto';
-    
         .mc-header {
             color: rgb(36, 40, 51);
             font-size: 30px;
@@ -341,7 +341,6 @@ const Scoped = styled.div`
             display: flex;
             flex-direction: column;
             gap:20px;
-
             .ant {
                 &-card {
                     background-color: #f7f8fb;

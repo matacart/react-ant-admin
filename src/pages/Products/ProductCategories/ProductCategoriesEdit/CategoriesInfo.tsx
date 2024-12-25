@@ -65,6 +65,7 @@ function CategoriesInfo() {
     return (
         <Card title="分类信息" className='product-data-card' extra={
             <>
+                语言翻译：
                 <Select
                     // size='large'
                     defaultValue="English"

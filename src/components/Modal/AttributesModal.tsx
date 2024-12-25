@@ -1,5 +1,7 @@
+import { addProductOptionValues, getProductStyleValueList } from '@/services/y2/api';
+import oldStore from '@/store/oldStore';
 import { DeleteOutlined, InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { GetProp, Input, Modal, Table, TableProps, Image, Upload, UploadProps, UploadFile, message, Spin, TabsProps, Tabs } from 'antd';
+import { GetProp, Input, Modal, Table, TableProps, Image, Upload, UploadProps, UploadFile, message, Spin, TabsProps, Tabs, Select } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
 import { set } from 'lodash';
@@ -29,6 +31,10 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
     
     const [attributesModal,setAttributesModal] = useState(false);
     const [imgModal,setImgModal] = useState(false);
+
+
+    const [languages,setLanguages] = useState([]);
+    const [language,setLanguage] = useState("2");
 
     // 弹窗图片
     const [imageUrl,setImageUrl] = useState("");
@@ -135,14 +141,75 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
         
     ];
 
+    // 使用函数进行替换
+    function replaceOptionValuesNames(source, target) {
+        // 创建一个 Map 来快速查找 targetArray 中的值
+        const targetMap = new Map(target.map(item => [item.option_values_id, item.option_values_name]));
+        // 返回一个新的数组，其中 sourceArray 的值根据 targetMap 进行了更新
+        return source.map(item => ({
+            ...item,
+            option_values_name: targetMap.get(item.option_values_id) || item.option_values_name // 如果找不到对应的 id，则使用原始值
+        }));
+    }
 
-    
+    // 判断数组中的对象是否存在相同的option_values_name
+    function hasDuplicateOptionValuesName(options) {
+        const seenNames = new Set();
+        for (const option of options) {
+          if (seenNames.has(option.option_values_name)) {
+            // 如果已经遇到过这个 name，则返回 true
+            return true;
+          }
+          // 将这个 name 添加到集合中
+          seenNames.add(option.option_values_name);
+        }
+       
+        // 如果遍历完整个数组都没有发现重复，则返回 false
+        return false;
+      }
 
-    // 提交表格
-    const sumit = ()=>{
-        setAttributesModal(false)
-        setAttributes(false)
-        editTagData([...data,...removeData],flag)
+    // 切换语言
+    const handlLanguageClick = async (value:string)=>{
+        let updatedArray;
+        setLoading(true)
+        if(tagData.length>0){
+            await getProductStyleValueList(tagData[0].option_id,value).then(res=>{
+                if(res.code == 0){
+                    updatedArray = replaceOptionValuesNames(data,res.data)
+                }
+                setData(updatedArray)
+            })
+        }
+        setLoading(false)
+    }
+    // // 提交表格
+    const submit = async ()=>{
+        if(hasDuplicateOptionValuesName(data)){
+            return message.error('规格名称不能重复')
+        }
+        let success = false;
+        setLoading(true)
+        const promises = data.map(async item=>{
+            await addProductOptionValues(item.option_values_id,language,item.option_id,item.option_values_name).then(res=>{
+                if(res.code == 0){
+                    success = true
+                }
+            })
+        })
+       Promise.all(promises).then(()=>{
+            if(success){
+                message.success('产品款式值更新成功');
+            }else{
+                message.error('产品款式值更新失败');
+            }
+            if(oldStore.language == language){
+                // setAttributesModal(false)
+                // setAttributes(false)
+                console.log(data)
+                editTagData([...data],flag)
+            }
+            setLoading(false)
+       })
     }
     // 重置表格
     const reset = ()=>{
@@ -158,7 +225,6 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
           label: '从电脑上传',
           children: 
             <Spin spinning={loading}>
-            
             <div>
             {/* {...props} */}
             {imageUrl == ""?<Dragger 
@@ -238,7 +304,19 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
         setRemoveData(rdata)
         setData(vdata)
     }, [attributes]);
- 
+    
+
+    useEffect(() => {
+        let tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+            return {
+                value: item.id,
+                label: item.name
+            }
+        })
+        setLanguages(tempList)
+    }, [])
+
+
     return (
         <div>
             {/* 款式框 */}
@@ -248,18 +326,29 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
                 destroyOnClose
                 width={800}
                 open={attributesModal}
-                onOk={sumit}
+                onOk={submit}
                 onCancel={reset}
-                okText="保存"
+                okText="更新"
                 cancelText="取消"
-                >
-                <div style={{color:"#7A8499",marginBottom:"20px"}}>
-                    <div>客户可在选择商品规格时看到已上传的图片</div>
-                    <div>支持上传.jpg、.png、.gif格式的图片；最大限制4M；建议尺寸：96px * 96px</div>
+            >
+                <div style={{display:"flex",justifyContent:"space-between"}}>
+                    <div style={{color:"#7A8499",marginBottom:"20px"}}>
+                        <div>客户可在选择商品规格时看到已上传的图片</div>
+                        <div>支持上传.jpg、.png、.gif格式的图片；最大限制4M；建议尺寸：96px * 96px</div>
+                    </div>
+                    <div>语言翻译：<Select
+                        defaultValue={oldStore.language}
+                        onChange={(value)=>{
+                            setLanguage(value)
+                            handlLanguageClick(value);
+                        }}
+                        style={{ width: 120 }}
+                        options={languages}
+                    /></div>
                 </div>
                 <div>
                     <Scoped>
-                        <Table<DataType> columns={columns} pagination={false} dataSource={data} />
+                        <Table<DataType> columns={columns} loading={loading} pagination={false} dataSource={data} />
                     </Scoped>
                 </div>
             </Modal>

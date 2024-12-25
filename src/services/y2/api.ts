@@ -5,6 +5,7 @@ import { Oauth2 } from '../../../config/myConfig'
 import newStore from '@/store/newStore';
 import oldStore from '@/store/oldStore';
 import cookie from 'react-cookies';
+import idID from '@/locales/id-ID';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -184,7 +185,6 @@ export async function deleteProduct(id: string) {
 // 改用product_list
 // 根据id & languages_id获取产品详情
 export async function getProductDetail(id: string,languagesId: string) {
-  console.log(id, languagesId)
   return request(`/api/ApiStore/product`, {
     method: 'POST',
     headers: {
@@ -199,7 +199,18 @@ export async function getProductDetail(id: string,languagesId: string) {
   })
 }
 
-// 
+// 选项类型
+export async function getOptionType() {
+  return request('/api/ApiStore/product_option_type_select', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+    // data: {
+    //   "domain_id": cookie.load("domain")?.id,
+    // },
+  })
+}
 
 // 创建商品
 export async function addProduct() {
@@ -279,7 +290,8 @@ export async function addProduct() {
       "alliance_status": newStore.allianceStatus,
       // 直营
       "hosted_status": newStore.hostedStatus,
-      "attributes":JSON.stringify(Array.from(newStore.attributes)),
+      "attributes":JSON.stringify(Array.from([...newStore.attributes,...newStore.removeData])),
+      "variants":JSON.stringify([...newStore.variants,...newStore.removeVariantData]),
       // 第三方链接
       "diversion":JSON.stringify([
         {
@@ -407,10 +419,9 @@ export async function submitRenewalProduct(res:any){
       "is_home": oldStore.isHome?"1":"0",
       // 
       "sort": oldStore.sort,
-      // 询盘开关：
       "is_share": oldStore.isShare,
-      // 
-      "inquiry_status": oldStore.inquiry_status,
+      // 询盘开关：
+      "inquiry_status": oldStore.inquiryStatus,
       // 
       "ad_waf_status": oldStore.adWafStatus,
       "ad_product_id": oldStore.adProductId,
@@ -470,8 +481,8 @@ export async function submitRenewalProduct(res:any){
       // 商品状态
       // 
       // "attributes":[{option_name:"111",option_values_name:"123"}]
-      "attributes":JSON.stringify(Array.from(oldStore.attributes)),
-      "variants":JSON.stringify(oldStore.variants),
+      "attributes":JSON.stringify(Array.from([...oldStore.attributes,...oldStore.removeData])),
+      "variants":JSON.stringify([...oldStore.variants,...oldStore.removeVariantData]),
       // 第三方链接
       "diversion":JSON.stringify([
         {
@@ -591,17 +602,18 @@ export async function deleteProductList(ids:string) {
 
 
 // 创建款式名称 languages_id product_option_name sort product_option_type_id status
-export async function addStyleName(languagesId:string,productStyleName:string){
+export async function addStyleName(id:string,languagesId:string,productStyleName:string,productOptionType:string){
   return await request('/api/ApiStore/product_option_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
+      "id":id,
       "languages_id":languagesId,
       "product_option_name":productStyleName,
       "sort":"1",
-      "product_option_type_id":"1",
+      "product_option_type_id":productOptionType,
       "status":"1"
     }
   })
@@ -664,6 +676,37 @@ export async function getProductStyleList(model:string,languagesId:string){
   })
 }
 
+export async function getProductOption(id:string,languagesId:string){
+  return await request('/api/ApiStore/product_option',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "id":id,
+      "languages_id":languagesId
+    }
+  })
+}
+
+
+// 
+export async function getProductOptionSelect(languagesId:string){
+  return await request('/api/ApiStore/product_option_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      // "model":model,
+      "languages_id":languagesId
+    }
+  })
+}
+
+
+    
+
 // id: 1363171657457
 // attributes_image: []
 // price_prefix: +
@@ -703,15 +746,34 @@ export async function deleteProductStyle(id:number){
 }
 
 // 获取所有款式
-export async function getProductStyleValueList(){
-  return await request('/api/ApiStore/product_option_values_list',{
+export async function getProductStyleValueList(optionId:string,language:string){
+  return await request('/api/ApiStore/product_option_values_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
+      "option_id":optionId,
+      "languages_id":language,
       "page":1,
       "limit":100
+    }
+  })
+}
+
+// 
+export async function addProductOptionValues(id:string,language:string,optionId:string,optionValuesName:string){
+  return await request('/api/ApiStore/product_option_values_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "id":id,
+      "languages_id":language,
+      "status":"1",
+      "option_id":optionId,
+      "option_values_name":optionValuesName
     }
   })
 }

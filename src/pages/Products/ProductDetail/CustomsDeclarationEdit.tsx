@@ -2,6 +2,7 @@ import { getCountryList } from "@/services/y2/api";
 import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select, Tooltip } from "antd";
+import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -9,7 +10,7 @@ interface CountryOption {
     label: string;
     value: string | number;
 }
-export default function CustomsDeclarationEdit() {
+function CustomsDeclarationEdit() {
     const [countryList,setCountryList] =  useState<CountryOption[]>([]);
     let country:any = [];
     useEffect(()=>{
@@ -54,6 +55,7 @@ export default function CustomsDeclarationEdit() {
                             }
                             options={countryList}
                             defaultValue={oldStore.notion}
+                            value={oldStore.notion}
                             onChange={(value)=>{
                                 oldStore.setNotion(value)
                             }}
@@ -62,13 +64,15 @@ export default function CustomsDeclarationEdit() {
                     <Form.Item
                         required                    
                         label="HS(协调制度) 代码">
-                        <Input defaultValue={oldStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>oldStore.setHSCode(e.target.value)} />
+                        <Input defaultValue={oldStore.HSCode} value={oldStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>oldStore.setHSCode(e.target.value)} />
                     </Form.Item>
                 </Form>
             </Card>
         </Scoped>
     )
 }
+
+export default observer(CustomsDeclarationEdit)
 
 const Scoped = styled.div`
 .ant{

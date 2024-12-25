@@ -32,6 +32,7 @@ function ProductDataCard() {
     return (
         <Card title="商品信息" className='product-data-card' extra={
             <>
+                语言翻译：
                 <Select
                     // size='large'
                     defaultValue="English"

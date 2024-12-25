@@ -5,7 +5,7 @@ import { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 // import { errorConfig } from './requestErrorConfig';
-import { getDomainList, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { getOptionType, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
@@ -105,6 +105,18 @@ axios.post('/api/ApiAppstore/languages_select').then((res) => {
 import { FormattedMessage } from 'umi';  //多语言
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
+
+
+  getOptionType().then((res:any)=>{
+    // console.log(res)
+    if(res.code == 0){
+      sessionStorage["productOptionType"] = JSON.stringify(res.data)
+    }else{
+      console.log("获取商品类型失败")
+    }
+      
+      // }))
+  })
 
   const stores = window.location.pathname.slice(0,8)
   return {
@@ -279,8 +291,6 @@ export const request: RequestConfig = {
       // }
     },
   },
-
-
   // 请求拦截器
   requestInterceptors: [
     (config: any) => {
@@ -315,6 +325,7 @@ export const request: RequestConfig = {
         }).catch((err) => { console.log(err) });
       }
       if(res.data.code==1001){
+        sessionStorage.removeItem("domain")
         history.push(loginPath);
         return res;
       }

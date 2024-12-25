@@ -158,7 +158,7 @@ import productStore from "./productStore";
   @observable inventoryTracking: boolean = false;
 
   // 缺货后继续销售
-  @observable continueSell: Boolean = false;
+  @observable continueSell: boolean = false;
 
   @action setSKU = (value: string) => {
     this.SKU = value;
@@ -288,6 +288,12 @@ import productStore from "./productStore";
     this.isBind = value;
   }
 
+  // 询盘 
+  inquiryStatus = "0";
+  setInquiryStatus(value: string) {
+    this.inquiryStatus = value;
+  }
+
   // 防护
   adWafStatus = "0";
   adProductId = "";
@@ -351,9 +357,9 @@ import productStore from "./productStore";
   }
 
   // 款式
-  attributes = []
+  attributes:any[] = []
 
-  setAttributes(value:[]){
+  setAttributes(value: any[]){
     this.attributes = value
   }
 
@@ -389,6 +395,20 @@ import productStore from "./productStore";
   }
 
 
+  // 临时数据
+  removeData = [];
+
+
+  removeVariantData = [];
+
+  setRemoveData(value: any) {
+    this.removeData = value;
+  }
+
+  setRemoveVariantData(value: any) {
+    this.removeVariantData = value;
+  }
+
 
   // 更新产品
   updateProduct(){
@@ -400,6 +420,10 @@ import productStore from "./productStore";
 
   // 初始化
   productInit(data:any){
+
+    this.setRemoveData([])
+    this.setRemoveVariantData([])
+
     this.setTitle(data.title)
     this.setContent(data.content == null ? "" : data.content)
     this.setContent1(data.content1)
@@ -461,12 +485,14 @@ import productStore from "./productStore";
     this.setMetaKeyword(data.meta_keyword)
     this.setMetaDescription(data.meta_description)
     if(data.product_url !== null){
-      this.setProductUrl(data.product_url)
+      // 由于提交时提交时带了/，所以需要去掉
+      this.setProductUrl(data.product_url.substring(1))
     }
     this.setAllianceStatus(data.alliance_status)
     this.setHostedStatus(data.hosted_status)
     this.setIsShare(data.is_share)
     this.setPartsWarehouse(data.is_sys)
+    this.setInquiryStatus(data.inquiry_status)
     this.setAttributes(data.attributes==null?[]:data.attributes)
     this.setVariants(data.variants==null?[]:data.variants)
     productStore.setAttributes(data.attributes==null?[]:data.attributes)

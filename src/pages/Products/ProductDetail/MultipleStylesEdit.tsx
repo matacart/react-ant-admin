@@ -1,11 +1,11 @@
 import AttributesModal from "@/components/Modal/AttributesModal";
-import { addProduct, addStyle, addStyleContent, addStyleName, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
+import ProductStyleModal from "@/components/Modal/ProductStyleModal";
+import { addProduct, addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
 import oldStore from "@/store/oldStore";
 import productStore from "@/store/productStore";
-import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
-import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message, Tooltip, SelectProps, Table, TableProps, Space } from "antd";
-import e from "express";
-import { set } from "lodash";
+import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
+import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message, Tooltip, SelectProps, Table, TableProps, Space, Divider, AutoCompleteProps } from "antd";
+import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -15,48 +15,65 @@ import styled from "styled-components";
 
 type TagRender = SelectProps['tagRender'];
 
-const options = [
-  {
-    value: "Color",
-    label: "Color",
-  },
-  {
-    value: "Size",
-    label: "Size",
-  },
-  {
-    value: "Material",
-    label: "Material",
-  },
-  {
-    value: "Style",
-    label: "Style",
-  },
-];
-
 const { Option } = Select;
 
-export default function MultipleStylesEdit(props:any) {
+const { confirm } = Modal;
+
+function MultipleStylesEdit(props:any) {
   // const [checked, setChecked] = useState(false);
   // const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [specifications, setSpecifications] = useState([{ id: 1,attributes:""}]);
+  const [specifications, setSpecifications] = useState([]);
   const [values, setValues] = useState<string[]>([]);
   const [tags, setTags] = useState<any[][]>([]); // 用于存储每个规格组的标签
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+  const [options,setOptions] = useState([
+    {
+      value: "1",
+      label: "Color",
+    },
+    {
+      value: "2",
+      label: "Size",
+    },
+    {
+      value: "3",
+      label: "Material",
+    },
+    {
+      value: "4",
+      label: "Style",
+    },
+  ]);
 
-  // 展开变体
-  const [onVariant,setOnVariant] = useState(true);
+  // 确认关联变体
+  const showVariantConfirm = () => {
+    confirm({
+      title: '确认展开多款式?',
+      icon: <ExclamationCircleFilled />,
+      centered:true,
+      content: '展开多款式后，操作属性，关联SKU也将同步操作，这可能对款式列表关联的数据造成影响',
+      onOk() {
+        props.setOnVariant(true)
+      },
+      onCancel() {
+        props.setOnVariant(false)
+      },
+    });
+  };
+
   // 原始数据
   const [info,setInfo] = useState<any>([]);
+  const [infoCopy,setInfoCopy] = useState<any>([]);
   // 表格数据
   const [tagData,setTagData] = useState<any>([]);
   // 表格行
-  const [flag,setFlag] = useState();
+  const [flag,setFlag] = useState<number>();
   const [styleDate,setStyleDate] = useState<any>([]);
   const [attributesModal, setAttributesModal] = useState(false);
+
   // 自定义标签
-  const tagRender = (props:any,index:any) => {
+  const tagRender = (props:any,index:any,spec:any) => {
     const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
       event.preventDefault();
@@ -81,87 +98,126 @@ export default function MultipleStylesEdit(props:any) {
     );
   };
   // 修改
-  const editTagData = (value:any,i:number)=>{
+  const editTagData = (data:any,i:number)=>{
+    let newSpecifications = [...specifications]
+    data.forEach((selectData:any)=>{
+      newSpecifications[i].optionValueList.forEach(countData => {
+        if(selectData.option_values_id == countData.option_values_id){
+          // 更新
+          countData.option_values_name = selectData.option_values_name
+          // if(selectData.option_values_name !== countData.option_values_name){
+          //   console.log(countData.option_values_name)
+          //   console.log(selectData.option_values_name)
+          //   addProductOptionValues(selectData.option_values_id,oldStore.language,selectData.option_id,selectData.option_values_name).then(res=>{
+          //     if(res.code==0){
+          //       countData.option_values_name = selectData.option_values_name
+          //       setSpecifications(newSpecifications)
+          //       // console.log(newSpecifications[i].optionValueList)
+          //       // 数据
+          //       // message.success('产品款式值更新成功');
+          //     }else{
+          //       message.error('产品款式值更新失败----');
+          //     }
+          //   })
+          // }
+        }
+      });
+    })
+    // console.log(newSpecifications)
+    setSpecifications(newSpecifications)
     let newInfo:any = [...info]
-    newInfo[i] = value
+    newInfo[i] = data
     setInfo(newInfo)
     oldStore.setAttributes(newInfo.flat())
-    let temp:any = []
-    // 重新赋值
-    value.forEach((e:any)=>{
-      if(e.status !== "9"){
-        temp.push((e.id == null || e.id == "") ?e.option_values_name:e.id)
-      }
-    })
-    let newTags = [...tags];
-    newTags[i] = temp
-    setTags(newTags)
-    // 更新所有标签的扁平化列表，并通知父组件
-    // 数据分流  ---- 修改
-    let tagsId:any = [...newTags];
-    let tagsValues:any = [...newTags];
-    newTags.forEach((res,index) => {
-      if(res.length>0){
-        res.forEach(e => {
-          Array.from(newInfo.flat(),(x:any)=>{
-            if(x.id == e){
-              tagsValues[index] = tagsValues[index].map(value => {
-                if (value == e) {
-                  return x.option_values_name; // 将3替换为'three'
-                }
-                return value; // 其他值保持不变
-              })
-            }
-          })
-        })
-      }
-    });
-    props.setStyle(tagsValues)
-  }
+    props.onVariant && props.setStyle(newInfo)
 
+    // // setInfoCopy(newInfo)
+    // oldStore.setAttributes(newInfo.flat())
+    // let temp:any = []
+    // // 重新赋值
+    // value.forEach((e:any)=>{
+    //   if(e.status !== "9"){
+    //     temp.push((e.id == null || e.id == "") ?e.option_values_name:e.id)
+    //   }
+    // })
+    // let newTags = [...tags];
+    // newTags[i] = temp
+    // setTags(newTags)
+    // // 更新所有标签的扁平化列表，并通知父组件
+    // // 数据分流  ---- 修改
+    // let tagsId:any = [...newTags];
+    // let tagsValues:any = [...newTags];
+    // newTags.forEach((res,index) => {
+    //   if(res.length>0){
+    //     res.forEach(e => {
+    //       Array.from(newInfo.flat(),(x:any)=>{
+    //         if(x.id == e){
+    //           tagsValues[index] = tagsValues[index].map(value => {
+    //             if (value == e) {
+    //               return x.option_values_name; // 将3替换为'three'
+    //             }
+    //             return value; // 其他值保持不变
+    //           })
+    //         }
+    //       })
+    //     })
+    //   }
+    // });
+    // console.log(newTags)
+    // props.setStyle(tagsValues)
+    // console.log(tagsValues)
+  }
   // 收集所有输入值后调用父组件提供的回调函数
   useEffect(() => {
-    // const allTagsFlat = tags.flat();
-    // const styleId = allTagsFlat.join(',');
-    // props.onSecondInputChange?.(styleDate);
+    const fetchData = async () => {
     const optionMap = {};
     // 遍历数组
-    productStore.attributes.forEach(item => {
-      // 获取当前的 option_name
-      const optionName = item.option_name;
-      // 如果 optionIdMap 中还没有这个 option_name，则创建一个空数组
-      if (!optionMap[optionName]) {
-        optionMap[optionName] = [];
+      productStore.attributes.forEach(item => {
+        // 获取当前的 option_name
+        const optionName = item.option_name;
+        // 如果 optionIdMap 中还没有这个 option_name，则创建一个空数组
+        if (!optionMap[optionName]) {
+          optionMap[optionName] = [];
+        }
+        // 将当前的 option_values_name 添加到对应 option_name 的数组中
+        optionMap[optionName].push(item);
+      });
+      console.log(optionMap)
+      let tempList:any = [];
+      let tempTags:any = [];
+      let tempInfo:any = [];
+      let tempValues:any = [];
+      let index = 0;
+      for(let item in optionMap){
+        // value ---- id
+        tempTags.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'option_values_id')))
+        tempValues.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'option_values_name')))
+        // 款式
+        // console.log(item)
+        await getProductStyleValueList(optionMap[item][0].option_id,oldStore.language).then(res=>{
+          // console.log(res.data)
+          tempList.push(
+            {id: index+1,attributes:item,flag:true,optionId:optionMap[item][0].option_id,optionValueList:res.data}
+          )
+          // 仅过滤旧属性
+          // optionMap[item].forEach(element => {
+          //   res.data.some(i => i.option_values_id == element.option_values_id)
+          // });
+        })
+        // console.log(optionMap[item])
+        tempInfo.push(optionMap[item])
+        index++;
       }
-      // 将当前的 option_values_name 添加到对应 option_name 的数组中
-      optionMap[optionName].push(item);
-    });
-    let tempList:any = [];
-    let tempTags:any = [];
-    let tempInfo:any = [];
-    let tempValues:any = [];
-    let index = 0;
-    for(let item in optionMap){
-      // value ---- id
-      tempTags.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'id')))
-      tempValues.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'option_values_name')))
-      // 款式
-      tempList.push(
-        {id: index+1,attributes:item}
-      )
-      tempInfo.push(optionMap[item])
-      index++;
+      setValues(Array.from(tempList,(item:any)=>{return item.attributes}))
+      setSpecifications(tempList)
+      // 值
+      setTags(tempTags)
+      // props.setStyle(tempValues)
+      // 原始数据
+      setInfo(tempInfo)
     }
-    setValues(Array.from(tempList,(item:any)=>{return item.attributes}))
-    setSpecifications(tempList)
-    // 值
-    setTags(tempTags)
-    props.setStyle(tempValues)
-    // 原始数据
-    setInfo(tempInfo)
-  }, []);
-
-  
+    fetchData();
+  }, [oldStore.productId]);
   // 方案修改补充
   // 去除id相同的数据 保留第一个
   function removeDuplicatesById(arr) {
@@ -175,40 +231,90 @@ export default function MultipleStylesEdit(props:any) {
       }
     });
   }
+  const [optionList,setOptionList] = useState<AutoCompleteProps['options']>([])
 
-  useEffect(()=>{
-
-    // 提取 - value 和 id
-    let optionNameList:any = [];
-    let valuesNameList:any = [];
-    getProductStyleValueList().then(res=>{
-      res.data.forEach((item:any)=>{
-        if(item.status == "1"){
-          if(item.option_id!==undefined){
-            optionNameList.push({
-              id:item.option_id,
-              value:item.option_name
-            })
-          }
-          if(item.id !== undefined){
-            valuesNameList.push({
-              id:item.id,
-              value:item.option_values_name
-            })
+  // 去除label相同的数据
+  function removeDuplicateLabels(data) {
+    // 用于存储已遇到的 label 的集合
+    const seenLabels = new Set();
+    // 用于存储最终结果的数组
+    const result = [];
+    // 定义一个递归函数来处理可能嵌套的数组
+    function processArray(arr) {
+      for (const item of arr) {
+        if (Array.isArray(item)) {
+          // 如果项是数组，则递归处理
+          processArray(item);
+        } else if (item && typeof item === 'object' && 'label' in item) {
+          // 如果项是对象且包含 label 属性
+          const { label } = item;
+          if (!seenLabels.has(label)) {
+            // 如果 label 尚未被记录，则添加到结果数组并标记为已见
+            seenLabels.add(label);
+            result.push(item);
           }
         }
-      })
-      console.log(removeDuplicatesById(optionNameList))
-      console.log(removeDuplicatesById(valuesNameList))
-    })
+        // 如果项不是对象或不包含 label 属性，则忽略它（或根据需要处理）
+      }
+    }
    
+    // 开始处理输入数据
+    processArray(data);
+   
+    return result;
+  }
+  // function filtrationData(data:any){
+  //   const optionMap = {};
+  //   // 遍历数组
+  //   data.forEach(item => {
+  //     // 获取当前的 option_name
+  //     const optionName = item.option_name;
+  //     // 如果 optionIdMap 中还没有这个 option_name，则创建一个空数组
+  //     if (!optionMap[optionName]) {
+  //       optionMap[optionName] = [];
+  //     }
+  //     // 将当前的 option_values_name 添加到对应 option_name 的数组中
+  //     optionMap[optionName].push(item);
+  //   });
+  //   console.log(optionMap)
+  //   // let tempList:any = [];
+  //   // let tempTags:any = [];
+  //   // let tempInfo:any = [];
+  //   // let tempValues:any = [];
+  //   // let index = 0;
+  //   // for(let item in optionMap){
+  //   //   // value ---- id
+  //   //   tempTags.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'id')))
+  //   //   tempValues.push(optionMap[item].map(proxyObj => Reflect.get(proxyObj, 'option_values_name')))
+  //   //   // 款式
+  //   //   tempList.push(
+  //   //     {id: index+1,attributes:item}
+  //   //   )
+  //   //   tempInfo.push(optionMap[item])
+  //   //   index++;
+  //   // }
+  //   // setValues(Array.from(tempList,(item:any)=>{return item.attributes}))
+  //   // setSpecifications(tempList)
+  //   // // 值
+  //   // setTags(tempTags)
+  //   // props.setStyle(tempValues)
+  //   // // 原始数据
+  //   // setInfo(tempInfo)
+  // }
+  useEffect(()=>{
+    // 属性 --- 获取所有属性
+    getProductOptionSelect("2").then(res=>{
+      let newOptionList:any = [];
+      res.data.forEach((item:any)=>{
+        newOptionList.push({
+          label:item.option_name,
+          value:item.option_id
+        })
+      })
+      setOptionList(newOptionList)
+    })
+    // console.log(oldStore.attributes)
   },[])
-
-  // useEffect(()=>{
-  //   if(props.style.length == 0){
-  //     setOnVariant(true)
-  //   }
-  // },[props.style])
   // 处理回车键事件  ---待
   function handleKeyDown(e: React.KeyboardEvent, index: number) {
     if (e.key === 'Enter') {
@@ -238,92 +344,156 @@ export default function MultipleStylesEdit(props:any) {
   // 添加 useRef 来保存输入框的引用
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   inputRefs.current = Array(values.length).fill(null);
-  // 处理标签选择或输入变化 -- 新增
-  async function handleTagChange(value: any,index:number) {
-    info[index].push({
-      option_name:values[index],
-      option_values_name:value.value
-    })
-    oldStore.setAttributes(info.flat())
-    let newTags = [...tags];
-    newTags[index] = [...newTags[index],value.value]
-    setTags(newTags)
-    // 更新所有标签的扁平化列表，并通知父组件
-    // 数据分流
-    let tagsId:any = [...newTags];
-    let tagsValues:any = [...newTags];
-    newTags.forEach((res,index) => {
-      if(res.length>0){
-        res.forEach(e => {
-          Array.from(info.flat(),(x:any)=>{
-            if(x.id == e){
-              tagsValues[index] = tagsValues[index].map(value => {
-                if (value == e) {
-                  return x.option_values_name; // 将3替换为'three'
-                }
-                return value; // 其他值保持不变
+  // 处理标签选择或输入变化 -- 新增 -- 减
+  async function handleTagChange(value: any,option:any,index:number) {
+    // 增
+    if((tags[index].length??=0)<value.length){
+      if(specifications[index].optionId == undefined || specifications[index].optionId == "") return message.error("请先输入属性")
+      let newOption;
+      option[option.length-1].value == undefined?newOption= specifications[index].optionValueList.filter(item=>item.option_values_name == value[value.length-1]):newOption=specifications[index].optionValueList.filter(item=>item.option_values_id == value[value.length-1])
+      let newTags = [...tags]; 
+      // 存在---
+      try{
+        if(newOption.length>0){
+          // 输入
+          let valueId:string;
+          for(let item in specifications[index].optionValueList){
+            if(specifications[index].optionValueList[item].option_values_name == value[value.length-1]){
+              valueId = specifications[index].optionValueList[item].option_values_id
+              break;
+            }
+          }
+          if(tags[index].some(item=> item == valueId)){
+            message.error("请勿重复输入")
+            return
+          }
+          newTags[index] = [...newTags[index],newOption[0].option_values_id]
+          setTags(newTags)
+          info[index].push({
+            option_name:specifications[index].attributes,
+            option_values_name:option[option.length-1].label,
+            option_values_id:newOption[0].option_values_id,
+            option_id:specifications[index].optionId
+          })
+          oldStore.setAttributes(info.flat())
+          props.onVariant && props.setStyle([...info])
+          // 
+        }else{
+          // 创建---
+          addProductOptionValues("",oldStore.language,specifications[index].optionId,value[value.length-1]).then(res=>{
+            // console.log(res)
+            if(res.code == 0){
+              newTags[index] = [...newTags[index],res.id]
+              let newSpecifications = [...specifications]
+              newSpecifications[index].optionValueList.push({
+                option_values_id:res.id,
+                option_values_name:value[value.length-1]
               })
+              setSpecifications(newSpecifications)
+              setTags(newTags)
+              // console.log(option)
+              // console.log(option[option.length-1].label)
+              info[index].push({
+                option_name:specifications[index].attributes,
+                option_values_name:value[value.length-1],
+                option_values_id:res.id,
+                option_id:specifications[index].optionId
+              })
+              oldStore.setAttributes(info.flat())
+              props.onVariant && props.setStyle([...info])
+            }else{
+              message.error("添加失败")
             }
           })
-        })
+        }
+      }catch(e){
+        console.log(e)
       }
-    });
-    // console.log(tagsId)
-    props.setStyle(tagsValues)
+      // 
+    }else{
+      // 减
+      let newTags = [...tags];
+      let optionValueId = tags[index].filter(element => !value.includes(element))
+      // console.log(optionValueId[0])
+      let newInfo = [...info]
+      newInfo[index] = info[index].filter(element => {
+        if(element.option_values_id === optionValueId[0]){
+          console.log(element.id)
+          if((element.id??="")!==""){
+            oldStore.removeData.push({...element,status:"9"})
+          }
+          return false
+        }
+        return true
+      })
+      oldStore.setAttributes(newInfo.flat())
+      newTags[index] = value
+      setTags(newTags)
+      setInfo(newInfo)
+      props.onVariant && props.setStyle([...newInfo])
+    }
+    
+    // 创建
+    // // 查询id -- 获取id
+    // let lock = true;
+    // optionValueList.forEach(async (item:any)=>{
+    //   if(item.option_values_name == value.value){
+    //     // 添加成功
+    //     info[index].push({
+    //       option_name:specifications[index].attributes,
+    //       option_values_name:value.value,
+    //       id:item.option_values_id,
+    //       option_id:specifications[index].optionId
+    //     })
+    //     await sleep(60000);
+    //     lock = false
+    //   }
+    // })
+    // if(lock){
+    //   await addProductOptionValues("",specifications[index].optionId,value.value).then(res=>{
+    //     if(res.code == 0){
+    //       // 添加成功
+    //       info[index].push({
+    //         option_name:specifications[index].attributes,
+    //         option_values_name:value.value,
+    //         id:res.id,
+    //         option_id:specifications[index].optionId
+    //       })
+    //     }else{
+    //       console.log("请求失败")
+    //     }
+    //   })
+    // }
+
+    // oldStore.setAttributes(info.flat())
+    
+    // // 更新所有标签的扁平化列表，并通知父组件 --- 变体
+    // // 数据分流
+    // let tagsId:any = [...newTags];
+    // let tagsValues:any = [...newTags];
+    // newTags.forEach((res,index) => {
+    //   if(res.length>0){
+    //     res.forEach(e => {
+    //       Array.from(info.flat(),(x:any)=>{
+    //         if(x.id == e){
+    //           tagsValues[index] = tagsValues[index].map(value => {
+    //             if (value == e) {
+    //               return x.option_values_name; // 将3替换为'three'
+    //             }
+    //             return value; // 其他值保持不变
+    //           })
+    //         }
+    //       })
+    //     })
+    //   }
+    // });
+    // props.setStyle(tagsValues)
     // const allTagsFlat = newTags.flat();
     // const styleId = allTagsFlat.join(',');
     // props.onSecondInputChange?.(styleId);
   }
-  // 删除
-  function handleTagRemove(value: any,index:number){
-    // 先根据id删除 ，后根据option_values_name删除
-    info[index] = Array.from(info[index],(v:any)=>{
-      if(v.id == null || v.id == ""){
-        if(v.option_values_name == value.value){
-        }else{
-          return v
-        }
-      }else{
-        if(v.id == value.value){
-          v.status = "9"
-        }
-        return v
-      }
-    }).filter(e => e !== undefined)
-    // console.log(info[index])
-    oldStore.setAttributes(info.flat())
-    const newTags = [...tags];
-    newTags[index] = newTags[index].filter(t => t !== value.value);
-    setTags(newTags);
-    // 更新所有标签的扁平化列表，并通知父组件
-    // 数据分流
-    // let tagsId:any = [...newTags];
-    let tagsValues:any = [...newTags];
-    newTags.forEach((res,index) => {
-      if(res.length>0){
-        res.forEach(e => {
-          Array.from(info.flat(),(x:any)=>{
-            if(x.id == e){
-              tagsValues[index] = tagsValues[index].map(value => {
-                if (value == e) {
-                  return x.option_values_name; // 将3替换为'three'
-                }
-                return value; // 其他值保持不变
-              })
-            }
-          })
-        })
-      }
-    });
-    props.setStyle(tagsValues)
-  } 
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 控制模态框的显示状态
-  // 为编辑图标添加点击事件处理器
-  const handleEditClick = () => {
-    setIsEditModalVisible(true);
-    console.log(oldStore.attributes)
-  };
   // 模态框确认按钮点击事件处理器
   const handleOk = () => {
     setIsEditModalVisible(false);
@@ -338,40 +508,25 @@ export default function MultipleStylesEdit(props:any) {
     console.log('复选框状态:', e.target.checked);
     // 这里可以添加更多的逻辑来处理复选框的变化
   }
-  // 处理复选框变化
-  // function handleCheckboxChange(e: { target: { checked: boolean; }; }) {
-  //   if(e.target.checked && specifications.length == 0){
-  //     addSpecification()
-  //   }
-  // }
 
   // 处理第一个搜索框的选择变化
-  function handleChange(value: string, index: number) {
-    const newValues = [...values];
-    newValues[index] = value;
-    setValues(newValues)
-    info[index].forEach(element => {
-      element.option_name = value
-    });
-    console.log(newValues)
-    oldStore.setAttributes(info.flat())
-    // console.log(`selected ${value}`);
-    // console.log(newValues)
-    // 检查是否有重复值
-    const hasDuplicate = new Set(newValues).size !== newValues.length;
-    if (hasDuplicate) {
-      setErrors(prevErrors => ({
-        ...prevErrors,
-        [index]: '属性/款式不能重复'
-      }));
-    } else {
-      setErrors(prevErrors => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[index];
-        return newErrors;
-      });
-    }
-
+  function handleBlur(value: string, index: number) {
+    // // console.log(`selected ${value}`);
+    // // console.log(newValues)
+    // // 检查是否有重复值
+    // const hasDuplicate = new Set(newValues).size !== newValues.length;
+    // if (hasDuplicate) {
+    //   setErrors(prevErrors => ({
+    //     ...prevErrors,
+    //     [index]: '属性/款式不能重复'
+    //   }));
+    // } else {
+    //   setErrors(prevErrors => {
+    //     const newErrors = { ...prevErrors };
+    //     delete newErrors[index];
+    //     return newErrors;
+    //   });
+    // }
     // 更新其他逻辑...
   }
   // 处理搜索框的搜索事件
@@ -382,110 +537,277 @@ export default function MultipleStylesEdit(props:any) {
   }
 
   // 移除标签
-  function handleRemoveTag(index: number, tag: string) {
-    const newTags = [...tags];
-    newTags[index] = newTags[index].filter(t => t !== tag);
-    setTags(newTags);
-  }
+  // function handleRemoveTag(index: number, tag: string) {
+  //   const newTags = [...tags];
+  //   newTags[index] = newTags[index].filter(t => t !== tag);
+  //   setTags(newTags);
+  // }
 
   // 删除整个规格组
   function handleRemove(index: number) {
     info[index].forEach((element:any) => {
-      element.status = "9"
+      if(element.id){
+        oldStore.removeData.push({...element,status:"9"})
+      }
     })
+    // 直接删除
+    info.splice(index,1)
+
+    if(props.onVariant){
+      // 删除所有属性时--删除所有变体
+      if(info.length == 0){
+        oldStore.variants.forEach(element => {
+          element.status = "9"
+          oldStore.removeVariantData.push(element)
+        });
+        oldStore.setVariants([])
+      }
+      props.setStyle([...info])
+    }
+
     oldStore.setAttributes(info.flat())
     const newSpecifications = specifications.filter((_, i) => i !== index);
     setSpecifications(newSpecifications);
     const newValues = values.filter((_, i) => i !== index);
     setValues(newValues);
-
     const newTags = tags.filter((_, i) => i !== index);
     setTags(newTags);
-   
   }
-
   // 添加新的规格组 -- attributes属性
   async function addSpecification(){
     const newId = specifications.length + 1;
-    setSpecifications([...specifications, { id: newId,attributes:''}]);
+    setSpecifications([...specifications, { id: newId,attributes:'',optionId:"",flag:false,optionValueList:[]}]);
     setValues([...values, ""]);
     setTags([...tags, []]); // 添加一个新的空数组作为新的标签集合
-    // console.log([...specifications, { id: newId,attributes:''}])
-    // console.log([...values, ""])
-    // console.log([...tags, []])
     info.push([])
     // // 更新输入框引用
-    // inputRefs.current = [...inputRefs.current, null];
   }
-  // 控制款式列表
-  const isVariant = () => {
-    // if(tags.length>0){
-    //   props.setStyle(tags)
-    //   setOnVariant(false)
-    // }else{
-    //   message.info("请先添加款式")
-    // }
+  // 是否有相同的属性
+  function hasSameAttributes(arr) {
+    const seenAttributes = new Set();
+    for (const item of arr) {
+      if (seenAttributes.has(item.attributes)) {
+        return true; // 找到了相同的 attributes
+      }
+      seenAttributes.add(item.attributes);
+    }
+    return false; // 没有找到相同的 attributes
+  }
 
-  }
+  // 
+  const inputRef = useRef(null);
 
   return (
     <Scoped>
-      <Card title="多款式" extra={onVariant?<a onClick={isVariant}>展开变体</a>:""}>
+      {/* <span onClick={isVariant}>展开变体</span> */}
+      {/*  */}
+      {/* props.setOnVariant(!props.onVariant) */}
+      <Card title="多款式" extra={<div onClick={()=>{
+        !props.onVariant?showVariantConfirm():props.setOnVariant(!props.onVariant)
+      }} style={{textAlign:"right",cursor:"pointer"}}>此商品有多个款式
+        <Checkbox style={{marginLeft:"10px"}} checked={props.onVariant}>
+        </Checkbox>
+      </div>}>
         {/* <Checkbox checked={checked} onChange={handleCheckboxChange}>
           此商品有多个款式
         </Checkbox> */}
         {(
           <>
-          {specifications.map((spec, index) => (
-          <div key={spec.id} className="select-input icon-container">
-            <AutoComplete
-              placeholder="请输入属性"
-              style={{ width: "160px", height: "44px" }}
-              options={options.map(opt => ({ value: opt.value, label: opt.label }))}
-              filterOption={(inputValue, option) =>
-                option.value.toUpperCase().includes(inputValue.toUpperCase())
-              }
-              onChange={(value) => handleChange(value, index)}
-              value={values[index]}
-            />
+          {specifications.map((spec, index) => {
+            // 监听
+            let optionContent:string
+            return (
+              <div key={spec.id} className="select-input icon-container">
+              {/* shu */}
+              <AutoComplete
+                optionFilterProp="label"
+                placeholder="请输入属性"
+                value={spec.attributes}
+                defaultValue={spec.attributes}
+                style={{ width: "180px", height: "44px"}}
+                // options={optionValueList.map(opt => ({ value: opt.label, label:opt.label  }))}
+                options={optionList.map(opt => ({ value: opt.label, label:opt.label  }))}
+                onChange={(value,option)=>{
+                  // -----------    
+                  let newSpecifications = [...specifications]
+                  newSpecifications[index].attributes = value
+                  newSpecifications[index].flag = false
+                  setSpecifications(newSpecifications)
+                }}
+                onFocus={(e) => {
+                  optionContent = e.target.value
+                }}
+                // 选中
+                onSelect={(e)=>{
+                  if(hasSameAttributes(specifications)){
+                    let newErrors = { ...errors }
+                    newErrors[index] = '属性/款式不能重复'
+                    setErrors(newErrors)
+                    return
+                  }else{
+                    let newErrors = { ...errors }
+                    newErrors[index] = ''
+                    setErrors(newErrors)
+                  }
+                  // 失去焦点时判断 --- 同时清空原数据
+                  if(specifications[index].attributes !== optionContent){
+                    let newTags = [...tags];
+                    newTags[index] = []
+                    setTags(newTags)
+                    let newInfo = [...info]
+                    newInfo[index] = []
+                    setInfo(newInfo)
+                  }
+                  let list = optionList.filter(item=>item.label == e)
+                  let newSpecifications = [...specifications]
+                    newSpecifications[index].optionId = list[0].value
+                    newSpecifications[index].attributes = e
+                    getProductStyleValueList(list[0].value,oldStore.language).then(res=>{
+                      newSpecifications[index].optionValueList = res.data
+                      newSpecifications[index].flag = true
+                      setSpecifications(newSpecifications)
+                      // 处理用户先输入款式
+                      const newValues = [...values];
+                      newValues[index] = e
+                      setValues(newValues)
+                      info[index].forEach(element => {
+                        element.option_id = list[0].value
+                        element.option_name = e
+                      });
+                      oldStore.setAttributes(info.flat())
+                  })
+                }}
+                onBlur={(e) => {
+                  if(hasSameAttributes(specifications)){
+                    let newErrors = { ...errors }
+                    newErrors[index] = '属性/款式不能重复'
+                    setErrors(newErrors)
+                    return
+                  }else{
+                    let newErrors = { ...errors }
+                    newErrors[index] = ''
+                    setErrors(newErrors)
+                  }
+                  // 过滤空值
+                  if(e.target.value == "") {
+                    let newSpecifications = [...specifications]
+                    newSpecifications[index].optionId = ""
+                    newSpecifications[index].attributes = e.target.value
+                    newSpecifications[index].optionValueList = []
+                    setSpecifications(newSpecifications)
+                    return 
+                  }
+                  // 
+                  let list = optionList.filter(item=>item.label == e.target.value)
+                  if(list.length>0){
+                    let newSpecifications = [...specifications]
+                    newSpecifications[index].optionId = list[0].value
+                    newSpecifications[index].attributes = e.target.value
+                    getProductStyleValueList(list[0].value,oldStore.language).then(res=>{
+                      newSpecifications[index].optionValueList = res.data
+                      newSpecifications[index].flag = true
+                      setSpecifications(newSpecifications)
+                      // 处理用户先输入款式
+                      const newValues = [...values];
+                      newValues[index] = e.target.value
+                      setValues(newValues)
+                      info[index].forEach(element => {
+                        element.option_id = list[0].value
+                        element.option_name = e.target.value
+                      });
+                      oldStore.setAttributes(info.flat())
+                    })
+                  }else{
+                    // // 判断值是否重复
+                    // if(specifications.some(item=>item.attributes == optionContent)){
+                    //   return console.log("重复")
+                    // }
+                    // 失去焦点时判断 --- 同时清空原数据
+                    if(specifications[index].attributes !== optionContent){
+                      let newTags = [...tags];
+                      newTags[index] = []
+                      setTags(newTags)
+                      let newInfo = [...info]
+                      newInfo[index] = []
+                      setInfo(newInfo)
+                    }
+                    // 创建
+                    addStyleName("",oldStore.language,e.target.value,"1").then(res=>{
+                      if(res.code == 0){
+                        let newSpecifications = [...specifications]
+                        newSpecifications[index].optionId = res.id
+                        newSpecifications[index].attributes = e.target.value
+                        newSpecifications[index].optionValueList = []
+                        newSpecifications[index].flag = true
+                        setSpecifications(newSpecifications)
+                        // 处理用户先输入款式
+                        const newValues = [...values];
+                        newValues[index] = e.target.value;
+                        setValues(newValues)
+                        info[index].forEach(element => {
+                          element.option_id = res.id
+                          element.option_name = e.target.value
+                        });
+                        oldStore.setAttributes(info.flat())
+                      }else{
+                        message.error("添加失败")
+                      }
+                    })
+                  }
+                }}
+              />
+              {spec.flag && <ProductStyleModal inputRef={inputRef} optionList={optionList} setOptionList={setOptionList} spec={spec} specifications={specifications} setSpecifications={setSpecifications} />}
               {errors[index] && (
-              <div className="error-message">
-                {errors[index]}
+                <div className="error-message">
+                  {errors[index]}
+                </div>
+              )}
+              <div className="custom-input">
+                <Select
+                  loading={true}
+                  mode="tags"
+                  // disabled={!spec.flag}
+                  // open={false}
+                  className="input-text-area"
+                  // allowClear={false}
+                  style={{ width: "100%", height: "100%" }}
+                  placeholder={tags[index]?.length > 0 ? "" : "请输入款式值,可输入多个"}
+                  value={tags[index]}
+                  tagRender={(props)=>tagRender(props,index,spec)}
+                  onChange={(value,option) => handleTagChange(value,option,index)}
+                  // onDeselect={(value) => handleTagRemove(value, index)}
+                  // onSearch={(searchText) => handleSearch(searchText, index)}
+                  // onKeyDown={(e) => handleKeyDown(e, index)}
+                >
+                  {/* {info[index]?.map((option:any) => (
+                    <Option value={option.id == undefined?option.option_values_name:option.id}>
+                      {(option.attribute_image == null || option.attribute_image == "")?'':<div style={{marginRight: '6px',width:"16px",display:"inline-block",position:"relative",top:"-1px"}}>
+                        <img style={{width:"100%",height:"100%", objectFit:"contain"}} src={option.attribute_image} />
+                      </div>}
+                      {option.option_values_name}
+                    </Option>
+                  ))} */}
+                  {spec.optionValueList?.map((option:any) => (
+                    <Option value={option.option_values_id} label={option.option_values_name}>
+                      {/* {(option.attribute_image == null || option.attribute_image == "")?'':<div style={{marginRight: '6px',width:"16px",display:"inline-block",position:"relative",top:"-1px"}}>
+                        <img style={{width:"100%",height:"100%", objectFit:"contain"}} src={option.attribute_image} />
+                      </div>} */}
+                      {option.option_values_name}
+                    </Option>
+                  ))}
+                </Select>
               </div>
-            )}
-            <div className="custom-input">
-              <Select
-                mode="tags"
-                allowClear
-                // open={false}
-                labelInValue
-                style={{ width: "100%", height: "100%" }}
-                placeholder={tags[index]?.length > 0 ? "" : "请输入款式值"}
-                value={tags[index]}
-                tagRender={(props)=>tagRender(props,index)}
-                onSelect={(value) => handleTagChange(value,index)}
-                onDeselect={(value) => handleTagRemove(value, index)}
-                onSearch={(searchText) => handleSearch(searchText, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                className="input-text-area"
-              >
-                {info[index]?.map((option:any) => (
-                  <Option value={option.id == undefined?option.option_values_name:option.id}>
-                    {(option.attribute_image == null || option.attribute_image == "")?'':<div style={{marginRight: '6px',width:"16px",display:"inline-block",position:"relative",top:"-1px"}}>
-                      <img style={{width:"100%",height:"100%", objectFit:"contain"}} src={option.attribute_image} />
-                    </div>}
-                    {option.option_values_name}
-                  </Option>
-                ))}
-              </Select>
-            </div>
             {/* {index === 0 && ( // 只在第一个规格组中显示复选框
               <div className="hide-option-checkbox">
                 <Checkbox onChange={(e) => handleHideOptionCheckboxChange(e)}>购买时隐藏此选项</Checkbox>
               </div>
             )} */}
             {/* 添加图标 */}
-            <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" style={{cursor: "pointer"}} onClick={handleEditClick}>
+            <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" style={{cursor: "pointer"}} onClick={()=>{
+                setAttributesModal(true)
+                setTagData(info[index])
+                setFlag(index)
+            }}>
               <Tooltip title="编辑">
                 <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
                   <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
@@ -500,7 +822,9 @@ export default function MultipleStylesEdit(props:any) {
               </Tooltip>
             </span>
           </div>
-          ))}
+            );
+          }
+          )}
           {specifications.length < 5 && ( // 限制最多添加四个规格组
             <span style={{marginRight: "20px"}}>
             <Button
@@ -513,17 +837,10 @@ export default function MultipleStylesEdit(props:any) {
             </Button>
             </span>
           )}
-          {/* <Button
-              type="primary"
-              className="add-specification-button"
-              onClick={addProductStyle}
-          >
-            添加款式
-          </Button> */}
         </>
         )}
         {/* 模态框 */}
-        <Modal
+        {/* <Modal
           title="规格编辑"
           visible={isEditModalVisible}
           onOk={handleOk}
@@ -553,20 +870,30 @@ export default function MultipleStylesEdit(props:any) {
               </tr>
             </tbody>
           </table>
-        </Modal>
-        {/* 属性框 */}
+        </Modal> */}
+        {/* 属性 */}
         <AttributesModal tagData={tagData} flag={flag} editTagData={editTagData} attributes={attributesModal} setAttributes={setAttributesModal} />
+        {/* 多款式 */}
+
       </Card>
+      {/*  */}
     </Scoped>
   );
-
 }
+
+
+export default observer(MultipleStylesEdit);
 
 // 定义样式
 const Scoped = styled.div`
+  .customCheckbox{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
   .ant-card-body {
     padding: 20px;
-    
   }
   .ant-select-arrow{
     display: none;
@@ -574,7 +901,7 @@ const Scoped = styled.div`
   .select-input {
     display: flex;
     align-items: center;
-    gap: 8px;
+    /* gap: 8px; */
     margin-top: 25px;
     position: relative; /* 添加相对定位 */
   }
@@ -641,7 +968,7 @@ const Scoped = styled.div`
   }
   .hide-option-checkbox {
     position: absolute;
-    left: 190px; /* 第一个输入框的宽度 */
+    left: 190px; //第一个输入框的宽度
     top: 44px; /* 第二个输入框的顶部位置 */
   }
   .edit-icon {

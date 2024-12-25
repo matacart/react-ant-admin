@@ -1,6 +1,8 @@
 import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import styled from "styled-components"
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
@@ -11,12 +13,15 @@ const originPriceOnChange: InputNumberProps['onChange'] = (value) => {
 };
 const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setCostPrice(value==null?0:value);
-
 };
 
 
 
-export default function PriceOrTransactionCardEdit() {
+function PriceOrTransactionCardEdit() {
+
+    useEffect(()=>{
+    },[oldStore.productId])
+
     return (
         <Scoped>
             <Card title='价格/交易'>
@@ -34,13 +39,15 @@ export default function PriceOrTransactionCardEdit() {
                                         </span>
                                     </Tooltip>
                                 </>
-                            } name='price' className="price-item">
+                            } 
+                            className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
-                                    defaultValue={oldStore.price}
+                                    defaultValue={1000}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={priceOnChange}
+                                    value={oldStore.price}
                                     className="ant-input"
                                 />
                             </Form.Item>
@@ -56,10 +63,12 @@ export default function PriceOrTransactionCardEdit() {
                                         </span>
                                     </Tooltip>
                                 </>
-                            } name='originPrice' className="price-item">
+                            } className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
                                     defaultValue={1000}
+                                    value={oldStore.originPrice}
+                                    // defaultValue={oldStore.originPrice}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={originPriceOnChange}
@@ -79,10 +88,11 @@ export default function PriceOrTransactionCardEdit() {
                                         </span>
                                     </Tooltip>
                                 </>
-                            } name='costPrice' className="price-item">
+                            } className="price-item">
                                 <InputNumber<number>
                                     prefix="US$"
                                     defaultValue={oldStore.costPrice}
+                                    value={oldStore.costPrice}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     onChange={costPriceOnChange}
@@ -102,7 +112,7 @@ export default function PriceOrTransactionCardEdit() {
                                         </span>
                                     </Tooltip>
                                 </>
-                            } name='price' className="price-item">
+                            } className="price-item">
                                 <InputNumber
                                     prefix="US$"
                                     defaultValue={'--'}
@@ -122,7 +132,7 @@ export default function PriceOrTransactionCardEdit() {
                                         </span>
                                     </Tooltip>
                                 </>
-                            } name='price' className="price-item">
+                            } className="price-item">
                                 <InputNumber
                                     suffix="%"
                                     defaultValue={'--'}
@@ -134,21 +144,29 @@ export default function PriceOrTransactionCardEdit() {
                     </Row>
                     <Form.Item
                         valuePropName="checked"
-                        wrapperCol={{
-                            span: 5,
+                        style={{
+                            marginBottom: 0
                         }}
-                        name="needTaxes">
+                    >
                         <Checkbox onChange={(e)=>{
                             console.log(e.target.checked)
                             oldStore.setNeedTax(e.target.checked)
                         }}>是否需要税费</Checkbox>
+                    </Form.Item>
+                    <Form.Item
+                        valuePropName="checked"
+                    >
+                        <Checkbox defaultChecked={oldStore.inquiryStatus=="1"?true:false} onChange={(e)=>{
+                            oldStore.setInquiryStatus(e.target.checked?"1":"0")
+                            // console.log(e.target.checked?"1":"0")
+                        }}>是否允许询盘</Checkbox>
                     </Form.Item>
                 </Form>
             </Card>
         </Scoped>
     )
 }
-
+export default observer(PriceOrTransactionCardEdit)
 
 const Scoped = styled.div`
 .ant{

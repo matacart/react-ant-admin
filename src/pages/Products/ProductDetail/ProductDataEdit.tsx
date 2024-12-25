@@ -58,6 +58,7 @@ function ProductDataEdit(prop:any){
               message.success('复制成功')
             }}><CopyOutlined /></span>
           </span>
+          语言翻译：
           <Select
               // size='large'
               defaultValue="English"
@@ -118,4 +119,4 @@ function ProductDataEdit(prop:any){
     );
   }
   
-  export default observer(ProductDataEdit);
+export default observer(ProductDataEdit);

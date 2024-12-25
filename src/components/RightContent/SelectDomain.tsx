@@ -15,7 +15,7 @@ function highlightSearchTerm(text: string, term: string) {
     return text.replace(term,()=> `<span class="mark">'${term}'</span>`);
 }
 
-const domainList: any[] = [];
+let domainList: any[] = [];
 
 
 // 店铺搜索 
@@ -55,6 +55,8 @@ export default function SelectDomain() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searching, setSearching] = useState(false)
     const intl = useIntl();// 多语言
+
+    
 
     function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
         try {
@@ -98,19 +100,21 @@ export default function SelectDomain() {
         setIsActive(false);
     }
     useEffect(() => {
+        domainList = [];
         // 判断会话中是否存在店铺数据
         if(sessionStorage["domain"]){
             if(JSON.parse(sessionStorage["domain"]).length !== 0){
                 setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
                 setDefaultDomain(cookie.load("domain")?.id);
+                domainList = JSON.parse(sessionStorage["domain"])
+
             }else{
                 getDomainList().then((res) => {
-                    console.log(res)
                     res?.data?.forEach((item: any, index: any) => {
                         domainList.push({
                             id: item.id,
                             domainName: item.domain_name,
-                            secondDomain: item.second_domain,
+                            secondDomain: item.second_domain.toLowerCase(),
                             status: item.status,
                         })
                     })
@@ -125,20 +129,19 @@ export default function SelectDomain() {
             }
         }else{
             getDomainList().then((res) => {
-                console.log(res)
                 let flag:any = [];
                 res?.data?.forEach((item: any, index: any) => {
                     domainList.push({
                         id: item.id,
                         domainName: item.domain_name,
-                        secondDomain: item.second_domain,
+                        secondDomain: item.second_domain.toLowerCase(),
                         status: item.status,
                     })
                     if(item.second_domain == window.location.hostname.slice(0,window.location.hostname.indexOf("."))){
                         flag.push({
                             id: item.id,
                             domainName: item.domain_name,
-                            secondDomain: item.second_domain,
+                            secondDomain: item.second_domain.toLowerCase(),
                             status: item.status,
                         })
                     }
@@ -152,7 +155,7 @@ export default function SelectDomain() {
                 }else{
                     cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
                     setDefaultDomain(flag[0].id);
-                    console.log(flag[0].id)
+                    // console.log(flag[0].id)
                 }
             }).catch((error) => {
                 message.error('未获取到店铺列表，请检查网络')

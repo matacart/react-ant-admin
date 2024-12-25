@@ -267,7 +267,7 @@ function StoresTable() {
           domainList.push({
               id: item.id,
               domainName: item.domain_name,
-              secondDomain: item.second_domain,
+              secondDomain: item.second_domain.toLowerCase(),
               status: item.status,
           })
         })
