@@ -1,23 +1,21 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined, FacebookFilled, LeftOutlined, RightOutlined, YahooFilled } from '@ant-design/icons';
 import { Button, Divider,Dropdown,MenuProps,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
 // 引入
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
 import ProductImgEdit from './ProductImgEdit';
 import ProductSettingsEdit from './ProductSettingsEdit';
 import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
-import { deleteProduct, getPlatformCategorySelect, getProductDetail, upDateProductStatus } from '@/services/y2/api';
+import { deleteProduct, getProductDetail, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
 import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
-import oldStore from '@/store/oldStore';
 import MultipleStylesEdit from './MultipleStylesEdit';
 import ProductStyleListEdit from './ProductStyleListEdit';
 import { styled } from 'styled-components';
 import PriceOrTransactionCardEdit from './PriceOrTransactionCardEdit';
-import ProductStyleList from '../ProductAdd/ProductStyleList';
 import ProductSeoEdit from './ProductSeoEdit';
 import { observer } from 'mobx-react-lite';
 import Winnow from './Winnow';
@@ -30,7 +28,8 @@ import ProtectionInformationEdit from './ProtectionInformationEdit';
 import RecommendationEdit from './RecommendationEdit';
 import RelevanceEdit from './RelevanceEdit';
 import copy from 'copy-to-clipboard';
-// import { history } from '@umijs/max';
+import ProductEditOverlay from '@/components/Overlay/ProductEditOverlay';
+import oldStore from '@/store/product/oldStore';
 
 
 // 信息
@@ -53,12 +52,12 @@ interface ProductDetail {
     // tag:string;
 }
 
+// export const MyContext = createContext({});
+
 function ProductDetail() {
     // 获取商品详情
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
-
     const navigate = useNavigate(); // 使用 useNavigate 钩子
-    // const product:any = useLocation().state
     const params = new URL(location.href).searchParams
     let productId = params.get("productId")
     let languageId = params.get("languagesId")
@@ -72,8 +71,9 @@ function ProductDetail() {
     
     const [isLoading,setIsLoading] = useState(false);
     const [saveLoading,setSaveLoading] = useState(false);
-
     const [language,setLanguage] = useState("");
+
+    
 
     // 分享链接
     const items: MenuProps['items'] = [
@@ -201,7 +201,8 @@ function ProductDetail() {
             const response = await getProductDetail(productId == null?"":productId,lang ?? ''); // 参数
             setProductDetail(response.data);
             if(response.data){
-                setProductDetail(response.data);
+                setProductStatus(response.data.status);
+                oldStore.setProductDetail(response.data);
                 oldStore.productInit(response.data);
             } else {
                 console.error('Invalid data format:', response);
@@ -214,35 +215,22 @@ function ProductDetail() {
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
         fetchProductDetail();
-
-        // console.log(product)
     },[productId]);
-    // 实现 onSecondInputChange 函数
-    // const handleSecondInputChange = (value: any) => {
-    //     setStyle(value);
-    //     console.log(value)
-    //     // 需要有多款式的时候才显示
-    // };
-
     // 更新商品状态 -- 存档
     const updateData = (status:string)=>{
         setProductStatus(status)
     }
-
     const prevProduct=(id:string)=>{
         if(id==="" || id===null){
             message.error("这是第一个商品")
         }else{
-            // navigate('/products/productId/edit?',language:oldStore.language}})
             history.push(`/products/productId/edit?productId=`+id+`&languagesId=`+oldStore.language)
         }
     }
     const nextProduct=(id:string)=>{
-        // setIsLoading(true)
         if(id==="" || id===null){
             message.error("这是最后一个商品")
         }else{
-            // navigate('/products/productId/edit',{state:{productId:id,language:oldStore.language}})
             history.push(`/products/productId/edit?productId=`+id+`&languagesId=`+oldStore.language)
         }
     }
@@ -252,7 +240,7 @@ function ProductDetail() {
             <Modal centered title={productStatus == "2"?"取消商品存档":"将商品存档"} open={onFile} onOk={onFileOk} onCancel={()=>{setOnFile(false)}}>
                 {productStatus == "2"?<p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>:<p>存档后销售渠道不再展示此商品，可通过商品管理进行查看</p>}
             </Modal>
-            { productDetail && <StyledDiv>
+            {productDetail && <StyledDiv>
                 <Spin spinning={isLoading}>
                     <div className='mc-layout-wrap'>
                         <div className="mc-layout">
@@ -331,17 +319,13 @@ function ProductDetail() {
                                         setOnFile(true);
                                     }}>将商品取消存档</Button>}
                                     <Button type='primary' onClick={async () => {
-                                        // console.log(Array.from(oldStore.attributes))
-                                        await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()))
-                                        // console.log(oldStore)
-                                        // console.log(JSON.stringify([...oldStore.variants,...oldStore.removeVariantData]))
+                                        oldStore.setProductImg(Array.from(oldStore.temp.values())[0])
+                                        await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()).slice(1))
                                         setIsLoading(true)
                                         if(oldStore.partsWarehouse == "0"){
                                             oldStore.updateProduct().then(async res => {
                                                 if (res.code === 0) message.success('修改内容已更新');
-                                                // await globalStore.sleep(2000)
-                                                // history.push('/products/index')
-                                                
+                                                oldStore.setEditStatus(false);
                                                 setIsLoading(false);
                                             });
                                         }else{
@@ -355,6 +339,8 @@ function ProductDetail() {
                 </Spin> 
             </StyledDiv>
             }
+            {/* 编辑提示 */}
+            {oldStore.editStatus && <ProductEditOverlay setIsLoading={setIsLoading} />}
         </div>
     )
 }

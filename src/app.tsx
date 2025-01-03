@@ -1,27 +1,23 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { DashboardOutlined, GlobalOutlined, LinkOutlined, ProfileOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
+import { GlobalOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
-import defaultSettings from '../config/defaultSettings';
-// import { errorConfig } from './requestErrorConfig';
-import { getOptionType, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
+import { getOptionType, getAccessToken, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
+import { message } from 'antd';
+import { Ping } from './components/RightContent';
+import SelectDomain from './components/RightContent/SelectDomain';
+import React, { useState } from 'react';
+// layout
+import { FormattedMessage } from 'umi';  //多语言
+import cookie from 'react-cookies'
+import { Provider } from 'mobx-react';
+import store from './store/store'
+import defaultSettings from '../config/defaultSettings';
+
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
-import { Divider, message, Popover, Select } from 'antd';
-import { Ping } from './components/RightContent';
-import access from './access';
-import { Oauth2 } from '../config/myConfig'
-import { getAccessToken } from '@/services/y2/api';
-import type { RequestConfig } from '@umijs/max';
-import { errorConfig } from './requestErrorConfig';
-import SelectDomain from './components/RightContent/SelectDomain';
-// import ProductListAjax from './components/List/OrderListAjax';
-import React, { useState } from 'react';
-import cookie from 'react-cookies'
 // 在 app.tsx 文件顶部添加导入语句
-
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 // 
@@ -35,15 +31,13 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-
-  
   // fetchUserInfo    方法 从接口获取用户信息，没有则跳转登录页
   const fetchUserInfo = async () => {
     //调用(mock中的)接口获取用户信息
     try {
       const msg = await queryCurrentUser({
       });
-     
+      
       return msg.data; // 返回用户信息
     } catch (error) {
       console.log(error);
@@ -101,12 +95,8 @@ axios.post('/api/ApiAppstore/languages_select').then((res) => {
   }
 })
 
-// layout
-import { FormattedMessage } from 'umi';  //多语言
+
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-
-
-
   getOptionType().then((res:any)=>{
     // console.log(res)
     if(res.code == 0){
@@ -114,9 +104,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     }else{
       console.log("获取商品类型失败")
     }
-      
-      // }))
   })
+  // console.log(1111)
 
   const stores = window.location.pathname.slice(0,8)
   return {

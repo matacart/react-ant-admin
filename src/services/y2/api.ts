@@ -3,9 +3,8 @@
 import { request } from '@umijs/max';
 import { Oauth2 } from '../../../config/myConfig'
 import newStore from '@/store/newStore';
-import oldStore from '@/store/oldStore';
 import cookie from 'react-cookies';
-import idID from '@/locales/id-ID';
+import oldStore from '@/store/product/oldStore';
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -158,7 +157,76 @@ export async function getAccessToken() {
   });
 }
 
-// 删除产品
+
+// 文件库 ---
+export async function getFileList(groupId?:string,extType?:number,pageNumber?:number,pageSize?:number,title?:string){
+  return request("/api/ApiResource/file_list", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "groupId": groupId,
+      "extType":extType,
+      "pageNum":pageNumber,
+      "pageSize":pageSize,
+      "title":title
+    }
+  });
+}
+
+// 分组 ---
+export async function getGroupList() {
+  return request("/api/ApiResource/group_list", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  });
+}
+// 新增分组
+export async function getGroupAdd(groupName: string,groupId:string) {
+  return request("/api/ApiResource/group_add", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "groupId":groupId,
+      "groupNames": groupName,
+      // access_token: localStorage.getItem('access_token')
+    }
+  });
+}
+
+// 删除分组
+export async function deleteGroup(groupId: string) {
+  return request("/api/ApiResource/group_del", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "groupId": groupId,
+      // access_token: localStorage.getItem('access_token')
+    }
+  });
+}
+// 删除文件
+export async function deleteFile(id: string) {
+  return request('/api/ApiResource/file_del', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      "id":id
+    },
+  })
+}
+
+
+// 删除产品 ----- 产品
 export async function deleteProduct(id: string) {
   return request('/api/ApiStore/product_del', {
     method: 'POST',
@@ -224,12 +292,14 @@ export async function addProduct() {
       "model":newStore.model,
       "sku": newStore.SKU,
       "price": newStore.price,
-      "specialprice": "",
+      // 售价
+      "specialprice": newStore.originPrice,
+      "cost_price":newStore.costPrice,
       "start_time":"",
       "end_time":"",
       "quantity": newStore.inventory,
-      "sales_count":"",
-      "minimum":"",
+      "sales_count":newStore.salesCount.toString(),
+      "minimum":newStore.minimum.toString(),
       "weight": newStore.weight,
       "weight_class_id": newStore.weightClassId,
       "title": newStore.title,
@@ -260,8 +330,6 @@ export async function addProduct() {
       "content": newStore.content,
       // 内容
       "content1": newStore.content1,
-      "originPrice":newStore.originPrice,
-      "cost_price":newStore.costPrice,
       "needTax":newStore.needTax?"1":"0",
       // 条码
       "barcode": newStore.ISBN,
@@ -281,8 +349,8 @@ export async function addProduct() {
       // 品库
       "is_sys":newStore.partsWarehouse,
       // 封面
-      "product_image": newStore.selectedImgList[0] ,
-      "product_video": '',  // 视频
+      "product_image": newStore.productImg ,
+      "product_video": newStore.productVideo,  // 视频
       // 图片
       "additional_image": JSON.stringify(newStore.selectedImgList),
       "languages_id": newStore.language,
@@ -397,10 +465,8 @@ export async function submitRenewalProduct(res:any){
       "languages_name": oldStore.languages_name,
       "model": oldStore.model,
       "update_time": oldStore.update_time,
-      // 特殊价
-      "specialprice": oldStore.specialprice,
-      "start_time": oldStore.start_time,
-      "end_time": oldStore.end_time,
+      "start_time": oldStore.startTime,
+      "end_time": oldStore.endTime,
       "weight_class_id": oldStore.weightClassId,
       "languages_id": oldStore.language,
       // 库存状态 1-有库存，2-无库存
@@ -436,7 +502,7 @@ export async function submitRenewalProduct(res:any){
       "meta_keyword": oldStore.metaKeyword,
       "meta_description":oldStore.metaDescription,
       "product_url": "/"+oldStore.productUrl,
-      "minimum": oldStore.minimum,
+      "minimum": oldStore.minimum.toString(),
       // 
       "title": oldStore.title,
       // 新增属性
@@ -454,18 +520,19 @@ export async function submitRenewalProduct(res:any){
       // 商品类型 -- 平台
       "platform_category_id": oldStore.productType,
       "categoryIds":oldStore.productCategories,
-      "product_image": oldStore.selectedImgList[0],
-      "product_video": oldStore.product_video,  // 视频
+      "product_image": oldStore.productImg,
+      "product_video": oldStore.productVideo,  // 视频
       // "additional_image": oldStore.selectedImgList,
       "additional_image": JSON.stringify(oldStore.selectedImgList),
-      "price": oldStore.price,      
       // 原价
-      "originPrice":oldStore.originPrice,
+      "price": oldStore.price,
+      // 售价
+      "specialprice":oldStore.originPrice,
       // 成本价
       "cost_price":oldStore.costPrice,
       "quantity": oldStore.inventory,
       // 销量
-      "sales_count": oldStore.sales_count,
+      "sales_count": oldStore.salesCount.toString(),
       "weight": oldStore.weight,
       // 描述
       "content1": oldStore.content1,
@@ -523,14 +590,14 @@ export async function getDomainList( options?: { [key: string]: any }) {
 }
 
 // 文件库
-export async function getFileList(page: any, limit: any) {
-  return request(`/api/ApiStore/file_list?page=${page}&limit=${limit}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-}
+// export async function getFileList(page: any, limit: any) {
+//   return request(`/api/ApiStore/file_list?page=${page}&limit=${limit}`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   })
+// }
 
 // 语言
 // export async function getLanguages() {

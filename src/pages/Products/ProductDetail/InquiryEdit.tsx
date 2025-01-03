@@ -2,7 +2,7 @@ import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { QuestionCircleOutlined } from "@ant-design/icons"
-import oldStore from "@/store/oldStore"
+import oldStore from "@/store/product/oldStore"
 
 
 // 询盘开关

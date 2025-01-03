@@ -1,17 +1,8 @@
-// import globalStore from "@/store/globalStore"
-// import newStore from "@/store/newStore"
-// import { Card } from "antd"
-// import { observer } from "mobx-react"
-// import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
 import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
+import oldStore from '@/store/product/oldStore';
 import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
 
@@ -38,7 +29,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                 </div>
                 <div className="item between">
                     <span>加入联盟</span>
-                    <Switch defaultChecked={oldStore.allianceStatus == "1"?true:false} onChange={onChange} />
+                    <Switch checked={oldStore.allianceStatus == "1"?true:false} onChange={onChange} />
                 </div>
             </Card>
         </Scoped>

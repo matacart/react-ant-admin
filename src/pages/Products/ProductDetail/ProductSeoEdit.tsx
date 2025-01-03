@@ -92,9 +92,9 @@ import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
 import cookie from 'react-cookies';
 import SEOEdit from "../components/SEOEdit";
+import oldStore from "@/store/product/oldStore";
 
 
  function productSeoEdit(){

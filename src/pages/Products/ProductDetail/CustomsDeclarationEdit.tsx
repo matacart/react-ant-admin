@@ -1,5 +1,5 @@
 import { getCountryList } from "@/services/y2/api";
-import oldStore from "@/store/oldStore";
+import oldStore from "@/store/product/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";

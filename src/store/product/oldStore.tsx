@@ -1,24 +1,50 @@
-import { addProduct, addTags, getProductDetail, submitRenewalProduct } from "@/services/y2/api";
-import { message, SelectProps, UploadFile } from "antd";
-import { valueType } from "antd/es/statistic/utils";
-import { action, makeAutoObservable, makeObservable, observable, toJS } from "mobx";
-import productStore from "./productStore";
+import { addProduct, addTags, submitRenewalProduct } from "@/services/y2/api";
+import { UploadFile } from "antd";
+import { action, makeAutoObservable, makeObservable, observable } from "mobx";
+import fileUpload from "./fileUpload";
+import productStore from "../productStore";
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
-
-// interface ImageItem {
-//   url?: string;
-// }
 
  class oldStore {
 
   constructor() {
     makeAutoObservable(this)
   }
+
+  // 产品信息
+  productDetail = {}
+
+  setProductDetail = (res: any) => {
+    this.productDetail = res;
+  }
+
+  // 
+  productInfo = {}
+  setProductInfo = (res: object) => {
+    this.productInfo = res;
+  }
+
+  fileUpload = new fileUpload();
+
+  editStatus = false;
+
+  setEditStatus = (value:boolean) => {
+    this.editStatus = value;
+  }
   
+  @observable language = '2';
+  @action setLanguage = (language: string) => {
+    this.language = language;
+  }
+
   // 产品id
-  @observable productId = "";
+  productId = "";
+
+  @action setProductId = (productId: string) => {
+    this.productId = productId;
+  }
 
   nextProductId = ""
 
@@ -31,16 +57,8 @@ import productStore from "./productStore";
   setPrevProductId = (value: string) => {
     this.prevProductId = value;
   }
-  @action setProductId = (productId: string) => {
-    this.productId = productId;
-    
-  }
-  // 
-  productInfo = {}
-  setProductInfo = (res: object) => {
-    this.productInfo = res;
-  }
-
+  
+  
   // 旧属性  兼容旧系统
   @observable categorys = [];
   @observable checked = 0;
@@ -62,29 +80,35 @@ import productStore from "./productStore";
   @observable divided_country = "0";
   @observable divided_url = "0";
   @observable group_id = "0";
-  @observable minimum = "0";
-  @observable sales_count = "";
   @observable product_video = "";
   // @observable imgTempList:any = [];
   // @action setImgTempList = (res: any) => {
   //   this.imgTempList = res;
   // }
   // 商品信息
-  @observable model = "";
-  @action setModel = (model: string) => {
+  model = "";
+  setModel = (model: string) => {
     this.model = model;
   }
   
-  @observable language = '2';
-  @action setLanguage = (language: string) => {
-    this.language = language;
+  // 视频
+  productVideo:string = '';
+  setProductVideo = (res: string) => {
+    this.productVideo = res;
   }
-  // 商品图片/视频  
-  @observable selectedImgList: UploadFile[] = [];
-  // -- 封面
-  @observable additionalImage:UploadFile[] = [];
 
-  @observable temp = new Map();
+  // -- 封面
+  productImg: string = '';
+  setProductImg = (res: string) => {
+    this.productImg = res;
+  }
+  
+  // 商品图片/视频  
+  selectedImgList: UploadFile[] = [];
+  additionalImage:UploadFile[] = [];
+  temp = new Map();
+
+  
   // 商品标题 
   @observable title = '';
   @action setTitle = (title: string) => {
@@ -100,9 +124,6 @@ import productStore from "./productStore";
   @action setContent1 = (value: string) => {
     this.content1 = value
   }
-  // @action setContent1 = (content1: string) => {
-  //   this.content = content1
-  // }
   // 操作选中的图片数组
   @action getSelectedImgList = () => {
     return this.selectedImgList;
@@ -124,16 +145,26 @@ import productStore from "./productStore";
   @action isIncludeSelectedImgList = (img: any) => {
     return this.selectedImgList.indexOf(img) > -1;
   }
-  // 价格/交易
-  // 售价
-  @observable price: number|undefined = 1000;
-  // 原价
-  @observable originPrice: number|undefined = 0;
-  // 成本价
-  @observable costPrice: number|undefined = 1000;
-  // 需要收取税费
-  @observable needTax: boolean = false;  //0
+  
 
+   // 生效时间
+   startTime = ''
+   endTime = ''
+  setStartTime = (value: string) => {
+    this.startTime = value;
+  }
+  setEndTime = (value: string) => {
+    this.endTime = value;
+  }
+
+  // 价格/交易
+  // 原价
+  price: number|undefined = 1000;
+  // 售价
+  originPrice: number|undefined = 1000;
+  // 成本价
+  costPrice: number|undefined = 1000;
+  
   @action setPrice = (value: number|undefined) => {
     this.price = value;
   }
@@ -143,125 +174,110 @@ import productStore from "./productStore";
   @action setCostPrice = (value: number|undefined) => {
     this.costPrice = value;
   }
+  // 需要收取税费
+  needTax: boolean = false;  //0
   // 税费
-  @action setNeedTax = (value: boolean) => {
+  setNeedTax = (value: boolean) => {
     this.needTax = value;
   }
   // 库存
   // SKU
-  @observable SKU: string = '';
-  // 条码
-  @observable ISBN: string = '';
-  // 库存数量
-  @observable inventory: number = 0;
-  // 库存追踪
-  @observable inventoryTracking: boolean = false;
-
-  // 缺货后继续销售
-  @observable continueSell: boolean = false;
-
-  @action setSKU = (value: string) => {
+  SKU: string = '';
+  setSKU = (value: string) => {
     this.SKU = value;
   }
-  @action setISBN = (value: string) => {
+  // 条码
+  ISBN: string = '';
+  setISBN = (value: string) => {
     this.ISBN = value;
   };
-
-  @action setInventory = (value: number) => {
+  // 库存数量
+  inventory: number = 0;
+  setInventory = (value: number) => {
     this.inventory = value;
   }
-  
-  @action setInventoryTracking = (value: boolean) => {
+  // 库存追踪
+  inventoryTracking: boolean = false;
+  setInventoryTracking = (value: boolean) => {
     this.inventoryTracking = value;
   }
-
-  @action setContinueSell = (value: boolean) => {
+  // 缺货后继续销售
+  continueSell: boolean = false;
+  setContinueSell = (value: boolean) => {
     this.continueSell = value;
   }
-
+  minimum = 0;
+  setMinimum = (value: number) => {
+    this.minimum = value;
+  }
+  salesCount = 0;
+  setSalesCount = (value: number) => {
+    this.salesCount = value;
+  }
   // 海关信息
   // 发货国家/地区
-  @observable notion: string = '';
-  // HS(协调制度)代码
-  @observable HSCode: string = '';
-
-  @action setNotion = (value: string) => {
+  notion: string = '';
+  setNotion = (value: string) => {
     this.notion = value;
   }
-  @action setHSCode = (value: string) => {
+  // HS(协调制度)代码
+  HSCode: string = '';
+  setHSCode = (value: string) => {
     this.HSCode = value;
   }
 
   // 多款式
-  @observable multipleStyles: boolean = false;
-  // 设置 multipleStyles  
-  @action setMultipleStyles(value: boolean) {
+  multipleStyles: boolean = false;
+  setMultipleStyles(value: boolean) {
     this.multipleStyles = value;
   }
 
   // 商品设置
   // 上架商品 -- status
-  @observable productStatus = "";
-  // SPU
-  @observable SPU: string = '';
-  // 重量
-  @observable weight: string = '';
-  // 商品厂商
-  @observable manufactuer: string = '';
-  // 标签
-  @observable tags = '';
-  // 商品类型
-  @observable productType = '';
-  // 商品类型
-  @observable productCategories = '';
-  
-  // 重量单位
-  @observable weightClassId = "1";
-
-  
-  // 设置 onPutProduct  
-  @action setProductStatus(value: string) {
+  productStatus:string = "";
+  setProductStatus(value: string) {
     this.productStatus = value;
   }
-  // 发货
-  @observable isShipping = true;
-  @action setIsShipping(value: boolean) {
-    this.isShipping = value;
-  }
-  // 设置 SPU  
-  @action setSPU(value: string) {
+  // SPU
+  SPU: string = '';
+  setSPU(value: string) {
     this.SPU = value;
   }
-
-  // 设置 weight  
-  @action setWeight(value: string) {
+  // 重量
+  weight: string = '';
+  setWeight(value: string) {
     this.weight = value;
   }
-  @action setWeightClassId(value: string) {
-    this.weightClassId = value;
-  }
-
-
-  // 设置 manufactuer  
-  @action setManufactuer(value: string) {
+  // 商品厂商
+  manufactuer: string = '';
+  setManufactuer(value: string) {
     this.manufactuer = value;
-    // console.log(value)
   }
-
-  // 设置 tag 
-  @action setTags(value: string) {
+  // 标签
+  tags:string = '';
+  setTags(value: string) {
     this.tags = value;
   }
-
-  // 设置 productType（这里假设你可以传入任何类型的数组）  
-  @action setProductType(value: string) {
+  // 商品类型
+  productType:string = '';
+  setProductType(value: string) {
     this.productType = value;
   }
-  @action setProductCategories(value: string) {
+  // 商品分类
+  productCategories:string = '';
+  setProductCategories(value: string) {
     this.productCategories = value;
   }
-
-  // 推荐
+  // 重量单位
+  weightClassId:string = "1";
+  setWeightClassId(value: string) {
+    this.weightClassId = value;
+  }
+  // 发货
+  isShipping = true;
+  setIsShipping(value: boolean) {
+    this.isShipping = value;
+  }
   // 推荐
   isHome = false;
   isHot = false;
@@ -283,23 +299,19 @@ import productStore from "./productStore";
 
   // 店铺关联
   isBind = "1";
-
   setIsBind(value: string) {
     this.isBind = value;
   }
-
   // 询盘 
   inquiryStatus = "0";
   setInquiryStatus(value: string) {
     this.inquiryStatus = value;
   }
-
   // 防护
   adWafStatus = "0";
   adProductId = "";
   adProductUrl = "";
   adGroupId = "0";
-
   setAdWafStatus(value: string) {
     this.adWafStatus = value;
   }
@@ -314,20 +326,19 @@ import productStore from "./productStore";
   }
 
   // seo设置
-  @observable metaTitle = "";
-  @observable metaKeyword = "";
-  @observable metaDescription = "";
-  @observable productUrl = "";
+  metaTitle = "";
+  metaKeyword = "";
+  metaDescription = "";
+  productUrl = "";
 
-
-  @action setMetaTitle(value: string) {
+  setMetaTitle(value: string) {
     this.metaTitle = value;
   }
 
-  @action setMetaKeyword(value: string) {
+  setMetaKeyword(value: string) {
     this.metaKeyword = value;
   }
-  @action setMetaDescription(value: string) {
+  setMetaDescription(value: string) {
     this.metaDescription = value;
   }
   @action setProductUrl(value: string) {
@@ -344,7 +355,6 @@ import productStore from "./productStore";
   setHostedStatus(value:string){
     this.hostedStatus = value
   }
-
   // 品库
   partsWarehouse = "0"
   setPartsWarehouse(value: string) {
@@ -355,14 +365,11 @@ import productStore from "./productStore";
   setIsShare(value: string) {
     this.isShare = value;
   }
-
   // 款式
   attributes:any[] = []
-
   setAttributes(value: any[]){
     this.attributes = value
   }
-
   // variant
   variants = []
   setVariants(value:any){
@@ -389,26 +396,50 @@ import productStore from "./productStore";
     // 状态
     status:"0"
   }
-
   setThirdPartyPlatform(value: any) {
     this.thirdPartyPlatform = value;
   }
 
-
-  // 临时数据
+  // 临时数据 --- 删除数据
   removeData = [];
-
-
   removeVariantData = [];
-
   setRemoveData(value: any) {
     this.removeData = value;
   }
-
   setRemoveVariantData(value: any) {
     this.removeVariantData = value;
   }
 
+  // 验证 -- 表单
+  validate = {
+    title:"success",
+    model:"success",
+    language:"success",
+    productStatus:"success",
+    productType:"success",
+    weightClassId:"success",
+    weight:"success",
+    inventory:"success",
+    SKU:"success",
+    ISBN:"success",
+    originPrice:"success",
+    costPrice:"success",
+    content:"success",
+    content1:"success",
+    metaTitle:"success",
+    metaKeyword:"success",
+    metaDescription:"success"
+  }
+  // 验证
+  validateForm(){
+    this.title == ""?this.validate.title = "error":this.validate.title = "success";
+    this.model == ""?this.validate.model = "error":this.validate.model = "success";
+    if(this.validate.title=="success" && this.validate.model == "success"){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   // 更新产品
   updateProduct(){
@@ -418,32 +449,46 @@ import productStore from "./productStore";
     return submitRenewalProduct(this)
   }
 
+  // 格式化日期
+  FormatDate(time:string){
+    const Time = new Date(parseInt(time)*1000)
+    return Time.getFullYear()+"-"+(Time.getMonth()+1)+"-"+Time.getDate()+" "+Time.getHours()+":"+Time.getMinutes()+":"+Time.getSeconds()
+  }
   // 初始化
   productInit(data:any){
-
     this.setRemoveData([])
     this.setRemoveVariantData([])
-
     this.setTitle(data.title)
     this.setContent(data.content == null ? "" : data.content)
     this.setContent1(data.content1)
     this.setModel(data.model)
     this.setPrice(data.price)
-    this.setOriginPrice(data.originPrice)
+    // 售价
+    this.setOriginPrice(data.specialprice)
+    this.setCostPrice(data.cost_price)
     this.setISBN(data.barcode)
     this.setSKU(data.sku)
     this.setInventory(data.quantity)
+    this.setMinimum(parseInt(data.minimum))
+    this.setSalesCount(parseInt(data.sales_count))
     this.weight=data.weight
-    this.costPrice=data.cost_price
     this.SPU=data.SPU
     this.manufactuer=data.manufactuer
     this.tags=data.tag
     this.productType=data.product_type
     //  图片  
-    this.setSelectedImgList(data.additional_image == ""?[]:JSON.parse(data.additional_image))
+    if(JSON.parse(data.additional_image).length>0){
+      data.product_image == ""?this.setSelectedImgList(JSON.parse(data.additional_image)):this.setSelectedImgList([data.product_image,...JSON.parse(data.additional_image)])
+    }else{
+      data.product_image == ""?this.setSelectedImgList([]):this.setSelectedImgList([data.product_image])
+    }
     this.selectedImgList.forEach((value:any,index:any) => {
-        this.temp.set(index.toString(),value)
+      this.temp.set(index.toString(),value)
     });
+    
+
+    // 视频
+    this.setProductVideo(data.product_video)
     // console.log(JSON.parse(data.additional_image))
     // data.additional_image === ""?[]:
     // console.log(JSON.parse(data.additional_image))
@@ -451,6 +496,8 @@ import productStore from "./productStore";
     // JSON.parse(data.additional_image).forEach((value:any,index:any) => {
     //   this.temp.set(index.toString(),value)
     // });
+    this.setStartTime(this.FormatDate(data.start_time))
+    this.setEndTime(this.FormatDate(data.end_time))
     // 税费
     this.setNeedTax(data.needTax == 0 ? false : true)
     // 
@@ -581,8 +628,6 @@ import productStore from "./productStore";
     // this.minimum=data.minimum
     // this.product_video = data.product_video
   }
-
-
   // 重置商品
   reset(){
     this.productId = '';
@@ -626,13 +671,6 @@ import productStore from "./productStore";
     this.attributes = [];
     this.temp.clear();
   }
-
-  // @action submitAddProduct() {
-  //   return addProduct()
-  // }
-  // 加载初始数据
 }
 
-
-// eslint-disable-next-line import/no-anonymous-default-export
 export default new oldStore();

@@ -1,5 +1,5 @@
 import ProductThirdTripartite from "@/components/Modal/ProductThirdTripartite";
-import oldStore from "@/store/oldStore";
+import oldStore from '@/store/product/oldStore';
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Switch, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";

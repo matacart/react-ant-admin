@@ -1,9 +1,10 @@
-import oldStore from "@/store/oldStore";
 import { QuestionCircleOutlined } from "@ant-design/icons"
-import { Card, Checkbox, Col, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
+import { Card, Checkbox, Col, DatePicker, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components"
+import dayjs from "dayjs";
+import oldStore from "@/store/product/oldStore";
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setPrice(value==null?0:value);
@@ -15,11 +16,13 @@ const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setCostPrice(value==null?0:value);
 };
 
-
+const { RangePicker } = DatePicker;
 
 function PriceOrTransactionCardEdit() {
 
+    const [Time,setTime] = useState<any>([])
     useEffect(()=>{
+        setTime([(oldStore.startTime??="")==""?null:dayjs(oldStore.startTime),(oldStore.endTime??="")==""?null:dayjs(oldStore.endTime)])
     },[oldStore.productId])
 
     return (
@@ -32,7 +35,7 @@ function PriceOrTransactionCardEdit() {
                             required
                             label={
                                 <>
-                                    售价
+                                    特价
                                     <Tooltip title="当商品参与各类促销活动时，可能不会使用此价格进行结账，具体以实际活动售价为准">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
@@ -42,18 +45,44 @@ function PriceOrTransactionCardEdit() {
                             } 
                             className="price-item">
                                 <InputNumber<number>
-                                    prefix="US$"
-                                    defaultValue={1000}
-                                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={priceOnChange}
-                                    value={oldStore.price}
-                                    className="ant-input"
+                                     prefix="US$"
+                                     defaultValue={1000}
+                                     value={oldStore.originPrice}
+                                     // defaultValue={oldStore.originPrice}
+                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                     onChange={originPriceOnChange}
+                                     className="ant-input"
                                 />
                             </Form.Item>
                         </Col>
-
                         <Col offset={2} span={11}>
+                            <Form.Item label={
+                                <>
+                                    特价时间
+                                    <Tooltip title="特价活动时间">
+                                        <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                                            <QuestionCircleOutlined />
+                                        </span>
+                                    </Tooltip>
+                                </>
+                            } className="price-item">
+                                <RangePicker value={Time} showTime onOk={(value)=>{
+                                    if( value[0]){
+                                        let startTime = value[0].year()+"-"+(value[0].month())+1+"-"+value[0].date()+" "+value[0].hour()+":"+value[0].minute()+":"+value[0].second()
+                                        oldStore.setStartTime(startTime)
+                                    }
+                                    if( value[1]){
+                                        let endTime = value[1].year()+"-"+(value[1].month())+1+"-"+value[1].date()+" "+value[1].hour()+":"+value[1].minute()+":"+value[1].second()
+                                        oldStore.setEndTime(endTime)
+                                    }
+                                    setTime(value)
+                                }} />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
                             <Form.Item label={
                                 <>
                                     原价
@@ -67,18 +96,15 @@ function PriceOrTransactionCardEdit() {
                                 <InputNumber<number>
                                     prefix="US$"
                                     defaultValue={1000}
-                                    value={oldStore.originPrice}
-                                    // defaultValue={oldStore.originPrice}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={originPriceOnChange}
+                                    onChange={priceOnChange}
+                                    value={oldStore.price}
                                     className="ant-input"
                                 />
                             </Form.Item>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col span={11}>
+                        <Col offset={2} span={11}>
                             <Form.Item label={
                                 <>
                                     成本价
@@ -148,7 +174,7 @@ function PriceOrTransactionCardEdit() {
                             marginBottom: 0
                         }}
                     >
-                        <Checkbox onChange={(e)=>{
+                        <Checkbox checked={oldStore.needTax} onChange={(e)=>{
                             console.log(e.target.checked)
                             oldStore.setNeedTax(e.target.checked)
                         }}>是否需要税费</Checkbox>
@@ -156,7 +182,7 @@ function PriceOrTransactionCardEdit() {
                     <Form.Item
                         valuePropName="checked"
                     >
-                        <Checkbox defaultChecked={oldStore.inquiryStatus=="1"?true:false} onChange={(e)=>{
+                        <Checkbox checked={oldStore.inquiryStatus=="1"?true:false} onChange={(e)=>{
                             oldStore.setInquiryStatus(e.target.checked?"1":"0")
                             // console.log(e.target.checked?"1":"0")
                         }}>是否允许询盘</Checkbox>

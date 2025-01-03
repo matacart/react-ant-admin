@@ -4,12 +4,12 @@ import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputRef, message, 
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import oldStore from "@/store/oldStore";
 import { getCategorySelect, getPlatformCategorySelect, selectTags, upDateProductStatus } from "@/services/y2/api";
 import TagsModal from "@/components/Modal/TagsModal";
 import { set, values } from 'lodash';
 import ProductCategoryModal from "@/components/Modal/ProductCategoryModal";
 import { observer } from "mobx-react-lite";
+import oldStore from "@/store/product/oldStore";
 
 // 上架商品
 const onPutProduct = (checked: boolean) => {
@@ -242,6 +242,8 @@ function ProductSettingsEdit(props:any) {
           inputTagRef.current?.focus();
         }
     }, [inputVisible]);
+
+    // 分类
     useEffect(() => {
         let temp:any = [];
         getCategorySelect().then(res=>{
@@ -255,8 +257,7 @@ function ProductSettingsEdit(props:any) {
             })
             setCategoryTags(temp)
         })
-    }, []);
-
+    }, [oldStore.productId]);
     useEffect(() => {
         editInputRef.current?.focus();
     }, [editInputValue]);
@@ -279,7 +280,7 @@ function ProductSettingsEdit(props:any) {
                 </div>:
                 <div className="item between">
                     <span>上架商品</span>
-                    <Switch defaultChecked={oldStore.productStatus=="1"?true:false} onChange={(checked)=>{
+                    <Switch checked={oldStore.productStatus=="1"?true:false} onChange={(checked)=>{
                         checked?oldStore.setProductStatus("1"):oldStore.setProductStatus("0")
                     }} />
                 </div>}
@@ -349,7 +350,8 @@ function ProductSettingsEdit(props:any) {
                             onChange={(e)=>{
                                 oldStore.setWeight(e.target.value)
                             }}
-                            defaultValue={oldStore.weight}
+                            value={oldStore.weight}
+                            // defaultValue={oldStore.weight}
                             className="ant-input"
                             addonAfter={selectAfter}
                             style={{
@@ -457,7 +459,7 @@ function ProductSettingsEdit(props:any) {
                             onChange={(e)=>{
                                 oldStore.setProductType(e)
                             }}
-                            defaultValue={oldStore.productType}
+                            value={oldStore.productType}
                         />
                     </Form.Item>
                     <Form.Item

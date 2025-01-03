@@ -44,6 +44,7 @@ const settingArray = [
         icon: '/icons/set/file.svg',
         title: '文件库',
         desc: '管理你上传的所有文件素材',
+        url:"/settings/fileManage",
     },{
         icon: '/icons/set/notice.svg',
         title: '通知',
@@ -94,7 +95,6 @@ const settingArray = [
 
 
 export default function Settings() {
-
     return (
         <Scoped>
             <LittleLayout title="设置">

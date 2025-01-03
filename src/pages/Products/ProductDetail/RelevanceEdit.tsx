@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
-import oldStore from "@/store/oldStore"
+import oldStore from '@/store/product/oldStore';
 
 
  function RelevanceEdit(){

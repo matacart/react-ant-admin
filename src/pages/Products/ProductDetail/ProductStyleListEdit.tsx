@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space } from 'antd';
-import oldStore from '@/store/oldStore';
 import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react-lite';
 import e from 'express';
 import { set } from 'lodash';
+import oldStore from '@/store/product/oldStore';
 // import _ from 'lodash';
 
 

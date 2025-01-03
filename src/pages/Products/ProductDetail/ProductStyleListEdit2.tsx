@@ -1,7 +1,7 @@
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
 import styled from "styled-components"
-import oldStore from "@/store/oldStore";
+import oldStore from '@/store/product/oldStore';
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setPrice(value==null?0:value);

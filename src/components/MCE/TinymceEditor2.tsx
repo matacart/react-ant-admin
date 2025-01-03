@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';  
 import { Editor } from '@tinymce/tinymce-react';  
-import oldStore from '@/store/oldStore';
+import axios from 'axios';
+import oldStore from '@/store/product/oldStore';
 
   
 // 假设这是TinyMCE实例的正确类型，您可能需要从@tinymce/tinymce-react包中导入它  
@@ -69,6 +70,22 @@ export default function App(prop: any){
           'blockquote hr code superscript subscript | fullscreen ', 
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           // toolbar_sticky: true,
+          // 自定义上传文件函数 --- 版本：5.0,  ---优化：自定义插件 添加其它高级设置
+          images_upload_handler:async (blobInfo, progress)=>{
+            const formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            try {
+              const response = await axios.post('/api/ApiAppstore/doUploadPic', formData)
+              if (response.data.code === 0) {
+                // console.log(response.data.data.src);
+                return Promise.resolve("https:"+response.data.data.src);
+              } else {
+                return Promise.reject(response.data.msg);
+              }
+            } catch (error) {
+              return Promise.reject('上传失败');
+            }
+          },
           promotion:false, //去除upgrade按钮
           // 
           init_instance_callback:initData

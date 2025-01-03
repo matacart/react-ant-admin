@@ -45,3 +45,30 @@ ol {
     display: block;
   }
 }
+
+
+/* 样式 */
+.color-242833{
+  color: #242833;
+}
+
+.color-7A8499{
+  color: #7A8499;
+}
+
+.color-356DFF{
+  color: #356dff;
+}
+
+.font-16{
+  font-size: 16px;
+}
+
+.font-14{
+  font-size: 14px;
+}
+
+.font-w-600{
+  font-weight: 600;
+}
+

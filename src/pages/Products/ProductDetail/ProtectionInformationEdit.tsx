@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import ProductDefenseModal from "@/components/Modal/ProductDefenseModal"
-import oldStore from "@/store/oldStore"
+import oldStore from '@/store/product/oldStore';
 
 
  function ProtectionInformationEdit(){

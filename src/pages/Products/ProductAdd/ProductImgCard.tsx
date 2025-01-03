@@ -1,12 +1,14 @@
-import { Badge, Card, Flex, Form, Input, Modal, Select, Spin } from "antd";
+import { Badge, Button, Card, Flex, Form, Input, Modal, Select, Spin } from "antd";
 import React, { useEffect, useMemo, useState } from 'react';
-import { InboxOutlined, LoadingOutlined, PlusOutlined, SearchOutlined, ShopOutlined } from '@ant-design/icons';
+import { InboxOutlined, LoadingOutlined, PlusOutlined, SearchOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { message, Upload, Image } from 'antd';
 import styled from 'styled-components';
 import { values } from "lodash";
 import axios from "axios";
 import newStore from "@/store/newStore";
+import FileList from "../components/FileList";
+import { observer } from "mobx-react-lite";
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -19,10 +21,12 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-export default function ProductImgCard() {
+function ProductImgCard() {
 
 
   const [loading,setLoading] = useState(false);
+  // 视频弹窗加载
+  const [videoLoading, setVideoLoading] = useState(false);
   // youtubeUrl
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
@@ -130,6 +134,12 @@ export default function ProductImgCard() {
     })
     setFileList(tempList as any)
   }, [])
+
+  const [selectFileCount,setSelectFileCount] = useState(0);
+
+  useEffect(()=>{
+    newStore.fileUpload.selectFileList.length>0?setSelectFileCount(newStore.fileUpload.selectFileList.length):null
+  },[newStore.fileUpload.selectFileList])
   
   // 
   const handlePreview = async (file: UploadFile) => {
@@ -160,6 +170,8 @@ export default function ProductImgCard() {
   //   newStore.setSelectedImgList(newFileList);
   // }
   const handleChange = async (info: any) => {
+
+    // console.log(info)
     // 删除
     if(info.file.status == "removed"){
       setFileList(info.fileList);
@@ -191,6 +203,22 @@ export default function ProductImgCard() {
     setFileList(info.fileList);
   };
 
+  // 从文件库添加文件
+  const addFileLibrary = (items:any)=>{
+    let newFileList = [...fileList];
+    items.forEach((item:any)=>{
+      newFileList.push({
+        uid:item.id,
+        name:item.id,
+        status:"done",
+        url:item.url
+      })
+      newStore.temp.set(item.id, item.url)
+    })
+    setFileList(newFileList);
+  }
+
+
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       <PlusOutlined />
@@ -198,38 +226,35 @@ export default function ProductImgCard() {
     </button>
   );
 
-  // const props: UploadProps = {
-  //   name: 'file',
-  //   listType: "picture-card",
-  //   fileList: fileList,
-  //   showUploadList: false,
-  //   multiple: true,
-  //   action: '/api/ApiAppstore/doUploadPic',
-  //   onChange(info) {
-  //     const { status, response } = info.file;
-  //     if (status !== 'uploading') {
-  //       console.log(info.file, info.fileList);
-  //     }
-  //     if (status === 'done') {
-  //       message.success(`${info.file.name} file uploaded successfully.`);
-  //       newStore.addSelectedImgList(response?.fileUrl)
-  //       console.log('llllllllllllllll' +
-  //         '    id:' +
-  //         response?.fileId,
-  //         '    name:' + response?.fileName,
-  //         '     url:' + response?.fileUrl);
-  //     } else if (status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`);
-  //     }
-
-
-  //   },
-  //   onDrop(e) {
-  //     console.log('Dropped files', e.dataTransfer.files);
-  //   },
-  // };
-
-
+  const videoProps: UploadProps = {
+    name: 'file',
+    showUploadList:false,
+    maxCount:1,
+    headers: {
+      authorization: 'authorization-text',
+    },
+    // 手动上传
+    beforeUpload:(file)=>{
+      setVideoLoading(true)
+      if(file.type.slice(0,5)=="video"){
+        // 上传
+        let formData = new FormData()
+        formData.append("1", file)
+        axios.post('/api/ApiAppstore/doUploadVideo',formData).then((req: any) => {
+          if(req.data.code == 0){
+            form.setFieldValue('youTubeUrl', req.data.data.src)
+            setVideoLoading(false);
+          }else{
+            setVideoLoading(false);
+            message.error("上传失败", 1)
+          }
+        })
+      }else{
+        message.error("文件格式错误")
+      }
+      return false
+    },
+  };
 
   return (
     <Scoped>
@@ -237,6 +262,8 @@ export default function ProductImgCard() {
         extra={<>
           <a onClick={() => {
             setAddUrlModalOpen(true);
+            // 表单
+            form.setFieldValue("youTubeUrl",newStore.productVideo);
           }}>添加URL</a>
           <a style={{
             marginLeft: 20
@@ -277,32 +304,6 @@ export default function ProductImgCard() {
               />
             )}
           </Spin>
-          {/* 图片展示 */}
-          {/* {
-            newStore.getSelectedImgList()?.map((img: any, index: any) => {
-              let tempSelectedImgIndex = tempSelectedImg.indexOf(img);
-             return (
-                <div style={{
-                  height: 150,
-                  width: 128,
-                  borderRadius: 8,
-                  overflow: "hidden"
-                }}>
-                  <img
-                    style={{
-                      height: 128,
-                      width: 128,
-                      overflow: 'hidden',
-                      objectFit: "contain",
-                      background: "rgb(247, 248, 251)",
-                      cursor: "default",
-                    }}
-                    src={img?.fileUrl} key={img?.fileId} />
-                </div>)
-            })
-          } */}
-          
-
         </div>
         {/* 图片上传-外 */}
         {/* <Dragger {...props} height={200} >
@@ -322,10 +323,23 @@ export default function ProductImgCard() {
           title="YouTube视频"
           centered
           width="90vw"
-
           open={addUrlModalOpen}
-          onOk={() => setAddUrlModalOpen(false)}
-          onCancel={() => setAddUrlModalOpen(false)}
+          onOk={() => {
+            // 手动效验
+            form.validateFields({validateOnly:true}).then((values) => {
+              if(values.youTubeUrl){
+                newStore.setProductVideo(values.youTubeUrl)
+                setAddUrlModalOpen(false)
+              }
+            }).catch(error=>{
+              console.log(1111)
+            })
+          }}
+          onCancel={() => {
+            form.resetFields()
+            // form.setFieldValue("youTubeUrl", oldStore.productVideo)
+            setAddUrlModalOpen(false)
+          }}
           styles={{
             body: {
               height: "120px",
@@ -335,31 +349,41 @@ export default function ProductImgCard() {
             maxWidth: "860px"
           }}
         >
-          <Form layout="vertical"
-            form={form}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              label={<div style={{ fontWeight: 500, fontSize: "14px" }}>复制 YouTube 视频URL到下面输入框</div>}
-              name='youTubeUrl'
-              rules={[{
-                validator: (rule, value) => {
-                  // 校验逻辑保持不变  
-                  const regexYouTube = /^https?:\/\/(?:www\.)?youtu(be\.com\/watch\?v=|\.be\/)([a-zA-Z0-9_-]{11})(?:&|#|\?)*$/;
-                  if (!regexYouTube.test(value)) {
-                    return Promise.reject(new Error('请输入正确的YouTube视频链接！'));
-                  }
-                  return Promise.resolve();
-                }
-              }]}
+          <Spin spinning={videoLoading}>
+            <Form layout="vertical"
+              form={form}
+              clearOnDestroy
             >
-              <Input />
-            </Form.Item>
-            <div style={{
-              color: "rgb(122, 132, 153)"
-            }}>目前只支持YouTube视频</div>
-          </Form>
-
+              <Form.Item
+                label={<div style={{ fontWeight: 500, fontSize: "14px" }}>复制 YouTube 视频URL到下面输入框</div>}
+                name='youTubeUrl'
+                rules={[{
+                  validator: (rule, value,callback) => {
+                    // 校验逻辑保持不变  
+                    const regexYouTube = /^https?:\/\/(?:www\.)?youtu(be\.com\/watch\?v=|\.be\/)([a-zA-Z0-9_-]{11})(?:&|#|\?)*$/;
+                    // 本地视频
+                    if("img1.s.handingcdn.com" == value.slice(2,23)){
+                      return Promise.resolve();
+                    }
+                    if (!regexYouTube.test(value)) {
+                      return Promise.reject('请输入正确的视频链接！');
+                    }
+                    return Promise.resolve();
+                  }
+                }]}
+              >
+                <Input defaultValue={newStore.productVideo} />
+              </Form.Item>
+              <div style={{
+                color: "rgb(122, 132, 153)"
+              }}>目前只支持YouTube视频和本地上传视频</div>
+              <div style={{margin:"20px 0"}}>
+                <Upload {...videoProps}>
+                  <Button icon={<UploadOutlined />}>上传本地视频</Button>
+                </Upload>
+              </div>
+            </Form>
+          </Spin>
         </Modal>
 
         {/* 添加多媒体图片 Modal */}
@@ -367,75 +391,51 @@ export default function ProductImgCard() {
           width="90vw" style={{ maxWidth: "860px" }}
           styles={{
             body: {
-              height: "700px",
+              height: "710px",
               padding: 0
             }
           }}
+          destroyOnClose
           centered
           title='从文件库中选择'
           open={addImgModalOpen}
+          footer={(_, { OkBtn, CancelBtn }) => (
+            <>
+              <Flex justify="space-between">
+                <div style={{lineHeight:"32px"}}>已选<span style={{margin:"0 4px"}}>{selectFileCount}</span>个文件</div>
+                <div>
+                  <CancelBtn />
+                  <span style={{ margin: "0 6px" }}></span>
+                  <OkBtn />
+                </div>
+              </Flex>
+            </>
+          )}
           onOk={() => {
             setAddImgModalOpen(false)
-            newStore.setSelectedImgList([...newStore.getSelectedImgList(), ...tempSelectedImg]);
-            tempSelectedImg.length = 0;
+            // 从文件库中添加文件
+            addFileLibrary(newStore.fileUpload.selectFileList)
+            newStore.fileUpload.setSelectFileIndex({});
+            newStore.fileUpload.setSelectFileList([]);
+            setSelectFileCount(0)
           }}
-          onCancel={() => setAddImgModalOpen(false)}
+          onCancel={() => {
+            newStore.fileUpload.setSelectFileIndex({});
+            newStore.fileUpload.setSelectFileList([]);
+            setAddImgModalOpen(false);
+            setSelectFileCount(0)
+          }}
         >
-          {/* 图片搜索 */}
-          <div className="img-modal-header" style={{
-            display: "flex",
-            alignContent: "center",
-            marginTop: '20px',
-            marginBottom: '8px'
-          }}>
-            <Input
-              placeholder="搜索文件名/文件格式"
-              prefix={<SearchOutlined style={{ color: "rgba(0,0,0,0.25" }} />}
-              style={{
-                height: "36px",
-                width: "300px",
-                marginRight: "20px"
-              }}
-
-            />
-
-            <Select
-              placeholder="文件类型"
-              style={{ width: 120, height: 36 }}
-              // onChange={}
-              options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}
-            />
-          </div>
-          {/* 图片列表wrap */}
-          <div className="content" style={{ display: "flex", flexWrap: "wrap", gap: "8px"
-          }}>
-            {/* 列表 */}
-            <div>
-              {/* 上传 */}
-              <div>
-
-              </div>
-              {/* 图片 */}
-              <div>
-
-              </div>
-            </div>
-            {/* 分页 */}
-            <div></div>
-
-          </div>
+          <FileList />
         </Modal>
-
       </Card>
     </Scoped>
 
   )
 }
+
+
+export default observer(ProductImgCard)
 
 
 const UploadTipDesc = styled.div`

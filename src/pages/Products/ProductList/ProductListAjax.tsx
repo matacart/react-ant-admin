@@ -8,8 +8,8 @@ import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
 import SelectedActions from './SelectedActions';
-import oldStore from '@/store/oldStore';
 import cookie from 'react-cookies';
+import oldStore from '@/store/product/oldStore';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;

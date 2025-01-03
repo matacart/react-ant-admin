@@ -19,7 +19,8 @@ function ProductOverlay() {
     }
 
     const create = async () => {
-        await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
+        newStore.setProductImg(Array.from(newStore.temp.values())[0])
+        await newStore.setSelectedImgList(Array.from(newStore.temp.values()).slice(1))
         if(newStore.validateForm()){
             newStore.unBlock();
             newStore.submitAddProduct().then(res=>{

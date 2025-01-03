@@ -1,5 +1,4 @@
-import newStore from "@/store/newStore";
-import oldStore from "@/store/oldStore";
+import oldStore from '@/store/product/oldStore';
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
 import e from "express";
@@ -21,11 +20,15 @@ function StockEdit(){
                 <Form layout="vertical">
                     <Row>
                         <Col span={11}>
-                            <Form.Item label="模型"
-                                required initialValue={oldStore.model}>
+                            <Form.Item label="型号"
+                                required initialValue={oldStore.model}
+                                validateStatus={oldStore.validate.model as any}
+                                help={oldStore.validate.model == "success"?"":<span style={{ color: '#F86140' }}>请输入商品模型</span>}>
                                 <Input
                                     onChange={(e)=>{
                                         oldStore.setModel(e.target.value)
+                                        newStore.validate.model = "success"
+                                        newStore.setEditStatus(true)
                                     }}
                                     value={oldStore.model}
                                 />
@@ -61,6 +64,28 @@ function StockEdit(){
                                     value={oldStore.inventory}
                                     onChange={(e=>{
                                         oldStore.setInventory(Number(e.target.value))
+                                    })}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
+                            <Form.Item
+                                label="最少购买"
+                            >
+                                <Input
+                                    value={oldStore.minimum}
+                                    onChange={(e) => oldStore.setMinimum(Number(e.target.value))}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                            <Form.Item label="商品销量">
+                                <Input
+                                    value={oldStore.salesCount}
+                                    onChange={(e=>{
+                                        oldStore.setSalesCount(Number(e.target.value))
                                     })}
                                 />
                             </Form.Item>

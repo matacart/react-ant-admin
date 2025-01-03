@@ -1,19 +1,19 @@
 import { Card, Form, Input, message, Select, Tooltip } from "antd";
-import { useEffect, useState } from "react";
-import oldStore from "@/store/oldStore";
+import { useContext, useEffect, useState } from "react";
 import { getProductDetail } from "@/services/y2/api";
 import { CopyOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import copy from 'copy-to-clipboard';
 import { observer } from "mobx-react-lite";
 import TinymceEditor2 from "@/components/MCE/TinymceEditor2";
+import oldStore from "@/store/product/oldStore";
 
 const { TextArea } = Input;
 const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   oldStore.setTitle(e.target.value)
 };
 
-
 function ProductDataEdit(prop:any){
+
     const [form] = Form.useForm();
 
     const [language, setLanguage] = useState("2");
@@ -75,14 +75,20 @@ function ProductDataEdit(prop:any){
         </>
       }>
         <Form layout='vertical' className='product-form' form={form}>
+        {/* --- 托管给form对象 */}
           <Form.Item
-            // name="title"  --- 托管给form对象
+            required
             label="商品标题"
             initialValue={oldStore.title}
+            validateStatus={oldStore.validate.title as any}
+            help={oldStore.validate.title == "success"?"":<span style={{ color: '#F86140' }}>请输入商品标题</span>}
           >
             <Input
               value={oldStore.title}
               onChange={(e)=>{
+                // 清除
+                oldStore.validate.title = "success"
+                oldStore.setEditStatus(true)
                 oldStore.setTitle(e.target.value)
               }}
             />

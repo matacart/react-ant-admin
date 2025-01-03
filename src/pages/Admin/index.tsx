@@ -17,9 +17,6 @@ export default () => {
     // 请求平台分类
     globalStore.getPlatformCategory();
 
-
-    
-
   },[])
 
 
@@ -73,7 +70,6 @@ export default () => {
               }
             ]}
           >
-
           </TextCard>
         </Space>
       </div>

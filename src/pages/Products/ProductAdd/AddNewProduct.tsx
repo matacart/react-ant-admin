@@ -227,9 +227,8 @@ function AddNewProduct(){
                     <Divider/>
                     <div className='mc-footer'>
                         <Button type='primary' onClick={async ()=>{
-                            await newStore.setSelectedImgList(Array.from(newStore.temp.values()))
-                            // console.log(newStore)
-                            history.push('/products/index')
+                            newStore.setProductImg(Array.from(newStore.temp.values())[0])
+                            await newStore.setSelectedImgList(Array.from(newStore.temp.values()).slice(1))
                             if(newStore.partsWarehouse == "0"){
                                 if(newStore.validateForm()){
                                     newStore.unBlock();

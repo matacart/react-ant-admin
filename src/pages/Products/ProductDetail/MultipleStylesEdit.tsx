@@ -1,7 +1,7 @@
 import AttributesModal from "@/components/Modal/AttributesModal";
 import ProductStyleModal from "@/components/Modal/ProductStyleModal";
 import { addProduct, addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
-import oldStore from "@/store/oldStore";
+import oldStore from "@/store/product/oldStore";
 import productStore from "@/store/productStore";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
 import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message, Tooltip, SelectProps, Table, TableProps, Space, Divider, AutoCompleteProps } from "antd";

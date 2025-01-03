@@ -1,5 +1,6 @@
 import { addProductOptionValues, getProductStyleValueList } from '@/services/y2/api';
-import oldStore from '@/store/oldStore';
+import oldStore from '@/store/product/oldStore';
+// import oldStore from '@/store/product/oldStore';
 import { DeleteOutlined, InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { GetProp, Input, Modal, Table, TableProps, Image, Upload, UploadProps, UploadFile, message, Spin, TabsProps, Tabs, Select } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
@@ -80,7 +81,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             }} style={{width:"200px"}} />,
         },
         {
-            title: '价格',
+            title: '加价',
             dataIndex: 'price',
             key: 'price',
             render: (text,record,index) => <Input value={record.option_values_price} onChange={(e)=>{
@@ -114,7 +115,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
                         newIsHovering[index] = false
                         setIsHovering(newIsHovering)
                     }}>
-                        <Image src={record.attribute_image} />
+                        <Image src={JSON.parse(record.attribute_image)[0]} />
                         <div className="overlay"
                             style={{
                                 width: '100%',
@@ -362,9 +363,9 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             cancelText="取消"
             onOk={()=>{
                 setImgModal(false)
-                // 添加图片
+                // 添加图片 --- 数组类型的JSON对象
                 let newData = [...data];
-                newData[selectImgIndex].attribute_image = imageUrl
+                newData[selectImgIndex].attribute_image = JSON.stringify([imageUrl])
                 setData(newData)
                 setImageUrl("")
             }}

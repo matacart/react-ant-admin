@@ -20,7 +20,7 @@ function BlankPage() {
                             <div>你将在此处添加和管理采购单</div>
                             <div>
                                 <Button type="primary" style={{width:"218px",height:"44px",fontWeight:"600"}} onClick={()=>{
-                                    // history.push('/products/categories/new')
+                                    history.push("/products/purchase_orders/new")
                                 }}>创建采购订单</Button>
                             </div>
                         </div>

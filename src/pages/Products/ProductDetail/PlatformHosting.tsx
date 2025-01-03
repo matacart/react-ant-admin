@@ -4,16 +4,13 @@
 // import { observer } from "mobx-react"
 // import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
-import { Card, Checkbox, Switch, Tooltip } from "antd"
+import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
 import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
+import oldStore from "@/store/product/oldStore";
 
  function PlatformHosting(){
     
@@ -37,7 +34,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                 </div>
                 <div className="item between">
                     <span>托管</span>
-                    <Switch defaultChecked={oldStore.hostedStatus == "1"?true:false} onChange={onChange} />
+                    <Switch checked={oldStore.hostedStatus == "1"?true:false} onChange={onChange} />
                 </div>
             </Card>
         </Scoped>

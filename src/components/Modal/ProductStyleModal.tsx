@@ -1,5 +1,5 @@
-import { addStyleName, getOptionType, getProductOption } from "@/services/y2/api";
-import oldStore from "@/store/oldStore";
+import { addStyleName, getProductOption } from "@/services/y2/api";
+import oldStore from "@/store/product/oldStore";
 import { Form, Input, message, Modal, Select, Spin, Switch, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";

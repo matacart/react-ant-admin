@@ -30,7 +30,7 @@ function StockCard() {
                 <Form layout="vertical">
                     <Row>
                         <Col span={11}>
-                            <Form.Item label="模型"
+                            <Form.Item label="型号"
                                 // rules={[{ required: true, message: 'Please input model!' }]}
                                 validateStatus={newStore.validate.model as any}
                                 help={newStore.validate.model == "success"?"":<span style={{ color: '#F86140' }}>请输入商品模型</span>}
@@ -83,6 +83,28 @@ function StockCard() {
                                         newStore.setEditStatus(true)
                                     }}
                                     value={newStore.inventory}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
+                            <Form.Item
+                                label="最少购买"
+                            >
+                                <Input
+                                    defaultValue={newStore.minimum}
+                                    onChange={(e) => newStore.setMinimum(Number(e.target.value))}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                            <Form.Item label="商品销量">
+                                <Input
+                                    defaultValue={newStore.salesCount}
+                                    onChange={(e=>{
+                                        newStore.setSalesCount(Number(e.target.value))
+                                    })}
                                 />
                             </Form.Item>
                         </Col>

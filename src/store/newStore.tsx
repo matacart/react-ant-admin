@@ -1,16 +1,18 @@
 import { addProduct, addTags } from "@/services/y2/api";
 import { message, SelectProps, UploadFile } from "antd";
 import { action, makeAutoObservable, makeObservable, observable } from "mobx";
+import fileUpload from "./product/fileUpload";
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
-
-// 12332222111
 
 class newStore {
   constructor() {
     makeAutoObservable(this)
   }
+
+  fileUpload = new fileUpload();
+
 
   // 产品路由跳转提示 -- 页面确定跳转时清除
   unBlock!: () => void;
@@ -50,8 +52,20 @@ class newStore {
 
   @observable temp = new Map();
 
+
+  // -- 封面
+  productImg: string = '';
+  setProductImg = (res: string) => {
+    this.productImg = res;
+  }
   // 商品图片/视频
-  @observable selectedImgList: UploadFile[] = [];
+  selectedImgList: UploadFile[] = [];
+  // 视频
+  productVideo:string = '';
+  setProductVideo = (res: string) => {
+    this.productVideo = res;
+  }
+
 
   @action setTitle = (title: string|undefined) => {
     this.title = title;
@@ -95,10 +109,19 @@ class newStore {
 
   // 价格/交易
 
-  // 售价
-  @observable price: number|undefined = 1000;
+  // 生效时间
+  startTime = ''
+  endTime = ''
+  setStartTime = (value: string) => {
+    this.startTime = value;
+  }
+  setEndTime = (value: string) => {
+    this.endTime = value;
+  }
   // 原价
-  @observable originPrice: number|undefined = 0;
+  @observable price: number|undefined = 1000;
+  // 售价
+  @observable originPrice: number|undefined = 1000;
   // 成本价
   @observable costPrice: number|undefined = 1000;
   // 需要收取税费
@@ -115,6 +138,12 @@ class newStore {
   }
   @action setNeedTax = (value: boolean) => {
     this.needTax = value;
+  }
+
+  // 询盘 
+  inquiryStatus = "0";
+  setInquiryStatus(value: string) {
+    this.inquiryStatus = value;
   }
 
   // 库存
@@ -148,6 +177,17 @@ class newStore {
 
   @action setContinueSell = (value: boolean) => {
     this.continueSell = value;
+  }
+
+  minimum = 1;
+  salesCount = 1000;
+
+  setMinimum = (value: number) => {
+    this.minimum = value;
+  }
+
+  setSalesCount = (value: number) => {
+    this.salesCount = value;
   }
 
   // 海关信息
@@ -438,7 +478,12 @@ class newStore {
     })
     return addProduct();
   }
-  
+
+
+
+
+
+  // --------
 
   // 重置商品
   reset(){
@@ -447,13 +492,16 @@ class newStore {
     this.title = '';
     this.content = '';
     this.content1 = '';
+    this.productImg = '';
     this.selectedImgList = [];
     this.price = 1000;
-    this.originPrice = 0;
-    this.costPrice = 0;
+    this.originPrice = 1000;
+    this.costPrice = 1000;
     this.needTax = false;
     this.SKU = '';
     this.ISBN = '';
+    this.salesCount = 1000;
+    this.minimum = 1;
     this.inventory = 0;
     this.inventoryTracking = false;
     this.continueSell = false;
@@ -517,9 +565,5 @@ class newStore {
 }
 
 export default new newStore();
-
-// eslint-disable-next-line import/no-anonymous-default-export
-// export default new newStore(import { model_1 } from 'C:/Users/Administrator/Desktop/react-ant-admin-main/src/.umi-production/plugin-initialState/@@initialState';
-import { values } from 'lodash';
 
 

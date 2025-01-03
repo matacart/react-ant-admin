@@ -121,12 +121,14 @@ export default  [
         {
           path: 'purchase_orders',
           name: 'purchase_orders',
-          component: './Products/PurchaseOrder/BlankPage',
+          component: './Products/PurchaseOrder/Index',
         },
-        // {
-        //   path: 'purchase_orders',
-        //   name: 'purchase_orders',
-        // },
+        {
+          path: 'purchase_orders/new',
+          name: 'purchase_orders/new',
+          component: './Products/PurchaseOrder/new/NewPurchaseOrder',
+          menu: false,
+        },
         // 分类
         {
           path: 'categories',
@@ -290,8 +292,11 @@ export default  [
       {
         path:"base",
         component:"./Settings/Base/Base"
+      },
+      {
+        path:"fileManage",
+        component:"./Settings/FileManage/FileManage"
       }
-      
     ]
   },
   // {

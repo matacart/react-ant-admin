@@ -6,7 +6,7 @@ import styled from "styled-components"
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
-import oldStore from "@/store/oldStore";
+import oldStore from '@/store/product/oldStore';
 
 
  function Subnumber(){
@@ -40,7 +40,7 @@ import oldStore from "@/store/oldStore";
                         <Select
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
-                            defaultValue={oldStore.partsWarehouse}
+                            value={oldStore.partsWarehouse}
                             options={[
                                 { value: '0', label: '商户自建' },
                                 { value: '1', label: '平台自建' },
@@ -53,7 +53,7 @@ import oldStore from "@/store/oldStore";
                     <Form.Item>
                         <div className="item between">
                             <span>子号共享</span>
-                            <Switch defaultChecked={oldStore.isShare == "1"?true:false} onChange={onChange} />
+                            <Switch checked={oldStore.isShare == "1"?true:false} onChange={onChange} />
                         </div>
                     </Form.Item>
                 </Form>
