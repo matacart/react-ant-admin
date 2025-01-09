@@ -27,7 +27,7 @@ function FileList() {
 
     useEffect(()=>{
         getGroupList().then(res=>{
-            if(res.code == 0){
+            if(res.code == 0 && res.data.length>0){
                 let newItems:TabsProps['items'] = [...item]
                 res.data.list.forEach((item:any,index:number)=>{
                     // console.log(item)

@@ -3,9 +3,6 @@ import { Link } from "@umijs/max";
 import { Col, Row } from "antd";
 import styled from "styled-components";
 
-
-
-
 const settingArray = [
     {
         icon: '/icons/set.svg',
@@ -21,8 +18,9 @@ const settingArray = [
         desc: '管理你向客户发送商品的物流方式',
     }, {
         icon: '/icons/set/place.svg',
-        title: '地点',
-        desc: '管理店铺的地点信息',
+        title: '仓库地点',
+        desc: '管理仓库的地点信息',
+        url:"/settings/location",
     }, {
         icon: '/icons/set/tax.svg',
         title: '税费',

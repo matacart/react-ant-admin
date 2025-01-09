@@ -1,10 +1,12 @@
 import { QuestionCircleOutlined } from "@ant-design/icons"
-import { Card, Checkbox, Col, DatePicker, Form, InputNumber, InputNumberProps, Row, Tooltip } from "antd"
+import { Card, Checkbox, Col, DatePicker, Form, InputNumber, InputNumberProps, Row, Tooltip, Typography } from "antd"
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs";
 import oldStore from "@/store/product/oldStore";
+
+
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setPrice(value==null?0:value);
@@ -15,6 +17,8 @@ const originPriceOnChange: InputNumberProps['onChange'] = (value) => {
 const costPriceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setCostPrice(value==null?0:value);
 };
+
+const { Text } = Typography;
 
 const { RangePicker } = DatePicker;
 
@@ -36,7 +40,7 @@ function PriceOrTransactionCardEdit() {
                             label={
                                 <>
                                     特价
-                                    <Tooltip title="当商品参与各类促销活动时，可能不会使用此价格进行结账，具体以实际活动售价为准">
+                                    <Tooltip title="当商品参与各类促销活动时的价格">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
@@ -81,12 +85,15 @@ function PriceOrTransactionCardEdit() {
                             </Form.Item>
                         </Col>
                     </Row>
+                                        
                     <Row>
                         <Col span={11}>
                             <Form.Item label={
                                 <>
                                     原价
-                                    <Tooltip title="请输入一个高于当前价格的数值显示降价。降价前的价格通常会显示为划线价。（例如$20.00）">
+                                    <Tooltip title={<>
+                                        请输入一个高于当前价格的数值显示降价。降价前的价格通常会显示为划线价。（例如<Text className="color-FFFFFF" style={{textDecoration: "line-through"}}>$20.00</Text>）
+                                    </>}>
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>

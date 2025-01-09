@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import { history } from '@umijs/max';
 import SelectCard from './List/SelectCard';
+import purchaseOrderStore from '@/store/product/purchaseOrder/purchaseOrderStore';
+import { observer } from 'mobx-react-lite';
 
 
 const TabLabel = styled.div`
@@ -16,37 +18,37 @@ function Index() {
         {
             label: <TabLabel>全部</TabLabel>,
             children: (<SelectCard/>),
-            key: '1',
+            key: '-1',
             closable: false,
         },
         {
             label: <TabLabel>草稿</TabLabel>,
             children:  (<SelectCard/>),
-            key: '2',
+            key: '1',
             closable: false,
         },
         {
             label: <TabLabel>已订购</TabLabel>,
             children:  (<SelectCard/>),
-            key: '3',
+            key: '2',
             closable: false,
         },
         {
             label: <TabLabel>部分收货</TabLabel>,
             children:  (<SelectCard/>),
-            key: '4',
+            key: '3',
             closable: false,
         },
         {
             label: <TabLabel>收货完成</TabLabel>,
             children:  (<SelectCard/>),
-            key: '5',
+            key: '4',
             closable: false,
         },
         {
             label: <TabLabel>已关闭</TabLabel>,
             children:  (<SelectCard/>),
-            key: '6',
+            key: '0',
             closable: false,
         }
     ];
@@ -65,12 +67,32 @@ function Index() {
                     </div>
                     <div className='create-content'>
                         <Tabs
-                            // onChange={onChange}
+                            onChange={(activeKey)=>{
+                                console.log(activeKey)
+                                // purchaseOrderStore.setTagsStatus(activeKey)
+                                switch (activeKey) {
+                                    case '-1':
+                                        purchaseOrderStore.setTagsStatus("")
+                                        break;
+                                    case '1':
+                                        purchaseOrderStore.setTagsStatus("草稿")
+                                        break;
+                                    case '2':
+                                        purchaseOrderStore.setTagsStatus("已订购")
+                                        break;
+                                    case '3':
+                                        purchaseOrderStore.setTagsStatus("部分收货")
+                                        break;
+                                    case '4':
+                                        purchaseOrderStore.setTagsStatus("部分收货")
+                                        break;
+                                }
+                            }}
                             // activeKey={activeKey}
                             // onEdit={onEdit}
                             items={items}
                             // !默认不销毁
-                            destroyInactiveTabPane
+                            // destroyInactiveTabPane
                             // tabBarExtraContent={operations}
                         />
                     </div>
@@ -80,7 +102,7 @@ function Index() {
     )
 }
 
-export default Index;
+export default observer(Index);
 
 
 const Scoped = styled.div`

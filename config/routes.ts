@@ -111,6 +111,7 @@ export default  [
         {
           path: 'inventory',
           name: 'inventory',
+          component: './Products/Inventory/Index',
           // component: './Products/Inventory/BlankPage',
         },
         {
@@ -174,7 +175,6 @@ export default  [
         path: 'persona',
         name: 'persona',
       },
-      
     ],
   },
   // 折扣
@@ -208,7 +208,8 @@ export default  [
         path: 'reports',
         name: 'reports',
         component: './Analyse/index'
-      },{
+      },
+      {
         path: 'realtime',
         name: 'realtime',
         component:'./Analyse/report'
@@ -296,6 +297,10 @@ export default  [
       {
         path:"fileManage",
         component:"./Settings/FileManage/FileManage"
+      },
+      {
+        path:"location",
+        component:"./Settings/WarehouseAddress/WarehouseAddress"
       }
     ]
   },

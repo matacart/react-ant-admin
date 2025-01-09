@@ -1,9 +1,9 @@
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
+import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tag, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import qs from 'qs';
 import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
+import { deleteProduct, getCountryList, getProductList, getPurchase, upDateProductStatus } from '@/services/y2/api';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
 import cookie from 'react-cookies';
@@ -40,7 +40,6 @@ const content: ReactNode = (<>
   <div>·WhatsApp</div>
   <div>·Facebook</div>
   <div>·Telegram</div>
-
 </>)
 
 interface TableParams {
@@ -50,7 +49,7 @@ interface TableParams {
     filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
-function TableListCard() {
+function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
   const [loading, setLoading] = useState(false);
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
@@ -66,28 +65,7 @@ function TableListCard() {
     },
   });
   //列表数据
-//   const [data, setData] = useState<DataType[]>([]);
-
-  const data: DataType[] = [
-    {
-      key: '1',
-      name: 'John Brown',
-      money: '￥300,000.00',
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      money: '￥1,256,000.00',
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      money: '￥120,000.00',
-      address: 'Sydney No. 1 Lake Park',
-    },
-  ];
+  const [data, setData] = useState<DataType[]>([]);
 
   // 表头
   const columns: TableColumnsType<DataType> = [
@@ -98,18 +76,68 @@ function TableListCard() {
     },
     {
         title: '供应商',
-        dataIndex: 'money',
+        dataIndex: 'supplier_name',
         width: 120,
     },
     {
         title: '收货地点',
-        dataIndex: 'money',
+        dataIndex: 'warehouse_name',
         width: 120,
     },
     {
         title: '状态',
-        dataIndex: 'money',
+        dataIndex: 'status',
         width: 120,
+        render(value, record, index) {
+            switch(value){
+              case "1":
+                return (
+                  <Tag color="default" style={{borderRadius:"9999px",backgroundColor:"#f0f3f9",padding:"0 8px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                      <div style={{height:"4px",width:"4px",backgroundColor: "#7a8499",borderRadius:"50%"}}></div>
+                      <div className='font-12 color-474F5E'>草稿</div>
+                    </div>
+                  </Tag>
+                )
+              case "2":
+                return (
+                  <Tag color="warning" style={{borderRadius:"9999px",backgroundColor:"#ffedc9",padding:"0 8px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                      <div style={{height:"4px",width:"4px",backgroundColor: "#FE9E0F",borderRadius:"50%"}}></div>
+                      <div className='font-12 color-474F5E'>已订购</div>
+                    </div>
+                  </Tag>
+                )
+              case "3":
+                return (
+                  <Tag color="processing" style={{borderRadius:"9999px",backgroundColor:"#e2f0ff",padding:"0 8px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                      <div style={{height:"4px",width:"4px",backgroundColor: "#356dff",borderRadius:"50%"}}></div>
+                      <div className='font-12 color-474F5E'>部分收货</div>
+                    </div>
+                  </Tag>
+                )
+              case "4":
+                return (
+                  <Tag color="success" style={{borderRadius:"9999px",backgroundColor:"#D6FAE7",padding:"0 8px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                      <div style={{height:"4px",width:"4px",backgroundColor: "#35C08E",borderRadius:"50%"}}></div>
+                      <div className='font-12 color-474F5E'>收货完成</div>
+                    </div>
+                  </Tag>
+                )
+              case "5":
+                return (
+                  <Tag color="error" style={{borderRadius:"9999px",backgroundColor:"#FFEBE7",padding:"0 8px"}}>
+                    <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
+                      <div style={{height:"4px",width:"4px",backgroundColor: "#F86140",borderRadius:"50%"}}></div>
+                      <div className='font-12 color-474F5E'>已关闭</div>
+                    </div>
+                  </Tag>
+                )
+            }
+            
+        },
     },
     {
         title: '收货数量',
@@ -118,8 +146,13 @@ function TableListCard() {
     },
     {
         title: '总计',
-        dataIndex: 'money',
+        dataIndex: 'order_total',
         width: 120,
+        render(value, record, index) {
+          return (
+            <div>US${value}</div>
+          )
+      },
     },
     {
         title: '预计到达日期',
@@ -140,6 +173,15 @@ function TableListCard() {
     // }
   };
 
+
+
+  useEffect(()=>{
+    setData(purchaseorderData)
+
+    console.log(purchaseorderData)
+
+  },[purchaseorderData])
+
   return (
     <Scoped>
         {/* 商品列表 */}
@@ -152,6 +194,9 @@ function TableListCard() {
             scroll={{ x: 1300 }}
             onRow={(record) => ({
             onClick: () => {
+                getPurchase(record.id).then(res=>{
+                  console.log(res)
+                })
                 console.log('Row clicked:', record);
             },
             })}

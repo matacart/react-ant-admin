@@ -1,5 +1,6 @@
-import { Card, Col, Form, Row, Select, Table, TableProps } from "antd";
+import { Button, Card, Col, Form, Row, Select, Table, TableProps } from "antd";
 import styled from "styled-components";
+import AddGoodsModal from "./AddGoodsModal";
 
 
 
@@ -57,35 +58,46 @@ function PurchaseGoodsCard() {
     ];
 
     const data: DataType[] = [
-        {
-          key: '1',
-          name: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          tags: ['nice', 'developer'],
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-          tags: ['loser'],
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sydney No. 1 Lake Park',
-          tags: ['cool', 'teacher'],
-        },
+        // {
+        //   key: '1',
+        //   name: 'John Brown',
+        //   age: 32,
+        //   address: 'New York No. 1 Lake Park',
+        //   tags: ['nice', 'developer'],
+        // },
+        // {
+        //   key: '2',
+        //   name: 'Jim Green',
+        //   age: 42,
+        //   address: 'London No. 1 Lake Park',
+        //   tags: ['loser'],
+        // },
+        // {
+        //   key: '3',
+        //   name: 'Joe Black',
+        //   age: 32,
+        //   address: 'Sydney No. 1 Lake Park',
+        //   tags: ['cool', 'teacher'],
+        // },
     ];
+
+    const addGoods = () => {
+        return(
+            <>
+                <div className="font-20" style={{textAlign:"center"}}>请添加需要采购的商品</div>
+                <div style={{textAlign:"center",marginTop:"20px"}}>
+                    <AddGoodsModal/>
+                </div>
+            </>
+        )
+    }
 
     return(
         <Scoped>
             <Card bordered={false} title="采购商品">
-                <div className="table_box">
-                    <Table<DataType> columns={columns} dataSource={data} />
-                </div>
+            {data.length === 0?addGoods():<div className="table_box">
+                <Table<DataType> columns={columns} dataSource={data} />
+            </div>}
             </Card>
         </Scoped>
     )

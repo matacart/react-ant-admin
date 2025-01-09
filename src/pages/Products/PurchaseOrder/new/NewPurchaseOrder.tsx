@@ -7,6 +7,7 @@ import PurchaseGoodsCard from "../PurchaseGoodsCard";
 import CostSummaryCard from "../CostSummaryCard";
 import RemarkCard from "../RemarkCard";
 import { history } from '@umijs/max';
+import purchaseOrderStore from "@/store/product/purchaseOrder/purchaseOrderStore";
 
 function NewPurchaseOrder(){
 
@@ -39,6 +40,8 @@ function NewPurchaseOrder(){
                     </div>
                     <div className='mc-footer'>
                         <Button type='primary' onClick={async ()=>{
+                            // console.log(321)
+                            purchaseOrderStore.purchaseOrderSubmit()
                         }}>创建</Button>
                     </div>
                 </div>

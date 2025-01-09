@@ -280,16 +280,20 @@ function ProductImgEdit() {
               {fileList.length >= 8 ? null : uploadButton}
             </Upload>
             {previewImage && (
-              <Image
-                wrapperStyle={{ display: 'none' }}
-                preview={{
-                  visible: previewOpen,
-                  onVisibleChange: (visible) => setPreviewOpen(visible),
-                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                }}
-                src={previewImage}
-              />
+              <>
+                <div style={{zIndex:"999"}}>123</div>
+                <Image
+                  wrapperStyle={{ display: 'none' }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                  }}
+                  src={previewImage}
+                />
+              </>
             )}
+            
           </Spin>
         </div>
         {/* 图片上传-外 */}

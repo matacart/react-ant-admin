@@ -1049,3 +1049,256 @@ export async function deleteCategory(id:string){
     }
   })
 }
+
+
+// 采购订单------
+
+
+// 供应商货币
+export async function getPurchaseCurrencyList(){
+  return await request('/api/ApiAppstore/currencies_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+}
+
+// 采购订单列表
+export async function getPurchaseList(){
+  return await request('/api/ApiStore/purchase_orders_list',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+}
+
+// 采购订单详情
+export async function getPurchase(id:string){
+  return await request('/api/ApiStore/purchase_orders',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id
+    }
+  })
+}
+
+// 添加采购订单
+export async function addPurchaseOrders(res:any){
+  return await request('/api/ApiStore/purchase_orders_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      // 订单号
+      order_number:"",
+      supplier_id:res.supplierId,
+      supplier_name:res.supplierName,
+      warehouse_id:res.warehouseId,
+      warehouse_name:res.warehouseName,
+      currency:res.currency,
+      currency_value:res.currencyId,
+      payment_terms_id:res.paymentTermsId,
+      payment_terms:res.paymentTerms,
+      shipping_firstname:res.firstName,
+      shipping_lastname:res.lastName,
+      shipping_company:"",
+      shipping_street_address:res.address,
+      shipping_detailed_address:res.detailedAddress,
+      shipping_district:res.district,
+      shipping_country:res.country,
+      shipping_country_id:res.countryId,
+      shipping_state:res.state,
+      shipping_state_id:res.stateId,
+      shipping_city:res.city,
+      shipping_city_id:res.cityId,
+
+      // 运输商
+      shipments:JSON.stringify(res.shippings),
+
+      orders_status_id:"0",
+      order_tax:"",
+      order_total:res.orderTotal,
+      remark:res.remark,
+      comments:"",
+      send_email:"0",
+      status:"1"
+    }
+  })
+}
+
+
+// 省
+export async function getProvinceList(countryId:string){
+  return await request('/api/ApiAppstore/state_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      country_id:countryId
+    }
+  })
+}
+// 市
+export async function getCityList(cityId:string){
+  return await request('/api/ApiAppstore/city_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      state_id:cityId
+    }
+  })
+}
+
+// 添加供应商
+export async function AddSupplier(res:any){
+  return await request('/api/ApiAppstore/supplier_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "name":res.supplierName,
+      "country_id":res.nation,
+      "city":res.city,
+      // 单号
+      "code":"1",
+      'image':"",	
+      "type_id":"",
+      "category_id":"",
+      "state":res.province??="",
+      "district":res.district??="",
+      "postcode":res.postcode,
+      "address":res.address,
+      "detailed_address":res.detailedAddress,
+      'bank_name':"",
+      'bank_number':"",
+      "firstname":res.firstName,
+      "lastname":res.lastName,
+      "telephone":res.phone,
+      "email_address":res.email,
+      // 备注
+      'remark':"",
+      "approved":"1",
+    }
+  })
+}
+
+// 查询供应商列表
+export async function selectSupplier(){
+  return await request('/api/ApiAppstore/supplier_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+}
+
+// 获取供应商
+export async function getSupplier(id:string){
+  return await request('/api/ApiAppstore/supplier',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "id":id
+    }
+  })
+}
+
+// 编辑供应商
+export async function editSupplier(res:any){
+  return await request('/api/ApiAppstore/supplier_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "id":res.id,
+      "name":res.supplierName,
+      "country_id":res.nation,
+      "city":res.city,
+      // 单号
+      "code":res.code,
+      'image':"",	
+      "type_id":"",
+      "category_id":"",
+      "state":res.province??="",
+      "district":res.district??="",
+      "postcode":res.postcode,
+      "address":res.address,
+      "detailed_address":res.detailedAddress,
+      'bank_name':"",
+      'bank_number':"",
+      "linkman":res.name,
+      "telephone":res.phone,
+      "email_address":res.email,
+      // 备注
+      'remark':"",
+      "approved":"1",
+    }
+  })
+}
+
+// 设置
+
+// 添加仓库地址
+export async function addWarehouse(res:any){
+  return await request('/api/ApiStore/warehouse_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      id:"",
+      code:res.warehouseLocationCode,
+      name:res.warehouseLocationName,
+      // 邮箱
+      capacity:res.capacity,
+      occupied_space:"",
+      country:res.countryLaber,
+      country_id:res.nation,
+      state:res.provinceLaber,
+      state_id:res.province,
+      city:res.cityLaber,
+      city_id:res.city,
+      district:res.district,
+      postcode:res.postcode,
+      address:res.address,
+      detailed_address:res.detailedAddress,
+      // 姓氏
+      lastname:res.lastName,
+      // 名称
+      firstname:res.name,
+      telephone:res.phone,
+      email_address:res.email,
+      status:"1",
+      is_default:"0"
+    }
+  })
+}
+
+
+// 仓库地址列表
+export async function getAddWarehouseList(){
+  return await request('/api/ApiStore/warehouse_select',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+    }
+  })
+}
+

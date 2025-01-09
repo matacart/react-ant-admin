@@ -40,7 +40,7 @@ function FileManage() {
         getGroupList().then(res=>{
             console.log(res)
             if(res.code == 0){
-                setGroupList(res.data.list)
+                setGroupList(res.data.list??=[])
                 let newItems:TabsProps['items'] = [...item]
                 res.data.list.forEach((item:any,index:number)=>{
                     console.log(item)
@@ -63,7 +63,8 @@ function FileManage() {
         getGroupList().then(res=>{
             console.log(res)
             if(res.code == 0){
-                setGroupList(res.data.list)
+                // res.data.list 可能不存在
+                setGroupList(res.data.list??=[])
                 let newItems:TabsProps['items'] = [...item]
                 res.data.list.forEach((item:any,index:number)=>{
                     console.log(item)
@@ -96,7 +97,7 @@ function FileManage() {
 
     // 新增分组--保存
     const newGroup = () => {
-        getGroupAdd(groupName).then((res)=>{
+        getGroupAdd(groupName,"").then((res)=>{
             console.log(res);
             if(res.code == 0){
                 const item = {

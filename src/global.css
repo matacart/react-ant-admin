@@ -48,16 +48,38 @@ ol {
 
 
 /* 样式 */
+.color-FF0000{
+  color: #FF0000;
+}
+.color-FFFFFF{
+  color: #FFFFFF;
+}
+
 .color-242833{
   color: #242833;
+}
+.color-474F5E{
+  color: #474F5E;
 }
 
 .color-7A8499{
   color: #7A8499;
 }
 
+.color-474F5E{
+  color: #474F5E;
+}
+
 .color-356DFF{
   color: #356dff;
+}
+
+.font-24{
+  font-size: 24px;
+}
+
+.font-20{
+  font-size: 20px;
 }
 
 .font-16{
@@ -67,8 +89,14 @@ ol {
 .font-14{
   font-size: 14px;
 }
+.font-12{
+  font-size: 12px;
+}
 
 .font-w-600{
   font-weight: 600;
 }
 
+.cursor-pointer{
+  cursor: pointer;
+}

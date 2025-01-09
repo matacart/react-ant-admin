@@ -2,7 +2,7 @@ import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/comp
 import { GlobalOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
-import { getOptionType, getAccessToken, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { getOptionType, getAccessToken, currentUser as queryCurrentUser, getShippingCourierList } from '@/services/y2/api';
 import axios from 'axios';
 import { message } from 'antd';
 import { Ping } from './components/RightContent';
@@ -94,6 +94,13 @@ axios.post('/api/ApiAppstore/languages_select').then((res) => {
     sessionStorage["languages"] = JSON.stringify(res.data.data)
   }
 })
+// 运输承运商
+axios.post('/api/ApiAppstore/shippingcourier_select').then((res) => {
+  console.log(res)
+  if(res.data.code == 0){
+    sessionStorage["currency"] = JSON.stringify(res.data.data)
+  }
+})
 
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
@@ -105,7 +112,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       console.log("获取商品类型失败")
     }
   })
-  // console.log(1111)
+
 
   const stores = window.location.pathname.slice(0,8)
   return {

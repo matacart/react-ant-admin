@@ -1,14 +1,17 @@
 import { Checkbox, Dropdown, Select, Space } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Myselect.scss"
 
 
 // 自定义筛选框
-
-
-export default function MySelect({options,text,style}:{options:any,text:string,style?:any}) {
+function MySelect({options,setStatusOptions,text,style}:{options:any,setStatusOptions:any,text:string,style?:any}) {
 
     const [open,setOpen] = useState(false);
+
+    useEffect(()=>{
+        console.log(options)
+        // setStatusOptions(options)
+    },[options])
 
     return (
         <>
@@ -24,7 +27,13 @@ export default function MySelect({options,text,style}:{options:any,text:string,s
                 dropdownRender={(menu) => {
                     const list = options.map((item,index)=>{
                         return (
-                            <Checkbox className="item" style={{padding:"8px 12px",width:"100%"}} onChange={()=>{}}>{item.label}</Checkbox>
+                            <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
+                                let newOption = [...options]
+                                newOption[index].checked = e.target.checked
+                                // e.target.checked?checkedList.push(item):checkedList.splice(checkedList.indexOf(item),1)
+                                // setCheckedStatus(checkedList)
+                                setStatusOptions(newOption)
+                            }}>{item.label}</Checkbox>
                         )
                     })
                     return (
@@ -37,3 +46,5 @@ export default function MySelect({options,text,style}:{options:any,text:string,s
         </>
     )
 }
+
+export default MySelect
