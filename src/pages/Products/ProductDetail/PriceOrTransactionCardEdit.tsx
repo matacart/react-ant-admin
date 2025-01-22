@@ -36,7 +36,6 @@ function PriceOrTransactionCardEdit() {
                     <Row>
                         <Col span={11}>
                             <Form.Item 
-                            required
                             label={
                                 <>
                                     特价
@@ -71,7 +70,7 @@ function PriceOrTransactionCardEdit() {
                                     </Tooltip>
                                 </>
                             } className="price-item">
-                                <RangePicker value={Time} showTime onOk={(value)=>{
+                                <RangePicker value={Time || []} showTime onOk={(value)=>{
                                     if( value[0]){
                                         let startTime = value[0].year()+"-"+(value[0].month())+1+"-"+value[0].date()+" "+value[0].hour()+":"+value[0].minute()+":"+value[0].second()
                                         oldStore.setStartTime(startTime)

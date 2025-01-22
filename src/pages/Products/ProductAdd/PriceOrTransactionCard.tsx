@@ -40,7 +40,7 @@ export default function PriceOrTransactionCard() {
                             required
                             label={
                                 <>
-                                    特价特价
+                                    特价
                                     <Tooltip title="当商品参与各类促销活动时，使用此价格进行结账，具体以实际活动售价为准">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />

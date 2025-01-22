@@ -233,7 +233,7 @@ function ProductImgCard() {
     headers: {
       authorization: 'authorization-text',
     },
-    // 手动上传
+    // 手动上传视频
     beforeUpload:(file)=>{
       setVideoLoading(true)
       if(file.type.slice(0,5)=="video"){

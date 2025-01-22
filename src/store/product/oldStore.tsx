@@ -34,7 +34,8 @@ import productStore from "../productStore";
     this.editStatus = value;
   }
   
-  @observable language = '2';
+  // 多语言
+  language = '2';
   @action setLanguage = (language: string) => {
     this.language = language;
   }
@@ -410,50 +411,15 @@ import productStore from "../productStore";
     this.removeVariantData = value;
   }
 
-  // 验证 -- 表单
-  validate = {
-    title:"success",
-    model:"success",
-    language:"success",
-    productStatus:"success",
-    productType:"success",
-    weightClassId:"success",
-    weight:"success",
-    inventory:"success",
-    SKU:"success",
-    ISBN:"success",
-    originPrice:"success",
-    costPrice:"success",
-    content:"success",
-    content1:"success",
-    metaTitle:"success",
-    metaKeyword:"success",
-    metaDescription:"success"
-  }
-  // 验证
-  validateForm(){
-    this.title == ""?this.validate.title = "error":this.validate.title = "success";
-    this.model == ""?this.validate.model = "error":this.validate.model = "success";
-    if(this.validate.title=="success" && this.validate.model == "success"){
-      return true;
-    }else{
-      return false;
-    }
-  }
-
-  // 更新产品
-  updateProduct(){
-    addTags(this.language,this.tags).then(res=>{
-      console.log(res);
-    })
-    return submitRenewalProduct(this)
-  }
+  
 
   // 格式化日期
   FormatDate(time:string){
     const Time = new Date(parseInt(time)*1000)
     return Time.getFullYear()+"-"+(Time.getMonth()+1)+"-"+Time.getDate()+" "+Time.getHours()+":"+Time.getMinutes()+":"+Time.getSeconds()
   }
+
+  
   // 初始化
   productInit(data:any){
     this.setRemoveData([])
@@ -541,7 +507,8 @@ import productStore from "../productStore";
     this.setPartsWarehouse(data.is_sys)
     this.setInquiryStatus(data.inquiry_status)
     this.setAttributes(data.attributes==null?[]:data.attributes)
-    this.setVariants(data.variants==null?[]:data.variants)
+    // 变体
+    this.variants = data.variants?data.variants:[]
     productStore.setAttributes(data.attributes==null?[]:data.attributes)
     this.setThirdPartyPlatform({
       amazonUrl: data.diversion.url_amazon,
@@ -670,6 +637,47 @@ import productStore from "../productStore";
     this.isNew = false;
     this.attributes = [];
     this.temp.clear();
+  }
+
+
+  // 验证 -- 表单
+  validate = {
+    title:"success",
+    model:"success",
+    language:"success",
+    productStatus:"success",
+    productType:"success",
+    weightClassId:"success",
+    weight:"success",
+    inventory:"success",
+    SKU:"success",
+    ISBN:"success",
+    originPrice:"success",
+    costPrice:"success",
+    content:"success",
+    content1:"success",
+    metaTitle:"success",
+    metaKeyword:"success",
+    metaDescription:"success"
+  }
+  // 验证
+  validateForm(){
+    this.title == ""?this.validate.title = "error":this.validate.title = "success";
+    this.model == ""?this.validate.model = "error":this.validate.model = "success";
+    if(this.validate.title=="success" && this.validate.model == "success"){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  // 更新产品
+  updateProduct(){
+    addTags(this.language,this.tags).then(res=>{
+      console.log(res);
+    })
+
+    return submitRenewalProduct(this)
   }
 }
 

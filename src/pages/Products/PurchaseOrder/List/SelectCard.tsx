@@ -1,17 +1,21 @@
-import { Input, Button, Select, Dropdown, MenuProps, Flex, Tag } from "antd";
+import { Input, Button, Select, MenuProps, Flex, Tag } from "antd";
 import { useEffect, useRef, useState } from "react"
 import { SearchOutlined } from "@ant-design/icons";
 import TableListCard from "./TableListCard";
 import MySelect from "@/components/Select/MySelect";
 import { getAddWarehouseList, getPurchaseList, selectSupplier } from "@/services/y2/api";
-import { set } from 'lodash';
-import purchaseOrderStore from "@/store/product/purchaseOrder/purchaseOrderStore";
+import purchaseOrderList from "@/store/product/purchaseOrder/purchaseOrderListStore";
 import { observer } from "mobx-react-lite";
+import DropdownSort from "@/components/Dropdown/DropdownSort";
+import { styled } from 'styled-components';
 
 const { Search } = Input;
 
 function SelectCard(){
+
     const [language, setLanguage] = useState("2");
+
+    const [loading, setLoading] = useState(false);
 
     const [supplierList,setSupplierList] = useState([])
 
@@ -32,6 +36,76 @@ function SelectCard(){
       { value: '0', label: '已关闭',checked:false }
     ])
 
+    // 排序
+    const items:MenuProps['items'] = [
+      {
+        key: '1',
+        label: (
+          <div>创建时间（由近到远）</div>
+        ),
+      },
+      {
+        key: '2',
+        label: (
+          <div>创建时间（由远到近）</div>
+        ),
+      },
+      {
+        key: '3',
+        label: (
+          <div>预期到达时间（由近到远）</div>
+        ),
+      },
+      {
+        key: '4',
+        label: (
+          <div>预期到达时间（由远到近）</div>
+        ),
+      },
+      {
+        key: '5',
+        label: (
+          <div>供应商(A-Z)</div>
+        ),
+      },
+      {
+        key: '6',
+        label: (
+          <div>供应商(Z-A)</div>
+        ),
+      },
+      {
+        key: '7',
+        label: (
+          <div>收货地(A-Z)</div>
+        ),
+      },
+      {
+        key: '8',
+        label: (
+          <div>收货地(Z-A)</div>
+        ),
+      },
+      {
+        key: '9',
+        label: (
+          <div>状态升序</div>
+        ),
+      },
+      {
+        key: '10',
+        label: (
+          <div>状态降序</div>
+        ),
+      },
+  ];
+
+    const handleOrderNumberClose = ()=>{
+      // purchaseOrderStore.setTagsStatus("")
+      purchaseOrderList.setTagsOrderNumber("")
+      selecterPurchaseOrderList("",purchaseOrderList.tagsStatusValues,purchaseOrderList.tagsSupplierValues,purchaseOrderList.tagsPlaceOfReceiptValues)
+    }
+
     // 关闭状态标签
     const handleStatusClose = ()=>{
       setStatusOptions([
@@ -41,46 +115,62 @@ function SelectCard(){
         { value: '4', label: '收货完成',checked:false },
         { value: '0', label: '已关闭',checked:false }
       ])
-      purchaseOrderStore.setTagsStatus("")
+      purchaseOrderList.setTagsStatus("")
+      purchaseOrderList.setTagsStatusValues("")
+      selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,"",purchaseOrderList.tagsSupplierValues,purchaseOrderList.tagsPlaceOfReceiptValues)
     }
     // 
     const handleSupplierClose = ()=>{
-      purchaseOrderStore.setTagsSupplier("")
+      purchaseOrderList.setTagsSupplier("")
+      purchaseOrderList.setTagsSupplierValues("")
+      selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,purchaseOrderList.tagsStatusValues,"",purchaseOrderList.tagsPlaceOfReceiptValues)
     }
 
     const handlePlaceOfReceiptClose = ()=>{
-      purchaseOrderStore.setTagsPlaceOfReceipt("")
+      purchaseOrderList.setTagsPlaceOfReceipt("")
+      purchaseOrderList.setTagsPlaceOfReceiptValues("")
+      selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,purchaseOrderList.tagsStatusValues,purchaseOrderList.tagsSupplierValues,"")
     }
 
-    const items: MenuProps['items'] = [
-        {
-          key: '1',
-          label: (
-            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-              1st menu item
-            </a>
-          ),
-        },
-        {
-          key: '2',
-          label: (
-            <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-              2nd menu item
-            </a>
-          ),
-        },
-        {
-          key: '3',
-          label: (
-            <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-              3rd menu item
-            </a>
-          ),
-        },
-    ];
 
+    // 筛选采购订单
+    const selecterPurchaseOrderList = (orderNumber?:string,status?:string,supplier?:string,warehouse?:string)=>{
+      getPurchaseList(orderNumber,status,supplier,warehouse).then(res=>{
+        console.log(res)
+        if(res.code === 0){
+          setPurchaseorderData(res.data)
+        }else if(res.code == 201){
+          // 无数据
+          setPurchaseorderData([])
+        }
+      })
+    }
+
+    
+
+    const firstUpdate = useRef(true);
     useEffect(()=>{
+      if (firstUpdate.current) {
+        firstUpdate.current = false;
+        return;
+      }else{
+        let newTagsStatus = ""
+        let statusValues:string[] = []
+        statusOptions.forEach(item=>{
+          if(item.checked){
+            newTagsStatus+=item.label+","
+            statusValues.push(item.value)
+          }
+        })
+        purchaseOrderList.setTagsStatus(newTagsStatus.substring(0,newTagsStatus.length-1))
+        purchaseOrderList.setTagsStatusValues(statusValues.join(","))
+        selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,statusValues.join(","),purchaseOrderList.tagsSupplierValues,purchaseOrderList.tagsPlaceOfReceiptValues)
+      }
 
+    },[statusOptions])
+
+    
+    useEffect(()=>{
       // 获取供应商
       selectSupplier().then(res=>{
         if(res.code == 0){
@@ -109,49 +199,23 @@ function SelectCard(){
       })
 
       // 获取采购订单列表--条件
-      getPurchaseList().then(res=>{
-        console.log(res)
-        if(res.code === 0){
-          setPurchaseorderData(res.data)
-        }
-      })
+      // getPurchaseList().then(res=>{
+      //   console.log(res)
+      //   if(res.code === 0){
+      //     setPurchaseorderData(res.data)
+      //   }
+      // })
+      selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,purchaseOrderList.tagsStatusValues,purchaseOrderList.tagsSupplierValues,purchaseOrderList.tagsPlaceOfReceiptValues)
     },[])
-
-
-
-    const firstUpdate = useRef(true);
-    useEffect(()=>{
-
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-        return;
-      }else{
-        let newTagsStatus = ""
-        statusOptions.forEach(item=>{
-          if(item.checked){
-            newTagsStatus+=item.label+","
-          }
-        })
-        purchaseOrderStore.setTagsStatus(newTagsStatus.substring(0,newTagsStatus.length-1))
-      }
-    },[statusOptions])
-
-    // 筛选采购订单
-    const selecterSupplierList = ()=>{
-      getPurchaseList().then(res=>{
-        console.log(res)
-        if(res.code === 0){
-          setPurchaseorderData(res.data)
-        }
-      })
-    }
 
     return (
         <> 
             <div>
                 <div style={{display:'flex',flexWrap:'wrap',gap:'12px 12px',justifyContent:'space-between',marginBottom:'12px'}}>
                     <div className="products-select-items-left" style={{display:'flex',flexWrap:'wrap',gap:'12px 12px'}}>
-                        <div><Input prefix={<SearchOutlined />} placeholder="Basic usage" /></div>
+                        <div><Input prefix={<SearchOutlined />} value={purchaseOrderList.tagsOrderNumber} onChange={(e)=>{
+                          purchaseOrderList.setTagsOrderNumber(e.target.value)
+                        }} placeholder="采购单号" /></div>
                         <MySelect options={statusOptions} setStatusOptions={setStatusOptions} text="状态" style={{width:"180px"}}/>
                         <Select
                             value={"供应商"}
@@ -164,8 +228,9 @@ function SelectCard(){
                               </>
                             )}
                             onChange={(value,option)=>{
-                              purchaseOrderStore.setTagsSupplier(option.label)
-                              // setTagsSupplier(option.label)
+                              purchaseOrderList.setTagsSupplier(option.label)
+                              purchaseOrderList.setTagsSupplierValues(value)
+                              selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,purchaseOrderList.tagsStatusValues,value,purchaseOrderList.tagsPlaceOfReceiptValues)
                             }}
                             options={supplierList}
                         />
@@ -180,34 +245,40 @@ function SelectCard(){
                               </>
                             )}
                             onChange={(value,option)=>{
-                              purchaseOrderStore.setTagsPlaceOfReceipt(option.label)
+                              purchaseOrderList.setTagsPlaceOfReceipt(option.label)
+                              purchaseOrderList.setTagsPlaceOfReceiptValues(value)
+                              selecterPurchaseOrderList(purchaseOrderList.tagsOrderNumber,purchaseOrderList.tagsStatusValues,purchaseOrderList.tagsSupplierValues,value)
                             }}
                             options={placeOfReceiptList}
                         />
                     </div>
                     <div className="products-select-items-right" style={{display:'flex',flexWrap:'wrap',gap:'12px 12px'}}>
-                        <Dropdown menu={{ items }} placement="bottomRight" trigger={['click']} arrow>
-                            <Button>排序</Button>
-                        </Dropdown>
+                      <DropdownSort items={items} styled={{maxHeight:"290px",overflowY:"auto"}} />
                     </div>
                 </div>
                 {/* 标签 */}
                 <Flex style={{marginBottom:"10px"}}>
-                  {purchaseOrderStore.tagsStatus !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handleStatusClose}>
+                  {purchaseOrderList.tagsOrderNumber !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handleOrderNumberClose}>
                       <span className="color-474F5E font-14">
-                        状态：{purchaseOrderStore.tagsStatus}
-                      </span>
-                  </Tag>}
-                  
-                  {purchaseOrderStore.tagsSupplier !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handleSupplierClose}>
-                      <span className="color-474F5E font-14">
-                        供应商：{purchaseOrderStore.tagsSupplier}
+                        采购单号：{purchaseOrderList.tagsOrderNumber}
                       </span>
                   </Tag>}
 
-                  {purchaseOrderStore.tagsPlaceOfReceipt !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handlePlaceOfReceiptClose}>
+                  {purchaseOrderList.tagsStatus !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handleStatusClose}>
                       <span className="color-474F5E font-14">
-                        收货地：{purchaseOrderStore.tagsPlaceOfReceipt}
+                        状态：{purchaseOrderList.tagsStatus}
+                      </span>
+                  </Tag>}
+                  
+                  {purchaseOrderList.tagsSupplier !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handleSupplierClose}>
+                      <span className="color-474F5E font-14">
+                        供应商：{purchaseOrderList.tagsSupplier}
+                      </span>
+                  </Tag>}
+
+                  {purchaseOrderList.tagsPlaceOfReceipt !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={handlePlaceOfReceiptClose}>
+                      <span className="color-474F5E font-14">
+                        收货地：{purchaseOrderList.tagsPlaceOfReceipt}
                       </span>
                   </Tag>}
                   

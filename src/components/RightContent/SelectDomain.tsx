@@ -1,4 +1,4 @@
-import { getDomainList } from "@/services/y2/api";
+import { getCurrencies, getDomainList } from "@/services/y2/api";
 import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
 import { useEffect, useState } from "react";
@@ -56,6 +56,13 @@ export default function SelectDomain() {
     const [searching, setSearching] = useState(false)
     const intl = useIntl();// 多语言
 
+
+
+    const getDomainCurrent = (id:string)=>{
+        getCurrencies(id).then(res=>{
+            console.log(res)
+        })
+    }
     
 
     function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
@@ -89,7 +96,7 @@ export default function SelectDomain() {
           console.error('Invalid URL:', error);
           return null;
         }
-      }
+    }
 
     
     const changeDomain = (item: any) => {
@@ -102,31 +109,11 @@ export default function SelectDomain() {
     useEffect(() => {
         domainList = [];
         // 判断会话中是否存在店铺数据
-        if(sessionStorage["domain"]){
-            if(JSON.parse(sessionStorage["domain"]).length !== 0){
-                setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
-                setDefaultDomain(cookie.load("domain")?.id);
-                domainList = JSON.parse(sessionStorage["domain"])
-
-            }else{
-                getDomainList().then((res) => {
-                    res?.data?.forEach((item: any, index: any) => {
-                        domainList.push({
-                            id: item.id,
-                            domainName: item.domain_name,
-                            secondDomain: item.second_domain.toLowerCase(),
-                            status: item.status,
-                        })
-                    })
-                    setDomainListCurrent(domainList);
-                    // 缓存店铺数据
-                    sessionStorage["domain"] = JSON.stringify(domainList);
-                    cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
-                    setDefaultDomain(res.data[0]?.id);
-                }).catch((error) => {
-                    message.error('未获取到店铺列表，请检查网络')
-                })
-            }
+        if(sessionStorage["domain"] && JSON.parse(sessionStorage["domain"]).length !== 0){
+            setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
+            setDefaultDomain(cookie.load("domain")?.id);
+            getDomainCurrent(cookie.load("domain")?.id);
+            domainList = JSON.parse(sessionStorage["domain"])
         }else{
             getDomainList().then((res) => {
                 let flag:any = [];
@@ -152,10 +139,11 @@ export default function SelectDomain() {
                 if(flag.length == 0){
                     cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
                     setDefaultDomain(res.data[0]?.id);
+                    getDomainCurrent(res.data[0]?.id);
                 }else{
                     cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
                     setDefaultDomain(flag[0].id);
-                    // console.log(flag[0].id)
+                    getDomainCurrent(flag[0].id);
                 }
             }).catch((error) => {
                 message.error('未获取到店铺列表，请检查网络')

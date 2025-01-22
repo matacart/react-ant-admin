@@ -13,6 +13,10 @@ function WarehouseAddress() {
 
     const [warehouseAddressCount,setWarehouseAddressCount] = useState(0)
 
+    const goWarehouseAddressDetail = (id:string)=>{
+        history.push(`/settings/location/detail/${id}`)
+    }
+
     useEffect(()=>{
         getAddWarehouseList().then(res=>{
             if(res.code === 0){
@@ -55,7 +59,7 @@ function WarehouseAddress() {
                                     </Flex>
                                     {warehouseAddressList.map((item:any)=>{
                                         return (
-                                            <Flex key={item.id} className="availableLocation_box">
+                                            <Flex key={item.id} onClick={()=>goWarehouseAddressDetail(item.id)} className="availableLocation_box">
                                                 <div className="availableLocation" style={{width:"48px",height:"48px",display:"flex",justifyContent:"center",alignItems:"center"}}>
                                                     <EnvironmentOutlined className="font-24 color-7A8499" />
                                                 </div>
@@ -161,12 +165,16 @@ const Scoped = styled.div`
                 .availableLocation_box{
                     padding: 12px 0;
                     border-bottom: 1px solid #EEF1F7;
+                    cursor: pointer;
                     .availableLocation{
                         margin-right: 12px;
                         background-color: #F7F8Fb;
                         border-radius: 4px;
                         border: 1px solid #EEF1F7;
                     }
+                }
+                .availableLocation_box:hover{
+                    background-color: #F7F8Fb;
                 }
             }
         }

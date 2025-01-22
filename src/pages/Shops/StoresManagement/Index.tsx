@@ -1,8 +1,10 @@
 import { Button, Card, Select, Tabs, TabsProps } from "antd"
 import { useEffect } from "react"
 import styled from "styled-components"
-import StoresCard from "./storesList/StoresCard";
 import { history } from 'umi';
+import StoresCard from "./StoresCard";
+import shopsManagement from "@/store/shops/shopsManagementStore";
+import { observer } from 'mobx-react-lite';
 
 
 const onChange = (key: string) => {
@@ -24,11 +26,13 @@ const items: TabsProps['items'] = [
 
 type PositionType = 'right';
 const OperationsSlot: Record<PositionType, React.ReactNode> = {
+    // right: <Button type="primary" onClick={()=>{
+    //     history.push('/stores-subscriptions/list/paid')
+    // }}>+ 购买开店套餐</Button>,
     right: <Button type="primary" onClick={()=>{
-        history.push('/stores-subscriptions/list/paid')
-    }}>+ 购买开店套餐</Button>,
+        history.push('/stores/create')
+    }}>+ 创建店铺</Button>,
 };
-
 
 // 上午、下午、晚上、凌晨、深夜
 function getCurrentTimeText(){
@@ -50,9 +54,10 @@ function getCurrentTimeText(){
 
 const timeText = getCurrentTimeText()
 
-function List(){
+function Index(){
+    // 获取店铺列表
     useEffect(()=>{
-        
+        shopsManagement.getShops()
     },[])
     return (
         <Scoped>
@@ -85,53 +90,53 @@ function List(){
     )
 }
 
-export default List
-
 const Scoped = styled.div`
-.mc-layout-wrap{
-    display: flex;
-    justify-content: center;
-    min-width: 510px;
-    .mc-layout {
-        width: 100%;
-        max-width: 1200px;
-        margin: '0 auto';
-        .mc-header {
-            color: rgb(36, 40, 51);
-            font-size: 30px;
-            height: 42px;
-            font-weight: bold;
-            margin: 8px 0px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-content: center;
-            &-left {
+    .mc-layout-wrap{
+        display: flex;
+        justify-content: center;
+        min-width: 510px;
+        .mc-layout {
+            width: 100%;
+            max-width: 1200px;
+            margin: '0 auto';
+            .mc-header {
+                color: rgb(36, 40, 51);
+                font-size: 30px;
+                height: 42px;
+                font-weight: bold;
+                margin: 8px 0px 24px;
                 display: flex;
-                flex-direction: row;
-                align-items: center;
-                &-content {
-                    margin-left: 12px;
-                    font-size: 20px;
+                justify-content: space-between;
+                align-content: center;
+                &-left {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    &-content {
+                        margin-left: 12px;
+                        font-size: 20px;
+                    }
+                }
+                &-right {
+                    display: flex;
+                    align-items: center;
+                    > .selector{
+                        height: 36px;
+                    }
                 }
             }
-            &-right {
-                display: flex;
-                align-items: center;
-                > .selector{
-                    height: 36px;
-                }
-            }
-        }
 
-        .card-wrap{
-            :where(.css-dev-only-do-not-override-no4izc).ant-card .ant-card-body{
-                padding: 12px 24px;
+            .card-wrap{
+                :where(.css-dev-only-do-not-override-no4izc).ant-card .ant-card-body{
+                    padding: 12px 24px;
+                }
             }
+            
         }
-        
     }
-}
-a{
-  font-weight: 400
-}
+    a{
+    font-weight: 400
+    }
 `
+
+export default observer(Index)

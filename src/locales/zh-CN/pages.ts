@@ -99,7 +99,7 @@ export default {
   "pages.login.phone.required": '手机号是必填项！',
   "pages.reset.success": '重设密码成功！',
   'pages.reset.failure': '重设密码失败，请重试！',
-  'pages.getcaptcha.success': '获取验证码成功！验证码为：',
+  'pages.getcaptcha.success': '获取验证码成功！',
   "pages.getcaptcha.failure": '验证码获取失败！',
   "register.title":'开始您的免费试用',
   //

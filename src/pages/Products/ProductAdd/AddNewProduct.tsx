@@ -207,7 +207,7 @@ function AddNewProduct(){
                             <ProductImgCard />
                             <PriceOrTransactionCard />
                             <StockCard/>
-                            <CustomsDeclaration/>
+                            {/* <CustomsDeclaration/> */}
                             <MultipleStylesCard style = {style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
                             {onVariant && <ProductStyleList style = {style} setStyle={setStyle} />}
                         </div>
@@ -229,6 +229,7 @@ function AddNewProduct(){
                         <Button type='primary' onClick={async ()=>{
                             newStore.setProductImg(Array.from(newStore.temp.values())[0])
                             await newStore.setSelectedImgList(Array.from(newStore.temp.values()).slice(1))
+                            console.log(newStore)
                             if(newStore.partsWarehouse == "0"){
                                 if(newStore.validateForm()){
                                     newStore.unBlock();

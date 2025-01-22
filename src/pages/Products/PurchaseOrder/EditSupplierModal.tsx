@@ -65,17 +65,17 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
         form.setFieldsValue({
             // id:res.id,
             // code:res.code,
-            supplierName:res.name,
-            nation:res.country_id,
-            province:res.state,
-            city:res.city,
-            district:res.district,
-            address:res.address,
-            detailedAddress:res.detailed_address,
-            postcode:res.postcode,
-            // name:res.linkman,
-            email:res.email_address,
-            phone:res.telephone,
+            // supplierName:res.name,
+            // nation:res.country_id,
+            // province:res.state,
+            // city:res.city,
+            // district:res.district,
+            // address:res.address,
+            // detailedAddress:res.detailed_address,
+            // postcode:res.postcode,
+            // // name:res.linkman,
+            // email:res.email_address,
+            // phone:res.telephone,
         })
     }
 

@@ -33,7 +33,6 @@ function CustomsDeclarationEdit() {
             <Card title="海关信息">
                 <Form layout="vertical">
                     <Form.Item 
-                    required
                     label={
                         <>
                             发货国家/地区
@@ -62,7 +61,6 @@ function CustomsDeclarationEdit() {
                         />
                     </Form.Item>
                     <Form.Item
-                        required                    
                         label="HS(协调制度) 代码">
                         <Input defaultValue={oldStore.HSCode} value={oldStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>oldStore.setHSCode(e.target.value)} />
                     </Form.Item>

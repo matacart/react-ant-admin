@@ -1,6 +1,6 @@
-import StoresTable from "@/components/Table/StoresTable";
 import { Input, Select } from "antd";
 import { useEffect } from "react";
+import StoresTable from "./StoresTable";
 
 
 

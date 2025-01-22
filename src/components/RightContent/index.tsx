@@ -9,7 +9,7 @@ export const SelectLang = () => {
   return (
     <UmiSelectLang
       style={{
-        padding: 4,
+        padding: 0,
       }}
       postLocalesData={()=>{return[  
         {  
@@ -91,10 +91,10 @@ export const Question = () => {
     <div
       style={{
         display: 'flex',
-        height: 26,
+        // height: 26,
       }}
       onClick={() => {
-        window.open('https://pro.ant.design/docs/getting-started');
+        window.open('http://help.handingyun.cn/');
       }}
     >
       <QuestionCircleOutlined />

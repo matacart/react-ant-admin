@@ -1,46 +1,16 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tag, Tooltip } from 'antd';
-import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import qs from 'qs';
-import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { deleteProduct, getCountryList, getProductList, getPurchase, upDateProductStatus } from '@/services/y2/api';
+import React, { useEffect, useRef, useState } from 'react';
+import { Checkbox, Input, message, Modal, Table, Tag, Tooltip } from 'antd';
+import type { GetProp, TableColumnsType, TableProps } from 'antd';
+import { history } from '@umijs/max';
 import styled from 'styled-components';
-import newStore from '@/store/newStore';
-import cookie from 'react-cookies';
-import oldStore from '@/store/product/oldStore';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
 // 表单项商品数据类型
 interface DataType {
-//   key: React.Key;
-//   model?: string;
-//   imgUrl?: string;
-//   product_image?: string;
-//   title?: string;
-//   content?: string;
-//   price?: number;
-//   costPrice?: number;
-//   ISBN?: string;
-//   inventory?: number;
-//   HSCode?:string;
-//   notion?: string;
-//   state?: string;
-//   productid:string;
-//   languages_id:string
+  id:string,
 }
-
-// ToolTip内容
-const content: ReactNode = (<>
-  <div>·在线商店</div>
-  <div>·贴文销售</div>
-  <div>·消息中心</div>
-  <div>·Google</div>
-  <div>·WhatsApp</div>
-  <div>·Facebook</div>
-  <div>·Telegram</div>
-</>)
 
 interface TableParams {
     pagination?: TablePaginationConfig;
@@ -71,7 +41,7 @@ function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
   const columns: TableColumnsType<DataType> = [
     {
         title: '采购单号',
-        dataIndex: 'name',
+        dataIndex: 'order_number',
         width: 120,
     },
     {
@@ -177,9 +147,7 @@ function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
 
   useEffect(()=>{
     setData(purchaseorderData)
-
-    console.log(purchaseorderData)
-
+    // console.log(purchaseorderData)
   },[purchaseorderData])
 
   return (
@@ -194,9 +162,8 @@ function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
             scroll={{ x: 1300 }}
             onRow={(record) => ({
             onClick: () => {
-                getPurchase(record.id).then(res=>{
-                  console.log(res)
-                })
+                history.push(`/purchase_orders/${record.id}`)
+                
                 console.log('Row clicked:', record);
             },
             })}

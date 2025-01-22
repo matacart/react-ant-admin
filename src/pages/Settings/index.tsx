@@ -8,6 +8,7 @@ const settingArray = [
         icon: '/icons/set.svg',
         title: '基础设置',
         desc: '设置并更新你的商店信息',
+        url: '/settings/base',
     }, {
         icon: '/icons/set/pay.svg',
         title: '收款',
@@ -30,6 +31,7 @@ const settingArray = [
         title: '语言',
         desc: '管理客户可以在商店中使用的语言',
         more: '当前商店语言：简体中文',
+        url:"/settings/lang",
     },{
         icon: '/icons/set/account.svg',
         title: '客户账户',
@@ -84,6 +86,10 @@ const settingArray = [
         icon: '/icons/set/markets.svg',
         title: '市场',
         desc: '管理你的国际市场',
+    },{
+        icon: '/icons/set/merchantSetup.svg',
+        title: '商户设置',
+        desc: '管理你的商户信息',
     }
 ]
 
@@ -149,6 +155,11 @@ p{
     }
     .moduleItemIcon{
         width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f5f8fc;
     }
     .moduleItemBody{
         margin-left: 24px;

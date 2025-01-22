@@ -86,6 +86,7 @@ export default defineConfig({
   layout: {
     locale: true,
     ...defaultSettings,
+    headerHeight: 200, // 菜单栏的宽度
   },
   /**
    * @name moment2dayjs 插件
@@ -160,7 +161,20 @@ export default defineConfig({
   esbuildMinifyIIFE: true,
   requestRecord: {},
 
-  // icon 集
-  icons: {autoInstall: {}},
+  // icon 集允许自动安装图标库
+  // icons: {autoInstall: {}},
+  icons: {},
+
+  chainWebpack: (config) => {
+    config.module
+    .rule('svg')
+    .exclude.add(/node_modules/)
+    .end()
+    .use('svg')
+    .loader('@svgr/webpack')
+    .options({
+          svgo: false,
+        });
+  },
 });
 

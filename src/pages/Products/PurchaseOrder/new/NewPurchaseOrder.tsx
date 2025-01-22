@@ -18,7 +18,7 @@ function NewPurchaseOrder(){
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                history.push("/products/purchase_orders")
+                                history.push("/purchase_orders")
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
@@ -41,6 +41,7 @@ function NewPurchaseOrder(){
                     <div className='mc-footer'>
                         <Button type='primary' onClick={async ()=>{
                             // console.log(321)
+                            console.log(purchaseOrderStore.purchaseOrder)
                             purchaseOrderStore.purchaseOrderSubmit()
                         }}>创建</Button>
                     </div>

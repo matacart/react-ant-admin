@@ -54,6 +54,11 @@ export default  function Login() {
           message.success(defaultLoginSuccessMessage);
           await fetchUserInfo();
           const urlParams = new URL(window.location.href).searchParams;
+
+          // 是否是商户
+          // history.push("/stores/merchantApplication")
+          // 是否有店铺
+
           history.push(urlParams.get('redirect') || '/');
           setUserLoginState(msg);
           return;

@@ -27,8 +27,8 @@ function StockEdit(){
                                 <Input
                                     onChange={(e)=>{
                                         oldStore.setModel(e.target.value)
-                                        newStore.validate.model = "success"
-                                        newStore.setEditStatus(true)
+                                        oldStore.validate.model = "success"
+                                        oldStore.setEditStatus(true)
                                     }}
                                     value={oldStore.model}
                                 />
@@ -49,7 +49,6 @@ function StockEdit(){
                     <Row>
                         <Col span={11}>
                             <Form.Item
-                                required
                                 label="SKU"
                             >
                                 <Input

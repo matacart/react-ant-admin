@@ -69,7 +69,6 @@ function ProductDataCard() {
                 </Form.Item>
                 <Form.Item 
                     name="resume"
-                    required
                     label='商品摘要'>
                     <TextArea showCount maxLength={400} onBlur={(e)=>{
                         newStore.setContent1(e.target.value);

@@ -16,7 +16,7 @@ function CostSummaryCard() {
 
 
     useEffect(()=>{
-        console.log(CostData)
+        // console.log(CostData)
         let newTotal = CostData.reduce((a:any,b:any)=>{
             return a + Number(b.price)
         },0).toFixed(2)
@@ -44,7 +44,6 @@ function CostSummaryCard() {
                 <div className="content_box">
                     <div>成本调整</div>
                     {CostData.map((item:any,index:number)=>{
-                        console.log(item)
                         return(
                             <Flex style={{marginTop: '6px'}} justify="space-between">
                                 <div>{item.name}</div>

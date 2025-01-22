@@ -4,7 +4,7 @@ import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'an
 import qs from 'qs';
 import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
-import { history, Link, useIntl } from '@umijs/max';
+import { history } from '@umijs/max';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
 import SelectedActions from './SelectedActions';
@@ -354,7 +354,8 @@ function ProductListAjax(selectProps:any) {
     //     languages_id:languages_id
     //   }
     // })
-    history.push(`/products/productId/edit?productId=`+productId+`&languagesId=`+languages_id)
+    // history.push(`/products/edit?productId=`+productId+`&languagesId=`+languages_id)
+    history.push(`/products/edit/${productId}/${languages_id}`)
   };
   
   return (

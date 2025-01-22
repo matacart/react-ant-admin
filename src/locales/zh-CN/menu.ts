@@ -77,6 +77,7 @@ export default {
   'menu.products.gift-cards':'礼品卡',
 
   'menu.customer': '客户',
+  'menu.customer.management': '客户管理',
   'menu.customer.persona': '细分',
 
   'menu.discount': '折扣',
@@ -89,4 +90,8 @@ export default {
   'menu.analyse.reports': '报告',
   'menu.analyse.realtime': '实时分析',
 
+  'menu.purchase_orders':"采购",
+  'menu.warehouse':"仓库",
+  'menu.warehouse.inventory':"库存",
+  'menu.warehouse.transfers':"转移"
 };

@@ -10,7 +10,6 @@ import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
 import { deleteProduct, getProductDetail, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
-import CustomsDeclarationEdit from './CustomsDeclarationEdit';
 import StockEdit from './StockEdit';
 import MultipleStylesEdit from './MultipleStylesEdit';
 import ProductStyleListEdit from './ProductStyleListEdit';
@@ -23,7 +22,7 @@ import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
 import { useLocation, useNavigate } from 'umi'
 import cookie from 'react-cookies';
-import { history } from '@umijs/max';
+import { history,useParams } from '@umijs/max';
 import ProtectionInformationEdit from './ProtectionInformationEdit';
 import RecommendationEdit from './RecommendationEdit';
 import RelevanceEdit from './RelevanceEdit';
@@ -59,8 +58,8 @@ function ProductDetail() {
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
     const navigate = useNavigate(); // 使用 useNavigate 钩子
     const params = new URL(location.href).searchParams
-    let productId = params.get("productId")
-    let languageId = params.get("languagesId")
+
+    const {productId,languageId} = useParams()
     // 提示
     const [modal, contextHolder] = Modal.useModal();
     const [style, setStyle] = useState([]);
@@ -224,14 +223,14 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是第一个商品")
         }else{
-            history.push(`/products/productId/edit?productId=`+id+`&languagesId=`+oldStore.language)
+            history.push(`/products/edit/${id}/${oldStore.language}`)
         }
     }
     const nextProduct=(id:string)=>{
         if(id==="" || id===null){
             message.error("这是最后一个商品")
         }else{
-            history.push(`/products/productId/edit?productId=`+id+`&languagesId=`+oldStore.language)
+            history.push(`/products/edit/${id}/${oldStore.language}`)
         }
     }
     return (
@@ -290,7 +289,7 @@ function ProductDetail() {
                                         {/* 价格 */}
                                         <PriceOrTransactionCardEdit />
                                         <StockEdit />
-                                        <CustomsDeclarationEdit />
+                                        {/* <CustomsDeclarationEdit /> */}
                                         <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style = {style} setStyle={setStyle} />
                                         {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}
                                     </div>
@@ -321,6 +320,9 @@ function ProductDetail() {
                                     <Button type='primary' onClick={async () => {
                                         oldStore.setProductImg(Array.from(oldStore.temp.values())[0])
                                         await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()).slice(1))
+
+                                        console.log(oldStore.variants)
+                                        console.log(oldStore.removeVariantData)
                                         setIsLoading(true)
                                         if(oldStore.partsWarehouse == "0"){
                                             oldStore.updateProduct().then(async res => {

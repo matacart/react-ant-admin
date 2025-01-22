@@ -10,7 +10,7 @@ body,
   filter: invert(80%);
 }
 .ant-layout {
-  min-height: 100vh;
+  min-height: 100vh
 }
 .ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
   left: unset;
@@ -51,6 +51,9 @@ ol {
 .color-FF0000{
   color: #FF0000;
 }
+.color-F86140{
+  color: #F86140;
+}
 .color-FFFFFF{
   color: #FFFFFF;
 }
@@ -60,6 +63,9 @@ ol {
 }
 .color-474F5E{
   color: #474F5E;
+}
+.color-B8BECC{
+  color: #B8BECC;
 }
 
 .color-7A8499{
@@ -89,9 +95,15 @@ ol {
 .font-14{
   font-size: 14px;
 }
+
 .font-12{
   font-size: 12px;
 }
+
+.line-h-20{
+  line-height:20px;
+}
+
 
 .font-w-600{
   font-weight: 600;

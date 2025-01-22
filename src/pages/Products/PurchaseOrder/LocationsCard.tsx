@@ -31,8 +31,6 @@ function LocationsCard() {
 
     const [purchaseCurrencyList,setPurchaseCurrencyList] = useState([]);
 
-
-
     // 供应商--列表
     function getSupplierList(){
         selectSupplier().then(res=>{
@@ -108,8 +106,8 @@ function LocationsCard() {
     }
 
     const handleCurrencyChange = (value:string,option:any)=>{
-        purchaseOrderStore.purchaseOrder.currencyId = option.value
-        purchaseOrderStore.purchaseOrder.currency = option.label
+        purchaseOrderStore.purchaseOrder.currencyRate = ""
+        purchaseOrderStore.purchaseOrder.currency = option.value
     }
 
 
@@ -134,9 +132,10 @@ function LocationsCard() {
         if(res.code == 0){
             let newList:any = []
             res.data.forEach((e:any) => {
+                console.log(e)
                 newList.push({
                     label:e.title,
-                    value:e.id
+                    value:e.code
                 })
             });
             setPurchaseCurrencyList(newList)

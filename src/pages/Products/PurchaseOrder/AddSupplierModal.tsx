@@ -79,7 +79,6 @@ function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplier
             // 清空地址
             clearProvince()
             clearCity()
-
             setCityList([])
         })
     }
@@ -107,8 +106,8 @@ function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplier
 
     // 验证成功 -- 创建供应商
     const createSupplier = ()=>{
-        console.log(form.getFieldsValue())
-        AddSupplier(form.getFieldsValue()).then(res=>{
+        // console.log({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber})
+        AddSupplier({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber}).then(res=>{
             console.log(res.code)
             if(res.code == 0){
                 setAddSupplierOpen(false)
@@ -184,11 +183,6 @@ function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplier
                             <Form.Item name={"detailedAddress"} label="详细地址（公寓、门牌号等）" rules={[]}>
                                 <Input placeholder='详细地址' />
                             </Form.Item>
-
-                            <Form.Item name={"city"} label="城市" rules={[]}>
-                                <Input placeholder='城市' />
-                            </Form.Item>
-
                             <Form.Item name={"postcode"} label="邮编" rules={[]}>
                                 <Input placeholder='邮编' />
                             </Form.Item>

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import { history } from '@umijs/max';
 import SelectCard from './List/SelectCard';
-import purchaseOrderStore from '@/store/product/purchaseOrder/purchaseOrderStore';
+import purchaseOrderList from '@/store/product/purchaseOrder/purchaseOrderListStore';
 import { observer } from 'mobx-react-lite';
 
 
@@ -53,6 +53,8 @@ function Index() {
         }
     ];
 
+    purchaseOrderList.reset()
+
     return(
         <Scoped>
             <div className='create-warp-flex' style={{ width: "100%" }}>
@@ -62,7 +64,7 @@ function Index() {
                         <h3 style={{ position: 'relative', top: 10, display: 'inline-block' }}>采购订单</h3>
                     </div>
                     <div className='create-title-right'>
-                        <Button type="primary" onClick={() => { history.push('/products/purchase_orders/new') }} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>创建采购订单</Button>
+                        <Button type="primary" onClick={() => { history.push('/purchase_orders/new') }} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>创建采购订单</Button>
                     </div>
                     </div>
                     <div className='create-content'>
@@ -72,19 +74,28 @@ function Index() {
                                 // purchaseOrderStore.setTagsStatus(activeKey)
                                 switch (activeKey) {
                                     case '-1':
-                                        purchaseOrderStore.setTagsStatus("")
+                                        purchaseOrderList.setTagsStatus("")
+                                        purchaseOrderList.setTagsStatusValues("")
                                         break;
                                     case '1':
-                                        purchaseOrderStore.setTagsStatus("草稿")
+                                        purchaseOrderList.setTagsStatus("草稿")
+                                        purchaseOrderList.setTagsStatusValues("1")
                                         break;
                                     case '2':
-                                        purchaseOrderStore.setTagsStatus("已订购")
+                                        purchaseOrderList.setTagsStatus("已订购")
+                                        purchaseOrderList.setTagsStatusValues("2")
                                         break;
                                     case '3':
-                                        purchaseOrderStore.setTagsStatus("部分收货")
+                                        purchaseOrderList.setTagsStatus("部分收货")
+                                        purchaseOrderList.setTagsStatusValues("3")
                                         break;
                                     case '4':
-                                        purchaseOrderStore.setTagsStatus("部分收货")
+                                        purchaseOrderList.setTagsStatus("收货完成")
+                                        purchaseOrderList.setTagsStatusValues("4")
+                                        break;
+                                    case '0':
+                                        purchaseOrderList.setTagsStatus("已关闭")
+                                        purchaseOrderList.setTagsStatusValues("0")
                                         break;
                                 }
                             }}
@@ -92,7 +103,7 @@ function Index() {
                             // onEdit={onEdit}
                             items={items}
                             // !默认不销毁
-                            // destroyInactiveTabPane
+                            destroyInactiveTabPane
                             // tabBarExtraContent={operations}
                         />
                     </div>

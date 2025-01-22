@@ -2,10 +2,10 @@ import { getFileList, getGroupAdd, getGroupList } from "@/services/y2/api"
 import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons"
 import { Button, Card, Flex, Input, Modal, Popover, Select, Spin, Tabs, TabsProps } from "antd"
 import { createContext, useEffect, useRef, useState } from "react"
+import { history } from "@umijs/max"
 import styled from "styled-components"
 import GroupCard from "./GroupCard"
 import FileModal from "./FileModal"
-import { set } from 'lodash';
 import fileData from '@/store/fileData';
 import { observer } from "mobx-react-lite"
 
@@ -157,7 +157,7 @@ function FileManage() {
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                
+                                history.push("/settings/index")
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>

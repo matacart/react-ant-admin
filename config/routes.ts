@@ -4,6 +4,14 @@ import menu from "@/locales/bn-BD/menu";
 import route from "mock/route";
 import { Children } from "react";
 import { Link, Outlet } from '@umijs/max';
+import React from "react";
+import { Icon } from '@umijs/max';
+// import CangKukuCun from '../public/icons/caigoucaigoudan.svg';
+// import CaiGouDan from '/icons/caigoucaigoudan.svg';
+
+
+// console.log(CangKukuCun)
+
 /**
  * @name umi 的路由配置
  * @description 只支持 path,component,routes,redirect,wrappers,name,icon 的配置
@@ -22,6 +30,7 @@ export default  [
     path: '/',
     redirect: '/home'
   },
+  
   {
     path: '/user',
     name: 'login',
@@ -85,6 +94,7 @@ export default  [
         },
     ]    
   },
+  
   // 商品
   {  
       path: '/products',
@@ -97,10 +107,16 @@ export default  [
           component: './Products/ProductItem/index',
         },
         {  
-          path: ':productId/edit',  
+          path: 'edit/:productId/:languageId',
           name: '',  
           component: './Products/ProductDetail/ProductDetail', 
-        }  ,
+        },
+        // 变体
+        {  
+          path: 'edit/:productId/:languageId/variants/:variantId',
+          name: '',  
+          component: './Products/ProductDetail/Variants/Index', 
+        },
         {
           // 创建商品
           path: 'new',
@@ -108,28 +124,8 @@ export default  [
           menu: false,
           component: './Products/ProductAdd/AddNewProduct',
         },
-        {
-          path: 'inventory',
-          name: 'inventory',
-          component: './Products/Inventory/Index',
-          // component: './Products/Inventory/BlankPage',
-        },
-        {
-          path: 'transfers',
-          name: 'transfers',
-          component: './Products/Transfers/BlankPage',
-        },
-        {
-          path: 'purchase_orders',
-          name: 'purchase_orders',
-          component: './Products/PurchaseOrder/Index',
-        },
-        {
-          path: 'purchase_orders/new',
-          name: 'purchase_orders/new',
-          component: './Products/PurchaseOrder/new/NewPurchaseOrder',
-          menu: false,
-        },
+       
+        
         // 分类
         {
           path: 'categories',
@@ -160,23 +156,38 @@ export default  [
         }
       ]
   },
+  
   // 客户
   {
     name: 'customer',
     path: '/customer',
     icon: 'UserOutlined',
     routes: [
-      // {
-      //   path: 'management',
-      //   name: 'management',
-      //   component: './Customer/index',
-      // },
+      {
+        path: 'blankPage',
+        name: 'blankPage',
+        menu: false,
+        component: './Customer/customer-management/BlankPage',
+      },
+      {
+        path: 'management',
+        name: 'management',
+        component: './Customer/customer-management/index',
+      },
+      {
+        path: 'management/operate/add',
+        name: 'management/operate/add',
+        menu: false,
+        component: './Customer/customer-management/customer-management-add/NewCustomer',
+      },
+      
       {
         path: 'persona',
         name: 'persona',
       },
     ],
   },
+  
   // 折扣
   {
     path: '/discount' ,
@@ -192,7 +203,8 @@ export default  [
       {
         path: 'campaigns',
         name: 'campaigns',
-      },{
+      },
+      {
         path: 'automation',
         name: 'automation',
       }
@@ -216,29 +228,78 @@ export default  [
       }
     ]
   },
+  // 采购
+  {
+    path: 'purchase_orders',
+    name: 'purchase_orders',
+    icon:"/icons/menu/cg.svg",
+    component: './Products/PurchaseOrder/Index',
+  },
+  {
+    path: 'purchase_orders/:id',
+    name: 'purchase_orders/:id',
+    component: './Products/PurchaseOrder/old/OldPurchaseOrder',
+    menu: false,
+  },
+  {
+    path: 'purchase_orders/new',
+    name: 'purchase_orders/new',
+    component: './Products/PurchaseOrder/new/NewPurchaseOrder',
+    menu: false,
+  },
+  // 库存
+  {
+    path: 'warehouse',
+    name: 'warehouse',
+    icon:"/icons/menu/ck.svg",
+    routes:[
+      {
+        path: 'inventory',
+        name: 'inventory',
+        component: './Products/Inventory/Index',
+      },
+      {
+        path: 'transfers',
+        name: 'transfers',
+        component: './Products/Transfers/BlankPage',
+      },
+    ]
+    // component: './Products/Inventory/BlankPage',
+  },
   // 店铺
+  // 商户申请
+  {
+    path: '/stores/merchantApplication',
+    menuRender: false,
+    component: './Shops/merchant-application/MerchantApplication',
+  },
+  {
+    path: '/stores/merchantCertification',
+    menuRender: false,
+    component: './Shops/merchant-application/MerchantCertification',
+  },
   {
     path: '/stores/create',
     menuRender: false,
-    component: './Stores/Create',
+    component: './Shops/Create',
   },
   {
     path: '/stores/list',
     name: 'stores_list',
     icon: 'ShopOutlined',
-    component: './Stores/List',
+    component: './Shops/StoresManagement/Index',
   },
   {
     path: '/stores/bills',
     name: 'stores_bills',
     icon: 'ProfileOutlined',
-    component: './Stores/Bills',
+    component: './Shops/Bills',
   },
   {
     path: '/stores/data',
     name: 'stores_data',
     icon: 'DashboardOutlined',
-    component: './Stores/Data',
+    component: './Shops/Data',
   },
   // stores
   // {
@@ -298,10 +359,20 @@ export default  [
         path:"fileManage",
         component:"./Settings/FileManage/FileManage"
       },
+      // 仓库地址
       {
         path:"location",
         component:"./Settings/WarehouseAddress/WarehouseAddress"
-      }
+      },
+      {
+        path:"location/detail/:id",
+        component:"./Settings/WarehouseAddress/WarehouseAddressDetail"
+      },
+      // 语言
+      {
+        path:"lang",
+        component:"./Settings/ShopLang/Language"
+      },
     ]
   },
   // {

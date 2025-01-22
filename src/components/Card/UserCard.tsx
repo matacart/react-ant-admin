@@ -33,6 +33,11 @@ export default function UserCard(props:any) {
         });
         }
     };
+
+    useEffect(() => {
+        console.log(props.currentUser)
+    }, []);
+
     return (
         <Scoped>
             <div>
@@ -51,8 +56,8 @@ export default function UserCard(props:any) {
                             <div style={{fontSize:"14px"}}>{props.currentUser.name}</div>
                             <div>账号 ID：{props.currentUser.userid}</div>
                             <div className="user_info_tag">
-                                <span>主账号</span>
-                                <span>个人认证</span>
+                                {props.currentUser.merchant_id ? <span>商户账号</span>:<span>普通账号</span> }
+                                {props.currentUser.merchant_id ? <span>商户认证</span>:<span>个人认证</span> }
                             </div>
                         </div>
                     </Flex>

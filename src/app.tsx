@@ -1,13 +1,13 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
 import { GlobalOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
+import { ProLayout, type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
-import { getOptionType, getAccessToken, currentUser as queryCurrentUser, getShippingCourierList } from '@/services/y2/api';
+import { getOptionType, getAccessToken, currentUser as queryCurrentUser, getShippingCourierList, currentUserStatus } from '@/services/y2/api';
 import axios from 'axios';
-import { message } from 'antd';
+import { Avatar, Flex, message } from 'antd';
 import { Ping } from './components/RightContent';
 import SelectDomain from './components/RightContent/SelectDomain';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // layout
 import { FormattedMessage } from 'umi';  //多语言
 import cookie from 'react-cookies'
@@ -18,11 +18,12 @@ import defaultSettings from '../config/defaultSettings';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/signIn';
 // 在 app.tsx 文件顶部添加导入语句
+// 进度条提示
+import NProgress from "nprogress"; 
+import "nprogress/nprogress.css";
+import Header from './components/Header/Header';
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
-// 
-
-
 
 // getInitialState 获取初始化状态
 export async function getInitialState(): Promise<{
@@ -96,43 +97,33 @@ axios.post('/api/ApiAppstore/languages_select').then((res) => {
 })
 // 运输承运商
 axios.post('/api/ApiAppstore/shippingcourier_select').then((res) => {
-  console.log(res)
   if(res.data.code == 0){
     sessionStorage["currency"] = JSON.stringify(res.data.data)
   }
 })
 
 
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
-  getOptionType().then((res:any)=>{
-    // console.log(res)
-    if(res.code == 0){
-      sessionStorage["productOptionType"] = JSON.stringify(res.data)
-    }else{
-      console.log("获取商品类型失败")
-    }
-  })
 
+export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+
+  const [domainStatus,setDomainStatus] = useState();
+  
+  useEffect(()=>{
+    getOptionType().then((res:any)=>{
+      if(res.code == 0){
+        sessionStorage["productOptionType"] = JSON.stringify(res.data)
+      }else{
+        console.log("获取商品类型失败")
+      }
+    })
+    currentUserStatus().then(res=>{
+      setDomainStatus(res)
+    })
+  },[])
 
   const stores = window.location.pathname.slice(0,8)
+  
   return {
-    //菜单栏
-    actionsRender: () => [
-      stores == "/stores/"?<></>:<SelectDomain/>,
-      <Question key="doc" />,
-      <SelectLang key="SelectLang" />,
-      <Ping key="Ping" />,
-    ],
-    avatarProps: {
-      src: initialState?.currentUser?.avatar,
-      title: <AvatarName />,
-      render: (_, avatarChildren) => {
-        return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
-      },
-    },
-    waterMarkProps: {
-      content: initialState?.currentUser?.name,
-    },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -141,26 +132,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    bgLayoutImgList: [
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-        left: 85,
-        bottom: 100,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-        bottom: -68,
-        right: -45,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-        bottom: 0,
-        left: 0,
-        width: '331px',
-      },
-    ],
     links: [
       // <Link key="openapi" to="/settings" target="_blank">
       //   <SettingOutlined />
@@ -173,31 +144,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </span>
       </Link>,
     ],
-    // 修改菜单数据
-    menuDataRender: (menuData) => {
-      if(stores == "/stores/"){
-        return menuData.filter(item => item.path == '/stores/create' || item.path == '/stores/list' || item.path == '/stores/bills' || item.path == '/stores/data' )
-      }else{
-        return menuData.filter(item => item.path !== '/stores/list' && item.path !== '/stores/bills' && item.path !== '/stores/data' )
-      }
-      // return (stores == "/stores/" ? [
-      //   {
-      //     path: '/stores/list',
-      //     icon: <ShopOutlined />,
-      //     name: '店铺管理',
-      //   },
-      //   {
-      //     path: '/stores/bills',
-      //     icon: <ProfileOutlined />,
-      //     name: '账单管理',
-      //   },
-      //   {
-      //     path: '/stores/data',
-      //     icon: <DashboardOutlined />,
-      //     name: '数据管理',
-      //   }
-      // ]:menuData)
-    },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
@@ -223,10 +169,70 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       );
     },
     // 默认配置应放在最前面防止覆盖
-    ...initialState?.settings,
-    title: 'MataCart',
-    logo: <GlobalOutlined />,
     
+    // 默认布局调整
+    waterMarkProps: {
+      content: initialState?.currentUser?.name,
+    },
+    bgLayoutImgList: [
+      {
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
+        left: 85,
+        bottom: 100,
+        height: '303px',
+      },
+      {
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
+        bottom: -68,
+        right: -45,
+        height: '303px',
+      },
+      {
+        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
+        bottom: 0,
+        left: 0,
+        width: '331px',
+      },
+    ],
+    // 修改菜单数据
+    menuDataRender: (menuData) => {
+      if(stores == "/stores/"){
+        return menuData.filter(item => item.path == '/stores/create' || item.path == '/stores/merchantCertification' || item.path == '/stores/merchantApplication' || item.path == '/stores/list' || item.path == '/stores/bills' || item.path == '/stores/data' )
+      }else{
+        return menuData.filter(item => item.path !== '/stores/list' && item.path !== '/stores/bills' && item.path !== '/stores/data' )
+      }
+      // return (stores == "/stores/" ? [
+      //   {
+      //     path: '/stores/list',
+      //     icon: <ShopOutlined />,
+      //     name: '店铺管理',
+      //   },
+      //   {
+      //     path: '/stores/bills',
+      //     icon: <ProfileOutlined />,
+      //     name: '账单管理',
+      //   },
+      //   {
+      //     path: '/stores/data',
+      //     icon: <DashboardOutlined />,
+      //     name: '数据管理',
+      //   }
+      // ]:menuData)
+    },
+    // 
+    headerRender: () => domainStatus && <Header stores={stores} initialState={initialState} domainStatus={domainStatus} />,
+    ...initialState?.settings,
+    token: {
+      bgLayout: '#EAEDF1',
+      header:{
+        colorBgHeader: '#ffffff',
+        heightLayoutHeader:parseInt((domainStatus?.data.package.end_time*1000 - Date.now())/1000/60/60/24)>15?60:100
+      }, 
+      sider:{
+        colorBgMenuItemHover: '#f7f8fb',
+        colorBgMenuItemSelected: '#f7f8fb'
+      },
+    }
   };
 };
 
@@ -291,6 +297,7 @@ export const request: RequestConfig = {
   requestInterceptors: [
     (config: any) => {
       // 在请求拦截器中带token（除登录接口）
+      NProgress.start(); // 开启进度条
       const token = cookie.load("token")
       if (token && config.url != loginPath)
         config.headers['token'] = token;
@@ -299,14 +306,19 @@ export const request: RequestConfig = {
         // config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
         config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
       return config;
+      NProgress.done(); // 关闭进度条
     },
 
   ],
   // 响应拦截器
   responseInterceptors: [
-    (response: any) => response,
+    (response: any) => {
+      NProgress.done(); // 关闭进度条
+      return response
+    },
     // access_token 过期
     (res:any) =>{
+      NProgress.done(); // 关闭进度条
       // console.log(res.data.code == 1001);
       let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
       if(res.data.code==40013){
