@@ -2,7 +2,13 @@ import { addProduct, addTags, submitRenewalProduct } from "@/services/y2/api";
 import { UploadFile } from "antd";
 import { action, makeAutoObservable, makeObservable, observable } from "mobx";
 import fileUpload from "./fileUpload";
+import cookie from 'react-cookies';
 import productStore from "../productStore";
+import dayjs from "dayjs";
+const utc = require('dayjs/plugin/utc')
+const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
@@ -415,8 +421,8 @@ import productStore from "../productStore";
 
   // 格式化日期
   FormatDate(time:string){
-    const Time = new Date(parseInt(time)*1000)
-    return Time.getFullYear()+"-"+(Time.getMonth()+1)+"-"+Time.getDate()+" "+Time.getHours()+":"+Time.getMinutes()+":"+Time.getSeconds()
+    // console.log(dayjs.unix(parseInt(time)).tz(JSON.parse(cookie.load("timeZone"))))
+    return dayjs.unix(parseInt(time)).tz(cookie.load("timeZone").time_zone_name.replace(/^"|"$/g, ''))
   }
 
   
@@ -462,8 +468,8 @@ import productStore from "../productStore";
     // JSON.parse(data.additional_image).forEach((value:any,index:any) => {
     //   this.temp.set(index.toString(),value)
     // });
-    this.setStartTime(this.FormatDate(data.start_time))
-    this.setEndTime(this.FormatDate(data.end_time))
+    this.setStartTime(data.start_time == "" ? "":this.FormatDate(data.start_time))
+    this.setEndTime(data.end_time == "" ? "":this.FormatDate(data.end_time))
     // 税费
     this.setNeedTax(data.needTax == 0 ? false : true)
     // 
@@ -676,7 +682,7 @@ import productStore from "../productStore";
     addTags(this.language,this.tags).then(res=>{
       console.log(res);
     })
-
+    console.log(this);
     return submitRenewalProduct(this)
   }
 }

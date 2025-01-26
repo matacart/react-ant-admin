@@ -69,6 +69,7 @@ export default  function Login() {
         //   id: 'pages.login.failure',
         //   defaultMessage: error.message,
         // });
+        console.log(error.message);
         message.error(error.message);
       }
     };    

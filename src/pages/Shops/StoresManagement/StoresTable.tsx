@@ -5,6 +5,10 @@ import { CopyOutlined, DeleteOutlined, InfoCircleOutlined, QuestionCircleOutline
 import { history, Link, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import { getDomainList } from '@/services/y2/api';
+import SuccessTag from '@/components/Tag/SuccessTag';
+import DefaultTag from '@/components/Tag/DefaultTag';
+import ErrorTag from '@/components/Tag/ErrorTag';
+import WarningTag from '@/components/Tag/WarningTag';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -80,16 +84,16 @@ function StoresTable() {
         render: (_, record) => (
           <div>
             <img style={{width:"38px",marginLeft:"8px"}} src='/img/storeLogo.png' className="storeLogo" />
-            <span style={{marginLeft:"8px"}}>{record.secondDomain}</span>
+            <span style={{marginLeft:"8px"}}>{record.storeName}</span>
           </div>
         ),
 
-        dataIndex: 'secondDomain',
+        dataIndex: 'storeName',
         width: 160,
       },
     {
       title: 'handle',
-      dataIndex: 'model',
+      dataIndex: 'secondDomain',
       width: 120,
     },
     {
@@ -122,31 +126,25 @@ function StoresTable() {
         </Tooltip>
       </div>,
       // dataIndex: 'status',
-      render: (_, record) => (
-        <div className="item between">
-          <TagStyle>
-            <Tag className="tag tag-success" style={{
-              display: 'flex',
-              alignContent: 'center'
-            }}>
-                <span className="tag-right">
-                    <span className={"tag-dot " + ((record?.status == 1) ? 'tag-dot-success ' : 'tag-dot-error')} />
-                </span>
-                {(record?.status == 1) ?"营业中": "已停用"}
-            </Tag>
-          </TagStyle>
-          {/* <span>{(record?.status == 1) ? intl.formatMessage({ id: "menu.stores.running" }) : intl.formatMessage({ id: "menu.stores.stop" })}</span>
-          <Switch defaultChecked={record?.status == 1 ? true : false}
-          onChange={(checked) => {
-            console.log(checked)
-          }}/> */}
-        </div>
-      ),
+      render: (_, record) => {
+        switch(record?.status) {
+          case "0":
+            return <DefaultTag text='已打烊' />;
+          case "1":
+            return <SuccessTag text='营业中' />;
+          case "-1":
+            return <WarningTag text='已冻结' />;
+          case "-2":
+            return <ErrorTag text='已停用' />;
+          case "-3":
+            return <ErrorTag text='已注销' />;
+        }
+      },
       width: 120,
     },
     {
       title: '店铺套餐',
-      dataIndex: 'model',
+      dataIndex: 'packageName',
       width: 120,
     },
     {
@@ -266,6 +264,8 @@ function StoresTable() {
         res?.data?.forEach((item: any, index: any) => {
           domainList.push({
               id: item.id,
+              storeName: item.store_name,
+              packageName:item.package_name,
               domainName: item.domain_name,
               secondDomain: item.second_domain.toLowerCase(),
               status: item.status,

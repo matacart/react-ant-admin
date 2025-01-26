@@ -1,12 +1,16 @@
 import { Space, Select, Input, Tag, Button, ConfigProvider } from "antd";
 import type { SearchProps } from 'antd/es/input/Search';
 import type { SelectProps } from 'antd';
-import PriceRangeSelector from "../Select/PriceRangeSelector";
-import MoreSelect from "../Select/MoreSelect";
 import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
 import { useEffect, useState } from "react"
 import { selectTags } from "@/services/y2/api";
-import EditTableHead from './../Select/EditTableHead';
+import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
+import MoreSelect from "@/components/Select/MoreSelect";
+import EditTableHead from "@/components/Select/EditTableHead";
+import styled from "styled-components";
+import TagSelector from "./TagSelector";
+import CommodityClassificationSelector from "./CommodityClassificationSelector";
+import DropdownSort from "@/components/Dropdown/DropdownSort";
 
 const { Search } = Input;
 // type TagRender = SelectProps['tagRender'];
@@ -106,7 +110,7 @@ export default function ProductsSelectCard(){
         // setTags(str.slice(1))
     }
     return (
-        <> 
+        <Scoped> 
             
             <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
@@ -121,11 +125,10 @@ export default function ProductsSelectCard(){
                         flexWrap: 'wrap',
                         gap: '12px 12px',
                     }}>
-                        <Space.Compact>
+                        <Space.Compact style={{height:36}}>
                             <Select
-                                size='large'
                                 defaultValue={0}
-                                style={{ width: 100}}
+                                style={{ width: 100 ,height:36}}
                                 listHeight={230}
                                 options={[
                                     { value: 0, label: '全部' },
@@ -139,80 +142,13 @@ export default function ProductsSelectCard(){
                                 ]}
                                 onChange={selectSearch}
                             />
-                            <Search
-                                size='large'
-                                placeholder="" onSearch={onSearch} style={{ width: 200 }} />
+                            <Search size='large' placeholder="" onSearch={onSearch} style={{width: 220,height:36}} />
                         </Space.Compact>
                         {/* 2 */}
-                        <Select
-                            size='large'
-                            showSearch
-                            style={{
-                                minWidth: 140,
-                            }}
-                            placeholder="商品分类"
-                            optionFilterProp="children"
-                            dropdownMatchSelectWidth={false}
-                            dropdownStyle={{ width: 190 }}
-                            filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                            filterSort={(optionA, optionB) =>
-                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                            }
-                            options={[
-                                {
-                                    value: '1',
-                                    label: '无分类商品',
-                                    style: { width: '100%' }, // 设置 option 宽度
-                                },
-                            
-                            ]}
-                        />
-                        {/* 3 */}
-                        <ConfigProvider
-                            theme={{
-                                // 2. 组合使用暗色算法与紧凑算法
-                                // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
-                                components: {
-                                    Select: {
-                                        // optionPadding: '0px 0px',
-                                        // showArrowPaddingInlineEnd: '0px',
-                                    }
-                                },
-                            }}>
-                            <Select
-                                size="large"
-                                placeholder='标签'
-                                mode="multiple"
-                                style={{
-                                    minWidth: 200
-                                }}
-                                open={openTagsList}
-                                dropdownStyle={{padding:"0px"}}
-                                dropdownRender={(menu) => (
-                                    <>
-                                    {menu}
-                                    {/* 1px solid #d7dbe7 */}
-                                        <div style={{width:"100%",height:"1px",backgroundColor:"#d7dbe7"}}></div>
-                                        <div style={{textAlign:"right",padding:"10px"}}>
-                                            {/* 解决失去焦点事件优先级较高的问题 */}
-                                            <Button onMouseDown={()=>{
-                                                setOpenTagsList(false)
-                                                setTags(str.slice(1))
-                                            }} type="primary">
-                                            确认
-                                            </Button>
-                                        </div>
-                                        
-                                    </>
-                                )}
-                                options={options}
-                                onChange={handleTagChange}
-                                onFocus={()=>{setOpenTagsList(true)}}
-                                onBlur={()=>{setOpenTagsList(false)}}
-                            ></Select>
-                        </ConfigProvider>
-                        
-                        {/* 4 */}
+                        <CommodityClassificationSelector />
+                        {/* 标签 */}
+                        <TagSelector/>
+                        {/* 4 价格区间 */}
                         <PriceRangeSelector />
                     </div>
                     <div
@@ -222,12 +158,11 @@ export default function ProductsSelectCard(){
                             flexWrap: 'wrap',
                             gap: '12px 12px',
                         }}>
-
                         {/*  */}
                         <Select 
-                            size='large'
                             defaultValue="English"
-                            style={{ width: 100 }}
+                            className="font-14"
+                            style={{ width: 100,height:36 }}
                             listHeight={230}
                             onChange={languageChange}
                             options={languageData}
@@ -237,13 +172,8 @@ export default function ProductsSelectCard(){
                         {/* 6 */}
                         <EditTableHead />
                         {/* 7 */}
-                        <Select
-                            size='large'
-                            defaultValue="全部"
-                            style={{ width: 100 }}
-                            listHeight={230}
-                            options={[
-                                { value: '全部', label: '全部' },
+                        <DropdownSort items={
+                            [
                                 { value: '商品名称（A-Z）', label: '商品名称（A-Z）' },
                                 { value: '商品名称（Z-A）', label: '商品名称（Z-A）' },
                                 { value: '库存（从低到高）', label: '库存（从低到高）' },
@@ -252,12 +182,21 @@ export default function ProductsSelectCard(){
                                 { value: '售价（从高到低）', label: '售价（从高到低）' },
                                 { value: '创建时间（从远到近）', label: '创建时间（从远到近）' },
                                 { value: '创建时间（从近到远）', label: '创建时间（从近到远）' },
-                            ]}
-                        />
+                            ]
+                        } styled={{maxHeight:"290px",overflowY:"auto"}} />
                     </div>
                 </div>
             </div>
             <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  />
-        </>
+        </Scoped>
     );
 }
+
+const Scoped = styled.div`
+    .ant-input{
+        height: 36px;
+    }
+    .ant-btn{
+        height: 36px;
+    }
+`;

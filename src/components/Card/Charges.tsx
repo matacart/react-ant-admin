@@ -12,7 +12,7 @@ export default function ({icon,price,text,origin,desc}:{
         <Scoped>
             { origin && (
                 <div className="introduction-packages__item__charges--previous">
-                    {icon+origin+' /'+text}
+                    {/* {icon+origin+' /'+text} */}
                 </div>
             )}
             <div className="currency-component-container">

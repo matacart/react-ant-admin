@@ -1,20 +1,71 @@
 import InputSearch from "@/components/Search/InputSearch";
-import { getCurrenciesList, getTimeZoneList } from "@/services/y2/api";
+import { getCityList, getCurrenciesList, getProvinceList, getTimeZoneList } from "@/services/y2/api";
 import baseInfoStore from "@/store/set-up/baseInfoStore";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Form, Input, Modal, Select, Switch, Table, TableProps } from "antd";
+import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import src from './../../../.umi/typings.d';
+import { parse } from 'url';
+import { set } from 'lodash';
+import { select } from "react-cookies";
+import { useForm } from "antd/es/form/Form";
 
 function ShopOperationInformation() {
 
     const [isOpen,setIsOpen] = useState(false);
 
+    const [form] = useForm();
+
+    const [isOpenBillingAddress,setIsOpenBillingAddress] = useState(false);
+
+    const [countryList,setCountryList] = useState([]);
+
+    const [provinceList,setProvinceList] = useState([]);
+
+    const [cityList,setCityList] = useState([]);
+
     // const [data,setData] = useState();
 
     const [timeZone,setTimeZone] = useState([]);
+
+    const selectedCountry = (value:string)=>{
+        getProvinceList(value).then(res=>{
+            console.log(res)
+            res.code == 0 && setProvinceList(
+                res.data.map(
+                    (item:any) => {
+                        return {
+                            label: item.name,
+                            value: item.id
+                        }
+                    }
+                )
+            )
+
+            setCityList([])
+        })
+    }
+
+    const selectedProvince = (value:string)=>{
+        getCityList(value).then(res=>{
+            res.code == 0 && setCityList(
+                res.data.map(
+                    (item:any) => {
+                        return {
+                            label: item.name,
+                            value: item.id
+                        }
+                    }
+                )
+            )
+        })
+    }
+
+    // 提交账单地址
+    const submitBillingAddress = ()=>{
+        console.log(form.getFieldsValue())
+    }
 
     useEffect(()=>{
         getTimeZoneList().then(res=>{
@@ -27,6 +78,17 @@ function ShopOperationInformation() {
             });
             setTimeZone(newTimeZone)
         })
+
+        setCountryList(
+            JSON.parse(sessionStorage.getItem("country") || "").map(
+                (item:any) => {
+                    return {
+                        label: item.country_name,
+                        value: item.country_id
+                    }
+                }
+            )
+        )
     },[])
 
     return (
@@ -46,7 +108,7 @@ function ShopOperationInformation() {
                                 <div style={{marginLeft:"12px"}}>中国</div>
                             </Flex>
                             <Flex align="center">
-                                <Button>编辑</Button>
+                                <Button onClick={()=>setIsOpenBillingAddress(true)}>编辑</Button>
                             </Flex>
                         </Flex>
                     </Form.Item>
@@ -88,6 +150,61 @@ function ShopOperationInformation() {
                     </Form.Item>
                 </Form>
             </Card>
+            {/* 账单地址 */}
+            {/* Edit billing address */}
+            <Modal title="编辑账单地址" centered width={620} open={isOpenBillingAddress} onOk={submitBillingAddress} onCancel={()=>{setIsOpenBillingAddress(false)}}>
+                <Form layout={"vertical"} form={form}>
+                    <Form.Item
+                        name="country"
+                        label="国家/地区"
+                        >
+                            {/* <Input placeholder="请选择国家/地区"></Input> */}
+                            <Select options={countryList} onChange={selectedCountry} />
+                    </Form.Item>
+                    <Row gutter={[10,0]}>
+                        <Col span={12}>
+                            <Form.Item
+                                label="省份"
+                                name="province"
+                                >
+                                    {provinceList.length>0 ? <Select options={provinceList} onChange={selectedProvince} placeholder="请选择省份" /> : <Input placeholder="请输入省份"></Input> }
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                label="城市"
+                                name="city"
+                                >
+                                    {cityList.length>0 ? <Select options={cityList} onChange={()=>{}} placeholder="请选择城市" />:<Input placeholder="请输入城市"></Input>}
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item
+                        label="区"
+                        name="area"
+                        >
+                            <Input placeholder="区"></Input>
+                    </Form.Item>
+                    <Form.Item
+                        label="地址"
+                        name="address"
+                        >
+                            <Input placeholder="地址"></Input>
+                    </Form.Item>
+                    <Form.Item
+                        label="详细地址"
+                        name="detailAddress"
+                        >
+                            <Input placeholder="详细地址"></Input>
+                    </Form.Item>
+                    <Form.Item
+                        label="邮编"
+                        name="postCode"
+                        >
+                            <Input placeholder="邮编"></Input>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </Scoped>
     )
 }

@@ -165,16 +165,16 @@ export default defineConfig({
   // icons: {autoInstall: {}},
   icons: {},
 
-  chainWebpack: (config) => {
-    config.module
-    .rule('svg')
-    .exclude.add(/node_modules/)
-    .end()
-    .use('svg')
-    .loader('@svgr/webpack')
-    .options({
-          svgo: false,
-        });
-  },
+  // chainWebpack: (config) => {
+  //   config.module
+  //   .rule('svg')
+  //   .exclude.add(/node_modules/)
+  //   .end()
+  //   .use('svg')
+  //   .loader('@svgr/webpack')
+  //   .options({
+  //         svgo: false,
+  //       });
+  // },
 });
 

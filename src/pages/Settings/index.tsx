@@ -13,6 +13,7 @@ const settingArray = [
         icon: '/icons/set/pay.svg',
         title: '收款',
         desc: '管理商店的支付服务',
+        url:"/settings/payments",
     }, {
         icon: '/icons/set/send.svg',
         title: '发货与配送',

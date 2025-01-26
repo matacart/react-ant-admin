@@ -11,7 +11,8 @@ import ShopStatusCard from './ShopStatusCard';
 import baseInfoStore from "@/store/set-up/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
-
+import cookie from 'react-cookies';
+import OverlayEdit from "@/components/Overlay/OverlayEdit"
 
 function Base() {
 
@@ -113,10 +114,11 @@ function Base() {
                     >
                     </Divider>
                     <div className="submit-btn">
-                        <Button type="primary" loading={isRenewal} onClick={()=>{
+                        <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
                             setIsRenewal(true)
                             baseInfoStore.setStore().then(res=>{
                                 if(res.code==0){
+                                    cookie.save('timeZone', JSON.stringify(JSON.parse(sessionStorage["timezones"]).filter(item=>item.id == baseInfoStore.timezone)[0]), { path: '/' });
                                     message.success('更新成功')
                                 }else{
                                     message.error('更新失败')
@@ -127,6 +129,7 @@ function Base() {
                     </div>
                 </div>
             </div>}
+            {/* <OverlayEdit /> */}
         </Scoped>
     )
 }

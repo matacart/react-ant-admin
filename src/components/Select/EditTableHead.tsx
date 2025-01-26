@@ -21,7 +21,7 @@ export default function EditTableHead(){
     
     return (
         <div>
-            <Button onClick={()=>{setOpen(true)}} size="large">编辑表头</Button>
+            <Button onClick={()=>{setOpen(true)}}>编辑表头</Button>
             <Drawer title='编辑表头' open={open} onClose={()=>{
                 setOpen(false);
             }}>

@@ -1,4 +1,4 @@
-import { getCurrencies, getDomainList } from "@/services/y2/api";
+import { getCurrencies, getCurrenciesList, getDomainList, getTimeZoneList } from "@/services/y2/api";
 import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
 import { useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import { result } from 'lodash';
 import { useIntl } from '@umijs/max';
 import cookie from 'react-cookies';
 import { history } from 'umi';
+import SuccessTag from "../Tag/SuccessTag";
+import DefaultTag from "../Tag/DefaultTag";
 
 // 定义一个函数来高亮搜索词  
 function highlightSearchTerm(text: string, term: string) {
@@ -98,6 +100,21 @@ export default function SelectDomain() {
         }
     }
 
+    // 货币符号
+    const setCurrencys = (defaultCurrency:string)=>{
+        defaultCurrency == "" ? cookie.save('symbolLeft', '', { path: '/' }) : getCurrenciesList().then(res=>{
+            console.log(res.data.filter(item=>item.code == defaultCurrency)[0]?.symbol_left)
+            cookie.save('symbolLeft', res.data.filter(item=>item.code == defaultCurrency)[0].symbol_left, { path: '/' });
+        })
+    }
+
+    // 时区
+    const setTimeZone = (timeZone:string)=>{
+        getTimeZoneList().then(res=>{
+            cookie.save('timeZone', JSON.stringify(res.filter(item=>item.id == timeZone)[0]), { path: '/' });
+        })
+    }
+
     
     const changeDomain = (item: any) => {
         if(!window.location.hostname.startsWith("localhost")){
@@ -111,8 +128,10 @@ export default function SelectDomain() {
         // 判断会话中是否存在店铺数据
         if(sessionStorage["domain"] && JSON.parse(sessionStorage["domain"]).length !== 0){
             setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
-            setDefaultDomain(cookie.load("domain")?.id);
+            setDefaultDomain(cookie.load("domain")?.storeName);
             getDomainCurrent(cookie.load("domain")?.id);
+            setCurrencys(cookie.load("domain").defaultCurrency);
+            setTimeZone(cookie.load("domain").timeZone);
             domainList = JSON.parse(sessionStorage["domain"])
         }else{
             getDomainList().then((res) => {
@@ -121,14 +140,20 @@ export default function SelectDomain() {
                     domainList.push({
                         id: item.id,
                         domainName: item.domain_name,
+                        storeName: item.store_name,
                         secondDomain: item.second_domain.toLowerCase(),
+                        defaultCurrency: item.default_currency,
+                        timeZone:item.timezone,
                         status: item.status,
                     })
                     if(item.second_domain == window.location.hostname.slice(0,window.location.hostname.indexOf("."))){
                         flag.push({
                             id: item.id,
                             domainName: item.domain_name,
+                            storeName: item.store_name,
                             secondDomain: item.second_domain.toLowerCase(),
+                            defaultCurrency: item.default_currency,
+                            timeZone:item.timezone,
                             status: item.status,
                         })
                     }
@@ -138,11 +163,15 @@ export default function SelectDomain() {
                 sessionStorage["domain"] = JSON.stringify(domainList);
                 if(flag.length == 0){
                     cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
-                    setDefaultDomain(res.data[0]?.id);
+                    setCurrencys(res.data[0]?.default_currency)
+                    setTimeZone(cookie.load("domain").timeZone);
+                    setDefaultDomain(res.data[0]?.storeName);
                     getDomainCurrent(res.data[0]?.id);
                 }else{
                     cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
-                    setDefaultDomain(flag[0].id);
+                    setCurrencys(res.data[0]?.default_currency)
+                    setTimeZone(cookie.load("domain").timeZone);
+                    setDefaultDomain(flag[0].storeName);
                     getDomainCurrent(flag[0].id);
                 }
             }).catch((error) => {
@@ -204,10 +233,13 @@ export default function SelectDomain() {
                             <div className="storeInfo">
                                 <div className="storeName">
                                     <div className="shopTitle" dangerouslySetInnerHTML={{
-                                        __html: item?.id
+                                        __html: item?.storeName
                                     }}>
                                     </div>
-                                    <Tag className="tag tag-success" style={{
+
+                                    {item?.status == 1 && <SuccessTag text={intl.formatMessage({id:"menu.stores.running"})} />}
+                                    {item?.status == 0 && <DefaultTag text={intl.formatMessage({id:"menu.stores.default"})} />}
+                                    {/* <Tag className="tag tag-success" style={{
                                         display: 'flex',
                                         alignContent: 'center'
                                     }}>
@@ -215,14 +247,14 @@ export default function SelectDomain() {
                                             <span className={"tag-dot " + ((item?.status == 1) ? 'tag-dot-success ' : 'tag-dot-error')} />
                                         </span>
                                         {(item?.status == 1) ?intl.formatMessage({id:"menu.stores.running"}): intl.formatMessage({id:"menu.stores.stop"})}
-                                    </Tag>
+                                    </Tag> */}
 
                                 </div>
                                 <div className="shopInfo">
-                                    {item?.domainName}
+                                    {item?.id}
                                 </div>
                                 <div className="email">
-                                    {item?.secondDomain}
+                                    {item?.domainName}
                                 </div>
                             </div>
                         </div>

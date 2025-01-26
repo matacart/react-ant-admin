@@ -57,8 +57,9 @@ export default {
   'menu.stores.create': 'Create Store',
 //
 'menu.search.stores': "Search Store Name/Subdomain/Main Domain",  
-'menu.stores.running': "Open",  
-"menu.stores.stop": "Closed",  
+'menu.stores.running': "Open",
+'menu.stores.default': "Closed",
+"menu.stores.stop": "Stop",  
 'menu.search.none': 'No stores matching the criteria',  
 'menu.stores.manage': 'Manage Stores',
 //

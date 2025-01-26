@@ -150,15 +150,13 @@ function ProductListAjax(selectProps:any) {
         flexWrap: 'nowrap',
         alignContent: 'center',
       }}>
-        <Avatar shape="square" size="large" src={record.imgUrl} icon={<PictureOutlined />} />
+        <Avatar shape="square" size="large" src={(record.imgUrl && record.imgUrl!=="")?record.imgUrl:"/icons/ProductCoverBlank.svg"} />
         <span style={{
           marginLeft: 10,
           alignContent: 'center',
           whiteSpace: 'nowrap',
-
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          
           maxWidth:"100%"
         }}>{record.title}</span>
       </div>
@@ -175,7 +173,7 @@ function ProductListAjax(selectProps:any) {
       render: (value, record, index) =>{
         let num = Number(value);
         return <>
-          {`US$ ${num.toFixed(2)}`}
+          {`${cookie.load("symbolLeft")} ${num.toFixed(2)}`}
         </>
       } 
     },
@@ -257,55 +255,39 @@ function ProductListAjax(selectProps:any) {
         )
       }
     },
-
   ];
 
-  const fetchData = () => {
+  const fetchData = async () => {
     setLoading(true);
-    // fetch(`/api/product/query/${qs.stringify(getRandomuserParams(tableParams))}`)
-    // fetch(`/api/product/query`)
-    //   .then((res) => res.json())
-    //   .then(({ results }) => {
-    //     setData(results);
-    //     setLoading(false);
-    //     setTableParams({
-    //       ...tableParams,
-    //       pagination: {
-    //         ...tableParams.pagination,
-    //         total: 200,
-    //         // 200 is mock data, you should read it from server
-    //         // total: data.totalCount,
-    //       },
-    //     });
-    //     console.log(result);
-    //   });
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag,newStore.isAlliance,newStore.isHosted)
-      .then((res) => {
+    try {
+      const result = await getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag,newStore.isAlliance,newStore.isHosted)
+      setLoading(false);
+      // 201 空
+      if(result.code == 0 || result.code == 201){
         let newData:DataType[] = [];
         let switchList:boolean[] = [];
-        res.data?.forEach((item:any)=>{
-            newData.push({
-              key:item.id,
-              model: item.model,
-              imgUrl: item.product_image,  //封面
-              product_image: item.additional_image,
-              price: item.price,
-              costPrice:item.cost_price,
-              title: item.title,
-              content:item.content,
-              state: item.status,
-              inventory: item.quantity,
-              ISBN:item.barcode,
-              HSCode:item.hs_code,
-              notion:item.shipping_country_id,
-              productid:item.id,  //产品id
-              languages_id:item.languages_id,
-              // 获取所有数据
-            })
-          // 
-          switchList.push(false)
+        result.data?.forEach((item:any)=>{
+          newData.push({
+            key:item.id,
+            model: item.model,
+            imgUrl: item.product_image,  //封面
+            product_image: item.additional_image,
+            price: item.price,
+            costPrice:item.cost_price,
+            title: item.title,
+            content:item.content,
+            state: item.status,
+            inventory: item.quantity,
+            ISBN:item.barcode,
+            HSCode:item.hs_code,
+            notion:item.shipping_country_id,
+            productid:item.id,  //产品id
+            languages_id:item.languages_id,
+            // 获取所有数据
+          })
+        switchList.push(false)
         })
         // 初始化开关数组
         setOnLoadingList(switchList);
@@ -315,22 +297,24 @@ function ProductListAjax(selectProps:any) {
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
-            total: res.count,
+            total: result.count,
             // 200 is mock data, you should read it from server
             // total: data.totalCount,
           }
         });
-      })
+        return
+      }
+      throw new Error(result);
+    }catch(error){
+      message.error('获取数据失败');
+    }
+    setLoading(false);
   };
   useEffect(() => {
     // 初始化商品
     newStore.reset();
     oldStore.reset();
     fetchData();
-    // console.log(newStore.flag)
-    // console.log(selectProps.selectProps)
-    // console.log(globalStore.shop[0].domainName)
-    // newStore.isAlliance
   }, [newStore.isAlliance,newStore.isHosted,newStore.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.tags]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
@@ -339,10 +323,6 @@ function ProductListAjax(selectProps:any) {
       filters,
       ...sorter,
     });
-    // `dataSource` is useless since `pageSize` changed
-    // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-    //   setData([]);
-    // }
   };
 
   const handleOrderClick = (productId: string,languages_id:string) => {
@@ -360,35 +340,54 @@ function ProductListAjax(selectProps:any) {
   
   return (
     <Scoped>
-    {/* 商品列表 */}
-      <SelectedActions selectedRowKeys={selectedRowKeys} onFetchData={fetchData} setSelectedRowKeys={setSelectedRowKeys} /> {/* 显示选择的数量和操作按钮 */}
-      <Table
-        columns={columns}
-        // rowKey={(record) => record.key}
-        dataSource={data}
-        pagination={tableParams.pagination}
-        loading={loading}
-        onChange={handleTableChange}
-        scroll={{ x: 1300 }}
-        rowKey={(record) => record.productid}
-        onRow={(record) => ({
-          onClick: () => {
-            console.log('Row clicked:', record);
-            handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
-          },
-        })}
-        rowSelection={{
-          type: 'checkbox',
-          selectedRowKeys, // 使用状态来记录选中的行
-          onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            setSelectedRowKeys(selectedRowKeys); // 更新状态
-          },
-        }}
-        // 隐藏表头
-        showHeader={selectedRowKeys.length === 0}
-      />
-      
+      {/* 商品列表 */}
+        <div className='table-box'>
+          <Table
+            columns={columns}
+            // rowKey={(record) => record.key}
+            components={
+              selectedRowKeys.length !== 0 ?{
+                header: {
+                  wrapper:()=>{
+                    return (
+                      <thead>
+                        <tr>
+                          <th colSpan={5}>
+                            {/* 显示选择的数量和操作按钮 */}
+                            <SelectedActions selectedRowKeys={selectedRowKeys} onFetchData={fetchData} setSelectedRowKeys={setSelectedRowKeys}/>
+                          </th>
+                        </tr>
+                      </thead>
+                    )
+                  }
+                },
+              }:{}
+            }
+            dataSource={data}
+            pagination={tableParams.pagination}
+            loading={loading}
+            onChange={handleTableChange}
+            scroll={{ x: 1300 }}
+            rowKey={(record) => record.productid}
+            onRow={(record) => ({
+              onClick: () => {
+                console.log('Row clicked:', record);
+                handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
+              },
+            })}
+            rowSelection={{
+              type: 'checkbox',
+              selectedRowKeys, // 使用状态来记录选中的行
+              onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                setSelectedRowKeys(selectedRowKeys); // 更新状态
+              },
+            }}
+            // 隐藏表头
+            // showHeader={selectedRowKeys.length === 0}
+          />
+        </div>
+        
       {/* 复制商品模态框 */}
       <Modal
         centered
@@ -461,6 +460,12 @@ const Scoped = styled.div`
   .ant-table-tbody > tr > td {
     padding: 10px; 
   }
+  .ant-table{
+    border: 1px solid #eef1f7;
+    border-radius: 6px;
+    border-bottom: none;
+  }
+  
 `
 const ButtonIcon = styled.div`
 .wrap{

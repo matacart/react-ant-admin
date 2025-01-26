@@ -7,6 +7,7 @@ import oldStore from '@/store/product/oldStore';
 import styled from 'styled-components';
 import { history } from '@umijs/max';
 import axios from 'axios';
+import cookie from 'react-cookies';
 // 默认数据
 // setStyles([...oldData,...filteredArray])
 // setCopyStyles([...oldData,...filteredArray])
@@ -259,7 +260,7 @@ function ProductStyleListEdit (props:any){
       width: 180,
       render: (value: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
+          <span style={{ marginRight: 4 }}>{cookie.load("symbolLeft")}</span>
           <div style={{ flex: 1 }}>
             <Input
               value={value === 0 ? '' : value.toString()}
@@ -286,7 +287,7 @@ function ProductStyleListEdit (props:any){
       width: 180,
       render: (value: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
+          <span style={{ marginRight: 4 }}>{cookie.load("symbolLeft")}</span>
           <div style={{ flex: 1 }}>
             <InputNumber
               value={value || 0}
@@ -311,7 +312,7 @@ function ProductStyleListEdit (props:any){
       width: 180,
       render: (value: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
+          <span style={{ marginRight: 4 }}>{cookie.load("symbolLeft")}</span>
           <div style={{ flex: 1 }}>
             <InputNumber
               value={value}

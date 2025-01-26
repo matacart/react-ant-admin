@@ -197,7 +197,8 @@ function ProductDetail() {
         setIsLoading(true)
         try {
             const lang = language !== "" ? language : languageId;
-            const response = await getProductDetail(productId == null?"":productId,lang ?? ''); // 参数
+            // const response = await getProductDetail(productId == null?"":productId,lang ?? ''); // 参数
+            const response = await getProductDetail(productId == null?"":productId,2); // 参数
             setProductDetail(response.data);
             if(response.data){
                 setProductStatus(response.data.status);

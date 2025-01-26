@@ -23,8 +23,8 @@ export default function Package() {
                     <Col span={8} className="pay-func">
                         <h3 className="title">支付方式</h3>
                         <p className="description">
-                            <div>管理您在 SHOPLINE 中支付账单的方式。</div>
-                            <Link key='viewAutoDeductRule' to='https://shoplineapphelp.zendesk.com/hc/articles/4404884608025'>
+                            <div>管理您在 MataCart 中支付账单的方式。</div>
+                            <Link key='viewAutoDeductRule' to=''>
                                 查看自动扣费规则
                                 <ExportOutlined className="mc-symbol-icon" />
                             </Link>
@@ -74,7 +74,7 @@ export default function Package() {
                     <Col span={8}>
                         <div className="left-title">我的套餐</div>
                         <p className="left-desc">
-                            管理你的 SHOPLINE 套餐，并查看套餐详细信息和佣金流水。<br />
+                            管理你的 MataCart 套餐，并查看套餐详细信息和佣金流水。<br />
                             查看
                             <Link to='#' className="link">服务细则</Link>
                             <span className="span">|</span>
@@ -133,7 +133,7 @@ export default function Package() {
                     <Col span={8}>
                         <div className="left-title">我的的服务权益</div>
                         <p className="left-desc">
-                            管理你的 SHOPLINE 套餐之外购买的服务和权益。
+                            管理你的 MataCart 套餐之外购买的服务和权益。
                         </p>
                     </Col>
                     <Col span={16} >

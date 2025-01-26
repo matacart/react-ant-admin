@@ -1,20 +1,14 @@
 import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Divider, Form, Cascader, Input, Select, Space, Button, Dropdown, Tabs, Modal } from 'antd';
-import './index.scss';
-import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone, DownOutlined } from '@ant-design/icons';
-import { ImportOutlined, PlusOutlined } from '@ant-design/icons';
+import { ImportOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
-import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import styled from 'styled-components';
 import newStore from '@/store/newStore';
-import { Switch } from 'antd/lib';
-import { setFlag } from 'mobx/dist/internal';
-import oldStore from '@/store/oldStore';
+import productStore from '@/store/productStore';
+import ProductsSelectCard from './ProductsSelectCard';
 
-const TabLabel = styled.div`
-    font-size: 16px;
-`;
+
 
 const aItems: MenuProps['items'] = [
     {
@@ -50,12 +44,7 @@ type PositionType = 'left' | 'right';
 //   right: <Button>Right Extra Action</Button>,
 // };
 
-
-
 const App: React.FC = () => {
-  // const [activeKey, setActiveKey] = useState("1");
-  
-  // const [language,setLanguage] = useState(2);
   const initialItems = [
     {
       label: <TabLabel>全部</TabLabel>,
@@ -125,37 +114,6 @@ const App: React.FC = () => {
       }
     }
   };
-
-  // const switchLanguages = (value: number) => {
-  //   // productStore.setLanguage(value);
-  //   // setLanguage(value);
-  //   // console.log(productStore.language);
-  // };
-  // let [languagesData,setlanguagesData] = useState([]);
-  // const operations = <Select
-  //   defaultValue={2}
-  //   style={{ width: 120 }}
-  //   onChange={switchLanguages}
-  //   options={languagesData}
-  // />;
-
-  
-
-  
-  
-  // const [position, setPosition] = useState<PositionType[]>(['left', 'right']);
-  // const slot = useMemo(() => {
-  //   if (position.length === 0) {
-  //     return null;
-  //   }
-  //   return position.reduce(
-  //     (acc, direction) => ({ ...acc, [direction]: OperationsSlot[direction] }),
-  //     {},
-  //   );
-  // }, [position]);
-
-  
-
   const add = () => {
     setIsModalVisible(true);
   };
@@ -212,71 +170,123 @@ const App: React.FC = () => {
     }
   };
 
- 
-
   useEffect(()=>{
     // 重新渲染初始化状态
     newStore.setFlag("");
     newStore.setIsAlliance("");
     newStore.setIsHosted("");
+    productStore.setAttributes([]);
   },[]);
 
   return (
-    <div className='create-warp-flex' style={{ width: "100%" }}>
-      <div className="create-warp">
-        <div className='create-title'>
-          <div className='create-title-left'>
-            <h3 style={{ position: 'relative', top: 10, display: 'inline-block' }}>商品</h3>
-            <ImportOutlined style={{ position: 'relative', top: -24, left: -10 }} />
-            <div style={{ position: 'relative', top: -44, left: 83 }}>
-              <Dropdown menu={{ items: aItems }}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    导入商品
-                  </Space>
-                </a>
-              </Dropdown>
+    <Scoped>
+      <div className='create-warp-flex' style={{ width: "100%" }}>
+        <div className="create-warp">
+          <div className='create-title'>
+            <div className='create-title-left'>
+              <h3 style={{ position: 'relative', top: 10, display: 'inline-block' }}>商品</h3>
+              <ImportOutlined style={{ position: 'relative', top: -24, left: -10 }} />
+              <div style={{ position: 'relative', top: -44, left: 83 }}>
+                <Dropdown menu={{ items: aItems }}>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      导入商品
+                    </Space>
+                  </a>
+                </Dropdown>
+              </div>
+            </div>
+            <div className='create-title-right'>
+              <Button type="primary" onClick={() => { history.push('/products/new') }} style={{ marginTop: "10px", width: "88px", height: "36px", fontSize: "16px" }}>创建商品</Button>
             </div>
           </div>
-          <div className='create-title-right'>
-            <Button type="primary" onClick={() => { history.push('/products/new') }} style={{ marginTop: "10px", width: "88px", height: "36px", fontSize: "16px" }}>创建商品</Button>
+          <div className='create-content'>
+            <Tabs
+              type="editable-card"
+              onChange={onChange}
+              activeKey={activeKey}
+              onEdit={onEdit}
+              items={items}
+              // !默认不销毁
+              destroyInactiveTabPane
+              // tabBarExtraContent={operations}
+            />
           </div>
         </div>
-        <div className='create-content'>
-          <Tabs
-            type="editable-card"
-            onChange={onChange}
-            activeKey={activeKey}
-            onEdit={onEdit}
-            items={items}
-            // !默认不销毁
-            destroyInactiveTabPane
-            // tabBarExtraContent={operations}
-          />
-        </div>
+        <Modal
+          title="创建选项卡"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <Form.Item label="选项卡名称" style={{ marginBottom: '16px' }}>
+            <Input
+              value={newTabName}
+              onChange={(e) => setNewTabName(e.target.value)}
+              placeholder="请输入选项卡名称"
+            />
+          </Form.Item>
+        </Modal>
       </div>
-      {/* <div style={{display:"none"}}>
-        <ProductsSelectCard  lang={language}></ProductsSelectCard>
-      </div> */}
-
-      {/* Modal for adding new tab */}
-      <Modal
-        title="创建选项卡"
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Form.Item label="选项卡名称" style={{ marginBottom: '16px' }}>
-          <Input
-            value={newTabName}
-            onChange={(e) => setNewTabName(e.target.value)}
-            placeholder="请输入选项卡名称"
-          />
-        </Form.Item>
-      </Modal>
-    </div>
+    </Scoped>
   );
 }
 
 export default App;
 
+const TabLabel = styled.div`
+    font-size: 16px;
+`;
+
+const Scoped = styled.div`
+  .create-warp-flex{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: #474f5e;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    .create-warp{
+      width: 100%;
+      min-width: 500px;
+      .create-title{
+          padding-bottom: 0px;
+          color: #474f5e;
+          font-size: 14px;
+          line-height: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-content: center;
+        .create-title-left{
+          display: inline-block;
+          h3 {
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            margin: 0 24px 24px 0;
+            overflow: hidden;
+            color: #242833;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 32px;
+          }
+        }
+        .create-title-right{
+          display: inline-block;
+
+        }
+
+      }
+      .create-content{
+          position: relative;
+          top: -10px;
+          padding: 5px 24px;
+          border-radius: 6px;
+          width: 100%;
+          background-color: white;
+          
+      }
+    }
+  }
+`

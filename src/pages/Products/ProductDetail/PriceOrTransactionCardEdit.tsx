@@ -5,8 +5,13 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs";
 import oldStore from "@/store/product/oldStore";
+import cookie from 'react-cookies';
 
 
+const utc = require('dayjs/plugin/utc')
+const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const priceOnChange: InputNumberProps['onChange'] = (value) => {
     oldStore.setPrice(value==null?0:value);
@@ -26,7 +31,7 @@ function PriceOrTransactionCardEdit() {
 
     const [Time,setTime] = useState<any>([])
     useEffect(()=>{
-        setTime([(oldStore.startTime??="")==""?null:dayjs(oldStore.startTime),(oldStore.endTime??="")==""?null:dayjs(oldStore.endTime)])
+        setTime([oldStore.startTime || null,oldStore.endTime || null])
     },[oldStore.productId])
 
     return (
@@ -48,7 +53,7 @@ function PriceOrTransactionCardEdit() {
                             } 
                             className="price-item">
                                 <InputNumber<number>
-                                     prefix="US$"
+                                     prefix={cookie.load("symbolLeft")}
                                      defaultValue={1000}
                                      value={oldStore.originPrice}
                                      // defaultValue={oldStore.originPrice}
@@ -62,7 +67,7 @@ function PriceOrTransactionCardEdit() {
                         <Col offset={2} span={11}>
                             <Form.Item label={
                                 <>
-                                    特价时间
+                                    特价时间（{cookie.load("timeZone").time_zone_label}）
                                     <Tooltip title="特价活动时间">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
@@ -71,13 +76,13 @@ function PriceOrTransactionCardEdit() {
                                 </>
                             } className="price-item">
                                 <RangePicker value={Time || []} showTime onOk={(value)=>{
-                                    if( value[0]){
-                                        let startTime = value[0].year()+"-"+(value[0].month())+1+"-"+value[0].date()+" "+value[0].hour()+":"+value[0].minute()+":"+value[0].second()
-                                        oldStore.setStartTime(startTime)
+                                    if(value[0]){
+                                        let startTime = value[0].tz(cookie.load("timeZone").time_zone_name.replace(/^"|"$/g, ''),true).unix()
+                                        oldStore.setStartTime(dayjs.unix(startTime).format("YYYY-MM-DD HH:mm:ss"))
                                     }
-                                    if( value[1]){
-                                        let endTime = value[1].year()+"-"+(value[1].month())+1+"-"+value[1].date()+" "+value[1].hour()+":"+value[1].minute()+":"+value[1].second()
-                                        oldStore.setEndTime(endTime)
+                                    if(value[1]){
+                                        let endTime = value[1].tz(cookie.load("timeZone").time_zone_name.replace(/^"|"$/g, ''),true).unix()
+                                        oldStore.setEndTime(dayjs.unix(endTime).format("YYYY-MM-DD HH:mm:ss"))
                                     }
                                     setTime(value)
                                 }} />
@@ -100,7 +105,7 @@ function PriceOrTransactionCardEdit() {
                                 </>
                             } className="price-item">
                                 <InputNumber<number>
-                                    prefix="US$"
+                                    prefix={cookie.load("symbolLeft")}
                                     defaultValue={1000}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
@@ -122,7 +127,7 @@ function PriceOrTransactionCardEdit() {
                                 </>
                             } className="price-item">
                                 <InputNumber<number>
-                                    prefix="US$"
+                                    prefix={cookie.load("symbolLeft")}
                                     defaultValue={oldStore.costPrice}
                                     value={oldStore.costPrice}
                                     formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
@@ -146,7 +151,7 @@ function PriceOrTransactionCardEdit() {
                                 </>
                             } className="price-item">
                                 <InputNumber
-                                    prefix="US$"
+                                    prefix={cookie.load("symbolLeft")}
                                     defaultValue={'--'}
                                     className="ant-input"
                                     disabled

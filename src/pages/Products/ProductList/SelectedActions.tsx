@@ -70,49 +70,50 @@ export default function SelectedActions({ selectedRowKeys, setSelectedRowKeys,on
     
     return (
       <Scoped>
-      <div style={{ display: 'flex', alignItems: 'center',backgroundColor: '#fafafa'}}>
-          <Checkbox
-            checked={selectedCount > 0}
-            onClick={(e) => {
-              e.stopPropagation(); // 阻止点击事件冒泡到父元素
-              handleClearSelection();
-            }}
-            style={{ marginLeft: 20 }}
-          />
-          <span style={{ marginLeft: 20 }}>已选择 {selectedCount} 项</span>
-          <div style={{ margin: '10px' }}>
-            <Button autoInsertSpace={false}>上架</Button>
-            <Button autoInsertSpace={false} style={{ margin: '10px' }}>下架</Button> {/* 新增的批量发货按钮 */}
-              <Select
-                // placeholder="批量编辑"
-                style={{ width: 120 }}
-                onSelect={handleBatchEditingChange}
-                value={"批量编辑"}
-              >
-                <Option value="1">修改名称</Option>
-                <Option value="2">编辑厂商</Option>
-                <Option value="3">添加标签</Option>
-                <Option value="4">剔除标签</Option>
-                <Option value="5">添加销售渠道</Option>
-                <Option value="6">去除销售渠道</Option>
-                <Option value="7">修改售价</Option>
-                <Option value="8">修改原价</Option>
-                <Option value="9">修改重量</Option>
-                <Option value="10">更改库存</Option>
-                <Option value="11">编辑商品类型</Option>
-                <Option value="12"><span style={{color:'#F00'}}>删除商品</span></Option>
-              </Select>
-            <Button autoInsertSpace={false} style={{ margin: '10px' }}>将商品存档</Button>
-            <Button autoInsertSpace={false}>进入批量编辑器</Button> {/* 新增的批量发货按钮 */}
-          </div>
-          {/* 弹窗 */}
-          {contextHolder}
-      </div>
+        <div style={{ display: 'flex', alignItems: 'center',backgroundColor: '#fafafa'}}>
+            <Checkbox
+              checked={selectedCount > 0}
+              onClick={(e) => {
+                e.stopPropagation(); // 阻止点击事件冒泡到父元素
+                handleClearSelection();
+              }}
+              style={{ marginLeft: 20 }}
+            />
+            <span style={{ marginLeft: 20 }}>已选择 {selectedCount} 项</span>
+            <div style={{ margin: '10px' }}>
+              <Button autoInsertSpace={false}>上架</Button>
+              <Button autoInsertSpace={false} style={{ margin: '10px' }}>下架</Button> {/* 新增的批量发货按钮 */}
+                <Select
+                  // placeholder="批量编辑"
+                  style={{ width: 120 }}
+                  onSelect={handleBatchEditingChange}
+                  value={"批量编辑"}
+                >
+                  <Option value="1">修改名称</Option>
+                  <Option value="2">编辑厂商</Option>
+                  <Option value="3">添加标签</Option>
+                  <Option value="4">剔除标签</Option>
+                  <Option value="5">添加销售渠道</Option>
+                  <Option value="6">去除销售渠道</Option>
+                  <Option value="7">修改售价</Option>
+                  <Option value="8">修改原价</Option>
+                  <Option value="9">修改重量</Option>
+                  <Option value="10">更改库存</Option>
+                  <Option value="11">编辑商品类型</Option>
+                  <Option value="12"><span style={{color:'#F00'}}>删除商品</span></Option>
+                </Select>
+              <Button autoInsertSpace={false} style={{ margin: '10px' }}>将商品存档</Button>
+              <Button autoInsertSpace={false}>进入批量编辑器</Button> {/* 新增的批量发货按钮 */}
+            </div>
+            {/* 弹窗 */}
+            {contextHolder}
+        </div>
       </Scoped>
     );
 }
 
 const Scoped = styled.div`
+width: 100%;
   .ant-select-selection-placeholder{
     color: #000000;
   }

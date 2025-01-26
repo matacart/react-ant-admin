@@ -113,6 +113,7 @@ export default function MultipleStylesCard(props:any) {
   }
   // 收集所有输入值后调用父组件提供的回调函数
   useEffect(() => {
+
     const fetchData = async () => {
     const optionMap = {};
     // 遍历数组

@@ -13,14 +13,13 @@ import { currentUserStatus } from "@/services/y2/api";
 
 function Header({stores,initialState,domainStatus}){
 
-    const [timer,setTimer] = useState();
+    const [timer,setTimer] = useState(999);
 
     const goMerchantApplication = ()=>{
         history.push("/stores/merchantApplication")
     }
     useEffect(()=>{
-        // setTimer(domainStatus)
-        setTimer(parseInt((domainStatus.data.package.end_time*1000 - Date.now())/1000/60/60/24))
+        domainStatus.code == 0 && setTimer(parseInt((domainStatus?.data.package.end_time*1000 - Date.now())/1000/60/60/24))
     },[])
     return(
         <Scoped>

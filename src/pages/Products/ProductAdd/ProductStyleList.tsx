@@ -4,6 +4,7 @@ import { ExclamationCircleOutlined, PlusOutlined, QuestionCircleOutlined } from 
 import newStore from '@/store/newStore';
 import styled from 'styled-components';
 import axios from 'axios';
+import cookie from 'react-cookies';
 
 // 默认数据
 interface StyleItem {
@@ -505,7 +506,7 @@ function ProductStyleList(props:any){
       width: 180,
       render: (value: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
+          <span style={{ marginRight: 4 }}>{cookie.load("symbolLeft")}</span>
           <div style={{ flex: 1 }}>
             <Input
               value={value === 0 ? '' : value.toString()}
@@ -532,7 +533,7 @@ function ProductStyleList(props:any){
       width: 180,
       render: (value: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
+          <span style={{ marginRight: 4 }}>{cookie.load("symbolLeft")}</span>
           <div style={{ flex: 1 }}>
             <InputNumber
               value={value || 0}
@@ -557,7 +558,7 @@ function ProductStyleList(props:any){
       width: 180,
       render: (value: number, record: StyleItem,index:number) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <span style={{ marginRight: 4 }}>US$</span>
+          <span style={{ marginRight: 4 }}>{cookie.load("symbolLeft")}</span>
           <div style={{ flex: 1 }}>
             <InputNumber
               value={value}

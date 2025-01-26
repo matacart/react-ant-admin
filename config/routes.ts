@@ -104,7 +104,7 @@ export default  [
         {
           path: 'index',
           name: 'index',
-          component: './Products/ProductItem/index',
+          component: './Products/ProductList/index',
         },
         {  
           path: 'edit/:productId/:languageId',
@@ -354,6 +354,10 @@ export default  [
       {
         path:"base",
         component:"./Settings/Base/Base"
+      },
+      {
+        path:"payments",
+        component:"./Settings/Collection/Collection"
       },
       {
         path:"fileManage",

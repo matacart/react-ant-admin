@@ -54,7 +54,8 @@ export default function UserCard(props:any) {
                         <div className="user_img"><img src="https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg"/></div>
                         <div className="user_info">
                             <div style={{fontSize:"14px"}}>{props.currentUser.name}</div>
-                            <div>账号 ID：{props.currentUser.userid}</div>
+                            <div>商户 MID：{props.currentUser.merchant_id?props.currentUser.merchant_id:"未申请"}</div>
+                            <div>用户 UID：{props.currentUser.userid}</div>
                             <div className="user_info_tag">
                                 {props.currentUser.merchant_id ? <span>商户账号</span>:<span>普通账号</span> }
                                 {props.currentUser.merchant_id ? <span>商户认证</span>:<span>个人认证</span> }
@@ -92,7 +93,7 @@ export default function UserCard(props:any) {
                         <div className="balance">
                             <div>可用额度</div>
                             <div>
-                                <span className="span1">¥ -0.74</span>
+                                <span className="span1">¥ 0.00</span>
                                 <span style={{display:"inline-block",width:"8px"}}></span>
                                 <span className="span2">充值</span>
                             </div>

@@ -42,19 +42,19 @@ export default function StoresCard(){
                                 label: '营业中',
                             },
                             {
-                                value: '2',
+                                value: '0',
                                 label: '已打烊',
                             },
                             {
-                                value: '3',
+                                value: '-1',
                                 label: '已冻结',
                             },
                             {
-                                value: '4',
+                                value: '-2',
                                 label: '已停用',
                             },
                             {
-                                value: '5',
+                                value: '-3',
                                 label: '已注销',
                             },
                             ]}

@@ -97,7 +97,7 @@ export default function MoreSelect(){
 
   return (
     <>
-      <Button size='large' onClick={showDrawer}  >
+      <Button onClick={showDrawer} >
       {intl.formatMessage({ id:'order.button.moreselect'})}
       </Button>
       <Drawer title='筛选' open={open} onClose={onClose} >

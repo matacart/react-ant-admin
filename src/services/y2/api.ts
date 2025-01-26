@@ -1422,16 +1422,38 @@ export async function setStoreInfo(res:any){
       id:res.id,
       store_logo:res.storeLogo,
       store_name:res.storeName,
+      merchant_email:res.merchantEmail,
+      service_email:res.serviceEmail,
       timezone:res.timezone,
       product_type:res.productType,
       country_name:"",
       orders_prefix:res.ordersPrefix,
-      remark:"",
+      remark:"",        
       // currency_id:res.currencyId,
       status:res.storeStauts,
     }
   })
 }
+
+// 
+export async function createStore(res:any){
+  return await request('/api/ApiAppstore/store_add',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:2,
+      country_name:res.country,
+      store_name:res.name,
+      domain_name:res.url?(res.url+".demo.hdyshop.cn"):"",
+      default_lang:'en-us',
+      default_currency:res.currencie,
+      merchant_email:res.email,
+    }
+  })
+}
+
 
 
 // 时区
@@ -1456,6 +1478,20 @@ export async function getCurrenciesList() {
       domain_id:cookie.load("domain")?.id,
       page:"1",
       limit:"100"
+    }
+  })
+}
+
+// 更新币种
+export async function setCurrenciesList(currenciesList:any) {
+  return await request(`/api/ApiAppstore/domain_currencies_batchadd`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      currencies:JSON.stringify(currenciesList)
     }
   })
 }

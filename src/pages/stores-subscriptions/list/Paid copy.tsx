@@ -136,7 +136,7 @@ const layerText = [
                 '员工账号数 100',
                 'Facebook粉丝页数 5',
                 '库存地点数量：100',
-                // 'SHOPLINE FLOW'
+                'SHOPLINE FLOW'
             ]
         }
     ],
@@ -154,7 +154,7 @@ const layerText = [
                 '员工账号数 100',
                 'Facebook粉丝页数 5',
                 '库存地点数量：100',
-                // 'SHOPLINE FLOW'
+                'SHOPLINE FLOW'
             ]
         }
     ]
@@ -162,24 +162,24 @@ const layerText = [
 
 const priceMonth = {
     icon: '$',
-    start: "",
+    start: 29,
     base: 79,
     flagship: 269,
     text: 'mo'
 }
 const priceYear = {
-    icon: '￥',
-    start: "3w",
+    icon: '$',
+    start: 24.17,
     base: 65.83,
     flagship: 224.17,
-    text: '年',
+    text: 'mo',
 }
 
 export default function Paid() {
     // swich num
-    const [activeNum, setActiveNum] = useState(2);
+    const [activeNum, setActiveNum] = useState(1);
     const [layer, setLayer] = useState(layerText);
-    const [price, setPrice] = useState(priceYear);
+    const [price, setPrice] = useState(priceMonth);
     // current active card ,default 2 
     const [hover, setHoverNum] = useState(2);
     return (
@@ -223,7 +223,7 @@ export default function Paid() {
                             {/* swich */}
                             <div className="introductionPeriodContainer">
                                 <ul className="introduction-period">
-                                    {/* <li className={"introduction-period__item " + (
+                                    <li className={"introduction-period__item " + (
                                         activeNum == 1 && 'active'
                                     )} onClick={() => {
                                         setActiveNum(1)
@@ -231,14 +231,14 @@ export default function Paid() {
                                     }
                                     }>
                                         月付
-                                    </li> */}
+                                    </li>
                                     <li className={"introduction-period__item " + (
                                         activeNum == 2 && 'active'
                                     )} onClick={() => {
                                         setActiveNum(2)
                                         setPrice(priceYear)
                                     }}>
-                                        年付
+                                        年付（节省17%）
                                     </li>
                                 </ul>
                             </div>
@@ -298,6 +298,7 @@ export default function Paid() {
                                     hover == 2 && 'hover'
                                 )}
                                 >
+
                                     {/* 展示 */}
                                     <li className="introduction-packages_item">
                                         {/* 热门 */}
@@ -314,7 +315,7 @@ export default function Paid() {
                                                     绝佳的启动方式 适合新手卖家快速上手
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"5W"} text={price.text} origin={activeNum == 2 ? priceMonth.base : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={price.base} text={price.text} origin={activeNum == 2 ? priceMonth.base : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{
@@ -366,7 +367,7 @@ export default function Paid() {
                                                     玩转流量积聚品牌效应 长效赋能海外DTC业务
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"10w"} text={price.text} origin={activeNum == 2 ? priceMonth.flagship : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={price.flagship} text={price.text} origin={activeNum == 2 ? priceMonth.flagship : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{

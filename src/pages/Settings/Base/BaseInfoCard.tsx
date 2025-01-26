@@ -105,13 +105,13 @@ function BaseInfoCard() {
                         label="商店联系人邮箱"
                         >
                         <div style={{marginBottom:"8px"}}>MataCart可通过此邮箱与你联系。</div>
-                        <Input placeholder="请输入商店联系人邮箱" />
+                        <Input placeholder="请输入商店联系人邮箱" value={baseInfoStore.merchantEmail} onChange={(e)=>baseInfoStore.setMerchantEmail(e.target.value)}  />
                     </Form.Item>
                     <Form.Item
                         label="客服邮箱"
                         >
                         <div style={{marginBottom:"8px"}}>客户可通过此邮箱与您联系。</div>
-                        <Input placeholder="请输入客服邮箱" />
+                        <Input placeholder="请输入客服邮箱" value={baseInfoStore.serviceEmail} onChange={(e)=>baseInfoStore.setServiceEmail(e.target.value)}/>
                     </Form.Item>
                     <div className="color-7A8499 font-12">
                         {"您的电子邮件在收件箱中可能通过以下形式显示：StoreName<no-reply@matacart.com>，您可以自行配置为带域名的品牌邮箱以提升邮件到达率。了解展示效果"}

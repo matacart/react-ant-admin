@@ -62,6 +62,7 @@ export default {
   //
   'menu.search.stores': "搜索店铺名称/子域名/主域名",
   'menu.stores.running': "营业中",
+  'menu.stores.default': "已打烊",
   "menu.stores.stop": "已停用",
   'menu.search.none': '暂无符合条件的店铺',
   'menu.stores.manage': '管理店铺',

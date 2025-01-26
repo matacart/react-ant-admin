@@ -95,18 +95,37 @@ axios.post('/api/ApiAppstore/languages_select').then((res) => {
     sessionStorage["languages"] = JSON.stringify(res.data.data)
   }
 })
+// 货币
+axios.post('/api/ApiAppstore/currencies_select').then((res) => {
+  if(res.data.code == 0){
+    sessionStorage["currencies"] = JSON.stringify(res.data.data)
+  }
+})
+
 // 运输承运商
 axios.post('/api/ApiAppstore/shippingcourier_select').then((res) => {
   if(res.data.code == 0){
     sessionStorage["currency"] = JSON.stringify(res.data.data)
   }
 })
-
-
+// 国家
+axios.post('/api/ApiAppstore/country_select').then((res) => {
+  if(res.data.code == 0){
+    sessionStorage["country"] = JSON.stringify(res.data.data)
+  }
+})
+// 时区
+axios.post('/api/ApiAppstore/timezones_select').then((res) => {
+  if(res.data.code == 0){
+    sessionStorage["timezones"] = JSON.stringify(res.data.data)
+  }
+})
 
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
   const [domainStatus,setDomainStatus] = useState();
+
+  const [layoutHeight,setLayoutHeight] = useState(60);
   
   useEffect(()=>{
     getOptionType().then((res:any)=>{
@@ -118,6 +137,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     })
     currentUserStatus().then(res=>{
       setDomainStatus(res)
+      console.log(res)
+      if(res.code == 0){
+        parseInt((res?.data.package.end_time*1000 - Date.now())/1000/60/60/24)>15?setLayoutHeight(60):setLayoutHeight(100);
+        // domainStatus?.code == 1 ? 100:
+      }else{
+        setLayoutHeight(100);
+      }
     })
   },[])
 
@@ -226,7 +252,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       bgLayout: '#EAEDF1',
       header:{
         colorBgHeader: '#ffffff',
-        heightLayoutHeader:parseInt((domainStatus?.data.package.end_time*1000 - Date.now())/1000/60/60/24)>15?60:100
+        heightLayoutHeader:layoutHeight,
       }, 
       sider:{
         colorBgMenuItemHover: '#f7f8fb',
@@ -252,8 +278,7 @@ interface ResponseStructure {
 
 // 请求封装
 export const request: RequestConfig = {
-  timeout: 60000, //超时处理，请求超过1分钟，取消请求
-
+  timeout: 10000, //超时处理，请求超过0.1分钟，取消请求
   // // 错误统一处理
   errorConfig: {
     // 抛出错误
