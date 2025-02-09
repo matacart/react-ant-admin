@@ -1,6 +1,7 @@
 import LittleLayout from "@/components/Layout/LittleLayout";
 import { Link } from "@umijs/max";
 import { Col, Row } from "antd";
+import { urlencoded } from "express";
 import styled from "styled-components";
 
 const settingArray = [
@@ -18,6 +19,7 @@ const settingArray = [
         icon: '/icons/set/send.svg',
         title: '发货与配送',
         desc: '管理你向客户发送商品的物流方式',
+        url:"/settings/delivery",
     }, {
         icon: '/icons/set/place.svg',
         title: '仓库地点',
@@ -27,6 +29,7 @@ const settingArray = [
         icon: '/icons/set/tax.svg',
         title: '税费',
         desc: '商店购物税费相关设定',
+        url:"/settings/taxes",
     }, {
         icon: '/icons/set/lang.svg',
         title: '语言',
@@ -37,10 +40,12 @@ const settingArray = [
         icon: '/icons/set/account.svg',
         title: '客户账户',
         desc: '管理网店客户的登录注册方式',
+        url:"/settings/customer"
     },{
         icon: '/icons/set/authority.svg',
         title: '管理员和权限',
         desc: '管理你的员工，以及员工可查看的内容或可执行的操作',
+        url:"/settings/adminpermission"
     },{
         icon: '/icons/set/file.svg',
         title: '文件库',
@@ -50,10 +55,12 @@ const settingArray = [
         icon: '/icons/set/notice.svg',
         title: '通知',
         desc: '编辑你的邮件通知模板',
+        url:"/settings/notice"
     },{
         icon: '/icons/set/domain.svg',
         title: '域名',
         desc: '管理商店域名',
+        url:"/settings/domain"
     },{
         icon: '/icons/set/settle.svg',
         title: '结账',

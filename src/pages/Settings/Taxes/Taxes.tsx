@@ -1,20 +1,15 @@
 import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import baseInfoStore from "@/store/set-up/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
-import cookie from 'react-cookies';
-import CollectionAccountCard from "./CollectionAccountCard"
-import CreditCardCollection from "./CreditCardCollection"
-import OtherCollection from "./OtherCollection"
-import ManualCollection from "./ManualCollection"
-import ReceivablesEntrySettings from "./ReceivablesEntrySettings"
-import CustomizedSettings from "./CustomizedSettings"
+import TaxDistrict from "./TaxDistrict"
+import TaxCollectionMethod from "./TaxCollectionMethod"
 
-function Collection() {
+function Taxes() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -35,37 +30,59 @@ function Collection() {
                             <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
-                            <div className="mc-header-left-content">收款</div>
+                            <div className="mc-header-left-content">税费设置</div>
                         </div>
                         <div className='mc-header-right'>
                             <div className="mc-header-right-content">
-
                             </div>
                         </div>
                     </div>
+                    {/* 收税地区 */}
                     <div className='mc-layout-main'>
-                            <div className='mc-layout-content'>
-                                <CollectionAccountCard />
-                                <div>
-                                    <div className="font-16 color-242833 font-w-600">更多收款设置</div>
-                                    <div className="font-12 color-474F5E" style={{marginTop:"8px"}}>您可为客户提供更多支付选项，提升客户支付体验和支付成功率</div>
-                                </div>
-                                <CreditCardCollection />
-                                <OtherCollection />
-                                <ManualCollection />
+                        <div className='mc-layout-content'>
+                            <div className="mc-layout-content-left">
+                                <div className="font-20 color-242833 font-w-600">收税地区</div>
+                                <p className="font-14 color-474F5E desc line-h-20">管理您征收税费的地点。如果您不确定您在何地有纳税义务，请咨询税务专家。您可以通过 <a>创建配送区域</a> 来添加新的国家/地区。<a>了解更多<ExportOutlined style={{position:"relative",top:"1px",left:"4px"}} /></a></p>
                             </div>
-                            <div className='mc-layout-extra'>
-                                <ReceivablesEntrySettings />
-                                <CustomizedSettings />
+                            <div className="mc-layout-content-right">
+                                <TaxDistrict />
                             </div>
+                        </div>
+                    </div>
+                    {/* 收税方式 */}
+                    <div className='mc-layout-main'>
+                        <div className='mc-layout-content'>
+                            <div className="mc-layout-content-left">
+                                <div className="font-20 color-242833 font-w-600">收税方式</div>
+                                <p className="font-14 color-474F5E desc line-h-20">设定店铺对商品/运费的收税方式</p>
+                            </div>
+                            <div className="mc-layout-content-right">
+                                <TaxCollectionMethod />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <Divider
+                        style={{
+                            fontSize: '14px',
+                            lineHeight: '20px',
+                            textAlign: 'center',
+                            color: '#666',
+                            fontWeight: '500',
+                        }}
+                        orientationMargin="3em"
+                    >
+                    </Divider>
+                    <div className="submit-btn">
+                        <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
+                        }}>更新</Button>
                     </div>
                 </div>
             </div>}
-            {/* <OverlayEdit /> */}
         </Scoped>
     )
 }
-export default Collection
+export default Taxes
 
 const Scoped = styled.div`
 .mc-layout-wrap{
@@ -85,7 +102,6 @@ const Scoped = styled.div`
             display: flex;
             justify-content: space-between;
             align-content: center;
-    
             &-left {
                 display: flex;
                 flex-direction: row;
@@ -105,45 +121,50 @@ const Scoped = styled.div`
                     &-icon {
                         font-size: 18px;
                     }
+
                 }
                 &-content {
+                    /* display: flex; */
                     margin-left: 12px;
                     font-size: 20px;
-                }
-            }
-            &-right {
-                display: flex;
-                align-items: center;
-                width: 70px;
-                > .selector{
-                    height: 36px;
+
                 }
             }
         }
-
         &-main {
+            margin-top: 20px;
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             gap: 20px;
         }
-
         &-content {
             flex: 9;
             min-width: 510px;
             display: flex;
-            flex-direction: column;
-            gap:20px
-        }
-        &-extra {
-            flex:4;
-            min-width: 285px;
-            display: flex;
-            flex-direction: column;
             gap:20px;
-            .ant {
-                &-card {
-                    background-color: #f7f8fb;
+            &-left{
+                flex: 1;
+                margin-right: 20px;
+                .desc{
+                    margin-top: 8px;
+                }
+            }
+            &-right{
+                flex: 2;
+                .availableLocation_box{
+                    padding: 12px 0;
+                    border-bottom: 1px solid #EEF1F7;
+                    cursor: pointer;
+                    .availableLocation{
+                        margin-right: 12px;
+                        background-color: #F7F8Fb;
+                        border-radius: 4px;
+                        border: 1px solid #EEF1F7;
+                    }
+                }
+                .availableLocation_box:hover{
+                    background-color: #F7F8Fb;
                 }
             }
         }

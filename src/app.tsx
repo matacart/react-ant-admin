@@ -9,7 +9,7 @@ import { Ping } from './components/RightContent';
 import SelectDomain from './components/RightContent/SelectDomain';
 import React, { useEffect, useState } from 'react';
 // layout
-import { FormattedMessage } from 'umi';  //多语言
+import { FormattedMessage, useLocation } from 'umi';  //多语言
 import cookie from 'react-cookies'
 import { Provider } from 'mobx-react';
 import store from './store/store'
@@ -38,7 +38,6 @@ export async function getInitialState(): Promise<{
     try {
       const msg = await queryCurrentUser({
       });
-      
       return msg.data; // 返回用户信息
     } catch (error) {
       console.log(error);
@@ -67,10 +66,12 @@ export async function getInitialState(): Promise<{
     })
   }
 
-  // 如果不是登录页面，执行
+  // 如果不是登录 || 注册 || 重置 页面，执行
   const { location } = history;
   // 例如 访问/welcome
-  if (location.pathname !== loginPath) {
+  console.log(location.pathname)
+  if (location.pathname == loginPath || location.pathname == '/user/forget' || location.pathname == '/user/signUp') {
+  }else{
     // currentUser 用户信息
     const currentUser = await fetchUserInfo(); // 调接口获取用户信息
     // history.push(loginPath);
@@ -80,7 +81,6 @@ export async function getInitialState(): Promise<{
       settings: defaultSettings as Partial<LayoutSettings>, // 右抽屉配置
     };
   }
-
   // 是登录页
   return {
     fetchUserInfo,
@@ -148,6 +148,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   },[])
 
   const stores = window.location.pathname.slice(0,8)
+
+  const location  = useLocation();
+  console.log(location.pathname)
   
   return {
     footerRender: () => <Footer />,

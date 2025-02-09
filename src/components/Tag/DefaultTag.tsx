@@ -17,5 +17,5 @@ export default function DefaultTag({text}:{text:string}){
 }
 
 const Scoped = styled.div`
-
+    
 `

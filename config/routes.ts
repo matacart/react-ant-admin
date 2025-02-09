@@ -360,8 +360,8 @@ export default  [
         component:"./Settings/Collection/Collection"
       },
       {
-        path:"fileManage",
-        component:"./Settings/FileManage/FileManage"
+        path:"delivery",
+        component:"./Settings/ShippingAndDistribution/ShippingAndDistribution"
       },
       // 仓库地址
       {
@@ -372,10 +372,36 @@ export default  [
         path:"location/detail/:id",
         component:"./Settings/WarehouseAddress/WarehouseAddressDetail"
       },
+      // 税费
+      {
+        path:"taxes",
+        component:"./Settings/Taxes/Taxes"
+      },
       // 语言
       {
         path:"lang",
         component:"./Settings/ShopLang/Language"
+      },
+      {
+        path:"customer",
+        component:"./Settings/Customer/Customer"
+      },
+      {
+        path:"adminpermission",
+        component:"./Settings/AdministratorsPermissions/AdministratorsPermissions"
+      },
+      {
+        path:"fileManage",
+        component:"./Settings/FileManage/FileManage"
+      },
+      {
+        path:"notice",
+        component:"./Settings/Notification/Notification"
+      },
+      // 域名
+      {
+        path:"domain",
+        component:"./Settings/Domain/Domain"
       },
     ]
   },

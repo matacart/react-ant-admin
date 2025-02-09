@@ -488,7 +488,7 @@ const Content = styled.div`
   flex-direction: column;
   gap: 5px;
   span{
-  font-size: 14px;
-  color: #313131
+    font-size: 14px;
+    color: #313131
   }
 `
