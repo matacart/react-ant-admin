@@ -1,3 +1,4 @@
+
 export default {
   'menu.welcome': '欢迎',
   'menu.more-blocks': '更多区块',
@@ -50,8 +51,10 @@ export default {
   'menu.editor.mind': '脑图编辑器',
   'menu.editor.koni': '拓扑编辑器',
   // 1
-  'menu.products': '商品',
-  'menu.products.index': '商品列表',
+  'menu.products':'商品',
+  'menu.products.index':'商品列表',
+  'menu.products.new': '添加商品',
+  'menu.products.edit': '编辑商品',
   "menu.stores": "店铺",
 
   "menu.stores_list":"店铺管理",
@@ -70,7 +73,10 @@ export default {
   'menu.orders': '订单',
   'menu.orders.manages': '订单管理',
   'menu.orders.recallOrders': '弃单',
+  'menu.orders.recall': '弃单',
   'menu.orders.draftOrders': '草稿单',
+
+
   'menu.products.inventory': '库存',
   'menu.products.transfers': '转移',
   'menu.products.purchase_orders':'采购订单',
@@ -94,5 +100,14 @@ export default {
   'menu.purchase_orders':"采购",
   'menu.warehouse':"仓库",
   'menu.warehouse.inventory':"库存",
-  'menu.warehouse.transfers':"转移"
+  'menu.warehouse.transfers':"转移",
+
+  // 
+  'menu.settings':"设置",
+  'menu.settings.index':"设置",
+  'menu.settings.base':"基础设置",
+  'menu.settings.payments':"收款",
+  'menu.settings.thirdCreditCard':"信用卡/借记卡收款",
+  'menu.settings.delivery':"发货与配送",
+  'menu.settings.logisticsAddCustom':"新增自定义运费",
 };

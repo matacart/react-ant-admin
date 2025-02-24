@@ -1,4 +1,5 @@
 import { Button, Card, Divider, Flex } from "antd"
+import { history } from "@umijs/max"
 import styled from "styled-components"
 
 export default function CollectionAccountCard() {
@@ -44,7 +45,7 @@ export default function CollectionAccountCard() {
                         <div>支持国际主流币种</div>
                     </div>
                 </Flex>
-                <Button type="primary">开通MataCart Payments</Button>
+                <Button type="primary" onClick={() => history.push("/settings/payments/mcpayment")}>开通MataCart Payments</Button>
                 
             </Card>
         </Scoped>

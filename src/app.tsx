@@ -4,7 +4,7 @@ import { ProLayout, type Settings as LayoutSettings } from '@ant-design/pro-comp
 import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
 import { getOptionType, getAccessToken, currentUser as queryCurrentUser, getShippingCourierList, currentUserStatus } from '@/services/y2/api';
 import axios from 'axios';
-import { Avatar, Flex, message } from 'antd';
+import { Avatar, Flex, Menu, message } from 'antd';
 import { Ping } from './components/RightContent';
 import SelectDomain from './components/RightContent/SelectDomain';
 import React, { useEffect, useState } from 'react';
@@ -22,6 +22,7 @@ const loginPath = '/user/signIn';
 import NProgress from "nprogress"; 
 import "nprogress/nprogress.css";
 import Header from './components/Header/Header';
+import MCPaymentHead from './components/Header/MCPaymentHead';
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 
@@ -69,7 +70,7 @@ export async function getInitialState(): Promise<{
   // 如果不是登录 || 注册 || 重置 页面，执行
   const { location } = history;
   // 例如 访问/welcome
-  console.log(location.pathname)
+  // console.log(location.pathname)
   if (location.pathname == loginPath || location.pathname == '/user/forget' || location.pathname == '/user/signUp') {
   }else{
     // currentUser 用户信息
@@ -128,6 +129,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const [layoutHeight,setLayoutHeight] = useState(60);
   
   useEffect(()=>{
+    // document.title = window.location.hostname.startsWith("localhost") ? "localhost"+"-"+document.title: window.location.hostname.slice(0,window.location.hostname.indexOf("."))+"-"+document.title;
     getOptionType().then((res:any)=>{
       if(res.code == 0){
         sessionStorage["productOptionType"] = JSON.stringify(res.data)
@@ -137,7 +139,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     })
     currentUserStatus().then(res=>{
       setDomainStatus(res)
-      console.log(res)
       if(res.code == 0){
         parseInt((res?.data.package.end_time*1000 - Date.now())/1000/60/60/24)>15?setLayoutHeight(60):setLayoutHeight(100);
         // domainStatus?.code == 1 ? 100:
@@ -147,11 +148,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     })
   },[])
 
-  const stores = window.location.pathname.slice(0,8)
+  const stores = window.location.pathname
 
   const location  = useLocation();
-  console.log(location.pathname)
-  
   return {
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -161,23 +160,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    links: [
-      // <Link key="openapi" to="/settings" target="_blank">
-      //   <SettingOutlined />
-      //   <span>设置</span>
-      // </Link>,
-      <Link key="openapi" to="/settings/index">
-        <SettingOutlined />
-        <span>
-          <FormattedMessage id="settings.title"  />
-        </span>
-      </Link>,
-    ],
+    // links: [
+    //   // <Link key="openapi" to="/settings" target="_blank">
+    //   //   <SettingOutlined />
+    //   //   <span>设置</span>
+    //   // </Link>,
+    //   // 
+    // ],
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
+
+
       return (
         <>
           {children}
@@ -225,10 +221,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ],
     // 修改菜单数据
     menuDataRender: (menuData) => {
-      if(stores == "/stores/"){
-        return menuData.filter(item => item.path == '/stores/create' || item.path == '/stores/merchantCertification' || item.path == '/stores/merchantApplication' || item.path == '/stores/list' || item.path == '/stores/bills' || item.path == '/stores/data' )
+      if(stores.slice(0,8) == "/stores/"){
+        return menuData.filter(item => item.path.slice(0,8) == "/stores/" )
       }else{
-        return menuData.filter(item => item.path !== '/stores/list' && item.path !== '/stores/bills' && item.path !== '/stores/data' )
+        return menuData.filter(item => item.path.slice(0,8) !== "/stores/" )
       }
       // return (stores == "/stores/" ? [
       //   {
@@ -248,8 +244,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       //   }
       // ]:menuData)
     },
+    menuProps: {
+      className:stores.slice(0,8) == "/stores/"?"":"mc-menu-item"
+    },
     // 
-    headerRender: () => domainStatus && <Header stores={stores} initialState={initialState} domainStatus={domainStatus} />,
+    headerRender: () => {
+      if(stores.slice(19,28) == "mcpayment"){
+        return <MCPaymentHead />
+      }
+      if(domainStatus){
+        return (
+          <Header stores={stores.slice(0,8)} initialState={initialState} domainStatus={domainStatus} />
+        )
+      }
+    },
     ...initialState?.settings,
     token: {
       bgLayout: '#EAEDF1',
@@ -259,9 +267,20 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       }, 
       sider:{
         colorBgMenuItemHover: '#f7f8fb',
-        colorBgMenuItemSelected: '#f7f8fb'
+        colorBgMenuItemSelected: '#f7f8fb',
+        colorTextMenuSelected:"#356DFF"
       },
+    },
+    pageTitleRender:(props,defaultPageTitle,info)=>{
+      const title = window.location.hostname.startsWith("localhost") ? "localhost": window.location.hostname.slice(0,window.location.hostname.indexOf("."));
+      // console.log(title)
+      // console.log(info)
+      return (
+        // title+" - "+info?.pageName+" - "+"MataCart"
+        title+" - "+defaultPageTitle
+      )
     }
+    // title:"MataCart",
   };
 };
 
@@ -360,13 +379,12 @@ export const request: RequestConfig = {
           // localStorage.setItem('access_token',  res.access_token)
         }).catch((err) => { console.log(err) });
       }
+      // 登录过期
       if(res.data.code==1001){
         sessionStorage.removeItem("domain")
         history.push(loginPath);
         return res;
       }
-      // if()
-      // res.code==
       else return res;
       // return res
     }

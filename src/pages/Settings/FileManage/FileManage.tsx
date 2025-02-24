@@ -8,6 +8,7 @@ import GroupCard from "./GroupCard"
 import FileModal from "./FileModal"
 import fileData from '@/store/fileData';
 import { observer } from "mobx-react-lite"
+import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 
 
 interface GroupItem {
@@ -17,6 +18,9 @@ interface GroupItem {
 }
 
 function FileManage() {
+
+    const [isSkeleton,setIsSkeleton] = useState(true)
+
     // 删除分组
     const removeGroup = (groupId:string) => {
         console.log(items)
@@ -53,6 +57,7 @@ function FileManage() {
                 })
                 setItems(newItems)
                 fileData.setItemsList([...newItems])
+                setIsSkeleton(!res)
             }
         })
     },[])
@@ -79,8 +84,6 @@ function FileManage() {
             }
         })
     },[fileData.itemsList])
-
-    
 
     const [isOpen, setIsOpen] = useState(false);
     
@@ -152,7 +155,7 @@ function FileManage() {
 
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -166,7 +169,10 @@ function FileManage() {
                         <div className='mc-header-right'>
                             <div className="mc-header-right-content">
                                 <Flex>
-                                    <div><Button style={{height:"36px",marginRight:"10px"}}>刷新</Button></div>
+                                    <div>
+                                        <Button style={{height:"36px",marginRight:"10px"}}>刷新</Button>
+                                        {/* <Button type="primary" style={{height:"36px"}}>上传文件</Button> */}
+                                    </div>
                                     {groupList.length>0 && <FileModal groupId={activeGroupId} groupList={groupList}></FileModal>}
                                 </Flex>
                             </div>
@@ -180,7 +186,8 @@ function FileManage() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
+            
         </Scoped>
     )
 }
@@ -188,6 +195,7 @@ function FileManage() {
 export default observer(FileManage)
 
 const Scoped = styled.div`
+
 .mc-layout-wrap{
     display: flex;
     justify-content: center;
@@ -245,6 +253,9 @@ const Scoped = styled.div`
             display: flex;
             flex-direction: column;
             gap:20px;
+            .ant-tabs-content-holder{
+                border-left: 1px solid #eef1f7;
+            }
             .tabBarBox{
                 /* margin-right: 20px; */
                 .tabBarBoxItem{

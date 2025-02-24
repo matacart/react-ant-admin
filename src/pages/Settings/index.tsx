@@ -1,105 +1,11 @@
 import LittleLayout from "@/components/Layout/LittleLayout";
-import { Link } from "@umijs/max";
+import { Link, useIntl } from "@umijs/max";
 import { Col, Row } from "antd";
 import { urlencoded } from "express";
 import styled from "styled-components";
+import cookie from 'react-cookies';
 
-const settingArray = [
-    {
-        icon: '/icons/set.svg',
-        title: '基础设置',
-        desc: '设置并更新你的商店信息',
-        url: '/settings/base',
-    }, {
-        icon: '/icons/set/pay.svg',
-        title: '收款',
-        desc: '管理商店的支付服务',
-        url:"/settings/payments",
-    }, {
-        icon: '/icons/set/send.svg',
-        title: '发货与配送',
-        desc: '管理你向客户发送商品的物流方式',
-        url:"/settings/delivery",
-    }, {
-        icon: '/icons/set/place.svg',
-        title: '仓库地点',
-        desc: '管理仓库的地点信息',
-        url:"/settings/location",
-    }, {
-        icon: '/icons/set/tax.svg',
-        title: '税费',
-        desc: '商店购物税费相关设定',
-        url:"/settings/taxes",
-    }, {
-        icon: '/icons/set/lang.svg',
-        title: '语言',
-        desc: '管理客户可以在商店中使用的语言',
-        more: '当前商店语言：简体中文',
-        url:"/settings/lang",
-    },{
-        icon: '/icons/set/account.svg',
-        title: '客户账户',
-        desc: '管理网店客户的登录注册方式',
-        url:"/settings/customer"
-    },{
-        icon: '/icons/set/authority.svg',
-        title: '管理员和权限',
-        desc: '管理你的员工，以及员工可查看的内容或可执行的操作',
-        url:"/settings/adminpermission"
-    },{
-        icon: '/icons/set/file.svg',
-        title: '文件库',
-        desc: '管理你上传的所有文件素材',
-        url:"/settings/fileManage",
-    },{
-        icon: '/icons/set/notice.svg',
-        title: '通知',
-        desc: '编辑你的邮件通知模板',
-        url:"/settings/notice"
-    },{
-        icon: '/icons/set/domain.svg',
-        title: '域名',
-        desc: '管理商店域名',
-        url:"/settings/domain"
-    },{
-        icon: '/icons/set/settle.svg',
-        title: '结账',
-        desc: '自定义你的网点结账流程',
-    },{
-        icon: '/icons/set/package.svg',
-        title: '套餐',
-        desc: '管理你的店铺套餐，并查看订单',
-        url: '/settings/package'
-    },{
-        icon: '/icons/set/rules.svg',
-        title: '规则',
-        desc: '管理你店铺的规则页面',
-    },{
-        icon: '/icons/set/operation.svg',
-        title: '操作日志',
-        desc: '展示员工在店内的操作记录',
-    },{
-        icon: '/icons/set/metafields.svg',
-        title: '元字段',
-        desc: '利用原字段扩展你的店铺',
-    },{
-        icon: '/icons/set/gift-card.svg',
-        title: '礼品卡',
-        desc: '设置礼品卡的有效时间',
-    },{
-        icon: '/icons/set/brand.svg',
-        title: '品牌',
-        desc: '管理你的品牌资产',
-    },{
-        icon: '/icons/set/markets.svg',
-        title: '市场',
-        desc: '管理你的国际市场',
-    },{
-        icon: '/icons/set/merchantSetup.svg',
-        title: '商户设置',
-        desc: '管理你的商户信息',
-    }
-]
+
 
 
 
@@ -107,9 +13,162 @@ const settingArray = [
 
 
 export default function Settings() {
+
+    const intl = useIntl();
+
+    // 语言
+    const lang = (langCode:string)=>{
+        switch (langCode) {
+            case 'zh-cn':
+                return intl.formatMessage({ id: 'settings.index.zh-cn' });
+            case 'zh-tw':
+                return intl.formatMessage({ id: 'settings.index.zh-tw' });
+            case 'en-us':
+                return intl.formatMessage({ id: 'settings.index.en-us' });
+            case 'ja-jp':
+                return intl.formatMessage({ id: 'settings.index.ja-jp' });
+            case 'ko-kr':
+                return intl.formatMessage({ id: 'settings.index.ko-kr' });
+            case 'de-de':
+                return intl.formatMessage({ id: 'settings.index.de-de' });
+            case 'ru-ru':
+                return intl.formatMessage({ id: 'settings.index.ru-ru' });
+            case 'fr-fr':
+                return intl.formatMessage({ id: 'settings.index.fr-fr' });
+            case 'es-es':
+                return intl.formatMessage({ id: 'settings.index.es-es' });
+            case 'pt-pt':
+                return intl.formatMessage({ id: 'settings.index.pt-pt' });
+            case 'th-th':
+                return intl.formatMessage({ id: 'settings.index.th-th' });
+            case 'ms-my':
+                return intl.formatMessage({ id: 'settings.index.ms-my' });
+            case 'bn-bd':
+                return intl.formatMessage({ id: 'settings.index.bn-bd' });
+            case 'vi-vn':
+                return intl.formatMessage({ id: 'settings.index.vi-vn' });
+            case 'en-au':
+                return intl.formatMessage({ id: 'settings.index.en-au' });
+            case 'id-id':
+                return intl.formatMessage({ id: 'settings.index.id-id' });
+            case 'es-mx':
+                return intl.formatMessage({ id: 'settings.index.es-mx' });
+            case 'ar':
+                return intl.formatMessage({ id: 'settings.index.ar' });
+            case 'it-it':
+                return intl.formatMessage({ id: 'settings.index.it-it' });
+            default:
+                return langCode;
+        }
+    }
+
+    const settingArray = [
+        {
+            icon: '/icons/set.svg',
+            title: intl.formatMessage({ id: 'settings.index.basic' }),
+            desc: intl.formatMessage({ id: 'settings.index.basicDesc' }),
+            url: '/settings/base',
+        }, {
+            icon: '/icons/set/pay.svg',
+            title: intl.formatMessage({ id: 'settings.index.Payments' }),
+            desc: intl.formatMessage({ id: 'settings.index.PaymentsDesc' }),
+            url:"/settings/payments",
+        }, {
+            icon: '/icons/set/send.svg',
+            title: intl.formatMessage({ id: 'settings.index.ShippingAndDelivery' }),
+            desc: intl.formatMessage({ id: 'settings.index.ShippingAndDeliveryDesc' }),
+            url:"/settings/delivery",
+        }, {
+            icon: '/icons/set/place.svg',
+            title: intl.formatMessage({ id: 'settings.index.Location' }),
+            desc: intl.formatMessage({ id: 'settings.index.LocationDesc' }),
+            url:"/settings/location",
+        }, {
+            icon: '/icons/set/tax.svg',
+            title: intl.formatMessage({ id: 'settings.index.TaxesAndFees' }),
+            desc: intl.formatMessage({ id: 'settings.index.TaxesAndFeesDesc' }),
+            url:"/settings/taxes",
+        }, {
+            icon: '/icons/set/lang.svg',
+            title: intl.formatMessage({ id: 'settings.index.Language' }),
+            desc: intl.formatMessage({ id: 'settings.index.LanguageDesc' }),
+            more: intl.formatMessage({ id: 'settings.index.currentLanguage' })+lang(cookie.load("default_lang")),
+            url:"/settings/lang",
+        },{
+            icon: '/icons/set/account.svg',
+            title: intl.formatMessage({ id: 'settings.index.CustomerAccount' }),
+            desc: intl.formatMessage({ id: 'settings.index.CustomerAccountDesc' }),
+            url:"/settings/customer"
+        },{
+            icon: '/icons/set/authority.svg',
+            title: intl.formatMessage({ id: 'settings.index.AdministratorAndPermissions' }),
+            desc: intl.formatMessage({ id: 'settings.index.AdministratorAndPermissionsDesc' }),
+            url:"/settings/adminpermission"
+        },{
+            icon: '/icons/set/file.svg',
+            title: intl.formatMessage({ id: 'settings.index.FileLibrary' }),
+            desc: intl.formatMessage({ id: 'settings.index.FileLibraryDesc' }),
+            url:"/settings/fileManage",
+        },{
+            icon: '/icons/set/notice.svg',
+            title: intl.formatMessage({ id: 'settings.index.Notifications' }),
+            desc: intl.formatMessage({ id: 'settings.index.NotificationsDesc' }),
+            url:"/settings/notice"
+        },{
+            icon: '/icons/set/domain.svg',
+            title: intl.formatMessage({ id: 'settings.index.Domain' }),
+            desc: intl.formatMessage({ id: 'settings.index.DomainDesc' }),
+            url:"/settings/domain"
+        },{
+            icon: '/icons/set/settle.svg',
+            title: intl.formatMessage({ id: 'settings.index.CheckoutSettings' }),
+            desc: intl.formatMessage({ id: 'settings.index.CheckoutSettingsDesc' }),
+            url:"/settings/settle"
+        },{
+            icon: '/icons/set/package.svg',
+            title: intl.formatMessage({ id: 'settings.index.Plan' }),
+            desc: intl.formatMessage({ id: 'settings.index.PlanDesc' }),
+            url: '/settings/package'
+        },{
+            icon: '/icons/set/rules.svg',
+            title: intl.formatMessage({ id: 'settings.index.TermsAndPolicies' }),
+            desc: intl.formatMessage({ id: 'settings.index.TermsAndPoliciesDesc' }),
+            url:"/settings/rules"
+        },{
+            icon: '/icons/set/operation.svg',
+            title: intl.formatMessage({ id: 'settings.index.OperationLog' }),
+            desc: intl.formatMessage({ id: 'settings.index.OperationLogDesc' }),
+            url:"/settings/operationLog"
+        },{
+            icon: '/icons/set/metafields.svg',
+            title: intl.formatMessage({ id: 'settings.index.Metafields' }),
+            desc: intl.formatMessage({ id: 'settings.index.MetafieldsDesc' }),
+            url:"/settings/metafields"
+        },{
+            icon: '/icons/set/gift-card.svg',
+            title: intl.formatMessage({ id: 'settings.index.GiftCard' }),
+            desc: intl.formatMessage({ id: 'settings.index.GiftCardDesc' }),
+            url:"/settings/giftCards"
+        },{
+            icon: '/icons/set/brand.svg',
+            title: intl.formatMessage({ id: 'settings.index.Brand' }),
+            desc: intl.formatMessage({ id: 'settings.index.BrandDesc' }),
+            url:"/settings/brand"
+        },{
+            icon: '/icons/set/markets.svg',
+            title: intl.formatMessage({ id: 'settings.index.Markets' }),
+            desc: intl.formatMessage({ id: 'settings.index.MarketsDesc' }),
+            url:"/settings/markets"
+        },{
+            icon: '/icons/set/merchantSetup.svg',
+            title: '商户设置',
+            desc: '管理你的商户信息',
+        }
+    ]
+
     return (
         <Scoped>
-            <LittleLayout title="设置">
+            <LittleLayout title={intl.formatMessage({ id: 'settings.title' })}>
                 <Row className="settings-body" gutter={[20, 20]} >
                     {settingArray.map((item) => (
                         <Col span={8}>

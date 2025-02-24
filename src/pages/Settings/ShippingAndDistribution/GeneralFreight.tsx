@@ -1,3 +1,4 @@
+import { history } from "@umijs/max";
 import { Button, Card, Divider, Flex, Form, GetProp, Input, message, Spin, Upload, UploadProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
@@ -17,7 +18,7 @@ function GeneralFreight() {
                 <Flex className="no-freight-box" align="center" vertical>
                     <div className="color-7A8499">无运费</div>
                     <div className="font-12 color-7A8499">添加运费以便客户完成结账</div>
-                    <Button type="primary">添加区域运费</Button>
+                    <Button type="primary" onClick={()=>history.push("/settings/logistics/edit/custom/1")}>添加区域运费</Button>
                 </Flex>
             </Card>
         </Scoped>

@@ -4,6 +4,7 @@ import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+import { title } from 'process';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
@@ -158,6 +159,10 @@ export default defineConfig({
   mfsu: {
     strategy: 'normal',
   },
+
+  // title:{
+  //   template:"123"
+  // },
   esbuildMinifyIIFE: true,
   requestRecord: {},
 

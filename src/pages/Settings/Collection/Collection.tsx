@@ -1,10 +1,9 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
+import { getAddonsConfigArray, getAddonsConfigs, getAddWarehouseList, getFileList, getStoreInfo, setAddonsConfig } from "@/services/y2/api"
 import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import cookie from 'react-cookies';
 import CollectionAccountCard from "./CollectionAccountCard"
@@ -13,6 +12,8 @@ import OtherCollection from "./OtherCollection"
 import ManualCollection from "./ManualCollection"
 import ReceivablesEntrySettings from "./ReceivablesEntrySettings"
 import CustomizedSettings from "./CustomizedSettings"
+import collection from "@/store/settings/collection"
+import AccountReview from "./AccountReview"
 
 function Collection() {
 
@@ -21,8 +22,13 @@ function Collection() {
     const [isRenewal,setIsRenewal] = useState(false)
 
     useEffect(()=>{
-        baseInfoStore.getStore().then(res=>{
-            setIsSkeleton(!res)
+        // getAddonsConfigArray().then(res=>{
+        //     console.log(res)
+        // })
+
+        getAddonsConfigs().then(res=>{
+            setIsSkeleton(false)
+            collection.setManualCollection(res.data)
         })
     },[])
 
@@ -39,13 +45,13 @@ function Collection() {
                         </div>
                         <div className='mc-header-right'>
                             <div className="mc-header-right-content">
-
                             </div>
                         </div>
                     </div>
                     <div className='mc-layout-main'>
                             <div className='mc-layout-content'>
                                 <CollectionAccountCard />
+                                {/* <AccountReview /> */}
                                 <div>
                                     <div className="font-16 color-242833 font-w-600">更多收款设置</div>
                                     <div className="font-12 color-474F5E" style={{marginTop:"8px"}}>您可为客户提供更多支付选项，提升客户支付体验和支付成功率</div>

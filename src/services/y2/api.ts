@@ -1411,6 +1411,19 @@ export async function getStoreInfo(id:string){
   return result.code == 0 ? result.data : null
 }
 
+export async function getDomain(id:string){
+  const result = await request('/api/ApiAppstore/domain',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id
+    }
+  })
+  return result.code == 0 ? result.data : null
+}
+
 // 更新店铺信息
 export async function setStoreInfo(res:any){
   return await request('/api/ApiAppstore/store_set',{
@@ -1608,3 +1621,187 @@ export async function deleteFile(id: string) {
     },
   })
 }
+
+// 域名
+export async function getDomainNameList() {
+  return request("/api/ApiAppstore/domain", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      "id": cookie.load("domain")?.id,
+    }
+  });
+}
+
+// 添加域名
+
+export async function addDomainName(domainName:string,otherDomain:string) {
+  return request("/api/ApiAppstore/domain_set", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id: cookie.load("domain")?.id,
+      domain_name:domainName,
+      other_domain:otherDomain
+    }
+  });
+}
+
+// 收款 --手动收款方式  -- 所有/详细
+export async function getAddonsConfigs(id?:string) {
+  return request("/api/ApiAppstore/addons_config_get", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id,
+      domain_id: cookie.load("domain")?.id,
+      languages_id:"2",
+      addons_id:"23"
+    }
+  });
+}
+// 手动收款方式  -- 配置
+export async function getAddonsConfigArray(id?:string,addonsId?:string) {
+  return request("/api/ApiAppstore/addons_config_array", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id,
+      domain_id: cookie.load("domain")?.id,
+      languages_id:"2",
+      addons_id:addonsId,
+      user_languages_id:"1"
+    }
+  });
+}
+// 更新
+export async function upDataAddonsConfig(res:any) {
+  return request("/api/ApiAppstore/addons_config_set", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id: cookie.load("domain")?.id,
+      // 配置
+      // "config["+res.config.isAddressRequired+"]":"123",
+      "config[isAddressRequired]":res.config.isAddressRequired,
+      "config[isUploadCredentials]":res.config.isUploadCredentials,
+      "config[credentialsText]":res.config.credentialsText,
+      "config[credentialsImg]":res.config.credentialsImg,
+      "config[cod_debugging]":res.config.cod_debugging,
+      "config[cod_order_status_id]":res.config.cod_order_status_id,
+      "config[cod_zone]":res.config.cod_zone,
+      // "cod_debugging"
+      id:res.id,
+      languages_id:res.languages_id,
+      addons_id:res.addons_id,
+      title:res.title,
+      summary:res.summary,
+      description:res.description,
+      is_sys:res.is_sys,
+      remark:res.remark,
+      status:res.status
+    }
+  });
+}
+
+// 添加
+export async function setAddonsConfig(res:any) {
+  return request("/api/ApiAppstore/addons_config_set", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id: cookie.load("domain")?.id,
+      languages_id:"2",
+      addons_id:"23",
+      title:res.title,
+      "config[isAddressRequired]":res.config.isAddressRequired,
+      "config[isUploadCredentials]":res.config.isUploadCredentials,
+      "config[credentialsText]":res.config.credentialsText,
+      "config[credentialsImg]":res.config.credentialsImg,
+      summary:res.summary,
+      description:"",
+      is_sys:0,
+      remark:'',
+      status:1
+      // addons_id:"23"
+      // addons_id:"23"
+    }
+  });
+}
+
+
+
+
+
+// 信用卡服务
+export async function getAddonsList(id?:string) {
+  return request("/api/ApiAppstore/addons_list", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      type_id:"1",
+      domain_id: cookie.load("domain")?.id,
+      languages_id:"2",
+    }
+  });
+}
+
+// 信用卡服务  -- 配置
+export async function getAddonsConfigCreditCard(addonsId?:string) {
+  return request("/api/ApiAppstore/addons_config_array", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      // id:"0",
+      domain_id: cookie.load("domain")?.id,
+      languages_id:"2",
+      addons_id:addonsId,
+      user_languages_id:"1"
+    }
+  });
+}
+
+
+// 
+export async function getUserInfo() {
+  return request("/api/ApiAppstore/user_info", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      // domain_id: cookie.load("domain")?.id
+    }
+  });
+}
+
+// 
+export async function upDatePassword(oldPassword:string,newPassword:string) {
+  return request("/api/ApiAppstore/change_password", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      old_password:oldPassword,
+      password:newPassword
+    }
+  });
+}
+

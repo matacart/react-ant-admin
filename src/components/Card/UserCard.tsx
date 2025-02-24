@@ -43,7 +43,7 @@ export default function UserCard(props:any) {
             <div>
                 <div className="account">
                     <Flex justify='space-between'>
-                        <div style={{display:"flex",fontSize:"14px",alignItems:"center"}}>
+                        <div className="cursor-pointer account-user" style={{display:"flex",fontSize:"14px",alignItems:"center"}} onClick={()=>history.push('/stores/account')}>
                             <TrademarkOutlined style={{marginRight:"8px"}} />
                             <span style={{fontWeight:600}}>账号</span>
                             <RightOutlined style={{marginLeft:"8px", width:"10px"}} />
@@ -160,6 +160,9 @@ const Scoped = styled.div`
         border-bottom: 1px solid #E9E9E9;
         padding: 20px;
         font-size: 12px;
+        .account-user:hover{
+            color: #0084ff;
+        }
         .quit{
             border: 1px solid #999;
             color: #3d3d3d;

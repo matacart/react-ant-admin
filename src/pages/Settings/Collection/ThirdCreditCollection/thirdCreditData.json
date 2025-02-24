@@ -1,0 +1,4047 @@
+{
+    "code": "SUCCESS",
+    "msg": "success",
+    "data": {
+        "supportPayments": [
+            {
+                "channelCode": "PPlinkPay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "PPlinkPay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Xendit",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Xendit",
+                    "type": "text"
+                },
+                "available": false,
+                "reasonCode": "STORE_CURRENCY_NOT_SUPPORT",
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Onerway",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Onerway",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISAElectron",
+                            "iconName": {
+                                "value": "VISA(Electron)",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/VISAElectron.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "FireantPay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Fireantpay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Pacypay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Pacypay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISAElectron",
+                            "iconName": {
+                                "value": "VISA(Electron)",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/VISAElectron.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "AsiaBill",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "AsiaBill",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "PhotonpayCredit",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "PhotonPay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Wintopay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Wintopay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Stripe",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Stripe",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "UnionPay",
+                            "iconName": {
+                                "value": "China UnionPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/0dc3ccc5c01043c581393fc034132a46.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Oceanpay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Oceanpayment",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Hipercard",
+                            "iconName": {
+                                "value": "Hipercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Hipercard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "UnionPay",
+                            "iconName": {
+                                "value": "China UnionPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/0dc3ccc5c01043c581393fc034132a46.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Elo",
+                            "iconName": {
+                                "value": "Elo",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/ELO.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "RuPay",
+                            "iconName": {
+                                "value": "RuPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/RuPay.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Aura",
+                            "iconName": {
+                                "value": "Aura",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Aura.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Carnet",
+                            "iconName": {
+                                "value": "Carnet",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/284d0825e0ba422fa88843aca1638a70.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Useepay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Useepay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Payoneer",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Payoneer",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Airwallex",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Airwallex",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "UnionPay",
+                            "iconName": {
+                                "value": "China UnionPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/0dc3ccc5c01043c581393fc034132a46.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Moozumi",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Moozumi",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISAElectron",
+                            "iconName": {
+                                "value": "VISA(Electron)",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/VISAElectron.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Adyen",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Adyen",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Cabal",
+                            "iconName": {
+                                "value": "Cabal",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Cabal.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "UnionPay",
+                            "iconName": {
+                                "value": "China UnionPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/0dc3ccc5c01043c581393fc034132a46.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Forbrugsforeningen",
+                            "iconName": {
+                                "value": "Forbrugsforeningen",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Forbrugsforeningen.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Troy",
+                            "iconName": {
+                                "value": "Troy",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Troy.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Elo",
+                            "iconName": {
+                                "value": "Elo",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/ELO.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Oasis",
+                            "iconName": {
+                                "value": "Oasis GiftCard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Oasis_GiftCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Bijcard",
+                            "iconName": {
+                                "value": "de Bijenkorf Card",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/de_Bijenkorf_Card.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Argencard",
+                            "iconName": {
+                                "value": "Argencard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Argencard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Mcalphabankbonus",
+                            "iconName": {
+                                "value": "Alpha Bank Mastercard Bonus",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Alpha_Bank_Mastercard_Bonus.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Warehouse",
+                            "iconName": {
+                                "value": "Warehouse GiftCard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Warehouse_GiftCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "RuPay",
+                            "iconName": {
+                                "value": "RuPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/RuPay.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Laser",
+                            "iconName": {
+                                "value": "Laser",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Laser.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Codensa",
+                            "iconName": {
+                                "value": "Codensa",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Codensa.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Tarjeta Shopping",
+                            "iconName": {
+                                "value": "Tarjeta Shopping",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Tarjeta_Shopping.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Visaalphabankbonus",
+                            "iconName": {
+                                "value": "Alpha Bank Visa Bonus",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Alpha_Bank_Visa_Bonus.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Hipercard",
+                            "iconName": {
+                                "value": "Hipercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Hipercard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Karenmillen",
+                            "iconName": {
+                                "value": "Karen Millen GiftCard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Karen_Millen_GiftCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Solo",
+                            "iconName": {
+                                "value": "Solo",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Solo.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "carteBancaire",
+                            "iconName": {
+                                "value": "Carte Bancaire",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Carte_Bancaire.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "dankort",
+                            "iconName": {
+                                "value": "Dankort",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Dankort.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Tarjeta Naranja",
+                            "iconName": {
+                                "value": "Tarjeta Naranja",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Tarjeta_Naranja.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MIR",
+                            "iconName": {
+                                "value": "MIR",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MIR.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISAElectron",
+                            "iconName": {
+                                "value": "VISA(Electron)",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/VISAElectron.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "uatp",
+                            "iconName": {
+                                "value": "UATP",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/UATP.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Bcmc",
+                            "iconName": {
+                                "value": "Bancontact/Mister Cash",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Bancontact_Mister_Cash.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "LianlianPay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "LianlianPay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Xborderpay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Zzepay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "GlocashCredit",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Glocash",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "youpay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "youpay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "PingPong",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "PingPong",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "FortunePay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "FortunePay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Onekpay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Onekpay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "KumaiCreditCard",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "kumai",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Omise",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Omise",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "paycom",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "pay.com",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "DigiTopPay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "DigiTop",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "iPay88",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "iPay88",
+                    "type": "text"
+                },
+                "available": false,
+                "reasonCode": "STORE_CURRENCY_NOT_SUPPORT",
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "UnionPay",
+                            "iconName": {
+                                "value": "China UnionPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/0dc3ccc5c01043c581393fc034132a46.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "MoonbaPayCredit",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Moonbapay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Aiglobalpay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Aiglobalpay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "AnolepayCredit",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "HPay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "ACQRAtest",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "ACQTECH",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Onlypay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "OnlyPay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "Komoju",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "KOMOJU",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "GlocalPay2f",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Glocalpay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": "PAYMENT_OPEN",
+                "onboardMode": "login"
+            },
+            {
+                "channelCode": "WorldPay",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "WorldPay",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Maestro",
+                            "iconName": {
+                                "value": "Maestro",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Maestro.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "carteBleue",
+                            "iconName": {
+                                "value": "Carte Bleue",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Carte_Bleue.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "airplus",
+                            "iconName": {
+                                "value": "Airplus",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Airplus.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "carteBancaire",
+                            "iconName": {
+                                "value": "Carte Bancaire",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Carte_Bancaire.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "dankort",
+                            "iconName": {
+                                "value": "Dankort",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Dankort.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "geCapital",
+                            "iconName": {
+                                "value": "GE Capital",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/GE_Capital.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "uatp",
+                            "iconName": {
+                                "value": "UATP",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/UATP.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "aurore",
+                            "iconName": {
+                                "value": "Aurore",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Aurore.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "Midtrans",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "Midtrans",
+                    "type": "text"
+                },
+                "available": false,
+                "reasonCode": "STORE_CURRENCY_NOT_SUPPORT",
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "DLocal",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "DLocal",
+                    "type": "text"
+                },
+                "available": false,
+                "reasonCode": "STORE_CURRENCY_NOT_SUPPORT",
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "Hipercard",
+                            "iconName": {
+                                "value": "Hipercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Hipercard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Cartao Mercadol Jvre",
+                            "iconName": {
+                                "value": "Cartao Mercadol Jvre",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Cartao_Mercadol_Jvre.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Cencosud",
+                            "iconName": {
+                                "value": "Cencosud",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Cencosud.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Cabal",
+                            "iconName": {
+                                "value": "Cabal",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Cabal.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Presto",
+                            "iconName": {
+                                "value": "Presto",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Presto.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "JCB",
+                            "iconName": {
+                                "value": "JCB",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/JCB.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Nativa",
+                            "iconName": {
+                                "value": "Nativa",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Nativa.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Mach",
+                            "iconName": {
+                                "value": "Mach",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MACH.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Elo",
+                            "iconName": {
+                                "value": "Elo",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/ELO.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Tarjeta Naranja",
+                            "iconName": {
+                                "value": "Tarjeta Naranja",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Tarjeta_Naranja.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Argencard",
+                            "iconName": {
+                                "value": "Argencard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Argencard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Magnia",
+                            "iconName": {
+                                "value": "Magnia",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Magnia.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "VISAElectron",
+                            "iconName": {
+                                "value": "VISA(Electron)",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/VISAElectron.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "RuPay",
+                            "iconName": {
+                                "value": "RuPay",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/RuPay.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Aura",
+                            "iconName": {
+                                "value": "Aura",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Aura.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Tarjeta Shopping",
+                            "iconName": {
+                                "value": "Tarjeta Shopping",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/Tarjeta_Shopping.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "CMR",
+                            "iconName": {
+                                "value": "CMR",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/CMR.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            },
+            {
+                "channelCode": "iPayLinks",
+                "onboardStatus": 0,
+                "paymentId": null,
+                "payGroup": "thirdCreditCard",
+                "channelName": {
+                    "value": "iPayLinks",
+                    "type": "text"
+                },
+                "available": true,
+                "reasonCode": null,
+                "channelDisplayIcons": {
+                    "payLevel": "channel",
+                    "displayIcons": [
+                        {
+                            "iconCode": "VISA",
+                            "iconName": {
+                                "value": "VISA",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "AmericanExpress",
+                            "iconName": {
+                                "value": "American Express",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/7db139ae3d9347288599d26937f03721.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "DinersClub",
+                            "iconName": {
+                                "value": "Diners Club",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/e2694400ff3043e19cd888bd0453336c.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "MasterCard",
+                            "iconName": {
+                                "value": "Mastercard",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/pay/logo/MasterCard.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        },
+                        {
+                            "iconCode": "Discover",
+                            "iconName": {
+                                "value": "Discover",
+                                "type": "text"
+                            },
+                            "iconImage": "https://img.myshopline.com/image/shopline/f2e1d31c8024410194b1bb69b151d9fb.svg",
+                            "describeInfo": null,
+                            "disabled": false,
+                            "hideIconInfo": null,
+                            "verifyDomainInfo": null,
+                            "supportSubIcons": null
+                        }
+                    ]
+                },
+                "accessMode": null,
+                "onboardMode": "bind"
+            }
+        ]
+    },
+    "success": true,
+    "trace_id": "5e1a0eb5b90fa98b59c5d4bbfb0e18e6"
+}

@@ -1,10 +1,10 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
+import { getAddWarehouseList, getDomainNameList, getFileList, getStoreInfo } from "@/services/y2/api"
 import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import domain from "@/store/settings/domain"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import PrimaryDomain from "./PrimaryDomain"
 import ErrorPage from "./ErrorPage"
@@ -19,8 +19,9 @@ function Domain() {
     const [isRenewal,setIsRenewal] = useState(false)
 
     useEffect(()=>{
-        baseInfoStore.getStore().then(res=>{
-            setIsSkeleton(!res)
+        getDomainNameList().then(res=>{
+            domain.setDomain(res.data)
+            setIsSkeleton(false)
         })
     },[])
     

@@ -6,16 +6,18 @@ import { useEffect, useState } from "react"
 import { selectTags } from "@/services/y2/api";
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
 import MoreSelect from "@/components/Select/MoreSelect";
-import EditTableHead from "@/components/Select/EditTableHead";
 import styled from "styled-components";
 import TagSelector from "./TagSelector";
 import CommodityClassificationSelector from "./CommodityClassificationSelector";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
+import cookie from 'react-cookies';
+import EditTableHead from "./EditTableHead";
 
 const { Search } = Input;
 // type TagRender = SelectProps['tagRender'];
 export default function ProductsSelectCard(){
-    const [language, setLanguage] = useState("2");
+    // 默认语言
+    const [language, setLanguage] = useState();
     const [languageData, setLanguageData] = useState([]);
     const [searchType,setSearchType] = useState(0);
     
@@ -50,6 +52,9 @@ export default function ProductsSelectCard(){
         let tempList = [];
         if(languageData.length==0){
             tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+                console.log(item.code)
+                console.log(item.code == cookie.load("default_lang"))
+                item.code == cookie.load("default_lang") && setLanguage(item.id)
                 return {
                     value: item.id,
                     label: item.name
@@ -160,7 +165,8 @@ export default function ProductsSelectCard(){
                         }}>
                         {/*  */}
                         <Select 
-                            defaultValue="English"
+                            // defaultValue={language}
+                            value={language}
                             className="font-14"
                             style={{ width: 100,height:36 }}
                             listHeight={230}
@@ -187,7 +193,7 @@ export default function ProductsSelectCard(){
                     </div>
                 </div>
             </div>
-            <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  />
+            {language && <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  />}
         </Scoped>
     );
 }

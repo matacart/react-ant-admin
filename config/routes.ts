@@ -6,6 +6,8 @@ import { Children } from "react";
 import { Link, Outlet } from '@umijs/max';
 import React from "react";
 import { Icon } from '@umijs/max';
+import { head, times } from "lodash";
+import { redirect } from "react-router-dom";
 // import CangKukuCun from '../public/icons/caigoucaigoudan.svg';
 // import CaiGouDan from '/icons/caigoucaigoudan.svg';
 
@@ -24,6 +26,12 @@ import { Icon } from '@umijs/max';
  * @param icon 配置路由的图标，取值参考 https://ant.design/components/icon-cn， 注意去除风格后缀和大小写，如想要配置图标为 <StepBackwardOutlined /> 则取值应为 stepBackward 或 StepBackward，如想要配置图标为 <UserOutlined /> 则取值应为 user 或者 User
  * @doc https://umijs.org/docs/guides/routes
  */
+
+// if(!window.location.hostname.startsWith("localhost")){
+//   console.log(window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
+// }else{
+//   console.log("localhost")
+// }
 
 export default  [
   {
@@ -63,20 +71,14 @@ export default  [
   // 订单
   {  
     path: '/orders',  
-    name: 'orders',  
+    name: 'orders',
     icon: 'ContainerOutlined',  
     routes: [  
       {  
         path: 'manages',  
         name: 'manages',  
         component: './Orders/OrderItem/index', // 假设您的 Orders/index 组件位于 src/pages/Orders/OrderItem/index.jsx 或类似的路径  
-      },  
-      {  
-        path: ':orderId',  
-        name: '',  
-        component: './Orders/OrderDetail/OrderDetail', 
-      }  ,
-  
+      },
       {
         path: 'recallOrders',
         name: 'recallOrders',
@@ -85,13 +87,19 @@ export default  [
       {
         path: 'draftOrders',
         name: 'draftOrders',
-        component: './Orders/OrderDraft/index',
+        component: './Orders/OrderDraft/OrderDraft',
       },
-        {
-          path: 'draftOrders/add',
-          name: '',
-          component: './Orders/OrderDraft/OrderDraftAdd',
-        },
+      {  
+        path: ':orderId',  
+        name: 'orderId',
+        hideInMenu: true,
+        component: './Orders/OrderDetail/OrderDetail', 
+      },
+      {
+        path: 'draftOrders/add',
+        name: '',
+        component: './Orders/OrderDraft/OrderDraftAdd',
+      },
     ]    
   },
   
@@ -102,13 +110,27 @@ export default  [
       icon: 'ProductOutlined',
       routes: [
         {
+          path: '/products',
+          redirect: '/products/index'
+        },
+        {
           path: 'index',
           name: 'index',
-          component: './Products/ProductList/index',
+          component: './Products/ProductList/index', 
+        },
+        {
+          // 创建商品
+          path: 'new',
+          name: 'new',
+          hideInMenu: true,
+          parentKeys: ['/products/index'],
+          component: './Products/ProductAdd/AddNewProduct',
         },
         {  
           path: 'edit/:productId/:languageId',
-          name: '',  
+          name: 'edit',
+          hideInMenu: true,
+          parentKeys: ['/products/index'],
           component: './Products/ProductDetail/ProductDetail', 
         },
         // 变体
@@ -117,15 +139,6 @@ export default  [
           name: '',  
           component: './Products/ProductDetail/Variants/Index', 
         },
-        {
-          // 创建商品
-          path: 'new',
-          name: 'new',
-          menu: false,
-          component: './Products/ProductAdd/AddNewProduct',
-        },
-       
-        
         // 分类
         {
           path: 'categories',
@@ -133,10 +146,10 @@ export default  [
           component: './Products/ProductCategories/Index',
         },
         {
-            path: 'categories/new',
-            name: 'categories/new',
-            menu: false,
-            component: './Products/ProductCategories/ProductCategoriesAdd/NewProductCategories',
+          path: 'categories/new',
+          name: 'categories/new',
+          menu: false,
+          component: './Products/ProductCategories/ProductCategoriesAdd/NewProductCategories',
         },
         {
           path: 'categories/edit',
@@ -149,10 +162,24 @@ export default  [
         //   name: '商品分类',
         //   component: './Products/ProductCategories/BlankPage',
         // },
-        
         {
           path: 'gift-cards',
-          name: 'gift-cards'
+          name: 'gift-cards',
+          component: './Products/GiftCards/GiftCards',
+        },
+        {
+          path: 'gift-cards/new',
+          name: 'gift-cards/new',
+          hideInMenu: true,
+          parentKeys: ['/products/gift-cards'],
+          component: './Products/GiftCards/GiftCardsAdd/GiftCardsAdd',
+        },
+        {
+          path: 'gift-cards-products/new',
+          name: 'gift-cards',
+          hideInMenu: true,
+          parentKeys: ['/products/gift-cards'],
+          component: './Products/GiftCards/GiftCardsProductAdd/GiftCardsProductAdd',
         }
       ]
   },
@@ -180,7 +207,6 @@ export default  [
         menu: false,
         component: './Customer/customer-management/customer-management-add/NewCustomer',
       },
-      
       {
         path: 'persona',
         name: 'persona',
@@ -301,6 +327,18 @@ export default  [
     icon: 'DashboardOutlined',
     component: './Shops/Data',
   },
+  // 账户管理
+  {
+    path: '/stores/account',
+    name: '账户管理',
+    icon: 'UserSwitchOutlined',
+    component: './Shops/AccountManagement/AccountManagement',
+    menuRender: false,
+    hideInMenu: true,
+  },
+
+
+  
   // stores
   // {
   //   path: '/stores',
@@ -336,32 +374,98 @@ export default  [
   },
   // 设置
   {
-    path: '/settings',
-    // name: 'settings',
+    path: 'settings',
+    name: 'settings',
+    icon: 'SettingOutlined',
+    hideChildrenInMenu:true,
+    // hideInMenu: true,
     routes: [
       {
-        path: 'index',
-        component: './Settings/index',
+        path: '',
+        redirect: '/settings/index',
       },
       {
-        path: 'package',
-        component: './Settings/Package'
+        path: 'index',
+        name: 'index',
+        parentKeys: ['/settings'],
+        hideInMenu: true,
+        component: './Settings/index',
       },
+      
       {
         path: 'bill',
         component: './Settings/Bill'
       },
       {
         path:"base",
+        name: "base",
+        parentKeys: ['/settings'],
         component:"./Settings/Base/Base"
       },
       {
         path:"payments",
+        name:"payments",
         component:"./Settings/Collection/Collection"
       },
+      // matacart账户
+      {
+        path:"payments/mcpayment",
+        menuRender: false,
+        headerRender: false,
+        component:"./Settings/Collection/OpenService/OpenService"
+      },
+      // matacart账户管理系统
+      {
+        path:"payments/mcpayment/main",
+        menuRender: false,
+        component:"./Settings/Collection/AccountManagement/AccountManagement"
+      },
+      
+
+
+      // -------------------
+      {
+        path:"payments/thirdCreditCard",
+        name:"thirdCreditCard",
+        component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollection"
+      },
+      {
+        path:"payments/thirdCreditCard/detail/:id",
+        component:"./Settings/Collection/ThirdCreditCollection/Detail/Detail"
+      },
+      {
+        path:"payments/edit",
+        component:"./Settings/Collection/AddManualCollection/AddManualCollection"
+      },
+      {
+        path:"payments/edit/:id",
+        component:"./Settings/Collection/ManualCollectionDetail/ManualCollectionDetail"
+      },
+      {
+        path:"payments/other",
+        component:"./Settings/Collection/OtherCollection/OtherCollection"
+      },
+      {
+        path:"payments/other/edit",
+        component:"./Settings/Collection/OtherCollection/OtherCollectionAdd/OtherCollectionAdd"
+      },
+      // 发货与配送
       {
         path:"delivery",
+        name:"delivery",
         component:"./Settings/ShippingAndDistribution/ShippingAndDistribution"
+      },
+      // 自定义运费
+      {
+        path:"logistics/add/custom",
+        name:"logisticsAddCustom",
+        component:"./Settings/ShippingAndDistribution/AddCustomLogistics/AddCustomLogistics"
+      },
+      // 通用运费
+      {
+        path:"logistics/edit/custom/:id",
+        name:"logisticsEditCustom",
+        component:"./Settings/ShippingAndDistribution/EditCustomLogistics/EditCustomLogistics"
       },
       // 仓库地址
       {
@@ -402,6 +506,51 @@ export default  [
       {
         path:"domain",
         component:"./Settings/Domain/Domain"
+      },
+      {
+        path:"manage",
+        component:"./Settings/Domain/DomainManage/DomainManage"
+      },
+      {
+        path:"add-domain",
+        component:"./Settings/Domain/DomainManage/AddDomain"
+      },
+      {
+        path:"redirection",
+        component:"./Settings/Domain/Redirection/Redirection"
+      },
+
+      {
+        path:"settle",
+        component:"./Settings/Settle/Settle"
+      },
+      {
+        path: 'package',
+        component: './Settings/Package'
+      },
+      {
+        path:"rules",
+        component:"./Settings/Rules/Rules"
+      },
+      {
+        path:"operationLog",
+        component:"./Settings/OperationLog/OperationLog"
+      },
+      {
+        path:"metafields",
+        component:"./Settings/Metafields/Metafields"
+      },
+      {
+        path:"giftCards",
+        component:"./Settings/GiftCards/GiftCards"
+      },
+      {
+        path:"brand",
+        component:"./Settings/Brand/Brand"
+      },
+      {
+        path:"markets",
+        component:"./Settings/Markets/Markets"
       },
     ]
   },

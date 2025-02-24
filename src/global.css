@@ -15,6 +15,17 @@ body,
 .ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
   left: unset;
 }
+
+/* 设置 */
+.mc-menu-item{
+  position: relative;
+  height: 100%;
+}
+.mc-menu-item>li:last-child{
+  position: absolute !important;
+  bottom: 0;
+}
+
 canvas {
   display: block;
 }
@@ -91,6 +102,10 @@ ol {
   font-size: 20px;
 }
 
+.font-18{
+  font-size: 18px;
+}
+
 .font-16{
   font-size: 16px;
 }
@@ -110,6 +125,9 @@ ol {
 
 .font-w-400{
   font-weight: 400;
+}
+.font-w-500{
+  font-weight: 500;
 }
 .font-w-600{
   font-weight: 600;

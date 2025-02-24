@@ -151,6 +151,7 @@ export default function LanguageList() {
     }
     // 设置默认语言
     const setDefaultLanguage = (record:any)=>{
+        console.log(record)
         addLanguages([{
             domain_id:cookie.load("domain")?.id,
             languages_id:record.language.id,
@@ -159,6 +160,7 @@ export default function LanguageList() {
             checked:"1"
         }]).then(res=>{
             getLanguages();
+            cookie.save('default_lang', record.language.code, { path: '/' });
         })
     }
     const onDragEnd = ({ active, over }: DragEndEvent) => {

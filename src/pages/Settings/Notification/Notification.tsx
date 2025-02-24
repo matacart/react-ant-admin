@@ -9,6 +9,8 @@ import LocalDistribution from "./LocalDistribution"
 import SiteToStore from "./SiteToStore"
 import LogisticsUpdate from "./LogisticsUpdate"
 import Customer from "./Customer"
+import CustomerSubscription from "./CustomerSubscription"
+import MerchantMail from "./MerchantMail"
 
 
 function Notification() {
@@ -97,7 +99,19 @@ function Notification() {
                             <div className="mc-layout-content-left">
                             </div>
                             <div className="mc-layout-content-right">
-                                <Customer />
+                                <CustomerSubscription />
+                            </div>
+                        </div>
+                    </div>
+                    {/* 商家邮件通知 */}
+                    <div className='mc-layout-main'>
+                        <div className='mc-layout-content'>
+                            <div className="mc-layout-content-left">
+                                <div className="font-20 color-242833 font-w-600">商家邮件通知</div>
+                                <p className="font-14 color-474F5E desc line-h-20">店铺在收到新订单时，向员工发送邮件通知，你可以自定义新订单通知邮件的内容，也可以自定义设置接收新通知的员工邮箱。邮件内容需遵守邮件运营商内容规则，不合规内容会被运营商屏蔽。<a>查看邮件模版规则<ExportOutlined style={{position:"relative",top:"1px",left:"4px"}} /></a></p>
+                            </div>
+                            <div className="mc-layout-content-right">
+                                <MerchantMail />
                             </div>
                         </div>
                     </div>

@@ -7,6 +7,7 @@ import { GlobalOutlined, SearchOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
 import { useEffect, useState } from 'react';
 import { currentUserStatus } from "@/services/y2/api";
+import { classNames } from 'classnames';
 
 
 // const { token } = theme.useToken();
@@ -51,9 +52,9 @@ function Header({stores,initialState,domainStatus}){
             </Flex>:""}
             
             <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
-                <div className="mc-header-left-content" style={{display:"flex",alignItems:"center"}}>
+                <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>
                     <div><GlobalOutlined className="font-24" /></div>
-                    <h1 style={{fontSize:"18px",width:"240px",marginLeft:"12px"}}>MataCart</h1>
+                    <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>history.push("/")}>MataCart</h1>
                 </div>
                 <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-60px"}}>
                     {stores == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder="搜索" />}

@@ -1,9 +1,9 @@
-import { getCurrencies, getCurrenciesList, getDomainList, getTimeZoneList } from "@/services/y2/api";
+import { getCurrencies, getCurrenciesList, getDomain, getDomainList, getTimeZoneList } from "@/services/y2/api";
 import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { result } from 'lodash';
+import { result, set } from 'lodash';
 import { useIntl } from '@umijs/max';
 import cookie from 'react-cookies';
 import { history } from 'umi';
@@ -57,8 +57,6 @@ export default function SelectDomain() {
     const [searchTerm, setSearchTerm] = useState('')
     const [searching, setSearching] = useState(false)
     const intl = useIntl();// 多语言
-
-
 
     const getDomainCurrent = (id:string)=>{
         getCurrencies(id).then(res=>{
@@ -115,6 +113,11 @@ export default function SelectDomain() {
         })
     }
 
+    // 默认语言
+    const setLanguage = (defaultLang:string)=>{
+        cookie.save('default_lang', defaultLang, { path: '/' });
+    }
+
     
     const changeDomain = (item: any) => {
         if(!window.location.hostname.startsWith("localhost")){
@@ -124,6 +127,10 @@ export default function SelectDomain() {
         setIsActive(false);
     }
     useEffect(() => {
+
+        // getDomain("140285").then((res) => {
+        //     console.log(res)
+        // });
         domainList = [];
         // 判断会话中是否存在店铺数据
         if(sessionStorage["domain"] && JSON.parse(sessionStorage["domain"]).length !== 0){
@@ -132,6 +139,7 @@ export default function SelectDomain() {
             getDomainCurrent(cookie.load("domain")?.id);
             setCurrencys(cookie.load("domain").defaultCurrency);
             setTimeZone(cookie.load("domain").timeZone);
+            setLanguage(cookie.load("domain").defaultLang);
             domainList = JSON.parse(sessionStorage["domain"])
         }else{
             getDomainList().then((res) => {
@@ -145,6 +153,7 @@ export default function SelectDomain() {
                         defaultCurrency: item.default_currency,
                         timeZone:item.timezone,
                         status: item.status,
+                        defaultLang: item.default_lang,
                     })
                     if(item.second_domain == window.location.hostname.slice(0,window.location.hostname.indexOf("."))){
                         flag.push({
@@ -155,6 +164,7 @@ export default function SelectDomain() {
                             defaultCurrency: item.default_currency,
                             timeZone:item.timezone,
                             status: item.status,
+                            defaultLang: item.default_lang,
                         })
                     }
                 })
@@ -163,12 +173,14 @@ export default function SelectDomain() {
                 sessionStorage["domain"] = JSON.stringify(domainList);
                 if(flag.length == 0){
                     cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
+                    cookie.save('default_lang', domainList[0].defaultLang, { path: '/' });
                     setCurrencys(res.data[0]?.default_currency)
                     setTimeZone(cookie.load("domain").timeZone);
-                    setDefaultDomain(res.data[0]?.storeName);
+                    setDefaultDomain(res.data[0]?.store_name);
                     getDomainCurrent(res.data[0]?.id);
                 }else{
                     cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
+                    cookie.save('default_lang', flag[0].defaultLang, { path: '/' });
                     setCurrencys(res.data[0]?.default_currency)
                     setTimeZone(cookie.load("domain").timeZone);
                     setDefaultDomain(flag[0].storeName);

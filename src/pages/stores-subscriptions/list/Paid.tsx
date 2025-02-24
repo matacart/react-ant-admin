@@ -268,7 +268,7 @@ export default function Paid() {
                                                     低成本体验建站 多重礼包助力业务启动
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={price.start} text={price.text} origin={activeNum == 2 ? priceMonth.start : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={"2999"} text={price.text} origin={activeNum == 2 ? priceMonth.start : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{
@@ -314,7 +314,7 @@ export default function Paid() {
                                                     绝佳的启动方式 适合新手卖家快速上手
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"5W"} text={price.text} origin={activeNum == 2 ? priceMonth.base : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={"4999"} text={price.text} origin={activeNum == 2 ? priceMonth.base : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{
@@ -366,7 +366,7 @@ export default function Paid() {
                                                     玩转流量积聚品牌效应 长效赋能海外DTC业务
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"10w"} text={price.text} origin={activeNum == 2 ? priceMonth.flagship : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={"9999"} text={price.text} origin={activeNum == 2 ? priceMonth.flagship : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{

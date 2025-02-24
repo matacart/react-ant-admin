@@ -1,10 +1,14 @@
 import DefaultTag from "@/components/Tag/DefaultTag";
-import { Button, Card, Divider, Flex, Typography } from "antd"
+import { Button, Card, Divider, Flex, Modal, Typography } from "antd"
+import { history } from "@umijs/max"
 import styled from "styled-components"
+import { useState } from "react";
 
 const { Text, Link } = Typography;
 
 export default function OtherCollection() {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <Scoped>
@@ -13,7 +17,7 @@ export default function OtherCollection() {
                     <div className="color-242833 font-16 font-w-600">其他收款方式</div>
                     {/* <div><a>已有帐号？绑定</a></div> */}
                 </Flex>
-                <div className="desc color-474F5E font-14">客户需要跳转至第三方页面完成支付流程，您可以同时启用多个服务商。 <Text underline className="color-7A8499">查看示例</Text></div>
+                <div className="desc color-474F5E font-14">客户需要跳转至第三方页面完成支付流程，您可以同时启用多个服务商。 <Text underline className="color-7A8499 cursor-pointer" onClick={() => setIsModalOpen(true)}>查看示例</Text></div>
                 <div className="payment-info">
                     <div>
                         <Flex>
@@ -24,8 +28,19 @@ export default function OtherCollection() {
                     </div>
                     <Flex align="center" className="color-356DFF">启用</Flex>
                 </div>
-                <Button className="submit-btn">添加</Button>
+                <Button className="submit-btn" onClick={()=>history.push("/settings/payments/other")}>添加</Button>
             </Card>
+            {/* 示例 */}
+            <ScopedModal title="示例" width={620} getContainer={false} centered open={isModalOpen} onCancel={()=>setIsModalOpen(false)} 
+                footer={[
+                    <Button key="submit" type="primary" loading={false} onClick={()=>setIsModalOpen(false)}>
+                        我知道了
+                    </Button>
+                ]}>
+                <div className="img-box">
+                    <img src={"https://cdn.myshopline.cn/sl/admin/ec2-admin-payment/20250211112125682/imgs/otherPayment.e0a26.png"} alt="" />
+                </div>
+            </ScopedModal>
         </Scoped>
     )
 }
@@ -50,5 +65,23 @@ const Scoped = styled.div`
     .payment-info:hover{
         background-color: #f0f7ff;
         cursor: pointer;
+    }
+`
+
+const ScopedModal = styled(Modal)`
+    .ant-modal-content{
+        padding: 20px 0;
+    }
+    .ant-modal-title{
+        padding: 0 24px;
+    }
+    .ant-modal-footer{
+        padding: 0 24px;
+    }
+    .img-box{
+        margin: 0;
+        padding: 24px;
+        background: #f0f3f9;
+        overflow: auto;
     }
 `

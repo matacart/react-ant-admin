@@ -7,12 +7,6 @@ import OrdersSelectCard from '@/components/Card/OrdersSelectCard'
 import './index.scss'
 import styled from 'styled-components'
 import Icon, { ImportOutlined } from '@ant-design/icons';
-import TabPane from 'antd/es/tabs/TabPane';
-import tabs from 'antd/es/tabs';
-import { Card } from 'antd';
-import  DTTabs from '@/components/Tabs/DTTabs'  
-import ReactDOM from 'react-dom'; 
-import { Link} from 'react-router-dom';
 import { history } from '@umijs/max';
 const TabLabel = styled.div`
    font-size: 18px;
@@ -55,88 +49,88 @@ const MenuComponent: React.FC<MenuProps> = ({ items }) => {
 
 
 import {useIntl, useModel } from '@umijs/max';
-export default function orders() {
+export default function Index() {
 
   const intl = useIntl();
-const aItems: MenuProps['items'] = [
-  {
-    key: '1',
-    label:intl.formatMessage({id:'orderlist.picking.list'}),
-    onClick: handleLianHuoDanClick,
-  },
-  {
-    key: '2',
-    label: intl.formatMessage({id:'orderlist.shipping.list'}),
-  },
-  {
-    key: '3',
-    label: intl.formatMessage({id:'orderlist.order.detail'}),
-  },
-  {
-    key: '4',
-    label: intl.formatMessage({id:'orderlist.order.report'}),
-  },
-];
+  const aItems: MenuProps['items'] = [
+    {
+      key: '1',
+      label:intl.formatMessage({id:'orderlist.picking.list'}),
+      onClick: handleLianHuoDanClick,
+    },
+    {
+      key: '2',
+      label: intl.formatMessage({id:'orderlist.shipping.list'}),
+    },
+    {
+      key: '3',
+      label: intl.formatMessage({id:'orderlist.order.detail'}),
+    },
+    {
+      key: '4',
+      label: intl.formatMessage({id:'orderlist.order.report'}),
+    },
+  ];
 
 
   return (
-    
+    <div>123</div>
    
-    <div className='create-warp-flex' style={{
-      width: "100%"
-    }}>
-      <div className="create-warp">
-        <div className='create-title'>
-          <div className='create-title-left'>
-            <h3 style={{
-              position: 'relative',
-              top: 10,
-              display: 'inline-block',
-            }}>{intl.formatMessage({ id:'order.draft.header'})}</h3>
-            <ImportOutlined style={{
-              position: 'relative',
-              top: -24,
-              left: -10,
+//     <div className='create-warp-flex' style={{
+//       width: "100%"
+//     }}>
+//       <div className="create-warp">
+//         <div className='create-title'>
+//           <div className='create-title-left'>
+//             <h3 style={{
+//               position: 'relative',
+//               top: 10,
+//               display: 'inline-block',
+//             }}>{intl.formatMessage({ id:'order.draft.header'})}</h3>
+//             <ImportOutlined style={{
+//               position: 'relative',
+//               top: -24,
+//               left: -10,
 
 
-            }} />
-            <div style={{
-              position: 'relative',
-              top: -44,
-              left: 130,
-            }}>
+//             }} />
+//             <div style={{
+//               position: 'relative',
+//               top: -44,
+//               left: 130,
+//             }}>
 
-              <Dropdown menu={{ items: aItems }} >
-                <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
-                  <Space>
-                  {intl.formatMessage({ id:'order.import.draft'})}
-                  </Space>
-                </a>
-              </Dropdown>
-            </div>
-          </div>
+//               <Dropdown menu={{ items: aItems }} >
+//                 <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
+//                   <Space>
+//                   {intl.formatMessage({ id:'order.import.draft'})}
+//                   </Space>
+//                 </a>
+//               </Dropdown>
+//             </div>
+//           </div>
           
-          <div className='"button-container"'>
+//           <div className='"button-container"'>
            
 
 
-          <Button type="primary"
-              onClick={() => { history.push('/orders/draftOrders/add') }}
-              style={{
-                marginTop: "10px",
-                width: "88px", height: "36px", fontSize: "16px",background:'#356DFF'
+//           <Button type="primary"
+//               onClick={() => { history.push('/orders/draftOrders/add') }}
+//               style={{
+//                 marginTop: "10px",
+//                 width: "88px", height: "36px", fontSize: "16px",background:'#356DFF'
 
-              }}>
-               {intl.formatMessage({ id: 'order.button.createorder' })}
-            </Button>
+//               }}>
+//                {intl.formatMessage({ id: 'order.button.createorder' })}
+//             </Button>
           
    
 
           
 
-          </div>
+//           </div>
           
-        </div>
+//         </div>
 
 
 
@@ -145,15 +139,15 @@ const aItems: MenuProps['items'] = [
 
 
         
-        <div className='create-content'>
+//         <div className='create-content'>
        
-        <div  >
-//订单列表
-</div>
-       //
+//         <div  >
+// //订单列表
+// </div>
+//        //
       
-        </div>
-      </div>
+//         </div>
+//       </div>
      
      
 
@@ -161,7 +155,7 @@ const aItems: MenuProps['items'] = [
 
 
 
-      </div>
+//     </div>
 
   )
 

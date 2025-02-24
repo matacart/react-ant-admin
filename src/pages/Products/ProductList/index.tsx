@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import newStore from '@/store/newStore';
 import productStore from '@/store/productStore';
 import ProductsSelectCard from './ProductsSelectCard';
+import { Outlet } from 'react-router-dom';
 
 
 
@@ -228,6 +229,7 @@ const App: React.FC = () => {
           </Form.Item>
         </Modal>
       </div>
+      <Outlet />
     </Scoped>
   );
 }

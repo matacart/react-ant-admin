@@ -15,5 +15,4 @@ export default function SuccessTag({text}:{text:string}){
 }
 
 const Scoped = styled.div`
-
 `
