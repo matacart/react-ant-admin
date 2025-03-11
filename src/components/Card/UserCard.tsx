@@ -12,25 +12,23 @@ export default function UserCard(props:any) {
      * 退出登录，并且将当前的 url 保存
      */
     const loginOut = async () => {
-
         // 清除缓存
         sessionStorage.removeItem("domain");
         await logout();
-        let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
+        let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
         cookie.remove("token",{domain:test,path:"/"})
         const { search, pathname } = window.location;
         const urlParams = new URL(window.location.href).searchParams;
-
         /** 此方法会跳转到 redirect 参数所在的位置 */
         const redirect = urlParams.get('redirect');
         // Note: There may be security issues, please note
         if (window.location.pathname !== '/user/signIn' && !redirect) {
-        history.replace({
-            pathname: '/user/signIn',
-            search: stringify({
-            redirect: pathname + search,
-            }),
-        });
+            history.replace({
+                pathname: '/user/signIn',
+                search: stringify({
+                redirect: pathname + search,
+                }),
+            });
         }
     };
 

@@ -194,23 +194,41 @@ export default  [
         path: 'blankPage',
         name: 'blankPage',
         menu: false,
-        component: './Customer/customer-management/BlankPage',
+        component: './Customer/CustomerManagement/BlankPage',
       },
       {
         path: 'management',
         name: 'management',
-        component: './Customer/customer-management/index',
+        component: './Customer/CustomerManagement/CustomerManagement',
       },
       {
         path: 'management/operate/add',
         name: 'management/operate/add',
         menu: false,
-        component: './Customer/customer-management/customer-management-add/NewCustomer',
+        component: './Customer/CustomerManagement/CustomerManagementAdd/NewCustomer',
       },
       {
-        path: 'persona',
+        path: 'persona/list',
         name: 'persona',
+        component: './Customer/Subdivide/Subdivide',
       },
+      {
+        path: 'persona/detail',
+        name: 'persona',
+        hideInMenu: true,
+        parentKeys: ['/customer/persona/list'],
+        component: './Customer/Subdivide/SubdivideAdd/SubdivideAdd',
+      },
+
+      {
+        path: 'persona/all',
+        name: 'persona',
+        hideInMenu: true,
+        parentKeys: ['/customer/persona/list'],
+        component: './Customer/Subdivide/ClientPortrait/ClientPortrait',
+      },
+      
+      
     ],
   },
   
@@ -292,6 +310,141 @@ export default  [
     ]
     // component: './Products/Inventory/BlankPage',
   },
+
+  {
+    path: 'app-store',
+    name: '应用',
+    component: './AppStore/AppStore/AppStore',
+    // component: './Products/Inventory/BlankPage',
+  },
+  {
+    path: 'app-store/custom-app',
+    name: '应用',
+    hideInMenu: true,
+    component: './AppStore/AppStore/CustomApp/CustomApp',
+    // component: './Products/Inventory/BlankPage',
+  },
+  {
+    path: 'app-store/custom-app-config/:id',
+    name: '应用',
+    hideInMenu: true,
+    component: './AppStore/AppStore/CustomAppConfig/CustomAppConfig',
+    // component: './Products/Inventory/BlankPage',
+  },
+  {
+    path: 'app-store/custom-app-config-setting',
+    name: '后台API权限编辑',
+    hideInMenu: true,
+    component: './AppStore/AppStore/CustomAppConfigSetting/CustomAppConfigSetting',
+  },
+  {
+    path: 'order_invoice_customization',
+    name: '订单票据定制插件',
+    icon: 'PieChartOutlined',
+    component: './AppStore/OrderInvoiceCustomization/OrderInvoiceCustomization',
+    routes:[
+      {
+        path: '',
+        redirect: 'orderList',
+      },
+      {
+        path: 'orderList',
+        name: '订单票据定制插件',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/OrderList/OrderList',
+      },
+      {
+        path: 'orderPdfPreview/:id',
+        name: '订单票据定制插件',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoice/PrintOrderInvoice',
+      },
+      {
+        path: 'orderPdfPreview/picking/:id',
+        name: '订单票据定制插件',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoicePicking/PrintOrderInvoicePicking',
+      },
+      {
+        path: 'draftOrderList',
+        name: '草稿单',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/DraftOrderList/DraftOrderList',
+      },
+      {
+        path: 'orderPdfPreview/draft/:id',
+        name: '草稿单',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/DraftOrderList/PrintOrderInvoiceDraft/PrintOrderInvoiceDraft',
+      },
+      {
+        path: 'templateManage',
+        name: '模板管理',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/TemplateManage/TemplateManage',
+      },
+      {
+        path: 'basicConfig',
+        name: '基础设置',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/BasicConfig/BasicConfig',
+      },
+      {
+        path: 'orderPdfDownload',
+        name: '下载列表',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/OrderPdfDownload/OrderPdfDownload',
+      },
+      {
+        path: 'email',
+        name: '邮件自动化',
+        hideInMenu: true,
+        component: './IFrame/OrderTicketAssistant/Email/Email',
+      }
+    ]
+  },
+  
+  {
+    path: 'channel',
+    name: '渠道',
+    component: './Products/Inventory/Index',
+    // component: './Products/Inventory/BlankPage',
+  },
+  {
+    path: 'website',
+    name: '在线商店',
+    icon: 'ShopOutlined',
+    component: './Products/Inventory/Index',
+    routes:[
+      {
+        path: 'shopSetting',
+        name: '店铺设计',
+        component: './Products/Inventory/Index',
+      },
+      {
+        path: 'articles',
+        name: '博客',
+        component: './Products/Transfers/BlankPage',
+      },
+      {
+        path: 'page',
+        name: '自定义页面',
+        component: './Products/Transfers/BlankPage',
+      },
+      {
+        path: 'navList',
+        name: '菜单导航',
+        component: './Products/Transfers/BlankPage',
+      },
+      {
+        path: 'preferences',
+        name: '偏好设置',
+        component: './Products/Transfers/BlankPage',
+      },
+    ]
+    // component: './Products/Inventory/BlankPage',
+  },
+
   // 店铺
   // 商户申请
   {
@@ -474,7 +627,7 @@ export default  [
       },
       {
         path:"location/detail/:id",
-        component:"./Settings/WarehouseAddress/WarehouseAddressDetail"
+        component:"./Settings/WarehouseAddress/WarehouseAddressDetail/WarehouseAddressDetail"
       },
       // 税费
       {
@@ -490,10 +643,18 @@ export default  [
         path:"customer",
         component:"./Settings/Customer/Customer"
       },
+      // 管理员和权限
       {
         path:"adminpermission",
+        name:"adminpermission",
         component:"./Settings/AdministratorsPermissions/AdministratorsPermissions"
       },
+      {
+        path:"adminpermission/add",
+        name:"adminpermissionAdd",
+        component:"./Settings/AdministratorsPermissions/AdministratorsPermissionsAdd/AdministratorsPermissionsAdd"
+      },
+
       {
         path:"fileManage",
         component:"./Settings/FileManage/FileManage"

@@ -25,6 +25,12 @@ body,
   position: absolute !important;
   bottom: 0;
 }
+.mc-menu-item>li:nth-last-child(3){
+  margin: 20px 0 0 0;
+}
+.mc-menu-item>li:nth-last-child(5){
+  margin: 20px 0 0 0;
+}
 
 canvas {
   display: block;
@@ -77,6 +83,10 @@ ol {
 }
 .color-B8BECC{
   color: #B8BECC;
+}
+
+.color-EEF1F6{
+  color: #EEF1F6;
 }
 
 .color-7A8499{

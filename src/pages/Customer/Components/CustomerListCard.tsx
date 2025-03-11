@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Table, TableColumnsType, TablePaginationConfig, TableProps } from 'antd';
+import { Button, Card, Input, Table, TableColumnsType, TablePaginationConfig, TableProps } from 'antd';
 import styled from 'styled-components';
 import Tag from 'antd/lib/tag';
 import { getCustomerList } from '@/services/y2/customer';
+import { SearchOutlined } from '@ant-design/icons';
+import DefaultTag from '@/components/Tag/DefaultTag';
 
 // 表单项订单数据类型
 interface DataType {
@@ -48,7 +50,9 @@ export default function CustmoerListAjax() {
       title: '邮箱订阅状态',
       dataIndex: 'status',
       width: 100,
-      render: (text: string) => renderCustomTag(text),
+      render: (text: string) => <>
+        <DefaultTag text='未订阅' />
+      </>,
     },
     {
       title: '地区',
@@ -125,61 +129,49 @@ export default function CustmoerListAjax() {
   };
 
   return (
-    <StyledTableWrapper>
-      {/* 列表 */}
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-  <Input
-    style={{
-      width: '482px',
-      height: '36px',
-      padding: '7px 11px',
-      marginTop: '16px',
-      marginBottom: '16px'
-    }}
-    placeholder="搜索用户名/邮箱/手机号/地区"
-  />
-  <Button
-    style={{
-      width: '60px',
-      height: '36px',
-      backgroundColor: '#FFFFFF',
-      color: '#474F5E',
-      padding: '7px 15px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: '16px',
-      marginBottom: '16px'
-    }}
-  >
-    排序
-  </Button>
-</div>
-      <Table
-        columns={columns}
-        rowKey={(record) => record.realname}
-        dataSource={data}
-        pagination={tableParams.pagination}
-        loading={loading}
-        onChange={handleTableChange}
-        scroll={{ x: 900 }}
-        rowSelection={{
-          type: 'checkbox',
-          onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          },
-        }}
-      />
-    </StyledTableWrapper>
+    <Scoped>
+      <Card>
+        {/* 控制 */}
+        <div className="control" style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <Input className='control-input' placeholder="搜索用户名/邮箱/手机号/地区" prefix={<SearchOutlined />} />
+          <Button style={{height:"36px"}}>排序</Button>
+        </div>
+        {/* 数据 */}
+        <Table
+          className='table'
+          columns={columns}
+          rowKey={(record) => record.realname}
+          dataSource={data}
+          pagination={tableParams.pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={{ x: 900 }}
+          rowSelection={{
+            type: 'checkbox',
+            onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            },
+          }}
+        />
+      </Card>
+    </Scoped>
   );
 };
 
-const StyledTableWrapper = styled.div`
-  .ant-table-thead > tr > th {
-    background-color: #F5F8FC !important; // 设置表头背景色
+const Scoped = styled.div`
+  .control{
+    padding: 16px 0;
+    &-input{
+      width: 480px;
+      height: 36px;
+    }
   }
-
-  .ant-table-tbody > tr > td {
-    padding: 10px;
+  .table{
+    .ant-table{
+        border: 1px solid #eef1f7;
+        border-radius: 6px;
+        border-bottom: none;
+    }
   }
-`;
+  
+`

@@ -1,5 +1,6 @@
 import SuccessTag from "@/components/Tag/SuccessTag";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { history } from "@umijs/max";
 import { Button, Card, Flex, Tooltip } from "antd";
 import styled from "styled-components";
 
@@ -19,7 +20,7 @@ export default function Employee() {
                         </Tooltip>
                     </div>
                 </div>
-                <Button>添加员工</Button>
+                <Button onClick={()=>history.push("/settings/adminpermission/add")}>添加员工</Button>
             </Flex>
             {/* no employee */}
             <div className="employee-data-box">

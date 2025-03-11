@@ -23,7 +23,7 @@ const Settings: ProLayoutProps & {
     bgLayout: '#EAEDF1',
     header:{
       colorBgHeader: '#ffffff',
-      heightLayoutHeader:100
+      heightLayoutHeader:60
     }, 
     sider:{
       colorBgMenuItemHover: '#f7f8fb',

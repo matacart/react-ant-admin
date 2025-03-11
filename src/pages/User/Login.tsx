@@ -3,7 +3,7 @@ import { getFakeCaptcha } from '@/services/y2/login';
 import { Alert, message, Tabs, Button, Form, Input, Divider,Checkbox } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, Link, history, useIntl, useModel } from '@umijs/max';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import './Login.scss';
 import cookie from 'react-cookies'
@@ -32,11 +32,31 @@ export default  function Login() {
       }
     };
 
+    // 已记住登录
+    const goHome = async () => {
+      if(cookie.load("token")){
+        console.log(cookie.load("token"));
+        await fetchUserInfo();
+        const urlParams = new URL(window.location.href).searchParams;
+        // 是否是商户
+        // history.push("/stores/merchantApplication")
+        // 是否有店铺
+        history.push(urlParams.get('redirect') || '/');
+        // setUserLoginState(msg);
+        return;
+      }
+    }
 
     const onFinish = async (values: API.LoginParams) => {
       try {
         // 登录
-        const msg = await login({ ...values, type });
+        // 过滤所有输入字段的前后空格
+        const trimmedValues = {
+          ...values,
+          username: values.username?.trim(),
+          // password: values.password?.trim()
+        };
+        const msg = await login({ ...trimmedValues, type });
         if (msg.code === 0) {
           let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
           const token = msg.token;
@@ -52,13 +72,12 @@ export default  function Login() {
             defaultMessage: '登录成功！',
           });
           message.success(defaultLoginSuccessMessage);
+          // 获取用户信息
           await fetchUserInfo();
           const urlParams = new URL(window.location.href).searchParams;
-
           // 是否是商户
           // history.push("/stores/merchantApplication")
           // 是否有店铺
-
           history.push(urlParams.get('redirect') || '/');
           setUserLoginState(msg);
           return;
@@ -72,7 +91,12 @@ export default  function Login() {
         console.log(error.message);
         message.error(error.message);
       }
-    };    
+    };
+    
+    
+    useEffect(() => {
+      goHome()
+    }, []);
     
     return (
         <>

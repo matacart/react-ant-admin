@@ -100,6 +100,7 @@ function ProductDataEdit(prop:any){
           >
             <TextArea
               showCount
+              autoSize={{ minRows: 1, maxRows: 6 }}
               maxLength={400}
               // onBlur={(e) => {
               //   // newStore.resume = e.target.value;
@@ -111,7 +112,6 @@ function ProductDataEdit(prop:any){
               }}
               style={{
                 resize: 'none',
-                height:'35px',
               }}
               value={oldStore.content1}
               placeholder='请用简短的文字描述本商品'

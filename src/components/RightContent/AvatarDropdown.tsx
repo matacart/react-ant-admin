@@ -10,6 +10,7 @@ import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
 import UserCard from './../Card/UserCard';
 import styled from 'styled-components';
+import cookie from 'react-cookies'
 
 
 export type GlobalHeaderRightProps = {
@@ -44,9 +45,11 @@ const useStyles = createStyles(({ token }) => {
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, children }) => {
   /**
    * 退出登录，并且将当前的 url 保存
+   * 清除token
    */
   const loginOut = async () => {
     await logout();
+    cookie.remove("token",{path:"/"})
     const { search, pathname } = window.location;
     const urlParams = new URL(window.location.href).searchParams;
     /** 此方法会跳转到 redirect 参数所在的位置 */

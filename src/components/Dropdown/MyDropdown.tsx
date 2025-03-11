@@ -15,7 +15,7 @@ export default function MyDropdown({component,itemList,styled,position}:{compone
     };
 
     const menuStyle: React.CSSProperties = {
-        padding: "4px 0",
+        padding: "8px 0",
         boxShadow: 'none',
     };
 

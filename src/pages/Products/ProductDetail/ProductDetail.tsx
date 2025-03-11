@@ -269,12 +269,12 @@ function ProductDetail() {
                                     <Button onClick={()=>{
                                         copy(`https://`+cookie.load("domain").domainName+`/`+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`)
                                         message.success('复制成功')
-                                    }} size="large" autoInsertSpace={false}>
+                                    }} autoInsertSpace={false}>
                                         复制
                                     </Button>
                                     <Button onClick={()=>{
                                         window.open(`https://`+cookie.load("domain").domainName+`/`+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`)
-                                    }} size="large" autoInsertSpace={false}>
+                                    }} autoInsertSpace={false}>
                                         预览
                                     </Button>
                                     <Dropdown menu={{ items }} placement="bottom">

@@ -189,6 +189,12 @@ const Scoped = styled.div`
   .ant-table-tbody > tr > td {
     padding: 10px; 
   }
+
+  .ant-table{
+    border: 1px solid #eef1f7;
+    border-radius: 6px;
+    border-bottom: none;
+  }
 `
 const ButtonIcon = styled.div`
 .wrap{

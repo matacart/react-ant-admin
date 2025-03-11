@@ -198,7 +198,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className='create-title-right'>
-              <Button type="primary" onClick={() => { history.push('/products/new') }} style={{ marginTop: "10px", width: "88px", height: "36px", fontSize: "16px" }}>创建商品</Button>
+              <Button type="primary" onClick={() => { history.push('/products/new') }} style={{ marginTop: "10px", width: "88px", height: "36px", fontSize: "14px" }}>创建商品</Button>
             </div>
           </div>
           <div className='create-content'>

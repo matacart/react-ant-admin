@@ -1,13 +1,29 @@
 import { getAddWarehouseList, getFileList } from "@/services/y2/api"
 import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
-import { Button, Card, Flex } from "antd"
+import { Button, Card, Flex, Modal, Radio } from "antd"
 import styled from "styled-components"
 import AddWarehouseAddressModal from "./AddWarehouseAddressModal"
 import { useEffect, useState } from "react"
 
 
+type RadioOptionType = {
+    label: string;
+    value: string | number;
+    disabled?: boolean;
+    style?: React.CSSProperties;
+}
+
+const style: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    marginTop:"12px"
+};
+
 function WarehouseAddress() {
+
+    const [openDefaultLocation,setOpenDefaultLocation] = useState(false)
 
     const [warehouseAddressList,setWarehouseAddressList] = useState([])
 
@@ -23,6 +39,7 @@ function WarehouseAddress() {
                 setWarehouseAddressList(res.data)
                 setWarehouseAddressCount(res.count)
             }
+            console.log(res)
         })
     },[])
  
@@ -76,9 +93,10 @@ function WarehouseAddress() {
                                     <div className="font-16 color-242833 font-w-600">默认地点</div>
                                     <div className="font-14 color-474F5E" style={{marginTop:"4px"}}>设置一个的地点，作为您在发货时和添加新商品时的默认地点</div>
                                     <div style={{marginTop:"12px"}}>
-                                        <Button>设置默认地点</Button>
+                                        <Button onClick={()=>setOpenDefaultLocation(true)}>设置默认地点</Button>
                                     </div>
                                 </Card>
+                                
                                 <Card>
                                     <div className="font-16 color-242833 font-w-600">发货优先顺序</div>
                                     <div className="font-14 color-474F5E" style={{marginTop:"4px"}}>当有新订单时，将根据此地点优先级分配新订单</div>
@@ -91,6 +109,25 @@ function WarehouseAddress() {
                     </div>
                 </div>
             </div>
+
+            {/* 设置默认地点 */}
+            <Modal
+                title="设置默认地点"
+                centered
+                open={openDefaultLocation}
+                onOk={()=>setOpenDefaultLocation(false)}
+                onCancel={()=>setOpenDefaultLocation(false)}
+            >
+                <div>设置一个的地点，作为您在发货时和添加新商品时的默认地点。</div>
+                <Radio.Group
+                    options={warehouseAddressList.map((item: any) => ({
+                        value: item.id,
+                        label: item.name,
+                    } as RadioOptionType))}
+                    style={style}
+                >
+                </Radio.Group>
+            </Modal>
         </Scoped>
     )
 }

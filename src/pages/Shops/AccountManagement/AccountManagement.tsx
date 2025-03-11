@@ -1,5 +1,5 @@
-import { Button, Card, Divider, Input, Select, Space } from "antd"
-import { useEffect, useState } from "react"
+import { Button, Card, Divider, Input, message, Select, Space } from "antd"
+import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import { history } from 'umi';
 import { ExportOutlined } from "@ant-design/icons";
@@ -8,7 +8,7 @@ import QuickLoginCard from "./QuickLoginCard";
 import ContactInformationCard from "./ContactInformationCard";
 import AccountLanguage from "./AccountLanguage";
 import LoginDevice from "./LoginDevice";
-import { getUserInfo } from "@/services/y2/api";
+import { getUserInfo, setUserInfo } from "@/services/y2/api";
 import AgreementAndPolicy from "./AgreementAndPolicy";
 import accountManagement from "@/store/shops/accountManagementStore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
@@ -23,9 +23,12 @@ function AccountManagement(){
 
     const [isRenewal,setIsRenewal] = useState(false)
 
+    const contactFormRef = useRef();
+
     useEffect(()=>{
-        accountManagement.getUser()
-        setIsSkeleton(false)
+        accountManagement.getUser().then(res=>{
+            setIsSkeleton(false)
+        })
     },[])
     return (
         <Scoped>
@@ -69,7 +72,7 @@ function AccountManagement(){
                                     <p className="font-14 color-474F5E desc line-h-20">MataCart会通过账户联系信息向您发送账户相关的电子账单或其他信息推送等。</p>
                                 </div>
                                 <div className="mc-layout-content-right">
-                                    <ContactInformationCard />
+                                    <ContactInformationCard ref={contactFormRef} />
                                 </div>
                             </div>
                         </div>
@@ -112,8 +115,30 @@ function AccountManagement(){
                         <Divider />
                         {/* 更新 */}
                         <div className="submit-btn">
-                            <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
-                                setIsRenewal(true)
+                            <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={async ()=>{
+                                
+                                // console.log(contactFormRef.current.validate())
+                                let isPass = true
+                                await contactFormRef.current?.validate().then().catch(()=>{
+                                    isPass = false
+                                    return
+                                })
+
+
+                                if(isPass){
+                                    setIsRenewal(true)
+                                    try {
+                                        setUserInfo(accountManagement.user).then(res=>{
+                                            if(res.code == "0"){
+                                                message.success("更新成功")
+                                                setIsRenewal(false)
+                                            }
+                                        })
+                                    } catch (error) {
+                                        message.error("失败，请重试")
+                                        setIsRenewal(false)
+                                    }
+                                }
                             }}>更新</Button>
                         </div>
                         {/* 注销 */}

@@ -6,12 +6,6 @@ import styled from "styled-components";
 import cookie from 'react-cookies';
 
 
-
-
-
-
-
-
 export default function Settings() {
 
     const intl = useIntl();

@@ -3,10 +3,12 @@ import React, { useRef, useState } from 'react'
 import { Button, Dropdown, Flex, Space } from 'antd';
 import { Tabs } from 'antd'
 import styled from 'styled-components'
-import Icon, { ImportOutlined } from '@ant-design/icons'; 
+import Icon, { ExportOutlined, ImportOutlined } from '@ant-design/icons'; 
 import { history } from '@umijs/max';
 import {useIntl, useModel } from '@umijs/max';
-import CustmoerListAjax from './CustomerListAjax';
+import { UnfoldIcon } from '@/components/Icons/Icons';
+import ScreeningConditionCard from './ScreeningConditionCard';
+import CustmoerListCard from '../Components/CustomerListCard';
 
 interface MenuItem {  
   key: string;  
@@ -42,27 +44,23 @@ const MenuComponent: React.FC<MenuProps> = ({ items }) => {
 
 
 
-export default function orders() {
+export default function CustomerManagement() {
 
   const intl = useIntl();
   const aItems: MenuProps['items'] = [
     {
       key: '1',
-      label:intl.formatMessage({id:'orderlist.picking.list'}),
+      label:"本地导入",
 
     },
     {
       key: '2',
-      label: intl.formatMessage({id:'orderlist.shipping.list'}),
+      label: "shopify表格导入",
     },
     {
       key: '3',
-      label: intl.formatMessage({id:'orderlist.order.detail'}),
-    },
-    {
-      key: '4',
-      label: intl.formatMessage({id:'orderlist.order.report'}),
-    },
+      label: "店铺搬迁导入",
+    }
   ];
 
 
@@ -79,62 +77,44 @@ export default function orders() {
                 top: 10,
                 display: 'inline-block',
               }}>客户</h3>
-              <ImportOutlined style={{
-                position: 'relative',
-                top: -24,
-                left: -10,
-
-
-              }} />
-              <div style={{
-                position: 'relative',
-                top: -44,
-                left: 130,
-              }}>
-
-                <Dropdown menu={{ items: aItems }} >
-                  <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
+              <Flex style={{ position: 'relative', top: -44, left: 70 }}>
+                <Dropdown menu={{ items: aItems }} trigger={['click']}>
+                  <Flex className='cursor-pointer'>
+                    <div style={{marginRight:"8px"}}><ImportOutlined /></div>
                     <Space>
-                    {intl.formatMessage({ id:'orderlist.import.orders'})}
+                      导入
                     </Space>
-                  </a>
+                    <UnfoldIcon />
+                  </Flex>
                 </Dropdown>
-              </div>
+                <Flex style={{marginLeft:"12px"}} className='cursor-pointer' onClick={()=>{}}>
+                    <div style={{marginRight:"8px"}}><ExportOutlined /></div>
+                    <div>导出</div>
+                </Flex>
+              </Flex>
             </div>
-            
-            <div className='"button-container"'>
-              < Button 
+            <div className="button-container">
+              <Button 
                 onClick={() => {  }}
                 style={{
-                
                   backgroundColor: 'WHITE',
                   marginRight: '12px',
                   width: "90px", height: "36px", fontSize: "14px",
-            
                 }}>
                 其他操作
               </Button>
-
-              <Button type="primary"
+              <Button 
+                type="primary"
                 onClick={() => { history.push('/customer/management/operate/add') }}
-                style={{
-                  width: "88px", height: "36px", fontSize: "16px",background:'#356DFF',
-                }}>
+                style={{ height: "36px", fontSize: "14px" }}
+              >
                 添加客户
               </Button>
-
             </div>
-            
           </div>
-          
-          <div className='create-content'>
-            <div>
-              <CustmoerListAjax/>
-            </div>
-              <Tabs
-                defaultActiveKey='1'
-              />
-          </div>
+          <ScreeningConditionCard />
+          <div style={{height:"20px"}}></div>
+          <CustmoerListCard/>
         </div>
       </div>
     </Scoped>
@@ -155,7 +135,6 @@ const Scoped = styled.div`
     .create-warp {
       width: 80%;
       min-width: 500px;
-  
       .create-title {
         padding-bottom: 0px;
         color: #474f5e;
@@ -164,10 +143,8 @@ const Scoped = styled.div`
         display: flex;
         justify-content: space-between;
         align-content: center;
-  
         .create-title-left {
           display: inline-block;
-  
           h3 {
             -webkit-box-flex: 1;
             -ms-flex: 1;
@@ -180,36 +157,10 @@ const Scoped = styled.div`
             line-height: 32px;
           }
         }
-  
         .button-container {
           display: inline-block;
           justify-content: space-between;
         }
-  
-      }
-  
-      .create-content {
-        position: relative;
-        top: -10px;
-        padding: 5px 24px;
-        border-radius: 6px;
-        width: 100%;
-        background-color: white;
-  
-      }
-  
-      .DynamicTabs{
-  
-    font-size: 18px;
-  
-  
-      }
-     
-      .oval-shape {
-        border-radius: 10px; /* 设置边框半径以实现椭圆形 */
-        font-size: 14px; /* 设置字体大小 */
-        color: #242833; /* 设置字体颜色 */
-        background: #FFEDC9;
       }
     }
   }

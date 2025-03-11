@@ -1,4 +1,4 @@
-import { Space, Select, Input, Tag, Button, ConfigProvider } from "antd";
+import { Space, Select, Input, Tag, Button, ConfigProvider, Flex } from "antd";
 import type { SearchProps } from 'antd/es/input/Search';
 import type { SelectProps } from 'antd';
 import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
@@ -9,41 +9,19 @@ import MoreSelect from "@/components/Select/MoreSelect";
 import styled from "styled-components";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import cookie from 'react-cookies';
+import { SearchOutlined } from "@ant-design/icons";
+import MyDropdown from "@/components/Dropdown/MyDropdown";
+import GiftCardsTableCard from "./GiftCardsTableCard";
 
 const { Search } = Input;
 // type TagRender = SelectProps['tagRender'];
 export default function GiftCardsSelectCard(){
     // 默认语言
-    const [language, setLanguage] = useState();
+    const [language, setLanguage] = useState("2");
     const [languageData, setLanguageData] = useState([]);
-    const [searchType,setSearchType] = useState(0);
     
     let timeTags:object[] = [];
-    const [tags,setTags] = useState("");
-    const [tagsList, setTagsList] = useState<object[]>([]);
    
-    const [title,setTitle] = useState("");
-    const [model,setModel] = useState("");
-    // 标签列表
-    const options: SelectProps['options'] = tagsList;
-    const [openTagsList,setOpenTagsList] = useState(false);
-    // 添加标签 
-    function getTags(language:string){
-        selectTags(language).then(res=>{
-            // console.log(res)
-            if(res.code == 0){
-                res.data.forEach((element:any) => {
-                    timeTags.push({
-                        label: element.tag,
-                        value: element.id
-                    })
-                });
-                setTagsList(timeTags)
-            }else if(res.code == 201){
-                setTagsList([])
-            }
-        })
-    }
     useEffect(()=>{
         // 添加语言
         let tempList = [];
@@ -60,57 +38,15 @@ export default function GiftCardsSelectCard(){
             setLanguageData(tempList)
         };
         if(timeTags.length == 0){
-            getTags(language)
+            // getTags(language)
         }
     },[])
-    // 搜索 0 - 7
-    const selectSearch = (value: number) => {
-        // console.log(`selected ${value}`);
-        setSearchType(value)
-    };
-
-    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-        // console.log(info?.source, value);
-        switch(searchType){
-            case 0:
-                console.log("search")
-                break;
-            case 1:
-                console.log("search by name"+value)
-                setTitle(value)
-                break;
-            case 2:
-                console.log("search by spu")
-                break;
-            case 3:
-                console.log("search by sku")
-                break;
-            case 4:
-                console.log("search by manufacturer")
-                break;
-            case 5:
-                console.log("search by barcode")
-                break;
-        }
-    }
     
     // 语言选择
     const languageChange= (value: string) => {
         setLanguage(value)
-        getTags(value)
     };
     
-    let str = ""
-    // 标签选择
-    const handleTagChange = (value: string,option:any)=>{
-        console.log(option)
-        str = ""
-        option.forEach((element:any) => {
-            // console.log(element.label)
-            str+=","+element.label
-        });
-        // setTags(str.slice(1))
-    }
     return (
         <Scoped> 
             <div className="products-select" >
@@ -126,7 +62,77 @@ export default function GiftCardsSelectCard(){
                         flexWrap: 'wrap',
                         gap: '12px 12px',
                     }}>
-                        
+                        {/* 搜索 */}
+                        {/* style={{height:"36px"}} */}
+                        <div>
+                            <Input style={{height:"36px",width:"320px"}} prefix={<SearchOutlined />} placeholder="搜索代码/客户" />
+                        </div>
+                        {/* 状态 */}
+                        <MyDropdown
+                            component={<Button style={{ height:"36px",width:"140px" }}>
+                                <Flex justify="space-between" align="center" style={{width:"100%"}}>
+                                    <div className='color-474F5E'>状态</div>
+                                    <img src="/icons/Suffix1.svg" />
+                                </Flex>
+                            </Button>}
+                            itemList={[
+                                {
+                                    key: "1", label: (
+                                        <div onClick={() => { } }>已启用</div>
+                                    )
+                                },
+                                {
+                                    key: "2", label: (
+                                        <div onClick={() => { } }>即将过期</div>
+                                    )
+                                },
+                                {
+                                    key: "3", label: (
+                                        <div onClick={() => { } }>已过期</div>
+                                    )
+                                },
+                                {
+                                    key: "4", label: (
+                                        <div onClick={() => { } }>已禁用</div>
+                                    )
+                                }
+                            ]} 
+                            styled={undefined}
+                            position={undefined}
+                        />
+                        {/*  */}
+                        <MyDropdown
+                            component={<Button style={{ height:"36px",width:"140px" }}>
+                                <Flex justify="space-between" align="center" style={{width:"100%"}}>
+                                    <div className='color-474F5E'>余额</div>
+                                    <img src="/icons/Suffix1.svg" />
+                                </Flex>
+                            </Button>}
+                            itemList={[
+                                {
+                                    key: "1", label: (
+                                        <div onClick={() => { } }>满余额或部分余额</div>
+                                    )
+                                },
+                                {
+                                    key: "2", label: (
+                                        <div onClick={() => { } }>满余额</div>
+                                    )
+                                },
+                                {
+                                    key: "3", label: (
+                                        <div onClick={() => { } }>部分余额</div>
+                                    )
+                                },
+                                {
+                                    key: "4", label: (
+                                        <div onClick={() => { } }>无余额</div>
+                                    )
+                                }
+                            ]} 
+                            styled={undefined}
+                            position={undefined}
+                        />
                         {/* 4 价格区间 */}
                         <PriceRangeSelector />
                     </div>
@@ -137,7 +143,7 @@ export default function GiftCardsSelectCard(){
                             flexWrap: 'wrap',
                             gap: '12px 12px',
                         }}>
-                        {/*  */}
+                        {/* 语言 */}
                         <Select 
                             // defaultValue={language}
                             value={language}
@@ -149,8 +155,6 @@ export default function GiftCardsSelectCard(){
                             />
                         {/* 5 */}
                         <MoreSelect />
-                        {/* 6 */}
-                        {/* <EditTableHead /> */}
                         {/* 7 */}
                         <DropdownSort items={
                             [
@@ -167,15 +171,12 @@ export default function GiftCardsSelectCard(){
                     </div>
                 </div>
             </div>
-            {/* {language && <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  />} */}
+            {language && <GiftCardsTableCard selectProps={{language:language,title:"123",model:"213",tags:"213"}}  />}
         </Scoped>
     );
 }
 
 const Scoped = styled.div`
-    .ant-input{
-        height: 36px;
-    }
     .ant-btn{
         height: 36px;
     }

@@ -1778,7 +1778,7 @@ export async function getAddonsConfigCreditCard(addonsId?:string) {
 }
 
 
-// 
+// 账号信息
 export async function getUserInfo() {
   return request("/api/ApiAppstore/user_info", {
     method: 'POST',
@@ -1791,6 +1791,21 @@ export async function getUserInfo() {
   });
 }
 
+// 更新账号信息
+export async function setUserInfo(res:any) {
+  return request("/api/ApiAppstore/user_contact_set", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      contact_email:res.contact_email,
+      contact_code:res.contact_code,
+      contact_phone:res.contact_phone
+      // domain_id: cookie.load("domain")?.id
+    }
+  });
+}
 // 
 export async function upDatePassword(oldPassword:string,newPassword:string) {
   return request("/api/ApiAppstore/change_password", {
@@ -1804,4 +1819,132 @@ export async function upDatePassword(oldPassword:string,newPassword:string) {
     }
   });
 }
+
+// 移除登录设备
+export async function delLoginRecord(id:string) {
+  return request("/api/ApiAppstore/login_record_del", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id
+    }
+  });
+}
+// 更新共享数据状态
+export async function setUserSharing(res:string) {
+  return request("/api/ApiAppstore/data_sharing_set", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      data_sharing:res
+    }
+  });
+}
+// 获取用户账号语言
+export async function getUserLanguages() {
+  return request("/api/ApiAppstore/user_languages_get", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  });
+}
+// 设置用户账号语言
+export async function setUserLanguages(languagesId:string) {
+  return request("/api/ApiAppstore/user_languages_set", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:languagesId
+    }
+  });
+}
+
+// 员工查询
+export async function getEmployeeList() {
+  return request("/api/ApiAppstore/employee_select", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      // languages_id:languagesId
+    }
+  });
+}
+
+// 创建应用
+export async function creatAppStore(res:any) {
+  return request("/api/ApiAppstore/app_add", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      app_name:res.name,
+      developer_id:res.developer,
+      developer_email:res.email,
+      app_description:'',
+      languages_id:"2",
+      meta_title:'',
+      meta_keyword:'',
+      meta_description:'',
+    }
+  });
+}
+
+// 获取应用列表
+
+export async function getAppStores() {
+  return request("/api/ApiAppstore/app_list", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      languages_id:"2",
+      page:"1",
+      limit:"100",
+    }
+  });
+}
+
+
+// 开发应用操作记录
+export async function getAppActionlogs() {
+  return request("/api/ApiAppstore/app_actionlog_list", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+    // data:{
+    //   languages_id:"2",
+    //   page:"1",
+    //   limit:"100",
+    // }
+  });
+}
+
+// 开发应用信息
+export async function getAppInfo({id,langId}:{id:string,langId:string}) {
+  return request("/api/ApiAppstore/app_info", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      id:id,
+      domain_id:cookie.load("domain")?.id,
+      languages_id:langId,
+    }
+  });
+}
+
+
 

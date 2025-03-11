@@ -110,4 +110,7 @@ export default {
   'menu.settings.thirdCreditCard':"信用卡/借记卡收款",
   'menu.settings.delivery':"发货与配送",
   'menu.settings.logisticsAddCustom':"新增自定义运费",
+  'menu.settings.adminpermission':"管理员和权限",
+  'menu.settings.adminpermissionAdd':"添加员工账号",
+
 };

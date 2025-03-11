@@ -1,9 +1,10 @@
 import SuccessTag from "@/components/Tag/SuccessTag";
 import { upDatePassword } from "@/services/y2/api";
 import { Button, Card, Flex, Form, Input, message, Modal } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import accountManagement from "@/store/shops/accountManagementStore";
+import { observer } from "mobx-react-lite";
 
 
 function LoginAccountCard() {
@@ -17,13 +18,18 @@ function LoginAccountCard() {
 
     const [isModifyPassword,seIsModifyPassword] = useState(false)
 
+    useEffect(()=>{
+        console.log(accountManagement)
+    },[])
+
+
     return (
         <Scoped>
             <Card>
                 <Flex justify="space-between">
                     <div>
                         <Flex align="center"><div style={{marginRight:"8px"}}>当前登录账号</div><SuccessTag text={"已验证"} /></Flex>
-                        <div className="color-474F5E" style={{marginTop:"8px"}}>+86 {accountManagement.user.mobile}</div>
+                        <div className="color-474F5E" style={{marginTop:"8px"}}>+{accountManagement.user.area_code} {accountManagement.user.mobile}</div>
                     </div>
                     <Flex gap={12}>
                         <Button onClick={()=>setIsModifyAccount(true)}>修改账号</Button>
@@ -95,7 +101,7 @@ function LoginAccountCard() {
 
 }
 
-export default LoginAccountCard;
+export default LoginAccountCard
 
 const Scoped = styled.div`
     margin-bottom: 20px;

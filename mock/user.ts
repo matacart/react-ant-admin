@@ -1,19 +1,5 @@
 // import { Request, Response } from 'express';
 
-// export default {
-//   // 登陆验证
-//   'POST /api/admin/login': (req: Request, res: Response) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.json({
-//       code: 0,
-//       msg: '登入成功',
-//       data: {
-//         access_token:
-//           'cKwCExfHZ4dbxPBUXSOJaOXcGQAfp6f5-TWrmNJuuuUjLHrGXnZHR9=WRFdjYGdDXEvE-HtyRFJJBnNKXDvqplZfqQutL5egMTOWS6QT7OWKW6S8mwt8tJMRxOuzg9R=gRVAWSUMT3PeM',
-//       },
-//     });
-//   },
-// };
 import { message } from 'antd';
 import { Request, Response } from 'express';
 import { fill } from 'lodash';
@@ -79,7 +65,7 @@ const { ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION } = process.env;
  * current user access， if is '', user need login
  * 如果是 pro 的预览，默认是有权限的
  */
-let access = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ? 'admin' : '';
+let access = ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION === 'site' ? 'admin' : 'admin';
 
 const getAccess = () => {
   return access;
@@ -87,6 +73,19 @@ const getAccess = () => {
 
 // 代码中会兼容本地 service mock 以及部署站点的静态数据
 export default {
+
+  // 登陆验证
+  // 'POST /api/admin/login': (req: Request, res: Response) => {
+  //   res.header('Access-Control-Allow-Origin', '*');
+  //   res.json({
+  //     code: 0,
+  //     msg: '登入成功',
+  //     data: {
+  //       access_token:
+  //         'cKwCExfHZ4dbxPBUXSOJaOXcGQAfp6f5-TWrmNJuuuUjLHrGXnZHR9=WRFdjYGdDXEvE-HtyRFJJBnNKXDvqplZfqQutL5egMTOWS6QT7OWKW6S8mwt8tJMRxOuzg9R=gRVAWSUMT3PeM',
+  //     },
+  //   });
+  // },
   // 支持值为 Object 和 Array
   'POST /api/ApiAppstore/currentUser': (req: Request, res: Response) => {
     if (!getAccess()) {
@@ -177,6 +176,7 @@ export default {
     },
   ],
   'POST /api/ApiAppstore/newlogin': async (req: Request, res: Response) => {
+    console.log('req', req);
     const { password, username, type } = req.body;
     await waitTime(2000);
     if (password === 'admin' && username === 'admin') {
@@ -316,6 +316,55 @@ export default {
       fileUrl: '#',
       fileSize: 0,
       fileName: '1'
+    })
+  },
+
+  'POST /api/ApiAppstore/shippingcourier_select': (req: Request, res: Response) => {
+    const formData = new FormData();
+    res.json({
+      code: 0,
+      msg: "",
+      count: "19",
+      data: []
+    })
+  },
+  'POST /api/ApiStore/product_option_type_select': (req: Request, res: Response) => {
+    const formData = new FormData();
+    res.json({
+      code: 0,
+      msg: "",
+      count: "19",
+      data: []
+    })
+  },
+  'POST /api/Api/user_session': (req: Request, res: Response) => {
+    const formData = new FormData();
+    res.json({
+      code: 0,
+      msg: "",
+      count: "19",
+      data:{
+        package:{
+          id: "1",
+          username: "admin",
+          password: "admin",
+          email: "admin@admin.com",
+          mobile: "1234567890",
+          status: "1",
+          role: "1",
+          create_time: "2022-02-13 12:00:00",
+          end_time: "2023-02-13 12:00:00",
+        }
+      }
+    })
+  },
+  'POST /api/ApiStore/platform_category_select': (req: Request, res: Response) => {
+    const formData = new FormData();
+    res.json({
+      code: 0,
+      msg: "",
+      count: "19",
+      data: []
     })
   },
 

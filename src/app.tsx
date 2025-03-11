@@ -1,5 +1,5 @@
 import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { GlobalOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
+import { GlobalOutlined, RightOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
 import { ProLayout, type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
 import { getOptionType, getAccessToken, currentUser as queryCurrentUser, getShippingCourierList, currentUserStatus } from '@/services/y2/api';
@@ -23,6 +23,8 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Header from './components/Header/Header';
 import MCPaymentHead from './components/Header/MCPaymentHead';
+import { AddIcon, NailIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
+import SalesChannel from './components/Menu/SalesChannel';
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 
@@ -42,7 +44,7 @@ export async function getInitialState(): Promise<{
       return msg.data; // 返回用户信息
     } catch (error) {
       console.log(error);
-      history.push(loginPath);
+      // history.push(loginPath);
     }
     return undefined;
   };
@@ -75,7 +77,7 @@ export async function getInitialState(): Promise<{
   }else{
     // currentUser 用户信息
     const currentUser = await fetchUserInfo(); // 调接口获取用户信息
-    // history.push(loginPath);
+    !currentUser && history.push(loginPath);
     return {
       fetchUserInfo, // 方法
       currentUser, // { username: 'lizhi',age:18,avatar:"xxxx" }
@@ -121,7 +123,7 @@ axios.post('/api/ApiAppstore/timezones_select').then((res) => {
     sessionStorage["timezones"] = JSON.stringify(res.data.data)
   }
 })
-
+// 运行时布局配置
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
   const [domainStatus,setDomainStatus] = useState();
@@ -139,11 +141,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     })
     currentUserStatus().then(res=>{
       setDomainStatus(res)
+
+      console.log(res)
       if(res.code == 0){
         parseInt((res?.data.package.end_time*1000 - Date.now())/1000/60/60/24)>15?setLayoutHeight(60):setLayoutHeight(100);
         // domainStatus?.code == 1 ? 100:
       }else{
-        setLayoutHeight(100);
+        setLayoutHeight(60);
       }
     })
   },[])
@@ -156,24 +160,15 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
-      }
+      // if (!initialState?.currentUser && location.pathname !== loginPath) {
+      //   history.push(loginPath);
+      // }
     },
-    // links: [
-    //   // <Link key="openapi" to="/settings" target="_blank">
-    //   //   <SettingOutlined />
-    //   //   <span>设置</span>
-    //   // </Link>,
-    //   // 
-    // ],
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
-
-
       return (
         <>
           {children}
@@ -219,6 +214,25 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
+    // 自定菜单项
+    menuItemRender:(item, dom)=>{
+      if(item.path == "/app-store"){
+        return <Link to={item.path}>
+          <Flex justify='space-between' align='center'>
+            <Flex className='font-12'>
+              {dom}
+              <RightIcon style={{fontWeight:600,fontSize:"14px"}} />
+            </Flex>
+            <AddIcon className='font-12 color-7A8499' />
+          </Flex>
+        </Link>
+      }else if(item.path == "/channel"){
+        return <SalesChannel dom={dom} />
+      }
+      return <Link to={item.path}>
+        {dom}
+      </Link>
+    },
     // 修改菜单数据
     menuDataRender: (menuData) => {
       if(stores.slice(0,8) == "/stores/"){
@@ -279,10 +293,21 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         // title+" - "+info?.pageName+" - "+"MataCart"
         title+" - "+defaultPageTitle
       )
-    }
+    },
+
+    
     // title:"MataCart",
   };
 };
+
+// 运行时路由配置
+export function patchRoutes({ routes, routeComponents }) {
+  console.log('patchRoutes', routes, routeComponents);
+  Object.keys(routes).forEach(key => {
+    const icon = routes[key];
+    icon.path == "order_invoice_customization" && (routes[key].icon = <Flex align='center'><PrintIcon style={{fontSize:"18px"}} /></Flex>)
+  });
+}
 
 
 
@@ -382,6 +407,7 @@ export const request: RequestConfig = {
       // 登录过期
       if(res.data.code==1001){
         sessionStorage.removeItem("domain")
+        cookie.remove("token",{path:"/"})
         history.push(loginPath);
         return res;
       }

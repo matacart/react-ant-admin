@@ -102,8 +102,35 @@ const FoldSvg = () => (
   </svg>
 )
 
+const DiscountedGraphSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M1.68 1.6a.08.08 0 00-.08.08v12.64c0 .044.035.08.08.08h12.64a.08.08 0 00.08-.08v-1.06a.08.08 0 00-.08-.08H2.826a.08.08 0 01-.08-.08V1.68a.08.08 0 00-.08-.08H1.68z" fill="currentColor"></path><path d="M14.056 3.632l.736.735a.08.08 0 010 .113L9.68 9.592a.08.08 0 01-.114 0L7.281 7.305a.08.08 0 00-.114 0L4.905 9.567a.08.08 0 01-.113 0l-.736-.735a.08.08 0 010-.113l3.111-3.111a.08.08 0 01.114 0l2.286 2.287a.08.08 0 00.114 0l4.262-4.263a.08.08 0 01.113 0z" fill="currentColor"></path></svg>
+)
+
+const TemplateSvg = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.742 2.492a.75.75 0 01.75-.75h14.862a.75.75 0 01.75.75v2.972a.75.75 0 01-.75.75H2.492a.75.75 0 01-.75-.75V2.492zm1.5.75v1.472h13.362V3.242H3.242zM8.678 8.436a.75.75 0 01.75-.75h7.926a.75.75 0 01.75.75v8.918a.75.75 0 01-.75.75H9.428a.75.75 0 01-.75-.75V8.436zm1.5.75v7.418h6.426V9.186h-6.426zM7.205 8.436a.75.75 0 00-.75-.75H2.492a.75.75 0 00-.75.75v8.918c0 .414.336.75.75.75h3.963a.75.75 0 00.75-.75V8.436zm-3.963.75h2.463v7.418H3.242V9.186z" fill="currentColor"></path>
+  </svg>
+)
+
+const RiseSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 12 12" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconAnalyticsIncrease"><path d="M6.528.467a.75.75 0 0 0-1.055 0L.654 5.24 1.71 6.306l3.54-3.507V11.5h1.5V2.798l3.54 3.508 1.056-1.066L6.528.467Z"></path></svg>
+)
+
+const IdeaSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9.166 1.667h1.667v1.667H9.166V1.667zm-4.41 4.267L3.576 4.756l1.178-1.178 1.179 1.178-1.179 1.178zm10.488-2.356l1.178 1.178-1.178 1.178-1.178-1.178 1.178-1.178zM12.5 15v-1.232c1.216-.894 2.5-2.288 2.5-4.184C15 6.97 12.85 5 10 5 7.149 5 5 6.97 5 9.584c0 1.896 1.284 3.289 2.5 4.184V15a.833.833 0 00.833.834h3.333A.833.833 0 0012.5 15zm-1.667-1.666v.833H9.166v-.833a.834.834 0 00-.37-.694c-.971-.647-2.13-1.703-2.13-3.056 0-1.69 1.403-2.917 3.334-2.917 1.93 0 3.333 1.227 3.333 2.917 0 1.353-1.158 2.409-2.13 3.056a.834.834 0 00-.37.694zm-2.5 3.333h3.333v1.667H8.333v-1.667z"></path></svg>
+)
+const RightSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="m12.86 9.47-5-5L6.8 5.53 11.27 10 6.8 14.47l1.06 1.06 5-5a.75.75 0 0 0 0-1.06Z"></path></svg>
+)
+
 const AddSvg = () => (
-  <svg viewBox="64 64 896 896" focusable="false" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M192 474h672q8 0 8 8v60q0 8-8 8H160q-8 0-8-8v-60q0-8 8-8z"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+    <path d="M9.25 10.607v5.321h1.5v-5.321h5.321v-1.5H10.75V3.786h-1.5v5.32H3.93v1.5h5.32Z"></path>
+  </svg>
+)
+
+const NailSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="m18.039 7.866-5.902-5.9a.75.75 0 0 0-1.1.042L6.708 7.065 2.726 8.53a.75.75 0 0 0-.271 1.234l3.358 3.358-3.642 3.642a.1.1 0 0 0 0 .141l.92.92a.1.1 0 0 0 .14 0l3.642-3.642 3.367 3.367a.75.75 0 0 0 1.235-.272l1.463-3.984 5.058-4.328a.75.75 0 0 0 .043-1.1ZM7.72 8.189 11.65 3.6l4.755 4.755-4.591 3.928a.75.75 0 0 0-.216.31L10.47 15.66 4.345 9.533 7.41 8.406a.75.75 0 0 0 .31-.217Z"></path></svg>
 )
 
 const FaceBookSvg = () => (
@@ -113,8 +140,36 @@ const FaceBookSvg = () => (
 )
 
 const AppleSvg = () => (
-  <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#apple_svg__clip0_8018_2869)"><path d="M17.762 6.818c-.116.09-2.164 1.244-2.164 3.81 0 2.968 2.606 4.018 2.684 4.044-.012.064-.414 1.438-1.374 2.838-.856 1.232-1.75 2.462-3.11 2.462-1.36 0-1.71-.79-3.28-.79-1.53 0-2.074.816-3.318.816-1.244 0-2.112-1.14-3.11-2.54C2.934 15.814 2 13.26 2 10.836c0-3.888 2.528-5.95 5.016-5.95 1.322 0 2.424.868 3.254.868.79 0 2.022-.92 3.526-.92.57 0 2.618.052 3.966 1.984zm-4.68-3.63c.622-.738 1.062-1.762 1.062-2.786A1.92 1.92 0 0014.106 0c-1.012.038-2.216.674-2.942 1.516-.57.648-1.102 1.672-1.102 2.71 0 .156.026.312.038.362.064.012.168.026.272.026.908 0 2.05-.608 2.71-1.426z" fill="#000"></path></g><defs><clipPath id="apple_svg__clip0_8018_2869"><path fill="#fff" transform="translate(2)" d="M0 0h16.28v20H0z"></path></clipPath></defs></svg>
+  <svg width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#apple_svg__clip0_8018_2869)"><path d="M17.762 6.818c-.116.09-2.164 1.244-2.164 3.81 0 2.968 2.606 4.018 2.684 4.044-.012.064-.414 1.438-1.374 2.838-.856 1.232-1.75 2.462-3.11 2.462-1.36 0-1.71-.79-3.28-.79-1.53 0-2.074.816-3.318.816-1.244 0-2.112-1.14-3.11-2.54C2.934 15.814 2 13.26 2 10.836c0-3.888 2.528-5.95 5.016-5.95 1.322 0 2.424.868 3.254.868.79 0 2.022-.92 3.526-.92.57 0 2.618.052 3.966 1.984zm-4.68-3.63c.622-.738 1.062-1.762 1.062-2.786A1.92 1.92 0 0014.106 0c-1.012.038-2.216.674-2.942 1.516-.57.648-1.102 1.672-1.102 2.71 0 .156.026.312.038.362.064.012.168.026.272.026.908 0 2.05-.608 2.71-1.426z" fill="#000"></path></g><defs><clipPath id="apple_svg__clip0_8018_2869"><path fill="#fff" transform="translate(2)" d="M0 0h16.28v20H0z"></path></clipPath></defs></svg>
 )
+
+const PrintSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.25 18H5.75V11.8184H14.25V18ZM7.875 16.4546H12.125V15.4234H7.875V16.4546ZM7.875 14.3941H12.125V13.3635H7.875V14.3941ZM4.6875 14.3941H2.5625C2.28071 14.3941 2.01046 14.2822 1.8112 14.0829C1.61194 13.8837 1.5 13.6134 1.5 13.3316V6.18367C1.5 5.90188 1.61194 5.63163 1.8112 5.43237C2.01046 5.23311 2.28071 5.12117 2.5625 5.12117H17.4375C17.7193 5.12117 17.9895 5.23311 18.1888 5.43237C18.3881 5.63163 18.5 5.90188 18.5 6.18367V13.3316C18.5 13.6134 18.3881 13.8837 18.1888 14.0829C17.9895 14.2822 17.7193 14.3941 17.4375 14.3941H15.3125V11.3352C15.3125 11.0534 15.2006 10.7832 15.0013 10.5839C14.802 10.3846 14.5318 10.2727 14.25 10.2727H5.75C5.46821 10.2727 5.19796 10.3846 4.9987 10.5839C4.79944 10.7832 4.6875 11.0534 4.6875 11.3352V14.3939V14.3941ZM4.15625 7.95459C4.14821 8.21884 4.21922 8.47948 4.36019 8.70313C4.50115 8.92679 4.70566 9.10328 4.94752 9.21003C5.18939 9.31677 5.45761 9.3489 5.71784 9.3023C5.97807 9.25571 6.21848 9.13251 6.40828 8.94848C6.59808 8.76444 6.72864 8.52795 6.78325 8.26928C6.83785 8.01061 6.81402 7.74153 6.71479 7.49649C6.61556 7.25144 6.44546 7.04159 6.22626 6.89379C6.00707 6.74599 5.74875 6.66697 5.48438 6.66684C5.13762 6.66194 4.80307 6.79476 4.5541 7.03616C4.30513 7.27756 4.16205 7.60785 4.15625 7.95459ZM5.21875 4.09081V1H15.3125V4.09081H5.21875Z"></path>
+  </svg>
+)
+
+const DownloadSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.9863 17.1992H4.98633C4.46875 17.1992 4.04883 16.7793 4.04883 16.2617C4.04883 15.7441 4.46875 15.3242 4.98633 15.3242H14.9863C15.5039 15.3242 15.9238 15.7441 15.9238 16.2617C15.9238 16.7793 15.5039 17.1992 14.9863 17.1992ZM12.1113 9.99609H7.86133C7.6543 9.99609 7.48633 9.82812 7.48633 9.62109V2.87109C7.48633 2.66406 7.6543 2.49609 7.86133 2.49609H12.1113C12.3184 2.49609 12.4863 2.66406 12.4863 2.87109V9.62109C12.4863 9.82812 12.3184 9.99609 12.1113 9.99609Z"></path><path d="M10.258 14.7246L15.5841 9.39844C15.8244 9.1582 15.6544 8.74414 15.3126 8.74414H4.66029C4.3185 8.74414 4.14858 9.15625 4.38881 9.39844L9.71498 14.7246C9.86537 14.875 10.1076 14.875 10.258 14.7246Z"></path>
+  </svg>
+)
+
+const MailSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M2.5 2.25c-.69 0-1.25.56-1.25 1.25v13c0 .69.56 1.25 1.25 1.25h15c.69 0 1.25-.56 1.25-1.25v-13c0-.69-.56-1.25-1.25-1.25h-15Zm.25 4.65V3.75h14.5V6.9l-.039-.092L10 9.812 2.788 6.808 2.75 6.9Zm0 1.517 6.721 2.8c.338.141.72.141 1.058 0l6.721-2.8v7.833H2.75V8.417Z"></path></svg>
+)
+
+
+const MailFilledSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 14.6667C2 15.403 2.61052 16 3.36364 16H15.6364C16.3895 16 17 15.403 17 14.6667V7.43722L10.2212 10.7575C9.96998 10.8806 9.67601 10.8892 9.4177 10.7809L2 7.67256V14.6667Z"></path><path d="M2 5.64168L9.7624 8.8945L17 5.34944V5.33333C17 4.59695 16.3895 4 15.6364 4H3.36364C2.61052 4 2 4.59695 2 5.33333V5.64168Z"></path>
+  </svg>
+)
+
+
+
+
+
 
 
 
@@ -159,8 +214,31 @@ export const AddIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={AddSvg} {...props} />
 );
 
+export const RightIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RightSvg} {...props} />
+);
+
 export const FoldIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={FoldSvg} {...props} />
+);
+
+export const DiscountedGraphIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DiscountedGraphSvg} {...props} />
+);
+export const TemplateIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TemplateSvg} {...props} />
+);
+
+export const RiseIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={RiseSvg} {...props} />
+);
+
+export const IdeaIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={IdeaSvg} {...props} />
+);
+
+export const NailIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NailSvg} {...props} />
 );
 
 export const FaceBookIcon = (props: Partial<CustomIconComponentProps>) => (
@@ -170,3 +248,20 @@ export const FaceBookIcon = (props: Partial<CustomIconComponentProps>) => (
 export const AppleIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={AppleSvg} {...props} />
 );
+
+export const PrintIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PrintSvg} {...props} />
+);
+
+export const DownloadIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DownloadSvg} {...props} />
+);
+
+export const MailIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MailSvg} {...props} />
+);
+
+export const MailFilledIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MailFilledSvg} {...props} />
+);
+

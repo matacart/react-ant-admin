@@ -8,6 +8,9 @@ import { title } from 'process';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
+
+// const
+
 export default defineConfig({
   /**
    * @name 开启 hash 模式
@@ -27,13 +30,15 @@ export default defineConfig({
 
   jsMinifier: 'terser',
 
+  links: [{ href: '/foo.css', rel: 'preload' }],
+
   /**
    * @name 路由的配置，不在路由中引入的文件不会编译
    * @description 只支持 path，component，routes，redirect，wrappers，title 的配置
    * @doc https://umijs.org/docs/guides/routes
    */
   // umi routes: https://umijs.org/docs/routing
-  routes,
+  routes:routes,
   /**
    * @name 主题的配置
    * @description 虽然叫主题，但是其实只是 less 的变量设置
@@ -180,6 +185,22 @@ export default defineConfig({
   //   .options({
   //         svgo: false,
   //       });
+  // },
+
+  // Qiankun 微应用 -- 注册子应用
+  // qiankun: {
+  //   master: {
+  //     apps: [
+  //       {
+  //         name: 'orderInvoiceCustomization',
+  //         entry: '//localhost:7001',
+  //       },
+  //       {
+  //         name: 'app2',
+  //         entry: '//localhost:7002',
+  //       },
+  //     ],
+  //   },
   // },
 });
 
