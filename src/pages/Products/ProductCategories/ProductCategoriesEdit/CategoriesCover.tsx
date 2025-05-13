@@ -1,48 +1,20 @@
 
-import editCategories from "@/store/categories/editCategories";
-import newCategories from "@/store/categories/newCategories";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import categories from "@/store/product/categories";
+import { PlusOutlined } from "@ant-design/icons";
 import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin } from "antd"
 import axios from "axios";
-import { set } from "lodash";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components"
-
-
-
-
 
  function CategoriesCover(){
 
     type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-
     const [isUpload,setIsUpload] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
-    const [fileList, setFileList] = useState<UploadFile[]>([
-        // {
-        //     uid: '-1',
-        //     name: 'image.png',
-        //     status: 'done',
-        //     url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        // }
-        // {
-        //     uid: '-1',
-        //     name: 'image.png',
-        //     status: 'done',
-        //     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        // },
-        //   {
-        //     uid: '-2',
-        //     name: 'image.png',
-        //     status: 'done',
-        //     url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        //   },
-    ]);
-
-    // const [imageUrl, setImageUrl] = useState<string>();
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     const getBase64 = (file: FileType): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -55,17 +27,22 @@ import styled from "styled-components"
     const handleChange: UploadProps['onChange'] = (info) => {
         if(info.file.status == "removed"){
             setFileList(info.fileList);
-            editCategories.setCoverImg("")
+            categories.setCategoriesInfo({
+                ...categories.categoriesInfo,
+                category_image: ""
+            })
             return
         }
         // 上传图片
         setIsUpload(true)
-        console.log(info)
         let formData = new FormData()
         formData.append("1", info.file as FileType)
         axios.post('/api/ApiAppstore/doUploadPic',formData).then(res=>{
             if(res.data.code == 0){
-                editCategories.setCoverImg(res.data.data.src)
+                categories.setCategoriesInfo({
+                    ...categories.categoriesInfo,
+                    category_image: res.data.data.src
+                })
             }
             setIsUpload(false)
         })
@@ -87,14 +64,12 @@ import styled from "styled-components"
         </button>
     )
     useEffect(()=>{
-        if(editCategories.coverImg!==null){
-            setFileList([{
-                uid: '-1',
-                name: 'image.png',
-                status: 'done',
-                url: editCategories.coverImg
-            }])
-        }
+        (categories.categoriesInfo.category_image && categories.categoriesInfo.category_image !== "") && setFileList([{
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
+            url: categories.categoriesInfo.category_image
+        }])
     },[])
 
     return (
@@ -105,18 +80,8 @@ import styled from "styled-components"
                 </div>
                 <div className="webUrl">
                     <Spin spinning={isUpload}>
-                        {/* <Upload
-                            name="avatar"
-                            listType="picture-card"
-                            className="avatar-uploader"
-                            showUploadList={false}
-                            action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                            // beforeUpload={beforeUpload}
-                            onChange={handleChange}
-                        >
-                            {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-                        </Upload> */}
-                        {<Upload
+                        {<>
+                            <Upload
                                 listType="picture-card"
                                 fileList={fileList}
                                 beforeUpload={()=>{
@@ -128,8 +93,10 @@ import styled from "styled-components"
                                 className="avatar-uploader"
                                 onRemove={()=>{setPreviewOpen(false)}}
                             >
-                            {fileList.length>0?null:uploadButton}
-                        </Upload>}
+                                {fileList.length>0?null:uploadButton}
+                            </Upload>
+                            {fileList.length == 0 && <div className="color-7A8499" style={{marginTop:"12px"}}>支持上传jpg、png、webp、SVG格式图片，最大限制4M；支持上传GIF格式动图，最大限制8M；</div>}
+                        </>}
                         <Image
                             style={{width: '100%'}}
                             wrapperStyle={{ display: 'none' }}
@@ -172,7 +139,7 @@ a{
        .ant-upload{
             width: 100% !important;
             height: 230px !important;
-            border: 2px dashed #d9d9d9 !important;
+            border: 1px dashed #d9d9d9 !important;
        }
        .ant-upload-list-item-container{
             width: 100% !important;

@@ -1,5 +1,4 @@
 import { getCountryList } from "@/services/y2/api";
-import newStore from "@/store/newStore";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Form, Input, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
@@ -55,19 +54,14 @@ export default function CustomsDeclaration() {
                                 (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                             }
                             options={countryList}
-                            defaultValue={newStore.notion}
                             onChange={(value)=>{
-                                newStore.setNotion(value)
-                                newStore.setEditStatus(true)
                             }}
                         />
                     </Form.Item>
                     <Form.Item
                         required                    
                         label="HS(协调制度) 代码">
-                        <Input defaultValue={newStore.HSCode} placeholder="请输入HS编码" onChange={(e)=>{
-                            newStore.setHSCode(e.target.value)
-                            newStore.setEditStatus(true)
+                        <Input placeholder="请输入HS编码" onChange={(e)=>{
                         }} />
                     </Form.Item>
                 </Form>

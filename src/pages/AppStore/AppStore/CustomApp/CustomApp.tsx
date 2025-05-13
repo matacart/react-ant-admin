@@ -4,10 +4,11 @@ import { history } from "@umijs/max"
 import styled from "styled-components"
 import BlankPage from "./BlankPage"
 import { useEffect, useState } from "react"
-import { getAppStores } from "@/services/y2/api"
 
 import dayjs from 'dayjs';
 import AppList from "./AppList"
+import SkeletonCard from "@/components/Skeleton/SkeletonCard"
+import { getDevAppStores } from "@/services/y2/api"
 
 interface DataType {
     key: string;
@@ -19,50 +20,29 @@ interface DataType {
 
 function CustomApp() {
 
-    const columns: TableProps<DataType>['columns'] = [
-        {
-          title: '应用名称',
-          dataIndex: 'app_name',
-          key: 'name',
-          render: (text) => <a>{text}</a>,
-        },
-        {
-          title: '应用状态',
-          dataIndex: 'status',
-          key: 'status',
-        },
-        {
-          title: '创建时间',
-          dataIndex: 'create_time',
-          key: 'create_time',
-          render: (text) => <div>{dayjs(text*1000).format("YYYY-MM-DD HH:mm:ss")}</div>,
-        },
-        {
-          title: '操作',
-          key: 'action',
-          render: (_, record) => (
-            <Flex gap={32}>
-                <div className="color-356DFF cursor-pointer" onClick={()=>history.push("/app-store/custom-app-config/"+record.id)}>编辑</div>
-                <div className="color-7A8499 cursor-pointer">卸载</div>
-                <div className="color-F86140 cursor-pointer">删除</div>
-            </Flex>
-          ),
-        },
-    ];
+    const [isSkeleton,setIsSkeleton] = useState(true)
 
     const [data,setData] = useState<null | []>(null)
 
+    // 获取应用列表
+    const fetchAppList = async ()=>{
+        try {
+            const appList = await getDevAppStores()
+            setData(appList.data)
+        }catch(err){
+            console.log(err)
+        }finally{
+            setIsSkeleton(false)
+        }
+    }
+
     useEffect(()=>{
-        getAppStores().then(res=>{
-            console.log(res)
-            res.code == 0 && setData(res.data)
-        })
+        fetchAppList()
     },[])
 
     return (
         <Scoped>
-            {data == null && <></>}
-            {(data !== null && data.length == 0 ) ? <BlankPage />:<AppList />}
+            {isSkeleton?<SkeletonCard />:(data !== null && data.length == 0 ) ? <BlankPage />:<AppList data={data} />}
         </Scoped>
     )
 }

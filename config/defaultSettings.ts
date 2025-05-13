@@ -22,8 +22,8 @@ const Settings: ProLayoutProps & {
   token: {
     bgLayout: '#EAEDF1',
     header:{
+      // heightLayoutHeader: 'auto',
       colorBgHeader: '#ffffff',
-      heightLayoutHeader:60
     }, 
     sider:{
       colorBgMenuItemHover: '#f7f8fb',

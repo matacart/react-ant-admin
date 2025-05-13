@@ -71,7 +71,7 @@ function Base() {
                         <div className='mc-layout-content'>
                             <div className="mc-layout-content-left">
                                 <div className="font-20 font-w-600">结算货币</div>
-                                <p className="font-14 color-474F5E desc line-h-20">设置商店收款的结算货币。一旦订单成立不可修改，请慎重选择</p>
+                                <p className="font-14 color-474F5E desc line-h-20">设置商店收款的结算货币。</p>
                             </div>
                             <div className="mc-layout-content-right">
                                 <SettlementCurrencyCard />
@@ -118,7 +118,7 @@ function Base() {
                             setIsRenewal(true)
                             baseInfoStore.setStore().then(res=>{
                                 if(res.code==0){
-                                    cookie.save('timeZone', JSON.stringify(JSON.parse(sessionStorage["timezones"]).filter(item=>item.id == baseInfoStore.timezone)[0]), { path: '/' });
+                                    cookie.save('timeZone', JSON.stringify(JSON.parse(sessionStorage["timezones"]).filter(item=>item.time_zone_name == baseInfoStore.timezone)[0]), { path: '/' });
                                     message.success('更新成功')
                                 }else{
                                     message.error('更新失败')

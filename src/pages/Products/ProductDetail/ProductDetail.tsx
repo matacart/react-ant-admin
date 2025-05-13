@@ -1,14 +1,13 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined, FacebookFilled, LeftOutlined, RightOutlined, YahooFilled } from '@ant-design/icons';
-import { Button, Divider,Dropdown,MenuProps,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
-// 引入
-import { createContext, useEffect, useState } from 'react';
+import { Divider,Flex,Form,MenuProps,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
 import ProductImgEdit from './ProductImgEdit';
 import ProductSettingsEdit from './ProductSettingsEdit';
 import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
-import { deleteProduct, getProductDetail, upDateProductStatus } from '@/services/y2/api';
+import { addTags, deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
 import StockEdit from './StockEdit';
 import MultipleStylesEdit from './MultipleStylesEdit';
@@ -20,15 +19,23 @@ import { observer } from 'mobx-react-lite';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
-import { useLocation, useNavigate } from 'umi'
 import cookie from 'react-cookies';
-import { history,useParams } from '@umijs/max';
+import { history,useParams,useNavigate } from '@umijs/max';
 import ProtectionInformationEdit from './ProtectionInformationEdit';
 import RecommendationEdit from './RecommendationEdit';
 import RelevanceEdit from './RelevanceEdit';
 import copy from 'copy-to-clipboard';
-import ProductEditOverlay from '@/components/Overlay/ProductEditOverlay';
-import oldStore from '@/store/product/oldStore';
+import dayjs from "dayjs";
+import product from '@/store/product/product';
+import SkeletonCard from '@/components/Skeleton/SkeletonCard';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import DangerButton from '@/components/Button/DangerButton';
+import DefaultButton from '@/components/Button/DefaultButton';
+import { useSleep } from '@/hooks/customHooks';
+import ButtonIcon from '@/components/Button/ButtonSvg';
+import { LeftIcon, RightIcon } from '@/components/Icons/Icons';
+import ButtonDropdownSecondary from '@/components/Dropdown/ButtonDropdownSecondary';
+import Overlay from '@/components/Overlay/Overlay';
 
 
 // 信息
@@ -51,35 +58,20 @@ interface ProductDetail {
     // tag:string;
 }
 
-// export const MyContext = createContext({});
-
 function ProductDetail() {
-    // 获取商品详情
-    const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
+
+    const sleep = useSleep();
     const navigate = useNavigate(); // 使用 useNavigate 钩子
-    const params = new URL(location.href).searchParams
-
     const {productId,languageId} = useParams()
-    // 提示
-    const [modal, contextHolder] = Modal.useModal();
-    const [style, setStyle] = useState([]);
-    // 商品存档
-    const [productStatus,setProductStatus] = useState("");
 
-    const [onFile,setOnFile] = useState(false);
-    
-    const [isLoading,setIsLoading] = useState(false);
-    const [saveLoading,setSaveLoading] = useState(false);
-    const [language,setLanguage] = useState("");
-
-    
+    const domainCookie = cookie.load("domain");
 
     // 分享链接
     const items: MenuProps['items'] = [
         {
             key: '1',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://www.facebook.com/share_channel/?type=reshare&link=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%3Futm_source%3DFacebook%26utm_medium%3Dproduct-links%26utm_content%3Dweb&app_id=966242223397117&source_surface=external_reshare&display&hashtag"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://www.facebook.com/share_channel/?type=reshare&link=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DFacebook%26utm_medium%3Dproduct-links%26utm_content%3Dweb&app_id=966242223397117&source_surface=external_reshare&display&hashtag"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareFacebook.97f9a.svg"/><span style={{marginLeft:"8px"}}>Facebook</span></div>
                 </a>
             ),
@@ -87,7 +79,7 @@ function ProductDetail() {
         {
             key: '2',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://twitter.com/share?text="+oldStore.title.trim()+"%26url%3Dhttps%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DTwitter%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://twitter.com/share?text="+product.productInfo.title.trim()+"%26url%3Dhttps%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DTwitter%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareTwitter.f35cb.svg"/><span style={{marginLeft:"8px"}}>Twitter</span></div>
                 </a>
             ),
@@ -95,7 +87,7 @@ function ProductDetail() {
         {
             key: '3',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://social-plugins.line.me/lineit/share?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DLine%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://social-plugins.line.me/lineit/share?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DLine%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLine.8cbc7.svg"/><span style={{marginLeft:"8px"}}>Line</span></div>
                 </a>
             ),
@@ -103,7 +95,7 @@ function ProductDetail() {
         {
             key: '4',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://api.whatsapp.com/send/?text=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DWhatsapp%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://api.whatsapp.com/send/?text=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DWhatsapp%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareWhatsapp.60743.svg"/><span style={{marginLeft:"8px"}}>Whatsapp</span></div>
               </a>
             ),
@@ -111,7 +103,7 @@ function ProductDetail() {
         {
             key: '5',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%26utm_source%3DTumblr%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DTumblr%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareTumblr.b0ed6.svg"/><span style={{marginLeft:"8px"}}>Tumblr</span></div>
               </a>
             ),
@@ -119,7 +111,7 @@ function ProductDetail() {
         {
             key: '6',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://pinterest.com/pin/create/button/?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"&media=undefined&description="+oldStore.title+"&utm_source%3DPinterest%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://pinterest.com/pin/create/button/?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"&media=undefined&description="+product.productInfo.title+"&utm_source%3DPinterest%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/SharePinterest.e96e2.svg"/><span style={{marginLeft:"8px"}}>Pinterest</span></div>
                 </a>
             ),
@@ -127,7 +119,7 @@ function ProductDetail() {
         {
             key: '7',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.reddit.com/submit?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%3Futm_source%3DReddit%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.reddit.com/submit?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DReddit%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareReddit.d1395.svg"/><span style={{marginLeft:"8px"}}>Reddit</span></div>
               </a>
             ),
@@ -135,16 +127,31 @@ function ProductDetail() {
         {
             key: '8',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+cookie.load("domain").domainName+"%2F"+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLinkedin.4a174.svg"/><span style={{marginLeft:"8px"}}>Linkedin</span></div>
               </a>
             ),
         },
     ];
+    const [productTitle,setProductTitle] = useState(""); //标题
 
+    const [form] = Form.useForm();
+    // 新增一个ref用于标记是否是初始渲染
+    const initialRender = useRef(true);
+    // 提示
+    const [isOverlay,setIsOverlay] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [loading,setLoading] = useState(false)
+    // const [saveLoading,setSaveLoading] = useState(false);
+    const params = new URL(location.href).searchParams
+
+    const [language,setLanguage] = useState("");
+    const [modal, contextHolder] = Modal.useModal();
+    
+    
+    const [style, setStyle] = useState([]);
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
-
     // 删除
     function productDel(id:any){
         return deleteProduct(id).then(res=>{
@@ -153,34 +160,51 @@ function ProductDetail() {
             navigate('/products/index')
         })
     }
-    
-    const onFileOk = () => {
-        setOnFile(false);
-        console.log(oldStore)
-        if(productStatus == "2"){
-            setProductStatus('0');
-            oldStore.setProductStatus('0');
-            upDateProductStatus(oldStore.productId, '0').then(res=>{
-                if(res.code == 0){
-                    message.success('取消存档成功');
-                }else{
-                    message.error('取消存档失败');
-                }
+    // 设置产品状态
+    function setProductStatus(status:string){
+        upDateProductStatus(product.productInfo.id,status).then(res=>{
+            message.success("成功")
+            product.setProductInfo({
+                ...product.productInfo,
+                status:status
             })
-        }else{
-            setProductStatus('2');
-            oldStore.setProductStatus('2');
-            upDateProductStatus(oldStore.productId, '2').then(res=>{
-                if(res.code == 0){
-                    message.success('存档成功');
-                }else{
-                    message.error('存档失败');
-                }
-            })
-        }
+        }).catch(err=>{
+            message.error("失败")
+        }).finally(()=>{
+            
+        })
+    }
+    // 存档弹窗
+    const onFile = () => {
+        modal.confirm({
+            title: "将商品存档",
+            centered:true,
+            icon: <></>,
+            content: '存档后销售渠道不再展示此商品，可通过商品管理进行查看',
+            okText: '确认',
+            cancelText: '取消',
+            onOk(){
+                setProductStatus("2")
+            }
+        });
+    };
+    // 取消存档弹窗
+    const noONFile = () => {
+        modal.confirm({
+            title: "取消商品存档",
+            centered:true,
+            icon: <></>,
+            content: '取消存档后商品将变为下架状态，您可以进行上架售卖',
+            okText: '确定',
+            cancelText: '取消',
+            onOk(){
+                setProductStatus("0")
+            }
+        });
     };
 
-    const confirm = () => {
+    // 删除弹窗
+    const delProduct = () => {
         modal.confirm({
             title: "确定删除吗？",
             centered:true,
@@ -189,168 +213,208 @@ function ProductDetail() {
             okText: '确认',
             cancelText: '取消',
             onOk(){
-                productDel(oldStore.productId)
+                productDel(product.productInfo.id)
             }
         });
     };
-    const fetchProductDetail = async (language?:string) => {
-        setIsLoading(true)
-        try {
-            const lang = language !== "" ? language : languageId;
-            // const response = await getProductDetail(productId == null?"":productId,lang ?? ''); // 参数
-            const response = await getProductDetail(productId == null?"":productId,2); // 参数
-            setProductDetail(response.data);
-            if(response.data){
-                setProductStatus(response.data.status);
-                oldStore.setProductDetail(response.data);
-                oldStore.productInit(response.data);
-            } else {
-                console.error('Invalid data format:', response);
-            }
-        } catch (error) {
-            console.error('Error fetching product detail:', error);
-        }
-        setIsLoading(false)
-    };
-    // 在组件加载时调用 fetchProductDetail
-    useEffect(() => {
-        fetchProductDetail();
-    },[productId]);
-    // 更新商品状态 -- 存档
-    const updateData = (status:string)=>{
-        setProductStatus(status)
-    }
+
+    // 上一个商品
     const prevProduct=(id:string)=>{
         if(id==="" || id===null){
             message.error("这是第一个商品")
         }else{
-            history.push(`/products/edit/${id}/${oldStore.language}`)
+            history.push(`/products/edit/${id}/${product.productInfo.languages_id}`)
         }
     }
+    // 下一个商品
     const nextProduct=(id:string)=>{
         if(id==="" || id===null){
             message.error("这是最后一个商品")
         }else{
-            history.push(`/products/edit/${id}/${oldStore.language}`)
+            history.push(`/products/edit/${id}/${product.productInfo.languages_id}`)
         }
     }
+
+    // 获取商品详情
+    const fetchProductDetail = async (id:string,langId:string) => {
+        setIsSkeleton(true)
+        getProductDetail(id,langId).then(res=>{
+            // 格式
+            if(res.data && JSON.stringify(res.data) != "[]"){
+                setProductTitle(res.data.title)
+                // 格式过滤 --- 有效的json格式
+                let newAdditonalImage = []
+                try {
+                    newAdditonalImage = (JSON.parse(res.data.additional_image || "[]") instanceof Array)?JSON.parse(res.data.additional_image || "[]"):[]
+                } catch (error) {
+                    console.log(error)
+                    newAdditonalImage = []
+                }
+                if(res.data.product_image == ""){
+                    product.setProductInfo({
+                        ...res.data,
+                        start_time:(res.data.start_time == "0" || res.data.start_time == "") ? "" : dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                        end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                        additional_image:[...newAdditonalImage]
+                    })
+                }else{
+                    console.log(res.data)
+                    product.setProductInfo({
+                        ...res.data,
+                        start_time:(res.data.start_time == "0" || res.data.start_time == "")?"":dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                        end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                        additional_image:[res.data.product_image,...newAdditonalImage]
+                    })
+                }
+                // 属性
+                product.setAttributes(res.data.attributes || [])
+                // 变体
+                product.setVariants(res.data.variants || [])
+            }
+        }).catch(()=>{
+        }).finally(async ()=>{
+            // await sleep(2000)
+            setIsSkeleton(false)
+        })
+    };
+
+    // 表单验证
+    const formValidation = ()=>{
+        return form.validateFields().then(res=>{
+            return true
+        }).catch(e=>{
+            if (e.errorFields.length > 0) {
+                form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
+            }
+            return false
+        })
+    }
+
+    // 更新产品
+    const onFinish = async ()=>{
+        if(await formValidation()){
+            setLoading(true)
+            try {
+                product.productInfo.tag !== "" && addTags(product.productInfo.languages_id,product.productInfo.tag).then(res=>{
+                })
+                await upDateProduct({
+                    ...product.productInfo,
+                    product_image:product.productInfo.additional_image[0] || "",
+                    additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
+                    diversion:JSON.stringify([product.productInfo.diversion || {}]),
+                    attributes:JSON.stringify([...product.attributes,...product.tempAttributes]),
+                    variants:JSON.stringify([...product.variants,...product.tempVariants])
+                })
+                message.success('修改成功')
+                setProductTitle(product.productInfo.title)
+            }catch(err){
+            }finally{
+                setIsOverlay(false)
+                setLoading(false)
+            }
+        }
+    }
+    // 在组件加载时调用 fetchProductDetail
+    useEffect(() => {
+        fetchProductDetail(productId || "",languageId || "2");
+    },[productId]);
+
+
+    // 监听product.productInfo 变化 --- 
+    useEffect(()=>{
+        if(initialRender.current) {
+            initialRender.current = false;
+            return;
+        }
+        if(!isSkeleton && !initialRender.current){
+            setIsOverlay(true)
+        }
+    },[product.productInfo])
+    
+    
     return (
         <div>
-            {/* 弹窗 */}
-            <Modal centered title={productStatus == "2"?"取消商品存档":"将商品存档"} open={onFile} onOk={onFileOk} onCancel={()=>{setOnFile(false)}}>
-                {productStatus == "2"?<p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>:<p>存档后销售渠道不再展示此商品，可通过商品管理进行查看</p>}
-            </Modal>
-            {productDetail && <StyledDiv>
-                <Spin spinning={isLoading}>
-                    <div className='mc-layout-wrap'>
-                        <div className="mc-layout">
-                            <div className="mc-header">
-                                <div className="mc-header-left">
-                                    <div className="mc-header-left-secondary" onClick={() => {
-                                        navigate('/products/index')
-                                    }}>
-                                    <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
-                                    </div>
-                                    <div className="mc-header-left-content">{oldStore.title}</div>
+            {isSkeleton?<SkeletonCard />:<Scoped>
+                {/* 弹窗 */}
+                <div className='mc-layout-wrap'>
+                    <div className="mc-layout">
+                        <div className="mc-header">
+                            <div className="mc-header-left">
+                                <div className="mc-header-left-secondary" onClick={() => {
+                                    navigate('/products/index')
+                                }}>
+                                <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className='mc-header-right'>
-                                    <Button size="large" onClick={()=>{
-                                        prevProduct(oldStore.prevProductId)
-                                    }} autoInsertSpace={false}>
-                                        <LeftOutlined />
-                                    </Button>
-                                    <Button size="large" onClick={()=>{
-                                        nextProduct(oldStore.nextProductId)
-                                    }} autoInsertSpace={false}>
-                                        <RightOutlined />
-                                    </Button>
-                                    {/* 分 */}
-                                    <div style={{borderRight:"1px solid #d7dbe7",height:"36px",marginRight:'8px'}}></div>
-                                    <Button onClick={()=>{
-                                        copy(`https://`+cookie.load("domain").domainName+`/`+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`)
-                                        message.success('复制成功')
-                                    }} autoInsertSpace={false}>
-                                        复制
-                                    </Button>
-                                    <Button onClick={()=>{
-                                        window.open(`https://`+cookie.load("domain").domainName+`/`+oldStore.title.replace(new RegExp(" ","gm"),"-")+`-p`+oldStore.productId+`.html`)
-                                    }} autoInsertSpace={false}>
-                                        预览
-                                    </Button>
-                                    <Dropdown menu={{ items }} placement="bottom">
-                                        <Button>分享</Button>
-                                    </Dropdown>
+                                <div className="mc-header-left-content">{productTitle}</div>
+                            </div>
+                            <Flex className='mc-header-right' align='center' gap={8}>
+                                <ButtonIcon icon={<LeftIcon className='font-20' />} onClick={()=>{
+                                    prevProduct(product.productInfo.prevProductId)
+                                }} />
+                                {/* 下一个 */}
+                                <ButtonIcon icon={<RightIcon className='font-20' />} onClick={()=>{
+                                    nextProduct(product.productInfo.nextProductId)
+                                }} />
+                                <div style={{borderRight:"1px solid #d7dbe7",height:"36px"}}></div>
+                                <DefaultButton text={"复制"} onClick={()=>{
+                                    const domainCookie = cookie.load("domain")
+                                    copy(`https://`+domainCookie?.domainName+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
+                                    message.success('复制成功')
+                                }} />
+                                <DefaultButton text={"预览"} onClick={()=>{
+                                    window.open(`https://`+domainCookie?.domainName+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
+                                }} />
+                                <ButtonDropdownSecondary text='分享' menu={{items:items}} trigger={['click']} />
+                            </Flex>
+                        </div>
+                            <div className='mc-layout-main'>
+                                <div className='mc-layout-content'>
+                                    <ProductDataEdit form={form} />
+                                    <ProductImgEdit/>
+                                    <PriceOrTransactionCardEdit />
+                                    <StockEdit form={form} />
+                                    <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style={style} setStyle={setStyle} />
+                                    {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}
+                                </div>
+                                <div className='mc-layout-extra'>
+                                    <RelevanceEdit />
+                                    <ProductSettingsEdit/>
+                                    <TradingRecords/>
+                                    <RecommendationEdit />
+                                    <ProductSeoEdit/>
+                                    <Winnow />
+                                    <PlatformHosting />
+                                    <Subnumber />
+                                    <ProtectionInformationEdit />
+                                    <ThirdPartyInfoEdit/>
+                                    <ThemeTemplateEdit/>
                                 </div>
                             </div>
-                                <div className='mc-layout-main'>
-                                    <div className='mc-layout-content'>
-                                        <ProductDataEdit setLanguage={setLanguage} />
-                                        {/* <ProductDataEdit productData={{title:productDetail?.title,content:productDetail?.content,content1:productDetail?.content1}} /> */}
-                                        <ProductImgEdit/>
-                                        {/* 价格 */}
-                                        <PriceOrTransactionCardEdit />
-                                        <StockEdit />
-                                        {/* <CustomsDeclarationEdit /> */}
-                                        <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style = {style} setStyle={setStyle} />
-                                        {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}
-                                    </div>
-                                    <div className='mc-layout-extra'>
-                                        <ProductSettingsEdit productStatus={productStatus} upProductStatus={updateData} />
-                                        <TradingRecords/>
-                                        <RelevanceEdit />
-                                        {/* <InquiryEdit /> */}
-                                        <RecommendationEdit />
-                                        <ProductSeoEdit/>
-                                        <Winnow />
-                                        <PlatformHosting />
-                                        <Subnumber />
-                                        <ProtectionInformationEdit />
-                                        <ThirdPartyInfoEdit/>
-                                        <ThemeTemplateEdit/>
-                                    </div>
-                                </div>
-                                <Divider />
-                                <div className='mc-footer'>
-                                    <Button type="primary" danger onClick={confirm}>将商品删除</Button>
+                            <Divider />
+                            <div className='mc-footer'>
+                                <Flex gap={12}>
+                                    <DangerButton text='将商品删除' onClick={delProduct} />
                                     {contextHolder}
-                                    {productStatus !== "2"?<Button style={{marginLeft:"-900px"}} onClick={()=>{
-                                        setOnFile(true);
-                                    }}>将商品存档</Button>:<Button loading={saveLoading} style={{marginLeft:"-880px"}} onClick={()=>{
-                                        setOnFile(true);
-                                    }}>将商品取消存档</Button>}
-                                    <Button type='primary' onClick={async () => {
-                                        oldStore.setProductImg(Array.from(oldStore.temp.values())[0])
-                                        await oldStore.setSelectedImgList(Array.from(oldStore.temp.values()).slice(1))
-
-                                        console.log(oldStore.variants)
-                                        console.log(oldStore.removeVariantData)
-                                        setIsLoading(true)
-                                        if(oldStore.partsWarehouse == "0"){
-                                            oldStore.updateProduct().then(async res => {
-                                                if (res.code === 0) message.success('修改内容已更新');
-                                                oldStore.setEditStatus(false);
-                                                setIsLoading(false);
-                                            });
-                                        }else{
-                                            message.error('抱歉！非品库管理员，平台产品不可编辑！');
-                                            setIsLoading(false);
-                                        }
-                                    }}>更新</Button>
-                                </div>
-                        </div>
+                                    {product.productInfo.status !== "2"?
+                                    <DefaultButton text='将商品存档' onClick={onFile} />
+                                    :<DefaultButton text='将商品取消存档' onClick={noONFile} />}
+                                </Flex>
+                                <PrimaryButton loading={loading} text='更新' onClick={onFinish} />
+                            </div>
                     </div>
-                </Spin> 
-            </StyledDiv>
-            }
-            {/* 编辑提示 */}
-            {oldStore.editStatus && <ProductEditOverlay setIsLoading={setIsLoading} />}
+                </div>
+                {/* 编辑提示 */}
+                {isOverlay && <Overlay status={loading} okText="更新" onExit={()=>{
+                    history.push('/products/index')
+                }} onSubmit={onFinish} />}
+            </Scoped>}
         </div>
     )
 }
 
 export default observer(ProductDetail);
 
-const StyledDiv = styled.div`
+const Scoped = styled.div`
     .mc-layout-wrap {
         display: flex;
         justify-content: center;
@@ -397,16 +461,7 @@ const StyledDiv = styled.div`
                 }
 
                 &-right {
-                    display: flex;
-                    align-items: center;
-                    /* width: 70px; */
-                    > .selector {
-                        height: 36px;
-                    }
-                    Button{
-                        height: 36px;
-                        margin-right: 8px;
-                    }
+                    height: 100%;
                 }
             }
 
@@ -447,46 +502,7 @@ const StyledDiv = styled.div`
             }
         }
     }
-
-    /* .b{
-        display: flex;
-        height: 100px;
-    } */
-
     a {
         font-weight: 400;
     }
 `;
-
-
-
-
-function setStyleId(value: any) {
-    throw new Error('Function not implemented.');
-}
-// function newStores(res:ProductDetail){
-//     console.log("--------------")
-//     console.log(res)
-//     oldStore.setTitle(res.title);
-
-//     oldStore.resume = res.content1;
-//     oldStore.desc = res.content;
-//     oldStore.setPrice(res.price);
-//     // newStore.setOriginPrice(res.originPrice);
-//     oldStore.setCostPrice(res.specialprice);
-//     oldStore.setSKU(res.sku)
-//     oldStore.setInventory(res.quantity)
-
-//     // console.log(typeof(res.status))
-
-//     oldStore.setOnPutProduct(res.status == "1"?true:false)
-//     oldStore.setWeight(res.weight)
-//     // 单位
-//     // weight_class_id  1
-//     // 标签
-//     oldStore.setTag(res.tag)
-//     // 类型
-
-//     console.log(oldStore)
-
-// }

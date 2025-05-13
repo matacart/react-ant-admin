@@ -1,7 +1,6 @@
 import { removeTags, selectTags, selectTagsSort } from "@/services/y2/api";
 import { useToken } from "@ant-design/pro-components";
 import { AutoComplete, AutoCompleteProps, Button, Divider, Dropdown, Flex, Input, MenuProps, message, Modal, Popover, Select, Space, Spin, Tag } from "antd";
-import { includes } from "lodash";
 import React from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -246,6 +245,7 @@ export default function TagsModal(prop:any){
             setTagList(tempList);
             setSelectedTags(tempList.filter((v:any)=>prop.tags.includes(v)))
             // console.log(tempList.filter((v:any)=>prop.tags.includes(v)))
+        }).catch((err)=>{
         })
     },[prop.tags])
     return(

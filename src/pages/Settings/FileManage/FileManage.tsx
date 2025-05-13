@@ -42,7 +42,6 @@ function FileManage() {
 
     useEffect(()=>{
         getGroupList().then(res=>{
-            console.log(res)
             if(res.code == 0){
                 setGroupList(res.data.list??=[])
                 let newItems:TabsProps['items'] = [...item]
@@ -59,6 +58,10 @@ function FileManage() {
                 fileData.setItemsList([...newItems])
                 setIsSkeleton(!res)
             }
+        }).catch(error=>{
+            // setIsSkeleton(!res)
+        }).finally(()=>{
+            setIsSkeleton(false)
         })
     },[])
 

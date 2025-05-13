@@ -1,5 +1,7 @@
+import DeleteModal from "@/components/Modal/DeleteModal";
+import ModifyModal from "@/components/Modal/ModifyModal";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Card, Modal, Space, Table, TableProps } from "antd";
+import { Card, Form, Input, Modal, Select, Space, Table, TableProps } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -13,6 +15,21 @@ interface DataType {
 function WebHookSubscriptionTable(){
 
     const [isOpen,setIsOpen] = useState(false);
+
+
+    const contentForm = (
+      <Form style={{padding:"20px 0 10px 0"}} layout="vertical">
+        <Form.Item label="事件名称">
+          <Select disabled />
+        </Form.Item>
+        <Form.Item label="通知URL">
+          <Input />
+        </Form.Item>
+        <Form.Item label="事件版本">
+          <Select />
+        </Form.Item>
+      </Form>
+    )
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -37,11 +54,23 @@ function WebHookSubscriptionTable(){
           key: 'action',
           render: (_, record) => (
             <Space size="middle">
-                <div className="cursor-pointer" onClick={()=>setIsOpen(true)}>
+                <ModifyModal
+                  okFun={()=>{}}
+                  title="编辑Webhook"
+                  okText="保存"
+                  tElement={<div className="cursor-pointer">
                     <EditOutlined className="font-18" />
-                </div>
+                  </div>}
+                  content={contentForm} 
+                />
                 <div>
-                    <DeleteOutlined className="font-18 color-F86140" />
+                    <DeleteModal 
+                      removeFunc={()=>{}}
+                      tElement={<DeleteOutlined className="font-18 color-F86140 cursor-pointer"/>}
+                      title={<div className="font-w-600">删除Webhook</div>}
+                      content={"请确认是否删除Webhook？"} 
+                      okText="删除"
+                    />
                 </div>
             </Space>
           ),
@@ -74,8 +103,8 @@ function WebHookSubscriptionTable(){
         <Scoped>
             <Table<DataType> columns={columns} dataSource={data} pagination={false} />
             {/* 编辑 */}
-            <Modal title="编辑Webhook" open={isOpen} centered onOk={()=>setIsOpen(false)} onCancel={()=>setIsOpen(false)}>
-                <div></div>
+            <Modal title="编辑Webhook" width={620} open={isOpen} centered onOk={()=>setIsOpen(false)} onCancel={()=>setIsOpen(false)}>
+              
             </Modal>
         </Scoped>
     )

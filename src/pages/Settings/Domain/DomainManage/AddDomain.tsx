@@ -118,7 +118,7 @@ function AddDomain() {
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                history.push("/settings/manage")
+                                history.push("/settings/domain/manage")
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
@@ -146,7 +146,7 @@ function AddDomain() {
                                     <Button type="primary" style={{height: "36px"}} onClick={() => {
                                         addDomainName(domainName,otherDomain)
                                         message.success('Processing complete!')
-                                        history.push("/settings/manage")
+                                        history.push("/settings/domain/manage")
                                     }}>
                                         完成
                                     </Button>

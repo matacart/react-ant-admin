@@ -1,15 +1,14 @@
-import { PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Link } from "@umijs/max";
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputNumber, InputRef, Modal, Select, SelectProps, Space, Switch, Tag, theme, Tooltip, TreeSelect } from "antd";
+import { ClockCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputNumber, InputRef, message, Modal, Select, SelectProps, Space, Switch, Tag, theme, Tooltip } from "antd";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
-import newStore from "@/store/newStore";
-import { addTags, getPlatformCategorySelect, removeTags, selectTags } from "@/services/y2/api";
+import { Link } from "react-router-dom";
+import { getCategorySelect, getPlatformCategorySelect, selectTags, upDateProductStatus } from "@/services/y2/api";
 import TagsModal from "@/components/Modal/TagsModal";
 import ProductCategoryModal from "@/components/Modal/ProductCategoryModal";
-
-
-
+import { observer } from "mobx-react-lite";
+import { useForm } from "antd/es/form/Form";
+import product from "@/store/product/product";
 
 type WebChannel = {
     name: string;
@@ -52,14 +51,17 @@ const managerArray: market[] = [
     }
 ]
 
-
-
 // 标签
 
+const options: SelectProps['options'] = [];
 
-
+for (let i = 10; i < 36; i++) {
+    options.push({
+        value: i.toString(36) + i,
+        label: i.toString(36) + i,
+    });
+}
 let index = 0;
-
 const tagInputStyle: React.CSSProperties = {
     width: 64,
     height: 22,
@@ -68,115 +70,72 @@ const tagInputStyle: React.CSSProperties = {
 };
 
 
+function ProductSettingsCard() {
 
-export default function ProductSettingsCard() {
+    const [form] = useForm();
 
     const [items, setItems] = useState(['jack', 'lucy']);
-    // const [productItems,setProductItems] = useState(['毛衣', '帽子']);
     const [name, setName] = useState('');
     const inputRef = useRef<InputRef>(null);
-
-    const { token } = theme.useToken();
+    
     const [tags, setTags] = useState<string[]>([]);
-    const [inputVisible, setInputVisible] = useState(false);
-    const [inputValue, setInputValue] = useState('');
+    
     const [editInputIndex, setEditInputIndex] = useState(-1);
     const [editInputValue, setEditInputValue] = useState('');
     // const inputTagRef = useRef<InputRef>(null);
     const editInputRef = useRef<InputRef>(null);
-
-    // 分类
-    const [categoryTags, setCategoryTags] = useState<any[]>([]);
-    
-
-
-    const [tagName, setTagName] = useState('');
-    const inputTagRef = useRef<InputRef>(null);
    
     const [options, setOptions] = useState([
         '标签一','标签二'
     ]);
-
-   // 重量单位
-   const [weightClassId,setWeightClassId] = useState("1");
-
-   // 重量
-   const { Option } = Select;
-   const selectAfter = (
-       <Select value={weightClassId} onSelect={(value)=>{
-           setWeightClassId(value)
-           newStore.setWeightClassId(value)
-       }}>
-           <Option value="1">千克</Option>
-           <Option value="2">克</Option>
-           <Option value="5">磅</Option>
-           <Option value="6">盎司</Option>
-       </Select>
-   );
-
-//    const Recommendedoptions = [
-//     { label: '首页', value: 'Apple' },
-//     { label: '热销', value: 'Pear' },
-//     { label: '精品', value: 'Pear' },
-//     { label: '新品', value: 'Orange' }
-//   ];
-
-    const handleTagChange = (value: string[]) => {
-        setTags(value)
-        newStore.setTags(value.join(","))
-        newStore.setEditStatus(true)
-    };
-    // 
-    const [value, setValue] = useState(['0-0-0']);
-
-    const onChange = (newValue: string[]) => {
-        console.log('onChange ', newValue);
-        setValue(newValue);
-    };
     
-    // 商品状态
-    const [productStatus,setProductStatus] = useState(true);
-    // 上架商品
-    const onPutProduct = (checked: boolean) => {
-        // set
-        setProductStatus(checked)
-        newStore.setOnPutProduct(checked);
-        newStore.setEditStatus(true)
-    };
-    
-    // 商品类型
+    // 商品类型 -- 平台
     const [productTypeOptions,setProductTypeOptions] = useState<any>();
+
+    // 店铺分类
+    const [categoryTags, setCategoryTags] = useState<any[]>([]);
     
+    // 重量 单位
+    const { Option } = Select;
+    const selectAfter = (
+        <Select value={product.productInfo.weight_class_id.toString()} onSelect={(value)=>{
+            product.setProductInfo({
+                ...product.productInfo,
+                weight_class_id:parseInt(value)
+            })
+        }}>
+            <Option value="1">千克</Option>
+            <Option value="2">克</Option>
+            <Option value="5">磅</Option>
+            <Option value="6">盎司</Option>
+        </Select>
+    );
+
+    // 店铺分类
+    const upDateCategoryTags = (tag:any[]) =>{
+        setCategoryTags(tag)
+        product.setProductInfo({
+            ...product.productInfo,
+            categoryIds:Array.from(tag,(e)=>{return e.id}).join(",")
+        })
+    }
     // 标签
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
         setTags(newTags);
-        newStore.setTags(newTags.join(","))
+        product.setProductInfo({
+            ...product.productInfo,
+            tag:newTags.join(",")
+        })
     };
 
-    // 分类
-    const handleTypeClose = (removedTag: string) => {
+    const handleTypeClose = (removedTag: any) => {
         const newTags = categoryTags.filter((tag) => tag.id !== removedTag.id);
         setCategoryTags(newTags);
-        newStore.setProductCategories(Array.from(newTags,(e)=>{return e.id}).join(","))
-    };
-    const showInput = () => {
-        setInputVisible(true);
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleInputConfirm = () => {
-        if (inputValue && !tags.includes(inputValue)) {
-            setTags([...tags, inputValue]);
-            // 添加标签
-            addTags(newStore.language,inputValue)
-            newStore.setTags([...tags, inputValue].join(","))
-        }
-        setInputVisible(false);
-        setInputValue('');
+        product.setProductInfo({
+            ...product.productInfo,
+            categoryIds:Array.from(newTags,(e)=>{return e.id}).join(",")
+        })
     };
     const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditInputValue(e.target.value);
@@ -185,22 +144,11 @@ export default function ProductSettingsCard() {
         const newTags = [...tags];
         newTags[editInputIndex] = editInputValue;
         setTags(newTags);
-        // console.log(newTags)
-        // console.log(1111);
-        // newStore.setTag(newTags.join(","))
+        console.log(newTags)
         setEditInputIndex(-1);
         setEditInputValue('');
     };
-    
-    const tagPlusStyle: React.CSSProperties = {
-        height: 22,
-        background: token.colorBgContainer,
-        borderStyle: 'dashed',
-    };
-    
-    const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    };
+
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
         setItems([...items, name || `New item ${index++}`]);
@@ -210,74 +158,152 @@ export default function ProductSettingsCard() {
         }, 0);
     };
 
-    const onTagChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTagName(event.target.value);
+    const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value);
+        console.log(name)
     };
-    const addItemTag = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-        e.preventDefault();
-        setOptions([...options, tagName || `New item ${index++}`]);
-        setTagName('');
-        setTimeout(() => {
-            inputRef.current?.focus();
-        }, 0);
+    // 更新标签
+    const updatetags = (tag:string[]) =>{
+    } 
+    
+
+    // 取消弹窗
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
     };
-    useEffect(() => {
-        if (inputVisible) {
-          inputTagRef.current?.focus();
+
+    const getTagsList = (langId:string)=>{
+        selectTags(langId).then(res=>{
+            // console.log(res)
+        }).catch((err)=>{
+
         }
-    }, [inputVisible]);
+        ).finally(()=>{
 
-    useEffect(() => {
-        editInputRef.current?.focus();
-    }, [editInputValue]);
-
-    useEffect(()=>{
-        // 获取标签
-        selectTags(newStore.language).then(res=>{
-            console.log(res)
-            let tempList:any = [];
-            res.data.forEach((element:any) => {
-                tempList.push(element.tag)
-            });
-            setOptions(tempList);
         })
-        setProductStatus(newStore.onPutProduct);
-        // 平台类型
-        getPlatformCategorySelect(newStore.language).then(res=>{
-            // console.log(res.data)
-            let tempList = Array.from(res.data,(obj:any)=>{
+    }
+
+    // 平台类型
+    const getPlatformCategoryList = async (langId:string)=>{
+        const temp = await getPlatformCategorySelect(langId).then(res=>{
+            return Array.from(res.data,(obj:any)=>{
                 return {
                     value: obj.id,
                     label: obj.category_name
                 }
             })
-            setProductTypeOptions(tempList)
         })
-    },[])
-    // 标签
-    const updatetags = (tag:string[]) =>{
-        setTags(tag)
-        newStore.setTags(tag.join(","))
+        return temp
     }
-    // 商品分类
-    const upDateCategoryTags = (tag:any[]) =>{
-        setCategoryTags(tag)
-        newStore.setProductCategories(Array.from(tag,(e)=>{return e.id}).join(","))
+
+    // 店铺商品类型
+    const getCategoryList = async ()=>{
+        const temp = await getCategorySelect().then(res=>{
+            return Array.from(res.data,(obj:any)=>{
+                return {
+                    value: obj.id,
+                    label: obj.category_name
+                }
+            })
+        })
+        return temp
     }
+    // // 分类
+    // useEffect(() => {
+    //     let temp:any = [];
+        // getCategorySelect().then(res=>{
+        //     res.data.forEach((res:any)=>{
+        //         if(oldStore.productCategories.split(",").includes(res.id)){
+        //             temp.push({
+        //                 id:res.id,
+        //                 name:res.category_name
+        //             })
+        //         }
+        //     })
+        //     setCategoryTags(temp)
+        // })
+    // }, [oldStore.productId]);
+    useEffect(() => {
+        editInputRef.current?.focus();
+    }, [editInputValue]);
+
+
+    useEffect(() => {
+
+        getTagsList(product.productInfo.languages_id)
+
+        getPlatformCategoryList(product.productInfo.languages_id).then(res=>{
+            setProductTypeOptions(res)
+        })
+
+        getCategoryList().then(res=>{
+            let temp:any = [];
+            res.forEach((item:any)=>{
+                if(product.productInfo.categoryIds.split(",").includes(item.value)){
+                    temp.push({
+                        id:item.value,
+                        name:item.label
+                    })
+                }
+            })
+            setCategoryTags(temp)
+        })
+
+        form.setFieldsValue({
+            SPU: product.productInfo.spu,
+            weight:product.productInfo.weight,
+            manufactuer:product.productInfo.manufactuer,
+            tags:product.productInfo.tag,
+            platformCategory:product.productInfo.platform_category_id == "" ? undefined : product.productInfo.platform_category_id
+        });
+    }, []);
 
     return (
         <Scoped>
             <Card title='商品设置' className="card">
+                {/* 取消存档 */}
+                <Modal centered title="取消商品存档" open={isModalOpen} onCancel={()=>setIsModalOpen(false)} onOk={()=>{
+                    upDateProductStatus(product.productInfo.id,"0").then(res=>{
+                        message.success("成功")
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            status:"0"
+                        })
+                    }).catch(err=>{
+                        message.error("失败")
+                    }).finally(()=>{
+                        setIsModalOpen(false)
+                    })
+                }}>
+                    <p>取消存档后商品将变为下架状态，您可以进行上架售卖</p>
+                </Modal>
+                {product.productInfo.status == "2"?<div>
+                    <div style={{backgroundColor:"#EEF1F6",display:'flex',justifyContent:"space-between",padding:"8px"}}>
+                        <div>
+                            <ClockCircleOutlined /><span style={{marginLeft:"8px"}}>已存档</span>
+                        </div>
+                        <div style={{color:"#1677FF",cursor:"pointer"}} onClick={showModal}>取消</div>
+                    </div>
+                    <div style={{marginTop:"6px",color:"#7A8499"}}>取消存档后商品将变为下架状态，您可以进行上架售卖</div>
+                </div>:
                 <div className="item between">
                     <span>上架商品</span>
-                    <Switch checked={productStatus} onChange={onPutProduct} />
-                </div>
+                    <Switch checked={product.productInfo.status=="1"?true:false} onChange={(checked)=>{
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            status:checked?"1":"0"
+                        })
+                    }} />
+                </div>}
                 <div className="item">
-                    <div>发货</div>
-                    <Checkbox defaultChecked={true} onChange={(e)=>{
-                        // console.log(e.target.checked)
-                        newStore.setIsShipping(e.target.checked)
-                        newStore.setEditStatus(true)
+                    <div style={{marginBottom:"4px"}}>发货</div>
+                    <Checkbox checked={product.productInfo.shipping == 1?true:false} onChange={(e)=>{
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            shipping:e.target.checked?1:0
+                        })
+                        
                     }}>需要运输</Checkbox>
                 </div>
                 <div className="item webChannelContent" >
@@ -308,11 +334,10 @@ export default function ProductSettingsCard() {
                         ))
                     }
                 </div>
-                <Form layout="vertical">
+                <Form form={form} layout="vertical">
                     <Form.Item
-                        style={{
-                            fontWeight: 600
-                        }} label={
+                        name="SPU"
+                        style={{ fontWeight: 600 }} label={
                             <>
                                 SPU
                                 <Tooltip title="标准化产品单元，如：属性值、特性相同的商品可以称为一个 SPU">
@@ -323,97 +348,86 @@ export default function ProductSettingsCard() {
                             </>
                         } >
                         <Input
-                            onChange={(e)=>{
-                                newStore.setSPU(e.target.value)
-                                newStore.setEditStatus(true)
-                            }}
                             className="ant-input"
+                            placeholder="SPU"
+                            onChange={(e)=>{
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    spu:e.target.value
+                                })
+                            }}
                         />
                     </Form.Item>
-                    <Form.Item label={
-                        <>
-                            重量
-                        </>
-                    } >
-                        <Input
-                            onChange={(e)=>{
-                                newStore.setWeight(e.target.value)
-                                newStore.setEditStatus(true)
-                            }}
-                            defaultValue={1000}
+                    <Form.Item name="weight" label={<>重量</>} >
+                        <InputNumber<number>
                             className="ant-input"
+                            style={{padding: "4px 0"}}
+                            onChange={(value)=>{
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    weight:value || 0
+                                })
+                            }}
                             addonAfter={selectAfter}
-                            style={{
-                                padding: "4px 0"
-                            }}
                         />
                     </Form.Item>
-                    <Form.Item label={
-                        <>
-                            商品厂商
-                        </>
+                    <Form.Item label={<>商品厂商</>
                     } >
                         <Input
-                            placeholder="例如：Zara"
                             className="ant-input"
+                            name="manufactuer"
+                            placeholder="例如：Zara"
                             onChange={(e)=>{
-                                newStore.setManufactuer(e.target.value);
-                                newStore.setEditStatus(true)
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    manufactuer:e.target.value
+                                })
                             }}
                         ></Input>
                     </Form.Item>
+                    {/* 标签问题 */}
                     <Form.Item
                         className="moreLink"
+                        name="tags"
                         label={
                             <div className="label-content between">
                                 <span>标签</span>
-                                <TagsModal tags={tags} language={newStore.language} updatetag={updatetags}/>
+                                <TagsModal tags={tags} language={product.productInfo.languages_id} updatetag={(value)=>{
+                                    product.setProductInfo({
+                                        ...product.productInfo,
+                                        tag:value.join(",")
+                                    })
+                                }}/>
                             </div>
                         }
                     >   
                         <Select
                             mode="tags"
-                            // style={{ width: '100%', padding: '0' }}
                             placeholder="添加标签（例如：复古/夏季）"
-                            onChange={handleTagChange}
+                            options={options.map((item) => ({ label: item, value: item }))}
                             showSearch={false}
                             tagRender={(props) => <></>}
-                            dropdownRender={(menu) => (
-                                <>
-                                {menu}
-                                {/* 舍弃 */}
-                                {/* <Divider style={{ margin: '8px 0' }} />
-                                <Space style={{ padding: '0 8px 4px' }}>
-                                    <Input
-                                        placeholder="Please enter item"
-                                        ref={inputTagRef}
-                                        value={tagName}
-                                        onChange={onTagChange}
-                                        onKeyDown={(e) => e.stopPropagation()}
-                                    />
-                                    <Button type="text" icon={<PlusOutlined />} onClick={addItemTag}>
-                                        标签
-                                    </Button>
-                                </Space> */}
-                                </>
-                              )}
-                              value={tags}
-                              options={options.map((item) => ({ label: item, value: item }))}
+                            onChange={(value)=>{
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    tag:value.join(",")
+                                })
+                            }}
                         />
                         <div style={{height:"10px"}}></div>
                         <Flex gap="4px 0" wrap>
-                            {tags.map<React.ReactNode>((tag, index) => {
+                            {product.productInfo.tag.split(",").map<React.ReactNode>((tag, index) => {
                                 if (editInputIndex === index) {
                                     return (
                                         <Input
-                                        ref={editInputRef}
-                                        key={tag}
-                                        size="small"
-                                        style={tagInputStyle}
-                                        value={editInputValue}
-                                        onChange={handleEditInputChange}
-                                        onBlur={handleEditInputConfirm}
-                                        onPressEnter={handleEditInputConfirm}
+                                            ref={editInputRef}
+                                            key={tag}
+                                            size="small"
+                                            style={tagInputStyle}
+                                            value={editInputValue}
+                                            onChange={handleEditInputChange}
+                                            onBlur={handleEditInputConfirm}
+                                            onPressEnter={handleEditInputConfirm}
                                         />
                                     );
                                 }
@@ -448,51 +462,36 @@ export default function ProductSettingsCard() {
                                 tagElem
                                 );
                             })}
-                            {/* {inputVisible ? (
-                                <Input
-                                ref={inputRef}
-                                type="text"
-                                size="small"
-                                style={tagInputStyle}
-                                value={inputValue}
-                                onChange={handleInputChange}
-                                onBlur={handleInputConfirm}
-                                onPressEnter={handleInputConfirm}
-                                />
-                            ) : (
-                                <Tag style={tagPlusStyle} icon={<PlusOutlined />} onClick={showInput}>
-                                    标签1
-                                </Tag>
-                            )} */}
                         </Flex>
                     </Form.Item>
                     <Form.Item
+                        name="platformCategory"
                         className="moreLink"
                         label={
                             <div className="label-content between">
                                 <span>商品大类</span>
-                                {/* <a>+自定义</a> */}
                             </div>
                         } >
                         <Select
                             style={{ width: "100%", height: "36px" }}
-                            placeholder="搜索类型"
+                            placeholder="类型"
                             options={productTypeOptions}
                             onChange={(e)=>{
-                                newStore.setProductType(e)
-                                newStore.setEditStatus(true)
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    platform_category_id:e
+                                })
                             }}
-                            defaultValue={newStore.productType}
                         />
                     </Form.Item>
                     <Form.Item
+                        className="moreLink"
                         style={{
                             marginBottom: 0
                         }}
-                        className="moreLink"
                         label={<div className="label-content between">
                             <span>商品分类</span>
-                            <ProductCategoryModal tags={categoryTags} language={newStore.language} upDateCategoryTags={upDateCategoryTags} />
+                            <ProductCategoryModal tags={categoryTags} language={product.productInfo.languages_id} upDateCategoryTags={upDateCategoryTags} />
                         </div>}
                     >
                         <div className="desc">
@@ -515,12 +514,12 @@ export default function ProductSettingsCard() {
                         </Flex>
                     </Form.Item>
                 </Form>
-
             </Card>
         </Scoped>
     )
 }
 
+export default observer(ProductSettingsCard)
 
 const Scoped = styled.div`
     .card{

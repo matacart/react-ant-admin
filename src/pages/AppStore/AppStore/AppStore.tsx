@@ -8,6 +8,8 @@ import { history } from '@umijs/max';
 import {useIntl, useModel } from '@umijs/max';
 import MyAppsCard from './MyAppsCard';
 import RecommendedAppsCard from './RecommendedAppsCard';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import DefaultButton from '@/components/Button/DefaultButton';
 
 export default function MyApps() {
 
@@ -21,31 +23,14 @@ export default function MyApps() {
             <div className='create-title-left'>
               <h3 style={{
                 position: 'relative',
-                top: 10,
                 display: 'inline-block',
               }}>我的应用</h3>
             </div>
-            <div className="button-container">
-              <Button 
-                onClick={() => { history.push('/app-store/custom-app') }}
-                style={{
-                  backgroundColor: 'WHITE',
-                  marginRight: '12px',
-                  width: "90px", height: "36px", fontSize: "14px",
-                }}>
-                开发应用
-              </Button>
-              <Button 
-                type="primary"
-                icon={<ShopOutlined />}
-                onClick={() => { window.open('https://www.handingyun.cn/appstore') }}
-                style={{ height: "36px", fontSize: "14px" }}
-              >
-                前往应用市场
-              </Button>
-            </div>
+            <Flex gap={12}>
+              <DefaultButton text="开发应用" onClick={() => { history.push('/app-store/custom-app') }} />
+              <PrimaryButton text="前往应用市场" icon={<ShopOutlined />} onClick={() => { window.open('https://apps.matacart.com/') }} />
+            </Flex>
           </div>
-          <div style={{height:"20px"}}></div>
           <div className='create-content'>
               <MyAppsCard />
               <div className='font-20 color-242833 font-w-600' style={{margin:"60px 0 20px 0"}}>推荐应用</div>
@@ -92,10 +77,6 @@ const Scoped = styled.div`
             font-weight: 600;
             line-height: 32px;
           }
-        }
-        .button-container {
-          display: inline-block;
-          justify-content: space-between;
         }
       }
     }

@@ -25,6 +25,7 @@ export const AvatarName = () => {
 };
 
 const useStyles = createStyles(({ token }) => {
+  // console.log(token)
   return {
     action: {
       display: 'flex',
@@ -133,8 +134,9 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
     },
 
   ];
+  // ,avatar:null
   const content = (
-    <UserCard currentUser={currentUser}/>
+    <UserCard currentUser={{...currentUser}}/>
   );
   return (
     // <HeaderDropdown

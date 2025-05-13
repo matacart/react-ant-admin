@@ -1,28 +1,31 @@
 import { Col, Flex, Form, Input, Modal, Radio, Select, Switch } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+
+
+// 产品防护信息弹窗
 export default function ProductDefenseModal(props:any) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [form] = Form.useForm();
 
-    // const [amazonRule,setAmazonRule]:any = useState('success')
-
     const submit = ()=>{
-        // console.log(form.getFieldsValue());
-        props.data.setAdGroupId(form.getFieldsValue().defenseSort)
-        props.data.setAdWafStatus(form.getFieldsValue().defenseStatus)
-        props.data.setAdProductId(form.getFieldsValue().productId)
-        props.data.setAdProductUrl(form.getFieldsValue().productUrl)
+        props.data.setProductInfo({
+            ...props.data.productInfo,
+            group_id:form.getFieldsValue().defenseSort,
+            ad_waf_status:form.getFieldsValue().defenseStatus,
+            ad_product_id:form.getFieldsValue().productId,
+            ad_product_url:form.getFieldsValue().productUrl,
+        })
         setIsOpen(false);
     }
 
     useEffect(()=>{
         form.setFieldsValue({
-            defenseSort:props.data.adGroupId,
-            defenseStatus:props.data.adWafStatus,
-            productId:props.data.adProductId,
-            productUrl:props.data.adProductUrl
+            defenseSort:props.data.productInfo.group_id,
+            defenseStatus:props.data.productInfo.ad_waf_status,
+            productId:props.data.productInfo.ad_product_id,
+            productUrl:props.data.productInfo.ad_product_url
         });
     },[props.status])
 
@@ -33,18 +36,16 @@ export default function ProductDefenseModal(props:any) {
                 setIsOpen(false);
                 // 初始化
                 form.setFieldsValue({
-                    defenseSort:props.data.adGroupId,
-                    defenseStatus:props.data.adWafStatus,
-                    productId:props.data.adProductId,
-                    productUrl:props.data.adProductUrl
+                    defenseSort:props.data.productInfo.group_id,
+                    defenseStatus:props.data.productInfo.ad_waf_status,
+                    productId:props.data.productInfo.ad_product_id,
+                    productUrl:props.data.productInfo.ad_product_url
                 });
-                // setAmazonRule("success")
             }}>
                 <Scoped>
                     <Form
                         form={form}
                         name="control-hooks"
-                        // onFinish={onFinish}
                         style={{ maxWidth: 600 }}
                         >
                         <div className="item-first">
@@ -76,23 +77,14 @@ export default function ProductDefenseModal(props:any) {
                                 </Col>
                             </Flex>
                             <Form.Item name="productId" label={<span className="label">投防ID</span>} 
-                                // validateStatus={amazonRule}
-                                // help={amazonRule == "success"?"":<span style={{ color: '#F86140' }}>请输入正确的链接格式</span>}
                             >
                                 <Input onChange={(e)=>{
-                                    // console.log(e.target.value)
-                                    // 规则
-                                    // setAmazonRule("error")
+                                   
                                 }} placeholder="投放的产品id" />
                             </Form.Item>
                             <Form.Item name="productUrl" label={<span className="label">投防URL</span>} 
-                                // validateStatus={amazonRule}
-                                // help={amazonRule == "success"?"":<span style={{ color: '#F86140' }}>请输入正确的链接格式</span>}
                             >
                                 <Input onChange={(e)=>{
-                                    // console.log(e.target.value)
-                                    // 规则
-                                    // setAmazonRule("error")
                                 }} placeholder="投放的产品url" />
                             </Form.Item>
                         </div>

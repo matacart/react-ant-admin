@@ -1,3 +1,4 @@
+import DefaultButton from "@/components/Button/DefaultButton";
 import { history } from "@umijs/max";
 import { Button, Card, Flex, Modal, Typography } from "antd"
 import { useState } from "react";
@@ -17,7 +18,9 @@ export default function CreditCardCollection() {
                     {/* <div><a>已有帐号？绑定</a></div> */}
                 </Flex>
                 <div className="desc color-474F5E font-14">客户在结账页便可完成支付流程。 <Text underline className="color-7A8499 cursor-pointer" onClick={() => setIsModalOpen(true)}>查看示例</Text></div>
-                <Button className="submit-btn" onClick={()=>history.push("/settings/payments/thirdCreditCard")}>选择服务商</Button>
+                <div className="btn-warp">
+                    <DefaultButton onClick={()=>history.push("/settings/payments/thirdCreditCard")} text="选择服务商" />
+                </div>
             </Card>
             {/* 示例 */}
             <ScopedModal title="示例" width={620} getContainer={false} centered open={isModalOpen} onCancel={()=>setIsModalOpen(false)} 
@@ -38,7 +41,7 @@ const Scoped = styled.div`
     .desc{
         margin-top: 4px;
     }
-    .submit-btn{
+    .btn-warp{
         margin-top: 16px;
     }
     .payment-info{

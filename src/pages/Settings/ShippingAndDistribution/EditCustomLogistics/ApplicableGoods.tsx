@@ -20,9 +20,7 @@ function ApplicableGoods() {
                     </Flex>
                 </Flex>
                 {isExpansionDetails?<List>
-                    
                 </List>:null}
-                
             </Card>
         </Scoped>
     )

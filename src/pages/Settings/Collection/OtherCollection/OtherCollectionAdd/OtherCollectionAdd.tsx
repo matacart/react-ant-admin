@@ -1,42 +1,79 @@
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, TabsProps, Upload } from "antd"
-import { history } from "@umijs/max"
+import { ArrowLeftOutlined } from "@ant-design/icons"
+import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, Radio, Select, TabsProps, Upload } from "antd"
+import { history, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
-import { useState } from "react";
-import { setAddonsConfig } from "@/services/y2/api";
-import { useForm } from "antd/es/form/Form";
-import modal from "antd/es/modal";
-import axios from "axios";
+import { useEffect, useState } from "react";
+import { getAddonsConfigCreditCard, setAddonsConfig, setAddonsConfigs } from "@/services/y2/api";
+import SkeletonCard from "@/components/Skeleton/SkeletonCard";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import collection from "@/store/settings/collection";
 
+// 修改FormItem接口增加value类型
+interface FormItem {
+    title?: string;
+    config: {
+      [key: string]: {
+        type: string;
+        title: string;
+        value?: string;  // 新增value类型声明
+        options?: Record<string, any>;
+      }
+    }
+}
 
 const { TextArea } = Input;
-
 function OtherCollectionAdd() {
 
-    const [imgLoading, setimgLoading] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const [isMaskVisible, setIsMaskVisible] = useState(false);
+    const [isSkeleton,setIsSkeleton] = useState(true)
+
+    const [loading,setLoading] = useState(false)
 
     const [form] = Form.useForm()
-
-    const [config,setConfig] = useState<any>({
-        item:[
-            {name: "MerchantId",value:""},
-            {name: "SecretKey",value:""},
-        ]
+    // 结构
+    const [formItemList,setFormItemList] = useState<FormItem>({
+        title: '',
+        config: {}
     });
 
+    // 创建
     const submit = ()=>{
-        console.log({...form.getFieldsValue(),config})
-        setAddonsConfig({...form.getFieldsValue(),config}).then(res=>{
+        setLoading(true)
+        setAddonsConfigs(collection.newOtherCollection).then(res=>{
             message.success("添加成功")
-            history.push("/settings/payments")
+            collection.clearNewOtherCollection()
+            history.push("/settings/payments/other")
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false)
         })
     }
 
+    useEffect(()=>{
+        getAddonsConfigCreditCard("",searchParams.get("addonsId") || "" ,searchParams.get("lang") || "").then(async res=>{
+            setFormItemList(res.data.addon)
+            let newObj: Record<string, any> = {};
+            Object.entries(res.data.addon.config).forEach(([key, value]) => {
+                newObj["config["+key+"]"] = (value as FormItem['config'][string]).value??""
+            });
+            collection.setNewOtherCollection({
+                ...collection.newOtherCollection,
+                addons_id:searchParams.get("addonsId"),
+                languages_id:searchParams.get("lang"),
+                title:res.data.addon.title,
+                ...newObj
+            })
+        }).catch(()=>{
+            // message.error("获取失败")
+        }).finally(()=>{
+            setIsSkeleton(false)
+        })
+    },[])
+
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />: <div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -45,30 +82,104 @@ function OtherCollectionAdd() {
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
-                            <div className="mc-header-left-content">添加 Afterpay BNPL (Australia)</div>
+                            <div className="mc-header-left-content">添加 {formItemList.title}</div>
                         </div>
+                        {/* <div className="mc-header-right">
+                        </div> */}
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
                             <Card classNames={{body:"card"}}>
                                 <div style={{margin:"20px 20px 0 20px"}}>
                                     <Form form={form} layout="vertical">
-                                        <Form.Item name={config.item[0].name} label={<div className="font-w-600">{config.item[0].name}</div>}>
-                                            <Input value={config.item[0].value} placeholder="输入付款方式名称" />
+                                        {Object.entries(formItemList.config).map(([key, value])=>(
+                                            <Form.Item key={key} name={key} label={<div className="font-w-600">{value.title}</div>}>
+                                                {(()=>{
+                                                    switch(value.type){
+                                                        case "text":
+                                                            return <Input defaultValue={(collection.newOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
+                                                                collection.setNewOtherCollection({
+                                                                    ...collection.newOtherCollection,
+                                                                    ["config["+key+"]"]:e.target.value
+                                                                })
+                                                            }} />;
+                                                        case "select":
+                                                            const options = Object.entries(value.options || {}).map(([key, value])=>{
+                                                                return {
+                                                                    label:value,
+                                                                    value:key
+                                                                }
+                                                            })
+                                                            return <Select defaultValue={(collection.newOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} options={options} onChange={(value)=>{
+                                                                collection.setNewOtherCollection({
+                                                                    ...collection.newOtherCollection,
+                                                                    ["config["+key+"]"]:value
+                                                                })
+                                                            }} />
+                                                        case "textarea":
+                                                            return <TextArea placeholder={value.title} />
+                                                        case "radio":
+                                                            return <Radio.Group
+                                                                defaultValue={"0"}
+                                                                options={(value.options || []).map((res:string,index:string)=>{
+                                                                    return {
+                                                                        label:res,
+                                                                        value:index.toString()
+                                                                    }
+                                                                })}
+                                                                onChange={(e)=>{
+                                                                    collection.setNewOtherCollection({
+                                                                        ...collection.newOtherCollection,
+                                                                        ["config["+key+"]"]:e.target.value
+                                                                    })
+                                                                }}
+                                                            />
+                                                    }
+                                                })()}
+                                            </Form.Item>
+                                        ))}
+                                        <Form.Item label={<div className="font-w-600">自定义标题</div>}>
+                                            <Input placeholder="标题" onChange={(e)=>{
+                                                collection.setNewOtherCollection({
+                                                    ...collection.newOtherCollection,
+                                                    title:e.target.value
+                                                })
+                                            }} />
                                         </Form.Item>
-                                        <Form.Item name={config.item[1].name} label={<div className="font-w-600">{config.item[1].name}</div>}>
-                                            <Input value={config.item[1].value} placeholder="输入付款方式名称" />
+                                        <Form.Item label={<div className="font-w-600">自定义描述</div>}>
+                                            <TextArea placeholder="描述" showCount maxLength={500} rows={5} onChange={(e)=>{
+                                                collection.setNewOtherCollection({
+                                                    ...collection.newOtherCollection,
+                                                    description:e.target.value
+                                                })
+                                            }} />
+                                        </Form.Item>
+                                        <Form.Item label={<div className="font-w-600">备注</div>}>
+                                            <TextArea placeholder="备注" showCount maxLength={200} rows={2} onChange={(e)=>{
+                                                collection.setNewOtherCollection({
+                                                    ...collection.newOtherCollection,
+                                                    remark:e.target.value
+                                                })
+                                            }} />
+                                        </Form.Item>
+                                        <Form.Item label={<div className="font-w-600">排序</div>}>
+                                            <Input defaultValue={collection.newOtherCollection.sort} onChange={(e)=>{
+                                                collection.setNewOtherCollection({
+                                                    ...collection.newOtherCollection,
+                                                    sort:e.target.value
+                                                })
+                                            }} />
                                         </Form.Item>
                                     </Form>
                                 </div>
                             </Card>
-                            <div style={{textAlign:"right"}}>
-                                <Button onClick={submit} type="primary" style={{height:36}}>添加 手动收款方式</Button>
-                            </div>
+                            <Flex justify="end">
+                                <PrimaryButton text={"添加"+formItemList.title} loading={loading} onClick={submit} />
+                            </Flex>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
         </Scoped>
     )
 }

@@ -6,74 +6,107 @@ import { AvatarDropdown, AvatarName } from "../RightContent/AvatarDropdown";
 import { GlobalOutlined, SearchOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
 import { useEffect, useState } from 'react';
-import { currentUserStatus } from "@/services/y2/api";
-import { classNames } from 'classnames';
+import { observer } from "mobx-react-lite";
+import { currentUserStatus, getOptionType, getPlatformCategorySelect } from "@/services/y2/api";
 
 
 // const { token } = theme.useToken();
 
-function Header({stores,initialState,domainStatus}){
+function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialState:any}){
 
+    // 剩余天数
     const [timer,setTimer] = useState(999);
+
+    const [userStatus,setUserStatus] = useState<any>({})
 
     const goMerchantApplication = ()=>{
         history.push("/stores/merchantApplication")
     }
+    const goCreateStores = ()=>{
+        history.push("/stores/create")
+    }
+
     useEffect(()=>{
-        domainStatus.code == 0 && setTimer(parseInt((domainStatus?.data.package.end_time*1000 - Date.now())/1000/60/60/24))
+        // 获取用户账号状态信息
+        currentUserStatus().then((res:any)=>{
+            setUserStatus(res)
+            const endtimer = parseInt(res.data.package.end_time || 0)
+            const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
+            res.code == 0 && setTimer(RemainTime)
+            RemainTime<=15 ? setHeight(100) : setHeight(60)
+        })
+        // 获取商品属性类型
+        getOptionType().then((res:any)=>{
+            if(res.code == 0){
+              sessionStorage["productOptionType"] = JSON.stringify(res.data)
+            }else{
+              console.log("获取商品类型失败")
+            }
+        })
     },[])
+
+
     return(
         <Scoped>
-            {/* {stores == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder="搜索" />} */}
-            { domainStatus.code == 1 ? 
-                <Flex className="tips-box" justify="center" align="center">
-                <div className="color-FFFFFF">未认证！请先进行账号认证</div>
-                <Button className="tips-box-btn" onClick={goMerchantApplication}>账号认证</Button>
-            </Flex>:""}
-            { domainStatus.code == 2 ? 
-                <Flex className="tips-box" justify="center" align="center">
-                <div className="color-FFFFFF">未开通店铺！请先开通店铺</div>
-                <Button className="tips-box-btn" onClick={()=>{}}>创建店铺</Button>
-            </Flex>:<></>}
-            { domainStatus.code == 3 ?
-                <Flex className="tips-box" justify="center" align="center">
-                <div className="color-FFFFFF">店铺已到期！购买套餐后恢复使用</div>
-                <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
-            </Flex>:<></>}
-            { domainStatus.code == 4 ? 
-                <Flex className="tips-box" justify="center" align="center">
-                <div className="color-FFFFFF">店铺已停用！</div>
-                <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
-            </Flex>:<></>}
-            { domainStatus.code == 0 && timer<15 ? 
-                <Flex className="tips-box" justify="center" align="center">
-                <div className="color-FFFFFF">{timer == 0?"你的套餐剩余时间不足1天":"你的套餐剩余"+timer+"天"}</div>
-                <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
-            </Flex>:""}
-            
-            <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
-                <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>
-                    <div><GlobalOutlined className="font-24" /></div>
-                    <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>history.push("/")}>MataCart</h1>
-                </div>
-                <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-60px"}}>
-                    {stores == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder="搜索" />}
-                </div>
-                <Flex className="mc-header-left-content" align='center'>
-                    <div className="item">{stores == "/stores/"?<></>:<SelectDomain/>}</div>
-                    <div className="item"><Question key="doc" /></div>
-                    <div className="item"><SelectLang key="SelectLang" /></div>
-                    <div className="item"><Ping key="Ping" /></div>
-                    <div style={{margin:"0 20px"}} className="cursor-pointer"><AvatarDropdown>{<Avatar src={initialState?.currentUser?.avatar} />} <AvatarName /></AvatarDropdown></div>
+            <div>
+                {userStatus.code == 1 ? 
+                    <Flex className="tips-box" justify="center" align="center">
+                    <div className="color-FFFFFF">未认证！请先进行账号认证</div>
+                    <Button className="tips-box-btn" onClick={goMerchantApplication}>账号认证</Button>
+                </Flex>:""}
+                { userStatus.code == 2 ? 
+                    <Flex className="tips-box" justify="center" align="center">
+                    <div className="color-FFFFFF">未开通套餐！请先开通套餐</div>
+                    {/* 开通套餐 */}
+                    <Button className="tips-box-btn" onClick={()=>{}}>开通套餐</Button>
+                </Flex>:<></>}
+                { userStatus.code == 3 ?
+                    <Flex className="tips-box" justify="center" align="center">
+                    <div className="color-FFFFFF">店铺已到期！购买套餐后恢复使用</div>
+                    <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
+                </Flex>:<></>}
+                { userStatus.code == 4 ? 
+                    <Flex className="tips-box" justify="center" align="center">
+                    <div className="color-FFFFFF">店铺已停用！</div>
+                    <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
+                </Flex>:<></>}
+                { userStatus.code == 5 ? 
+                    <Flex className="tips-box" justify="center" align="center">
+                    <div className="color-FFFFFF">未创建店铺！请先创建店铺</div>
+                    <Button className="tips-box-btn" onClick={goCreateStores}>创建店铺</Button>
+                </Flex>:<></>}
+                { userStatus.code == 0 && timer<=15 ? 
+                    <Flex className="tips-box" justify="center" align="center">
+                    <div className="color-FFFFFF">{timer == 0?"你的套餐剩余时间不足1天":"你的套餐剩余"+timer+"天"}</div>
+                    <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
+                </Flex>:""}
+                <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
+                    <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>
+                        <div><GlobalOutlined className="font-24" /></div>
+                        <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>history.push("/")}>MataCart</h1>
+                    </div>
+                    <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-60px"}}>
+                        {url == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder="搜索" />}
+                    </div>
+                    <Flex className="mc-header-left-content" align='center'>
+                        {userStatus.code == 0 && <div className="item">{url == "/stores/"?<></>:<SelectDomain/>}</div>}
+                        <div className="item"><Question key="doc" /></div>
+                        <div className="item"><SelectLang key="SelectLang" /></div>
+                        <div className="item"><Ping key="Ping" /></div>
+                        <div style={{margin:"0 20px"}} className="cursor-pointer"><AvatarDropdown>{<Avatar src={initialState?.currentUser?.avatar} />} <AvatarName /></AvatarDropdown></div>
+                    </Flex>
                 </Flex>
-            </Flex>
+            </div>
         </Scoped>
     )
 }
 
-export default Header;
+export default observer(Header)
 
 const Scoped = styled.div`
+
+    /* position: absolute; */
+
     .tips-box{
         line-height: 40px;
         height: 40px;

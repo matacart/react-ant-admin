@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 export default function ProductThirdTripartite(props:any) {
+    // console.log(props)
+
     const [isOpen, setIsOpen] = useState(false);
     const [form] = Form.useForm();
 
@@ -15,57 +17,41 @@ export default function ProductThirdTripartite(props:any) {
 
         // 验证
         form.validateFields().then((values) => {
-            props.product.setThirdPartyPlatform({
-                ...props.product.thirdPartyPlatform,
-                status: tripartiteStatus ? "1" : "0",
-            })
+            let newDiversion = {...props.diversion,status:tripartiteStatus}
             items.forEach((item,index)=>{
                 item.sort = index
                 switch (item.id) {
                     case '0':
-                        props.product.setThirdPartyPlatform({
-                            ...props.product.thirdPartyPlatform,
-                            amazonUrl: item.url,
-                            amazonSort: index,
-                            amazonStatus: item.status,
-                        })
+                        newDiversion.url_amazon = item.url
+                        newDiversion.sort_amazon = index
+                        newDiversion.status_amazon = item.status
                         break;
                     case '1':
-                        props.product.setThirdPartyPlatform({
-                            ...props.product.thirdPartyPlatform,
-                            eBayUrl: item.url,
-                            eBaySort: index,
-                            eBayStatus: item.status,
-                        })
+                        newDiversion.url_ebay = item.url
+                        newDiversion.sort_ebay = index
+                        newDiversion.status_ebay = item.status
                         break;
                     case '2':
-                        props.product.setThirdPartyPlatform({
-                            ...props.product.thirdPartyPlatform,
-                            tmallUrl: item.url,
-                            tmallSort: index,
-                            tmallStatus: item.status,
-                        })
+                        newDiversion.url_tmall = item.url
+                        newDiversion.sort_tmall = index
+                        newDiversion.status_tmall = item.status
                         break;
                     case '3':
-                        props.product.setThirdPartyPlatform({
-                            ...props.product.thirdPartyPlatform,
-                            aliExpressUrl: item.url,
-                            aliExpressSort: index,
-                            aliExpressStatus: item.status,
-                        })
+                        newDiversion.url_aliexpress = item.url
+                        newDiversion.sort_aliexpress = index
+                        newDiversion.status_aliexpress = item.status
                         break;
                     case '4':
-                        props.product.setThirdPartyPlatform({
-                            ...props.product.thirdPartyPlatform,
-                            whatsappUrl: item.url,
-                            whatsappSort: index,
-                            whatsappStatus: item.status,
-                        })
+                        newDiversion.url_whatsapp = item.url
+                        newDiversion.sort_whatsapp = index
+                        newDiversion.status_whatsapp = item.status
                         break;
                 }
             })
+            props.setDiversion(newDiversion)
             setIsOpen(false);
         }).catch(errorInfo => {
+            console.log(errorInfo);
             // 验证失败，不执行提交逻辑
             // 可以在这里显示错误信息给用户
             message.error("请输入正确的链接格式");
@@ -76,52 +62,52 @@ export default function ProductThirdTripartite(props:any) {
         {
             id: '0',
             title: "Amazon",
-            url: props.product.thirdPartyPlatform.amazonUrl,
-            sort: props.product.thirdPartyPlatform.amazonSort,
-            status: props.product.thirdPartyPlatform.amazonStatus,
+            url: props.diversion.url_amazon,
+            sort: props.diversion.sort_amazon,
+            status: props.diversion.status_amazon,
         },
         {
             id: '1',
             title: "eBay",
-            url: props.product.thirdPartyPlatform.eBayUrl,
-            sort: props.product.thirdPartyPlatform.eBaySort,
-            status: props.product.thirdPartyPlatform.eBayStatus,
+            url: props.diversion.url_ebay,
+            sort: props.diversion.sort_ebay,
+            status: props.diversion.status_ebay,
         },
         {
             id: '2',
             title: "tmall",
-            url: props.product.thirdPartyPlatform.tmallUrl,
-            sort: props.product.thirdPartyPlatform.tmallSort,
-            status: props.product.thirdPartyPlatform.tmallStatus,
+            url: props.diversion.url_tmall,
+            sort: props.diversion.sort_tmall,
+            status: props.diversion.status_tmall,
         },
         {
             id: '3',
             title: "aliExpress",
-            url: props.product.thirdPartyPlatform.aliExpressUrl,
-            sort: props.product.thirdPartyPlatform.aliExpressSort,
-            status: props.product.thirdPartyPlatform.aliExpressStatus,
+            url: props.diversion.url_aliexpress,
+            sort: props.diversion.sort_aliexpress,
+            status: props.diversion.status_aliexpress,
         },
         {
             id: '4',
             title: "whatsapp",
-            url: props.product.thirdPartyPlatform.whatsappUrl,
-            sort: props.product.thirdPartyPlatform.whatsappSort,
-            status: props.product.thirdPartyPlatform.whatsappStatus,
+            url: props.diversion.url_whatsapp,
+            sort: props.diversion.sort_whatsapp,
+            status: props.diversion.status_whatsapp,
         },
     ]);
 
     useEffect(()=>{
         // 排序
         form.setFieldsValue({
-            Amazon:props.product.thirdPartyPlatform.amazonUrl,
-            eBay:props.product.thirdPartyPlatform.eBayUrl,
-            tmall:props.product.thirdPartyPlatform.tmallUrl,
-            aliExpress:props.product.thirdPartyPlatform.aliExpressUrl,
-            whatsapp:props.product.thirdPartyPlatform.whatsappUrl,
+            Amazon:props.diversion.url_amazon,
+            eBay:props.diversion.url_ebay,
+            tmall:props.diversion.url_tmall,
+            aliExpress:props.diversion.url_aliexpress,
+            whatsapp:props.diversion.url_whatsapp,
         })
         setItems(items.sort((a, b) => a.sort - b.sort))
-        setTripartiteStatus(props.product.thirdPartyPlatform.status == "1"?true:false)
-    },[props.product.thirdPartyPlatform.status])
+        setTripartiteStatus(props.diversion.status == "1"?true:false)
+    },[props.diversion])
     
     return(
         <>
@@ -131,7 +117,7 @@ export default function ProductThirdTripartite(props:any) {
                 <div style={{marginLeft:"28px"}}>
                     {/* <span style={{fontSize:"14px",marginRight:"12px"}}>绑定状态</span> */}
                     {/* checkedChildren="开启" unCheckedChildren="关闭" */}
-                    <Switch  onChange={(e) => setTripartiteStatus(e)} checked={tripartiteStatus} />
+                    <Switch onChange={(e) => setTripartiteStatus(e)} checked={tripartiteStatus} />
                 </div>
                 {/* <Tooltip title="绑定第三方商品">
                     <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
@@ -145,35 +131,35 @@ export default function ProductThirdTripartite(props:any) {
                 items.forEach((item,index)=>{
                     switch (item.id) {
                         case '0':
-                            item.url = props.product.thirdPartyPlatform.amazonUrl
-                            item.status = props.product.thirdPartyPlatform.amazonStatus
+                            item.url = props.diversion.url_amazon
+                            item.status = props.diversion.status_amazon
                             break;
                         case '1':
-                            item.url = props.product.thirdPartyPlatform.eBayUrl
-                            item.status = props.product.thirdPartyPlatform.eBayStatus
+                            item.url = props.diversion.url_ebay
+                            item.status = props.diversion.status_ebay
                             break;
                         case '2':
-                            item.url = props.product.thirdPartyPlatform.tmallUrl
-                            item.status = props.product.thirdPartyPlatform.tmallStatus
+                            item.url = props.diversion.url_tmall
+                            item.status = props.diversion.status_tmall
                             break;
                         case '3':
-                            item.url = props.product.thirdPartyPlatform.aliExpressUrl
-                            item.status = props.product.thirdPartyPlatform.aliExpressStatus
+                            item.url = props.diversion.url_aliexpress
+                            item.status = props.diversion.status_aliexpress
                             break;
                         case '4':
-                            item.url = props.product.thirdPartyPlatform.whatsappUrl
-                            item.status = props.product.thirdPartyPlatform.whatsappStatus
+                            item.url = props.diversion.url_whatsapp
+                            item.status = props.diversion.status_whatsapp
                             break;
                     }
                 })
                 form.setFieldsValue({
-                    Amazon:props.product.thirdPartyPlatform.amazonUrl,
-                    eBay:props.product.thirdPartyPlatform.eBayUrl,
-                    tmall:props.product.thirdPartyPlatform.tmallUrl,
-                    aliExpress:props.product.thirdPartyPlatform.aliExpressUrl,
-                    whatsapp:props.product.thirdPartyPlatform.whatsappUrl,
+                    Amazon:props.diversion.url_amazon,
+                    eBay:props.diversion.url_ebay,
+                    tmall:props.diversion.url_tmall,
+                    aliExpress:props.diversion.url_aliexpress,
+                    whatsapp:props.diversion.url_whatsapp,
                 })
-                setTripartiteStatus(props.product.thirdPartyPlatform.status == "1"?true:false)
+                setTripartiteStatus(props.diversion.status == "1"?true:false)
                 items.sort((a, b) => a.sort - b.sort)
             }}>
                 <Scoped>

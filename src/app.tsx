@@ -2,17 +2,13 @@ import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/comp
 import { GlobalOutlined, RightOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
 import { ProLayout, type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
-import { getOptionType, getAccessToken, currentUser as queryCurrentUser, getShippingCourierList, currentUserStatus } from '@/services/y2/api';
+import { getOptionType, getAccessToken, currentUser as queryCurrentUser, currentUserStatus } from '@/services/y2/api';
 import axios from 'axios';
-import { Avatar, Flex, Menu, message } from 'antd';
-import { Ping } from './components/RightContent';
-import SelectDomain from './components/RightContent/SelectDomain';
+import { App, Avatar, Flex, Menu, message, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 // layout
 import { FormattedMessage, useLocation } from 'umi';  //多语言
 import cookie from 'react-cookies'
-import { Provider } from 'mobx-react';
-import store from './store/store'
 import defaultSettings from '../config/defaultSettings';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -28,6 +24,102 @@ import SalesChannel from './components/Menu/SalesChannel';
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 
+let currentVersion = '';
+
+// 配置NProgress
+NProgress.configure({ showSpinner: false }) // 是否显示右上角螺旋加载提示
+
+const checkVersion = async () => {
+  try {
+    const res = await fetch('/version.json?t=' + Date.now()); // 跳过缓存
+    const { version } = await res.json();
+    
+    if (!currentVersion) {
+      currentVersion = version; // 初始化当前版本
+      return;
+    }
+
+    if (version !== currentVersion) {
+      Modal.confirm({
+        title: '发现新版本',
+        centered: true,
+        content: '是否立即刷新以获取最新内容？',
+        okText: '刷新',
+        onOk: () => location.reload(),
+      });
+    }
+  } catch (err) {
+    console.error('版本检测失败:', err);
+  }
+};
+
+
+// 配置化请求参数
+const CONFIG_REQUESTS = [
+  { 
+    url: '/api/ApiAppstore/languages_select',
+    storageKey: 'languages',
+    retry: 3
+  },
+  {
+    url: '/api/ApiAppstore/currencies_select',
+    storageKey: 'currencies', 
+    retry: 3
+  },
+  {
+    url: '/api/ApiAppstore/country_select',
+    storageKey: 'country',
+    retry: 3
+  },
+  {
+    url: '/api/ApiAppstore/timezones_select',
+    storageKey: 'timezones',
+    retry: 3
+  }
+];
+
+// 带重试的请求封装
+const fetchWithRetry = (url: string, retries: number): Promise<any> => {
+  return axios.post(url).catch(err => {
+    return retries > 0 
+      ? fetchWithRetry(url, retries - 1)
+      : Promise.reject(err);
+  });
+};
+// 安全存储方法
+const safeSessionStorageSet = (key: string, data: unknown) => {
+  try {
+    if (data && typeof data === 'object') {
+      sessionStorage.setItem(key, JSON.stringify(data));
+    }
+  } catch (e) {
+    console.error(`SessionStorage 存储失败 [${key}]`, e);
+  }
+};
+// 执行请求并处理
+Promise.allSettled(
+  CONFIG_REQUESTS.map(({ url, storageKey, retry }) => 
+    fetchWithRetry(url, retry)
+      .then(response => {
+        if (response?.data?.code === 0 && response.data.data) {
+          safeSessionStorageSet(storageKey, response.data.data);
+        }
+        return response;
+      })
+      .catch(err => {
+        console.error(`请求失败 [${url}]`, err);
+        return null;
+      })
+  )
+).then(results => {
+  const failed = results.filter(r => r.status === 'rejected');
+  if (failed.length > 0) {
+    console.warn(`${failed.length}个请求未完全成功`);
+  }
+});
+
+
+
 // getInitialState 获取初始化状态
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
@@ -39,31 +131,24 @@ export async function getInitialState(): Promise<{
   const fetchUserInfo = async () => {
     //调用(mock中的)接口获取用户信息
     try {
-      const msg = await queryCurrentUser({
-      });
-      return msg.data; // 返回用户信息
+      const msg = await queryCurrentUser();
+      return msg.data // 返回用户信息
     } catch (error) {
-      console.log(error);
       // history.push(loginPath);
     }
     return undefined;
   };
-
-
   // access_token 初始化
   // let access_token = localStorage.getItem('access_token')
   let access_token = cookie.load('access_token')
   if (!access_token) {
     let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
     getAccessToken().then((res) => {
-      // localStorage.setItem('access_token', res.access_token)
       if(window.location.hostname.startsWith("localhost")){
         cookie.save("access_token",res.access_token,{path:"/"})
       }else{
         cookie.save("access_token",res.access_token,{domain:test,path:"/"})
       }
-      // localStorage.setItem('access_token', res.access_token)
-      // console.log(res)
     }).catch((err) => {
       message.error(err.message)
     })
@@ -72,7 +157,6 @@ export async function getInitialState(): Promise<{
   // 如果不是登录 || 注册 || 重置 页面，执行
   const { location } = history;
   // 例如 访问/welcome
-  // console.log(location.pathname)
   if (location.pathname == loginPath || location.pathname == '/user/forget' || location.pathname == '/user/signUp') {
   }else{
     // currentUser 用户信息
@@ -92,77 +176,45 @@ export async function getInitialState(): Promise<{
 }
 
 
-// 语言
-axios.post('/api/ApiAppstore/languages_select').then((res) => {
-  if(res.data.code == 0){
-    sessionStorage["languages"] = JSON.stringify(res.data.data)
-  }
-})
-// 货币
-axios.post('/api/ApiAppstore/currencies_select').then((res) => {
-  if(res.data.code == 0){
-    sessionStorage["currencies"] = JSON.stringify(res.data.data)
-  }
-})
+// 全局
+// Promise.all([axios.post('/api/ApiAppstore/languages_select'),axios.post('/api/ApiAppstore/currencies_select'),axios.post('/api/ApiAppstore/country_select'),axios.post('/api/ApiAppstore/timezones_select')]).then(([res,res2,res3,res4])=>{
+//   if(res.data.code == 0){
+//     sessionStorage["languages"] = JSON.stringify(res.data.data)
+//   }
+//   if(res2.data.code == 0){
+//     sessionStorage["currencies"] = JSON.stringify(res2.data.data)
+//   }
+//   if(res3.data.code == 0){
+//     sessionStorage["country"] = JSON.stringify(res3.data.data)
+//   }
+//   if(res4.data.code == 0){
+//     sessionStorage["timezones"] = JSON.stringify(res4.data.data)
+//   }
+// }).catch((err)=>{
+//   console.log(err)
+// })
 
-// 运输承运商
-axios.post('/api/ApiAppstore/shippingcourier_select').then((res) => {
-  if(res.data.code == 0){
-    sessionStorage["currency"] = JSON.stringify(res.data.data)
-  }
-})
-// 国家
-axios.post('/api/ApiAppstore/country_select').then((res) => {
-  if(res.data.code == 0){
-    sessionStorage["country"] = JSON.stringify(res.data.data)
-  }
-})
-// 时区
-axios.post('/api/ApiAppstore/timezones_select').then((res) => {
-  if(res.data.code == 0){
-    sessionStorage["timezones"] = JSON.stringify(res.data.data)
-  }
-})
+
+
+
 // 运行时布局配置
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
-  const [domainStatus,setDomainStatus] = useState();
-
-  const [layoutHeight,setLayoutHeight] = useState(60);
-  
-  useEffect(()=>{
-    // document.title = window.location.hostname.startsWith("localhost") ? "localhost"+"-"+document.title: window.location.hostname.slice(0,window.location.hostname.indexOf("."))+"-"+document.title;
-    getOptionType().then((res:any)=>{
-      if(res.code == 0){
-        sessionStorage["productOptionType"] = JSON.stringify(res.data)
-      }else{
-        console.log("获取商品类型失败")
-      }
-    })
-    currentUserStatus().then(res=>{
-      setDomainStatus(res)
-
-      console.log(res)
-      if(res.code == 0){
-        parseInt((res?.data.package.end_time*1000 - Date.now())/1000/60/60/24)>15?setLayoutHeight(60):setLayoutHeight(100);
-        // domainStatus?.code == 1 ? 100:
-      }else{
-        setLayoutHeight(60);
-      }
-    })
-  },[])
+  const [height,setHeight] = useState(120)
 
   const stores = window.location.pathname
 
-  const location  = useLocation();
+  // 版本轮询
+  useEffect(() => {
+    const timer = setInterval(checkVersion, 1000000);
+    return () => clearInterval(timer);
+  }, []);
+  // 获取数据
+
   return {
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
-      // 如果没有登录，重定向到 login
-      // if (!initialState?.currentUser && location.pathname !== loginPath) {
-      //   history.push(loginPath);
-      // }
     },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -171,20 +223,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // if (initialState?.loading) return <PageLoading />;
       return (
         <>
-          {children}
-          {/* {isDev && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )} */}
+          <App>
+            {children}
+          </App>
         </>
       );
     },
@@ -214,6 +255,17 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
+    // menu菜单底部
+    menuFooterRender: () => {
+      return (
+        <div className='menu-item-settings'>
+          <Link style={stores.slice(0,8) == "/setting"?{color:"#1677FF",backgroundColor:"#F7F8FB"}:{color:"rgba(0, 0, 0, .65)"}} to={"/settings"}>
+            <SettingOutlined />
+            <span style={{marginLeft:"8px"}}>设置</span>
+          </Link>
+        </div>
+      )
+    },
     // 自定菜单项
     menuItemRender:(item, dom)=>{
       if(item.path == "/app-store"){
@@ -228,6 +280,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </Link>
       }else if(item.path == "/channel"){
         return <SalesChannel dom={dom} />
+      }else if(item.path == "/settings"){
+        return <Link to={item.path} className='menu-item-settings'>
+        {dom}
+      </Link>
       }
       return <Link to={item.path}>
         {dom}
@@ -259,26 +315,24 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       // ]:menuData)
     },
     menuProps: {
-      className:stores.slice(0,8) == "/stores/"?"":"mc-menu-item"
+      // className:stores.slice(0,8) == "/stores/"?"":"mc-menu-item"
     },
-    // 
     headerRender: () => {
       if(stores.slice(19,28) == "mcpayment"){
         return <MCPaymentHead />
       }
-      if(domainStatus){
-        return (
-          <Header stores={stores.slice(0,8)} initialState={initialState} domainStatus={domainStatus} />
-        )
-      }
+      return (
+        <Header setHeight={setHeight} url={stores.slice(0,8)} initialState={initialState} />
+      )
     },
     ...initialState?.settings,
+    // 覆盖默认token
     token: {
       bgLayout: '#EAEDF1',
       header:{
-        colorBgHeader: '#ffffff',
-        heightLayoutHeader:layoutHeight,
-      }, 
+        colorBgHeader: '#FFFFFF',
+        heightLayoutHeader:height,
+      },
       sider:{
         colorBgMenuItemHover: '#f7f8fb',
         colorBgMenuItemSelected: '#f7f8fb',
@@ -294,11 +348,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         title+" - "+defaultPageTitle
       )
     },
-
-    
     // title:"MataCart",
   };
 };
+
+
 
 // 运行时路由配置
 export function patchRoutes({ routes, routeComponents }) {
@@ -309,10 +363,6 @@ export function patchRoutes({ routes, routeComponents }) {
   });
 }
 
-
-
-
-
 // 与后端约定的响应数据格式
 interface ResponseStructure {
   code: number;
@@ -322,98 +372,102 @@ interface ResponseStructure {
 }
 
 
-
+// ------ 暂无接口重试机制
+// 全局计数器
+let requestCount = 0;
+// 启动进度条
+const startProgress = () => {
+  if (requestCount === 0) {
+    NProgress.start(); // 只有当计数器为 0 时才启动进度条
+  }
+  requestCount++;
+};
+// 结束进度条
+const endProgress = () => {
+  requestCount--;
+  if (requestCount === 0) {
+    NProgress.done(); // 只有当计数器回到 0 时才关闭进度条
+  }
+};
 // 请求封装
 export const request: RequestConfig = {
   timeout: 10000, //超时处理，请求超过0.1分钟，取消请求
-  // // 错误统一处理
+  // 错误统一处理
   errorConfig: {
     // 抛出错误
     errorThrower: (res: any) => {
-      // const { code, data, errorCode, errorMessage } =
-      //   res as unknown as ResponseStructure;
-      //   console.log(res);
-      // // access_token 过期
-      // if (data.code == 40013) {
-      //   const error: any = new Error(errorMessage);
-      //   error.name = 'access_token_expires';
-      //   error.info = { errorCode, errorMessage, data };
-      //   throw error; // 抛出自制的错误
-      // }
     },
-  //   // 错误接收及处理 axios
-  //   // errorHandler(error: any, opts: any) {
-  //   //   // message.error("网络繁忙，请稍后再试");
-  //   //   let access_token = ''
-  //   //   if(error.name === 'access_token_expires'){
-  //   //     getAccessToken().then((res:any)=>{
-  //   //       access_token = res.data;
-  //   //       localStorage.setItem('access_token',access_token)
-  //   //     });
-  //   //   console.log('重新获取access_token')
-  //   //   message.error('access_token过期，请稍后再试');
-  //   //   }
-
-
+    // 错误接收及处理
     errorHandler(error: any, opts: any) {
-      // message.error("网络繁忙，请稍后再试");
-      // if (error.name === 'access_token_expires') {
-      //   getAccessToken().then(res => {
-      //     let access_token = res.data.access_token;
-      //     localStorage.setItem('access_token', access_token)
-      //   }).catch((err) => { console.log(err) })
-      // }
+      endProgress();
+      // message.error("网络繁忙，请刷新页面");
+      console.log(error)
     },
   },
   // 请求拦截器
   requestInterceptors: [
     (config: any) => {
-      // 在请求拦截器中带token（除登录接口）
-      NProgress.start(); // 开启进度条
-      const token = cookie.load("token")
-      if (token && config.url != loginPath)
-        config.headers['token'] = token;
-        // config['token'] = token;
-        // 携带access_token
-        // config.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
-        config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
-      return config;
-      NProgress.done(); // 关闭进度条
-    },
 
+
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const length = 8;
+      let result = '';
+   
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+      }
+
+      // console.log(str)
+
+      if(config.method == "post"){
+        config.url = config.url+"?__trackId__="+result
+      }
+
+      if (!config.skipAuthRefresh) {
+        startProgress(); // 启动进度条
+      }
+      // 在请求拦截器中带token（除登录接口）
+      const token = cookie.load("token")
+      if (token && config.url != loginPath){
+        config.headers['token'] = token;
+        // 携带access_token
+        config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
+      }
+      return config;
+    },
   ],
   // 响应拦截器
   responseInterceptors: [
-    (response: any) => {
-      NProgress.done(); // 关闭进度条
-      return response
-    },
     // access_token 过期
     (res:any) =>{
-      NProgress.done(); // 关闭进度条
-      // console.log(res.data.code == 1001);
+      endProgress();
+      // 过滤
+      if(res.config.url == "/api/Oauth2/gettoken"){
+        return res
+      }
       let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
       if(res.data.code==40013){
-          getAccessToken().then(res => {
-            if(window.location.hostname.startsWith("localhost")){
-              console.log(window.location.hostname.startsWith("localhost"))
-              cookie.save("access_token",res.access_token,{path:"/"})
-            }else{
-              cookie.save('access_token', res.access_token, { domain:test,path: '/' });
-            }
-          // localStorage.setItem('access_token',  res.access_token)
+        // access_token过期
+        getAccessToken().then(res => {
+          if(window.location.hostname.startsWith("localhost")){
+            cookie.save("access_token",res.access_token,{path:"/"})
+          }else{
+            cookie.save('access_token', res.access_token, { domain:test,path: '/' });
+          }
         }).catch((err) => { console.log(err) });
-      }
-      // 登录过期
-      if(res.data.code==1001){
+      }else if(res.data.code==1001){
+        // token过期
         sessionStorage.removeItem("domain")
-        cookie.remove("token",{path:"/"})
+        cookie.remove("token",{ domain:test,path: '/' })
+        cookie.remove("token",{ path: '/' })
         history.push(loginPath);
+      }else if(res.data.code>2000){
+        message.error(res.data.msg);
+        // console.log(res)
+      }else{
         return res;
       }
-      else return res;
-      // return res
-    }
+    },
   ],
 }
-

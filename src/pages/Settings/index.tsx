@@ -1,11 +1,9 @@
 import LittleLayout from "@/components/Layout/LittleLayout";
-import { Link, useIntl } from "@umijs/max";
 import { Col, Row } from "antd";
-import { urlencoded } from "express";
 import styled from "styled-components";
 import cookie from 'react-cookies';
-
-
+import { useIntl } from '@umijs/max';
+import { Link } from "react-router-dom";
 export default function Settings() {
 
     const intl = useIntl();

@@ -4,9 +4,10 @@ import SelectCountry from '../../components/Stores/SelectCountry'
 import SelectCurrency from '../../components/Stores/SelectCurrency'
 import SelectContryCode from '../../components/Stores/SelectCountryCode'
 import { useEffect, useState } from 'react'
-import { createStore } from '@/services/y2/api'
+import { createStore, currentUserStatus } from '@/services/y2/api'
 import styled from 'styled-components'
 import { history } from '@umijs/max'
+import userInfo from '@/store/userInfo'
 
 
 interface SelectListType {
@@ -49,12 +50,17 @@ export default function Create() {
 
     const createStoreFinish = ()=>{
         setLoading(true)
-        console.log(form.getFieldsValue())
         createStore(form.getFieldsValue()).then(res=>{
-            console.log(res)
             if(res.code == 0){
                 message.success("创建成功")
-                history.push("/stores/list")
+                currentUserStatus().then(res=>{
+                    userInfo.setUserSession(res)
+                }).catch(err=>{
+                    // console.log(err)
+                    message.error("请求异常，请刷新")
+                }).finally(()=>{
+                    history.push("/stores/list")
+                })
             }
             res.code == 201 && message.error(res.msg)
             setLoading(false)

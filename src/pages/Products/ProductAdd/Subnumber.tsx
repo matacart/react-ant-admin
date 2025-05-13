@@ -1,18 +1,24 @@
 
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
 import { Card, Form, Select, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
+import { Link } from "react-router-dom";
+import product from "@/store/product/product";
 
 
  function Subnumber(){
-    const onChange = (checked: boolean) => {
-        newStore.setIsShare(checked?'1':'0')
-    };
+    
+    const [form] = Form.useForm();
+
+
+    useEffect(()=>{
+        form.setFieldsValue({
+            partsWarehouse:parseInt(product.productInfo.is_sys),
+            isShare:true
+        })
+    },[])
+
     return (
         <Scoped>
             <Card className="gap">
@@ -26,9 +32,10 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                     </span>
                     <Link to='#'>编辑</Link>
                 </div>
-                <Form layout="vertical">
+                <Form layout="vertical" form={form}>
                     <Form.Item
                         className="moreLink"
+                        name="partsWarehouse"
                         label={
                             <div className="label-content between">
                                 <span>数据归属</span>
@@ -37,20 +44,27 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                         <Select
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
-                            defaultValue={newStore.partsWarehouse}
                             options={[
-                                { value: '0', label: '商户自建' },
-                                { value: '1', label: '平台自建' },
+                                { value: 0, label: '商户自建' },
+                                { value: 1, label: '平台自建' },
                             ]}
                             onChange={(e)=>{
-                                newStore.setPartsWarehouse(e)
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    is_sys:e
+                                })
                             }}
                         />
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item name="isShare">
                         <div className="item between">
                             <span>子号共享</span>
-                            <Switch onChange={onChange} />
+                            <Switch checked={product.productInfo.is_share == 1?true:false} onChange={(e)=>{
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    is_share:e?1:0
+                                })
+                            }} />
                         </div>
                     </Form.Item>
                 </Form>

@@ -3,32 +3,19 @@ import { Card, Form, Select, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
-import newCategories from "@/store/categories/newCategories";
-
+import categories from "@/store/product/categories"
 
  function CategoriesSubnumber(){
-    
-    const onChange = (checked: boolean) => {
-        console.log(`switch to ${checked}`);
-        newCategories.setIsShare(checked?'1':'0')
-    };
 
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">共享信息
-                        {/* <Tooltip title="上架信息">
-                            <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                                <QuestionCircleOutlined />
-                            </span>
-                        </Tooltip> */}
-                    </span>
+                    <span className="title">共享信息</span>
                     <Link to='#'>编辑</Link>
                 </div>
                 <Form layout="vertical">
                     <Form.Item
-                        className="moreLink"
                         label={
                             <div className="label-content between">
                                 <span>数据归属</span>
@@ -37,20 +24,28 @@ import newCategories from "@/store/categories/newCategories";
                         <Select
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
-                            defaultValue={newCategories.partsWarehouse}
+                            value={categories.categoriesInfo.is_sys.toString()}
                             options={[
-                                { value: '0', label: '商户自建' },
-                                { value: '1', label: '平台自建' },
+                                { value: "0", label: '商户自建' },
+                                { value: "1", label: '平台自建' },
                             ]}
                             onChange={(e)=>{
-                                newCategories.setPartsWarehouse(e)
+                                categories.setCategoriesInfo({
+                                    ...categories.categoriesInfo,
+                                    is_sys:e
+                                })
                             }}
                         />
                     </Form.Item>
                     <Form.Item>
                         <div className="item between">
                             <span>子号共享</span>
-                            <Switch defaultChecked={newCategories.isShare == "1"?true:false} onChange={onChange} />
+                            <Switch checked={categories.categoriesInfo.is_share == 1?true:false} onChange={(e)=>{
+                                categories.setCategoriesInfo({
+                                    ...categories.categoriesInfo,
+                                    is_share: e ? 1 : 0
+                                })
+                            }} />
                         </div>
                     </Form.Item>
                 </Form>

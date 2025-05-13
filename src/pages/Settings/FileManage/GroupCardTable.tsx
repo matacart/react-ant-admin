@@ -11,6 +11,7 @@ import { ProColumns, ProTable } from "@ant-design/pro-components";
 import { type } from './../../../../types/index.d';
 import { TableRowSelection } from "antd/es/table/interface";
 import DeleteModal from "@/components/Modal/DeleteModal";
+import { title } from 'process';
 
 const { useToken } = theme;
 
@@ -131,7 +132,7 @@ function GroupCardTable({dataSource}) {
 
             if(type == "MP4"){
               imgTypeUrl = record.url
-            }else if(type == "JPEG" || type == "JPG" || type == "PNG" || type == "GIF" || type == "PJP"){
+            }else if(type == "JPEG" || type == "JPG" || type == "PNG" || type == "GIF" || type == "PJP" || type == "SVG"){
               imgTypeUrl = record.url
             }else if(type == "XLSX"){
 
@@ -142,7 +143,7 @@ function GroupCardTable({dataSource}) {
             return (
               <Flex align="center">
                 <div style={{marginRight:12,width:60,height:60}}>
-                  {type == "MP4"?<video style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={record.url} />:<img style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={imgTypeUrl} />}
+                  {type == "MP4"?<video style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={record.url} />:<img style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={imgTypeUrl+"?x-oss-process=image/resize,w_300"} />}
                 </div>
                 <div>
                   <div className="color-242833">{name}</div>
@@ -193,7 +194,15 @@ function GroupCardTable({dataSource}) {
                     }} style={{fontSize:"20px",cursor:"pointer"}}><PaperClipOutlined /></span>
                 </Tooltip>
                 <Tooltip title="删除">
-                  <DeleteModal removeFunc={()=>{removeFile(record.id)}} content={"此文件将从文件库中被删除，且文件关联的资源将自动移除该文件，操作无法撤销。"} />
+                  <DeleteModal
+                    tElement={
+                      <span style={{cursor:"pointer",fontSize:"20px",color:"red"}}><DeleteOutlined /></span>
+                    }
+                    title="删除文件"
+                    removeFunc={()=>{removeFile(record.id)}} 
+                    content={"此文件将从文件库中被删除，且文件关联的资源将自动移除该文件，操作无法撤销。"}
+                    okText="删除"
+                  />
                 </Tooltip>
             </Space>
           ),

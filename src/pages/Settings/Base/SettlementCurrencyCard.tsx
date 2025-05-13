@@ -1,6 +1,6 @@
 import InputSearch from "@/components/Search/InputSearch";
 import { getCurrenciesList, setCurrenciesList } from "@/services/y2/api";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { CheckOutlined, CloseOutlined, ExportOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, InputNumber, message, Modal, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
@@ -16,8 +16,6 @@ interface DataType {
 }
 
 
-  
-
 function SettlementCurrencyCard() {
 
     const [form] = Form.useForm();
@@ -27,6 +25,8 @@ function SettlementCurrencyCard() {
     const [isOpen,setIsOpen] = useState(false);
 
     const [data,setData] = useState<any[]>([]);
+
+    const [currency,setCurrency] = useState();
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -102,6 +102,9 @@ function SettlementCurrencyCard() {
         }
     ];
     useEffect(()=>{
+        console.log()
+        setCurrency(cookie.load("domain").defaultCurrency)
+        // console.log()
     },[])
     // 获取
     const getCurrencies = ()=>{
@@ -131,6 +134,19 @@ function SettlementCurrencyCard() {
         setCurrenciesList(currenciesList).then(res=>{
             // console.log(data)
             cookie.save('symbolLeft', data.filter(item=>item.is_default == "1")[0].symbol_left, { path: '/' });
+            console.log(data)
+            let newDomain = cookie.load("domain")
+            if(cookie.load("domain")){
+                const current = data.filter(item=>item.is_default == "1")[0]
+                // console.log(current)
+                newDomain = {
+                    ...newDomain,
+                    defaultCurrency:current.code,
+                    // defaultLang:current.defaultLang
+                }
+                cookie.save('domain', newDomain, { path: '/' });
+                setCurrency(newDomain.defaultCurrency)
+            }
         })
     }
 
@@ -142,11 +158,14 @@ function SettlementCurrencyCard() {
                         label="结算货币"
                         name="logo"
                         >
-                        <div style={{marginBottom:"12px"}}>日圆 (JPY)</div>
-                        <Button>修改货币</Button>
-                        <div style={{marginTop:"15px"}}>一旦有订单成立或成功发放首张礼品卡后，此选项不可修改，请慎重操作</div>
+                        <div style={{marginBottom:"12px"}}>货币 ({currency ?? "US"})</div>
+                        <Button onClick={()=>{
+                            setIsOpen(true)
+                            getCurrencies()
+                        }}>修改货币</Button>
+                        <div style={{marginTop:"15px"}}>设置系统默认货币格式，<a>详细了解<ExportOutlined style={{position:"relative",top:"1px",left:"4px"}} /></a></div>
                     </Form.Item>
-                    <Form.Item
+                    {/* <Form.Item
                         label="自定义货币格式"
                         name="name"
                         >
@@ -155,7 +174,7 @@ function SettlementCurrencyCard() {
                             setIsOpen(true)
                             getCurrencies()
                         }}>编辑格式</Button>
-                    </Form.Item>
+                    </Form.Item> */}
                 </Form>
             </Card>
             <Modal open={isOpen} title="自定义货币格式" destroyOnClose width={860} centered onOk={onSubmit} onCancel={()=>{

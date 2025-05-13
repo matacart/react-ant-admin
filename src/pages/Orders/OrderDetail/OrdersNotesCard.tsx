@@ -1,17 +1,12 @@
-import { PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Link, useIntl } from "@umijs/max";
-import { Button, Card, Divider, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
+import { Button, Card, Divider, Flex, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
 import styled from "styled-components";
 // import MoreSelect from './../Select/MoreSelect';
 // import Product from './../../pages/Products/index';
 import { useRef, useState } from "react";
-import newStore from "@/store/newStore";
 import OrdersNoteField from "./OrdersNoteField";
 
 // 上架商品
-
-let index = 0;
-
 export default function ProductSettingsCard() {
   const [isEditing, setIsEditing] = useState(false);
   const [initialValue, setInitialValue] = useState<string | undefined>(undefined);
@@ -34,19 +29,15 @@ export default function ProductSettingsCard() {
 
   return (
       <Scoped>
-          <Card  style={{ width: '300px' }}
-                 title={<div style={{ display: 'flex', alignItems: 'center', fontSize: '16px', color: '#474F5E', justifyContent: 'space-between' }}>
-                         <div><p style={{ fontSize: '16px', color: '#242833' }}>{intl.formatMessage({ id:'order.detail.notes'})}</p></div>
-                         <button onClick={onEditClick} style={{ fontSize: '14px', color: '#356DFF', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                         {intl.formatMessage({ id:'order.detail.edit'})}
-                         </button>
-                     </div>}
+          <Card title={<Flex justify="space-between" align="center">
+                <span style={{ fontSize: '16px', color: '#242833' }}>{intl.formatMessage({ id:'order.detail.notes'})}</span>
+                <button onClick={onEditClick} style={{ fontSize: '14px', color: '#356DFF', border: 'none', background: 'transparent', cursor: 'pointer' }}>
+                    {intl.formatMessage({ id:'order.detail.edit'})}
+                </button>
+            </Flex>}
           >
-              {isEditing ? (
-                  <OrdersNoteField isEditing={isEditing} initialValue={initialValue} onSave={onSave} onClose={onClose} />
-              ) : (
-                  <div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.detail.empitynotes'})}</div>
-              )}
+            <div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.detail.empitynotes'})}</div>
+            <OrdersNoteField isEditing={isEditing} initialValue={initialValue} onSave={onSave} onClose={onClose} />
           </Card>
       </Scoped>
   )
@@ -62,7 +53,3 @@ const Scoped = styled.div`
     }
  
 `
-
-function setIsEditing(arg0: boolean) {
-    throw new Error("Function not implemented.");
-}

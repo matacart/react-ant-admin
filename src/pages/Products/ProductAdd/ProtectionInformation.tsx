@@ -1,11 +1,9 @@
-
-import newStore from "@/store/newStore"
 import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import ProductDefenseModal from "@/components/Modal/ProductDefenseModal"
+import product from "@/store/product/product"
 
 
  function ProtectionInformation(){
@@ -21,11 +19,16 @@ import ProductDefenseModal from "@/components/Modal/ProductDefenseModal"
                             </span>
                         </Tooltip>
                     </span>
-                    <ProductDefenseModal data={newStore} status={newStore.adWafStatus} />
+                    <ProductDefenseModal data={product} status={product.productInfo.ad_waf_status} />
                 </div>
                 <div className="item between">
                     <span>防护开关</span>
-                    <Switch onChange={(e) => {newStore.setAdWafStatus(e ? '1' : '0')}} checked={newStore.adWafStatus == '1'?true:false} />
+                    <Switch checked={product.productInfo.ad_waf_status == '1'?true:false} onChange={(e) => {
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            ad_waf_status:e?'1':'0'
+                        })
+                    }}  />
                 </div>
             </Card>
         </Scoped>

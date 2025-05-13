@@ -1,10 +1,7 @@
-import oldStore from '@/store/product/oldStore';
+import product from "@/store/product/product"
 import { Card, Checkbox, Flex, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
-
 
  function RecommendationEdit(){
 
@@ -22,10 +19,30 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                 </div>
                 <div className="item between">
                     <Flex gap="8px 8px" wrap>
-                        <span><Checkbox checked={oldStore.isHome} onChange={(e)=>{oldStore.setIsHome(e.target.checked)}}>首页</Checkbox></span>
-                        <span><Checkbox checked={oldStore.isHot} onChange={(e)=>{oldStore.setIsHot(e.target.checked)}}>热销</Checkbox></span>
-                        <span><Checkbox checked={oldStore.isBest} onChange={(e)=>{oldStore.setIsBest(e.target.checked)}}>精品</Checkbox></span>
-                        <span><Checkbox checked={oldStore.isNew} onChange={(e)=>{oldStore.setIsNew(e.target.checked)}}>新品</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_home == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_home:e.target.checked?1:0
+                            })
+                        }}>首页</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_hot == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_hot:e.target.checked?1:0
+                            })
+                        }}>热销</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_best == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_best:e.target.checked?1:0
+                            })
+                        }}>精品</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_new == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_new:e.target.checked?1:0
+                            })
+                        }}>新品</Checkbox></span>
                     </Flex>
                 </div>
             </Card>

@@ -40,7 +40,7 @@ function ShippingDetailsCard() {
 
     useEffect(()=>{
         let tempList = [];
-        if(courierList.length==0){
+        if(courierList.length==0 && JSON.parse(sessionStorage["currency"])){
             tempList = JSON.parse(sessionStorage["currency"]).map((item:any)=>{
                 return {
                     value: item.courier_code,

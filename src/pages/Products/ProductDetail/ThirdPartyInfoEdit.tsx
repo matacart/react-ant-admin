@@ -1,12 +1,20 @@
 import ProductThirdTripartite from "@/components/Modal/ProductThirdTripartite";
-import oldStore from '@/store/product/oldStore';
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Card, Switch, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import product from "@/store/product/product";
 
 
 function ThirdPartyInfoEdit() {
+
+    const setDiversion = (diversion:any) => {
+        // console.log(diversion)
+        product.setProductInfo({
+            ...product.productInfo,
+            diversion:diversion
+        })
+    }
 
     return (
         <Scoped>
@@ -20,12 +28,20 @@ function ThirdPartyInfoEdit() {
                             </span>
                         </Tooltip>
                     </div>
-                    <ProductThirdTripartite product={oldStore} />
+                    {product.productInfo.diversion && <ProductThirdTripartite diversion={product.productInfo.diversion} setDiversion={setDiversion} />}
                 </div>
                 <div className="content">
                     <div className="item between">
                         <span>绑定状态</span>
-                        <Switch onChange={(e) => {oldStore.setThirdPartyPlatform({...oldStore.thirdPartyPlatform,status:e?"1":"0"})}} checked={oldStore.thirdPartyPlatform.status == '1'?true:false} />
+                        <Switch checked={product.productInfo.diversion?.status == 1?true:false} onChange={(e) => {
+                             product.setProductInfo({
+                                ...product.productInfo,
+                                diversion:{
+                                    ...product.productInfo.diversion,
+                                    status:e?1:0
+                                }
+                            })
+                        }} />
                     </div>
                 </div>
             </Card>

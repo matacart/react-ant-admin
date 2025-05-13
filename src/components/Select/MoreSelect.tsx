@@ -1,91 +1,97 @@
 import React, { useState } from 'react';
-import { Button, ConfigProvider } from 'antd';
+import { ConfigProvider, Divider } from 'antd';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
 // import  Collapse  from './Collapse';
 import Drawer from '../Drawer/Drawer';
-import PriceRangeSelector from './PriceRangeSelector';
-import PriceRangeInput from '../Input/PriceRangeInput';
-import './MoreSelect.scss'
-
-import CustomizeProductTypeSelector from './CustomizeProductTypeSelector';
-import ProductTypeSelector from './ProductTypeSelector';
 import { useIntl } from '@umijs/max';
-
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
-
-
-
-const items: CollapseProps['items'] = [
-  {
-    key: '1',
-    label: '价格区间',
-    children: (
-      <div>
-        <PriceRangeInput />
-        <div className={'cleanText'}>清除</div>
-      </div>
-    ),
-  },
-  {
-    key: '2',
-    label: '商品类型',
-    children: (
-    <>
-      <ProductTypeSelector/>
-      <div className={'cleanText'}>清除</div>
-    </>)
-    ,
-  },
-  {
-    key: '3',
-    label: '自定义商品类型',
-    children: (
-      <>
-      <CustomizeProductTypeSelector/>
-      <div className={'cleanText'}>清除</div>
-      </>
-    ),
-  },{
-    key: '4',
-    label: '商品状态',
-    children: (
-      <>
-      <CustomizeProductTypeSelector/>
-      <div className={'cleanText'}>清除</div>
-      </>
-    ),
-  },{
-    key: '5',
-    label: '自定义商品类型',
-    children: (
-      <>
-      <CustomizeProductTypeSelector/>
-      <div className={'cleanText'}>清除</div>
-      </>
-    ),
-  },{
-    key: '6',
-    label: '自定义商品类型',
-    children: (
-      <>
-      <CustomizeProductTypeSelector/>
-      <div className={'cleanText'}>清除</div>
-      </>
-    ),
-  },
-];
-
-  
+import styled from 'styled-components';
+import DefaultButton from '../Button/DefaultButton';
+import NumberInput from '../Input/NumberInput';
+import cookie from 'react-cookies';
 
 export default function MoreSelect(){
   const intl = useIntl();
   const [open, setOpen] = useState(false);
+
+  const [min,setMin] = useState(0);
+
+  const [max,setMax] = useState(0);
+
+  const items: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: '价格区间',
+      children: (
+        <div>
+          <NumberInput 
+                className="input" 
+                placeholder='最小值'
+                min={0}
+                value={min}
+                prefix={cookie.load("symbolLeft") || ""}
+                onChange={(value:number)=>{
+                    setMin(value)
+                }}
+            />
+            <div className='divider-warp'><Divider className='divider'></Divider></div>
+            <NumberInput 
+                className="input"
+                placeholder='最大值'
+                prefix={cookie.load("symbolLeft") || ""}
+                min={0}
+                value={max}
+                onChange={(value:number)=>{
+                    setMax(value)
+                }}
+            />
+          <div className={'cleanText'}>清除</div>
+        </div>
+      ),
+    },
+    {
+      key: '2',
+      label: '商品类型',
+      children: (
+      <>
+        <div className={'cleanText'}>清除</div>
+      </>)
+      ,
+    },
+    {
+      key: '3',
+      label: '自定义商品类型',
+      children: (
+        <>
+        <div className={'cleanText'}>清除</div>
+        </>
+      ),
+    },{
+      key: '4',
+      label: '商品状态',
+      children: (
+        <>
+        <div className={'cleanText'}>清除</div>
+        </>
+      ),
+    },{
+      key: '5',
+      label: '自定义商品类型',
+      children: (
+        <>
+        <div className={'cleanText'}>清除</div>
+        </>
+      ),
+    },{
+      key: '6',
+      label: '自定义商品类型',
+      children: (
+        <>
+        <div className={'cleanText'}>清除</div>
+        </>
+      ),
+    },
+  ];
 
   const showDrawer = () => {
     setOpen(true);
@@ -96,10 +102,8 @@ export default function MoreSelect(){
   };
 
   return (
-    <>
-      <Button onClick={showDrawer} >
-      {intl.formatMessage({ id:'order.button.moreselect'})}
-      </Button>
+    <Scoped>
+      <DefaultButton text={intl.formatMessage({ id:'order.button.moreselect'})} onClick={showDrawer} />
       <Drawer title='筛选' open={open} onClose={onClose} >
         <ConfigProvider 
           theme={{
@@ -125,6 +129,18 @@ export default function MoreSelect(){
           />
         </ConfigProvider>
       </Drawer>
-    </>
+    </Scoped>
   );
 };
+
+
+const Scoped = styled.div`
+  .cleanText{
+    margin-top: 10px;
+    color: #7a8499;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-block;
+  }
+`;

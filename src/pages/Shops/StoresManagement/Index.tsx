@@ -1,5 +1,5 @@
 import { Button, Card, Select, Tabs, TabsProps } from "antd"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { history } from 'umi';
 import StoresCard from "./StoresCard";
@@ -11,18 +11,7 @@ const onChange = (key: string) => {
     console.log(key);
 };
 
-const items: TabsProps['items'] = [
-    {
-      key: '1',
-      label: '已启用店铺（2）',
-      children: <StoresCard/>,
-    },
-    {
-      key: '2',
-      label: '待启用店铺（0）',
-      children: 'Content of Tab Pane 2',
-    }
-];
+
 
 type PositionType = 'right';
 const OperationsSlot: Record<PositionType, React.ReactNode> = {
@@ -55,9 +44,27 @@ function getCurrentTimeText(){
 const timeText = getCurrentTimeText()
 
 function Index(){
+
+    const [enableCount,setEnalbeCount] = useState(0)
+
+    const items: TabsProps['items'] = [
+        {
+          key: '1',
+          label: '已启用店铺（'+enableCount+'）',
+          children: <StoresCard/>,
+        },
+        {
+          key: '2',
+          label: '待启用店铺（0）',
+          children: 'Content of Tab Pane 2',
+        }
+    ];
+
     // 获取店铺列表
     useEffect(()=>{
-        shopsManagement.getShops()
+        shopsManagement.getShops().then(res=>{
+            setEnalbeCount(res.length)
+        })
     },[])
     return (
         <Scoped>

@@ -1,27 +1,32 @@
-import { Button, Form, Input, Divider, Checkbox, message, Select } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Divider, Checkbox, message, Select, ConfigProvider, Dropdown, Flex } from 'antd';
+import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl, Link, history, useModel } from '@umijs/max';
-import React, { useEffect, useState } from 'react';
-import { request } from '@umijs/max';
+import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { getCountryList, getFakeCaptcha, register } from '@/services/y2/api';
 import {state} from '../../../config/myConfig'
 import styled from 'styled-components';
-type FieldType = {
-    username?: string;
-    password?: string;
-    agreement?: string;
-};
+import { UnfoldIcon } from '@/components/Icons/Icons';
+
 interface Props {
     changeForm: (value: number) => void
 }
 
-const { Option } = Select;
+// 修改style常量定义部分
+const style: React.CSSProperties = {
+    color: '#7A8499',
+    position: 'absolute',
+    width: "100%",
+    top: "10px",
+    left: "10px",
+    padding: "10px 0",
+    maxHeight: "300px",
+    overflow: "auto",
+}
 
 
 export default function Register(props: Props) {
 
-    const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
     const [captchaIsLoding, setCaptchaIsLoading] = useState(false);
@@ -29,93 +34,86 @@ export default function Register(props: Props) {
     const [phone, setPhone] = useState('');
     const intl = useIntl();
 
-    // 区号表
-    const [countryList,setCountryList] = useState([]);
+    const [phoneCode,setPhoneCode] = useState("86");
+    // 搜索
+    const [searchKey, setSearchKey] = useState('');
 
-    // 国际号码区号
-    const [InternationalAreaCode,setInternationalAreaCode] = useState("86");
+    const Ref = useRef(null);
 
-    const fetchUserInfo = async () => {
-        const userInfo = await initialState?.fetchUserInfo?.();
-        if (userInfo) {
-            flushSync(() => {
-                setInitialState((s) => ({
-                    ...s,
-                    currentUser: userInfo,
-                }));
-            });
-        }
-    };
+    const filteredItems  = JSON.parse(sessionStorage.getItem("country") || "[]").filter((item: any) => item.country_name.includes(searchKey));
 
-    const selectBefore = (
-        <Select
-            options = {countryList}
-            defaultValue={InternationalAreaCode}
-            onChange={(e)=>{
-                setInternationalAreaCode(e)
-            }}>
-        </Select>
-    );
+    const items = filteredItems
+        .map((item: any) => {
+            return {
+                key: item.country_id,
+                label: <a onClick={() => {
+                setSearchKey("")
+                setPhoneCode(item.codes)
+                }} style={{ color: phoneCode == item.codes ? "#356DFF" : "" }}>
+                <span style={{ marginRight: "8px" }}>{item.country_name}</span>{"+" + item.codes}
+                </a>,
+            }
+        })
+        .concat(
+            filteredItems.length === 0 ? [{
+                key: 'no-data',
+                disabled: true,
+                label: (
+                <div style={{ 
+                    color: '#999',
+                    textAlign: 'center',
+                    padding: '8px 0'
+                }}>
+                    <FormattedMessage id="pages.search.noData" defaultMessage="无匹配数据" />
+                </div>
+                )
+            }] : []
+        );
 
     useEffect(() => {
-        getCountryList().then((res)=>{
-            let newList = res.data.map(item=>{
-                if(item.codes !== null){
-                    return {
-                        value: item.codes,
-                        label: "+"+item.codes
-                    }
-                }
-            }).filter(item=>item !== undefined)
-            // 过滤相同的数据
-            newList = Array.from(
-                new Set(newList.map((item) => JSON.stringify(item)))
-            ).map((item) => JSON.parse(item));
-            setCountryList(newList);
-        })
+        
     }, []);
 
     return (
-        <div>
-            {countryList.length>0?
-                <Scoped>
-                <h3>
-                    <FormattedMessage id="register.title" defaultMessage="开始您的免费试用" />
-                </h3>
-                <div className="register-form-content">
-                <Form
-                    name="normal_register"
-                    className="register-form"
-                    layout="horizontal"
-                    onFinish={
-                        async (values: API.LoginParams) => {
-                            try {
-                                const msg = await register({ ...values,InternationalAreaCode });
-                                console.log(msg);
-                                if (msg.status == 1) {
-                                    const defaultLoginSuccessMessage = intl.formatMessage({
-                                        id: 'pages.register.success',
-                                        defaultMessage: '注册成功！',
-                                    });
-                                    message.success(defaultLoginSuccessMessage);
-                                    history.push('/user/signIn');
-                                    return;
-                                }else if(msg.status == -1){
-                                    message.error('手机号已被注册');
-                                }
-                                message.error(intl.formatMessage({id: 'pages.captcha.wrong', defaultMessage: '验证码错误'}));
-                            } catch (error) {
-                                const defaultLoginFailureMessage = intl.formatMessage({
-                                    id: 'pages.register.failure',
-                                    defaultMessage: '注册失败，请重试！',
+        <Scoped>
+            <h3>
+                <FormattedMessage id="register.title" defaultMessage="开始您的免费试用" />
+            </h3>
+            <div className="register-form-content">
+            <div className='user-box' ref={Ref}></div>
+            <Form
+                name="normal_register"
+                className="register-form"
+                layout="horizontal"
+                onFinish={
+                    async (values: API.LoginParams) => {
+                        try {
+                            const msg = await register({ ...values,phoneCode });
+                            console.log(msg);
+                            if (msg.status == 1) {
+                                const defaultLoginSuccessMessage = intl.formatMessage({
+                                    id: 'pages.register.success',
+                                    defaultMessage: '注册成功！',
                                 });
-                                // console.log(error);
-                                message.error(defaultLoginFailureMessage);
+                                message.success(defaultLoginSuccessMessage);
+                                history.push('/user/signIn');
+                                return;
+                            }else if(msg.status == -1){
+                                message.error('手机号已被注册');
                             }
+                            message.error(intl.formatMessage({id: 'pages.captcha.wrong', defaultMessage: '验证码错误'}));
+                        } catch (error) {
+                            const defaultLoginFailureMessage = intl.formatMessage({
+                                id: 'pages.register.failure',
+                                defaultMessage: '注册失败，请重试！',
+                            });
+                            // console.log(error);
+                            message.error(defaultLoginFailureMessage);
                         }
                     }
-                    size="large"
-                >
+                }
+                size="large"
+            >
                 <Form.Item
                     name="username"
                     rules={[
@@ -138,15 +136,54 @@ export default function Register(props: Props) {
                         onChange={(e) => {
                             setPhone(e.target.value);
                         }}
-                        addonBefore={selectBefore}
                         style={{
                             height: '52px',
                         }}
-                        // prefix={<UserOutlined className="site-form-item-icon" />}
                         placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
+                        prefix={<UserOutlined className="site-form-item-icon" />}
+                        suffix={
+                            <ConfigProvider
+                                theme={{
+                                components: {
+                                    Dropdown: {
+                                    /* 这里是你的组件 token */
+                                        paddingXXS:0
+                                    },
+                                },
+                                }}
+                            >
+                                <Dropdown overlayClassName="search-dropdown-overlay" getPopupContainer={()=>Ref.current!} onOpenChange={(open)=>{
+                                    !open && setSearchKey("")
+                                }} menu={{style:style,items:[
+                                {
+                                    key: 'search',
+                                    label: (
+                                    <div style={{ padding:0,width:"100%"}} onClick={(e) => e.stopPropagation()}>
+                                        <Form.Item style={{margin:"0"}}>
+                                            <Input
+                                                name="undefined"
+                                                value={searchKey}
+                                                style={{height:"36px",fontSize:"14px",borderRadius:"4px"}}
+                                                placeholder="搜索国家"
+                                                onChange={(e) => setSearchKey(e.target.value)}
+                                                // onClick={(e) => e.stopPropagation()}
+                                                suffix={<SearchOutlined />}
+                                            />
+                                        </Form.Item>
+                                    </div>
+                                    ),
+                                },
+                                ...items,
+                                ]}} placement="bottomRight" trigger={["click"]}>
+                                <Flex gap={6} className='color-7A8499 cursor-pointer'>
+                                    +{phoneCode}
+                                    <UnfoldIcon />
+                                </Flex>
+                                </Dropdown>
+                            </ConfigProvider>
+                        }
                     />
                 </Form.Item>
-
                 <Form.Item
                     name="captcha"
                     rules={[
@@ -182,7 +219,8 @@ export default function Register(props: Props) {
                                 flex: 1
                             }}
                             onClick={async () => {
-                                const result = await getFakeCaptcha(phone,InternationalAreaCode,"reg");
+                                // InternationalAreaCode
+                                const result = await getFakeCaptcha(phone,phoneCode,"reg");
                                 // console.log(phone,InternationalAreaCode);
                                 // const result = await axios({
                                 //     headers: {
@@ -190,8 +228,7 @@ export default function Register(props: Props) {
                                 //     },
                                 //     url:`/h-module-sendSmsCode.html?base_name=${phone}&queue_type=reg&area_code=${InternationalAreaCode}&service=xht&from=matacart`
                                 // })
-                                
-                                console.log(result);
+                                // console.log(result);
                                 if (!result) {
                                     message.error(intl.formatMessage({
                                         id: 'pages.getcaptcha.failure'
@@ -285,8 +322,6 @@ export default function Register(props: Props) {
                             fontWeight: '400'
                         }} href='https://www.matacart.com/privacy.html'><FormattedMessage id='pages.privacyPolicy' defaultMessage='隐私政策' /></a>
                     </Checkbox>
-
-
                 </Form.Item>
                 <Button
                     style={{
@@ -298,67 +333,77 @@ export default function Register(props: Props) {
                 >
                     <FormattedMessage id="menu.register" defaultMessage="注册" />
                 </Button>
-                </Form>
+            </Form>
+            </div>
+            <Divider
+                style={{
+                    marginTop: '80px',
+                    fontSize: '14px',
+                    lineHeight: '20px',
+                    textAlign: 'center',
+                    color: '#666',
+                    fontWeight: '500',
+                }}
+                orientationMargin="3em"
+            >
+                <FormattedMessage id="pages.register.otherWays" defaultMessage='通过其他方式注册' />
+            </Divider>
+            <div
+                className="external-register-button-container"
+                style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    marginBottom: '60px',
+                }}
+            >
+                <Button className="external-register-button" block>
+                    <img
+                        src="/icons/google.svg"
+                        style={{
+                            objectFit: 'contain',
+                            height: '62%',
+                        }}
+                    />
+                    {intl.formatMessage({ id: 'pages.register.link.google' })}
+                </Button>
+                <Button className="external-register-button" block>
+                    <img src="/icons/facebook.svg" />
+                    {intl.formatMessage({ id: 'pages.register.link.facebook' })}
+                </Button>
+                <Button className="external-register-button" block>
+                    <img src="/icons/apple.svg" />
+                    {intl.formatMessage({ id: 'pages.register.link.apple' })}
+                </Button>
+                <Button className="external-register-button" block>
+                    <img src="/icons/linkie.svg" style={{ height: '100%', objectFit: 'contain' }} />
+                    {intl.formatMessage({ id: 'pages.register.link.linkie' })}
+                </Button>
+                <div>
+                    <FormattedMessage id={'pages.alreadyHavaAccount'} />，
+                    <Link to="/user/signIn"><FormattedMessage id={'pages.goToLogin'} /></Link>
                 </div>
-                <Divider
-                    style={{
-                        marginTop: '80px',
-                        fontSize: '14px',
-                        lineHeight: '20px',
-                        textAlign: 'center',
-                        color: '#666',
-                        fontWeight: '500',
-                    }}
-                    orientationMargin="3em"
-                >
-                    <FormattedMessage id="pages.register.otherWays" defaultMessage='通过其他方式注册' />
-                </Divider>
-                <div
-                    className="external-register-button-container"
-                    style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        justifyContent: 'center',
-                        marginBottom: '60px',
-                    }}
-                >
-                    <Button className="external-register-button" block>
-                        <img
-                            src="/icons/google.svg"
-                            style={{
-                                objectFit: 'contain',
-                                height: '62%',
-                            }}
-                        />
-                        {intl.formatMessage({ id: 'pages.register.link.google' })}
-                    </Button>
-                    <Button className="external-register-button" block>
-                        <img src="/icons/facebook.svg" />
-                        {intl.formatMessage({ id: 'pages.register.link.facebook' })}
-                    </Button>
-                    <Button className="external-register-button" block>
-                        <img src="/icons/apple.svg" />
-                        {intl.formatMessage({ id: 'pages.register.link.apple' })}
-                    </Button>
-                    <Button className="external-register-button" block>
-                        <img src="/icons/linkie.svg" style={{ height: '100%', objectFit: 'contain' }} />
-                        {intl.formatMessage({ id: 'pages.register.link.linkie' })}
-                    </Button>
-
-                    <div>
-                        <FormattedMessage id={'pages.alreadyHavaAccount'} />，
-                        <Link to="/user/signIn"><FormattedMessage id={'pages.goToLogin'} /></Link>
-                    </div>
-                </div>
-            </Scoped>
-            :<></>}
-        </div>
+            </div>
+        </Scoped>
     )
 
     
 }
 
 const Scoped = styled.div`
+
+    .user-box{
+        position: relative;
+        .ant-dropdown{
+            width: 100%;
+        }
+        .ant-dropdown-menu-item:first-child{
+            padding: 0 12px 8px 12px;
+            &:hover{
+            background-color: #FFF;
+            }
+        }
+    }
 
     .register-form-wrap h3 {
         margin-bottom: 32px;

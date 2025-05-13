@@ -1,0 +1,4 @@
+产品型号（必填且唯一，不可重复）,语言id 1中文 2英文,分组号：1正2仿,产品名称（英文产品名）,文件夹名/产品主图片名（注意有区别大小写，要与实际文件目录名大小写一致）,文件夹名/产品细节图名  （多张的请用|隔开）（注意有区别大小写，要与实际文件目录名大小写一致）,原价,特价（要比原价低）,库存量,重量,状态：1上架0下架9删除,一级类目名,二级类目名,三级类目名,,多条一行：xs||s||m，或单条单行,,,产品描述（英文描述）
+v_products_model,languages_id,group_id,v_products_name,v_products_image,additional_image,v_products_price,v_specials_price,v_products_quantity,v_products_weight,v_status,v_categories_name_1,v_categories_name_2,v_categories_name_3,option_name_1,option_value_1,option_name_2,option_value_2,v_products_description
+m0101,2,1,shoe name,https://oss.handingcdn.com/image/001.jpg,https://oss.handingcdn.com/image/001.jpg|https://oss.handingcdn.com/image/002.jpg|https://oss.handingcdn.com/image/003.jpg,100.09,34.5,6614,0,1,Baseball Jerseys,Baseball Champions Ring,,Color,RED,Size,S,"With Western Union Payment, 12% Off Extra."
+,,,,,,,,,,,,,,,BLUE,,M,

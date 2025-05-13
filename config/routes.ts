@@ -77,12 +77,12 @@ export default  [
       {  
         path: 'manages',  
         name: 'manages',  
-        component: './Orders/OrderItem/index', // 假设您的 Orders/index 组件位于 src/pages/Orders/OrderItem/index.jsx 或类似的路径  
+        component: './Orders/OrderList/index',
       },
       {
         path: 'recallOrders',
         name: 'recallOrders',
-        component: './Orders/AbandonedOrder',
+        component: './Orders/RecallOrders/RecallOrders',
       },
       {
         path: 'draftOrders',
@@ -98,7 +98,7 @@ export default  [
       {
         path: 'draftOrders/add',
         name: '',
-        component: './Orders/OrderDraft/OrderDraftAdd',
+        component: './Orders/OrderDraft/OrderDraftAdd/OrderDraftAdd',
       },
     ]    
   },
@@ -117,6 +117,12 @@ export default  [
           path: 'index',
           name: 'index',
           component: './Products/ProductList/index', 
+        },
+        {
+          path: 'migrate',
+          name: 'migrate',
+          hideInMenu: true,
+          component: './Products/Migrate/Migrate', 
         },
         {
           // 创建商品
@@ -149,13 +155,13 @@ export default  [
           path: 'categories/new',
           name: 'categories/new',
           menu: false,
-          component: './Products/ProductCategories/ProductCategoriesAdd/NewProductCategories',
+          component: './Products/ProductCategories/ProductCategoriesAdd/ProductCategoriesAdd',
         },
         {
           path: 'categories/edit',
           name: 'categories/edit',
           menu: false,
-          component: './Products/ProductCategories/ProductCategoriesEdit/EditProductCategories',
+          component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
         },
         // {
         //   path: 'categories/blankPage',
@@ -169,14 +175,13 @@ export default  [
         },
         {
           path: 'gift-cards/new',
-          name: 'gift-cards/new',
+          name: 'giftCardsNew',
           hideInMenu: true,
           parentKeys: ['/products/gift-cards'],
           component: './Products/GiftCards/GiftCardsAdd/GiftCardsAdd',
         },
         {
           path: 'gift-cards-products/new',
-          name: 'gift-cards',
           hideInMenu: true,
           parentKeys: ['/products/gift-cards'],
           component: './Products/GiftCards/GiftCardsProductAdd/GiftCardsProductAdd',
@@ -269,6 +274,11 @@ export default  [
         path: 'realtime',
         name: 'realtime',
         component:'./Analyse/report'
+      },
+      {
+        path: 'batch',
+        hideInMenu: true,
+        component:'./Analyse/Batch/Batch'
       }
     ]
   },
@@ -313,33 +323,35 @@ export default  [
 
   {
     path: 'app-store',
-    name: '应用',
+    name: 'appStore',
     component: './AppStore/AppStore/AppStore',
     // component: './Products/Inventory/BlankPage',
   },
   {
     path: 'app-store/custom-app',
-    name: '应用',
     hideInMenu: true,
     component: './AppStore/AppStore/CustomApp/CustomApp',
     // component: './Products/Inventory/BlankPage',
   },
   {
     path: 'app-store/custom-app-config/:id',
-    name: '应用',
     hideInMenu: true,
     component: './AppStore/AppStore/CustomAppConfig/CustomAppConfig',
     // component: './Products/Inventory/BlankPage',
   },
   {
+    path: 'app-store/custom-app-config/setting/:id',
+    hideInMenu: true,
+    component: './AppStore/AppStore/CustomAppConfig/AppSetting/AppSetting',
+  },
+  {
     path: 'app-store/custom-app-config-setting',
-    name: '后台API权限编辑',
     hideInMenu: true,
     component: './AppStore/AppStore/CustomAppConfigSetting/CustomAppConfigSetting',
   },
   {
     path: 'order_invoice_customization',
-    name: '订单票据定制插件',
+    name: 'orderInvoiceCustomization',
     icon: 'PieChartOutlined',
     component: './AppStore/OrderInvoiceCustomization/OrderInvoiceCustomization',
     routes:[
@@ -349,55 +361,46 @@ export default  [
       },
       {
         path: 'orderList',
-        name: '订单票据定制插件',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/OrderList/OrderList',
       },
       {
         path: 'orderPdfPreview/:id',
-        name: '订单票据定制插件',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoice/PrintOrderInvoice',
       },
       {
         path: 'orderPdfPreview/picking/:id',
-        name: '订单票据定制插件',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoicePicking/PrintOrderInvoicePicking',
       },
       {
         path: 'draftOrderList',
-        name: '草稿单',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/DraftOrderList/DraftOrderList',
       },
       {
         path: 'orderPdfPreview/draft/:id',
-        name: '草稿单',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/DraftOrderList/PrintOrderInvoiceDraft/PrintOrderInvoiceDraft',
       },
       {
         path: 'templateManage',
-        name: '模板管理',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/TemplateManage/TemplateManage',
       },
       {
         path: 'basicConfig',
-        name: '基础设置',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/BasicConfig/BasicConfig',
       },
       {
         path: 'orderPdfDownload',
-        name: '下载列表',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/OrderPdfDownload/OrderPdfDownload',
       },
       {
         path: 'email',
-        name: '邮件自动化',
         hideInMenu: true,
         component: './IFrame/OrderTicketAssistant/Email/Email',
       }
@@ -406,40 +409,65 @@ export default  [
   
   {
     path: 'channel',
-    name: '渠道',
+    name: 'channel',
     component: './Products/Inventory/Index',
     // component: './Products/Inventory/BlankPage',
   },
   {
     path: 'website',
-    name: '在线商店',
+    name: 'website',
     icon: 'ShopOutlined',
-    component: './Products/Inventory/Index',
+    // component: './Products/Inventory/Index',
     routes:[
       {
         path: 'shopSetting',
-        name: '店铺设计',
-        component: './Products/Inventory/Index',
+        name: 'shopSetting',
+        component: './Channel/OnlineStore/ShopSetting/ShopSetting',
       },
       {
         path: 'articles',
-        name: '博客',
-        component: './Products/Transfers/BlankPage',
+        name: 'articles',
+        component: './Channel/OnlineStore/Articles/Articles',
+      },
+      {
+        path: 'articles/new',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/Articles/New/NewArticles',
+      },
+      {
+        path: 'articles/edit',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/Articles/Edit/EditArticles',
       },
       {
         path: 'page',
-        name: '自定义页面',
-        component: './Products/Transfers/BlankPage',
+        name: 'customPage',
+        component: './Channel/OnlineStore/CustomPage/CustomPage',
+      },
+      {
+        path: 'page/new',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/CustomPage/New/NewPage',
+      },
+      {
+        path: 'page/edit',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/CustomPage/Edit/EditPage',
       },
       {
         path: 'navList',
-        name: '菜单导航',
-        component: './Products/Transfers/BlankPage',
+        name: 'navList',
+        component: './Channel/OnlineStore/NavList/NavList',
+      },
+      {
+        path: 'navList/add',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/NavList/New/NewNavList',
       },
       {
         path: 'preferences',
-        name: '偏好设置',
-        component: './Products/Transfers/BlankPage',
+        name: 'preferences',
+        component: './Channel/OnlineStore/Preferences/Preferences',
       },
     ]
     // component: './Products/Inventory/BlankPage',
@@ -483,7 +511,6 @@ export default  [
   // 账户管理
   {
     path: '/stores/account',
-    name: '账户管理',
     icon: 'UserSwitchOutlined',
     component: './Shops/AccountManagement/AccountManagement',
     menuRender: false,
@@ -531,7 +558,7 @@ export default  [
     name: 'settings',
     icon: 'SettingOutlined',
     hideChildrenInMenu:true,
-    // hideInMenu: true,
+    hideInMenu: true,
     routes: [
       {
         path: '',
@@ -539,7 +566,6 @@ export default  [
       },
       {
         path: 'index',
-        name: 'index',
         parentKeys: ['/settings'],
         hideInMenu: true,
         component: './Settings/index',
@@ -573,9 +599,6 @@ export default  [
         menuRender: false,
         component:"./Settings/Collection/AccountManagement/AccountManagement"
       },
-      
-
-
       // -------------------
       {
         path:"payments/thirdCreditCard",
@@ -583,8 +606,12 @@ export default  [
         component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollection"
       },
       {
-        path:"payments/thirdCreditCard/detail/:id",
-        component:"./Settings/Collection/ThirdCreditCollection/Detail/Detail"
+        path:"payments/thirdCreditCard/add",
+        component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollectionAdd/ThirdCreditCollectionAdd"
+      },
+      {
+        path:"payments/thirdCreditCard/detail",
+        component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollectionDetail/ThirdCreditCollectionDetail"
       },
       {
         path:"payments/edit",
@@ -599,8 +626,12 @@ export default  [
         component:"./Settings/Collection/OtherCollection/OtherCollection"
       },
       {
-        path:"payments/other/edit",
+        path:"payments/other/add",
         component:"./Settings/Collection/OtherCollection/OtherCollectionAdd/OtherCollectionAdd"
+      },
+      {
+        path:"payments/other/detail",
+        component:"./Settings/Collection/OtherCollection/OtherCollectionDetail/OtherCollectionDetail"
       },
       // 发货与配送
       {
@@ -669,11 +700,11 @@ export default  [
         component:"./Settings/Domain/Domain"
       },
       {
-        path:"manage",
+        path:"domain/manage",
         component:"./Settings/Domain/DomainManage/DomainManage"
       },
       {
-        path:"add-domain",
+        path:"domain/add-domain",
         component:"./Settings/Domain/DomainManage/AddDomain"
       },
       {
@@ -714,6 +745,37 @@ export default  [
         component:"./Settings/Markets/Markets"
       },
     ]
+  },
+
+  // 主题编辑
+  {
+    path: 'theme',
+    name: 'theme',
+    icon: 'SettingOutlined',
+    hideInMenu: true,
+    layout: false,
+    component: './Theme/Editor/Editor',
+    routes: [
+      {
+        path: '',
+        redirect: 'home',
+      },
+      {
+        path: 'home',
+        name: 'home',
+        pure:true,
+        parentKeys: ['/theme'],
+        component: './Theme/Editor/Home/Home',
+      },
+      {
+        path: 'allCollections',
+        name: 'allCollections',
+        pure:true,
+        parentKeys: ['/theme'],
+        component: './Theme/Editor/Category/Category',
+      }
+    ]
+
   },
   // {
   //   path: '/test',

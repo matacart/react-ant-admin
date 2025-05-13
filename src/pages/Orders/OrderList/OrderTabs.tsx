@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Button, Modal, Tag, Input } from 'antd';
-import { useIntl } from '@umijs/max';
-import OrdersSelectCard from '@/components/Card/OrdersSelectCard';
+import { Tabs, Button, Modal, Tag, Input, Flex, Dropdown, Radio, Popover } from 'antd';
 import OrdersListAjax from '@/pages/Orders/OrderList/OrdersListAjax';
-import '@/components/Card/FilteRConditions.scss';
-import { CloseOutlined } from '@ant-design/icons';
+import OrdersSelectCard from './OrdersSelectCard';
+import orderList from '@/store/order/orderList';
+import { observer } from 'mobx-react-lite';
+import { useIntl } from '@umijs/max';
+import { DownIcon } from '@/components/Icons/Icons';
 
 const { TabPane } = Tabs;
 
 interface FilterCondition {
   id: string;
-  filter_group_id: string;
-  filter_name: React.ReactNode;
-  filter_field: string;
-  filter_value: string;
-  module: string;
+  languagesId:string;
 }
 
 // 获取今天的开始和结束时间
@@ -34,55 +31,59 @@ const getTodayEnd = () => {
   return `${year}-${month}-${day} 23:59:59`;
 };
 
-const todayStart = getTodayStart();
-const todayEnd = getTodayEnd();
-
-const filterCondition: FilterCondition[] = [
-  { id: '1', filter_group_id: '1', filter_name: '归档订单: 展示已归档的订单', filter_field: 'archive_status', filter_value: '', module: 'orders_list' },
-  { id: '2', filter_group_id: '2', filter_name: '发货状态: 待发货, 部分发货', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-  { id: '3', filter_group_id: '3', filter_name: '订单状态: 已取消', filter_field: 'orders_status_id', filter_value: '0', module: 'orders_list' },
-  { id: '4', filter_group_id: '4', filter_name: '订单状态: 处理中', filter_field: 'orders_status_id', filter_value: '1', module: 'orders_list' },
-  { id: '5', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'startDate', filter_value: `${todayStart}`, module: 'orders_list' },
-  { id: '', filter_group_id: '5', filter_name: '订单日期: 今天', filter_field: 'endDate', filter_value: `${todayEnd}`, module: 'orders_list' },
-];
-
-const filteredArr = (id: string): FilterCondition[] => {
-  return filterCondition.filter(element => element.id === id);
-};
-
-const FilteredOrdersComponent = ({ id, activeKey }: { id: string; activeKey: string }) => {
-  const elementsById = filteredArr(id);
-  const [filterCondition, setFilterCondition] = useState<FilterCondition[]>(elementsById);
+const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activeKey: string }) => {
+  const [filterCondition,setFilterCondition] = useState(
+    {
+      id:id,
+      languagesId: '2',
+    }
+  )
 
   const handleRemoveCondition = (conditionId: string) => {
     const updatedConditions = filterCondition.filter(condition => condition.id !== conditionId);
     setFilterCondition(updatedConditions);
   };
 
-  const hasFilters = filterCondition.length > 0;
 
- // 定义模态框的状态
-const [isModalVisible, setIsModalVisible] = useState(false);
-// 定义选项卡名称的状态
-const [tabName, setTabName] = useState('');
+  // 定义模态框的状态
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // 定义选项卡名称的状态
+  const [tabName, setTabName] = useState('');
 
-// 处理点击事件，显示模态框
-const addNewTab = () => {
-  setIsModalVisible(true);
-};
+  // 处理点击事件，显示模态框
+  const addNewTab = () => {
+    setIsModalVisible(true);
+  };
 
-// 关闭模态框
-const handleCancel = () => {
-  setIsModalVisible(false);
-};
+  // 关闭模态框
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  useEffect(()=>{
+    setFilterCondition({
+      id:id,
+      languagesId: orderList.languages
+    })
+  },[orderList.tagsStatusList,orderList.languages])
 
   return (
     <div>
       <div>
-      <OrdersSelectCard />
+        <OrdersSelectCard />
       </div>
       <div>
-        {filterCondition.map((element) => (
+        {/* 标签 */}
+        <Flex style={{marginBottom:"10px"}}>
+          {orderList.tagsStatusList.map((item,index)=>(
+            item.value && <Tag key={index} style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{}}>
+                <span className="color-474F5E font-14">
+                  {item.title}：{item.label}
+                </span>
+            </Tag>
+          ))}
+        </Flex>
+        {/* {filterCondition.map((element) => (
           <Tag
             key={element.id}
             className='tag'
@@ -91,32 +92,27 @@ const handleCancel = () => {
           >
             {element.filter_name}
           </Tag>
-        ))}
-        <Button  onClick={addNewTab}>
+        ))} */}
+        {/* <Button  onClick={addNewTab}>
           新建选项卡
-        </Button>
+        </Button> */}
         <Modal
-  title="新建选项卡"
-  visible={isModalVisible}
-  onOk={() => {
-  
-    handleCancel();
-  }}
-  onCancel={handleCancel}
->
-  
-<p>选项卡名称</p>
-<Input></Input>
-</Modal>
+          title="新建选项卡"
+          visible={isModalVisible}
+          onOk={() => {
+          
+            handleCancel();
+          }}
+          onCancel={handleCancel}
+        >
+          <p>选项卡名称</p>
+          <Input></Input>
+        </Modal>
       </div>
-      {hasFilters ? (
-        <OrdersListAjax filterCondition={filterCondition} />
-      ) : (
-        <OrdersListAjax filterCondition={[]} /> // 展示所有订单列表项
-      )}
+        <OrdersListAjax {...filterCondition} />
     </div>
   );
-};
+})
 
 function OrderTabs() {
   const [newTabName, setNewTabName] = useState('');
@@ -124,9 +120,9 @@ function OrderTabs() {
   const intl = useIntl();
   const [panes, setPanes] = useState([
     { title: intl.formatMessage({ id: 'order.tabs.all' }), content: <FilteredOrdersComponent id={'1'} activeKey={activeKey} />, key: '1' },
-    { title: intl.formatMessage({ id: 'order.tabs.readytoship' }), content: <FilteredOrdersComponent id={'2'} activeKey={activeKey} />, key: '2' },
+    { title: intl.formatMessage({ id: 'order.tabs.readytoship' }), content: <FilteredOrdersComponent id={'4'} activeKey={activeKey} />, key: '4' },
     { title: intl.formatMessage({ id: 'order.tabs.cancelled' }), content: <FilteredOrdersComponent id={'3'} activeKey={activeKey} />, key: '3' },
-    { title: intl.formatMessage({ id: 'order.tabs.process' }), content: <FilteredOrdersComponent id={'4'} activeKey={activeKey} />, key: '4' },
+    { title: intl.formatMessage({ id: 'order.tabs.process' }), content: <FilteredOrdersComponent id={'2'} activeKey={activeKey} />, key: '2' },
     { title: intl.formatMessage({ id: 'order.tabs.neworders' }), content: <FilteredOrdersComponent id={'5'} activeKey={activeKey} />, key: '5' },
   ]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -178,16 +174,44 @@ function OrderTabs() {
     }
   };
 
+  
+
   return (
     <div>
       <Tabs
         activeKey={activeKey}
         onChange={onChange}
+        destroyInactiveTabPane={true}
         type="editable-card"
         onEdit={onEdit}
+        tabBarExtraContent={<>
+          <Dropdown placement="bottomRight" trigger={["click"]} menu={{items:[
+            {
+              key: '1',
+              label: <>
+                <Radio.Group
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                  }}
+                  options={[
+                    { value: 1, label: '全部地点' },
+                    { value: 2, label: '默认地点' },
+                  ]}
+                />
+              </>,
+            }
+          ]}}>
+            <Flex gap={6} className='cursor-pointer'>
+              <div className='color-474F5E'>全部地点</div>
+              <DownIcon className='color-474F5E font-12' />
+            </Flex>
+          </Dropdown>
+        </>}
       >
         {panes.map(pane => (
-          <TabPane tab={pane.title} key={pane.key} closable={parseInt(pane.key, 10) > 5}>
+          <TabPane tab={pane.title} key={pane.key} closable={parseInt(pane.key, 10) > 5} >
             {pane.content}
           </TabPane>
         ))}
@@ -207,5 +231,4 @@ function OrderTabs() {
     </div>
   );
 }
-
-export default OrderTabs;
+export default OrderTabs

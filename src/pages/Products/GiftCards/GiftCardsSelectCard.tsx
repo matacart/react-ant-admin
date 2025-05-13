@@ -1,9 +1,5 @@
-import { Space, Select, Input, Tag, Button, ConfigProvider, Flex } from "antd";
-import type { SearchProps } from 'antd/es/input/Search';
-import type { SelectProps } from 'antd';
-import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
+import { Space, Select, Input, Tag, Button, Flex } from "antd";
 import { useEffect, useState } from "react"
-import { selectTags } from "@/services/y2/api";
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
 import MoreSelect from "@/components/Select/MoreSelect";
 import styled from "styled-components";
@@ -69,69 +65,69 @@ export default function GiftCardsSelectCard(){
                         </div>
                         {/* 状态 */}
                         <MyDropdown
-                            component={<Button style={{ height:"36px",width:"140px" }}>
+                            tiggerEle={<Button style={{ height:"36px",width:"140px" }}>
                                 <Flex justify="space-between" align="center" style={{width:"100%"}}>
                                     <div className='color-474F5E'>状态</div>
                                     <img src="/icons/Suffix1.svg" />
                                 </Flex>
                             </Button>}
-                            itemList={[
-                                {
-                                    key: "1", label: (
-                                        <div onClick={() => { } }>已启用</div>
-                                    )
-                                },
-                                {
-                                    key: "2", label: (
-                                        <div onClick={() => { } }>即将过期</div>
-                                    )
-                                },
-                                {
-                                    key: "3", label: (
-                                        <div onClick={() => { } }>已过期</div>
-                                    )
-                                },
-                                {
-                                    key: "4", label: (
-                                        <div onClick={() => { } }>已禁用</div>
-                                    )
-                                }
-                            ]} 
-                            styled={undefined}
-                            position={undefined}
+                            menu={{
+                                items:[
+                                    {
+                                        key: "1", label: (
+                                            <div onClick={() => { } }>已启用</div>
+                                        )
+                                    },
+                                    {
+                                        key: "2", label: (
+                                            <div onClick={() => { } }>即将过期</div>
+                                        )
+                                    },
+                                    {
+                                        key: "3", label: (
+                                            <div onClick={() => { } }>已过期</div>
+                                        )
+                                    },
+                                    {
+                                        key: "4", label: (
+                                            <div onClick={() => { } }>已禁用</div>
+                                        )
+                                    }
+                                ]
+                            }}
                         />
                         {/*  */}
                         <MyDropdown
-                            component={<Button style={{ height:"36px",width:"140px" }}>
+                            tiggerEle={<Button style={{ height:"36px",width:"140px" }}>
                                 <Flex justify="space-between" align="center" style={{width:"100%"}}>
                                     <div className='color-474F5E'>余额</div>
                                     <img src="/icons/Suffix1.svg" />
                                 </Flex>
                             </Button>}
-                            itemList={[
-                                {
-                                    key: "1", label: (
-                                        <div onClick={() => { } }>满余额或部分余额</div>
-                                    )
-                                },
-                                {
-                                    key: "2", label: (
-                                        <div onClick={() => { } }>满余额</div>
-                                    )
-                                },
-                                {
-                                    key: "3", label: (
-                                        <div onClick={() => { } }>部分余额</div>
-                                    )
-                                },
-                                {
-                                    key: "4", label: (
-                                        <div onClick={() => { } }>无余额</div>
-                                    )
-                                }
-                            ]} 
-                            styled={undefined}
-                            position={undefined}
+                            menu={{
+                                items:[
+                                    {
+                                        key: "1", label: (
+                                            <div onClick={() => { } }>满余额或部分余额</div>
+                                        )
+                                    },
+                                    {
+                                        key: "2", label: (
+                                            <div onClick={() => { } }>满余额</div>
+                                        )
+                                    },
+                                    {
+                                        key: "3", label: (
+                                            <div onClick={() => { } }>部分余额</div>
+                                        )
+                                    },
+                                    {
+                                        key: "4", label: (
+                                            <div onClick={() => { } }>无余额</div>
+                                        )
+                                    }
+                                ]
+                            }}
                         />
                         {/* 4 价格区间 */}
                         <PriceRangeSelector />

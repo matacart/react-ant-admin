@@ -1,12 +1,10 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd'
+import { Button, Card, ConfigProvider, Drawer, Flex, Form, Input, message, Select } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
-import newStore from '@/store/newStore';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
-import CustomsDeclaration from './CustomsDeclaration';
 import MultipleStylesCard from './MultipleStylesCard';
 import PriceOrTransactionCard from './PriceOrTransactionCard';
 import ProductDataCard from './ProductDataCard';
@@ -16,91 +14,20 @@ import ProductStyleList from './ProductStyleList';
 import SEOCard from './SEOCard';
 import StockCard from './StockCard';
 import ThemeTemplateCard from './ThemeTemplateCard';
-import ThirdPartyInfoCard from './ThirdPartyInfoCard';
-import ProductOverlay from '@/components/Overlay/ProductOverlay';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
 import Subnumber from './Subnumber';
-import ProtectionInformation from './ProtectionInformation';
 import Recommendation from './Recommendation';
 import Relevance from './Relevance';
-import globalStore from '@/store/globalStore';
+import product from '@/store/product/product';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import ProtectionInformation from './ProtectionInformation';
+import ThirdPartyInfoCard from './ThirdPartyInfoCard';
+import { addTags, upDateProduct } from '@/services/y2/api';
+import SkeletonCard from '@/components/Skeleton/SkeletonCard';
+import LangSelect from '@/pages/components/LangSelect';
+import Overlay from '@/components/Overlay/Overlay';
 
-// const createStyled = (productId:string)=>{
-//     setInterval(()=>{
-//         // 通过产品id添加款式
-//         console.log(newStore.styleName)
-//         if(newStore.styleName.length>0){
-//             newStore.styleName.forEach((e,i) => {
-//                 newStore.styleValue[i].forEach(async styleValue=>{
-//                     let styleNameId = 0;
-//                     let styleContentId = 0;
-//                     // 创建款式名称
-//                     await addStyleName(newStore.language,e).then(res=>{
-//                         console.log(res)
-//                         if(res.code==0){
-//                             // 创建成功
-//                             // 创建款式内容
-//                             // 通过产品id关联
-//                             styleNameId = res.id
-//                         }else{
-//                             // message.error('noooo');
-//                         }
-//                     });
-//                     // 创建款式内容
-//                     await addStyleContent(newStore.language,styleValue,styleNameId).then(async res=>{
-//                         console.log(res)
-//                         if(res.code==0){
-//                             styleContentId = res.id
-//                         }else{
-//                             // 款式存在 -- 查询所有款式获取款式内容id
-//                             // message.error('noooo');
-//                             await getProductStyleValueList().then(styleData=>{
-//                                 styleData.data.forEach((style:any)=>{
-//                                     if(style.option_values_name == styleValue && style.option_id == styleNameId){
-//                                         styleContentId = style.id
-//                                     }
-//                                 })
-//                             })
-//                         }
-//                     })
-//                     // 通过产品id关联
-//                     await addStyle(styleNameId,styleContentId,productId).then((res:any)=>{
-//                         console.log(res)
-//                         if(res.code==0){
-//                             console.log("产品款式添加成功")
-//                             newStore.setStyleName([]);
-//                         }else if(res.code==201){
-//                             // 款式产品已存在
-//                             newStore.setStyleName([]);
-//                         }
-//                     })
-//                 })
-//             });
-//         }
-//         // 给产品添加款式成功，通过模型获取到所有的产品款式，将内容添加进去
-//         if(newStore.styleName.length == 0){
-//             // // 通过模型查找款式列表
-//             getProductStyleList(newStore.model,newStore.language).then((res:any)=>{
-//                 // console.log(res)
-//                 if(res.code==0){
-//                     console.log(res.data)
-//                     // 通过for循环将所有数据提交
-//                     res.data.forEach((res:any)=>{
-//                         updateProductStyle(res.id,"200","100").then(result=>{
-//                             if(result.code == 0){
-//                                 // success
-                                
-//                             }
-//                         })
-//                     })
-//                 }else{
-//                   console.log("获取款式列表失败")
-//                 }
-//             })
-//         }
-//     },10000)
-// }
 // 表单项商品数据类型
 interface DataType {
     key: React.Key;
@@ -134,48 +61,122 @@ function AddNewProduct(){
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
     const [style, setStyle] = useState([]);
+    // 语言
+    const [language,setLanguage] = useState("2");
 
-    let productInfo = history.location.state as LocationState;
-    if(productInfo){
-        // 复制图片
-        if(productInfo.copyProductImage){
-            newStore.setSelectedImgList(JSON.parse(productInfo.copyProduct.product_image as string))
-            // 存储给map
-            JSON.parse(productInfo.copyProduct.product_image as string).forEach((value:any,index:any) => {
-                newStore.temp.set(index,value)
-            });
-        }
-        // 库存
-        if(productInfo.copyProductInventory){
-            newStore.setInventory(productInfo.copyProduct.inventory)
-        }
-        if(productInfo.radioValue == 1){
-            newStore.setOnPutProduct(true)
-        }else{
-            newStore.setOnPutProduct(false);
-        }
-        // 
-        newStore.setTitle('[Copy]'+productInfo.copyProduct.title)
-        newStore.setContent(productInfo.copyProduct.content)
-        newStore.setPrice(productInfo.copyProduct.price)
-        newStore.setCostPrice(productInfo.copyProduct.costPrice)
-        newStore.setModel(productInfo.copyProduct.model+"-1")
-        // 新增 11-19
-        newStore.setHSCode(productInfo.copyProduct.HSCode)
-        newStore.setISBN(productInfo.copyProduct.ISBN)
-        newStore.setNotion(productInfo.copyProduct.notion)
+    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [loading,setLoading] = useState(false) 
+    const [isOverlay,setIsOverlay] = useState(false)
+
+
+    const [form] = Form.useForm();
+
+    // 新增一个ref用于标记是否是初始渲染
+    const initialRender = useRef(true);
+
+    // 复制信息
+    // let productInfo = history.location.state as LocationState;
+    // if(productInfo){
+    //     // 复制图片
+    //     if(productInfo.copyProductImage){
+    //         newStore.setSelectedImgList(JSON.parse(productInfo.copyProduct.product_image as string))
+    //         // 存储给map
+    //         JSON.parse(productInfo.copyProduct.product_image as string).forEach((value:any,index:any) => {
+    //             newStore.temp.set(index,value)
+    //         });
+    //     }
+    //     // 库存
+    //     if(productInfo.copyProductInventory){
+    //         newStore.setInventory(productInfo.copyProduct.inventory)
+    //     }
+    //     if(productInfo.radioValue == 1){
+    //         newStore.setOnPutProduct(true)
+    //     }else{
+    //         newStore.setOnPutProduct(false);
+    //     }
+    //     // 
+    //     newStore.setTitle('[Copy]'+productInfo.copyProduct.title)
+    //     newStore.setContent(productInfo.copyProduct.content)
+    //     newStore.setPrice(productInfo.copyProduct.price)
+    //     newStore.setCostPrice(productInfo.copyProduct.costPrice)
+    //     newStore.setModel(productInfo.copyProduct.model+"-1")
+    //     // 新增 11-19
+    //     newStore.setHSCode(productInfo.copyProduct.HSCode)
+    //     newStore.setISBN(productInfo.copyProduct.ISBN)
+    //     newStore.setNotion(productInfo.copyProduct.notion)
+    // }
+
+    // 选择语言
+    const setLang = (lang:string)=>{
+        product.setProductInfo({
+            ...product.productInfo,
+            languages_id:lang
+        })
+        setLanguage(lang)
     }
-    console.log(productInfo)
-    // 复制
+
+    // 表单验证
+    const formValidation = ()=>{
+        return form.validateFields().then(res=>{
+            return true
+        }).catch(e=>{
+            if (e.errorFields.length > 0) {
+                form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
+            }
+            return false
+        })
+    }
+
+    // 验证通过 -- 创建商品
+    const onFinish = async () => {
+        if(await formValidation()){
+            setLoading(true)
+            try {
+                product.productInfo.tag !== "" && addTags(product.productInfo.languages_id,product.productInfo.tag).then(res=>{
+                })
+                await upDateProduct({
+                    ...product.productInfo,
+                    product_image:product.productInfo.additional_image[0] || "",
+                    additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
+                    diversion:JSON.stringify([product.productInfo.diversion || {}]),
+                    attributes:JSON.stringify([...product.attributes,...product.tempAttributes]),
+                    variants:JSON.stringify([...product.variants,...product.tempVariants])
+                })
+                message.success('创建成功')
+            }catch(err){
+            }finally{
+                setLoading(false)
+                history.push('/products/index')
+            }
+        }   
+    };
+
+
     useEffect(()=>{
-        
+        // 清空状态
+        const init = async () => {
+            await product.reset(); // 如果 reset 是异步操作
+            // 随机初始化型号
+            const randomModal = "m"+new Date().getTime()
+            await product.setProductInfo({
+                ...product.productInfo,
+                model:randomModal
+            })
+            setIsSkeleton(false)
+        };
+        init();
     },[])
-    // // 实现 onSecondInputChange 函数
-    // const handleSecondInputChange = (value: string) => {
-    //     setStyleId(value);
-    //     console.log(value)
-    //     // 初始化参数
-    // };
+
+    // 监听product.productInfo 变化 --- 
+    useEffect(()=>{
+        if(initialRender.current) {
+            initialRender.current = false;
+            return;
+        }
+        if(!isSkeleton && !initialRender.current){
+            setIsOverlay(true)
+        }
+    },[product.productInfo])
 
     // 离开提示
     window.onbeforeunload = () => {
@@ -185,7 +186,7 @@ function AddNewProduct(){
 
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -197,23 +198,26 @@ function AddNewProduct(){
                             </div>
                             <div className="mc-header-left-content">添加商品</div>
                         </div>
-                        <div className='mc-header-right'>
-                            <Select className='selector' defaultValue="更多" />
-                        </div>
+                        <Flex className='mc-header-right' align='center' gap={12}>
+                            {/* 语言 */}
+                            {/* <Select className='selector' defaultValue="更多" /> */}
+                            <LangSelect lang={language} setLang={setLang} />
+                        </Flex>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <ProductDataCard />
+                            <ProductDataCard form={form} />
                             <ProductImgCard />
                             <PriceOrTransactionCard />
-                            <StockCard/>
+                            <StockCard form={form} />
+                            {/* 海关信息 */}
                             {/* <CustomsDeclaration/> */}
                             <MultipleStylesCard style = {style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
                             {onVariant && <ProductStyleList style = {style} setStyle={setStyle} />}
                         </div>
                         <div className='mc-layout-extra'>
-                            <ProductSettingsCard/>
                             <Relevance />
+                            <ProductSettingsCard/>
                             <Recommendation />
                             <SEOCard/>
                             <Winnow />
@@ -226,33 +230,14 @@ function AddNewProduct(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' onClick={async ()=>{
-                            newStore.setProductImg(Array.from(newStore.temp.values())[0])
-                            await newStore.setSelectedImgList(Array.from(newStore.temp.values()).slice(1))
-                            console.log(newStore)
-                            // if(newStore.partsWarehouse == "0"){
-                            //     if(newStore.validateForm()){
-                            //         newStore.unBlock();
-                            //         newStore.submitAddProduct().then(res=>{
-                            //             if(res.code==0){
-                            //                 message.success('创建成功')
-                            //                 // 返回产品id 根据产品id在本地自动请求款式直到成功
-                            //             }else{
-                            //                 message.error('创建失败');
-                            //             }
-                            //         });
-                            //         await globalStore.sleep(1000);
-                            //         history.push('/products/index')
-                            //     }
-                            // }else{
-                            //     message.error('抱歉！非品库管理员，平台产品不可创建！');
-                            // }
-                        }}>创建</Button>
+                        <PrimaryButton text="创建" loading={loading} onClick={onFinish} />
                     </div>
                 </div>
-            </div>
-            {/* 编辑提示 */}
-            {newStore.editStatus && <ProductOverlay />}
+                {/* 编辑提示 */}
+                {isOverlay && <Overlay status={loading} okText='创建' onExit={()=>{
+                    history.push('/products/index')
+                }} onSubmit={onFinish} />}
+            </div>}
         </Scoped>
     )
 }
@@ -309,12 +294,6 @@ const Scoped = styled.div`
             }
     
             &-right {
-                display: flex;
-                align-items: center;
-                width: 70px;
-                > .selector{
-                    height: 36px;
-                }
             }
         }
 

@@ -18,5 +18,6 @@ export default function BackButton(){
 }
 
 const Scoped = styled.div`
-background-color: transparent;
+    display: flex;
+    background-color: transparent;
 `

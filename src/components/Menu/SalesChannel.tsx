@@ -108,9 +108,9 @@ function SalesChannel({dom}:{dom:ReactNode}){
             <Modal title="添加销售渠道" styles={{content:{paddingRight:"10px"},body:{height:"calc(100vh - 160px)",overflowY:"auto",paddingRight:"12px"}}} width={480} centered open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)}>
                 <ScopedList>
                     <List className="sales-channel">
-                        {notSalesChannelList.map(item=>{
+                        {notSalesChannelList.map((item,index)=>{
                             return (
-                                <List.Item>
+                                <List.Item key={index}>
                                     <Flex className="list-item-box" align="center">
                                         <div>
                                             <img width={25} height={25} src={item.imgUrl} />
@@ -133,9 +133,9 @@ function SalesChannel({dom}:{dom:ReactNode}){
                     </List>
                     <div className="line-text color-474F5E">已添加的渠道可进行删除</div>
                     <List className="sales-channel">
-                        {salesChannelList.map(item=>{
+                        {salesChannelList.map((item,index)=>{
                             return (
-                                <List.Item>
+                                <List.Item key={index}>
                                     <Flex className="list-item-box" align="center">
                                         <div>
                                             <img width={25} height={25} src={item.imgUrl} />
@@ -151,16 +151,16 @@ function SalesChannel({dom}:{dom:ReactNode}){
                                                 <Flex justify="center" className="icon-box cursor-pointer"><NailIcon /></Flex>
                                             </Tooltip>
                                             <MyDropdown
-                                                component={<Flex justify="center" className="icon-box cursor-pointer"><EllipsisOutlined /></Flex>}
-                                                itemList={[
-                                                    {
-                                                        key: "1", label: (
-                                                            <div onClick={() => { } } className="color-FF0000">卸载</div>
-                                                        )
-                                                    }
-                                                ]} 
-                                                styled={undefined}
-                                                position={undefined}
+                                                tiggerEle={<Flex justify="center" className="icon-box cursor-pointer"><EllipsisOutlined /></Flex>}
+                                                menu={{
+                                                    items:[
+                                                        {
+                                                            key: "1", label: (
+                                                                <div onClick={() => { } } className="color-FF0000">卸载</div>
+                                                            )
+                                                        }
+                                                    ]
+                                                }}
                                             />
                                         </Flex>
                                     </Flex>

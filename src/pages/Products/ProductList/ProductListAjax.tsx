@@ -1,15 +1,14 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import qs from 'qs';
 import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
-import newStore from '@/store/newStore';
 import SelectedActions from './SelectedActions';
 import cookie from 'react-cookies';
-import oldStore from '@/store/product/oldStore';
+import productList from '@/store/product/productList';
+import { observer } from 'mobx-react-lite';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -75,7 +74,8 @@ function ProductListAjax(selectProps:any) {
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 10,
+      pageSize: 50,
+      pageSizeOptions:[50,200,400,600]
     },
   });
   // 复制商品模态框
@@ -125,16 +125,9 @@ function ProductListAjax(selectProps:any) {
   //列表数据
   const [data, setData] = useState<DataType[]>([]);
 
-  const [tempTest,setTempTest] = useState("1");
-
   // 状态
   const onChangeSwich = (index: number,checked:boolean) => {
     // 改变商品的状态
-    // let oldDataItem = data[index]
-    // let newDataItem = {
-    //   ...oldDataItem,
-    //   state: !oldDataItem.state
-    // }
     let newData = [...data];
     newData[index].state = checked?"1":"0"
     setData(newData);
@@ -150,7 +143,7 @@ function ProductListAjax(selectProps:any) {
         flexWrap: 'nowrap',
         alignContent: 'center',
       }}>
-        <Avatar shape="square" size="large" src={(record.imgUrl && record.imgUrl!=="")?record.imgUrl:"/icons/ProductCoverBlank.svg"} />
+        <Avatar shape="square" size="large" src={(record.imgUrl && record.imgUrl!=="")?record.imgUrl+"?x-oss-process=image/resize,w_100":"/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_100"} />
         <span style={{
           marginLeft: 10,
           alignContent: 'center',
@@ -168,7 +161,7 @@ function ProductListAjax(selectProps:any) {
     },
     {
       title: '售价',
-      dataIndex: 'price',
+      dataIndex: 'specialprice',
       width: 150,
       render: (value, record, index) =>{
         let num = Number(value);
@@ -207,7 +200,7 @@ function ProductListAjax(selectProps:any) {
             <Popover content={content} title="销售渠道" style={{
               width: '20px'
             }} trigger="click">
-              {data[index].state == "1" ? '下架' : '上架'}
+              {data[index].state == "1" ? '上架' : '下架'}
             </Popover>
           </>:<div>已存档</div>}
         </div>,
@@ -261,8 +254,22 @@ function ProductListAjax(selectProps:any) {
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
+
+    const res = {
+      page:page,
+      limit:limit,
+      title:"",
+      languages_id:productList.languagesId,
+      tag:"",
+      status:productList.flag,
+      alliance_status:productList.isAlliance,
+      hosted_status:productList.isHosted,
+      // 条件
+      condition:JSON.stringify(productList.condition)
+    }
+
     try {
-      const result = await getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag,newStore.isAlliance,newStore.isHosted)
+      const result = await getProductList(res)
       setLoading(false);
       // 201 空
       if(result.code == 0 || result.code == 201){
@@ -275,6 +282,7 @@ function ProductListAjax(selectProps:any) {
             imgUrl: item.product_image,  //封面
             product_image: item.additional_image,
             price: item.price,
+            specialprice:item.specialprice,
             costPrice:item.cost_price,
             title: item.title,
             content:item.content,
@@ -298,10 +306,9 @@ function ProductListAjax(selectProps:any) {
           pagination: {
             ...tableParams.pagination,
             total: result.count,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
           }
         });
+        productList.setCount(result.count)
         return
       }
       throw new Error(result);
@@ -311,11 +318,8 @@ function ProductListAjax(selectProps:any) {
     setLoading(false);
   };
   useEffect(() => {
-    // 初始化商品
-    newStore.reset();
-    oldStore.reset();
     fetchData();
-  }, [newStore.isAlliance,newStore.isHosted,newStore.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.tags]);
+  }, [productList.languagesId,productList.condition,productList.isAlliance,productList.isHosted,productList.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize]);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
@@ -346,15 +350,15 @@ function ProductListAjax(selectProps:any) {
             columns={columns}
             // rowKey={(record) => record.key}
             components={
-              selectedRowKeys.length !== 0 ?{
+              productList.productList.length !== 0 ?{
                 header: {
                   wrapper:()=>{
                     return (
                       <thead>
                         <tr>
-                          <th colSpan={5}>
+                          <th colSpan={7}>
                             {/* 显示选择的数量和操作按钮 */}
-                            <SelectedActions selectedRowKeys={selectedRowKeys} onFetchData={fetchData} setSelectedRowKeys={setSelectedRowKeys}/>
+                            <SelectedActions onFetchData={fetchData}/>
                           </th>
                         </tr>
                       </thead>
@@ -367,7 +371,10 @@ function ProductListAjax(selectProps:any) {
             pagination={tableParams.pagination}
             loading={loading}
             onChange={handleTableChange}
-            scroll={{ x: 1300 }}
+            scroll={{
+              y: 'calc(100vh - 410px)', // 垂直滚动
+              x: 1300
+            }}
             rowKey={(record) => record.productid}
             onRow={(record) => ({
               onClick: () => {
@@ -377,10 +384,14 @@ function ProductListAjax(selectProps:any) {
             })}
             rowSelection={{
               type: 'checkbox',
-              selectedRowKeys, // 使用状态来记录选中的行
+              selectedRowKeys:productList.productList, // 使用状态来记录选中的行
               onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+                productList.setProductList(selectedRowKeys)
                 console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-                setSelectedRowKeys(selectedRowKeys); // 更新状态
+                if(productList.allSelected){
+                  productList.setAllSelected(false)
+                  message.success('已取消全选');
+                }
               },
             }}
             // 隐藏表头
@@ -454,9 +465,13 @@ function ProductListAjax(selectProps:any) {
 };
 
 
-export default ProductListAjax;
+export default observer(ProductListAjax)
 
 const Scoped = styled.div`
+  .full-width-header {
+    display: block !important;
+    width: 100% !important;
+  }
   .ant-table-tbody > tr > td {
     padding: 10px; 
   }

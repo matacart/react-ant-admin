@@ -6,8 +6,6 @@ import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import styled from 'styled-components';
-import newStore from '@/store/newStore';
-
 const TabLabel = styled.div`
     font-size: 16px;
 `;
@@ -56,32 +54,6 @@ function Index(){
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newTabName, setNewTabName] = useState('');
   
-  const onChange = (newActiveKey: string) => {
-    setActiveKey(newActiveKey);
-    if(newActiveKey == "5"){
-      newStore.setFlag("")
-      newStore.setIsAlliance("1")
-      newStore.setIsHosted("")
-    }else if(newActiveKey == "6"){
-      newStore.setFlag("")
-      newStore.setIsAlliance("")
-      newStore.setIsHosted("1")
-    }else{
-      newStore.setIsAlliance("0")
-      newStore.setIsHosted("0")
-      switch(newActiveKey){
-        case '1':
-          return newStore.setFlag("");
-        case '2':
-          return newStore.setFlag("1");
-        case '3':
-          return newStore.setFlag("0");
-        case '4':
-          return newStore.setFlag("2");
-      }
-    }
-  };
-
   const add = () => {
     setIsModalVisible(true);
   };
@@ -142,9 +114,7 @@ function Index(){
 
   useEffect(()=>{
     // 重新渲染初始化状态
-    newStore.setFlag("");
-    newStore.setIsAlliance("");
-    newStore.setIsHosted("");
+    
   },[]);
 
   return (
@@ -172,7 +142,6 @@ function Index(){
             <div className='create-content'>
             <Tabs
                 type="editable-card"
-                onChange={onChange}
                 activeKey={activeKey}
                 onEdit={onEdit}
                 items={items}

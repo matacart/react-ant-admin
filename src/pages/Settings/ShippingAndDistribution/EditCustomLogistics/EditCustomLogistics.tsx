@@ -4,14 +4,42 @@ import { history } from "@umijs/max"
 import styled from "styled-components"
 import ApplicableGoods from "./ApplicableGoods"
 import ManagementGroup from "./ManagementGroup"
+import { useEffect, useState } from "react"
+import { getDeliveryList } from "@/services/y2/api"
+import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight"
+import SkeletonCard from "@/components/Skeleton/SkeletonCard"
+import LangSelect from "@/pages/components/LangSelect"
+import { observer } from "mobx-react-lite"
 
 
 
 function EditCustomLogistics() {
+
+    const [isSkeleton,setIsSkeleton] = useState(true)
+    const setLang = (lang:string)=>{
+        getDeliveryList(lang).then(res=>{
+            generalFreight.setDeliverys(res.data)
+            generalFreight.setDeliverysLanguage(lang)
+        }).catch(err=>{
+            console.log(err)
+        }).finally(()=>{
+        })
+    }
+
+    useEffect(()=>{
+        generalFreight.setDeliverysLanguage("2")
+        getDeliveryList("2").then(res=>{
+            generalFreight.setDeliverys(res.data)
+        }).catch(err=>{
+            console.log(err)
+        }).finally(()=>{
+            setIsSkeleton(false)
+        })
+    },[])
     
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -22,6 +50,10 @@ function EditCustomLogistics() {
                             </div>
                             <div className="mc-header-left-content">通用运费设置</div>
                         </div>
+                        <div className="mc-header-right">
+                            {/* 语言 */}
+                            <LangSelect lang={generalFreight.deliverysLanguage} setLang={setLang} />
+                        </div>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
@@ -29,18 +61,18 @@ function EditCustomLogistics() {
                             <ManagementGroup />
                         </div>
                     </div>
-                    <Divider className="divider" />
+                    {/* <Divider className="divider" />
                     <div className="submit-btn">
                         <Button type="primary" style={{height: "36px"}} loading={false} onClick={()=>{
                         }}>更新</Button>
-                    </div>
+                    </div> */}
                 </div>
-            </div>
+            </div>}
         </Scoped>
     )
 }
 
-export default EditCustomLogistics
+export default observer(EditCustomLogistics)
 
 const Scoped = styled.div`
 

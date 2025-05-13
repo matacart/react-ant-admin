@@ -109,30 +109,31 @@ export default function LanguageList() {
                         {value.is_default == 1 && <Tag color="default" style={{borderRadius:"12px",marginLeft:"10px"}}>默认语言</Tag>}
                     </div>
                     <MyDropdown
-                        component={<Button style={{width:"28px",height:"28px",padding:"0",transform:"rotate(90deg)"}}><MoreOutlined /></Button>}
-                        itemList={value.is_default !== 1?[
-                            {key:"1",label:(
-                                <div onClick={()=>setDefaultLanguage(record)}>设置为默认语言</div>
-                            )},
-                            {key:"2",label:(<div className='color-F86140' onClick={()=>{
-                                modal.confirm({
-                                    title: '确认要删除该语言吗？',
-                                    icon: <ExclamationCircleOutlined />,
-                                    content: '删除后，客户将无法浏览该语言版本店铺。',
-                                    centered:true,
-                                    okText: '确认',
-                                    cancelText: '取消',
-                                    onOk:()=>{
-                                        deleteLanguages(record)
-                                    }
-                                });
-                            }}>删除语言</div>)}
-                        ]:[
-                            {key:"1",label:(
-                                <div onClick={()=>setDefaultLanguage(record)}>修改默认语言</div>
-                            )},
-                        ]}
-                        styled={{}}
+                        tiggerEle={<Button style={{width:"28px",height:"28px",padding:"0",transform:"rotate(90deg)"}}><MoreOutlined /></Button>}
+                        menu={{
+                            items:value.is_default !== 1?[
+                                {key:"1",label:(
+                                    <div onClick={()=>setDefaultLanguage(record)}>设置为默认语言</div>
+                                )},
+                                {key:"2",label:(<div className='color-F86140' onClick={()=>{
+                                    modal.confirm({
+                                        title: '确认要删除该语言吗？',
+                                        icon: <ExclamationCircleOutlined />,
+                                        content: '删除后，客户将无法浏览该语言版本店铺。',
+                                        centered:true,
+                                        okText: '确认',
+                                        cancelText: '取消',
+                                        onOk:()=>{
+                                            deleteLanguages(record)
+                                        }
+                                    });
+                                }}>删除语言</div>)}
+                            ]:[
+                                {key:"1",label:(
+                                    <div onClick={()=>setDefaultLanguage(record)}>修改默认语言</div>
+                                )},
+                            ]
+                        }}
                         position={"bottomRight"}
                     />
                     {/* <Button style={{width:"28px",height:"28px",padding:"0",transform:"rotate(90deg)"}}><MoreOutlined /></Button> */}

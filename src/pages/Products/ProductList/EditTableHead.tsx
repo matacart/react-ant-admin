@@ -18,7 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { SortableItem } from "./SortableItem";
 import styled from "styled-components";
-import { type } from './../../../../types/index.d';
+import DefaultButton from "@/components/Button/DefaultButton";
 
 interface Item {
   id: string;
@@ -100,8 +100,8 @@ export default function EditTableHead(){
 
     return (
         <Scoped>
-            <Button onClick={()=>{setOpen(true)}}>编辑表头</Button>
-            <Drawer title='编辑表头' footer={<Footed />} closeIcon={false} open={open}  onClose={()=>{
+            <DefaultButton onClick={() => { setOpen(true) } } text={"编辑表头"} />
+            <Drawer title={<div className="font-20">编辑表头</div>} footer={<Footed />} closeIcon={false} open={open}  onClose={()=>{
                 setOpen(false);
             }}>
                 <div className="color-474F5E">请至少保留 2 个表头项，暂不支持编辑操作栏</div>

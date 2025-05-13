@@ -85,7 +85,6 @@ class baseInfoStore{
             this.serviceEmail = obj.service_email;
             this.productType = obj.product_type;
             this.timezone = obj.timezone;
-
             this.ordersPrefix = obj.orders_prefix;
         })
         return true;

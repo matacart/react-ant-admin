@@ -1,13 +1,17 @@
+import product from "@/store/product/product";
 import { Card, Select } from "antd";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import styled from "styled-components";
 
+const ThemeTemplateEdit = () =>{
+    const handleChange = (value: string) => {
+        product.setProductInfo({
+            ...product.productInfo,
+            template_id:value
+        })
+    };
 
-const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
-
-  export default function ThemeTemplateEdit() {
     return (
         <Scoped>
             <Card>
@@ -15,18 +19,22 @@ const handleChange = (value: string) => {
                     主题模板
                 </div>
                 <Select
-                    defaultValue="默认模板"
+                    defaultValue={product.productInfo.template_id}
                     style={{ width: "100%" }}
                     onChange={handleChange}
                     options={[
-                        { value: 'default', label: '默认模板' },
-
+                        { value: '0', label: '默认模板' },
+                        { value: '1', label: 'v1' },
+                        { value: '2', label: 'v2' },
+                        { value: '3', label: 'v3' },
                     ]}
                 />
             </Card>
         </Scoped>
     )
 }
+
+export default observer(ThemeTemplateEdit)
 
 const Scoped = styled.div`
 .title{

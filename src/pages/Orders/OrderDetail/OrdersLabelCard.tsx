@@ -10,7 +10,7 @@ const {TextArea} = Input
 function OrdersLabelCard() {
     const intl = useIntl();
     return (
-        <Card  style={{ width: '300px' }} 
+        <Card
         title={
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{fontSize:'16px',color:'#242833'}}>   

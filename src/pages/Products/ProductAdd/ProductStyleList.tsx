@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space, Tooltip, Typography } from 'antd';
+import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
 import { ExclamationCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import newStore from '@/store/newStore';
 import styled from 'styled-components';
-import axios from 'axios';
 import cookie from 'react-cookies';
+import product from '@/store/product/product';
+import axios from 'axios';
 
-// 默认数据
 interface StyleItem {
   keyId: number;
   image: string;
@@ -29,12 +29,16 @@ interface StyleItem {
 
 const { Text } = Typography;
 
-function ProductStyleList(props:any){
+function ProductStyleList (props:any){
 
   const [isLoading, setIsLoading] = useState(false);
 
   const [styles, setStyles] = useState<StyleItem[]>([]);
+
+  // const [imgList,setImgList] = useState<string[] | null>(null);
   // 
+  const [copyStyles, setCopyStyles] = useState<StyleItem[]>([]);
+
   const [modal, contextHolder] = Modal.useModal();
   function generateSku(attrValue){
     // 开始构建sku 
@@ -76,42 +80,48 @@ function ProductStyleList(props:any){
   }
 
   useEffect(() => {
+    console.log('props',props.style)
     const generateStyles = async (sku:any) => {
       setIsLoading(true);
+      // 
       const newStyles = sku.map((item, index) => ({
-        image: '',
-        option_values_ids:item.option_values_id,
-        option_values_names:item.option_values_name,
-        sku: '',
-        price:"",
-        original_price:0,
-        cost_price:0,
-        quantity:0,
-        status:"1",
-        sort:"1",
-        // -----
-        // tax: true,
-        // inventoryPolicy: '',
-        hsCode: '',
-        country: '',
-        weight: 0,
+          image: '',
+          option_values_ids:item.option_values_id,
+          option_values_names:item.option_values_name,
+          sku: '',
+          price:"",
+          original_price:0,
+          cost_price:0,
+          quantity:0,
+          status:"1",
+          sort:"1",
+          // -----
+          // tax: true,
+          // inventoryPolicy: '',
+          hsCode: '',
+          country: '',
+          weight: 0,
+          // weightUnit: '克',
+          // shipping: true,
+          // barcode: '',
+          // metaFields: '',
       }));
-      // console.log('newStyles',newStyles)
       let temp = [...newStyles]
-      if(newStore.variants.length<newStyles.length){
+      console.log('product.variants',product.variants)
+      if(product.variants.length<newStyles.length){
         // 增加
         temp.forEach((res,index) => {
-          newStore.variants.forEach(element => {
+          product.variants.forEach(element => {
             if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
               temp[index] = element
             }
           })
         })
       }else{
-        const commonElements = newStore.variants.filter(item1 => 
+        const commonElements = product.variants.filter(item1 => 
           temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
         )
-        const commonElementsRemove = newStore.variants.filter(item1 => 
+        const commonElementsRemove = product.variants.filter(item1 => 
           !temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
         )
         console.log('commonElements',commonElements)
@@ -125,314 +135,46 @@ function ProductStyleList(props:any){
         })
         commonElementsRemove.forEach(res=>{
           if(res.id!==undefined){
-            newStore.removeVariantData.push({...res,status:"9"})
+            product.tempVariants.push({...res,status:"9"})
           }
         })
       }
       setStyles(temp)
-      console.log('temp',temp)
-      newStore.setVariants(temp)
+      product.setVariants(temp)
       setIsLoading(false);
+      // temp.forEach((res,index) => {
+      //   product.variants.forEach(element => {
+      //     if(element.status !== "9" && element.option_values_names == res.option_values_names){
+      //       temp[index] = element
+      //     }else{
+      //       // 状态
+      //       // removeData()
+      //       temp.push({...element,status:"9"})
+      //     }
+      //   })
+      // });
+      // console.log('temp',temp)
+      // setStyles(temp)
     };
     if(props.style.length>0) {
       let sku = generateSku(props.style)
       generateStyles(sku)
     }else{
-      // generateStyles([])
       setStyles([])
-      // let reVariants = []
-      // newStore.variants.forEach(item=>{
-      //   if(item.id!==undefined){
-      //     reVariants.push({...item,status:"9"})
-      //   }
-      // })
-      // newStore.setVariants([])
-      // newStore.removeVariantData.push(...reVariants)
-      
     }
   }, [props.style]);
 
   // 默认数据
   useEffect(()=>{
-    setStyles(newStore.variants)
+    setStyles(product.variants)
   },[])
 
+  
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [fileList, setFileList] = useState<any[]>([]);
   const [previewImage, setPreviewImage] = useState<string>('');
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
-  // const columns = [
-  //   {
-  //     title: '图片',
-  //     dataIndex: 'image',
-  //     fixed: 'left', // 固定左侧
-  //     width: 130, // 设置宽度以适应图片
-  //     render: (imageUrl: string, record: StyleItem) => (
-  //       <Upload
-  //         action="/appstore/ApiAppstore/doUploadPic"
-  //         listType="picture-card"
-  //         multiple={true}
-  //         fileList={fileList.filter((file) => file.uid === record.id)}
-  //         onPreview={handlePreview}
-  //         onChange={(info) => handleChange(info, record.id)}
-  //       >
-  //         {fileList.filter((file) => file.uid === record.id).length >= 8 ? null : (
-  //           <div>
-  //             <div className="ant-upload-picture-card-wrapper">
-  //               <div className="ant-upload-picture-card">
-  //                 <div>+</div>
-  //               </div>
-  //             </div>
-  //             <div className="ant-upload-text">上传图片</div>
-  //           </div>
-  //         )}
-  //         {imageUrl && <img src={imageUrl} alt="example" style={{ width: '100%' }} />}
-  //       </Upload>
-  //     ),
-  //   },
-  //   {
-  //     title: '款式',
-  //     dataIndex: 'option_values_names',
-  //     width: 80, // 设置宽度以适应文字
-  //   },
-  //   {
-  //     title: 'SKU',
-  //     dataIndex: 'sku',
-  //     render: (sku: string, record: StyleItem) => (
-  //       <Input
-  //         value={sku}
-  //         onChange={(e) => handleSkuChange(record.id, e.target.value)}
-  //         style={{ width: 150}}
-  //       />
-  //     ),
-  //     width:152,
-  //   },
-  //   {
-  //     title: '售价',
-  //     dataIndex: 'price',
-  //     render: (price: number, record: StyleItem,index:number) => (
-  //       <div style={{ display: 'flex', alignItems: 'center' }}>
-  //         <span style={{ marginRight: 4 }}>US$</span>
-  //         <Input
-  //           value={price === 0 ? '' : price.toString()}
-  //           onChange={(e) => handleSalePriceChange(index,record,e.target.value)}
-  //           placeholder="售价"
-  //           style={{ width: 150}}
-  //         />
-  //       </div>
-  //     ),
-  //     width: 152,
-  //   },
-  //   // {
-  //   //   title: '原价',
-  //   //   dataIndex: 'originalPrice',
-  //   //   render: (originalPrice: number, record: StyleItem) => (
-  //   //     <div style={{ display: 'flex', alignItems: 'center' }}>
-  //   //       <span style={{ marginRight: 4 }}>US$</span>
-  //   //       <Input
-  //   //         value={originalPrice === 0 ? '' : originalPrice.toString()}
-  //   //         onChange={(e) => handleOriginalPriceChange(record.id, e.target.value)}
-  //   //         placeholder="原价"
-  //   //         style={{ width: 150 }}
-  //   //       />
-  //   //     </div>
-  //   //   ),
-  //   //   width: 152,
-  //   // },
-  //   // {
-  //   //   title: '成本价',
-  //   //   dataIndex: 'costPrice',
-  //   //   render: (costPrice: number, record: StyleItem) => (
-  //   //     <div style={{ display: 'flex', alignItems: 'center' }}>
-  //   //       <span style={{ marginRight: 4 }}>US$</span>
-  //   //       <Input
-  //   //         value={costPrice === 0 ? '' : costPrice.toString()}
-  //   //         onChange={(e) => handleCostPriceChange(record.id, e.target.value)}
-  //   //         placeholder="成本价"
-  //   //         style={{ width: 150}}
-  //   //       />
-  //   //     </div>
-  //   //   ),
-  //   //   width: 132,
-  //   // },
-  //   // {
-  //   //   title: '税收',
-  //   //   dataIndex: 'tax',
-  //   //   render: (tax: boolean, record: StyleItem) => (
-  //   //     <span style={{ whiteSpace: 'nowrap' }}>
-  //   //       <Checkbox
-  //   //         checked={tax}
-  //   //         onChange={(e) => handleTaxChange(record.id, e.target.checked)}
-  //   //       />
-  //   //   需要收取税费
-  //   //     </span>
-  //   //   ),
-  //   //   width:130,
-  //   // },
-  // //   {
-  // //     title: '库存策略',
-  // //     dataIndex: 'inventoryPolicy',
-  // //     render: (tax: boolean, record: StyleItem) => (
-  // //       <span style={{ whiteSpace: 'nowrap' }}>
-  // //         <Checkbox
-  // //           checked={tax}
-  // //         />
-  // //  开启库存策略
-  // //       </span>
-  // //     ),
-  // //     width:130,
-  // //   },
-  // //   {
-  // //     title: 'HS（协调制度）代码',
-  // //     dataIndex: 'hsCode',
-  // //     render: (hsCode: string, record: StyleItem) => (
-  // //       <div style={{ display: 'flex', alignItems: 'center' }}>
-  // //         <Input
-  // //           value={hsCode || ''} 
-  // //           onChange={(e) => handleHsCodeChange(record.id, e.target.value)}
-  // //           placeholder="请输入HS编码"
-  // //           style={{ width: 150,  }}
-  // //         />
-  // //       </div>
-  // //     ),
-  // //     width:152,
-  // //   },
-  //   {
-  //     title: '国家',
-  //     dataIndex: 'country',
-  //     render: (country: string) => (
-  //       <div style={{ display: 'flex', alignItems: 'center' }}>
-  //       <Select
-  //         className="ant-select-selector"
-  //         placeholder="选择国家"
-  //         value={country}
-  //         onChange={(value) => handleCountryChange(value)}
-  //         style={{ width: 100, }}
-  //       >
-  //           <Select.Option value="China" >中国</Select.Option>
-  //         {/* 其他选项... */}
-  //       </Select>
-  //       </div>
-  //     ),
-  //     width:122,
-  //   },
-  //   {
-  //     title: '库存',
-  //     dataIndex: 'stock',
-  //     render: (stock: number, record: StyleItem) => (
-  //       <div style={{ display: 'flex', alignItems: 'center' }}>
-  //         <Input
-  //           value={stock || '0'} 
-  //           placeholder="请输入库存数量"
-  //           style={{ width: 130 }}
-  //           onChange={(e) => {
-  //             const newValue = e.target.value;
-  //             record.stock = newValue ? parseInt(newValue, 10) : 0;
-  //            handleStockChange(record);
-  //           }}
-  //         />
-  //       </div>
-  //     ),
-  //     width: 132,
-  //   },
-  //   // {
-  //   //   title: '重量',
-  //   //   dataIndex: 'weight',
-  //   //   render: (weight: number, record: StyleItem) => (
-  //   //     <div style={{ display: 'flex', alignItems: 'center' }}>
-  //   //       <InputNumber
-  //   //         value={weight}
-  //   //         onChange={(newValue) => handleWeightChange(record.id, Math.max(0, newValue))}
-  //   //         min={0} // 设置最小值为0
-  //   //         style={{ width: 160 }}
-  //   //       />
-  //   //       <Select
-  //   //         value={record.weightUnit}
-  //   //         onChange={(unit) => handleWeightUnitChange(record.id, unit)}
-  //   //         style={{ width: 70 }}
-  //   //       >
-  //   //         <Select.Option value="克">克</Select.Option>
-  //   //         <Select.Option value="千克">千克</Select.Option>
-  //   //         <Select.Option value="磅">磅</Select.Option>
-  //   //         <Select.Option value="蛊司">蛊司</Select.Option>
-  //   //       </Select>
-  //   //     </div>
-  //   //   ),
-  //   //   width: 162,
-  //   // },
-  //   // {
-  //   //   title: '发货',
-  //   //   dataIndex: 'shipping',
-  //   //   render: (shipping: boolean, record: StyleItem) => (
-  //   //     <span style={{ whiteSpace: 'nowrap' }}>
-  //   //       <Checkbox
-  //   //         checked={shipping}
-  //   //         onChange={(e) => handleShippingChange(record.id, e.target.checked)}
-  //   //       >
-  //   //         需要运输发货
-  //   //       </Checkbox>
-  //   //     </span>
-  //   //   ),
-  //   //   width: 150,
-  //   // },
-  //   {
-  //     title: '条码',
-  //     dataIndex: 'barcode',
-  //     render: (sku: string, record: StyleItem) => (
-  //       <Input
-  //         value={sku}
-  //         style={{ width: 100}}
-  //       />
-  //     ),
-  //     width:122,
-  //   },
-  //   {
-  //     title: '元字段',
-  //     dataIndex: 'metaFields',
-  //     render: (metaFields: string, record: StyleItem) => (
-  //       <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-  //         {metaFields}
-  //         <span className="edit-icon btn-icon__1h8Qx edit__3TiEz">
-  //           <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
-  //             <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
-  //           </svg>
-  //         </span>
-  //       </span>
-  //     ),
-  //     width: 100,
-  //   },
-  //   {
-  //     title: '',
-  //     dataIndex: 'delete',
-  //     render: (metaFields: string,record: StyleItem,index:number) => (
-  //       <Space>
-  //         {/* <LocalizedModal /> */}
-  //         {/* <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=> handleRemove(record.id)}> */}
-  //         <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" onClick={()=>{
-  //           modal.confirm({
-  //             title: '确认删除',
-  //             icon: <ExclamationCircleOutlined />,
-  //             content: '该多属性删除后无法恢复，是否要继续',
-  //             okText: '确认',
-  //             cancelText: '取消',
-  //             centered:true,
-  //             destroyOnClose:true,
-  //             onOk:()=>{
-  //               handleRemove(record,index)
-  //             }
-  //           });
-  //           // console.log(111111)
-  //         }}>
-  //           <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
-  //             <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
-  //           </svg>
-  //         </span>
-  //       </Space>
-  //     ),
-  //     width: 50,
-  //     fixed: 'right', // 将列固定在右侧
-  //   },
-  // ];
+
   const columns = [
     {
       title: '图片',
@@ -454,8 +196,9 @@ function ProductStyleList(props:any){
                 if(req.data.code == 0){
                   let newStyles = [...styles]
                   newStyles[index].image = req.data.data.src
+                  console.log(req.data.data.src)
                   setStyles(newStyles)
-                  newStore.setVariants(newStyles)
+                  product.setVariants(newStyles)
                   setIsLoading(false)
                 }else{
                   setIsLoading(false)
@@ -778,6 +521,7 @@ function ProductStyleList(props:any){
                 handleRemove(record,index)
               }
             });
+            // console.log(111111)
           }}>
             <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20" title="删除">
               <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
@@ -790,19 +534,20 @@ function ProductStyleList(props:any){
     },
   ];
 
+
   // 添加处理 SKU 变化的函数
   const handleSkuChange = (newValue: string,index:number) => {
     let newStyles = [...styles]
     newStyles[index].sku = newValue
     setStyles(newStyles)
-    newStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加浮动价变化的函数
   const handleSalePriceChange = (index: number,item:any,newValue: number) => {
     let newStyles = [...styles]
     newStyles[index].price = newValue
     setStyles(newStyles)
-    newStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加处理发货状态变化的函数
   // const handleShippingChange = (id: number, newShipping: boolean) => {
@@ -820,7 +565,7 @@ function ProductStyleList(props:any){
     let newStyles = [...styles]
     newStyles[index].original_price = newValue
     setStyles(newStyles)
-    newStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加处理成本价变化的函数
   const handleCostPriceChange = (id: number, newValue:number,index:number) => {
@@ -828,73 +573,86 @@ function ProductStyleList(props:any){
     let newStyles = [...styles]
     newStyles[index].cost_price = newValue
     setStyles(newStyles)
-    newStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加处理库存变化的函数
   const handleStockChange = (record: StyleItem,index:number) => {
+    // const updatedStyles = styles.map((style) => {
+    //   if (style.id === record.id) {
+    //     return { ...style, stock: record.stock };
+    //   }
+    //   return style;
+    // });
+    // const updatedStyles = styles.map((style) => {
+    //   if (style.id === record.id) {
+    //     return { ...style, stock: record.stock };
+    //   }
+    //   return style;
+    // });
     let newStyles = [...styles]
     newStyles[index].quantity = record.quantity
     setStyles(newStyles)
-    newStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
 // 添加处理删除的函数
 const handleRemove = (item:any,index:number) => {
   let newStyles = [...styles]
   newStyles.splice(index,1)
   setStyles(newStyles)
-  newStore.setVariants(newStyles)
-  // if(item.id){
-  //   oldStore.setRemoveVariantData([...oldStore.removeVariantData,{...item,status:"9"}])
-  // }
+  product.setVariants(newStyles)
+  if(item.id){
+    product.setTempVariants([...product.tempVariants,{...item,status:"9"}])
+  }
 };
 
-// const handleHsCodeChange = (recordId: number, value: string) => {
-//   // 处理输入框变化的回调，根据id更新styles中的hsCode
-//   setStyles(styles.map(style => 
-//     style.id === recordId ? { ...style, hsCode: value } : style
-//   ));
-// };
-// // 添加处理国家变化的函数
-// const handleCountryChange = (value: string) => {
-//   const updatedStyles = styles.map((style) => {
-//     if (style.id === selectedRowKeys[0]) {
-//       return { ...style, country: value };
-//     }
-//     return style;
-//   });
-//   setStyles(updatedStyles);
-// };
-// // 添加处理税收状态改变的函数
-// const handleTaxChange = (id: number, checked: boolean) => {
-//   const updatedStyles = styles.map((style) => {
-//     if (style.id === id) {
-//       return { ...style, tax: checked };
-//     }
-//     return style;
-//   });
-//   setStyles(updatedStyles);
-// };
-// // 添加处理重量变化的函数
-// const handleWeightChange = (id: number, newValue: number) => {
-//   const updatedStyles = styles.map((style) => {
-//     if (style.id === id) {
-//       return { ...style, weight: Math.max(0, newValue) }; // 确保值不小于0
-//     }
-//     return style;
-//   });
-//   setStyles(updatedStyles);
-// };
+const handleHsCodeChange = (recordId: number, value: string) => {
+  // 处理输入框变化的回调，根据id更新styles中的hsCode
+  setStyles(styles.map(style => 
+    style.id === recordId ? { ...style, hsCode: value } : style
+  ));
+};
 
-// // 添加处理重量单位变化的函数
-// const handleWeightUnitChange = (id: number, unit: string) => {
-//   const updatedStyles = styles.map((style) => {
-//     if (style.id === id) {
-//       return { ...style, weightUnit: unit };
-//     }
-//     return style;
-//   });
-//   setStyles(updatedStyles);
-// };
+// 添加处理国家变化的函数
+const handleCountryChange = (value: string) => {
+  const updatedStyles = styles.map((style) => {
+    if (style.id === selectedRowKeys[0]) {
+      return { ...style, country: value };
+    }
+    return style;
+  });
+  setStyles(updatedStyles);
+};
+// 添加处理税收状态改变的函数
+const handleTaxChange = (id: number, checked: boolean) => {
+  const updatedStyles = styles.map((style) => {
+    if (style.id === id) {
+      return { ...style, tax: checked };
+    }
+    return style;
+  });
+  setStyles(updatedStyles);
+};
+// 添加处理重量变化的函数
+const handleWeightChange = (id: number, newValue: number) => {
+  const updatedStyles = styles.map((style) => {
+    if (style.id === id) {
+      return { ...style, weight: Math.max(0, newValue) }; // 确保值不小于0
+    }
+    return style;
+  });
+  setStyles(updatedStyles);
+};
+
+// 添加处理重量单位变化的函数
+const handleWeightUnitChange = (id: number, unit: string) => {
+  const updatedStyles = styles.map((style) => {
+    if (style.id === id) {
+      return { ...style, weightUnit: unit };
+    }
+    return style;
+  });
+  setStyles(updatedStyles);
+};
   const onSelectChange = (newSelectedRowKeys: number[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -917,7 +675,11 @@ const handleRemove = (item:any,index:number) => {
   };
 
   const handleChange = ({ fileList }: { fileList: any[]; }, id?: number) => {
+
+    console.log(fileList);
+    
     setFileList(fileList);
+
   };
   const handleModifyPrice = () => {
     // 实现更改价格的逻辑
@@ -1049,7 +811,7 @@ const handleRemove = (item:any,index:number) => {
                 </Select>
                 <Select
                   placeholder="更多操作"
-                  onClick={handleMoreActions}   style={{  marginRight: '10px' }}
+                  onClick={handleMoreActions} style={{ marginRight: '10px' }}
                   dropdownMatchSelectWidth={false}
                   dropdownStyle={{ width: 150 }}
                 >
@@ -1068,7 +830,6 @@ const handleRemove = (item:any,index:number) => {
               )}
             </div>
           </Checkbox.Group>
-
           <Table
             loading={isLoading}
             rowKey={(record,index)=>index}
@@ -1076,6 +837,15 @@ const handleRemove = (item:any,index:number) => {
             dataSource={styles}
             rowSelection={rowSelection}
             scroll={{ x: 1360 }}
+            // onRow={(record) => ({
+            //   onClick: () => {
+            //     console.log('Row clicked:', record);
+            //     if(record.id){
+            //       return history.push(`/products/edit/${product.productId}/${product.language}/variants/${record.id}`);
+            //     }
+            //     message.info("请先保存商品")
+            //   },
+            // })}
           />
           {contextHolder}
         </div>

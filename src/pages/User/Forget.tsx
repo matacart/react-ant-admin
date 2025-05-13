@@ -1,13 +1,23 @@
-import { Button, Form, Input, Divider, message, Space,Checkbox,FormProps, Select } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Divider, message, Space, Select, ConfigProvider, Dropdown, Flex } from 'antd';
+import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl, Link ,history,useModel} from '@umijs/max';
-import React,{ useEffect, useState } from 'react';
+import React,{ useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { request } from '@umijs/max';
 import { getCountryList, getFakeCaptcha, resetPassword } from '@/services/y2/api';
 import styled from 'styled-components';
+import { UnfoldIcon } from '@/components/Icons/Icons';
 
-
+const style = {
+    color: '#7A8499',
+    position: 'absolute',
+    width:"100%",
+    top:"10px",
+    left:"10px",
+    padding:"10px 0",
+    maxHeight:"300px",
+    overflow:"auto",
+}
 
 export default function LoginForm() {
 
@@ -15,16 +25,47 @@ export default function LoginForm() {
     const [phone, setPhone] = useState('');
     const [captchaIsLoding, setCaptchaIsLoading] = useState(false);
     const [formIsLoading, setFormIsLoading] = useState(false);
-
     const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
 
-
-    // 区号表
-    const [countryList,setCountryList] = useState([]);
     // 国际号码区号
-    const [InternationalAreaCode,setInternationalAreaCode] = useState("86");
+    // const [InternationalAreaCode,setInternationalAreaCode] = useState("86");
+    const [phoneCode,setPhoneCode] = useState("86");
+    // 搜索
+    const [searchKey, setSearchKey] = useState('');
+
+    const Ref = useRef(null);
+    // const items = JSON.parse(sessionStorage.getItem("country") || "[]").filter(item=>item.country_name.includes(searchKey))
+    const filteredItems  = JSON.parse(sessionStorage.getItem("country") || "[]").filter((item: any) => item.country_name.includes(searchKey));
+
+    const items = filteredItems
+      .map((item: any) => {
+        return {
+          key: item.country_id,
+          label: <a onClick={() => {
+            setSearchKey("")
+            setPhoneCode(item.codes)
+          }} style={{ color: phoneCode == item.codes ? "#356DFF" : "" }}>
+            <span style={{ marginRight: "8px" }}>{item.country_name}</span>{"+" + item.codes}
+          </a>,
+        }
+      })
+      .concat(
+        filteredItems.length === 0 ? [{
+          key: 'no-data',
+          disabled: true,
+          label: (
+            <div style={{ 
+              color: '#999',
+              textAlign: 'center',
+              padding: '8px 0'
+            }}>
+              <FormattedMessage id="pages.search.noData" defaultMessage="无匹配数据" />
+            </div>
+          )
+        }] : []
+    );
 
     const fetchUserInfo = async () => {
         const userInfo = await initialState?.fetchUserInfo?.();
@@ -38,32 +79,7 @@ export default function LoginForm() {
         }
     };
 
-    const selectBefore = (
-        <Select 
-            options = {countryList}
-            defaultValue={InternationalAreaCode} onChange={(e)=>{
-                // console.log(e);
-                setInternationalAreaCode(e)
-            }}>
-        </Select>
-    );
-
     useEffect(() => {
-        getCountryList().then((res)=>{
-            let newList = res.data.map(item=>{
-                if(item.codes !== null){
-                    return {
-                        value: item.codes,
-                        label: "+"+item.codes
-                    }
-                }
-            }).filter(item=>item !== undefined)
-            // 过滤相同的数据
-            newList = Array.from(
-                new Set(newList.map((item) => JSON.stringify(item)))
-            ).map((item) => JSON.parse(item));
-            setCountryList(newList);
-        })
     }, []);
 
     return (
@@ -72,6 +88,7 @@ export default function LoginForm() {
                 <FormattedMessage id="forget.title" defaultMessage="忘记密码" />
             </h3>
             <div className="login-form-content">
+                <div className='user-box' ref={Ref}></div>
                 <Form
                     name="normal_login"
                     className="login-form"
@@ -79,7 +96,7 @@ export default function LoginForm() {
                     // 重设密码
                     onFinish={async (values: API.LoginParams) => {                            
                         try {
-                            const msg = await resetPassword({ ...values,InternationalAreaCode });
+                            const msg = await resetPassword({ ...values,phoneCode });
                             console.log(msg);
                             if (msg.status) {
                             // localStorage.setItem('token', token);
@@ -128,11 +145,51 @@ export default function LoginForm() {
                             style={{
                                 height: '52px',
                             }}
-                            addonBefore={selectBefore}
                             onChange={(e) => {
                                 setPhone(e.target.value);
                             }}
                             placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
+                            suffix={
+                                <ConfigProvider
+                                  theme={{
+                                    components: {
+                                      Dropdown: {
+                                        /* 这里是你的组件 token */
+                                        paddingXXS:0,
+                                      },
+                                    },
+                                  }}
+                                >
+                                  <Dropdown data-form-ignore="true" getPopupContainer={()=>Ref.current!} onOpenChange={(open)=>{
+                                    !open && setSearchKey("")
+                                  }} menu={{style:style,items:[
+                                    {
+                                      key: 'search',
+                                      label: (
+                                        <div style={{ padding:0,width:"100%"}} onClick={(e) => e.stopPropagation()}>
+                                          <Form.Item style={{margin:0}}>
+                                            <Input
+                                              name="undefined"
+                                              value={searchKey}
+                                              style={{height:"36px",fontSize:"14px",borderRadius:"4px"}}
+                                              placeholder="搜索国家"
+                                              onChange={(e) => setSearchKey(e.target.value)}
+                                              // onClick={(e) => e.stopPropagation()}
+                                              suffix={<SearchOutlined />}
+                                            />
+                                          </Form.Item>
+                                        </div>
+                                      ),
+                                    },
+                                    ...items,
+                                  ]}} placement="bottomRight" trigger={["click"]}>
+                                    <Flex gap={6} className='color-7A8499 cursor-pointer'>
+                                      +{phoneCode}
+                                      <UnfoldIcon />
+                                    </Flex>
+                                  </Dropdown>
+                                </ConfigProvider>
+                            }
                         />
                     </Form.Item>
 
@@ -171,7 +228,7 @@ export default function LoginForm() {
                             }}
                             onClick={async () => {
                                 setCaptchaIsLoading(true);
-                                const result = await getFakeCaptcha(phone,"86","forget");
+                                const result = await getFakeCaptcha(phone,phoneCode,"forget");
                                 if (!result) {
                                     message.error('验证码获取失败！');return;
                                 }else{
@@ -222,7 +279,6 @@ export default function LoginForm() {
                 </Form>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
                     <Link to='/user/signIn'><FormattedMessage id='pages.goToLogin'/></Link>
-
                 </div>
             </div>
         </Scoped>
@@ -231,24 +287,29 @@ export default function LoginForm() {
 
 const Scoped = styled.div`
 
+    .user-box{
+        position: relative;
+        .ant-dropdown{
+            width: 100%;
+        }
+        .ant-dropdown-menu-item:first-child{
+            padding: 0 12px 8px 12px;
+            &:hover{
+            background-color: #FFF;
+            }
+        }
+    }
     .login-form-content {
         position: relative;
         width: 100%;
         margin-bottom: 16px;
     }
 
-
     .login-form-input {
         height: 52px;
         padding: 0 16px;
     }
-
-    /* .login-form-forgot {
-        float: right;
-    }
-    .ant-col-rtl .login-form-forgot {
-        float: left;
-    } */
+    
     .login-form-button {
         width: 100%;
         font-weight: 600;
@@ -257,7 +318,7 @@ const Scoped = styled.div`
     .link-button-container {
         width: 100%;  
         display: flex;  
-        justify-content: space-between; /* 这将使得子元素在主轴上均匀分布，并靠两边 */  
+        justify-content: space-between; 
         padding: 0 2px;
     }
 

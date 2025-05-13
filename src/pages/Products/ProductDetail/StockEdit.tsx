@@ -1,46 +1,61 @@
-import oldStore from '@/store/product/oldStore';
+import product from "@/store/product/product";
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
-import e from "express";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import styled from "styled-components"
 
 
 const onChange: InputProps['onChange'] = (value) => {
     console.log('changed', value);
     // 
-    // newStore.setContinueSell(e.target.value)
 };
 
 
-function StockEdit(){
+
+
+function StockEdit({form}:{form:any}){
+
+    useEffect(()=>{
+        form.setFieldsValue({
+            model: product.productInfo.model,
+            ISBN:product.productInfo.barcode,
+            SKU:product.productInfo.sku,
+            quantity:product.productInfo.quantity,
+            minimum:product.productInfo.minimum,
+            salesCount:product.productInfo.sales_count,
+            inventoryTracking:product.productInfo.inventoryTracking == 1?true:false,
+            continueSell:product.productInfo.continueSell == 1?true:false
+        })
+    },[])
+
     return (
         <Scoped>
             <Card title='库存' >
-                <Form layout="vertical">
+                <Form layout="vertical" form={form}>
                     <Row>
                         <Col span={11}>
-                            <Form.Item label="型号"
-                                required initialValue={oldStore.model}
-                                validateStatus={oldStore.validate.model as any}
-                                help={oldStore.validate.model == "success"?"":<span style={{ color: '#F86140' }}>请输入商品模型</span>}>
+                            <Form.Item name="model" label="型号"
+                                rules={[{ required: true, message: '请输入型号' }]}
+                            >
                                 <Input
                                     onChange={(e)=>{
-                                        oldStore.setModel(e.target.value)
-                                        oldStore.validate.model = "success"
-                                        oldStore.setEditStatus(true)
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            model:e.target.value
+                                        })
                                     }}
-                                    value={oldStore.model}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                        <Form.Item label="条码(ISBN、UPC、GTIN等)">
+                            <Form.Item name="ISBN" label="条码(ISBN、UPC、GTIN等)">
                                 <Input
-                                    value={oldStore.ISBN}
-                                    defaultValue={oldStore.ISBN}
                                     onChange={(e)=>{
-                                        oldStore.setISBN(e.target.value)
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            barcode:e.target.value
+                                        })
                                     }}
                                 />
                             </Form.Item>
@@ -49,21 +64,30 @@ function StockEdit(){
                     <Row>
                         <Col span={11}>
                             <Form.Item
+                                name="SKU"
                                 label="SKU"
                             >
                                 <Input
-                                    value={oldStore.SKU}
-                                    onChange={(e) => oldStore.setSKU(e.target.value)}
+                                    onChange={(e) => {
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            sku:e.target.value
+                                        })
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                            <Form.Item initialValue={oldStore.inventory} label="库存数量">
-                                <Input
-                                    value={oldStore.inventory}
-                                    onChange={(e=>{
-                                        oldStore.setInventory(Number(e.target.value))
-                                    })}
+                            <Form.Item name="quantity" label="库存数量">
+                                <InputNumber<number>
+                                    className="ant-input"
+                                    min={0}
+                                    onChange={(value)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            quantity:value?.toString() || ""
+                                        })
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
@@ -71,45 +95,59 @@ function StockEdit(){
                     <Row>
                         <Col span={11}>
                             <Form.Item
+                                name="minimum"
                                 label="最少购买"
                             >
-                                <Input
-                                    value={oldStore.minimum}
-                                    onChange={(e) => oldStore.setMinimum(Number(e.target.value))}
+                                <InputNumber<number>
+                                    className="ant-input"
+                                    min={0}
+                                    onChange={(value) =>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            minimum:value?.toString() || ""
+                                        })
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                            <Form.Item label="商品销量">
-                                <Input
-                                    value={oldStore.salesCount}
-                                    onChange={(e=>{
-                                        oldStore.setSalesCount(Number(e.target.value))
-                                    })}
+                            <Form.Item name="salesCount" label="商品销量">
+                                <InputNumber<number>
+                                    className="ant-input"
+                                    min={0}
+                                    onChange={(value)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            sales_count:value?.toString() || ""
+                                        })
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Form.Item
-                        valuePropName="checked"
+                        name="inventoryTracking"
                         style={{
                             marginBottom: 0
                         }}
                         >
-                        <Checkbox checked={oldStore.inventoryTracking} onChange={(e)=>{
-                            oldStore.setInventoryTracking(e.target.checked)
+                        <Checkbox onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                inventoryTracking:e.target.checked?1:0
+                            })
                         }}>开启库存追踪</Checkbox>
                     </Form.Item>
-                    <Form.Item
-                        valuePropName="checked"
-                    >
+                    <Form.Item name="continueSell">
                         <Checkbox
-                        checked={oldStore.continueSell}
-                        onChange={(e)=>{
-                            oldStore.setContinueSell(e.target.checked)
-                        }}
-                        
-                        >缺货后继续销售
+                            onChange={(e)=>{
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    continueSell:e.target.checked?1:0
+                                })
+                            }}
+                        >
+                            缺货后继续销售
                             <Tooltip title="此设置同时适用MataCart后台管理">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                     <QuestionCircleOutlined />
@@ -146,8 +184,15 @@ const Scoped = styled.div`
         }
     }
     &-input{
-            width: 100%;
-            height: 36px;
-    } 
+        width: 100%;
+        height: 36px;
+        &-number-input-wrap{
+            height: 100%;
+            display:flex;
+            align-items: center;
+        }
+        &-number-input{
+        }
+    }
 }
 `

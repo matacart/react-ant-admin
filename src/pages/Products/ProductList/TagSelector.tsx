@@ -1,9 +1,6 @@
-import { Button, Checkbox, Divider, Dropdown, Flex, Popover, Select } from 'antd';
+import { Button, Checkbox, ConfigProvider, Divider, Dropdown, Flex, Popover, Select } from 'antd';
 import React, { useRef, useState } from 'react';
 import { styled } from 'styled-components';
-import MySelect from '@/components/Select/MySelect';
-
-
 
 export default function TagSelector() {
 
@@ -18,6 +15,20 @@ export default function TagSelector() {
     ])
 
     return (
+        <ConfigProvider
+            theme={{
+                token: {
+                    /* 这里是你的全局 token */
+                    paddingXXS:0,
+                },
+                components: {
+                    Select: {
+                        // defaultActiveBg:"#f7f8fb",
+                        borderRadius:4,
+                    },
+                },
+            }}
+        >
             <Select
                 placeholder={<div className='color-474F5E font-14'>商品标签</div>}
                 showSearch
@@ -85,6 +96,7 @@ export default function TagSelector() {
 
                 }}
             ></Select>
+        </ConfigProvider>
     )
 }
 

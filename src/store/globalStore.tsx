@@ -37,6 +37,8 @@ class globalStore {
         let tempList:any = [];
         await getCategorySelect().then(res=>{
             tempList = (this.buildTree(res.data));
+        }).catch(err=>{
+            console.log(err)
         })
         return tempList;
     }

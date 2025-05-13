@@ -4,22 +4,29 @@ import { history } from "@umijs/max"
 import styled from "styled-components"
 import BlankPage from "./BlankPage"
 import { useEffect, useState } from "react"
-import { creatAppStore, getAppStores, getEmployeeList } from "@/services/y2/api"
+import { creatAppStore, delDevApp, getEmployeeList, setAppStatus, unInstallDevApp } from "@/services/y2/api"
 
 import dayjs from 'dayjs';
 import LicensesAndTerms from "./LicensesAndTerms"
+import SuccessTag from "@/components/Tag/SuccessTag"
+import WarningTag from "@/components/Tag/WarningTag"
+import DeleteModal from "@/components/Modal/DeleteModal"
+import PrimaryButton from "@/components/Button/PrimaryButton"
+import SearchInput from "@/components/Input/SearchInput"
 
 interface DataType {
     key: string;
+    id: string;
     name: string;
     age: number;
+    status:string;
     address: string;
     tags: string[];
 }
 
-function AppList() {
+function AppList(props) {
 
-    const [data,setData] = useState<null | []>(null)
+    const [data,setData] = useState<null | []>([]);
 
     const [isBtnLoading, setIsBtnLoading] = useState(false);
 
@@ -38,27 +45,57 @@ function AppList() {
                 console.log(res)
                 res.code == 0 && message.success("创建应用成功");
             })
-
         }).catch((errorInfo)=>{
             // console.log(errorInfo)
         }) 
-       
-        
     }
 
-    
+    // 卸载应用
+    const UninstallApp = (appId:string)=>{
+        unInstallDevApp(appId).then(res=>{
+            message.success("卸载成功");
+            setData((prevData:any) => {
+                return prevData.map((item:any)=>{
+                    if(item.id == appId){
+                        return {
+                            ...item,
+                            status:"0"
+                        }
+                    }else{
+                        return item
+                    }
+                })
+            });
+        }).catch((error)=>{
+            console.log(error)
+        })
+    }
+    // 删除应用
+    const ReomveApp = (appId:string)=>{
+        delDevApp(appId).then(res=>{
+            message.success("删除应用成功");
+            setData((prevData:any) => prevData ? prevData.filter((element:any) => element.id !== appId) : null);
+        }).catch((error)=>{
+            console.log(error)
+        })
+    }
+
 
     const columns: TableProps<DataType>['columns'] = [
         {
           title: '应用名称',
           dataIndex: 'app_name',
           key: 'name',
-          render: (text) => <a>{text}</a>,
+          render: (text) => <div>{text}</div>,
         },
         {
-          title: '应用状态',
-          dataIndex: 'status',
-          key: 'status',
+            title: '应用状态',
+            dataIndex: 'status',
+            key: 'status',
+            render: (value) => <div>
+                {value == "1" && <SuccessTag text="已安装" />}
+                {value == "0" && <WarningTag text="未安装" />}
+            </div>,
         },
         {
           title: '创建时间',
@@ -72,8 +109,30 @@ function AppList() {
           render: (_, record) => (
             <Flex gap={32}>
                 <div className="color-356DFF cursor-pointer" onClick={()=>history.push("/app-store/custom-app-config/"+record.id)}>编辑</div>
-                <div className="color-7A8499 cursor-pointer">卸载</div>
-                <div className="color-F86140 cursor-pointer">删除</div>
+                <DeleteModal
+                    tElement={
+                        <button className={record.status == "0"?"mc-btn mc-btn-disable":"mc-btn"} disabled={record.status == "0"}>
+                            卸载
+                        </button>
+                    }
+                    removeFunc={()=>{
+                        UninstallApp(record.id)
+                    }} 
+                    title="卸载应用" 
+                    content={"您的应用的访问令牌将被撤销，并且应用将无权访问商店数据。如果您重新安装应用，您将获得新的访问令牌。"}
+                    okText="卸载"
+                />
+                <DeleteModal
+                    tElement={
+                        <div className="color-F86140 cursor-pointer">删除</div>
+                    }
+                    removeFunc={()=>{
+                        ReomveApp(record.id)
+                    }} 
+                    title="删除应用" 
+                    content={"您的应用的访问令牌将被撤销，且配置将被删除，此操作无法撤销。"}
+                    okText="删除"
+                />
             </Flex>
           ),
         },
@@ -81,10 +140,6 @@ function AppList() {
 
 
     useEffect(()=>{
-        getAppStores().then(res=>{
-            console.log(res)
-            res.code == 0 && setData(res.data)
-        })
         // 
         getEmployeeList().then(res=>{
             const newEmployeeList = res.data.map(item=>{
@@ -95,6 +150,8 @@ function AppList() {
             })
             setEmployeeList(newEmployeeList)
         })
+        // 
+        setData(props.data as DataType[])
     },[])
 
     return (
@@ -115,12 +172,8 @@ function AppList() {
                         <div className='mc-layout-content'>
                             <Card>
                                 <Flex justify="space-between">
-                                    <div style={{width:"360px"}}>
-                                        <Input placeholder="输入应用名称进行搜索" prefix={<SearchOutlined />}  />
-                                    </div>
-                                    <div>
-                                        <Button type="primary" onClick={()=>setIsModalOpen(true)}>创建应用</Button>
-                                    </div>
+                                    <SearchInput placeholder="输入应用名称进行搜索" style={{width:"360px"}} />
+                                    <PrimaryButton text="创建应用" onClick={()=>setIsModalOpen(true)}/>
                                 </Flex>
                                 <div style={{marginTop:"20px"}}>
                                     <Table<DataType> columns={columns} dataSource={data} />
@@ -162,6 +215,17 @@ const Scoped = styled.div`
     border: 1px solid #eef1f7;
     border-radius: 6px;
     border-bottom: none;
+}
+
+.mc-btn{
+    border: none;
+    background: none;
+    color:#356DFF;
+    cursor: pointer;
+}
+.mc-btn-disable{
+    cursor: not-allowed;
+    color: #b8becc;
 }
 
 .mc-layout-wrap{

@@ -27,7 +27,6 @@ export default function ProductsSelectCard(){
     // 添加标签 
     function getTags(language:string){
         selectTags(language).then(res=>{
-            // console.log(res)
             if(res.code == 0){
                 res.data.forEach((element:any) => {
                     timeTags.push({
@@ -39,6 +38,9 @@ export default function ProductsSelectCard(){
             }else if(res.code == 201){
                 setTagsList([])
             }
+        }).catch((err)=>{
+            console.log(err)
+        }).finally(()=>{
         })
     }
     useEffect(()=>{

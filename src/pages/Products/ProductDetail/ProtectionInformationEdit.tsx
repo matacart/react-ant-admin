@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import ProductDefenseModal from "@/components/Modal/ProductDefenseModal"
-import oldStore from '@/store/product/oldStore';
+import product from "@/store/product/product"
 
 
  function ProtectionInformationEdit(){
@@ -24,11 +24,16 @@ import oldStore from '@/store/product/oldStore';
                             </span>
                         </Tooltip>
                     </span>
-                    <ProductDefenseModal data={oldStore} status={oldStore.adWafStatus} />
+                    <ProductDefenseModal data={product} status={product.productInfo.ad_waf_status} />
                 </div>
                 <div className="item between">
                     <span>防护开关</span>
-                    <Switch onChange={(e) => {oldStore.setAdWafStatus(e ? '1' : '0')}} checked={oldStore.adWafStatus == '1'?true:false} />
+                    <Switch checked={product.productInfo.ad_waf_status == '1'?true:false} onChange={(e) => {
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            ad_waf_status:e?'1':'0'
+                        })
+                    }}  />
                 </div>
             </Card>
         </Scoped>

@@ -4,21 +4,20 @@ import { Editor } from '@tinymce/tinymce-react';
 // 如果包没有直接导出类型，您可能需要自己定义或使用any作为临时解决方案  
 type EditorInstance = any; // 替换为实际的类型  
   
-export default function App(prop: any){  
+export default function App({content,setContent}:{content:string,setContent:any}){  
   const editorRef = useRef<EditorInstance>(null); 
   // 初始化回调函数
   const initData = () => {
+    editorRef.current?.setContent(content)
   };
   return (  
     <>  
       <Editor  
         tinymceScriptSrc='/tinymce/tinymce.min.js'  
         licenseKey='gpl'
-        onBlur={()=>{
-          prop.prop.content = editorRef.current?.getContent()
-        }}
+        onChange={(e)=>setContent(e.target.getContent())}
         onInit={(_evt, editor) => (editorRef.current = editor)}  
-        initialValue={prop.prop.content}  
+        initialValue={content}
         init={{
           language_url: '/langs/zh_CN.js',
           language: 'zh_CN',
@@ -61,7 +60,6 @@ export default function App(prop: any){
           init_instance_callback:initData
         }}  
       />  
-      {/* <button onClick={log}>Log editor content</button>   */}
     </>  
   );  
 }

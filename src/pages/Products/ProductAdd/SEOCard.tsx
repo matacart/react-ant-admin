@@ -1,31 +1,37 @@
-// import globalStore from "@/store/globalStore"
-// import newStore from "@/store/newStore"
-// import { Card } from "antd"
-// import { observer } from "mobx-react"
-// import styled from "styled-components"
-
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import cookie from 'react-cookies';
-import newStore from "@/store/newStore";
-import SEOEdit from "../components/SEOEdit";
+import SEOEdit from "@/pages/components/SEOEdit";
+import product from "@/store/product/product";
+
 
  function SEOCard(){
-    
+
+    const setSEO = (title:string,description:string,keyword:string,url:string)=>{
+
+        product.setProductInfo({
+                ...product.productInfo,
+                meta_title:title,
+                meta_description:description,
+                meta_keyword:keyword,
+                product_url:url
+        })
+    }
+
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit seo={newStore}/>
+                        <SEOEdit seo={product.productInfo} setSEO={setSEO} type="-p" />
                     </span>
                 </div>
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
-                <div className="webTitle">{newStore.metaTitle==""?(newStore.title==""?"未填写标题":newStore.title):newStore.metaTitle}</div>
+                <div className="webTitle">{product.productInfo.meta_title==""?(product.productInfo.title==""?"未填写标题":product.productInfo.title):product.productInfo.meta_title}</div>
                 {/* 未填写标题 */}
-                <div className="webDesc">{newStore.metaDescription==""?"未填写描述":newStore.metaDescription}</div>
+                <div className="webDesc">{product.productInfo.meta_description==""?"未填写描述":product.productInfo.meta_description}</div>
             </Card>
         </Scoped>
     )

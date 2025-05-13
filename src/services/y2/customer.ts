@@ -1,13 +1,17 @@
 import { request } from '@umijs/max';
 
 export async function getCustomerList(page: any, limit: any) {
-    return request(`/api/ApiAppstore/customers_list?page=${page}&limit=${limit}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-  }
+  return request(`/api/ApiAppstore/customers_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      page: page,
+      limit: limit,
+    }
+  })
+}
 
   
   export async function getAddressList(page: string, limit: number, additionalParams?: string) {

@@ -1,9 +1,19 @@
-import { Button, Card, Tabs, TabsProps } from "antd"
+import { Button, Card, message, Tabs, TabsProps } from "antd"
 import styled from "styled-components"
 import AccessRangeAllCard from "./AccessRangeAllCard";
 import WebHookSubscriptionTable from "./WebHookSubscriptionTable";
+import { useEffect } from "react";
+import customAppConfigSetting from "@/store/appStore/customAppConfigSetting";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import { upDatePermissionsList } from "@/services/y2/api";
+import customAppConfig from "@/store/appStore/customAppConfig";
+import { useSearchParams } from "react-router-dom";
 
 function AccessRangeCard(){
+
+    const [searchParams, setSearchParams] = useSearchParams("");
+
+    const appId = searchParams.get("appId")?? "";
 
     const items: TabsProps['items'] = [
         {
@@ -18,13 +28,25 @@ function AccessRangeCard(){
         },
     ];
 
+    const upDate = ()=>{
+        const newPermissionsList = customAppConfigSetting.newPermissionsList.map((item:any)=>{
+            return{
+                permission_id:item.id,
+                status:item.is_authorized
+            }
+        })
+        upDatePermissionsList(appId,JSON.stringify(newPermissionsList)).then(res=>{
+            console.log(res)
+            message.success("修改成功")
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
+
     return(
         <Scoped>
-            <Card title="后台 API 访问范围" extra={<Button type="primary">保存</Button>}>
+            <Card title={customAppConfigSetting.accessRangeTitle} extra={<PrimaryButton onClick={upDate} text="保存" />}>
                 <Tabs defaultActiveKey="1" items={items} onChange={()=>{}} />
-            </Card>
-            <Card style={{marginTop:"20px"}} title="WebHook订阅" extra={<Button type="primary">创建WebHook</Button>}>
-                <WebHookSubscriptionTable />
             </Card>
         </Scoped>
     )

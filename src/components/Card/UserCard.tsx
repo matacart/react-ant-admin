@@ -76,6 +76,8 @@ export default function UserCard(props:any) {
                             <span>访问控制</span>
                             <div style={{display:"inline-block",borderRight:"1px solid #E9E9E9", height:"10px", margin:"0 8px"}}></div>
                             <span>AccessKey</span>
+                            <div style={{display:"inline-block",borderRight:"1px solid #E9E9E9", height:"10px", margin:"0 8px"}}></div>
+                            <span className="cursor-pointer" onClick={()=>history.push('/analyse/batch')}>批处理进度</span>
                         </div>
                     </Flex>
                 </div>

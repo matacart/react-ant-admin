@@ -1,13 +1,13 @@
 import { Tabs, TabsProps, Tag } from "antd"
 import styled from "styled-components"
 
-export default function WarningTag({text}:{text:string}){
+export default function WarningTag({text,textStyle}:{text:string,textStyle?:any}){
     return(
         <Scoped>
             <Tag color="warning" style={{borderRadius:"9999px",backgroundColor:"#ffedc9",padding:"0 8px"}}>
                 <div style={{display:"flex",alignItems:"center",gap:"5px"}}>
                     <div style={{height:"4px",width:"4px",backgroundColor: "#FE9E0F",borderRadius:"50%"}}></div>
-                    <div className='font-12 color-474F5E font-w-500'>{text}</div>
+                    <div className={'font-12 color-474F5E font-w-500'} style={{...textStyle}}>{text}</div>
                 </div>
             </Tag>
         </Scoped>

@@ -5,6 +5,7 @@ import styles from './OpenStoreGuidance.module.scss'
 import { ShopOutlined,CheckCircleFilled ,ShopTwoTone} from '@ant-design/icons';
 import { useState } from 'react';
 import classNames from 'classnames';
+import { history } from '@umijs/max';
 // 渐变
 const twoColors: ProgressProps['strokeColor'] = {
     '0%': '#108ee9',
@@ -22,7 +23,8 @@ type Tab = {
     doneTitle: string,
     doneDesc: string,
     doneButtonText: string
-    doneImg: string
+    doneImg: string,
+    url:string
 }
 // 标签数据
 const tabs: Tab[] = [
@@ -37,7 +39,8 @@ const tabs: Tab[] = [
         doneTitle: "您已添加了新产品",
         doneDesc: "您还可以继续添加更多新产品",
         doneButtonText: "去添加",
-        doneImg: 'icons/addProductDone.svg'
+        doneImg: 'icons/addProductDone.svg',
+        url:"/products/new"
     },{
         svg: <ShopOutlined />,
         name: "配置物流",
@@ -47,9 +50,10 @@ const tabs: Tab[] = [
         img: 'icons/addProductDone.svg',
         done: true,
         doneTitle: "您已配置了物流",
-        doneDesc: "SHOPLINE支持按重量等多个维度设置不同国家/地区的物流模版，也可同时支持多个方案。在后台也可以添加物流商",
+        doneDesc: "MataCart支持按重量等多个维度设置不同国家/地区的物流模版，也可同时支持多个方案。在后台也可以添加物流商",
         doneButtonText: "设置物流方式",
-        doneImg: 'icons/setupLogisticsDone.svg'
+        doneImg: 'icons/setupLogisticsDone.svg',
+        url:"/settings/delivery"
     },{
         svg: <ShopOutlined />,
         name: "设定收款",
@@ -61,7 +65,8 @@ const tabs: Tab[] = [
         doneTitle: "您已配置了收款方式",
         doneDesc: "可根据您售卖的地区设置合适的付款方式",
         doneButtonText: "设置收款方式",
-        doneImg: 'icons/setCollectionDone.svg'
+        doneImg: 'icons/setCollectionDone.svg',
+        url:"/settings/payments"
     },{
         svg: <ShopOutlined />,
         name: "创建自定义页面",
@@ -73,7 +78,8 @@ const tabs: Tab[] = [
         doneTitle: "创建自定义页面",
         doneDesc: "您已成功添加页面，您可以继续添加更多页面或者完善已有页面信息。",
         doneButtonText: "去设置",
-        doneImg: 'icons/createPageDone.svg'
+        doneImg: 'icons/createPageDone.svg',
+        url:"/website/page"
     },{
         svg: <ShopOutlined />,
         name: "整理导航",
@@ -85,7 +91,8 @@ const tabs: Tab[] = [
         doneTitle: "整理导航",
         doneDesc: "",
         doneButtonText: "",
-        doneImg: ''
+        doneImg: '',
+        url:"/website/navList"
     },
 ]
 
@@ -155,7 +162,7 @@ const App: React.FC = () => {
                 >
                     {
                         tabs.map((tab, index) => (
-                            <div key={tab.name}
+                            <div key={index}
                                 onClick={() => {
                                     setActiveTab(tabs[index])
                                 }}
@@ -165,7 +172,7 @@ const App: React.FC = () => {
                                 {tab.done ? <CheckCircleFilled style={{color: '#356dff'}} /> : tab.svg}
                                 </div>
                                 <div>
-                                {tab.name}
+                                    {tab.name}
                                 </div>
                             </div>
                         ))
@@ -181,7 +188,9 @@ const App: React.FC = () => {
                         {activeTab.done ? activeTab.doneDesc : activeTab.desc}
                     </div>
                     <div className={styles.buttonContainer}>
-                        <Button type='primary'>{activeTab.done ? activeTab.doneButtonText : activeTab.buttonText}</Button>
+                        <Button type='primary' onClick={()=>{
+                            activeTab.url !== "" && history.push(activeTab.url)
+                        }}>{activeTab.done ? activeTab.doneButtonText : activeTab.buttonText}</Button>
                         <div className={styles.link}>{activeTab.done? '':'跳过'}</div>
                     </div>
                   </div>

@@ -42,7 +42,6 @@ function ShopOperationInformation() {
                     }
                 )
             )
-
             setCityList([])
         })
     }
@@ -73,7 +72,7 @@ function ShopOperationInformation() {
             res.forEach((e:any) => {
                 newTimeZone.push({
                     label:"("+e.time_zone_label+")"+" "+e.time_zone_name,
-                    value:e.id
+                    value:e.time_zone_name
                 })
             });
             setTimeZone(newTimeZone)
@@ -144,6 +143,7 @@ function ShopOperationInformation() {
                             style={{ width: 256 }}
                             options={timeZone}
                             onChange={(e)=>{
+                                console.log(e)
                                 baseInfoStore.setTimeZone(e)
                             }}
                         />

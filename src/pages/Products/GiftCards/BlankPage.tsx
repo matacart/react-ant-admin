@@ -90,10 +90,9 @@ const Scoped = styled.div`
                             padding: 5px 24px;
                             border-radius: 6px;
                             width: 100%;
-                            height: 500px;
                             background-color: white;
                             .create-content-flex{
-                                margin: 60px 0px;
+                                margin: 120px 0px;
                                 text-align: center;
                                 h3{
                                     font-weight: 600;

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import { NailIcon } from '@/components/Icons/Icons';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
+import DefaultButton from '@/components/Button/DefaultButton';
 
 export default function RecommendedAppsCard() {
   const [loading, setLoading] = useState(false);
@@ -47,10 +48,8 @@ export default function RecommendedAppsCard() {
       <Card classNames={{body:"card"}}>
         {/* 控制 */}
         <Flex className="control" justify='space-between' align='center'>
-          <div className='font-16 color-242833'>为店铺安装最受欢迎的应用</div>
-          <Flex>
-            <Button style={{height:"36px"}} onClick={()=>window.open("https://www.handingyun.cn/appstore")}>查看更多应用</Button>
-          </Flex>
+            <div className='font-16 color-242833'>为店铺安装最受欢迎的应用</div>
+            <DefaultButton text="查看更多应用" onClick={()=>window.open("https://www.handingyun.cn/appstore")} />
         </Flex>
         <Row wrap={true} style={{ flexWrap: "wrap",padding:"12px 0"}}>
             {appList.map(item=>{

@@ -3,6 +3,7 @@ import { Button, Card, Divider, Flex, Modal, Typography } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useState } from "react";
+import DefaultButton from "@/components/Button/DefaultButton";
 
 const { Text, Link } = Typography;
 
@@ -28,7 +29,9 @@ export default function OtherCollection() {
                     </div>
                     <Flex align="center" className="color-356DFF">启用</Flex>
                 </div>
-                <Button className="submit-btn" onClick={()=>history.push("/settings/payments/other")}>添加</Button>
+                <div className="btn-warp">
+                    <DefaultButton onClick={()=>history.push("/settings/payments/other")} text="添加" />
+                </div>
             </Card>
             {/* 示例 */}
             <ScopedModal title="示例" width={620} getContainer={false} centered open={isModalOpen} onCancel={()=>setIsModalOpen(false)} 
@@ -49,7 +52,7 @@ const Scoped = styled.div`
     .desc{
         margin-top: 4px;
     }
-    .submit-btn{
+    .btn-warp{
         margin-top: 16px;
     }
     .payment-info{

@@ -9,8 +9,6 @@ import { QuitIcon } from "../Icons/Icons";
 // const { token } = theme.useToken();
 
 function MCPaymentHead(){
-
-
     useEffect(()=>{
     },[])
     return(

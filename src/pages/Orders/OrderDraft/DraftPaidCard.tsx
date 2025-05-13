@@ -1,131 +1,168 @@
 // DraftPaidCard.js
-import React, { useEffect } from 'react';
-import { Card, Form, InputNumber, Divider } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Card, Form, InputNumber, Divider, Flex, Checkbox, Tooltip, Popover, Popconfirm } from 'antd';
+import SimpleCard from '@/components/Card/SimpleCard';
+import DefaultButton from '@/components/Button/DefaultButton';
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import DiscountEditModal from './DiscountEditModal';
+import ShippingFeeEditingModal from './ShippingFeeEditingModal';
+import MyButton from '@/components/Button/MyButton';
+import MySelect from '@/components/Select/MySelect';
+import cookie from 'react-cookies';
+import order from '@/store/order/order';
+import { observer } from 'mobx-react-lite';
+import { getAddonsList } from '@/services/y2/api';
+function DraftPaidCard() {
 
-function DraftPaidCard(props: { products: any; discount: any; shippingFee: any; tax: any; onUpdateDiscount: any; onUpdateShippingFee: any; onUpdateTax: any; }) {
-  const { products, discount, shippingFee, tax, onUpdateDiscount, onUpdateShippingFee, onUpdateTax } = props;
+  const [open,setOpen] = useState(false)
 
-  const calculateSubtotal = () => {
-    return products.reduce((acc: any, product: { total: any; }) => acc + product.total, 0);
-  };
+  // 成本价 US$0.00
+  const [costPrice,setCostPrice] = useState(0);
+  // 小计
+  const [pricing,setPricing] = useState(0);
 
-  const calculateCostPrice = () => {
-    return products.reduce((acc: number, product: { quantity: number; price: number; }) => acc + product.quantity * product.price, 0);
-  };
+  // 税费
+  const [taxes,setTaxes] = useState(false);
 
-  const subtotal = calculateSubtotal();
-  const costPrice = calculateCostPrice();
-  const total = subtotal - discount + shippingFee + tax;
+  const symbolLeft = cookie.load("symbolLeft") || ""
 
-  // 初始状态为不可编辑
-  const [isDiscountEditable, setIsDiscountEditable] = React.useState(false);
-  const [isShippingFeeEditable, setIsShippingFeeEditable] = React.useState(false);
-  const [isTaxEditable, setIsTaxEditable] = React.useState(false);
+  useMemo(()=>{
+    let newCostPrice = 0;
+    let newPricing = 0;
+    order.productInfo.forEach(element => {
+      newCostPrice = newCostPrice + element.cost_price * element.quantity
+      newPricing = newPricing + element.specialprice * element.quantity
+    });
+    setCostPrice(newCostPrice)
+    setPricing(newPricing)
 
-  useEffect(() => {
-    // 检查 products 是否有变化
-    if (products.length > 0) {
-      // 假设只要 products 有变化就设置为可编辑
-      setIsDiscountEditable(true);
-      setIsShippingFeeEditable(true);
-      setIsTaxEditable(true);
+    // 如果产品折扣大于小计，则修改折扣
+    if(newPricing<order.orderInfo.discountAmount){
+      order.setOrderInfo({
+        ...order.orderInfo,
+        discountAmount:newPricing
+      })
     }
-  }, [products]);
+    // console.log(order.discountAmount)
+    // console.log(order.logisticsAmount)
+  },[order.productInfo])
 
-  // 初始状态为 US$0.00
-  const initialDiscountValue = isDiscountEditable ? discount : 0;
-  const initialShippingFeeValue = isShippingFeeEditable ? shippingFee : 0;
-  const initialTaxValue = isTaxEditable ? tax : 0;
+
+  useEffect(()=>{
+    getAddonsList("2","1","0").then(res=>{
+      console.log(res)
+    })
+  },[])
+
 
   return (
-    <Card style={{ width: '980px' }} title={<div>收款</div>}>
-      <Form>
-        <div style={itemStyle}>
-          <span style={labelStyle}>成本价</span>
-          <span style={amountStyle}>{`US$${costPrice.toFixed(2)}`}</span>
-        </div>
-
-        <div style={itemStyle}>
-          <span style={labelStyle}>小计</span>
-          <span style={amountStyle}>{`US$${subtotal.toFixed(2)}`}</span>
-        </div>
-
-        <div style={itemStyle}>
-          <span style={discountLabelStyle}>{isDiscountEditable ? '折扣编辑' : '折扣'}</span>
-          <InputNumber
-            value={initialDiscountValue}
-            disabled={!isDiscountEditable}
-            onChange={(value) => onUpdateDiscount(value)}
-          />
-        </div>
-
-        <div style={itemStyle}>
-          <span style={discountLabelStyle}>{isShippingFeeEditable ? '运费编辑' : '运费'}</span>
-          <InputNumber
-            value={initialShippingFeeValue}
-            disabled={!isShippingFeeEditable}
-            onChange={(value) => onUpdateShippingFee(value)}
-          />
-        </div>
-
-        <div style={itemStyle}>
-          <span style={totalLabelStyle}>{isTaxEditable ? '税费编辑' : '税费'}</span>
-          <InputNumber
-            value={initialTaxValue}
-            disabled={!isTaxEditable}
-            onChange={(value) => onUpdateTax(value)}
-          />
-        </div>
-      </Form>
-
-      <Divider />
-
-      <Form>
-        <div style={itemStyle}>
-          <span style={totalLabelStyle}>合计</span>
-          <span style={totalAmountStyle}>{`US$${total.toFixed(2)}`}</span>
-        </div>
-      </Form>
-    </Card>
+    <SimpleCard title={<div>收款</div>} content={
+      <>
+        <Flex gap={8} vertical>
+          <Flex justify="space-between">
+            <div>
+              成本价
+              <Tooltip title="成本价信息不会展示给消费者">
+                  <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                      <QuestionCircleOutlined />
+                  </span>
+              </Tooltip>
+            </div>
+            <div>
+              {symbolLeft}{costPrice}
+              {/* <Tooltip title="成本价信息不会展示给消费者">
+                  <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                      <QuestionCircleOutlined />
+                  </span>
+              </Tooltip> */}
+            </div>
+          </Flex>
+          <Flex justify="space-between">
+            <div>小计</div>
+            <div>{symbolLeft}{pricing}</div>
+          </Flex>
+          <Flex justify="space-between">
+            <DiscountEditModal pricing={pricing} />
+            <div style={{flex:1}}>{order.orderInfo.discountDesc==""?"-":order.orderInfo.discountDesc}</div>
+            <div>-{symbolLeft}{order.orderInfo.discountAmount?order.orderInfo.discountAmount:0}</div>
+          </Flex>
+          <Flex justify="space-between">
+            <ShippingFeeEditingModal />
+            <div style={{flex:1}}>{order.orderInfo.logisticsType == "FREE_SHIPPING"?"免运费":order.orderInfo.logisticsName==""?"-":order.orderInfo.logisticsName}</div>
+            <div>{symbolLeft}{order.orderInfo.logisticsAmount}</div>
+          </Flex>
+          <Flex justify="space-between">
+            <Popover 
+              open={open}
+              onOpenChange={(newOpen)=>{
+                if(!newOpen){
+                  setTaxes(order.orderInfo.isTaxe == 1)
+                }
+                setOpen(newOpen)
+              }}
+              content={
+                <div>
+                  <Checkbox checked={taxes} onChange={(e)=>{
+                    setTaxes(e.target.checked)
+                  }} style={{marginTop:"8px",marginBottom:"12px"}} >收税</Checkbox>
+                  <Flex gap={8} justify='end'>
+                    <MyButton text="取消" autoInsertSpace={false} className='font-12' style={{height:"28px",width:"44px"}} onClick={()=>{
+                      setOpen(false)
+                      setTaxes(order.orderInfo.isTaxe == 1)
+                    }} />
+                    <MyButton text="应用" autoInsertSpace={false} type='primary' className='font-12' style={{height:"28px",width:"44px"}} onClick={()=>{
+                      order.setOrderInfo({
+                        ...order.orderInfo,
+                        isTaxe:taxes?1:0
+                      })
+                      setOpen(false)
+                    }} />
+                  </Flex>
+                </div>
+              } title="税费" trigger="click">
+              <a style={{width:"20%"}} onClick={()=>setOpen(true)}>税费</a>
+            </Popover>
+            <div style={{flex:1}}>{order.orderInfo.isTaxe == 1?"-":"未征收"}</div>
+            <div></div>
+          </Flex>
+          <Flex justify="space-between">
+            <div className='font-w-600'>合计</div>
+            <div className='font-w-600'>{symbolLeft}{pricing - order.orderInfo.discountAmount + order.orderInfo.logisticsAmount}</div>
+          </Flex>
+        </Flex>
+        <Divider />
+        {/* 付款金额大于零 */}
+        {pricing - order.orderInfo.discountAmount + order.orderInfo.logisticsAmount > 0 && <>
+          <Checkbox>延期支付</Checkbox>
+          <Flex justify='space-between' align='end'>
+            <Flex gap={20}>
+              <div>
+                <div style={{margin:"14px 0"}}>支付状态</div>
+                <MySelect value={order.orderInfo.paymentStatus} onChange={(value:string)=>{
+                  order.setOrderInfo({
+                    ...order.orderInfo,
+                    paymentStatus:value
+                  })
+                }} style={{width:"120px",height:"36px"}} options={[
+                  { value: '0', label: '未付款' },
+                  { value: '1', label: '已付款' },
+                ]} />
+              </div>
+              <div>
+                <div style={{margin:"14px 0"}}>支付方式</div>
+                <MySelect style={{width:"120px",height:"36px"}} options={[
+                  { value: '0', label: '未付款' },
+                  { value: '1', label: '已付款' },
+                ]} />
+              </div>
+            </Flex>
+            <DefaultButton text={'发送账单'} />
+          </Flex>
+        </>
+       }
+      </>
+    } />
   );
 }
 
-export default DraftPaidCard;
-
-// 定义样式
-const itemStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: '10px',
-};
-
-const labelStyle = {
-  fontSize: '14px',
-  color: '#474F5E',
-};
-
-const discountLabelStyle = {
-  fontSize: '14px',
-  color: '#B8BECC',
-};
-
-const totalLabelStyle = {
-  fontSize: '14px',
-  color: '#242833',
-};
-
-const amountStyle = {
-  fontSize: '14px',
-  color: '#474F5E',
-};
-
-const discountAmountStyle = {
-  fontSize: '14px',
-  color: '#B8BECC',
-};
-
-const totalAmountStyle = {
-  fontSize: '14px',
-  color: '#242833',
-};
+export default observer(DraftPaidCard)

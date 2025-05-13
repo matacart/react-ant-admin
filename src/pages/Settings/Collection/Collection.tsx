@@ -25,7 +25,6 @@ function Collection() {
         // getAddonsConfigArray().then(res=>{
         //     console.log(res)
         // })
-
         getAddonsConfigs().then(res=>{
             setIsSkeleton(false)
             collection.setManualCollection(res.data)

@@ -1,66 +1,90 @@
-import CategoriesTable from "@/components/Table/CategoriesTable";
-import { SearchOutlined, UserOutlined } from "@ant-design/icons";
-import { Space, Select, Input, Tag, Button, Dropdown, theme, Divider } from "antd";
-import type { MenuProps, SelectProps } from 'antd';
+import SearchInput from "@/components/Input/SearchInput";
+import MySelect from "@/components/Select/MySelect";
+import { Flex } from "antd";
+import type { MenuProps } from 'antd';
 import React from "react";
-import { useEffect, useState } from "react"
-
+import { useEffect } from "react"
+import CategoriesTable from "./CategoriesTable";
+import LangSelect from "@/pages/components/LangSelect";
+import categoriesList from "@/store/product/categoriesList";
+import DropdownSort from "@/components/Dropdown/DropdownSort";
+import { observer } from "mobx-react-lite";
 
 const items: MenuProps['items'] = [
     {
       key: '1',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-          1st menu item
+        <a>
+          商品分类名称（A-Z）
         </a>
       ),
     },
     {
       key: '2',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-          2nd menu item
+        <a>
+          商品分类名称（Z-A）
         </a>
       ),
     },
     {
       key: '3',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-          3rd menu item
+        <a>
+          分类创建时间（从远到近）
         </a>
       ),
     },
     {
-        key: '4',
-        label: (
-          <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-            3rd menu item
-          </a>
-        ),
-      },
+      key: '4',
+      label: (
+        <a>
+          分类创建时间（从近到远）
+        </a>
+      ),
+    },
+    {
+      key: '5',
+      label: (
+        <a>
+          分类关联商品数量（从低到高）
+        </a>
+      ),
+    },
+    {
+      key: '6',
+      label: (
+        <a>
+          分类关联商品数量（从高到低）
+        </a>
+      ),
+    },
+    {
+      key: '7',
+      label: (
+        <a>
+          更新时间（从近到远）
+        </a>
+      ),
+    },
+    {
+      key: '8',
+      label: (
+        <a>
+          更新时间（从远到近）
+        </a>
+      ),
+    },
 ];
 
-const { useToken } = theme;
-
-export default function CategoriesSelect(){
-    
-    const { token } = useToken();
-    const contentStyle: React.CSSProperties = {
-        backgroundColor: token.colorBgElevated,
-        borderRadius: token.borderRadiusLG,
-        boxShadow: token.boxShadowSecondary,
+function CategoriesSelect(){
+    // 语言选择
+    const setLang = (value: string) => {
+      categoriesList.setLanguagesId(value)
     };
-    
-    const menuStyle: React.CSSProperties = {
-    boxShadow: 'none',
-    };
-
-
 
     useEffect(()=>{
         // 添加语言
-        
     },[])
    
     return (
@@ -73,38 +97,28 @@ export default function CategoriesSelect(){
                     justifyContent: 'space-between',
                     marginBottom: '12px'
                 }}>
-                    <div className="products-select-items-left" style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '12px 12px',
-                    }}>
-                        <Input placeholder="default size" style={{width:"320px",height:"36px"}} prefix={<SearchOutlined />} />
-                        <Select
-                            placeholder="类型"
-                            style={{ width: 120,height: 36 }}
-                            options={[{ value: '1', label: 'Lucy' },{ value: '2', label: 'Lucy2' }]}
-                        />
-                    </div>
-                    <div className="products-select-items-right"
-                        style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: '12px 12px',
-                        }}>
-                        <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight"
-                        dropdownRender={(menu) => (
-                            <div style={contentStyle}>
-                            <div style={{padding:"8px 16px 4px 16px",color:"#BEB8CC",fontSize:"12px"}}>排序</div>
-                            {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}
-                            </div>
-                        )}>
-                            <Button style={{height:"36px"}}>排序</Button>
-                        </Dropdown>
-                    </div>
+                    <Flex gap={12}>
+                        <SearchInput placeholder="搜索分类名称" style={{width:"320px"}} />
+                        <MySelect placeholder="类型" style={{height:"36px",width:"120px"}} options={[
+                          {
+                            value: '1',
+                            label: '手动'
+                          },
+                          {
+                            value: '2',
+                            label: '智能'
+                          },
+                        ]} />
+                    </Flex>
+                    <Flex gap={12}>
+                      <LangSelect isLabel={true} lang={categoriesList.languagesId} setLang={setLang} />
+                      <DropdownSort items={items} />
+                    </Flex>
                 </div>
             </div>
             <CategoriesTable />
-            {/* <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  /> */}
         </>
     );
 }
+
+export default observer(CategoriesSelect)

@@ -3,8 +3,9 @@ import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, Mail
 import styled from 'styled-components'
 import { history } from '@umijs/max';
 import { useState } from 'react';
-import { accountAuthentication } from '@/services/y2/api';
+import { accountAuthentication, currentUserStatus } from '@/services/y2/api';
 import { useForm } from 'antd/es/form/Form';
+import userInfo from '@/store/userInfo';
 
 
 const { TextArea } = Input;
@@ -17,16 +18,18 @@ export default function MerchantApplication() {
     const [loading,setLoading] = useState(false)
 
     const onFormFinish = (values: any) => {
-        // history.push('/')
-        console.log(values)
         accountAuthentication(values.user).then(res=>{
-            console.log(res)
-            // 
             if(res.code == 201){
                 message.error('该账号已认证，请勿重复认证！');
             }else if(res.code == 0){
                 message.success('账号认证成功！');
-                history.back();
+                currentUserStatus().then(res=>{
+                    userInfo.setUserSession(res)
+                }).catch(err=>{
+                    message.error("请求异常，请刷新")
+                }).finally(()=>{
+                    history.back();
+                })
             }
         })
     };

@@ -27,12 +27,11 @@ export default function TextCard(cardContent: CardContent): ReactNode {
                     {
                         buttonContents.map((buttonContent,index)=>{
                             return(
-                                <>
+                                <div key={index}>
                                     <Link  to={buttonContent.url}>
-                                    <Button key={index}>{buttonContent.text}</Button>
-                                    
+                                        <Button key={index}>{buttonContent.text}</Button>
                                     </Link>
-                                </>
+                                </div>
                             )
                         })
                     }

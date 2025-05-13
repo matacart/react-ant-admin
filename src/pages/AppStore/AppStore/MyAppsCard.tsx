@@ -4,9 +4,14 @@ import styled from 'styled-components';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import { NailIcon } from '@/components/Icons/Icons';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
+import { getAppStores, getDomainAppStores } from '@/services/y2/api';
+import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
 export default function MyAppsCard() {
+
   const [loading, setLoading] = useState(false);
+
+  const [isSkeleton,setIsSkeleton] = useState(true)
 
   const [appList,setAppList] = useState([
     {
@@ -31,10 +36,22 @@ export default function MyAppsCard() {
     }
   ]);
 
+  useEffect(()=>{
+    getAppStores().then(res=>{
+      // console.log(res);
+      setAppList(res.data)
+    }).catch(err=>{
+      console.log(err);
+    }).finally(()=>{
+      setIsSkeleton(false)
+    })
+  },[])
+  
+
 
   return (
     <Scoped>
-      <Card classNames={{body:"card"}}>
+      {isSkeleton?<SkeletonCard />:<Card classNames={{body:"card"}}>
         {/* 控制 */}
         <Flex className="control" justify='space-between' align='center'>
           <div className='font-16 color-242833'>已安装4个应用</div>
@@ -55,15 +72,17 @@ export default function MyAppsCard() {
         </Flex>
         {appList.map(item=>{
           return (
-            <div className='list-item-box cursor-pointer'>
+            <div className='list-item-box cursor-pointer' onClick={()=>{
+              console.log(item);
+            }}>
               <Flex className='list-item' justify='space-between' align='center'>
                 <Flex align='center'>
                   <div className='list-item-img'>
-                    <img src={item.appImg} />
+                    <img src={item.appImg??"/icons/ProductCoverBlank.svg"} />
                   </div>
                   <div>
-                    <div className='font-18 color-242833'>{item.appName}</div>
-                    <div style={{marginTop:"4px"}} className='color-7A8499'>{item.appDesc}</div>
+                    <div className='font-18 color-242833'>{item.app_name}</div>
+                    <div style={{marginTop:"4px"}} className='color-7A8499'>{"item.appDesc"}</div>
                   </div>
                 </Flex>
                 <Flex className="list-item-controls" gap={8}>
@@ -71,33 +90,33 @@ export default function MyAppsCard() {
                         <Flex justify="center" className="icon-box cursor-pointer"><NailIcon /></Flex>
                     </Tooltip>
                     <MyDropdown
-                        component={<Flex justify="center" className="icon-box cursor-pointer"><EllipsisOutlined /></Flex>}
-                        itemList={[
-                          {
+                        tiggerEle={<Flex justify="center" className="icon-box cursor-pointer"><EllipsisOutlined /></Flex>}
+                        menu={{
+                          items:[
+                            {
                               key: "1", label: (
                                   <div onClick={() => { } }>应用详情</div>
                               )
-                          },
-                          {
-                            key: "2", label: (
-                                <div onClick={() => { } }>关于应用</div>
-                            )
-                          },
-                          {
-                            key: "3", label: (
-                                <div onClick={() => { } } className="color-FF0000">删除应用</div>
-                            )
-                          }
-                        ]} 
-                        styled={undefined}
-                        position={undefined}
+                            },
+                            {
+                              key: "2", label: (
+                                  <div onClick={() => { } }>关于应用</div>
+                              )
+                            },
+                            {
+                              key: "3", label: (
+                                  <div onClick={() => { } } className="color-FF0000">删除应用</div>
+                              )
+                            }
+                          ]
+                        }}
                     />
                 </Flex>
               </Flex>
             </div>
           )
         })}
-      </Card>
+      </Card>}
     </Scoped>
   );
 };

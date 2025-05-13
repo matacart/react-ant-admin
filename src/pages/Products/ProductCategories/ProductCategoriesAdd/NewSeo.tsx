@@ -1,30 +1,39 @@
-// import globalStore from "@/store/globalStore"
-// import newStore from "@/store/newStore"
-// import { Card } from "antd"
-// import { observer } from "mobx-react"
-// import styled from "styled-components"
-
 import { Card } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import oldStore from "@/store/oldStore"
-import newCategories from "@/store/categories/newCategories"
 import cookie from 'react-cookies';
+import SEOEditSecond from "@/pages/components/SEOEditSecond";
+import categories from "@/store/product/categories";
 
  function NewSeo(){
+
+    const setSEO = (title:string,description:string,keyword:string,url:string)=>{
+        categories.setCategoriesInfo({
+            ...categories.categoriesInfo,
+            meta_title:title,
+            meta_description:description,
+            meta_keyword:keyword
+        })
+    }
+
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        {/* <SEOEdit seo={newCategories}/> */}
+                        <SEOEditSecond seo={{
+                            title:categories.categoriesInfo.meta_title,
+                            description:categories.categoriesInfo.meta_description,
+                            keyword:categories.categoriesInfo.meta_keyword,
+                            url:""
+                        }} setSEO={setSEO} type={"-c"}  />
                     </span>
                 </div>
                 <div className="webUrl">{cookie.load("domain")?.domainName}</div>
-                <div className="webTitle">{newCategories.metaTitle==""?(newCategories.title==""?"未填写标题":newCategories.title):newCategories.metaTitle}</div>
+                <div className="webTitle">{categories.categoriesInfo.meta_title==""?(categories.categoriesInfo.title==""?"未填写标题":categories.categoriesInfo.title):categories.categoriesInfo.meta_title}</div>
                 {/* 未填写标题 */}
-                <div className="webDesc">{newCategories.metaDescription==""?(newCategories.content==""?"未填写描述":newCategories.content?.replace(/<[^>]*>/g,"")):newCategories.metaDescription}</div>
+                <div className="webDesc">{categories.categoriesInfo.meta_description==""?(categories.categoriesInfo.content==""?"未填写描述":categories.categoriesInfo.content.replace(/<[^>]*>/g,"")):categories.categoriesInfo.meta_description}</div>
             </Card>
         </Scoped>
     )

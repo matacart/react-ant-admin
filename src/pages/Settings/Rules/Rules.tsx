@@ -1,15 +1,18 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
+import { getAddWarehouseList, getRuleList, setRuleList } from "@/services/y2/api"
 import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import RefundPolicy from "./RefundPolicy"
 import PrivacyPolicy from "./PrivacyPolicy"
 import TermsOfService from "./TermsOfService"
 import ShippingPolicy from "./ShippingPolicy"
+import rules from "@/store/settings/rules"
+import LangSelect from "@/pages/components/LangSelect"
+import StatementModal from "@/components/Modal/StatementModal"
+import { useSleep } from "@/hooks/customHooks"
 
 function Rules() {
 
@@ -17,9 +20,64 @@ function Rules() {
 
     const [isRenewal,setIsRenewal] = useState(false)
 
+    const sleep = useSleep()
+
+    // 免责声明
+    const content = (<div>
+        <div className="disclaimerContainer">
+            <div>以下材料仅供参考，不构成广告、征求或法律建议。</div>
+            <div style={{marginTop: "16px"}}>在发布这些协议之前，您还应该咨询独立法律建议。您应仔细阅读生成的信息，并在必要时修改、删除或添加全部或任意区域。使用、访问或传输此类材料和信息或此处包含的任何链接并非用于创建，并且接收这些内容不会构成MATACATR 和用户或浏览器之间受代理人和客户的关系。</div>
+            <div style={{marginTop: "16px"}}>在没有向您所在州或省的持证律师寻求法律建议的情况下，不应出于任何目的依赖此信息。所包含的信息仅作为一般信息提供，不一定能反映最新的法律进展；所以不能保证信息的正确性和完整性。MATACATR明确表示不对基于本网站的任何或所有内容执行或未执行的操作承担任何责任。</div>
+            <div style={{marginTop: "16px"}}>此外，MATACATR不一定认可也不对可通过此信息访问的任何第三方内容负责。</div>
+        </div>
+    </div>)
+
+    const setLang = (lang:string) => {
+        getRuleList("",lang).then(res=>{
+            (res.data && res.data.length>0) && res.data.forEach((item:any)=>{
+                switch (item.page_type) {
+                    case "terms_of_service":
+                        rules.setTermsofUse(item)
+                        break;
+                    case "refund_policy":
+                        rules.setReturnPolicy(item)
+                        break;
+                    case "shipping_policy":
+                        rules.setShippingPolicy(item)
+                        break;
+                    case "privacy_policy":
+                        rules.setPrivacyPolicy(item)
+                }
+            })
+            rules.setLanguagesId(lang)
+        }).catch(err=>{
+            console.log(err)
+        }).finally(()=>{
+            // setIsSkeleton(false)
+        })
+    }
+
     useEffect(()=>{
-        baseInfoStore.getStore().then(res=>{
-            setIsSkeleton(!res)
+        getRuleList("",rules.languagesId).then(res=>{
+            (res.data && res.data.length>0) && res.data.forEach((item:any)=>{
+                switch (item.page_type) {
+                    case "terms_of_service":
+                        rules.setTermsofUse(item)
+                        break;
+                    case "refund_policy":
+                        rules.setReturnPolicy(item)
+                        break;
+                    case "shipping_policy":
+                        rules.setShippingPolicy(item)
+                        break;
+                    case "privacy_policy":
+                        rules.setPrivacyPolicy(item)
+                }
+            })
+        }).catch(err=>{
+            console.log(err)
+        }).finally(()=>{
+            setIsSkeleton(false)
         })
     },[])
 
@@ -36,6 +94,7 @@ function Rules() {
                         </div>
                         <div className='mc-header-right'>
                             <div className="mc-header-right-content">
+                                <LangSelect lang={rules.languagesId} setLang={setLang} />
                             </div>
                         </div>
                     </div>
@@ -46,7 +105,9 @@ function Rules() {
                                 <div className="font-20 color-242833 font-w-600">管理你店铺的规则页面</div>
                                 <p className="font-14 color-474F5E desc line-h-20">您可以创建自己的规则页面，或从模板中创建这些页面并进行自定义。这些模板不是法律建议，需要针对您的商店进行自定义。</p>
                                 <p className="font-14 color-474F5E desc line-h-20">保存的政策会作为链接显示在结账页面的页脚中。如果您需要将政策添加到在线商店的菜单中，请查看<a>设置指引<ExportOutlined style={{position:"relative",top:"1px",margin:"0 4px"}} /></a>。</p>
-                                <p className="font-14 color-474F5E desc line-h-20">使用这些模板表示您已经阅读并同意<a>免责声明</a>。</p>
+                                <p className="font-14 color-474F5E desc line-h-20">使用这些模板表示您已经阅读并同意
+                                    <StatementModal triggerObj={<a>免责声明</a>} content={content} title="免责声明" />。
+                                </p>
                             </div>
                             <div className="mc-layout-content-right">
                                 <RefundPolicy />
@@ -97,6 +158,17 @@ function Rules() {
                     </Divider>
                     <div className="submit-btn">
                         <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
+                            setIsRenewal(true)
+                            setRuleList(JSON.stringify([{...rules.privacyPolicy,is_sys:'0'},{...rules.returnPolicy,is_sys:'0'},{...rules.shippingPolicy,is_sys:'0'},{...rules.termsofUse,is_sys:'0'}]),rules.languagesId).then(async res=>{
+                                // 重新获取规则
+                                await sleep(2000)
+                                setLang(rules.languagesId)
+                                message.success('修改内容已更新')
+                            }).catch(err=>{
+                                console.log(err)
+                            }).finally(()=>{
+                                setIsRenewal(false)
+                            })
                         }}>更新</Button>
                     </div>
                 </div>
@@ -151,6 +223,10 @@ const Scoped = styled.div`
                     font-size: 20px;
 
                 }
+            }
+            &-right {
+                display: flex;
+                align-items: center;
             }
         }
         &-main {

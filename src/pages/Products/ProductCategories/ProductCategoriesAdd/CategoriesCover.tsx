@@ -1,20 +1,14 @@
 
-import newCategories from "@/store/categories/newCategories";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import categories from "@/store/product/categories";
+import { PlusOutlined } from "@ant-design/icons";
 import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin, message } from "antd"
 import axios from "axios";
-import { set } from "lodash";
 import { useState } from "react";
 import styled from "styled-components"
-
-
-
-
 
  function CategoriesCover(){
 
     type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
 
     const [isUpload,setIsUpload] = useState(false);
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -35,7 +29,10 @@ import styled from "styled-components"
         // 删除
         if(info.file.status == "removed"){
             setFileList(info.fileList);
-            newCategories.setCoverImg("")
+            categories.setCategoriesInfo({
+                ...categories.categoriesInfo,
+                category_image: ""
+            })
             return
         }
         // 上传图片
@@ -44,8 +41,10 @@ import styled from "styled-components"
         formData.append("1", info.file as FileType)
         axios.post('/api/ApiAppstore/doUploadPic',formData).then(res=>{
             if(res.data.code == 0){
-                message.success("上传成功")
-                newCategories.setCoverImg(res.data.data.src)
+                categories.setCategoriesInfo({
+                    ...categories.categoriesInfo,
+                    category_image: res.data.data.src
+                })
             }
             setIsUpload(false)
         })
@@ -75,7 +74,8 @@ import styled from "styled-components"
                 </div>
                 <div className="webUrl">
                     <Spin spinning={isUpload}>
-                        {<Upload
+                        {<>
+                            <Upload
                                 beforeUpload={()=>{
                                     return false
                                 }}
@@ -87,8 +87,10 @@ import styled from "styled-components"
                                 className="avatar-uploader"
                                 onRemove={()=>{setPreviewOpen(false)}}
                             >
-                            {fileList.length!==0?null:uploadButton}
-                        </Upload>}
+                                {fileList.length!==0?null:uploadButton}
+                            </Upload>
+                            {fileList.length == 0 && <div className="color-7A8499" style={{marginTop:"12px"}}>支持上传jpg、png、webp、SVG格式图片，最大限制4M；支持上传GIF格式动图，最大限制8M；</div>}
+                        </>}
                         <Image
                             style={{width: '100%'}}
                             wrapperStyle={{ display: 'none' }}
@@ -131,7 +133,7 @@ a{
        .ant-upload{
             width: 100% !important;
             height: 230px !important;
-            border: 2px dashed #d9d9d9 !important;
+            border: 1px dashed #d9d9d9 !important;
        }
        .ant-upload-list-item-container{
             width: 100% !important;

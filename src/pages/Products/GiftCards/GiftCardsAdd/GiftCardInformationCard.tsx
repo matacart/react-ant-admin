@@ -2,8 +2,6 @@ import { Card, Form, Input, Select, Tooltip } from "antd";
 import { ConsoleSqlOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import TinyMce from "@/components/MCE/TinyMce";
-
 
 const {TextArea} = Input
 

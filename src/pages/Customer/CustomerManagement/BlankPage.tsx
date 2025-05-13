@@ -2,7 +2,7 @@ import { Button, Checkbox, Divider, Flex, Modal } from 'antd';
 import { history } from '@umijs/max';
 import { ExclamationCircleOutlined, ExportOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import UploadDrag from '@/components/UploadFile/UploadDrag';
+import UploadImportDrag from '@/components/UploadFile/UploadImportDrag';
 
 function BlankPage() {
 
@@ -15,10 +15,11 @@ function BlankPage() {
             title: '导入客户',
             icon: <></>,
             centered:true,
+            destroyOnClose:true,
             content: <>
                 <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
                 <div>
-                    <UploadDrag />
+                    <UploadImportDrag size={10} />
                 </div>
                 <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
                 <div style={{margin:"8px 0px"}}>
@@ -40,7 +41,7 @@ function BlankPage() {
           content: <>
                 <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
                 <div>
-                    <UploadDrag />
+                    <UploadImportDrag size={10} />
                 </div>
                 <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
                 <div style={{margin:"8px 0px"}}>
@@ -105,7 +106,6 @@ function BlankPage() {
                     </div>
                 </div>
             </div>
-
             {/* Excel批量导入 */}
             {contextHolder}
         </Scoped>

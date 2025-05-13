@@ -11,11 +11,13 @@ class shopsManagementStore {
     domainList:any = []
 
     // 获取店铺
-    getShops(){
-        getDomainList().then(res=>{
-            console.log(res)
+    async getShops(){
+        let result;
+        await getDomainList().then(res=>{
             this.domainList = res.data
+            result = res.data
         })
+        return result
     }
 }
 

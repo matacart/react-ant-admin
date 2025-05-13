@@ -117,5 +117,5 @@ export default {
   'settings.index.Markets':"市场",
   'settings.index.MarketsDesc':"管理你的国际市场",
 
-
+  
 };

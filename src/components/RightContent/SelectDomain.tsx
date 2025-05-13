@@ -9,11 +9,12 @@ import cookie from 'react-cookies';
 import { history } from 'umi';
 import SuccessTag from "../Tag/SuccessTag";
 import DefaultTag from "../Tag/DefaultTag";
+import globalStore from "@/store/globalStore";
 
 // 定义一个函数来高亮搜索词  
 function highlightSearchTerm(text: string, term: string) {
     // 使用正则表达式来匹配搜索词，并替换为带有<mark>标签的文本
-    console.log(term)
+    // console.log(term)
     return text.replace(term,()=> `<span class="mark">'${term}'</span>`);
 }
 
@@ -60,11 +61,9 @@ export default function SelectDomain() {
 
     const getDomainCurrent = (id:string)=>{
         getCurrencies(id).then(res=>{
-            console.log(res)
+            // console.log(res)
         })
     }
-    
-
     function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
         try {
           // 创建一个新的URL对象
@@ -100,8 +99,7 @@ export default function SelectDomain() {
 
     // 货币符号
     const setCurrencys = (defaultCurrency:string)=>{
-        defaultCurrency == "" ? cookie.save('symbolLeft', '', { path: '/' }) : getCurrenciesList().then(res=>{
-            console.log(res.data.filter(item=>item.code == defaultCurrency)[0]?.symbol_left)
+        (defaultCurrency == "" || defaultCurrency == undefined) ? cookie.save('symbolLeft', '', { path: '/' }) : getCurrenciesList().then(res=>{
             cookie.save('symbolLeft', res.data.filter(item=>item.code == defaultCurrency)[0].symbol_left, { path: '/' });
         })
     }
@@ -109,7 +107,7 @@ export default function SelectDomain() {
     // 时区
     const setTimeZone = (timeZone:string)=>{
         getTimeZoneList().then(res=>{
-            cookie.save('timeZone', JSON.stringify(res.filter(item=>item.id == timeZone)[0]), { path: '/' });
+            cookie.save('timeZone', JSON.stringify(res.filter(item=>item.time_zone_name == timeZone)[0]), { path: '/' });
         })
     }
 
@@ -128,6 +126,8 @@ export default function SelectDomain() {
     }
     useEffect(() => {
 
+        // 平台大类
+        // globalStore.getPlatformCategory();
         // getDomain("140285").then((res) => {
         //     console.log(res)
         // });
@@ -137,9 +137,9 @@ export default function SelectDomain() {
             setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
             setDefaultDomain(cookie.load("domain")?.storeName);
             getDomainCurrent(cookie.load("domain")?.id);
-            setCurrencys(cookie.load("domain").defaultCurrency);
-            setTimeZone(cookie.load("domain").timeZone);
-            setLanguage(cookie.load("domain").defaultLang);
+            setCurrencys(cookie.load("domain")?.defaultCurrency);
+            setTimeZone(cookie.load("domain")?.timeZone);
+            setLanguage(cookie.load("domain")?.defaultLang);
             domainList = JSON.parse(sessionStorage["domain"])
         }else{
             getDomainList().then((res) => {
@@ -175,14 +175,14 @@ export default function SelectDomain() {
                     cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
                     cookie.save('default_lang', domainList[0].defaultLang, { path: '/' });
                     setCurrencys(res.data[0]?.default_currency)
-                    setTimeZone(cookie.load("domain").timeZone);
+                    setTimeZone(cookie.load("domain")?.timeZone);
                     setDefaultDomain(res.data[0]?.store_name);
                     getDomainCurrent(res.data[0]?.id);
                 }else{
                     cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
                     cookie.save('default_lang', flag[0].defaultLang, { path: '/' });
                     setCurrencys(res.data[0]?.default_currency)
-                    setTimeZone(cookie.load("domain").timeZone);
+                    setTimeZone(cookie.load("domain")?.timeZone);
                     setDefaultDomain(flag[0].storeName);
                     getDomainCurrent(flag[0].id);
                 }

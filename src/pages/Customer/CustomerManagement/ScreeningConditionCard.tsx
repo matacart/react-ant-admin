@@ -43,31 +43,31 @@ export default function ScreeningConditionCard() {
                     <Flex className="select-item color-242833 cursor-pointer" gap={8} align="center">
                         订单数量
                         <MyDropdown
-                            component={<div className="select-item-conditions"> {symbol} </div>}
-                            itemList={[
-                                {
-                                    key: "1", label: (
-                                        <div onClick={()=>setSymbol("=")}>等于</div>
-                                    )
-                                },
-                                {
-                                    key: "2", label: (
-                                        <div onClick={()=>setSymbol("≠")}>不等于</div>
-                                    )
-                                },
-                                {
-                                    key: "3", label: (
-                                        <div onClick={()=>setSymbol(">")}>大于</div>
-                                    )
-                                },
-                                {
-                                    key: "4", label: (
-                                        <div onClick={()=>setSymbol("<")}>小于</div>
-                                    )
-                                }
-                            ]} 
-                            styled={undefined}
-                            position={undefined}
+                            tiggerEle={<div className="select-item-conditions"> {symbol} </div>}
+                            menu={{
+                                items:[
+                                    {
+                                        key: "1", label: (
+                                            <div onClick={()=>setSymbol("=")}>等于</div>
+                                        )
+                                    },
+                                    {
+                                        key: "2", label: (
+                                            <div onClick={()=>setSymbol("≠")}>不等于</div>
+                                        )
+                                    },
+                                    {
+                                        key: "3", label: (
+                                            <div onClick={()=>setSymbol(">")}>大于</div>
+                                        )
+                                    },
+                                    {
+                                        key: "4", label: (
+                                            <div onClick={()=>setSymbol("<")}>小于</div>
+                                        )
+                                    }
+                                ]
+                            }}
                         />
                         <div>
                         {/*  */}

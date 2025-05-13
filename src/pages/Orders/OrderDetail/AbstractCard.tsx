@@ -9,7 +9,7 @@ const {TextArea} = Input
 function AbstractCard() {
     const intl = useIntl();
     return (
-        <Card  style={{ width: '300px' }} 
+        <Card
         title={
             <div style={{ display: 'flex', alignItems: 'center', fontSize: '16px' ,color:'#474F5E', justifyContent: 'space-between' }}>
            <div>   

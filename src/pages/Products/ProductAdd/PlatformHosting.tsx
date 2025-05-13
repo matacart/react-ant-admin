@@ -4,21 +4,15 @@
 // import { observer } from "mobx-react"
 // import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
-import { Card, Checkbox, Switch, Tooltip } from "antd"
+import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
 import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
+import product from "@/store/product/product";
 
  function PlatformHosting(){
-    const onChange = (checked: boolean) => {
-        newStore.setHostedStatus(checked?'1':'0')
-    };
+    
     return (
         <Scoped>
             <Card className="gap">
@@ -34,8 +28,12 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                 </div>
                 <div className="item between">
                     <span>托管</span>
-                    {/* <Checkbox></Checkbox> */}
-                    <Switch onChange={onChange} />
+                    <Switch checked={product.productInfo.hosted_status == 1?true:false} onChange={(checked)=>{
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            hosted_status:checked?1:0
+                        })
+                    }} />
                 </div>
             </Card>
         </Scoped>

@@ -71,6 +71,7 @@ export default {
   'menu.stores.manage': '管理店铺',
   //
   'menu.orders': '订单',
+  'menu.orders.orderId': '订单',
   'menu.orders.manages': '订单管理',
   'menu.orders.recallOrders': '弃单',
   'menu.orders.recall': '弃单',
@@ -78,10 +79,15 @@ export default {
 
 
   'menu.products.inventory': '库存',
+  'menu.products.migrate': '转移',
   'menu.products.transfers': '转移',
   'menu.products.purchase_orders':'采购订单',
   'menu.products.categories':'分类',
   'menu.products.gift-cards':'礼品卡',
+  'menu.products.giftCardsNew':'新增礼品卡',
+
+  'menu.appStore':'应用市场',
+  'menu.orderInvoiceCustomization':'订单票据定制插件',
 
   'menu.customer': '客户',
   'menu.customer.management': '客户管理',
@@ -102,6 +108,13 @@ export default {
   'menu.warehouse.inventory':"库存",
   'menu.warehouse.transfers':"转移",
 
+  'menu.website':"在线商店",
+  'menu.website.shopSetting':'店铺设计',
+  'menu.website.articles':'博客',
+  'menu.website.customPage':'自定义页面',
+  'menu.website.navList':'菜单导航',
+  'menu.website.preferences':'偏好设置',
+  'menu.channel':"渠道",
   // 
   'menu.settings':"设置",
   'menu.settings.index':"设置",
@@ -112,5 +125,6 @@ export default {
   'menu.settings.logisticsAddCustom':"新增自定义运费",
   'menu.settings.adminpermission':"管理员和权限",
   'menu.settings.adminpermissionAdd':"添加员工账号",
+  'menu.settings.logisticsEditCustom':'通用运费编辑',
 
 };

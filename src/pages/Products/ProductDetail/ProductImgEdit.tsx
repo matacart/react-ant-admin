@@ -6,8 +6,7 @@ import { message, Upload, Image } from 'antd';
 import styled from 'styled-components';
 import axios from "axios";
 import { observer } from "mobx-react-lite";
-import oldStore from "@/store/product/oldStore";
-import FileListEdit from "../components/FileListEdit";
+import product from "@/store/product/product";
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -21,11 +20,6 @@ const getBase64 = (file: FileType): Promise<string> =>
   });
 
 function ProductImgEdit() {
-
-  // youtubeUrl
-  const onFinish = (values: any) => {
-    console.log('Received values of form:', values);
-  };
 
   const [loading,setLoading] = useState(false);
   // 视频弹窗加载
@@ -57,134 +51,99 @@ function ProductImgEdit() {
     return tempSelectedImg.indexOf(img);
   }
   // 是否已被之前选中
-  const isBeforeSelected = (img: any) => {
-    return oldStore.isIncludeSelectedImgList(img);
-  }
+  // const isBeforeSelected = (img: any) => {
+  //   return oldStore.isIncludeSelectedImgList(img);
+  // }
   // 是否现在被选中
   const isCurrentSelected = (img: any) => {
     return tempSelectedImg.indexOf(img) > -1
   }
   // 图片选中
   const imgClass = (img: any) => {
-    if (isBeforeSelected(img)) {
-      return "img-selected-band";
-    } else if (isCurrentSelected(img)) {
-      return "img-selected img-mask"
-    } else {
-      return "img-mask"
-    }
+    // if (isBeforeSelected(img)) {
+    //   return "img-selected-band";
+    // } else if (isCurrentSelected(img)) {
+    //   return "img-selected img-mask"
+    // } else {
+    //   return "img-mask"
+    // }
   }
 // ###########   图片上传  ######################
 
   const { Dragger } = Upload;
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-    // {
-    //   uid: '-2',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-3',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-4',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-xxx',
-    //   percent: 50,
-    //   name: 'image.png',
-    //   status: 'uploading',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-5',
-    //   name: 'image.png',
-    //   status: 'error',
-    // },
-  ]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   let imageMap = new Map();
   // 图片集合
 
   const [selectFileCount,setSelectFileCount] = useState(0);
 
-  useEffect(()=>{
-    oldStore.fileUpload.selectFileList.length>0?setSelectFileCount(oldStore.fileUpload.selectFileList.length):null
-  },[oldStore.fileUpload.selectFileList])
-
   useEffect(() => {
-    // let tempList:any = [];
-    // oldStore.selectedImgList.forEach((res,index) => {
-    //   tempList.push({
-    //     uid:index.toString(),
-    //     url:res,
-    //   })
-    // });
-    let tempList = Array.from(oldStore.selectedImgList,(res,index)=>{
+    console.log(product.productInfo.additional_image)
+    // console.log([...product.productInfo.additional_image])
+    const newImgList = [...product.productInfo.additional_image].map((item,index)=>{
       return {
         uid:index.toString(),
-        url:res,
+        name: item.toString(),
+        status: 'done',
+        url:item,
       }
     })
-    // console.log(tempList)
-    setFileList(tempList as any)
-  }, [oldStore.productId])
+    setFileList(newImgList as any)
+  }, [])
   
   // 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
-
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
-  const handleChange = async (info: any) => {
-
-    // 删除
-    if(info.file.status == "removed"){
-      setFileList(info.fileList);
-      oldStore.temp.delete(info.file.uid)
-      return
-    }
-    setLoading(true)
-    // 上传
+  // 上传
+  const beforeUploadImg = async (info: any) => {
+    setLoading(true);
     let formData = new FormData()
-    formData.append("1", info.file as FileType)
-    axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
-      if(req.data.code == 0){
-        // uid --- src
-        // message.success("上传成功", 1)
-        oldStore.temp.set(info.file.uid, req.data.data.src)
-        setLoading(false);
+    formData.append("file", info)
+    axios.post('/api/ApiAppstore/doUploadPic',formData).then((res: any) => {
+      console.log(res)
+      if(res.data.code == 0){
+        setFileList([...fileList,{
+          uid:(fileList.length).toString(),
+          name: res.data.data.src.toString(),
+          status: 'done',
+          url:res.data.data.src.toString(),
+        }]);
+        product.setProductInfo(
+          {
+            ...product.productInfo,
+            additional_image:[...product.productInfo.additional_image,res.data.data.src.toString()]
+          }
+        )
       }else{
         message.error("上传失败", 1)
       }
+    }).catch((err: any) => {
+      
+    }).finally(() => {
+      setLoading(false);
     })
-    // }else if(info.file.status == "removed"){
-    //   oldStore.temp.delete(info.file.uid)
-    //   // 移除
-    // }else if(info.file.status == "done"){
-    //   // 失败
-    // }else{
-    //   // 其它
-    // }
-    setFileList(info.fileList);
+  };
+
+  const onRemoveImg = (file: FileType) => {
+    setFileList(fileList.filter(item => item.uid !== file.uid));
+    // 试试
+    const newAdditionalImage = product.productInfo.additional_image.filter((item:any,index:number)=>{
+      return index.toString() !== file.uid
+    })
+    product.setProductInfo(
+      {
+        ...product.productInfo,
+        additional_image:newAdditionalImage
+      }
+    )
   };
 
   const uploadButton = (
@@ -195,20 +154,20 @@ function ProductImgEdit() {
   );
 
   // 从文件库添加文件
-  const addFileLibrary = (items:any)=>{
-    let newFileList = [...fileList];
-    items.forEach((item:any)=>{
-      newFileList.push({
-        uid:item.id,
-        name:item.id,
-        status:"done",
-        url:item.url
-      })
-      oldStore.temp.set(item.id, item.url)
-    })
-    // console.log(newFileList)
-    setFileList(newFileList);
-  }
+  // const addFileLibrary = (items:any)=>{
+  //   let newFileList = [...fileList];
+  //   items.forEach((item:any)=>{
+  //     newFileList.push({
+  //       uid:item.id,
+  //       name:item.id,
+  //       status:"done",
+  //       url:item.url
+  //     })
+  //     oldStore.temp.set(item.id, item.url)
+  //   })
+  //   // console.log(newFileList)
+  //   setFileList(newFileList);
+  // }
 
 
   const videoProps: UploadProps = {
@@ -249,16 +208,16 @@ function ProductImgEdit() {
           <a onClick={() => {
             setAddUrlModalOpen(true);
             // 表单
-            form.setFieldValue("youTubeUrl",oldStore.productVideo);
+            form.setFieldValue("youTubeUrl",product.productInfo.product_video);
           }}>添加URL</a>
-          <a style={{
+          {/* <a style={{
             marginLeft: 20
           }}
             onClick={() => {
               setAddImgModalOpen(true);
               getImgList();
             }}
-          >添加多媒体图片</a>
+          >添加多媒体图片</a> */}
         </>}
       >
         <div className="content" style={{
@@ -269,19 +228,22 @@ function ProductImgEdit() {
           <Spin spinning={loading}>
             <Upload
               listType="picture-card"
-              beforeUpload={()=>{
+              beforeUpload={(info)=>{
+                beforeUploadImg(info)
                 return false
+              }}
+              onRemove={(file)=>{
+                onRemoveImg(file)
               }}
               multiple={true}
               fileList={fileList}
               onPreview={handlePreview}
-              onChange={handleChange}
             >
               {fileList.length >= 8 ? null : uploadButton}
             </Upload>
             {previewImage && (
               <>
-                <div style={{zIndex:"999"}}>123</div>
+                <div style={{zIndex:"999"}}></div>
                 <Image
                   wrapperStyle={{ display: 'none' }}
                   preview={{
@@ -296,18 +258,6 @@ function ProductImgEdit() {
             
           </Spin>
         </div>
-        {/* 图片上传-外 */}
-        {/* <Dragger {...props} height={200} >
-          <PlusOutlined style={{
-            fontSize: 30,
-            color: "#929292"
-          }} />
-          <p className="ant-upload-text">添加图片（或把图片拖到框内）</p>
-        </Dragger>
-
-        <UploadTipDesc>
-          支持上传jpg、png、webp、SVG格式图片，最大限制为10M（4M为最佳店铺浏览体验）；支持上传GIF格式动图，最大限制8M
-        </UploadTipDesc> */}
         {/* 添加url Modal */}
         <Modal
           title="YouTube视频"
@@ -319,7 +269,10 @@ function ProductImgEdit() {
             // 手动效验
             form.validateFields(["youTubeUrl"]).then((values) => {
               if(values.youTubeUrl){
-                oldStore.setProductVideo(values.youTubeUrl)
+                product.setProductInfo({
+                  ...product.productInfo,
+                  product_video:values.youTubeUrl
+                })
                 setAddUrlModalOpen(false)
                 return true
               }else{
@@ -355,7 +308,7 @@ function ProductImgEdit() {
                   // 校验逻辑保持不变
                   const regexYouTube = /^(?:https?:\/\/)?(?:www\.)?((youtube\.com\/watch\?v=)|(youtu\.be\/))([a-zA-Z0-9_-]{11})$/;
                   // 本地视频
-                  if("img1.s.handingcdn.com" == value.slice(2,23)){
+                  if("//oss.handingcdn.com" == value.slice(0,20)){
                     return Promise.resolve();
                   }
                   if(!regexYouTube.test(value)) {
@@ -367,7 +320,7 @@ function ProductImgEdit() {
                 }
               }]}
             >
-              <Input defaultValue={oldStore.productVideo}/>
+              <Input defaultValue={product.productInfo.product_video}/>
             </Form.Item>
             <div style={{
               color: "rgb(122, 132, 153)"
@@ -382,64 +335,6 @@ function ProductImgEdit() {
         </Modal>
         {/* 添加多媒体图片 Modal */}
         {/* <Modal
-          width="90vw" style={{ maxWidth: "860px" }}
-          styles={{
-            body: {
-              height: "700px",
-              padding: 0
-            }
-          }}
-          centered
-          title='从文件库中选择'
-          open={addImgModalOpen}
-          onOk={() => {
-            setAddImgModalOpen(false)
-            oldStore.setSelectedImgList([...oldStore.getSelectedImgList(), ...tempSelectedImg]);
-            tempSelectedImg.length = 0;
-          }}
-          onCancel={() => setAddImgModalOpen(false)}
-        >
-          <div className="img-modal-header" style={{
-            display: "flex",
-            alignContent: "center",
-            marginTop: '20px',
-            marginBottom: '8px'
-          }}>
-            <Input
-              placeholder="搜索文件名/文件格式"
-              prefix={<SearchOutlined style={{ color: "rgba(0,0,0,0.25" }} />}
-              style={{
-                height: "36px",
-                width: "300px",
-                marginRight: "20px"
-              }}
-
-            />
-
-            <Select
-              placeholder="文件类型"
-              style={{ width: 120, height: 36 }}
-              options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}
-            />
-          </div>
-          <div className="content" style={{ display: "flex", flexWrap: "wrap", gap: "8px"
-          }}>
-            <div>
-              <div>
-              </div>
-              <div>
-              </div>
-            </div>
-            <div></div>
-          </div>
-        </Modal> */}
-        {/* 添加多媒体图片 Modal */}
-        <Modal
           width="90vw" style={{ maxWidth: "860px" }}
           styles={{
             body: {
@@ -480,7 +375,7 @@ function ProductImgEdit() {
           }}
         >
           <FileListEdit />
-        </Modal>
+        </Modal> */}
       </Card>
     </Scoped>
 

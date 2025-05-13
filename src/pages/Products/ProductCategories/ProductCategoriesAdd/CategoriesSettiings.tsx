@@ -1,11 +1,7 @@
-import newStore from "@/store/newStore"
-import { Card, Checkbox, Flex, Switch, Tooltip } from "antd"
+import categories from "@/store/product/categories"
+import { Card, Switch } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
-import newCategories from "@/store/categories/newCategories"
-
 
  function CategoriesSettings(){
     
@@ -13,17 +9,16 @@ import newCategories from "@/store/categories/newCategories"
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">分类设置
-                        {/* <Tooltip title="客户可以把商品添加到精选联盟商品库，供达人选品推广">
-                            <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                                <QuestionCircleOutlined />
-                            </span>
-                        </Tooltip> */}
-                    </span>
+                    <span className="title">分类设置</span>
                 </div>
                 <div className="item between">
                     <span>启用</span>
-                    <Switch onChange={(e) => {newCategories.setStatus(e ? '1' : '0')}} checked={newCategories.status == '1'?true:false}  />
+                    <Switch onChange={(e) => {
+                        categories.setCategoriesInfo({
+                            ...categories.categoriesInfo,
+                            status: e ? 1 : 0
+                        })
+                    }} checked={categories.categoriesInfo.status == 1?true:false}  />
                 </div>
             </Card>
         </Scoped>

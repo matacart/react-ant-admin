@@ -1,21 +1,63 @@
 import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
 import { Button, Card, Divider, Flex, Form, Input, List, message, Modal, Select, Table, TableProps, TabsProps } from "antd"
-import { history } from "@umijs/max"
+import { history, useParams, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import { creatAppStore, getAppStores, getEmployeeList } from "@/services/y2/api"
+import { creatAppStore, getEmployeeList, getPermissionsList } from "@/services/y2/api"
 import AccessRangeCard from "./AccessRangeCard"
+import WebHookSubscriptionTable from "./WebHookSubscriptionTable"
+import customAppConfigSetting from "@/store/appStore/customAppConfigSetting"
+import { observer } from "mobx-react-lite"
+import SkeletonCard from "@/components/Skeleton/SkeletonCard"
+import { set } from "lodash"
+import ModifyModal from "@/components/Modal/ModifyModal"
+import PrimaryButton from "@/components/Button/PrimaryButton"
+
+
 
 function CustomAppConfigSetting() {
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [isSkeleton,setIsSkeleton] = useState(true)
+
+    const contentForm = (
+        <Form style={{padding:"20px 0 10px 0"}} layout="vertical">
+            <Form.Item label="事件名称">
+            <Select disabled />
+            </Form.Item>
+            <Form.Item label="通知URL">
+            <Input />
+            </Form.Item>
+            <Form.Item label="事件版本">
+            <Select />
+            </Form.Item>
+        </Form>
+    )
+
+    // 获取权限列表
+    const fetchPermissionsList = async ()=>{
+        try {
+            const permissionsList = await getPermissionsList(searchParams.get("appId")?? "",searchParams.get("type")?? "","2")
+            customAppConfigSetting.setPermissionsList(permissionsList.data)
+            console.log(permissionsList.data)
+            customAppConfigSetting.setNewPermissionsList(permissionsList.data)
+        } catch (error) {
+            // 
+        }finally{
+            setIsSkeleton(false)
+        }
+    }
 
     useEffect(()=>{
-       
+        searchParams.get("type") == "2" && customAppConfigSetting.setAccessRangeTitle("后台 API 权限编辑")
+        searchParams.get("type") == "1" && customAppConfigSetting.setAccessRangeTitle("店面 API 权限编辑")
+        fetchPermissionsList()
     },[])
 
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -24,17 +66,27 @@ function CustomAppConfigSetting() {
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
-                            <div className="mc-header-left-content">后台API权限编辑</div>
+                            <div className="mc-header-left-content">{customAppConfigSetting.accessRangeTitle}</div>
                         </div>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
                             <AccessRangeCard />
+                            {searchParams.get("type") == "2" && <Card title="WebHook订阅" extra={
+                                <ModifyModal
+                                    okFun={()=>{}}
+                                    title={<div className="color-242833">创建WebHook</div>}
+                                    okText="保存"
+                                    tElement={<PrimaryButton text="创建WebHook" />}
+                                    content={contentForm} 
+                                />
+                            }>
+                                <WebHookSubscriptionTable />
+                            </Card>}
                         </div>
                     </div>
                 </div>
-            </div>
-           
+            </div>}
         </Scoped>
     )
 }

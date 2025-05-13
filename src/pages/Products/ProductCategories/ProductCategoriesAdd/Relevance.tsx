@@ -1,10 +1,8 @@
-import newStore from "@/store/newStore"
-import { Card, Checkbox, Flex, Switch, Tooltip } from "antd"
+import categories from "@/store/product/categories"
+import { QuestionCircleOutlined } from "@ant-design/icons"
+import { Card, Checkbox, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
-import newCategories from "@/store/categories/newCategories"
 
 
  function Relevance(){
@@ -13,7 +11,7 @@ import newCategories from "@/store/categories/newCategories"
             <Card className="gap">
                 <div className="header">
                     <span className="title">店铺关联
-                        <Tooltip title="商品在多个店铺中展示">
+                        <Tooltip title="分类在店铺中展示">
                             <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                 <QuestionCircleOutlined />
                             </span>
@@ -22,7 +20,12 @@ import newCategories from "@/store/categories/newCategories"
                 </div>
                 <div className="item between">
                     <span>数据关联</span>
-                    <Switch onChange={(e) => {newCategories.setIsBind(e ? '1' : '0')}} checked={newCategories.isBind == '1'?true:false}  />
+                    <Switch onChange={(e) => {
+                        categories.setCategoriesInfo({
+                            ...categories.categoriesInfo,
+                            is_bind: e ? 1 : 0
+                        })
+                    }} checked={categories.categoriesInfo.is_bind == 1?true:false}  />
                 </div>
             </Card>
         </Scoped>

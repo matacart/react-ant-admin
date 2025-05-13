@@ -1,10 +1,9 @@
-import { Button, Dropdown, MenuProps, theme } from "antd";
+import { Button, ConfigProvider, Dropdown, MenuProps, theme } from "antd";
 import React, { useState } from "react";
-import { styled } from 'styled-components';
 
 const { useToken } = theme;
 // 自定义下拉
-export default function MyDropdown({component,itemList,styled,position}:{component:any,itemList:any,styled:any,position:any}) {
+export default function MyDropdown({tiggerEle,...props}:any) {
 
     const { token } = useToken();
 
@@ -19,25 +18,35 @@ export default function MyDropdown({component,itemList,styled,position}:{compone
         boxShadow: 'none',
     };
 
-    const items: MenuProps['items'] = itemList
-
     return (
         <>
-            <Dropdown menu={{ items }} dropdownRender={(menu)=>(
-                <div style={contentStyle}>
-                    <div style={styled}>
-                        {/* <div className="font-12 color-B8BECC" style={{padding:"8px 12px"}}>选择排序方式</div> */}
-                        {React.cloneElement(
-                            menu as React.ReactElement<{
-                                style: React.CSSProperties;
-                            }>,
-                            { style: menuStyle },
-                        )}
-                    </div>
-                </div>
-            )} trigger={['click']} placement={position}>
-                {component}
-            </Dropdown>
+            <ConfigProvider
+                theme={{
+                    token: {
+                        paddingXXS:0 
+                    },
+                }}
+            >
+                <Dropdown {...props}  
+                    trigger={['click']} 
+                    dropdownRender={(menu)=>{
+                        return (
+                            <div style={contentStyle}>
+                                <div>
+                                    {React.cloneElement(
+                                        menu as React.ReactElement<{
+                                            style: React.CSSProperties;
+                                        }>,
+                                        { style: menuStyle },
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    }}
+                >
+                    {tiggerEle}
+                </Dropdown>
+            </ConfigProvider>
         </>
     )
 }

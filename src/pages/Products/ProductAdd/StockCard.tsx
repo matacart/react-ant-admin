@@ -1,136 +1,157 @@
-import newStore from "@/store/newStore";
+import product from "@/store/product/product";
 import { QuestionCircleOutlined } from "@ant-design/icons"
-import { Card, Checkbox, Col, Form, Input, InputNumber, InputNumberProps, InputProps, Row, Tooltip } from "antd"
+import { Card, Checkbox, Col, Flex, Form, Input, InputNumber, InputProps, Row, Tooltip } from "antd"
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components"
 
+function StockCard({form}:{form:any}){
 
-// const onChangeSKU = (value) => {
-//     console.log('changed', value);
-//     // newStore.setSKU(value)
-// };
-
-// const onChangeISBN = (value:string) => {
-//     console.log('changed', value);
-// };
-const onChange = (value:string) => {
-    console.log('changed', value);
-};
-
-
-
-function StockCard() {
     useEffect(()=>{
-        // console.log(newStore)
-    })
+        form.setFieldsValue({
+            model:product.productInfo.model,
+            ISBN:product.productInfo.barcode,
+            SKU:product.productInfo.sku,
+            quantity:product.productInfo.quantity,
+            minimum:product.productInfo.minimum,
+            salesCount:product.productInfo.sales_count,
+            inventoryTracking:product.productInfo.inventoryTracking == 1?true:false,
+            continueSell:product.productInfo.continueSell == 1?true:false
+        })
+    },[])
+
     return (
         <Scoped>
             <Card title='库存' >
-                <Form layout="vertical">
+                <Form layout="vertical" form={form}>
                     <Row>
                         <Col span={11}>
-                            <Form.Item label="型号"
-                                // rules={[{ required: true, message: 'Please input model!' }]}
-                                validateStatus={newStore.validate.model as any}
-                                help={newStore.validate.model == "success"?"":<span style={{ color: '#F86140' }}>请输入商品模型</span>}
-                                name='model' required initialValue={newStore.model}>
-                                <Input
-                                    onChange={(e)=>{
-                                        newStore.setModel(e.target.value)
-                                        newStore.validate.model = "success"
-                                        newStore.setEditStatus(true)
-                                    }}
-                                    value={newStore.model}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col offset={2} span={11}>
-                            <Form.Item label="条码(ISBN、UPC、GTIN等)"
-                                name='ISBN'>
-                                <Input
-                                    defaultValue={newStore.ISBN}
-                                    onChange={(e)=>{
-                                        newStore.setISBN(e.target.value)
-                                        newStore.setEditStatus(true)
-                                    }}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={11}>
-                            <Form.Item
-                            label="SKU"
-                            name='SKU'
-                                >
-                                <Input
-                                    onChange={(e)=>{
-                                        newStore.setSKU(e.target.value)
-                                        newStore.setEditStatus(true)
-                                    }}
-                                    value={newStore.SKU}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col offset={2} span={11}>
-                            <Form.Item label="库存数量"
-                                name='stockQuantity' initialValue={newStore.inventory}>
-                                <Input
-                                    type='number'
-                                    onChange={(e)=>{
-                                        newStore.setInventory(Number(e.target.value))
-                                        newStore.setEditStatus(true)
-                                    }}
-                                    value={newStore.inventory}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col span={11}>
-                            <Form.Item
-                                label="最少购买"
+                            <Form.Item name="model" label={<Flex>
+                                <div>型号</div>
+                                <Tooltip title="型号唯一不重复">
+                                    <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                                        <QuestionCircleOutlined />
+                                    </span>
+                                </Tooltip>
+                            </Flex>}
+                                rules={[{ required: true, message: '请输入型号' }]}
                             >
                                 <Input
-                                    defaultValue={newStore.minimum}
-                                    onChange={(e) => newStore.setMinimum(Number(e.target.value))}
+                                    onChange={(e)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            model:e.target.value
+                                        })
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                            <Form.Item label="商品销量">
+                            <Form.Item 
+                                name="ISBN" 
+                                label="条码(ISBN、UPC、GTIN等)"
+                            >
                                 <Input
-                                    defaultValue={newStore.salesCount}
-                                    onChange={(e=>{
-                                        newStore.setSalesCount(Number(e.target.value))
-                                    })}
+                                    placeholder="条码(ISBN、UPC、GTIN等)"
+                                    onChange={(e)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            barcode:e.target.value
+                                        })
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
+                            <Form.Item
+                                name="SKU"
+                                label="SKU"
+                            >
+                                <Input
+                                    placeholder="SKU"
+                                    onChange={(e) => {
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            sku:e.target.value
+                                        })
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                            <Form.Item name="quantity" label="库存数量">
+                                <InputNumber<number>
+                                    className="ant-input"
+                                    min={0}
+                                    onChange={(value)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            quantity:value?.toString() || ""
+                                        })
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
+                            <Form.Item
+                                name="minimum"
+                                label="最少购买"
+                            >
+                                <InputNumber<number>
+                                    className="ant-input"
+                                    min={0}
+                                    onChange={(value) =>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            minimum:value?.toString() || ""
+                                        })
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                            <Form.Item name="salesCount" label="商品销量">
+                                <InputNumber<number>
+                                    className="ant-input"
+                                    min={0}
+                                    onChange={(value)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            sales_count:value?.toString() || ""
+                                        })
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
                     </Row>
                     <Form.Item
-                        valuePropName="checked"
-                        name="enableInventoryTracking"
+                        name="inventoryTracking"
                         style={{
                             marginBottom: 0
                         }}
                         >
                         <Checkbox onChange={(e)=>{
-                            console.log(e.target.checked)
-                            newStore.setInventoryTracking(e.target.checked)
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                inventoryTracking:e.target.checked?1:0
+                            })
                         }}>开启库存追踪</Checkbox>
                     </Form.Item>
-                    <Form.Item
-                        valuePropName="checked"
-                        name="continueSelling">
+                    <Form.Item name="continueSell">
                         <Checkbox
-                        onChange={(e)=>{
-                            newStore.setContinueSell(e.target.checked)
-                        }}
-                        
-                        >缺货后继续销售
-                            <Tooltip title="此设置适用MataCart后台管理">
+                            onChange={(e)=>{
+                                product.setProductInfo({
+                                    ...product.productInfo,
+                                    continueSell:e.target.checked?1:0
+                                })
+                            }}
+                        >
+                            缺货后继续销售
+                            <Tooltip title="此设置同时适用MataCart后台管理">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                     <QuestionCircleOutlined />
                                 </span>
@@ -145,7 +166,9 @@ function StockCard() {
 
 export default observer(StockCard)
 
+
 const Scoped = styled.div`
+
 .ant{
     &-card{
         &-head-title{
@@ -164,8 +187,15 @@ const Scoped = styled.div`
         }
     }
     &-input{
-            width: 100%;
-            height: 36px;
-    } 
+        width: 100%;
+        height: 36px;
+        &-number-input-wrap{
+            height: 100%;
+            display:flex;
+            align-items: center;
+        }
+        &-number-input{
+        }
+    }
 }
 `

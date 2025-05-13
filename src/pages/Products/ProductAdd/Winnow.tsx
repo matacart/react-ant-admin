@@ -1,28 +1,13 @@
-// import globalStore from "@/store/globalStore"
-// import newStore from "@/store/newStore"
-// import { Card } from "antd"
-// import { observer } from "mobx-react"
-// import styled from "styled-components"
 
-import SEOEdit from "@/components/Select/SEOEdit"
-import globalStore from "@/store/globalStore"
-import newStore from "@/store/newStore"
 import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
-import oldStore from "@/store/oldStore"
-import { Link } from "react-router-dom"
 import { QuestionCircleOutlined } from "@ant-design/icons"
-
+import product from "@/store/product/product"
+import { Link } from "react-router-dom"
 
  function Winnow(){
     
-    const onChange = (checked: boolean) => {
-        console.log(`switch to ${checked}`);
-        newStore.setAllianceStatus(checked?'1':'0')
-    };
-
     return (
         <Scoped>
             <Card className="gap">
@@ -38,7 +23,12 @@ import { QuestionCircleOutlined } from "@ant-design/icons"
                 </div>
                 <div className="item between">
                     <span>加入联盟</span>
-                    <Switch onChange={onChange} />
+                    <Switch checked={product.productInfo.alliance_status == 1?true:false} onChange={(checked)=>{
+                        product.setProductInfo({
+                            ...product.productInfo,
+                            alliance_status:checked?1:0
+                        })
+                    }} />
                 </div>
             </Card>
         </Scoped>

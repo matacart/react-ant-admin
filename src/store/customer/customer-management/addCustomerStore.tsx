@@ -17,8 +17,6 @@ class addCustomerStore {
     basePhone:string = "";
 
     // 客户订阅 -- 
-
-
     
     baseSex:string = "";
 

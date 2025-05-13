@@ -9,6 +9,7 @@ import productStore from '@/store/productStore';
 import { Outlet } from 'react-router-dom';
 import GiftCardsSelectCard from './GiftCardsSelectCard';
 import { ExportIcon } from '@/components/Icons/Icons';
+import BlankPage from './BlankPage';
 
 
 
@@ -116,6 +117,7 @@ const App: React.FC = () => {
 
   return (
     <Scoped>
+      {/* <BlankPage /> */}
       <div className='create-warp-flex' style={{ width: "100%" }}>
         <div className="create-warp">
           <div className='create-title'>
@@ -149,7 +151,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
-      <Outlet />
     </Scoped>
   );
 }

@@ -1,122 +1,93 @@
-import { Space, Select, Input, Tag, Button, ConfigProvider } from "antd";
-import type { SearchProps } from 'antd/es/input/Search';
-import type { SelectProps } from 'antd';
-import ProductListAjax from "@/pages/Products/ProductList/ProductListAjax";
-import { useEffect, useState } from "react"
+import { Space, Select, Input, Tag, Button, ConfigProvider, Flex } from "antd";
+import { useEffect, useRef, useState } from "react"
 import { selectTags } from "@/services/y2/api";
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
-import MoreSelect from "@/components/Select/MoreSelect";
 import styled from "styled-components";
 import TagSelector from "./TagSelector";
 import CommodityClassificationSelector from "./CommodityClassificationSelector";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import cookie from 'react-cookies';
 import EditTableHead from "./EditTableHead";
+import MySelect from "@/components/Select/MySelect";
+import MySearch from "@/components/Input/MySearch";
+import LangSelect from "@/pages/components/LangSelect";
+import productList from "@/store/product/productList";
+import { observer } from "mobx-react-lite";
+import MoreSelect from "./MoreSelect";
 
 const { Search } = Input;
-// type TagRender = SelectProps['tagRender'];
-export default function ProductsSelectCard(){
-    // 默认语言
-    const [language, setLanguage] = useState();
-    const [languageData, setLanguageData] = useState([]);
-    const [searchType,setSearchType] = useState(0);
-    
-    let timeTags:object[] = [];
-    const [tags,setTags] = useState("");
-    const [tagsList, setTagsList] = useState<object[]>([]);
-   
-    const [title,setTitle] = useState("");
-    const [model,setModel] = useState("");
-    // 标签列表
-    const options: SelectProps['options'] = tagsList;
-    const [openTagsList,setOpenTagsList] = useState(false);
-    // 添加标签 
-    function getTags(language:string){
-        selectTags(language).then(res=>{
-            // console.log(res)
-            if(res.code == 0){
-                res.data.forEach((element:any) => {
-                    timeTags.push({
-                        label: element.tag,
-                        value: element.id
-                    })
-                });
-                setTagsList(timeTags)
-            }else if(res.code == 201){
-                setTagsList([])
-            }
-        })
-    }
-    useEffect(()=>{
-        // 添加语言
-        let tempList = [];
-        if(languageData.length==0){
-            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
-                console.log(item.code)
-                console.log(item.code == cookie.load("default_lang"))
-                item.code == cookie.load("default_lang") && setLanguage(item.id)
-                return {
-                    value: item.id,
-                    label: item.name
-                }
-            })
-            setLanguageData(tempList)
-        };
-        if(timeTags.length == 0){
-            getTags(language)
-        }
-    },[])
-    // 搜索 0 - 7
-    const selectSearch = (value: number) => {
-        // console.log(`selected ${value}`);
-        setSearchType(value)
-    };
 
-    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-        // console.log(info?.source, value);
-        switch(searchType){
-            case 0:
-                console.log("search")
-                break;
-            case 1:
-                console.log("search by name"+value)
-                setTitle(value)
-                break;
-            case 2:
-                console.log("search by spu")
-                break;
-            case 3:
-                console.log("search by sku")
-                break;
-            case 4:
-                console.log("search by manufacturer")
-                break;
-            case 5:
-                console.log("search by barcode")
-                break;
-        }
-    }
+
+// type TagRender = SelectProps['tagRender'];
+const ProductsSelectCard = ()=>{
+
+    const [searchType,setSearchType] = useState("SEARCH_TXT");
+    const [searchText,setSearchText] = useState("");
+
+    const [min,setMin] = useState();
+    const [max,setMax] = useState();
+
+    // 添加标签 
+    // function getTags(language:string){
+    //     selectTags(language).then(res=>{
+    //         if(res.code == 0){
+    //             res.data.forEach((element:any) => {
+    //                 timeTags.push({
+    //                     label: element.tag,
+    //                     value: element.id
+    //                 })
+    //             });
+    //             setTagsList(timeTags)
+    //         }else if(res.code == 201){
+    //             setTagsList([])
+    //         }
+    //     }).catch((err)=>{
+    //     })
+    // }
+    // const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+    //     // console.log(info?.source, value);
+    //     switch(searchType){
+    //         case 0:
+    //             console.log("search")
+    //             break;
+    //         case 1:
+    //             console.log("search by name"+value)
+    //             setTitle(value)
+    //             break;
+    //         case 2:
+    //             console.log("search by spu")
+    //             break;
+    //         case 3:
+    //             console.log("search by sku")
+    //             break;
+    //         case 4:
+    //             console.log("search by manufacturer")
+    //             break;
+    //         case 5:
+    //             console.log("search by barcode")
+    //             break;
+    //     }
+    // }
     
     // 语言选择
-    const languageChange= (value: string) => {
-        setLanguage(value)
-        getTags(value)
+    const setLang = (value: string) => {
+        productList.setLanguagesId(value)
     };
     
     let str = ""
     // 标签选择
-    const handleTagChange = (value: string,option:any)=>{
-        console.log(option)
-        str = ""
-        option.forEach((element:any) => {
-            // console.log(element.label)
-            str+=","+element.label
-        });
-        // setTags(str.slice(1))
-    }
+    // const handleTagChange = (value: string,option:any)=>{
+    //     console.log(option)
+    //     str = ""
+    //     option.forEach((element:any) => {
+    //         // console.log(element.label)
+    //         str+=","+element.label
+    //     });
+    //     // setTags(str.slice(1))
+    // }
+
     return (
         <Scoped> 
-            
             <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
                     display: 'flex',
@@ -130,31 +101,40 @@ export default function ProductsSelectCard(){
                         flexWrap: 'wrap',
                         gap: '12px 12px',
                     }}>
-                        <Space.Compact style={{height:36}}>
-                            <Select
-                                defaultValue={0}
-                                style={{ width: 100 ,height:36}}
-                                listHeight={230}
-                                options={[
-                                    { value: 0, label: '全部' },
-                                    { value: 1, label: '商品名称' },
-                                    { value: 2, label: '商品SPU' },
-                                    { value: 3, label: '商品SKU' },
-                                    { value: 4, label: '商品厂商' },
-                                    { value: 5, label: '商品条码' },
-                                    { value: 6, label: '规格名称' },
-                                    { value: 7, label: '商品描述' },
-                                ]}
-                                onChange={selectSearch}
+                        {/* 搜索 */}
+                        <Space.Compact style={{width:"420px"}}>
+                            <MySelect value={searchType} options={[
+                                { value: "SEARCH_TXT", label: '全部' },
+                                { value: "PRODUCT_MODEL", label: '商品型号' },
+                                { value: "PRODUCT_NAME", label: '商品名称' },
+                                { value: "PRODUCT_SPU", label: '商品SPU' },
+                                { value: "PRODUCT_SKU", label: '商品SKU' },
+                                { value: "BRAND_NAME", label: '商品厂商' },
+                                { value: "BARCODE", label: '商品条码' },
+                                { value: "ATTRIBUTE_VALUE", label: '规格名称' },
+                                { value: "DESCRIPTION", label: '商品描述' },
+                            ]} style={{height:"36px",minWidth:"110px"}} onChange={(value:string)=>{
+                                setSearchType(value)
+                            }} />
+                            <MySearch placeholder="搜索" value={searchText}
+                                onChange={(e:any)=>{
+                                    setSearchText(e.target.value)
+                                }} 
+                                onSearch={(value:string)=>{
+                                    productList.setCondition({
+                                        ...productList.condition,
+                                        searchType:searchType,
+                                        keyword:value,
+                                    })
+                                }} 
                             />
-                            <Search size='large' placeholder="" onSearch={onSearch} style={{width: 220,height:36}} />
                         </Space.Compact>
                         {/* 2 */}
                         <CommodityClassificationSelector />
                         {/* 标签 */}
                         <TagSelector/>
                         {/* 4 价格区间 */}
-                        <PriceRangeSelector />
+                        <PriceRangeSelector min={min} setMin={setMin} max={max} setMax={setMax} />
                     </div>
                     <div
                         className="products-select-items-right"
@@ -164,15 +144,7 @@ export default function ProductsSelectCard(){
                             gap: '12px 12px',
                         }}>
                         {/*  */}
-                        <Select 
-                            // defaultValue={language}
-                            value={language}
-                            className="font-14"
-                            style={{ width: 100,height:36 }}
-                            listHeight={230}
-                            onChange={languageChange}
-                            options={languageData}
-                            />
+                        <LangSelect isLabel={true} lang={productList.languagesId} setLang={setLang} />
                         {/* 5 */}
                         <MoreSelect />
                         {/* 6 */}
@@ -180,23 +152,138 @@ export default function ProductsSelectCard(){
                         {/* 7 */}
                         <DropdownSort items={
                             [
-                                { value: '商品名称（A-Z）', label: '商品名称（A-Z）' },
-                                { value: '商品名称（Z-A）', label: '商品名称（Z-A）' },
-                                { value: '库存（从低到高）', label: '库存（从低到高）' },
-                                { value: '库存（从高到低）', label: '库存（从高到低）' },
-                                { value: '售价（从低到高）', label: '售价（从低到高）' },
-                                { value: '售价（从高到低）', label: '售价（从高到低）' },
-                                { value: '创建时间（从远到近）', label: '创建时间（从远到近）' },
-                                { value: '创建时间（从近到远）', label: '创建时间（从近到远）' },
+                                { key: '0', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"TITLE",
+                                        sortType:"ASC"
+                                    })
+                                }}>商品名称（A-Z）</a> },
+                                { key: '1', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"TITLE",
+                                        sortType:"DESC"
+                                    })
+                                }}>商品名称（Z-A）</a> },
+                                { key: '2', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"STOCK",
+                                        sortType:"ASC"
+                                    })
+                                }}>库存（从低到高）</a> },
+                                { key: '3', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"STOCK",
+                                        sortType:"DESC"
+                                    })
+                                }}>库存（从高到低）</a> },
+                                { key: '4', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"SKU_MIN_PRICE",
+                                        sortType:"ASC"
+                                    })
+                                }}>售价（从低到高）</a> },
+                                { key: '5', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"SKU_MIN_PRICE",
+                                        sortType:"DESC"
+                                    })
+                                }}>售价（从高到低）</a> },
+                                { key: '6', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"CREATE_TIME",
+                                        sortType:"ASC"
+                                    })
+                                }}>创建时间（从远到近）</a> },
+                                { key: '7', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"CREATE_TIME",
+                                        sortType:"DESC"
+                                    })
+                                }}>创建时间（从近到远）</a> },
+                                { key: '7', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"UPDATE_TIME",
+                                        sortType:"ASC"
+                                    })
+                                }}>更新时间（从远到近）</a> },
+                                { key: '7', label: <a onClick={()=>{
+                                    productList.setSortCondition({
+                                        ...productList.sortCondition,
+                                        sortField:"UPDATE_TIME",
+                                        sortType:"DESC"
+                                    })
+                                }}>更新时间（从近到远）</a> },
                             ]
                         } styled={{maxHeight:"290px",overflowY:"auto"}} />
                     </div>
                 </div>
             </div>
-            {language && <ProductListAjax selectProps={{language:language,title:title,model:model,tags:tags}}  />}
+            {/* 标签 */}
+            <Flex style={{marginBottom:"10px"}}>
+                  {productList.condition.keyword !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
+                        productList.setCondition({
+                            ...productList.condition,
+                            searchType:"SEARCH_TXT",
+                            keyword:"",
+                        })
+                        setSearchType("SEARCH_TXT")
+                        // 清空输入框
+                        setSearchText("")
+                  }}>
+                      <span className="color-474F5E font-14">
+                        {
+                            productList.condition.searchType == "SEARCH_TXT"?"全部"
+                            :productList.condition.searchType == "PRODUCT_MODEL"?"商品型号"
+                            :productList.condition.searchType == "PRODUCT_NAME"?"商品名称"
+                            :productList.condition.searchType == "PRODUCT_SPU"?"商品SPU"
+                            :productList.condition.searchType == "PRODUCT_SKU"?"商品SKU"
+                            :productList.condition.searchType == "BRAND_NAME"?"商品厂商"
+                            :productList.condition.searchType == "BARCODE"?"商品条码"
+                            :productList.condition.searchType == "ATTRIBUTE_VALUE"?"规格名称"
+                            :productList.condition.searchType == "DESCRIPTION"?"商品描述"
+                            :""
+                        }
+                        ：{productList.condition.keyword}
+                      </span>
+                  </Tag>}
+
+                  {productList.condition.sortationId !== "" && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
+                    productList.setCondition({
+                        ...productList.condition,
+                        sortationId:"",
+                    })
+                  }}>
+                      <span className="color-474F5E font-14">
+                        商品分类：{productList.condition.sortationId}
+                      </span>
+                  </Tag>}
+                  {(productList.condition.startPrice !== 0 && productList.condition.endPrice!==0) && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
+                    productList.setCondition({
+                        ...productList.condition,
+                        startPrice:0,
+                        endPrice:0,
+                    })
+                    setMin(undefined)
+                    setMax(undefined)
+                  }}>
+                      <span className="color-474F5E font-14">
+                        价格区间：{cookie.load("symbolLeft") || ""}{productList.condition.startPrice} ～ {cookie.load("symbolLeft") || ""}{productList.condition.endPrice}
+                      </span>
+                  </Tag>}
+            </Flex>
         </Scoped>
     );
 }
+export default observer(ProductsSelectCard)
 
 const Scoped = styled.div`
     .ant-input{

@@ -6,6 +6,7 @@ import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import collection from "@/store/settings/collection";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
+import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 
 const { Text, Link } = Typography;
 
@@ -21,6 +22,30 @@ function ManualCollection() {
           ),
         },
     ];
+
+    const controlsItems: MenuProps['items'] = [
+        {
+          label: <div>查看店铺</div>,
+          key: '1',
+        },
+        {
+          label: <div>复制</div>,
+          key: '2',
+        },
+        {
+          label: <div>重命名</div>,
+          key: '3',
+        },
+        {
+          label: <div>编辑语言</div>,
+          key: '4',
+        },
+        {
+          label: <div>编辑代码</div>,
+          key: '5',
+        },
+    ];
+
     useEffect(()=>{
         collection.manualCollection.forEach(item=>{
             if(item.title !== "货到付款"){
@@ -52,7 +77,6 @@ function ManualCollection() {
                     </Flex>
                     <RightOutlined />
                 </List.Item> */}
-                
                 {collection.manualCollection.length!==0 && <List className="payment-list">
                     {collection.manualCollection.map(item=>(
                         item?.status == 1 && <List.Item className="payment-item" onClick={()=>history.push('/settings/payments/edit/'+item.id)}>
@@ -64,11 +88,15 @@ function ManualCollection() {
                     ))}
                 </List>
                 }
-                <Dropdown className="submit-btn" trigger={['click']} menu={{ items }}>
+                {/* <DefaultSelect /> */}
+                <div className="btn-warp">
+                    <ButtonDropdownSecondary menu={{items:items}} trigger={['click']} text="添加" />
+                </div>
+                {/* <Dropdown  trigger={['click']} menu={{ items }}>
                     <Button style={{height:36}} onClick={(e) => e.preventDefault()}>
-                        添加<DownOutlined />
+                        <DownOutlined />
                     </Button>
-                </Dropdown>
+                </Dropdown> */}
             </Card>
 
             {/* 示例 */}
@@ -93,13 +121,8 @@ const Scoped = styled.div`
     .desc{
         margin-top: 4px;
     }
-    .submit-btn{
+    .btn-warp{
         margin-top: 16px;
-        /* width:80px !important;
-        white-space:nowrap;
-        word-break:break-all;
-        overflow:hidden; */
-        /* textOverflow:ellipsis; */
     }
     .payment-list{
         margin-top: 20px;

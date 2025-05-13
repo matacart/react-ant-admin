@@ -1,43 +1,50 @@
-import newStore from "@/store/newStore"
+import product from "@/store/product/product"
 import { Card, Checkbox, Flex, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import { QuestionCircleOutlined } from "@ant-design/icons"
-
+import { event } from './../../../.umi/plugin-locale/localeExports';
 
  function Recommendation(){
-    
-    // const onChange = (checked: boolean) => {
-    //     console.log(`switch to ${checked}`);
-    //     newStore.setAllianceStatus(checked?'1':'0')
-    // };
 
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">显示位置
-                        {/* <Tooltip title="客户可以把商品添加到精选联盟商品库，供达人选品推广">
-                            <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
-                                <QuestionCircleOutlined />
-                            </span>
-                        </Tooltip> */}
-                    </span>
+                    <span className="title">显示位置</span>
                 </div>
                 <div className="item between">
                     <Flex gap="8px 8px" wrap>
-                        <span><Checkbox defaultChecked={newStore.isHome} onChange={(e)=>{newStore.setIsHome(e.target.checked)}}>首页</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isHot} onChange={(e)=>{newStore.setIsHot(e.target.checked)}}>热销</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isBest} onChange={(e)=>{newStore.setIsBest(e.target.checked)}}>精品</Checkbox></span>
-                        <span><Checkbox defaultChecked={newStore.isNew} onChange={(e)=>{newStore.setIsNew(e.target.checked)}}>新品</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_home == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_home:e.target.checked?1:0
+                            })
+                        }}>首页</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_hot == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_hot:e.target.checked?1:0
+                            })
+                        }}>热销</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_best == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_best:e.target.checked?1:0
+                            })
+                        }}>精品</Checkbox></span>
+                        <span><Checkbox checked={product.productInfo.is_new == 1?true:false} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                is_new:e.target.checked?1:0
+                            })
+                        }}>新品</Checkbox></span>
                     </Flex>
                 </div>
             </Card>
         </Scoped>
     )
 }
-export default Recommendation
+export default observer(Recommendation)
 
 const Scoped = styled.div`
 .gap{

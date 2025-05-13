@@ -1,5 +1,5 @@
 import { addStyleName, getProductOption } from "@/services/y2/api";
-import oldStore from "@/store/product/oldStore";
+import product from "@/store/product/product";
 import { Form, Input, message, Modal, Select, Spin, Switch, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -47,7 +47,7 @@ export default function ProductStyleModal({inputRef,optionList,setOptionList,spe
         })
             // 修改父组件
             // console.log(inputRef)
-        if(language == oldStore.language){
+        if(language == product.productInfo.languages_id){
             setSpecifications(specifications.map((item:any)=>{
                 if(item.optionId===spec.optionId){
                     return {
@@ -92,13 +92,12 @@ export default function ProductStyleModal({inputRef,optionList,setOptionList,spe
         // setIsOpen(false)
     }
     useEffect(()=>{
-        setOptionsType(JSON.parse(sessionStorage["productOptionType"]).map((item:any)=>{
+        setOptionsType(JSON.parse(sessionStorage["productOptionType"] || "[]").map((item:any)=>{
             return {
                 value:item.product_option_type_id,
                 label:item.product_option_type_name
             }
         }))
-        // JSON.parse(sessionStorage["languages"]).
         // 语言
         // sessionStorage["languages"]
         let tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
@@ -121,7 +120,6 @@ export default function ProductStyleModal({inputRef,optionList,setOptionList,spe
               </Tooltip>
             </span>
             {/* justifyContent:"space-between" */}
-            {/* style={{display:'flex'}} */}
             <Modal width="600px" destroyOnClose closable={true} title={<div><div>属性编辑</div><div style={{fontWeight:500,fontSize:"14px",marginTop:"20px",marginBottom:"24px"}}>语言翻译：<Select
                 defaultValue={language}
                 onChange={(value)=>{
@@ -132,7 +130,7 @@ export default function ProductStyleModal({inputRef,optionList,setOptionList,spe
                 options={languages}
             /></div></div> } 
             centered open={isOpen} onOk={submit} okText="更新" onCancel={()=>{
-                setLanguage(oldStore.language)
+                setLanguage(product.productInfo.languages_id)
                 setIsOpen(false);
             }}>
                 <Spin spinning={isLoading}>

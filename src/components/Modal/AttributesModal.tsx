@@ -1,11 +1,9 @@
 import { addProductOptionValues, getProductStyleValueList } from '@/services/y2/api';
-import oldStore from '@/store/product/oldStore';
-// import oldStore from '@/store/product/oldStore';
+import product from '@/store/product/product';
 import { DeleteOutlined, InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { GetProp, Input, Modal, Table, TableProps, Image, Upload, UploadProps, UploadFile, message, Spin, TabsProps, Tabs, Select } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
-import { set } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 const _ = require('lodash');
@@ -57,10 +55,13 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
         axios.post('/api/ApiAppstore/doUploadPic',formData).then((res: any) => {
             if(res.data.code == 0){
                 setImageUrl(res.data.data.src)
-                setLoading(false);
             }else{
                 message.error("上传失败", 1)
             }
+        }).catch(() => {
+            message.error("上传失败", 1)
+        }).finally(() => {
+            setLoading(false);
         })
         let newIsHovering = [...isHovering]
         newIsHovering[selectImgIndex] = false
@@ -203,7 +204,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             }else{
                 message.error('产品款式值更新失败');
             }
-            if(oldStore.language == language){
+            if(product.productInfo.languages_id == language){
                 // setAttributesModal(false)
                 // setAttributes(false)
                 console.log(data)
@@ -338,7 +339,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
                         <div>支持上传.jpg、.png、.gif格式的图片；最大限制4M；建议尺寸：96px * 96px</div>
                     </div>
                     <div>语言翻译：<Select
-                        defaultValue={oldStore.language}
+                        defaultValue={product.productInfo.languages_id}
                         onChange={(value)=>{
                             setLanguage(value)
                             handlLanguageClick(value);

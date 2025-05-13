@@ -1,6 +1,5 @@
 
 import { Button, Col, Form, Input, message, Modal, Row, Select } from 'antd';
-import './BlankPage.scss';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { editSupplier, getCityList, getCountryList, getProvinceList, getSupplier } from '@/services/y2/api';

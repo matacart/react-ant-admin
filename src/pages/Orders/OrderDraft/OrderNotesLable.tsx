@@ -1,34 +1,34 @@
 import { Badge, Button, Card, Divider, Form, Input, Tooltip } from "antd";
-import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
-import { styled } from 'styled-components';
 import { useIntl } from "@umijs/max";
-const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    console.log('Change:', e.target.value);
-};
-const {TextArea} = Input
+import styled from "styled-components";
+import MyTextArea from "@/components/Input/MyTextArea";
+import order from "@/store/order/order";
+
+
 function OrderNotesLabel() {
     const intl = useIntl();
     return (
-        <Card  style={{ width: '300px' }} 
-        title={
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-          
-           订单备注
-                 
-                            
-                       
-                              </div>
-        }
-      
-    >
-        <Form >
-       
-          
-        <TextArea placeholder="客户不会看到你输入的内容" style={{width:'245px',height:'36px'}}/>
-        </Form>
-       
-    </Card>
-);
+        <Scoped>
+            <Card>
+                <div className='title font-16 font-w-600 color-242833'>订单备注</div>
+                <MyTextArea placeholder="客户不会看到你输入的备注内容" style={{width:"100%"}} autoSize={{ minRows: 2, maxRows: 6 }} onChange={(e)=>{
+                  order.setOrderInfo({...order.orderInfo,remark:e.target.value})
+                }} />
+            </Card>
+        </Scoped>
+        
+    )
 }
+
+const Scoped = styled.div`
+  background-color: #f7f8fb;
+  .title{
+    margin-bottom: 20px;
+  }
+  .search-input-warp{
+    margin:20px 0;
+  }
+`
+
 export default observer(OrderNotesLabel);

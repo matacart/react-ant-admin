@@ -1,61 +1,42 @@
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, LoadingOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, TabsProps, Upload } from "antd"
+import { ArrowLeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
+import { Card, Flex, Input, List } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsConfigArray, setAddonsConfig } from "@/services/y2/api";
-import { useForm } from "antd/es/form/Form";
-import modal from "antd/es/modal";
-import axios from "axios";
-
-import otherData from "./otherCollection.json"
-import { set } from 'lodash';
+import { getAddonsList, setAddonsConfig } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-
-
-const { TextArea } = Input;
+import LangSelect from "@/pages/components/LangSelect";
 
 function OtherCollection() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const [supportPayments,setSupportPayments] = useState<any>();
+    const [supportPayments,setSupportPayments] = useState<any>([]);
 
-    const [config,setConfig] = useState<any>({
-        isAddressRequired:"0",
-        isUploadCredentials:"0",
-        credentialsText:"",
-        credentialsImg:""
-    });
+    const [language,setLanguage] = useState("2");
 
-
-    // const [paymentMethod,setPaymentMethod] = useState([
-    //     {name:"Adyen Other",imgs:["https://img.myshopline.com/pay/logo/AfterPay.svg","https://img.myshopline.com/pay/logo/AfterPay.svg"]},
-    //     {name:"Affirm",imgs:["https://img.myshopline.com/pay/logo/AffirmBNPL.svg"]},
-    //     {name:"Afterpay BNPL (Australia)"},
-    //     {name:"Afterpay BNPL (Canada)"},
-    //     {name:"Afterpay BNPL (New Zealand)"},
-    //     {name:"Afterpay BNPL (United States)"},
-    //     {name:"Airwallex Afterpay Payments",imgs:["https://img.myshopline.com/pay/logo/AfterPay.svg","https://img.myshopline.com/pay/logo/AfterPay.svg"]},
-    //     {name:"Airwallex Apple Pay Payments",imgs:["https://img.myshopline.com/image/shopline/653611a69ca34f1383ae241e105e6f7a.svg"]},
-    //     {name:"Airwallex Google Pay Payments",imgs:["https://img.myshopline.com/image/shopline/e9e3a1ec63f34b81b7bf73ce83124bc9.svg"]},
-    //     {name:"Airwallex Klarna Payments",imgs:["https://img.myshopline.com/image/shopline/e0302c547faa4e5d88b92d620147b573.svg"]},
-    //     {name:"Airwallex Online Payments",otherNum:"43",imgs:["https://img.myshopline.com/image/shopline/1c05bf5aae2f4c7fb179a1b097e9a559.svg","https://img.myshopline.com/image/shopline/a3fa5eb289e54b1cbb1dc2fd5707cfac.svg","https://img.myshopline.com/pay/logo/Sofort.svg","https://img.myshopline.com/image/shopline/0dc3ccc5c01043c581393fc034132a46.svg"]},
-    // ]);
-
-    useEffect(()=>{
-        getAddonsConfigArray().then(res=>{
-            
+    const setLang = (lang:string) => {
+        getAddonsList(lang,"1","2").then(res=>{
+            setSupportPayments(res.data)
+            setLanguage(lang)
+        }).catch(err=>{
+        }).finally(()=>{
         })
-
-        setSupportPayments(otherData.data.supportPayments)
-        // console.log(otherData.data.supportPayments)
-
-        console.log(otherData)
-        setIsSkeleton(false)
+    }
+    // const [config,setConfig] = useState<any>({
+    //     isAddressRequired:"0",
+    //     isUploadCredentials:"0",
+    //     credentialsText:"",
+    //     credentialsImg:""
+    // });
+    useEffect(()=>{
+        getAddonsList(language,"1","2").then(res=>{
+            setSupportPayments(res.data)
+        }).catch(err=>{
+        }).finally(()=>{
+            setIsSkeleton(false)
+        })
     },[])
-
-
 
     return (
         <Scoped>
@@ -70,6 +51,10 @@ function OtherCollection() {
                             </div>
                             <div className="mc-header-left-content">其他收款方式</div>
                         </div>
+                        <div className="mc-header-right">
+                            {/* 语言 */}
+                            <LangSelect lang={language} setLang={setLang} />
+                        </div>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
@@ -77,28 +62,19 @@ function OtherCollection() {
                                 <div style={{margin:"20px"}}>
                                     <Input prefix={<SearchOutlined />} style={{minWidth:"100px"}} placeholder="搜索支付提供商" />
                                     <List className="payment-list">
-                                        {supportPayments.map(item=>(
-                                            <List.Item className="payment-item" onClick={()=>history.push('/settings/payments/other/edit')}>
+                                        {supportPayments.map((item:any,index:number)=>(
+                                            <List.Item key={index} className="payment-item" onClick={()=>{
+                                                if(item.addons_config_id == ""){
+                                                    history.push('/settings/payments/other/add?addonsId='+item.id+"&lang="+language)
+                                                }else{
+                                                    // 编辑
+                                                    history.push('/settings/payments/other/detail?addonsId='+item.id+"&id="+item.addons_config_id+"&lang="+language)
+                                                }
+                                            }}>
                                                 <Flex align="center">
-                                                    <div style={{marginRight:"8px"}} className="font-w-600">{item.channelName.value}</div>
+                                                    <div style={{marginRight:"8px"}} className="font-w-600">{item.title}</div>
                                                 </Flex>
                                                 <Flex>
-                                                    {
-                                                        item.channelDisplayIcons.displayIcons.length>4 ? (
-                                                            <Flex>
-                                                                {item.channelDisplayIcons.displayIcons.slice(0,4).map(res=>{
-                                                                    return (
-                                                                        <img src={res.iconImage} style={{width:"38px",height:"24px",marginRight:"8px"}} />
-                                                                    )
-                                                                })}
-                                                                <div style={{width:"38px",height:"24px",lineHeight:"22px",textAlign:"center",border:"1px solid #ddddd8",borderRadius:"2px"}} className="font-12 color-356DFF">{"+"+(item.channelDisplayIcons.displayIcons.length-4)}</div>
-                                                            </Flex>
-                                                        ):(
-                                                            <Flex>
-                                                                {item.channelDisplayIcons.displayIcons.slice(0,4).map(res=><img src={res.iconImage} style={{width:"38px",height:"24px",marginRight:"8px"}} />)}
-                                                            </Flex>
-                                                        )
-                                                    }
                                                     <RightOutlined style={{marginLeft:8}} />
                                                 </Flex>
                                             </List.Item>

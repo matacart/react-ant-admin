@@ -1,14 +1,15 @@
 
 import React, { useRef, useState } from 'react'
-import { Button, Dropdown, Flex, Space } from 'antd';
+import { Button, Checkbox, Dropdown, Flex, Modal, Space } from 'antd';
 import { Tabs } from 'antd'
 import styled from 'styled-components'
 import Icon, { ExportOutlined, ImportOutlined } from '@ant-design/icons'; 
 import { history } from '@umijs/max';
-import {useIntl, useModel } from '@umijs/max';
+import {useIntl } from '@umijs/max';
 import { UnfoldIcon } from '@/components/Icons/Icons';
 import ScreeningConditionCard from './ScreeningConditionCard';
 import CustmoerListCard from '../Components/CustomerListCard';
+import UploadImportDrag from '@/components/UploadFile/UploadImportDrag';
 
 interface MenuItem {  
   key: string;  
@@ -47,10 +48,69 @@ const MenuComponent: React.FC<MenuProps> = ({ items }) => {
 export default function CustomerManagement() {
 
   const intl = useIntl();
+  
+  const [modal, contextHolder] = Modal.useModal();
+  // 
+  const confirmExcel = () => {
+    modal.confirm({
+        width:620,
+        title: '导入客户',
+        icon: <></>,
+        centered:true,
+        destroyOnClose:true,
+        content: <>
+            <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
+            <div>
+                <UploadImportDrag size={10} />
+            </div>
+            <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
+            <div style={{margin:"8px 0px"}}>
+                <Checkbox>覆盖拥有相同邮箱或电话的现有客户</Checkbox>
+                {/* <span></span> */}
+            </div>
+        </>,
+        okText: '上传并导入',
+        cancelText: '取消',
+    });
+  };
+
+  const confirmShopify = () => {
+      modal.confirm({
+        title: '通过Shopify csv批量导入客户',
+        width:620,
+        centered:true,
+        icon: <></>,
+        content: <>
+              <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
+              <div>
+                  <UploadImportDrag size={10} />
+              </div>
+              <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
+              <div style={{margin:"8px 0px"}}>
+                  <Checkbox>覆盖拥有相同邮箱或电话的现有客户</Checkbox>
+                  {/* <span></span> */}
+              </div>
+          </>,
+        okText: '上传并导入',
+        cancelText: '取消',
+      });
+  };
+
+  const confirmStoreRelocation = () => {
+      modal.confirm({
+        title: '店铺搬迁',
+        centered:true,
+        icon: <></>,
+        content: '暂不支持',
+        okText: '确认',
+        cancelText: '取消',
+      });
+  };
+
   const aItems: MenuProps['items'] = [
     {
       key: '1',
-      label:"本地导入",
+      label:<div onClick={confirmExcel}>本地导入</div>,
 
     },
     {
@@ -117,6 +177,8 @@ export default function CustomerManagement() {
           <CustmoerListCard/>
         </div>
       </div>
+      {/* Excel批量导入 */}
+      {contextHolder}
     </Scoped>
   )
 

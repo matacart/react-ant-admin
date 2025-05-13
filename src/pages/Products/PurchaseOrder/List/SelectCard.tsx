@@ -2,12 +2,11 @@ import { Input, Button, Select, MenuProps, Flex, Tag } from "antd";
 import { useEffect, useRef, useState } from "react"
 import { SearchOutlined } from "@ant-design/icons";
 import TableListCard from "./TableListCard";
-import MySelect from "@/components/Select/MySelect";
 import { getAddWarehouseList, getPurchaseList, selectSupplier } from "@/services/y2/api";
 import purchaseOrderList from "@/store/product/purchaseOrder/purchaseOrderListStore";
 import { observer } from "mobx-react-lite";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
-import { styled } from 'styled-components';
+import SelectCheckBox from "@/components/Select/SelectCheckBox";
 
 const { Search } = Input;
 
@@ -146,8 +145,6 @@ function SelectCard(){
       })
     }
 
-    
-
     const firstUpdate = useRef(true);
     useEffect(()=>{
       if (firstUpdate.current) {
@@ -213,13 +210,13 @@ function SelectCard(){
             <div>
                 <div style={{display:'flex',flexWrap:'wrap',gap:'12px 12px',justifyContent:'space-between',marginBottom:'12px'}}>
                     <div className="products-select-items-left" style={{display:'flex',flexWrap:'wrap',gap:'12px 12px'}}>
-                        <div><Input prefix={<SearchOutlined />} value={purchaseOrderList.tagsOrderNumber} onChange={(e)=>{
+                        <div><Input style={{height:"36px"}} prefix={<SearchOutlined />} value={purchaseOrderList.tagsOrderNumber} onChange={(e)=>{
                           purchaseOrderList.setTagsOrderNumber(e.target.value)
                         }} placeholder="采购单号" /></div>
-                        <MySelect options={statusOptions} setStatusOptions={setStatusOptions} text="状态" style={{width:"180px"}}/>
+                        <SelectCheckBox options={statusOptions} setStatusOptions={setStatusOptions} text="状态" style={{width:"180px",height:"36px"}}/>
                         <Select
                             value={"供应商"}
-                            style={{ width: 180 }}
+                            style={{ width: 180,height:"36px" }}
                             showSearch
                             dropdownStyle={{padding:"6px 0"}}
                             dropdownRender={(menu) => (
@@ -227,6 +224,7 @@ function SelectCard(){
                                 {menu}
                               </>
                             )}
+                            
                             onChange={(value,option)=>{
                               purchaseOrderList.setTagsSupplier(option.label)
                               purchaseOrderList.setTagsSupplierValues(value)
@@ -236,7 +234,7 @@ function SelectCard(){
                         />
                         <Select
                             value={"收货地"}
-                            style={{ width: 180 }}
+                            style={{ width: 180,height:"36px" }}
                             showSearch
                             dropdownStyle={{padding:"6px 0"}}
                             dropdownRender={(menu) => (

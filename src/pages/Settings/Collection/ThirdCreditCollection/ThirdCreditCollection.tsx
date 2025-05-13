@@ -1,29 +1,35 @@
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, LoadingOutlined, PlusOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, TabsProps, Upload } from "antd"
+import { ArrowLeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
+import { Card, Flex, Form, Input, List, message, TabsProps, Upload } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-
-import thirdCreditData from "./thirdCreditData.json"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { getAddonsList } from "@/services/y2/api";
-
-
-const { TextArea } = Input;
+import LangSelect from "@/pages/components/LangSelect";
 
 function ThirdCreditCollection() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const [supportPayments,setSupportPayments] = useState<any>();
+    const [supportPayments,setSupportPayments] = useState<any>([]);
 
-    
+    const [language,setLanguage] = useState("2");
+
+    const setLang = (lang:string) => {
+        getAddonsList(lang,"1","1").then(res=>{
+            setSupportPayments(res.data)
+            setLanguage(lang)
+        }).catch(err=>{
+        }).finally(()=>{
+        })
+    }
 
     useEffect(()=>{
-        getAddonsList().then(res=>{
-            setIsSkeleton(false)
-            // console.log(res)
+        getAddonsList(language,"1","1").then(res=>{
             setSupportPayments(res.data)
+        }).catch(err=>{
+        }).finally(()=>{
+            setIsSkeleton(false)
         })
     },[])
 
@@ -42,6 +48,10 @@ function ThirdCreditCollection() {
                             </div>
                             <div className="mc-header-left-content">信用卡/借记卡收款</div>
                         </div>
+                        <div className="mc-header-right">
+                            {/* 语言 */}
+                            <LangSelect lang={language} setLang={setLang} />
+                        </div>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
@@ -49,29 +59,20 @@ function ThirdCreditCollection() {
                                 <div style={{margin:"20px"}}>
                                     <Input prefix={<SearchOutlined />} style={{minWidth:"100px"}} placeholder="搜索支付服务提供商" />
                                     <List className="payment-list">
-                                        {supportPayments.map(item=>(
-                                            // payments/thirdCreditCard/detail
-                                            <List.Item className="payment-item" onClick={()=>history.push('/settings/payments/thirdCreditCard/detail/'+item.id)}>
+                                        {supportPayments.map((item:any)=>(
+                                            <List.Item className="payment-item" onClick={()=>{
+                                                if(item.addons_config_id == ""){
+                                                    history.push('/settings/payments/thirdCreditCard/add?addonsId='+item.id+"&lang="+language)
+                                                }else{
+                                                    // 编辑
+                                                    history.push('/settings/payments/thirdCreditCard/detail?addonsId='+item.id+"&id="+item.addons_config_id+"&lang="+language)
+                                                }
+                                            }}
+                                            >
                                                 <Flex align="center">
                                                     <div style={{marginRight:"8px"}} className="font-w-600">{item.title}</div>
                                                 </Flex>
                                                 <Flex>
-                                                    {/* {
-                                                        item.channelDisplayIcons.displayIcons.length>4 ? (
-                                                            <Flex>
-                                                                {item.channelDisplayIcons.displayIcons.slice(0,4).map(res=>{
-                                                                    return (
-                                                                        <img src={res.iconImage} style={{width:"38px",height:"24px",marginRight:"8px"}} />
-                                                                    )
-                                                                })}
-                                                                <div style={{width:"38px",height:"24px",lineHeight:"22px",textAlign:"center",border:"1px solid #ddddd8",borderRadius:"2px"}} className="font-12 color-356DFF">{"+"+(item.channelDisplayIcons.displayIcons.length-4)}</div>
-                                                            </Flex>
-                                                        ):(
-                                                            <Flex>
-                                                                {item.channelDisplayIcons.displayIcons.slice(0,4).map(res=><img src={res.iconImage} style={{width:"38px",height:"24px",marginRight:"8px"}} />)}
-                                                            </Flex>
-                                                        )
-                                                    } */}
                                                     <RightOutlined style={{marginLeft:8}} />
                                                 </Flex>
                                             </List.Item>

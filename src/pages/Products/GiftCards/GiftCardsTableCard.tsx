@@ -6,9 +6,8 @@ import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled,
 import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
-import newStore from '@/store/newStore';
 import cookie from 'react-cookies';
-import oldStore from '@/store/product/oldStore';
+import productList from '@/store/product/productList';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -217,8 +216,20 @@ function GiftCardsTableCard(selectProps:any) {
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
+
+    const res = {
+      page:page,
+      limit:limit,
+      title:selectProps.selectProps.title,
+      model:selectProps.selectProps.model,
+      languagesId:selectProps.selectProps.language,
+      tag:selectProps.selectProps.tags,
+      status:productList.flag,
+      allianceStatus:productList.isAlliance,
+      hostedStatus:productList.isHosted
+    }
     try {
-      const result = await getProductList(page,limit,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.language,selectProps.selectProps.tags,newStore.flag,newStore.isAlliance,newStore.isHosted)
+      const result = await getProductList(res)
       setLoading(false);
       // 201 空
       if(result.code == 0 || result.code == 201){
@@ -268,10 +279,8 @@ function GiftCardsTableCard(selectProps:any) {
   };
   useEffect(() => {
     // 初始化商品
-    newStore.reset();
-    oldStore.reset();
     fetchData();
-  }, [newStore.isAlliance,newStore.isHosted,newStore.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize,selectProps.selectProps.language,selectProps.selectProps.title,selectProps.selectProps.model,selectProps.selectProps.tags]);
+  }, []);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({

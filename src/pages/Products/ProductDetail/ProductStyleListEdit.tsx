@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space, Tooltip, Typography } from 'antd';
 import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
 import { ExclamationCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { observer } from 'mobx-react-lite';
-import oldStore from '@/store/product/oldStore';
 import styled from 'styled-components';
-import { history } from '@umijs/max';
-import axios from 'axios';
 import cookie from 'react-cookies';
+import product from '@/store/product/product';
+import axios from 'axios';
 // 默认数据
 // setStyles([...oldData,...filteredArray])
 // setCopyStyles([...oldData,...filteredArray])
-// oldStore.setVariants([...oldData,...filteredArray])
+// product.setVariants([...oldData,...filteredArray])
 
 interface StyleItem {
   keyId: number;
@@ -112,26 +110,22 @@ function ProductStyleListEdit (props:any){
           // barcode: '',
           // metaFields: '',
       }));
-      // console.log('newStyles',newStyles)
-      // setStyles(newStyles)
-      // oldStore.variants
-      // setStyles([...newStyles,...oldStore.variants])
       let temp = [...newStyles]
-      console.log('oldStore.variants',oldStore.variants)
-      if(oldStore.variants.length<newStyles.length){
+      console.log('product.variants',product.variants)
+      if(product.variants.length<newStyles.length){
         // 增加
         temp.forEach((res,index) => {
-          oldStore.variants.forEach(element => {
+          product.variants.forEach(element => {
             if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
               temp[index] = element
             }
           })
         })
       }else{
-        const commonElements = oldStore.variants.filter(item1 => 
+        const commonElements = product.variants.filter(item1 => 
           temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
         )
-        const commonElementsRemove = oldStore.variants.filter(item1 => 
+        const commonElementsRemove = product.variants.filter(item1 => 
           !temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
         )
         console.log('commonElements',commonElements)
@@ -145,16 +139,15 @@ function ProductStyleListEdit (props:any){
         })
         commonElementsRemove.forEach(res=>{
           if(res.id!==undefined){
-            oldStore.removeVariantData.push({...res,status:"9"})
+            product.tempVariants.push({...res,status:"9"})
           }
         })
       }
       setStyles(temp)
-      console.log('temp',temp)
-      oldStore.setVariants(temp)
+      product.setVariants(temp)
       setIsLoading(false);
       // temp.forEach((res,index) => {
-      //   oldStore.variants.forEach(element => {
+      //   product.variants.forEach(element => {
       //     if(element.status !== "9" && element.option_values_names == res.option_values_names){
       //       temp[index] = element
       //     }else{
@@ -177,8 +170,8 @@ function ProductStyleListEdit (props:any){
 
   // 默认数据
   useEffect(()=>{
-    setStyles(oldStore.variants)
-  },[oldStore.productId])
+    setStyles(product.variants)
+  },[])
 
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
@@ -209,7 +202,7 @@ function ProductStyleListEdit (props:any){
                   newStyles[index].image = req.data.data.src
                   console.log(req.data.data.src)
                   setStyles(newStyles)
-                  oldStore.setVariants(newStyles)
+                  product.setVariants(newStyles)
                   setIsLoading(false)
                 }else{
                   setIsLoading(false)
@@ -551,14 +544,14 @@ function ProductStyleListEdit (props:any){
     let newStyles = [...styles]
     newStyles[index].sku = newValue
     setStyles(newStyles)
-    oldStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加浮动价变化的函数
   const handleSalePriceChange = (index: number,item:any,newValue: number) => {
     let newStyles = [...styles]
     newStyles[index].price = newValue
     setStyles(newStyles)
-    oldStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加处理发货状态变化的函数
   // const handleShippingChange = (id: number, newShipping: boolean) => {
@@ -576,7 +569,7 @@ function ProductStyleListEdit (props:any){
     let newStyles = [...styles]
     newStyles[index].original_price = newValue
     setStyles(newStyles)
-    oldStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加处理成本价变化的函数
   const handleCostPriceChange = (id: number, newValue:number,index:number) => {
@@ -584,7 +577,7 @@ function ProductStyleListEdit (props:any){
     let newStyles = [...styles]
     newStyles[index].cost_price = newValue
     setStyles(newStyles)
-    oldStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
   // 添加处理库存变化的函数
   const handleStockChange = (record: StyleItem,index:number) => {
@@ -603,16 +596,16 @@ function ProductStyleListEdit (props:any){
     let newStyles = [...styles]
     newStyles[index].quantity = record.quantity
     setStyles(newStyles)
-    oldStore.setVariants(newStyles)
+    product.setVariants(newStyles)
   };
 // 添加处理删除的函数
 const handleRemove = (item:any,index:number) => {
   let newStyles = [...styles]
   newStyles.splice(index,1)
   setStyles(newStyles)
-  oldStore.setVariants(newStyles)
+  product.setVariants(newStyles)
   if(item.id){
-    oldStore.setRemoveVariantData([...oldStore.removeVariantData,{...item,status:"9"}])
+    product.setTempVariants([...product.tempVariants,{...item,status:"9"}])
   }
 };
 
@@ -852,7 +845,7 @@ const handleWeightUnitChange = (id: number, unit: string) => {
             //   onClick: () => {
             //     console.log('Row clicked:', record);
             //     if(record.id){
-            //       return history.push(`/products/edit/${oldStore.productId}/${oldStore.language}/variants/${record.id}`);
+            //       return history.push(`/products/edit/${product.productId}/${product.language}/variants/${record.id}`);
             //     }
             //     message.info("请先保存商品")
             //   },

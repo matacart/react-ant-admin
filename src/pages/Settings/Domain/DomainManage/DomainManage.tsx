@@ -137,7 +137,7 @@ function DomainManage() {
                             <div className="mc-header-left-content">域名管理</div>
                         </div>
                         <div className='create-title-right'>
-                            <Button type="primary" onClick={() => {history.push("/settings/add-domain")}} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>添加域名</Button>
+                            <Button type="primary" onClick={() => {history.push("/settings/domain/add-domain")}} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>添加域名</Button>
                         </div>
                     </div>
                     <div className='mc-layout-main'>
