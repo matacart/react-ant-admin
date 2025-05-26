@@ -37,6 +37,7 @@ export async function getOrderList(page?: number, limit?: number,id?:string,lang
   if (languagesId) searchParams.set('languages_id', languagesId.toString());
   if (orderType) searchParams.set('order_type', orderType.toString());
   if (condition) searchParams.set('condition', JSON.stringify(condition));
+  if (true) searchParams.set('shipping_status_id', "150");
   searchParams.set('domain_id', cookie.load("domain")?.id);
   // 发送请求
   // /api/ApiStore/order_list

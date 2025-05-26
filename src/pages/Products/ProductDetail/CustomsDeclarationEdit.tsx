@@ -14,19 +14,6 @@ function CustomsDeclarationEdit() {
     const [countryList,setCountryList] =  useState<CountryOption[]>([]);
     let country:any = [];
     useEffect(()=>{
-        if(countryList.length==0){
-            getCountryList().then((res)=>{
-                if(res.code == 0){
-                    res.data.forEach((item:any)=>{
-                        country.push({
-                            label:item.country_name,
-                            value:item.country_id
-                        })
-                    })
-                }
-                setCountryList(country)
-            })
-        }
     })
     return (
         <Scoped>

@@ -1,4 +1,4 @@
-import { Button, Tabs } from 'antd';
+import { Button, Flex, Tabs } from 'antd';
 import { ExportOutlined, ImportOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
@@ -6,6 +6,7 @@ import { history } from '@umijs/max';
 import SelectCard from './List/SelectCard';
 import purchaseOrderList from '@/store/product/purchaseOrder/purchaseOrderListStore';
 import { observer } from 'mobx-react-lite';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 
 const TabLabel = styled.div`
@@ -59,14 +60,14 @@ function Index() {
         <Scoped>
             <div className='create-warp-flex' style={{ width: "100%" }}>
                 <div className="create-warp">
-                    <div className='create-title'>
-                    <div className='create-title-left'>
-                        <h3 style={{ position: 'relative', top: 10, display: 'inline-block' }}>采购订单</h3>
-                    </div>
-                    <div className='create-title-right'>
-                        <Button type="primary" onClick={() => { history.push('/purchase_orders/new') }} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>创建采购订单</Button>
-                    </div>
-                    </div>
+                    <Flex className='create-title' align='center'>
+                        <div className='create-title-left'>
+                            <h3>采购订单</h3>
+                        </div>
+                        <div className='create-title-right'>
+                            <PrimaryButton onClick={() => { history.push('/purchase_orders/new') }} text="创建采购订单" />
+                        </div>
+                    </Flex>
                     <div className='create-content'>
                         <Tabs
                             onChange={(activeKey)=>{
@@ -129,7 +130,7 @@ const Scoped = styled.div`
             width: 100%;
             min-width: 500px;
             .create-title{
-                padding-bottom: 0px;
+                margin-bottom: 20px;
                 color: #474f5e;
                 font-size: 14px;
                 line-height: 20px;
@@ -142,7 +143,7 @@ const Scoped = styled.div`
                         -webkit-box-flex: 1;
                         -ms-flex: 1;
                         flex: 1;
-                        margin: 0 24px 24px 0;
+                        margin-bottom: 0;
                         overflow: hidden;
                         color: #242833;
                         font-size: 24px;
@@ -156,8 +157,6 @@ const Scoped = styled.div`
                 }
             }
             .create-content{
-                position: relative;
-                top: 10px;
                 padding: 5px 24px;
                 border-radius: 6px;
                 width: 100%;

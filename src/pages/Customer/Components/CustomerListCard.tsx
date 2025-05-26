@@ -5,6 +5,7 @@ import Tag from 'antd/lib/tag';
 import { getCustomerList } from '@/services/y2/customer';
 import { SearchOutlined } from '@ant-design/icons';
 import DefaultTag from '@/components/Tag/DefaultTag';
+import { useNavigate } from 'react-router-dom';
 
 // 表单项订单数据类型
 interface DataType {
@@ -22,7 +23,11 @@ interface TableParams {
 }
 
 export default function CustmoerListAjax() {
+
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
+  
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -84,21 +89,8 @@ export default function CustmoerListAjax() {
   const fetchData = () => {
     setLoading(true);
 
-    getCustomerList(tableParams.pagination?.current, tableParams.pagination?.pageSize)
-      .then((res) => {
-        console.log('Response from getCustomerList:', res);
-
-        const newData: DataType[] = res.data?.map((item: any) => ({
-          realname: item.realname,
-          address: item.address,
-          price: item.price,
-          orderQuantity: item.orderQuantity,
-          status: item.status,
-        }));
-
-        console.log('New data after processing:', newData);
-        setData(newData); // 使用过滤后的数据
-        setLoading(false);
+    getCustomerList(tableParams.pagination?.current, tableParams.pagination?.pageSize).then((res) => {
+        setData(res.data)
         setTableParams({
           ...tableParams,
           pagination: {
@@ -106,9 +98,9 @@ export default function CustmoerListAjax() {
             total: res.count,
           },
         });
-      })
-      .catch(error => {
+      }).catch(error => {
         console.error('Error fetching data:', error);
+      }).finally(() => {
         setLoading(false);
       });
   };
@@ -141,6 +133,12 @@ export default function CustmoerListAjax() {
           className='table'
           columns={columns}
           rowKey={(record) => record.realname}
+          onRow={(record) => ({
+            onClick: () => {
+              console.log('Row clicked:', record);
+              navigate(`/customer/management/${record.id}`)
+            },
+          })}
           dataSource={data}
           pagination={tableParams.pagination}
           loading={loading}

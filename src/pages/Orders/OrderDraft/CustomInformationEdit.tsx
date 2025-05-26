@@ -30,37 +30,37 @@ function CustomInformationEdit() {
     address:''
   })
 
-  useMemo(()=>{
-    const address = [
-      order.deliveryAddress.company,
-      order.deliveryAddress.address,
-      order.deliveryAddress.address2,
-      order.deliveryAddress.cityLabel,
-      order.deliveryAddress.provinceLabel,
-      order.deliveryAddress.countryLabel
-    ].filter(Boolean) // 过滤空值
-    setReceiver({
-      name: order.deliveryAddress.firstName+" "+order.deliveryAddress.lastName,
-      tel: order.deliveryAddress.tel,
-      address:address.join(",")
-    })
-  },[order.deliveryAddress])
+  // useMemo(()=>{
+  //   const address = [
+  //     order.deliveryAddress.company,
+  //     order.deliveryAddress.address,
+  //     order.deliveryAddress.address2,
+  //     order.deliveryAddress.cityLabel,
+  //     order.deliveryAddress.provinceLabel,
+  //     order.deliveryAddress.countryLabel
+  //   ].filter(Boolean) // 过滤空值
+  //   setReceiver({
+  //     name: order.deliveryAddress.firstName+" "+order.deliveryAddress.lastName,
+  //     tel: order.deliveryAddress.tel,
+  //     address:address.join(",")
+  //   })
+  // },[order.deliveryAddress])
 
-  useMemo(()=>{
-    const address = [
-      order.payBillInfo.company,
-      order.payBillInfo.address,
-      order.payBillInfo.address2,
-      order.payBillInfo.cityLabel,
-      order.payBillInfo.provinceLabel,
-      order.payBillInfo.countryLabel
-    ].filter(Boolean) // 过滤空值
-    setBilling({
-      name: order.payBillInfo.firstName+" "+order.payBillInfo.lastName,
-      tel: order.payBillInfo.tel,
-      address:address.join(",")
-    })
-  },[order.billingAddress])
+  // useMemo(()=>{
+  //   const address = [
+  //     order.payBillInfo.company,
+  //     order.payBillInfo.address,
+  //     order.payBillInfo.address2,
+  //     order.payBillInfo.cityLabel,
+  //     order.payBillInfo.provinceLabel,
+  //     order.payBillInfo.countryLabel
+  //   ].filter(Boolean) // 过滤空值
+  //   setBilling({
+  //     name: order.payBillInfo.firstName+" "+order.payBillInfo.lastName,
+  //     tel: order.payBillInfo.tel,
+  //     address:address.join(",")
+  //   })
+  // },[order.billingAddress])
 
   
   return (
@@ -109,7 +109,7 @@ function CustomInformationEdit() {
             <BillingAddressModal />
           </Flex>
           {/*  */}
-          {JSON.stringify(order.payBillInfo) !== "{}" ? <>
+          {JSON.stringify(order.billingAddress) !== "{}" ? <>
             <div>{billing.name}</div>
             <div>{billing.tel}</div>
             <div>{billing.address}</div>

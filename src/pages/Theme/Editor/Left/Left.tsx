@@ -351,7 +351,6 @@ function Left(){
 const Scoped = styled.div`
     background-color: #fff;
     display: flex;
-
     .toolBar-toolMenu{
         align-items: center;
         background-color: #fff;

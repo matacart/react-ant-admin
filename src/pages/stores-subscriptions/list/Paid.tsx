@@ -111,7 +111,7 @@ const layerText = [
             title: '费率',
             desc: [
                 'MataCart Payments费率：该版本不支持 MataCart Payments',
-                '不使用MataCart Payments时，第三方交易费率：0.8%',
+                '不使用MataCart Payments时，第三方交易费率：2%',
             ],
         }, {
             title: '功能',
@@ -268,7 +268,7 @@ export default function Paid() {
                                                     低成本体验建站 多重礼包助力业务启动
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"2999"} text={price.text} origin={activeNum == 2 ? priceMonth.start : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={"1999"} text={price.text} origin={activeNum == 2 ? priceMonth.start : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{
@@ -376,7 +376,7 @@ export default function Paid() {
                                             </div>
                                             <div className="introduction-packages__item__section_layer">
                                                 <div >
-                                                    {layer[1]?.map(({ title, desc }) => (
+                                                    {layer[2]?.map(({ title, desc }) => (
                                                         <div className="introduction-packages__item__description">
                                                             <Divider />
                                                             <div className="introduction-packages__item__description__title">{title}</div>

@@ -2138,7 +2138,7 @@ export async function getCustomerList(page: any, limit: any) {
   return request(`/api/ApiAppstore/customers_list`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
     },
     data: {
       domain_id:cookie.load("domain")?.id,
@@ -2147,5 +2147,336 @@ export async function getCustomerList(page: any, limit: any) {
     }
   })
 }
+
+export async function getCustomer() {
+  return request(`/api/ApiAppstore/customers`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+    }
+  })
+}
+
+// // 创建收货地址
+// export async function carateAddress(res:any) {
+//   return request(`/api/ApiAppstore/addressAdd`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//     data: {
+//       domain_id:cookie.load("domain")?.id,
+//       ...res
+//     }
+//   })
+// }
+// 
+// 设置订单收货地址
+export async function setOrderShippingAddress(res:any) {
+  return request(`/api/ApiStore/setOrderShippingAddress`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+
+
+// 物流服务商
+export async function getShippingcourier() {
+  return request(`/api/ApiAppstore/shippingcourier_select`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: {
+      // domain_id:cookie.load("domain")?.id,
+    }
+  })
+}
+
+// 设置物流单号
+export async function setOrderNumber(res:any) {
+  return request(`/api/ApiStore/setShippingNo`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+
+// 设置订单发货
+export async function setOrderShipped(res:any) {
+  return request(`/api/ApiStore/setOrderShipped`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 取消订单发货
+export async function cancelOrderShipment(res:{orderId:string,shippingSn:string,shipmentId:string}) {
+  return request(`/api/ApiStore/cancelOrderShipment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 商家备注
+export async function addOrderRemark(res:{orderId:string,remark:string}) {
+  return request(`/api/ApiStore/addOrderRemark`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 订单日志
+export async function getOrderLogs(res:any) {
+  return request(`/api/ApiStore/getOrderLogs`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 联系信息
+export async function setOrderContact(res:any) {
+  return request(`/api/ApiStore/setOrderContact`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+// 标记付款
+export async function setOrderPaid(res:any) {
+  return request(`/api/ApiStore/setOrderPaid`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 设置付款期限
+export async function setOrderPaymentTerm(res:{orderId:string,paymentTerm:string,startDate:number}) {
+  return request(`/api/ApiStore/setOrderPaymentTerm`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 设置护照号/身份证号
+export async function setOrderIdNumber(res:{orderId:string,idNumber:string}) {
+  return request(`/api/ApiStore/setOrderIdNumber`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 删除付款期限
+export async function delOrderPaymentTerm(res:{orderId:string}) {
+  return request(`/api/ApiStore/delOrderPaymentTerm`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+// 订单退货
+export async function setOrderReturned(res:any) {
+  return request(`/api/ApiStore/setOrderReturned`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+// 订单取消
+export async function setCancelOrder(res:any) {
+  return request(`/api/ApiStore/cancelOrder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 添加标签
+export async function addOrderTag(res:{orderId:string,tagName:string}) {
+  return request(`/api/ApiStore/addOrderTag`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+// 删除标签
+export async function removeOrderTag(res:{orderId:string,tagName:string}) {
+  return request(`/api/ApiStore/removeOrderTag`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+// 获取标签列表
+export async function getOrderTagList(orderId:string) {
+  return request(`/api/ApiStore/getOrderTagList`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      orderId:orderId
+    }
+  })
+}
+// 批量添加标签列表
+export async function batchAddOrderTags(res:{orderIds:string,tagNames:string}) {
+  return request(`/api/ApiStore/batchAddOrderTags`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 拆分发货
+export async function splitOrderProducts(res:{orderProducts:string}) {
+  return request(`/api/ApiStore/splitOrderProducts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+export async function getReturnReasons(languagesId:string) {
+  return request(`/api/ApiStore/getReturnReasons`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languagesId:languagesId
+    }
+  })
+}
+export async function getReturnActions(languagesId:string) {
+  return request(`/api/ApiStore/getReturnActions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languagesId:languagesId
+    }
+  })
+}
+export async function getReturnStatuses(languagesId:string) {
+  return request(`/api/ApiStore/getReturnStatuses`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languagesId:languagesId
+    }
+  })
+}
+
+
+
+
+
+
 
 

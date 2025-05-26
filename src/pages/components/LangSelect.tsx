@@ -11,7 +11,7 @@ export default function LangSelect({isLabel,lang,setLang}:{isLabel?:string | boo
     useEffect(() => {
         let tempList = [];
         if(languageData.length==0){
-            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+            tempList = JSON.parse(sessionStorage["languages"] || "[]").map((item:any)=>{
                 return {
                     value: item.id,
                     label: item.name

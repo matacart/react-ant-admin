@@ -1,52 +1,35 @@
-import { Link, useIntl } from "@umijs/max";
-import { Button, Card, Divider, Flex, Form, Input, InputRef, Select, SelectProps, Space, Switch, Tooltip } from "antd";
+import { useIntl } from "@umijs/max";
+import { Card, Divider, Flex, Switch, Tooltip } from "antd";
 import styled from "styled-components";
-// import MoreSelect from './../Select/MoreSelect';
-// import Product from './../../pages/Products/index';
-import { useRef, useState } from "react";
-import OrdersNoteField from "./OrdersNoteField";
+import MerchantNotes from "./Modal/MerchantNotes";
+import order from "@/store/order/order";
+import { observer } from "mobx-react-lite";
 
-// 上架商品
-export default function ProductSettingsCard() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [initialValue, setInitialValue] = useState<string | undefined>(undefined);
+function OrdersNotesCard() {
   const intl = useIntl();
-  const onEditClick = () => {
-      // Set initial value here if needed
-      setIsEditing(true);
-  };
-
-  const onSave = (value: string) => {
-      // Do something with the saved value, e.g., update state or database
-      console.log('Saved value:', value);
-      setIsEditing(false);
-  };
-
-  const onClose = () => {
-      // Reset any changes and close the modal
-      setIsEditing(false);
-  };
 
   return (
       <Scoped>
-          <Card title={<Flex justify="space-between" align="center">
-                <span style={{ fontSize: '16px', color: '#242833' }}>{intl.formatMessage({ id:'order.detail.notes'})}</span>
-                <button onClick={onEditClick} style={{ fontSize: '14px', color: '#356DFF', border: 'none', background: 'transparent', cursor: 'pointer' }}>
-                    {intl.formatMessage({ id:'order.detail.edit'})}
-                </button>
-            </Flex>}
-          >
-            <div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.detail.empitynotes'})}</div>
-            <OrdersNoteField isEditing={isEditing} initialValue={initialValue} onSave={onSave} onClose={onClose} />
+          <Card className="card">
+            <Flex justify="space-between" style={{ marginBottom: '20px' }}>
+                <div className="font-16 color-242833 font-w-600">{intl.formatMessage({ id:'order.detail.notes'})}</div>
+                <MerchantNotes />
+            </Flex>
+            {order.merchantNotes.length>0 ? <>
+                <div style={{marginBottom:"6px"}} className="font-14 color-242833 font-w-500">商家备注</div>
+                <div className="color-474F5E">{order.merchantNotes[0].actionDetails?.sellerRemark}</div>
+            </>:<div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.detail.empitynotes'})}</div>}
           </Card>
       </Scoped>
   )
 }
 
 
+export default observer(OrdersNotesCard)
+
 const Scoped = styled.div`
     .card{
-        background-color: #f7f8fb;
+        background-color: #F7F8FB;
     }
     .item{
         margin-bottom: 20px;

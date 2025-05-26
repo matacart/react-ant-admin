@@ -262,12 +262,12 @@ const Scoped = styled.div`
       width: 100%;
       min-width: 500px;
       .create-title{
-          color: #474f5e;
-          font-size: 14px;
-          display: flex;
-          justify-content: space-between;
-          align-content: center;
-          margin-bottom: 20px;
+        color: #474f5e;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        margin-bottom: 20px;
         .create-title-left{
           h3 {
             color: #242833;

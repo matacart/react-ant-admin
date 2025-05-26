@@ -10,6 +10,7 @@ import { Outlet } from 'react-router-dom';
 import GiftCardsSelectCard from './GiftCardsSelectCard';
 import { ExportIcon } from '@/components/Icons/Icons';
 import BlankPage from './BlankPage';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 
 
@@ -121,21 +122,21 @@ const App: React.FC = () => {
       <div className='create-warp-flex' style={{ width: "100%" }}>
         <div className="create-warp">
           <div className='create-title'>
-            <div className='create-title-left'>
-                <h3 style={{ position: 'relative', top: 10, display: 'inline-block' }}>礼品卡</h3>
-                <Flex style={{ position: 'relative', top: -44, left: 93 }}>
-                    <Flex>
-                        <div style={{marginRight:"8px"}}><ImportOutlined /></div>
-                        <div>导入</div>
-                    </Flex>
-                    <Flex style={{marginLeft:"12px"}}>
-                        <div style={{marginRight:"8px"}}><ExportOutlined /></div>
-                        <div>导出</div>
-                    </Flex>
-                </Flex>
-            </div>
+            <Flex className='create-title-left' align='center'>
+              <h3>礼品卡</h3>
+              <Flex align='center'>
+                  <Flex>
+                    <div style={{marginRight:"8px"}}><ImportOutlined /></div>
+                    <div>导入</div>
+                  </Flex>
+                  <Flex style={{marginLeft:"12px"}}>
+                    <div style={{marginRight:"8px"}}><ExportOutlined /></div>
+                    <div>导出</div>
+                  </Flex>
+              </Flex>
+            </Flex>
             <div className='create-title-right'>
-              <Button type="primary" onClick={() => { history.push('/products/gift-cards/new') }} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>创建礼品卡</Button>
+              <PrimaryButton onClick={() => { history.push('/products/gift-cards/new') }} text='创建礼品卡' />
             </div>
           </div>
           <div className='create-content'>
@@ -169,46 +170,34 @@ const Scoped = styled.div`
     color: #474f5e;
     font-size: 16px;
     font-weight: 500;
-    line-height: 20px;
     .create-warp{
       width: 100%;
       min-width: 500px;
       .create-title{
-          padding-bottom: 0px;
-          color: #474f5e;
-          font-size: 14px;
-          line-height: 20px;
-          display: flex;
-          justify-content: space-between;
-          align-content: center;
-        .create-title-left{
-          display: inline-block;
+        color: #474f5e;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        margin-bottom: 20px;
+        .create-title-left {
           h3 {
-            -webkit-box-flex: 1;
-            -ms-flex: 1;
-            flex: 1;
-            margin: 0 24px 24px 0;
-            overflow: hidden;
             color: #242833;
             font-size: 24px;
             font-weight: 600;
-            line-height: 32px;
+            margin:0;
+            margin-right: 16px;
           }
         }
         .create-title-right{
           display: inline-block;
-
         }
-
       }
       .create-content{
-          position: relative;
-          top: -10px;
-          padding: 5px 24px;
-          border-radius: 6px;
-          width: 100%;
-          background-color: white;
-          
+        padding: 5px 24px;
+        border-radius: 6px;
+        width: 100%;
+        background-color: white;
       }
     }
   }

@@ -57,7 +57,7 @@ export default function Header() {
         <Scoped>
             {/* left */}
             <Tooltip title="返回管理后台" placement="right">
-                <div className='header-left cursor-pointer' onClick={()=>history.push()}>
+                <div className='header-left cursor-pointer' onClick={()=>history.push(`/home`)}>
                     <BackIcon />
                 </div>
             </Tooltip>

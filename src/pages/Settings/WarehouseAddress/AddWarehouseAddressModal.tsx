@@ -83,16 +83,14 @@ function AddWarehouseAddressModal() {
 
 
     useEffect(()=>{
-        getCountryList().then(res=>{
-            let country:any=[];
-            res.data.forEach((item:any)=>{
-                country.push({
-                    label:item.country_name,
-                    value:item.country_id
-                })
-            })
-            setCountryList(country)
+        // 国家
+        const country = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+            return {
+                label: item.country_name,
+                value: item.country_id
+            }
         })
+        setCountryList(country)
     },[])
  
     return (

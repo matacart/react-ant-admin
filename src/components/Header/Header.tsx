@@ -7,7 +7,7 @@ import { GlobalOutlined, SearchOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
 import { useEffect, useState } from 'react';
 import { observer } from "mobx-react-lite";
-import { currentUserStatus, getOptionType, getPlatformCategorySelect } from "@/services/y2/api";
+import { currentUserStatus, getOptionType, getPlatformCategorySelect, getShippingcourier } from "@/services/y2/api";
 
 
 // const { token } = theme.useToken();
@@ -42,6 +42,13 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
             }else{
               console.log("获取商品类型失败")
             }
+        }).catch(err=>{
+            console.log("获取商品类型失败")
+        })
+        // 获取物流服务
+        getShippingcourier().then(res=>{
+            localStorage["MC_DATA_SHIPPING_COURIER"] = JSON.stringify(res.data)
+        }).catch(err=>{
         })
     },[])
 
@@ -58,17 +65,17 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">未开通套餐！请先开通套餐</div>
                     {/* 开通套餐 */}
-                    <Button className="tips-box-btn" onClick={()=>{}}>开通套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>开通套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 3 ?
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">店铺已到期！购买套餐后恢复使用</div>
-                    <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 4 ? 
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">店铺已停用！</div>
-                    <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 5 ? 
                     <Flex className="tips-box" justify="center" align="center">
@@ -78,7 +85,7 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                 { userStatus.code == 0 && timer<=15 ? 
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">{timer == 0?"你的套餐剩余时间不足1天":"你的套餐剩余"+timer+"天"}</div>
-                    <Button className="tips-box-btn" onClick={()=>{}}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:""}
                 <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
                     <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>

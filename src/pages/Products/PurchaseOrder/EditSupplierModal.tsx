@@ -26,17 +26,13 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
 
     useEffect(()=>{
         // 国家
-        getCountryList().then(res=>{
-            setCountryList(res.data)
-            let country:any=[];
-            res.data.forEach((item:any)=>{
-                country.push({
-                    label:item.country_name,
-                    value:item.country_id
-                })
-            })
-            setCountryList(country)
+        const country = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+            return {
+                label: item.country_name,
+                value: item.country_id
+            }
         })
+        setCountryList(country)
         // 供应商信息
         upplierInfoFun()
     },[supplier])

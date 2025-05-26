@@ -11,6 +11,7 @@ import './index.scss';
 import type { TimeRangePickerProps } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import { useSleep } from '@/hooks/customHooks';
 
 // 格式化日期
 function formatDate(str:string) {
@@ -84,11 +85,7 @@ function timeFrame(s:Date,d:Date){
   if(difference == 7776000000){
     //90天
   }
-
-
-
   // 2678400000 30天
-
 }
 // 获取全部产品
 const objList = getAnalyse();
@@ -116,17 +113,22 @@ function getLastYear(time:Date){
   return formatDate((currTime.getFullYear()-1)+"-"+(currTime.getMonth()+1)+"-"+(currTime.getDate()));
 }
 export default function(this: any) {
+
+  const [loading,setLoading] = useState(false);
+
+  const sleep = useSleep();
+
   let [flag,setFlag] = useState("0");
 
   let [contrastTitle,setcontrastTitle] = useState("");
 
   let [salesVolumeData,setSalesVolumeData] = useState([
-      { year: '1991-01-10', value: "3" },
-      { year: '1992-02-10', value: "4" },
-      { year: '1993-03-10', value: "3.5" },
-      { year: '1994-04-10', value: "5" },
-      { year: '1995-05-10', value: "4.9" },
-      { year: '1996-06-10', value: "7" }
+      { year: '02/03', value: "3" },
+      { year: '03/03', value: "4" },
+      { year: '04/03', value: "3.5" },
+      { year: '05/03', value: "5" },
+      { year: '06/03', value: "4.9" },
+      { year: '07/01', value: "7" }
   ]);
   let [amountPaid,setAmountPaid] = useState([
       { year: '1993-02-03', value: 3 },
@@ -210,13 +212,29 @@ export default function(this: any) {
           lastToDate:lastToDate,
           compare : contrastTitle,
           config : {
+            autoFit: true,
             data:salesVolumeData,
+            style: {
+              width:"1000px",
+            },
+            viewStyle: {
+              // 视图的样式
+              width:"1000px",
+            },
+            xField: 'year',
+            yField: 'value',
             title: {
               visible: true,
               text: '带数据点的折线图',
             },
-            xField: 'year',
-            yField: 'value',
+            // 坐标轴配置
+            axis: {
+              x: {
+                line:true,
+                lineLineWidth: 0.5, // 轴线宽度
+              },
+              y: { tickCount: 5 },
+            },
             interaction: {
               tooltip: {
                 render:(e:any,{title, items}:any)=>{
@@ -850,6 +868,16 @@ export default function(this: any) {
   // 图表数组
   // 文字提示
   const [arrow, setArrow] = useState<'Show' | 'Hide' | 'Center'>('Show');
+
+  async function a(){
+    await sleep(2000)
+    setLoading(true)
+  }
+
+  useEffect(() => {
+    a()
+  }, []);
+
   return (
     <div>
       <div className="head">
@@ -1055,8 +1083,8 @@ export default function(this: any) {
             )
           }
           return (
-            <div className='sellBox'>
-              <div key={index} className="sell" >
+            <div className='sellBox' style={{width: '100%'}}>
+              {loading ? <div key={index} className="sell" >
               <div className="shadow">
                 <div className="shadow-container">
                   <div className="shadow-1">
@@ -1113,13 +1141,12 @@ export default function(this: any) {
                   </div>
                 </div>
               </div> }
-              </div>
+              </div>:<div className="sell" style={{height:"400px"}}></div>}
             </div>
           )
           })
         }
         </Masonry>
-        
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Flex, Modal } from 'antd';
 import styled from 'styled-components';
 import PrimaryButton from '../Button/PrimaryButton';
 
@@ -22,9 +22,9 @@ const StatementModal = ({triggerObj,content,title}:StatementModalProps)=>{
         </div>
         <ScopedModal title={title} width={620} getContainer={()=>mRef.current!} classNames={{header:"mtitle",body:"mbody",footer:"mfooted"}} centered open={isModalOpen} onOk={()=>setIsModalOpen(false)} onCancel={()=>setIsModalOpen(false)}
             footer = {(_, { OkBtn, CancelBtn }) => (
-                <>
+                <Flex justify="flex-end">
                     <PrimaryButton text="确定" onClick={()=>setIsModalOpen(false)} />
-                </>
+                </Flex>
             )}
         >
             {content}

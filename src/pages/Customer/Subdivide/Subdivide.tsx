@@ -4,6 +4,7 @@ import { Button, Card, Dropdown, Flex, Input, Space, Table, TableProps } from 'a
 import styled from 'styled-components'
 import { history } from '@umijs/max';
 import { SearchOutlined } from '@ant-design/icons';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 
 interface DataType {
@@ -71,20 +72,10 @@ export default function Subdivide() {
             <div className="create-warp">
             <div className='create-title'>
                 <div className='create-title-left'>
-                <h3 style={{
-                    position: 'relative',
-                    top: 10,
-                    display: 'inline-block',
-                }}>细分</h3>
+                <h3>细分</h3>
                 </div>
                 <div className="button-container">
-                <Button 
-                    type="primary"
-                    onClick={() => { history.push('/customer/persona/detail') }}
-                    style={{ height: "36px", fontSize: "14px" }}
-                >
-                    创建细分
-                </Button>
+                  <PrimaryButton text="创建细分" onClick={() => { history.push('/customer/persona/detail') }} />
                 </div>
             </div>
             <div className='create-content'>
@@ -113,7 +104,7 @@ const Scoped = styled.div`
       width: 80%;
       min-width: 500px;
       .create-title {
-        margin-bottom: 10px;
+        margin-bottom: 20px;
         color: #474f5e;
         font-size: 14px;
         line-height: 20px;
@@ -124,9 +115,9 @@ const Scoped = styled.div`
           display: inline-block;
           h3 {
             -webkit-box-flex: 1;
+            margin-bottom: 0;
             -ms-flex: 1;
             flex: 1;
-            margin: 0 24px 24px 0;
             overflow: hidden;
             color: #242833;
             font-size: 24px;
@@ -141,12 +132,10 @@ const Scoped = styled.div`
       }
       .create-content {
         position: relative;
-        top: -10px;
         padding: 5px 24px;
         border-radius: 6px;
         width: 100%;
         background-color: white;
-
         .create-input{
             margin:20px 0;
             width: 480px;

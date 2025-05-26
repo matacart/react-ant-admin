@@ -7,6 +7,7 @@ import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import orderList from '@/store/order/orderList';
 import SelectedActions from './SelectedActions';
 import { observer } from 'mobx-react-lite';
+import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;
@@ -62,7 +63,7 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.orderdata' }),
-      dataIndex: 'orderdata',
+      dataIndex: 'date_purchased',
       render: (text: string) => (
         <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {text}
@@ -76,17 +77,21 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.paymenstate' }),
-      dataIndex: 'paymentstate',
-      render: (text: string) => <OrderWarningTag text="未付款" />,
+      dataIndex: 'payment_status_id',
+      render: (value: number) => <>
+        {value == 8?<OrderDefaultTag text="已付款"/>:<OrderWarningTag text="未付款" />}
+      </>
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.deliverystate' }),
-      dataIndex: 'deliverystate',
-      render: (text: string) => <OrderWarningTag text="待发货" />,
+      dataIndex: 'delivery_status_id',
+      render: (value: number) => <>
+        {value == 1?<OrderWarningTag text="待发货" />:value == 150?<OrderWarningTag text="部分发货"/>:<OrderDefaultTag text="已发货"/>}
+      </>
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.paymentmethod' }),
-      dataIndex: 'paymentmethod',
+      dataIndex: 'payment_method',
       render: (text: string) => <span>{text}</span>,
     },
     {
@@ -95,7 +100,7 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.deliveryname' }),
-      dataIndex: 'deliveryname',
+      dataIndex: 'delivery_name',
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.tel' }),
@@ -112,7 +117,7 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     },
     {
       title: intl.formatMessage({ id: 'order.tableheader.pricetotal' }),
-      dataIndex: 'price',
+      dataIndex: 'order_total',
       render: (value: any, record: any, index: any) => {
         let num = Number(value);
         return <>{`US$ ${num.toFixed(2)}`}</>;
@@ -138,18 +143,18 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
         console.log('Response from getOrderList:', res);
         const newData: DataType[] = res.data?.map((item: any) => ({
           ...item,
-          orderid: item.id,
-          orderdata: item.date_purchased,
-          orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
-          paymentmethod: item.payment_method,
-          payment_status_id: item.payment_status_id, // 确保这里使用的是最新的 payment_status_id
-          paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
-          deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
-          deliveryname: item.delivery_name,
-          tel: item.tel,
-          shippingmethod: item.shipping_method,
-          paymentchannel: item.payment_method,
-          price: item.order_total,
+          // orderid: item.id,
+          // orderdata: item.date_purchased,
+          // orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
+          // paymentmethod: item.payment_method,
+          // payment_status_id: item.payment_status_id, // 确保这里使用的是最新的 payment_status_id
+          // paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
+          // deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
+          // deliveryname: item.delivery_name,
+          // tel: item.tel,
+          // shippingmethod: item.shipping_method,
+          // paymentchannel: item.payment_method,
+          // price: item.order_total,
         }));
   
         console.log('New data after processing:', newData);
@@ -208,14 +213,14 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     {/* 列表 */}
     <Table
       columns={columns}
-      rowKey={(record) => record.orderid}
+      rowKey={(record) => record.id}
       dataSource={data}
       pagination={tableParams.pagination}
       loading={loading}
       onChange={handleTableChange}
       scroll={{ x: 'max-content' }}
       onRow={(record) => ({
-        onClick: () => handleOrderClick(record.orderid), // 点击行时调用handleOrderClick
+        onClick: () => handleOrderClick(record.id), // 点击行时调用handleOrderClick
       })}
       rowSelection={{
         type: 'checkbox',
@@ -241,10 +246,12 @@ const Scoped = styled.div`
 
   .ant-table-tbody > tr > td {
     padding: 10px;
+    height: 56px;
   }
   
   .ant-table{
     border: 1px solid #eef1f7;
+    border-bottom: none;
     border-radius: 6px;
   }
 `;

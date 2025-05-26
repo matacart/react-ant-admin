@@ -1,5 +1,4 @@
-import { getAccessToken, getCountryList, login } from '@/services/y2/api';
-import { getFakeCaptcha } from '@/services/y2/login';
+import { getAccessToken, login } from '@/services/y2/api';
 import { Alert, message, Tabs, Button, Form, Input, Divider,Checkbox, Flex, MenuProps, Dropdown, ConfigProvider } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, Link, history, useIntl, useModel } from '@umijs/max';

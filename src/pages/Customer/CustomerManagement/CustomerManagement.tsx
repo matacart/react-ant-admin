@@ -10,6 +10,8 @@ import { UnfoldIcon } from '@/components/Icons/Icons';
 import ScreeningConditionCard from './ScreeningConditionCard';
 import CustmoerListCard from '../Components/CustomerListCard';
 import UploadImportDrag from '@/components/UploadFile/UploadImportDrag';
+import DefaultButton from '@/components/Button/DefaultButton';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 interface MenuItem {  
   key: string;  
@@ -131,13 +133,9 @@ export default function CustomerManagement() {
       }}>
         <div className="create-warp">
           <div className='create-title'>
-            <div className='create-title-left'>
-              <h3 style={{
-                position: 'relative',
-                top: 10,
-                display: 'inline-block',
-              }}>客户</h3>
-              <Flex style={{ position: 'relative', top: -44, left: 70 }}>
+            <Flex className='create-title-left' align='center'>
+              <h3>客户</h3>
+              <Flex>
                 <Dropdown menu={{ items: aItems }} trigger={['click']}>
                   <Flex className='cursor-pointer'>
                     <div style={{marginRight:"8px"}}><ImportOutlined /></div>
@@ -152,25 +150,11 @@ export default function CustomerManagement() {
                     <div>导出</div>
                 </Flex>
               </Flex>
-            </div>
-            <div className="button-container">
-              <Button 
-                onClick={() => {  }}
-                style={{
-                  backgroundColor: 'WHITE',
-                  marginRight: '12px',
-                  width: "90px", height: "36px", fontSize: "14px",
-                }}>
-                其他操作
-              </Button>
-              <Button 
-                type="primary"
-                onClick={() => { history.push('/customer/management/operate/add') }}
-                style={{ height: "36px", fontSize: "14px" }}
-              >
-                添加客户
-              </Button>
-            </div>
+            </Flex>
+            <Flex gap={12}>
+              <DefaultButton text="其它操作" />
+              <PrimaryButton text="添加客户" />
+            </Flex>
           </div>
           <ScreeningConditionCard />
           <div style={{height:"20px"}}></div>
@@ -198,25 +182,19 @@ const Scoped = styled.div`
       width: 80%;
       min-width: 500px;
       .create-title {
-        padding-bottom: 0px;
         color: #474f5e;
         font-size: 14px;
-        line-height: 20px;
         display: flex;
         justify-content: space-between;
         align-content: center;
-        .create-title-left {
-          display: inline-block;
+        margin-bottom: 20px;
+        .create-title-left{
           h3 {
-            -webkit-box-flex: 1;
-            -ms-flex: 1;
-            flex: 1;
-            margin: 0 24px 24px 0;
-            overflow: hidden;
             color: #242833;
             font-size: 24px;
             font-weight: 600;
-            line-height: 32px;
+            margin:0;
+            margin-right: 16px;
           }
         }
         .button-container {

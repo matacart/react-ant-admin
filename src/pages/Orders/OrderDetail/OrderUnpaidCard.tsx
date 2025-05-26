@@ -1,14 +1,19 @@
-import { Badge, Button, Card, Col, Divider, Flex, Form, Input, Row, Tooltip } from "antd";
-import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { Badge, Card, Col, Divider, Flex, Form, Modal, Row } from "antd";
 import { observer } from "mobx-react-lite";
 import { useIntl } from "@umijs/max";
-import orderStore from "@/store/order/orderStore";
 import { PendingSecondIcon } from "@/components/Icons/Icons";
 import order from "@/store/order/order";
 import PrimaryButton from "@/components/Button/PrimaryButton";
+import AddPaymentPeriod from "./Modal/AddPaymentPeriod";
+import DefaultButton from "@/components/Button/DefaultButton";
+import { setOrderPaid } from "@/services/y2/api";
+import { useState } from "react";
 
 function OrderUnpaidCard() {
+
     const intl = useIntl();
+
+    const [loading,setLoading] = useState(false);
 
     return (
         <Card title={
@@ -77,11 +82,50 @@ function OrderUnpaidCard() {
             <Divider/>
             <Flex align="center" justify="space-between">
                 <Flex gap={8}>
-                    <span>没有付款期限</span>
-                    <span className="color-356DFF cursor-pointer">添加期限</span>
+                    <span>
+                        {
+                            order.orderInfo.payment_term == "full_payment_on_shipment" ? "订单发货时全额付款":
+                            order.orderInfo.payment_term == "full_payment_on_invoice" ? "发送账单时全额付款":
+                            order.orderInfo.payment_term == "full_payment_by_date" ? "指定日期前全额付款":
+                            order.orderInfo.payment_term == "full_payment_in_7_days" ? "7天内全额付款":
+                            order.orderInfo.payment_term == "full_payment_in_15_days" ? "15天内全额付款":
+                            order.orderInfo.payment_term == "full_payment_in_30_days" ? "30天内全额付款":
+                            order.orderInfo.payment_term == "full_payment_in_45_days" ? "45天内全额付款":
+                            order.orderInfo.payment_term == "full_payment_in_60_days" ? "60天内全额付款":
+                            order.orderInfo.payment_term == "full_payment_in_90_days" ? "90天内全额付款":"没有付款期限"
+                        }
+                    </span>
+                    <AddPaymentPeriod />
                 </Flex>
                 <Flex gap={12}>
-                    <PrimaryButton text="标记付款" />
+                    <PrimaryButton text="标记付款" onClick={()=>{
+                        const modalRef = Modal.info({
+                            title: '标记订单为已付款',
+                            centered:true,
+                            content: (
+                              <div style={{marginBottom:"12px"}}>
+                                <p>当前订单的付款状态将被标记为“已付款"</p>
+                              </div>
+                            ),
+                            footer: (_, { OkBtn, CancelBtn }) => (
+                                <Flex gap={12} justify="end">
+                                    <DefaultButton text={"取消"} onClick={()=>modalRef.destroy()} />
+                                    <PrimaryButton text={"确定"} onClick={()=>{
+                                        setLoading(true)
+                                        setOrderPaid({
+                                            orderId:order.orderInfo.order_id
+                                        }).then(res=>{
+                                            order.triggerRefresh()
+                                        }).catch(err=>{ 
+                                        }).finally(()=>{
+                                            setLoading(false)
+                                            modalRef.destroy()
+                                        })
+                                    }} />
+                                </Flex>
+                            ),
+                        });
+                    }} />
                     <PrimaryButton text="发送账单" />
                 </Flex>
             </Flex>

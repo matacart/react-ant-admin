@@ -1,7 +1,11 @@
-import { Button, ConfigProvider } from "antd";
+import { Button, ButtonProps, ConfigProvider } from "antd";
 import styled from "styled-components";
 
-export default function ButtonIcon({icon,onClick}:{icon:React.ReactNode,onClick?:()=>void}){
+interface ButtonIconProps extends ButtonProps {
+    icon: any;
+}
+
+export default function ButtonIcon({icon,...props}:ButtonIconProps){
     
     return (
         <Scoped>
@@ -21,7 +25,7 @@ export default function ButtonIcon({icon,onClick}:{icon:React.ReactNode,onClick?
                     },
                 }}
                 >
-                <Button className="default-btn" onClick={onClick}>
+                <Button className="default-btn" {...props}>
                     {icon}
                 </Button>
             </ConfigProvider>

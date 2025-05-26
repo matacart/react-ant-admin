@@ -23,19 +23,13 @@ function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplier
     const [form] = useForm();
 
     useEffect(()=>{
-        getCountryList().then(res=>{
-            console.log(res.date)
-            setCountryList(res.data)
-            let country:any=[];
-            res.data.forEach((item:any)=>{
-                country.push({
-                    label:item.country_name,
-                    value:item.country_id
-                })
-            })
-            setCountryList(country)
+        const country = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+            return {
+                label: item.country_name,
+                value: item.country_id
+            }
         })
-
+        setCountryList(country)
         // 单号
         form.setFieldsValue({
             supplierName:"",

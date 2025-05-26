@@ -23,5 +23,5 @@ export default NumberInput
 
 const ScopedNumber = styled(InputNumber)`
     height: 36px;
-    width: 100%;
+    /* width: 100%; */
 `

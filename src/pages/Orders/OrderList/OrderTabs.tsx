@@ -116,10 +116,10 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
 
 function OrderTabs() {
   const [newTabName, setNewTabName] = useState('');
-  const [activeKey, setActiveKey] = useState('1');
+  const [activeKey, setActiveKey] = useState('');
   const intl = useIntl();
   const [panes, setPanes] = useState([
-    { title: intl.formatMessage({ id: 'order.tabs.all' }), content: <FilteredOrdersComponent id={'1'} activeKey={activeKey} />, key: '1' },
+    { title: intl.formatMessage({ id: 'order.tabs.all' }), content: <FilteredOrdersComponent id={''} activeKey={activeKey} />, key: '' },
     { title: intl.formatMessage({ id: 'order.tabs.readytoship' }), content: <FilteredOrdersComponent id={'4'} activeKey={activeKey} />, key: '4' },
     { title: intl.formatMessage({ id: 'order.tabs.cancelled' }), content: <FilteredOrdersComponent id={'3'} activeKey={activeKey} />, key: '3' },
     { title: intl.formatMessage({ id: 'order.tabs.process' }), content: <FilteredOrdersComponent id={'2'} activeKey={activeKey} />, key: '2' },

@@ -1,5 +1,5 @@
 import { DiscountedGraphIcon, IdeaIcon, RiseIcon, TemplateIcon } from "@/components/Icons/Icons";
-import { Button, Card, Col, Divider, Flex, Input, Row, Tabs, TabsProps, Tooltip } from "antd";
+import { Button, Card, Col, Divider, Flex, Input, Radio, Row, Tabs, TabsProps, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -59,7 +59,6 @@ export default function NewAndOldCard() {
             // custom: true,
             position:"bottom",
             layout: { justifyContent: 'center' },
-            background:"#FF0000",
             marker: {
                 symbol: 'diamond', // 标记形状：'circle'/'square'/'diamond'等
                 radius: 5,        // 标记大小
@@ -84,11 +83,6 @@ export default function NewAndOldCard() {
             { date: '06-12', count: 3, type: 'old' },
             { date: '06-13', count: 3, type: 'old' },
             { date: '06-14', count: 2, type: 'old' }
-            // { date: '06-12', count: 0, type: '订单数' },
-            // { date: '06-13', count: 0, type: '订单数' },
-            // { date: '06-14', count: 0, type: '行业均值' },
-            // { date: '06-15', count: 0, type: '行业均值' },
-            // { date: '06-16', count: 0, type: '行业均值' },
         ])
         .encode('x', 'date')
         .encode('y', 'count')
@@ -145,7 +139,47 @@ export default function NewAndOldCard() {
                 </Flex>
                 {/*  */}
                 <div className="chart-box">
+                    <div className="color-242833 font-w-500" style={{marginBottom:"8px"}}>新老客占比</div>
+                    <Flex gap={2} style={{marginBottom:"8px"}}>
+                        <div className="new-proportion">
+                            新客 · 75.00%
+                        </div>
+                        <div className="old-proportion">
+                            老客 · 25.00%
+                        </div>
+                    </Flex>
+                    <Flex gap={12}>
+                        <div className="tab-box">
+                            <Tabs defaultActiveKey="1" items={[
+                                {
+                                    key: '1',
+                                    label: '客户数',
+                                },
+                                {
+                                    key: '2',
+                                    label: 'GMV',
+                                },
+                                {
+                                    key: '3',
+                                    label: '订单数',
+                                },
+                            ]} />
+                        </div>
+                        <Radio.Group defaultValue="a">
+                            <Radio.Button value="a">每小时</Radio.Button>
+                            <Radio.Button value="b">每日</Radio.Button>
+                            <Radio.Button value="c">每周</Radio.Button>
+                        </Radio.Group>
+                    </Flex>
                     <div id="container" style={{ width: '100%', height: 500 }} />
+                    <Flex className="legend-box" justify="center" gap={12}>
+                        <div>
+                            {/* <span class="component-antv-g2-chart-legend-active-dot" style={{position: relative; background: rgb(53, 109, 255),  width: "12px", height: "12px", borderRadius: "3px",margin-right: "7px"}}>
+                                <span style="opacity: 0; position: absolute; inset: -2px; border-radius: 5px; background: rgb(53, 109, 255);"></span>
+                            </span> */}
+                            <span className="font-12">客户数</span>
+                        </div>
+                    </Flex>
                 </div>
             </Card>
         </Scoped>
@@ -194,6 +228,31 @@ const Scoped = styled.div`
         padding: 20px;
         border: 1px solid #d7dbe7;
         border-radius: 4px;
+        .new-proportion{
+            flex:3;
+            background-color: #356DFF;
+            padding: 6px 24px;
+            text-align: right;
+            white-space: nowrap;
+            border-radius: 2px;
+            color:#FFF;
+        }
+        .old-proportion{
+            flex:1;
+            background-color: #2ED296;
+            padding: 6px 24px;
+            text-align: right;
+            white-space: nowrap;
+            border-radius: 2px;
+            color:#FFF;
+        }
+        .tab-box{
+            flex: 1;
+        }
+        .legend-box{
+            padding: 6px;
+            background-color: rgb(248, 249, 252);
+        }
     }
     
    

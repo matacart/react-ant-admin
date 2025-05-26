@@ -119,3 +119,21 @@ export function transformConfig(obj: Record<string, any>){
     };
   }, {});
 };
+
+// 数组分组 -- 订单
+export function groupBy(arr:any[], key:string) {
+  const groups = arr.reduce((result, obj) => {
+    const groupKey = obj[key];
+    (result[groupKey] = result[groupKey] || []).push({...obj,num:0});
+    return result;
+  }, {});
+
+  // 将对象转换为数组格式
+  return Object.entries(groups).map(([groupKey, items]:any) => ({
+    groupKey,
+    time:items[0].shipment_time,
+    total: items.reduce((sum: number, item: any) => sum + parseInt(item["quantity_shipped"] || 0), 0),
+    items
+  }));
+
+}

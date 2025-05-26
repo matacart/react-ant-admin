@@ -19,7 +19,7 @@ function MySelectIcon({...props}) {
                         borderRadius:4,
                         paddingXXS:0,
                         // paddingSM:12
-                        paddingXS:200
+                        // paddingXS:200
                     },
                 }}
                 >

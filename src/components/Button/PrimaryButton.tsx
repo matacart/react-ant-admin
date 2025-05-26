@@ -1,8 +1,13 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider } from "antd";
+import { Button, ButtonProps, ConfigProvider } from "antd";
 import styled from "styled-components";
 
-export default function PrimaryButton({text,icon,loading,onClick}:{text:string,icon?:React.ReactNode,loading?:boolean,onClick?:()=>void}){
+interface MyButtonProps extends ButtonProps {
+    text: string;
+    icon?:React.ReactNode;
+}
+
+export default function PrimaryButton({text,icon,...props}:MyButtonProps){
 
 
     
@@ -19,7 +24,7 @@ export default function PrimaryButton({text,icon,loading,onClick}:{text:string,i
                     },
                 }}
                 >
-                <Button type="primary" loading={loading} className="default-btn" icon={icon} onClick={onClick}>
+                <Button type="primary" className="default-btn" icon={icon} {...props}>
                     {text}
                 </Button>
             </ConfigProvider>

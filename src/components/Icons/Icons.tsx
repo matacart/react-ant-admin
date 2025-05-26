@@ -233,6 +233,9 @@ const SuccessSecondSvg = () => (
 const PendingSecondSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle><circle cx="14" cy="14" r="7.1" stroke="#FE9E0F" stroke-width="1.8"></circle><path d="M14.1818 10.0908V14.1817L17.5909 16.2272" stroke="#FE9E0F" stroke-width="1.8"></path></svg>
 )
+const ReturnSecondSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><path d="M14.5 14L9 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M18 14L16 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M21.5 14L19.5 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#FE9E0F" stroke-width="2"></path><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle></svg>
+)
 
 const BackSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -405,6 +408,10 @@ export const SuccessSecondIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const PendingSecondIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={PendingSecondSvg} {...props} />
+);
+
+export const ReturnSecondIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ReturnSecondSvg} {...props} />
 );
 
 

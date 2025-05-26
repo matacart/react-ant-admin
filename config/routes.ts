@@ -95,6 +95,30 @@ export default  [
         hideInMenu: true,
         component: './Orders/OrderDetail/OrderDetail', 
       },
+      {  
+        path: ':orderId/delivery', 
+        name: 'orderId',
+        hideInMenu: true,
+        component: './Orders/OrderDetail/ManualDelivery/ManualDelivery', 
+      },
+      {  
+        path: 'afterSales/launch/:orderId', 
+        name: 'orderId',
+        hideInMenu: true,
+        component: './Orders/OrderDetail/AfterSales/AfterSales', 
+      },
+      {  
+        path: ':orderId/refund', 
+        name: 'orderId',
+        hideInMenu: true,
+        component: './Orders/OrderDetail/Refund/Refund', 
+      },
+      {  
+        path: ':orderId/productsEdit', 
+        name: 'orderId',
+        hideInMenu: true,
+        component: './Orders/OrderDetail/EditProduct/EditProduct', 
+      },
       {
         path: 'draftOrders/add',
         name: '',
@@ -205,6 +229,12 @@ export default  [
         path: 'management',
         name: 'management',
         component: './Customer/CustomerManagement/CustomerManagement',
+      },
+      {
+        path: 'management/:customerId',
+        name: 'management/:customerId',
+        menu: false,
+        component: './Customer/CustomerManagement/CustomerDetail/CustomerDetail',
       },
       {
         path: 'management/operate/add',

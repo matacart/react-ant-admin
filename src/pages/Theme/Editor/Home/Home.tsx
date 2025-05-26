@@ -3,6 +3,7 @@ import Left from "../Left/Left";
 import styled from "styled-components";
 import { useEffect } from "react";
 import home from "../data/InstalledSections/home.json"
+import Right from "../Right.tsx/Right";
 export default function Home(){
 
     useEffect(()=>{
@@ -32,7 +33,7 @@ export default function Home(){
                 </div>
             </div>
             <div className="right">
-                <div>Right</div>
+                <Right />
             </div>
         </Scoped>
     )

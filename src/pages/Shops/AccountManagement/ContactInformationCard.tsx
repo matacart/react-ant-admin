@@ -22,21 +22,23 @@ const ContactInformationCard = forwardRef((prop,ref)=>{
    
 
     useEffect(()=>{
-        getCountryList().then((res)=>{
-            let newList = res.data.map(item=>{
-                if(item.codes !== null){
-                    return {
-                        value: item.codes,
-                        label: "+"+item.codes
-                    }
+
+
+
+       
+        let newList = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+            if(item.codes !== null){
+                return {
+                    value: item.codes,
+                    label: "+"+item.codes
                 }
-            }).filter(item=>item !== undefined)
-            // 过滤相同的数据
-            newList = Array.from(
-                new Set(newList.map((item) => JSON.stringify(item)))
-            ).map((item) => JSON.parse(item));
-            setCountryList(newList);
-        })
+            }
+        }).filter(item=>item !== undefined)
+        // 过滤相同的数据
+        newList = Array.from(
+            new Set(newList.map((item) => JSON.stringify(item)))
+        ).map((item) => JSON.parse(item));
+        setCountryList(newList);
 
         form.setFieldsValue({
             email: accountManagement.user.contact_email,
