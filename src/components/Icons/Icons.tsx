@@ -201,6 +201,12 @@ const RocketSvg = () => (
   </svg>
 )
 
+const CrowdSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6.584 5.914a1.594 1.594 0 001.008-1.48c0-.877-.714-1.591-1.592-1.591-.878 0-1.592.714-1.592 1.592 0 .671.418 1.246 1.007 1.48a2.888 2.888 0 00-2.298 2.823c0 .337.237.45.427.54l.011.004c.768.27 1.879.343 2.414.343.584 0 1.726-.095 2.485-.357.284-.109.429-.287.429-.53 0-1.39-.988-2.553-2.299-2.824z"></path><path d="M4.48 5.78a1.919 1.919 0 01-.614-1.408c0-.681.529-1.279 1.062-1.621-.003-.005-.008-.008-.011-.011l-.011-.014a1.594 1.594 0 00-2.589 1.24c0 .672.419 1.247 1.008 1.48A2.888 2.888 0 001.026 8.27c0 .243.145.421.433.532.427.148.956.232 1.334.279-.154-.088-.198-.173-.198-.386 0-1.298.774-2.414 1.885-2.915zm4.195-.333a1.594 1.594 0 001.007-1.48 1.594 1.594 0 00-2.602-1.23l-.042.034c.263.176.718.414.867.694a1.924 1.924 0 01-.388 2.315 3.197 3.197 0 011.885 2.915c0 .25-.187.354-.263.394l.008-.001c.39-.045.947-.132 1.398-.287.284-.11.428-.288.428-.531 0-1.39-.988-2.553-2.298-2.823z"></path>
+  </svg>
+)
+
 const CompilationSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" data-icon="SLIconSort">
     <path d="M18.35 6.675a.75.75 0 0 1-.4.663l-7.425 3.924a.75.75 0 0 1-.7 0L2.4 7.338a.75.75 0 0 1 0-1.326l7.424-3.925a.75.75 0 0 1 .701 0l7.425 3.925c.245.13.4.385.4.663Zm-8.175-3.077-5.82 3.077 5.82 3.076 5.82-3.076-5.82-3.077Z"></path>
@@ -230,11 +236,18 @@ const SuccessSecondSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" stroke-width="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" stroke-width="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stop-color="#46917F" stop-opacity="0.08"></stop><stop offset="1" stop-color="#46917F" stop-opacity="0"></stop></linearGradient></defs></svg>
 )
 
+const PauseSecondSvg = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
+)
+
 const PendingSecondSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle><circle cx="14" cy="14" r="7.1" stroke="#FE9E0F" stroke-width="1.8"></circle><path d="M14.1818 10.0908V14.1817L17.5909 16.2272" stroke="#FE9E0F" stroke-width="1.8"></path></svg>
 )
 const ReturnSecondSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><path d="M14.5 14L9 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M18 14L16 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M21.5 14L19.5 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#FE9E0F" stroke-width="2"></path><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle></svg>
+)
+const ReturnCompletedSecondSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" stroke-width="2"></circle><path d="M20 14L9 14" stroke="#369F87" stroke-width="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#369F87" stroke-width="2"></path><defs><linearGradient id="paint0_linear_11975_10802" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stop-color="#46917F" stop-opacity="0.08"></stop><stop offset="1" stop-color="#46917F" stop-opacity="0"></stop></linearGradient></defs></svg>
 )
 
 const BackSvg = () => (
@@ -264,8 +277,14 @@ const WarningSvg = () => (
   </svg>
 )
 const SearchSvg = () => (
-  <svg viewBox="0 0 24 24" data-icon="search" width="1em" height="1em" fill="currentColor">
+  <svg viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
     <path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"></path>
+  </svg>
+)
+
+const SearchSecondSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+    <path d="M8 1.25a6.75 6.75 0 1 0 4.213 12.024l5.257 5.256 1.06-1.06-5.256-5.257A6.75 6.75 0 0 0 8 1.25ZM2.75 8a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0Z"></path>
   </svg>
 )
 
@@ -285,12 +304,82 @@ const EmailSvg = () => (
     <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 13.5C4.5 14.0523 4.94771 14.5 5.5 14.5H14.5C15.0523 14.5 15.5 14.0523 15.5 13.5V8.07788L10.5289 10.5681C10.3446 10.6604 10.1291 10.6668 9.93964 10.5857L4.5 8.25439V13.5ZM4.5 6.73124L10.1924 9.17085L15.5 6.51204V6.5C15.5 5.94772 15.0523 5.5 14.5 5.5H5.5C4.94772 5.5 4.5 5.94772 4.5 6.5V6.73124Z"></path>
   </svg>
 )
+const GlobalSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 1024 1024" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M598.477 665.6a453.171 453.171 0 01-24.935 79.667c-12.288 28.672-25.6 48.538-37.734 60.519C523.878 817.562 515.891 819.2 512 819.2c-3.891 0-11.878-1.638-23.808-13.414-12.186-11.981-25.446-31.898-37.734-60.519a453.53 453.53 0 01-24.986-79.667h172.954zm52.326 0c-11.571 56.832-29.337 105.37-51.251 140.954A307.968 307.968 0 00778.086 665.6H650.803zM424.448 806.554A307.968 307.968 0 01245.914 665.6h127.283c11.571 56.832 29.337 105.37 51.251 140.954zM416.41 614.4h191.18c4.404-31.898 6.81-66.304 6.81-102.4 0-36.096-2.406-70.451-6.81-102.4H416.41A756.07 756.07 0 00409.6 512c0 36.096 2.406 70.502 6.81 102.4zm-51.661-204.8c-4.096 32.46-6.349 66.816-6.349 102.4s2.202 69.94 6.349 102.4h-142.49A306.688 306.688 0 01204.8 512c0-35.891 6.144-70.349 17.46-102.4h142.489zm60.774-51.2h172.954a453.274 453.274 0 00-24.935-79.667c-12.288-28.672-25.6-48.538-37.734-60.519C523.878 206.438 515.891 204.8 512 204.8c-3.891 0-11.878 1.638-23.808 13.414-12.186 11.981-25.446 31.898-37.734 60.519a453.632 453.632 0 00-24.986 79.667zm-1.075-140.954c-21.914 35.584-39.68 84.173-51.2 140.954H245.914a307.968 307.968 0 01178.534-140.954zm175.104 0c21.914 35.584 39.68 84.173 51.251 140.954h127.283a307.968 307.968 0 00-178.534-140.954zm59.7 192.154H801.74A306.688 306.688 0 01819.2 512a306.688 306.688 0 01-17.46 102.4H659.252c4.096-32.46 6.349-66.816 6.349-102.4s-2.202-69.94-6.349-102.4z"></path></svg>
+)
+const ScreeningSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+    <path d="M1.807 2.713A.75.75 0 0 1 2.5 2.25h15a.75.75 0 0 1 .53 1.28l-4.28 4.28V14a.75.75 0 0 1-.372.648l-6 3.5A.75.75 0 0 1 6.25 17.5V7.81L1.97 3.53a.75.75 0 0 1-.163-.817ZM4.311 3.75l3.22 3.22c.14.14.219.331.219.53v8.694l4.5-2.625V7.5a.75.75 0 0 1 .22-.53l3.22-3.22H4.31Z"></path>
+  </svg>
+)
 
+const CrowdSecondSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.053 12.51v-.004a5.047 5.047 0 00-1.472-3.572 4.983 4.983 0 00-2.445-1.36.24.24 0 01.03-.013l.092-.042a3.488 3.488 0 00.306-.172 2.878 2.878 0 00.538-.444 3.306 3.306 0 00.306-.38l.075-.117a2.933 2.933 0 00.211-.422c.022-.056.043-.112.062-.168l.038-.12a2.9 2.9 0 00.064-1.31 2.955 2.955 0 00-.155-.549A2.913 2.913 0 008.797 2.11l-.069-.018a3.384 3.384 0 00-.21-.046c-.024-.004-.05-.007-.073-.012A2.646 2.646 0 008.003 2a2.97 2.97 0 00-.915.147 2.818 2.818 0 00-.822.43 3.063 3.063 0 00-.547.534 3.001 3.001 0 00-.335.534l-.042.092c-.014.035-.03.068-.042.102a2.266 2.266 0 00-.09.269l-.02.069a1.378 1.378 0 00-.02.086c-.01.042-.018.084-.025.126l-.012.072a2.645 2.645 0 00-.033.442c0 .175.016.347.045.514.008.049.02.096.03.142a2.871 2.871 0 00.244.666l.033.062c.112.207.246.397.403.57l.047.05c.032.035.065.068.098.1l.052.046a2.86 2.86 0 00.836.531 4.972 4.972 0 00-2.411 1.354A5.015 5.015 0 003 12.511c0 .033.006.065.017.093.072.41.602.737 1.58.98.92.227 2.14.352 3.434.352s2.514-.124 3.435-.353c1.039-.256 1.573-.612 1.587-1.057V12.509z" fill="currentColor"></path><path d="M3.76 8.23a6.035 6.035 0 011.168-.92 3.862 3.862 0 01-.36-.548c-.017-.028-.03-.056-.045-.082a3.844 3.844 0 01-.365-1.088A3.91 3.91 0 014.14 4.31l.015-.097c.01-.054.022-.11.035-.17.009-.042.018-.08.028-.114.007-.031.017-.062.025-.094l.004-.017a1.495 1.495 0 00-.212.031A2.034 2.034 0 003.589 4l-.042.02a1.956 1.956 0 00-.417.29c-.024.02-.046.042-.068.063a1.901 1.901 0 00-.18.21c-.01.012-.02.025-.027.037-.018.025-.036.05-.052.077l-.025.039c-.177.29-.278.633-.278.998 0 .366.101.707.278.999l.025.039.052.076.026.038c.144.192.324.358.53.484l.03.019c.039.023.08.045.12.066a3.383 3.383 0 00-1.536.893 3.43 3.43 0 00-1 2.433c0 .03.005.056.014.083.031.166.153.311.364.434.166.097.39.183.67.257A6.033 6.033 0 013.761 8.23zm11.213 2.667a3.436 3.436 0 00-2.559-3.33c.22-.112.417-.267.578-.453L13 7.106l.047-.056.014-.017.067-.092c.006-.008.011-.018.017-.025.019-.03.038-.058.055-.09.039-.065.073-.135.105-.206l.015-.036a1.924 1.924 0 00-.126-1.714l-.033-.054a1.337 1.337 0 00-.09-.13 1.795 1.795 0 00-.255-.273c-.033-.03-.07-.058-.104-.086a1.911 1.911 0 00-.928-.383c.022.087.042.176.058.265l.016.097a3.63 3.63 0 01.043.594 3.91 3.91 0 01-.776 2.337l-.04.052c.437.26.84.575 1.204.94a6.04 6.04 0 011.703 3.429c.252-.07.455-.15.608-.24.24-.14.366-.31.372-.505v-.011l.001-.005z" fill="currentColor"></path>
+  </svg>
+)
+
+
+const FillCollectionSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.13 2.54a.97.97 0 011.74 0l1.253 2.54a.323.323 0 00.243.177l2.802.407a.97.97 0 01.538 1.654l-2.027 1.977a.323.323 0 00-.094.286l.48 2.79a.97.97 0 01-1.408 1.023L8.15 12.077a.323.323 0 00-.3 0l-2.507 1.317a.97.97 0 01-1.407-1.022l.479-2.791a.323.323 0 00-.093-.286L2.294 7.318a.97.97 0 01.538-1.654l2.802-.407a.323.323 0 00.243-.177L7.13 2.54z" fill="currentColor"></path>
+  </svg>
+)
+
+const CustomerInformationSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="6.435" cy="5.767" fill="currentColor" r="2.435"></circle><path d="M9.59 10.059c-.644-.72-1.795-.671-2.75-.522a2.91 2.91 0 01-.935-.006c-.97-.166-2.152-.232-2.809.501l-.71.792c-.828.925-.241 2.507.931 2.507h6.03c1.172 0 1.76-1.582.93-2.507l-.686-.765z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M14 5.167a.5.5 0 01-.5.5h-3a.5.5 0 010-1h3a.5.5 0 01.5.5zM14 7.165a.5.5 0 01-.5.5h-2.333a.5.5 0 110-1H13.5a.5.5 0 01.5.5zM11.335 9.164a.5.5 0 01.5-.5H13.5a.5.5 0 110 1h-1.666a.5.5 0 01-.5-.5z" fill="currentColor"></path>
+  </svg>
+)
+
+const ShoppingSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1.333 3.162c0-.273.222-.495.496-.495h1.213c.318 0 .592.224.654.536l.26 1.297a.663.663 0 01.448-.193l8.24-.278a.667.667 0 01.671.818l-1.007 4.328a.667.667 0 01-.62.514l-6.359.286a.665.665 0 01-.288-.052l.135.676h6.737a.33.33 0 010 .661h-6.96a.667.667 0 01-.654-.537L2.885 3.658H1.83a.496.496 0 01-.496-.496zM7 12.667a1 1 0 11-2 0 1 1 0 012 0zM10.667 13.667a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"></path>
+  </svg>
+)
+
+
+const ShopSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.77 6.157a1.47 1.47 0 00-.139-.638l-.469-2.443a.736.736 0 00-.718-.576H3.326a.736.736 0 00-.718.576l-.47 2.443a1.471 1.471 0 102.805.625 1.471 1.471 0 002.942 0 1.471 1.471 0 102.943 0 1.47 1.47 0 002.942.013zM13.034 8.35a.745.745 0 00-.01-.122 2.205 2.205 0 01-2.196-.44 2.199 2.199 0 01-1.472.563c-.543 0-1.067-.2-1.47-.562a2.199 2.199 0 01-1.472.562c-.543 0-1.067-.2-1.471-.562a2.199 2.199 0 01-2.197.44.786.786 0 00-.01.122v4.413a.735.735 0 00.735.736H12.3a.735.735 0 00.736-.736V8.351zm-8.2 1.15a.5.5 0 01.5.5v1.667a.5.5 0 01-1 0V10a.5.5 0 01.5-.5z" fill="currentColor"></path>
+  </svg>
+)
+
+const PromotionSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.808 8.465a1 1 0 01-.283-.848l.601-4.208a.333.333 0 01.283-.283l4.207-.6a1 1 0 01.849.282l5.068 5.068a1 1 0 010 1.414L9.29 13.533a1 1 0 01-1.414 0L2.808 8.465zm2.525-2.132a1 1 0 100-2 1 1 0 000 2z" fill="currentColor"></path>
+  </svg>
+)
+
+const MetaFieldSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.808 4.8a1.2 1.2 0 011.2-1.2H4.8a.4.4 0 110 .8h-.792a.4.4 0 00-.4.4v2.133L2.56 8l1.047 1.067V10.8a.8.8 0 00.8.8H4.8a.4.4 0 010 .8h-.392a1.6 1.6 0 01-1.6-1.6V9.394L1.742 8.308a.44.44 0 010-.616l1.066-1.086V4.8zM11.2 4c0-.22.18-.4.4-.4h.793a1.2 1.2 0 011.2 1.2v1.806l1.065 1.086a.44.44 0 010 .616l-1.065 1.086V11.2a1.2 1.2 0 01-1.2 1.2H11.6a.4.4 0 010-.8h.793a.4.4 0 00.4-.4V9.067L13.84 8l-1.047-1.067V4.8a.4.4 0 00-.4-.4H11.6a.4.4 0 01-.4-.4z" fill="currentColor">
+    </path>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.927 9.294h1.336l.214.706H8.4L7.105 6h-1.01L4.8 10h.913l.214-.706zm.668-2.217l.444 1.464h-.882l.438-1.464z" fill="currentColor">
+    </path>
+    <path d="M8.6 8.394c0-.32.058-.6.174-.841.12-.242.28-.428.484-.558.202-.13.429-.195.679-.195.213 0 .4.045.56.134.162.089.287.206.374.351v-.44h.93v3.11h-.93v-.44c-.09.145-.217.262-.38.351-.16.09-.346.134-.56.134-.246 0-.47-.065-.673-.195a1.4 1.4 0 01-.484-.563 1.962 1.962 0 01-.174-.848zm2.271.006c0-.238-.065-.426-.196-.563a.61.61 0 00-.467-.206.628.628 0 00-.472.206c-.127.134-.19.32-.19.557 0 .238.063.428.19.57.13.137.287.205.472.205a.61.61 0 00.467-.206c.13-.137.196-.325.196-.563z" fill="currentColor">
+    </path>
+  </svg>
+)
+
+const GroupingModeSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.885 5.365c0 .2-.11.384-.288.478L8.252 8.668a.54.54 0 01-.504 0L2.403 5.843a.54.54 0 010-.955l5.345-2.825a.54.54 0 01.504 0l5.345 2.825a.54.54 0 01.288.477z" fill="currentColor"></path><path d="M8 10.27l5.168-2.732.283-.15a.14.14 0 01.204.123v.866a.14.14 0 01-.074.123l-5.336 2.82a.522.522 0 01-.488 0L2.42 8.5a.14.14 0 01-.074-.123V7.51a.14.14 0 01.205-.122l.283.15 5.167 2.731z" fill="currentColor"></path><path d="M8 12.888l5.168-2.731.283-.15a.14.14 0 01.204.122v.867a.14.14 0 01-.074.123l-5.336 2.82a.521.521 0 01-.488 0L2.42 11.12a.139.139 0 01-.074-.123v-.867a.14.14 0 01.205-.123l.283.151 5.167 2.731z" fill="currentColor"></path>
+  </svg>
+)
+
+const AdvancedModeSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3.938 3A.937.937 0 003 3.938v8.124c0 .518.42.938.938.938h8.124c.518 0 .938-.42.938-.938V3.938A.937.937 0 0012.062 3H3.938z" fill="#fff"></path><path d="M2.667 3.667a1 1 0 011-1h8.666a1 1 0 011 1v8.666a1 1 0 01-1 1H3.667a1 1 0 01-1-1V3.667zm7.229 1.472A.727.727 0 009.296 4H4.729a.727.727 0 00-.599 1.14l1.755 2.552a.727.727 0 01.128.412v2.728c0 .231.11.45.297.586l.546.4a.727.727 0 001.157-.586V8.105c0-.147.045-.29.128-.412L9.896 5.14zm-.358 3.147v.351c0 .158.128.286.286.286h1.89A.286.286 0 0012 8.637v-.351A.286.286 0 0011.714 8h-1.89a.286.286 0 00-.286.286zm.286 1.253a.286.286 0 00-.286.285v.352c0 .158.128.286.286.286h1.89a.286.286 0 00.286-.286v-.352a.286.286 0 00-.286-.285h-1.89zm-.286 1.824v.351c0 .158.128.286.286.286h1.89a.286.286 0 00.286-.286v-.351a.286.286 0 00-.286-.286h-1.89a.286.286 0 00-.286.286z" fill="currentColor"></path>
+  </svg>
+)
 
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
 );
-
+export const CrowdIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CrowdSvg} {...props} />
+);
 export const PandaIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={PandaSvg} {...props} />
 );
@@ -405,6 +494,9 @@ export const SuccessIcon = (props: Partial<CustomIconComponentProps>) => (
 export const SuccessSecondIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SuccessSecondSvg} {...props} />
 );
+export const PauseSecondIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PauseSecondSvg} {...props} />
+);
 
 export const PendingSecondIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={PendingSecondSvg} {...props} />
@@ -414,6 +506,9 @@ export const ReturnSecondIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={ReturnSecondSvg} {...props} />
 );
 
+export const ReturnCompletedSecondIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ReturnCompletedSecondSvg} {...props} />
+);
 
 // 返回
 export const BackIcon = (props: Partial<CustomIconComponentProps>) => (
@@ -442,6 +537,10 @@ export const SearchIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SearchSvg} {...props} />
 );
 
+export const SearchSecondIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={SearchSecondSvg} {...props} />
+);
+
 export const CloseIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={CloseSvg} {...props} />
 );
@@ -452,6 +551,56 @@ export const TelIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const EmailIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EmailSvg} {...props} />
+);
+
+export const ReductionIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ReductionSvg} {...props} />
+);
+
+export const GlobalIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={GlobalSvg} {...props} />
+);
+
+
+export const ScreeningIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ScreeningSvg} {...props} />
+);
+
+export const FillCollectionIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FillCollectionSvg} {...props} />
+);
+
+export const CrowdSecondIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CrowdSecondSvg} {...props} />
+);
+
+
+export const CustomerInformationIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CustomerInformationSvg} {...props} />
+);
+
+export const ShoppingIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ShoppingSvg} {...props} />
+);
+
+export const ShopIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ShopSvg} {...props} />
+);
+
+export const PromotionIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PromotionSvg} {...props} />
+);
+
+export const MetaFieldIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MetaFieldSvg} {...props} />
+);
+
+export const GroupingModeIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={GroupingModeSvg} {...props} />
+);
+
+export const AdvancedModeIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={AdvancedModeSvg} {...props} />
 );
 
 
@@ -467,6 +616,12 @@ const EditorCategorySvg = () => (
     <path d="M4.94287 14.8838L5.36416 18.9484C5.44957 19.7724 6.1868 20.3711 7.01081 20.2857L9.02037 20.0774C8.9505 20.0071 8.88406 19.9318 8.82153 19.8518L4.94287 14.8838Z"></path><path d="M5.93164 14.5244L9.61035 19.2363C10.1202 19.8893 11.0628 20.0053 11.7158 19.4955L12.9172 18.5575L5.93164 14.5244Z"></path><path d="M4.93588 12.1012C5.01386 12.5824 5.32149 13.0166 5.76622 13.2734L14.671 18.4146C15.4513 18.8651 16.4197 18.6487 16.8339 17.9313L20.7355 11.1735C21.1497 10.456 20.8529 9.5092 20.0726 9.05867L11.1678 3.91752C10.7231 3.66075 10.1932 3.61148 9.7375 3.78453L4.30646 5.84694C4.09198 5.92839 3.96976 6.14009 4.00646 6.36656L4.93588 12.1012ZM9.09918 8.96057C8.68497 9.67801 7.76758 9.92382 7.05014 9.50961C6.3327 9.0954 6.08689 8.17801 6.50111 7.46057C6.91532 6.74313 7.8327 6.49732 8.55014 6.91153C9.26758 7.32575 9.5134 8.24313 9.09918 8.96057Z"></path>
   </svg>
 
+)
+
+const ReductionSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3.858 10.75H16v-1.5H3.858v1.5Z"></path>
+  </svg>
 )
 
 const EditorComponentSvg = () => (

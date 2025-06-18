@@ -2,9 +2,9 @@
 import React, { useRef, useState } from 'react'
 import { Button, Card, Dropdown, Flex, Input, Space, Table, TableProps } from 'antd';
 import styled from 'styled-components'
-import { history } from '@umijs/max';
 import { SearchOutlined } from '@ant-design/icons';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import { useNavigate } from 'react-router-dom';
 
 
 interface DataType {
@@ -16,76 +16,85 @@ interface DataType {
 
 export default function Subdivide() {
 
+  const navigate = useNavigate();
 
-    const columns: TableProps<DataType>['columns'] = [
-        {
-            title: '细分名称',
-            dataIndex: 'name',
-            key: 'name',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: '细分规模%',
-            dataIndex: 'age',
-            key: 'age',
-        },
-        {
-            title: '更新时间',
-            dataIndex: 'time',
-            key: 'time',
-        },
-        {
-            title: '操作人',
-            dataIndex: 'time',
-            key: 'time',
-            render: (text) => <>MataCart</>,
-        },
-    ];
+  const columns: TableProps<DataType>['columns'] = [
+      {
+          title: '细分名称',
+          dataIndex: 'name',
+          key: 'name',
+          render: (text) => <a>{text}</a>,
+      },
+      {
+          title: '细分规模%',
+          dataIndex: 'age',
+          key: 'age',
+      },
+      {
+          title: '更新时间',
+          dataIndex: 'time',
+          key: 'time',
+      },
+      {
+          title: '操作人',
+          dataIndex: 'time',
+          key: 'time',
+          render: (text) => <>MataCart</>,
+      },
+  ];
 
-
-    const data: DataType[] = [
-        {
-          key: '1',
-          name: 'High-value',
-          age: "32%",
-          time: '2024-01-01',
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: "32%",
-          time: '2024-01-01',
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: "32%",
-          time: '2024-01-01',
-        },
-      ];
+  const data: DataType[] = [
+    {
+      key: '1',
+      name: 'High-value',
+      age: "32%",
+      time: '2024-01-01',
+    },
+    {
+      key: '2',
+      name: 'Jim Green',
+      age: "32%",
+      time: '2024-01-01',
+    },
+    {
+      key: '3',
+      name: 'Joe Black',
+      age: "32%",
+      time: '2024-01-01',
+    },
+  ];
 
     return (
         <Scoped>
-        <div className='create-warp-flex' style={{
+          <div className='create-warp-flex' style={{
             width: "100%"
-        }}>
-            <div className="create-warp">
-            <div className='create-title'>
-                <div className='create-title-left'>
-                <h3>细分</h3>
-                </div>
-                <div className="button-container">
-                  <PrimaryButton text="创建细分" onClick={() => { history.push('/customer/persona/detail') }} />
-                </div>
-            </div>
-            <div className='create-content'>
-                <Input className='create-input' prefix={<SearchOutlined />} placeholder='搜索细分' />
-                <div className='table-box'>
-                    <Table<DataType> columns={columns} dataSource={data} />
-                </div>
-            </div>
-            </div>
-        </div>
+          }}>
+              <div className="create-warp">
+              <div className='create-title'>
+                  <div className='create-title-left'>
+                  <h3>细分</h3>
+                  </div>
+                  <div className="button-container">
+                    <PrimaryButton text="创建细分" onClick={() => { navigate('/customer/persona/detail') }} />
+                  </div>
+              </div>
+              <div className='create-content'>
+                  <Input className='create-input' style={{height:"36px"}} prefix={<SearchOutlined />} placeholder='搜索细分' />
+                  <div className='table-box'>
+                    <Table<DataType> 
+                      columns={columns} 
+                      dataSource={data} 
+                      onRow={(record, index)=>({
+                        onClick: () => {
+                          navigate(`/customer/persona/detail?currentTab=${record.key}`)
+                        }
+                      })}
+                    />
+                  </div>
+              </div>
+              </div>
+          </div>
+        {/* ?currentTab= */}
         </Scoped>
     )
 

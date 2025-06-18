@@ -22,7 +22,7 @@ function BillDetails() {
                     </Flex>
                     <Flex className="color-474F5E font-w-400" justify="space-between">
                         <div>实际付款</div>
-                        <div>US$1,000.00</div>
+                        <div>US$0.00</div>
                     </Flex>
                 </Flex>
                 <Divider/>

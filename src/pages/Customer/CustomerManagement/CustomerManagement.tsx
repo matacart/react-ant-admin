@@ -1,17 +1,15 @@
 
 import React, { useRef, useState } from 'react'
-import { Button, Checkbox, Dropdown, Flex, Modal, Space } from 'antd';
-import { Tabs } from 'antd'
+import { Checkbox, Dropdown, Flex, Modal, Space } from 'antd';
 import styled from 'styled-components'
-import Icon, { ExportOutlined, ImportOutlined } from '@ant-design/icons'; 
-import { history } from '@umijs/max';
-import {useIntl } from '@umijs/max';
+import { ExportOutlined, ImportOutlined } from '@ant-design/icons'; 
 import { UnfoldIcon } from '@/components/Icons/Icons';
 import ScreeningConditionCard from './ScreeningConditionCard';
 import CustmoerListCard from '../Components/CustomerListCard';
 import UploadImportDrag from '@/components/UploadFile/UploadImportDrag';
-import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import ButtonDropdown from '@/components/Dropdown/ButtonDropdown';
+import { useNavigate } from 'react-router-dom';
 
 interface MenuItem {  
   key: string;  
@@ -49,9 +47,41 @@ const MenuComponent: React.FC<MenuProps> = ({ items }) => {
 
 export default function CustomerManagement() {
 
-  const intl = useIntl();
-  
+  const navigate = useNavigate();
+
+  const controlsItems: MenuProps['items'] = [
+    {
+      label: <Flex align='center' gap={8}>
+        <img style={{ width: '20px', height: '20px' }} src="/images/icons/smartPush.svg" />
+        <span>使用 Smartpush 进行邮件营销</span>
+      </Flex>,
+      key: '1',
+    },
+    {
+      label: <Flex align='center' gap={8}>
+        <img style={{ width: '20px', height: '20px' }} src="/images/icons/invite-customer.svg" />
+        <span>向客户发送账号激活邀请邮件</span>
+      </Flex>,
+      key: '2',
+    },
+    {
+      label: <Flex align='center' gap={8}>
+        <img style={{ width: '20px', height: '20px' }} src="/images/icons/promo-code.svg" />
+        <span>为客户提供折扣码</span>
+      </Flex>,
+      key: '3',
+    },
+    {
+      label: <Flex align='center' gap={8}>
+        <img style={{ width: '20px', height: '20px' }} src="/images/icons/auto-coupon.svg" />
+        <span>为客户提供自动折扣</span>
+      </Flex>,
+      key: '4',
+    }
+  ];
+
   const [modal, contextHolder] = Modal.useModal();
+
   // 
   const confirmExcel = () => {
     modal.confirm({
@@ -152,8 +182,8 @@ export default function CustomerManagement() {
               </Flex>
             </Flex>
             <Flex gap={12}>
-              <DefaultButton text="其它操作" />
-              <PrimaryButton text="添加客户" />
+              <ButtonDropdown menu={{items:controlsItems}} placement="bottomRight" text="其它操作" />
+              <PrimaryButton text="添加客户" onClick={()=>navigate(`/customer/management/operate/add`)} />
             </Flex>
           </div>
           <ScreeningConditionCard />

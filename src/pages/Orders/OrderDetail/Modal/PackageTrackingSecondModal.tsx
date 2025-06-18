@@ -3,7 +3,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { setOrderNumber } from "@/services/y2/api";
+import { setOrderNumber, setOrderNumberReturn } from "@/services/y2/api";
 import order from "@/store/order/order";
 import { Checkbox, Flex, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
@@ -28,13 +28,12 @@ function PackageTrackingSecondModal({shipping}:{shipping:any}){
     const shippingInfo = shipping.return
     const submit = () => {
         form.validateFields().then((values)=>{
-            console.log(shippingInfo)
             setLoading(true)
-            setOrderNumber({
+            setOrderNumberReturn({
                 orderId:order.orderInfo.order_id,
-                shippingSn:shipping.groupKey,
+                returnId:shippingInfo.return_id,
+                // shippingSn:shipping.groupKey,
                 shippingId:logisticsValue,
-                shipmentId:shippingInfo.return_id,
                 ...values,
             }).then(()=>{
                 order.triggerRefresh();
@@ -67,8 +66,7 @@ function PackageTrackingSecondModal({shipping}:{shipping:any}){
 
     return(
         <>
-            {(shippingInfo?.shipping_no && shippingInfo?.shipping_no !== "") ? <PrimaryButton text={intl.formatMessage({ id: "order.detail.addtracking" })} onClick={()=>setOpen(true)} />:<>
-                <a onClick={()=>{
+            {(shippingInfo?.shipping_no && shippingInfo?.shipping_no !== "") ? <a onClick={()=>{
                     form.setFieldsValue({
                         shippingNo:shippingInfo.shipping_no,
                         shippingUrl:shippingInfo.shipping_courier_url,
@@ -76,7 +74,8 @@ function PackageTrackingSecondModal({shipping}:{shipping:any}){
                     })
                     setLogisticsValue(shippingInfo.shipping_courier_id)
                     setOpen(true)
-                }}>编辑跟踪信息</a>
+                }}>编辑跟踪信息</a>:<>
+                <a onClick={()=>setOpen(true)} >添加跟踪信息</a>
             </>}
             <Modal open={open} width={520} title="更新运单号" centered onCancel={cancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
@@ -96,7 +95,7 @@ function PackageTrackingSecondModal({shipping}:{shipping:any}){
                     </Form.Item>
                     <Form.Item label="物流服务商">
                         <MySelect placeholder="请填写快递公司名称" showSearch 
-                        value={logisticsValue}
+                        value={logisticsValue==""?undefined:logisticsValue}
                         options={logistics} style={{height:"36px"}} onChange={(value:string)=>{
                             setLogisticsValue(value)
                             value == "0" && form.setFieldsValue({

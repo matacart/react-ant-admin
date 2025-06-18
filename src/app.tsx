@@ -21,6 +21,7 @@ import Header from './components/Header/Header';
 import MCPaymentHead from './components/Header/MCPaymentHead';
 import { AddIcon, NailIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
 import SalesChannel from './components/Menu/SalesChannel';
+import config from 'config/config';
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 
@@ -99,17 +100,15 @@ const safeSessionStorageSet = (key: string, data: unknown) => {
 // 执行请求并处理
 Promise.allSettled(
   CONFIG_REQUESTS.map(({ url, storageKey, retry }) => 
-    fetchWithRetry(url, retry)
-      .then(response => {
-        if (response?.data?.code === 0 && response.data.data) {
-          safeSessionStorageSet(storageKey, response.data.data);
-        }
-        return response;
-      })
-      .catch(err => {
-        console.error(`请求失败 [${url}]`, err);
-        return null;
-      })
+    fetchWithRetry(url, retry).then(response => {
+      if (response?.data?.code === 0 && response.data.data) {
+        safeSessionStorageSet(storageKey, response.data.data);
+      }
+      return response;
+    }).catch(err => {
+      console.error(`请求失败 [${url}]`, err);
+      return null;
+    })
   )
 ).then(results => {
   const failed = results.filter(r => r.status === 'rejected');
@@ -396,18 +395,19 @@ export const request: RequestConfig = {
   errorConfig: {
     // 抛出错误
     errorThrower: (res: any) => {
-    },
+      if (!res) throw new Error('空响应');
+      },
     // 错误接收及处理
     errorHandler(error: any, opts: any) {
       endProgress();
-      // message.error("网络繁忙，请刷新页面");
+      message.error("网络繁忙，请刷新页面");
       console.log(error)
+      return error;
     },
   },
   // 请求拦截器
   requestInterceptors: [
     (config: any) => {
-
 
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       const length = 8;
@@ -437,11 +437,19 @@ export const request: RequestConfig = {
       return config;
     },
   ],
-  // 响应拦截器
+  // // 响应拦截器
   responseInterceptors: [
     // access_token 过期
     (res:any) =>{
+    
+      if(!res.data){
+        console.log(res)
+        const error = new Error('Empty response data');
+        return error
+      }
+
       endProgress();
+      // return res
       // 过滤
       if(res.config.url == "/api/Oauth2/gettoken"){
         return res
@@ -455,7 +463,9 @@ export const request: RequestConfig = {
           }else{
             cookie.save('access_token', res.access_token, { domain:test,path: '/' });
           }
-        }).catch((err) => { console.log(err) });
+        }).catch((err) => { 
+          console.log(err) 
+        });
       }else if(res.data.code==1001){
         // token过期
         sessionStorage.removeItem("domain")
@@ -466,6 +476,7 @@ export const request: RequestConfig = {
         message.error(res.data.msg);
         // console.log(res)
       }else{
+        // console.log(res)
         return res;
       }
     },

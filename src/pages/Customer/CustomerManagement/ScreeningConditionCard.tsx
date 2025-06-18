@@ -1,13 +1,27 @@
+import DefaultButton from "@/components/Button/DefaultButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyDropdown from "@/components/Dropdown/MyDropdown";
-import { DiscountedGraphIcon, TemplateIcon } from "@/components/Icons/Icons";
+import { DiscountedGraphIcon, ScreeningIcon, TemplateIcon } from "@/components/Icons/Icons";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
-import { Button, Card, Divider, Flex, Input, Tooltip } from "antd";
+import { Button, Card, Divider, Flex, Input, Popover, Tooltip } from "antd";
 import { useRef, useState } from "react";
 import styled from "styled-components";
+import ConditionCheckedGroup from "./ConditionCheckedGroup";
+import ScreeningConditions from "./ScreeningConditions";
+import cousomerManagement from "@/store/customer/cousomerManagement";
+import { observer } from "mobx-react-lite";
+import ConditionDate from "./ConditionDate";
+import ConditionCheckedGroupSearch from "./ConditionCheckedGroupSearch";
+import ConditionModal from "./ConditionModal";
+import ConditionInputNumber from "./ConditionInputNumber";
+import ConditionInputPrice from "./ConditionInputPrice";
+import ConditionSelect from "./ConditionSelect";
+import ConditionCheckedSearchAndDate from "./ConditionCheckedSearchAndDate";
+import ConditionProductsAndDate from "./ConditionProductsAndDate";
+import SubdivisionTemplate from "./SubdivisionTemplate";
 
-
-export default function ScreeningConditionCard() {
+function ScreeningConditionCard() {
 
     const [symbol,setSymbol] = useState("=");
 
@@ -17,18 +31,16 @@ export default function ScreeningConditionCard() {
 
     const [orderQuantity,setOrderQuantity] = useState("不限");
 
-
     return (
         <Scoped>
             <Card classNames={{body:"card"}}>
                 <Flex justify="space-between" style={{padding:"0 24px"}}>
-                    <Flex>
-                        <div>客户</div>
+                    <Flex align="center">
+                        <div><span className="font-16" style={{marginRight:"4px"}}>2</span>客户</div>
                         <div onClick={()=>history.push("/customer/persona/all")} className="color-356DFF cursor-pointer" style={{marginLeft:"24px"}}><DiscountedGraphIcon /><span style={{marginLeft:"4px"}}>客户画像</span></div>
                     </Flex>
                     <Flex align="center">
-                        <TemplateIcon />
-                        <div style={{marginLeft:"8px"}}>细分模板</div>
+                        <SubdivisionTemplate />
                         <Divider type="vertical" style={{height:"60%",borderColor:"#b8becc"}} />
                         <Tooltip title="疑问">
                             <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
@@ -37,87 +49,134 @@ export default function ScreeningConditionCard() {
                         </Tooltip>
                     </Flex>
                 </Flex>
-
                 <Divider className="divider" />
-                <Flex style={{padding:"0 24px"}} className="select-box">
-                    <Flex className="select-item color-242833 cursor-pointer" gap={8} align="center">
-                        订单数量
-                        <MyDropdown
-                            tiggerEle={<div className="select-item-conditions"> {symbol} </div>}
-                            menu={{
-                                items:[
-                                    {
-                                        key: "1", label: (
-                                            <div onClick={()=>setSymbol("=")}>等于</div>
-                                        )
-                                    },
-                                    {
-                                        key: "2", label: (
-                                            <div onClick={()=>setSymbol("≠")}>不等于</div>
-                                        )
-                                    },
-                                    {
-                                        key: "3", label: (
-                                            <div onClick={()=>setSymbol(">")}>大于</div>
-                                        )
-                                    },
-                                    {
-                                        key: "4", label: (
-                                            <div onClick={()=>setSymbol("<")}>小于</div>
-                                        )
-                                    }
-                                ]
-                            }}
-                        />
-                        <div>
-                        {/*  */}
-                            {isInput?<Input autoFocus ref={myInputRef} defaultValue={orderQuantity} onBlur={(e)=>{
-                                setIsInput(false)
-                                setOrderQuantity(e.target.value == ""?"不限":e.target.value)
-                            }} />:<div className="select-item-text" onClick={()=>{
-                                console.log(myInputRef)
-                                setIsInput(true)
-                            }}>{orderQuantity}</div>}
-                        </div>
-                    </Flex>
+                <Flex style={{padding:"0 24px"}} gap={8} wrap className="select-box">
+                    {/*  */}
+                    {cousomerManagement.conditionList.map((item,index)=>{
+                        switch (item.type) {
+                            case 'date':
+                                return <ConditionDate key={index} index={index} condition={item.condition} />;
+                            case 'checkedGroup':
+                                return <ConditionCheckedGroup key={index} index={index} condition={item.condition} />;
+                            case 'checkedGroupSearch':
+                                return <ConditionCheckedGroupSearch key={index} index={index} condition={item.condition} />;
+                            case 'modal':
+                                return <ConditionModal key={index} index={index} condition={item.condition} />;
+                            case 'inputNumber':
+                                return <ConditionInputNumber key={index} index={index} condition={item.condition} />;
+                            case 'inputPrice':
+                                return <ConditionInputPrice key={index} index={index} condition={item.condition} />;
+                            case 'select':
+                                return <ConditionSelect key={index} index={index} condition={item.condition} />
+                            case 'checkedSearchAndDate':
+                                return <ConditionCheckedSearchAndDate key={index} index={index} condition={item.condition} />
+                            case 'productsAndDate':
+                                return <ConditionProductsAndDate key={index} index={index} condition={item.condition} />
+                        }
+                    })}
+                    <ScreeningConditions />
                 </Flex>
                 <Flex gap={10} align="center" className="recommendation-screening" style={{padding:"0 24px",marginTop:"16px"}}>
                     推荐筛选：
                     <Tooltip title="历史累计成单的订单数量">
-                        <div className="item">
-                            订单数
+                        <div className="item" onClick={()=>{
+                            cousomerManagement.setConditionList([
+                                ...cousomerManagement.conditionList,
+                                {
+                                  type:"inputNumber",
+                                  condition:[{
+                                    label:"订单数量",
+                                    selectOptions:[]
+                                  }]
+                                }
+                            ])
+                        }}>
+                            订单数量
                         </div>
                     </Tooltip>
                     <Tooltip title="历史累计的消费金额">
-                        <div className="item">
+                        <div className="item" onClick={()=>{
+                            cousomerManagement.setConditionList([
+                                ...cousomerManagement.conditionList,
+                                {
+                                  type:"inputPrice",
+                                  condition:[{
+                                    label:"消费金额",
+                                    selectOptions:[]
+                                  }]
+                                }
+                            ])
+                        }}>
                             消费金额
                         </div>
                     </Tooltip>
                     <Tooltip title="客户最近一次将商品添加到购物车的时间">
-                        <div className="item">
+                        <div className="item" onClick={()=>{
+                            cousomerManagement.setConditionList([
+                                ...cousomerManagement.conditionList,
+                                {
+                                  type:"date",
+                                  condition:[{
+                                    label:"最近一次加购时间",
+                                    selectOptions:[]
+                                  }]
+                                }
+                            ])
+                        }}>
                             最近一次加购时间
                         </div>
                     </Tooltip>
                     <Tooltip title="客户上次成单的时间">
-                        <div className="item">
-                        上次购买时间
+                        <div className="item" onClick={()=>{
+                            cousomerManagement.setConditionList([
+                                ...cousomerManagement.conditionList,
+                                {
+                                  type:"date",
+                                  condition:[{
+                                    label:"上次购买时间",
+                                    selectOptions:[]
+                                  }]
+                                }
+                            ])
+                        }}>
+                            上次购买时间
                         </div>
                     </Tooltip>
                     <Tooltip title="消费金额高于店铺平均水平的客户">
-                        <div className="item">
+                        <div className="item" onClick={()=>{
+                            cousomerManagement.setConditionList([
+                                ...cousomerManagement.conditionList,
+                                {
+                                  type:"select",
+                                  condition:[{
+                                    label:"重点运营",
+                                    options:[
+                                      { label : "近30天加购未下单客户", value : "近30天加购未下单客户",tip:""},
+                                      { label : "订阅邮件30天内未下单客户", value : "订阅邮件30天内未下单客户",tip:""},
+                                      { label : "高价值客户", value : "高价值客户",tip:"消费金额高于店铺平局水平的客户"},
+                                      { label : "近期活跃客户", value : "近期活跃客户",tip:"近30天登录过的已订阅的客户"},
+                                      { label : "复购人群", value : "复购人群",tip:"近90天下过单且累计消费次数大于1的已订阅客户"},
+                                    ],
+                                    selectOptions:["高价值客户"]
+                                  }]
+                                }
+                            ])
+                        }}>
                             高价值客户
                         </div>
                     </Tooltip>
                 </Flex>
                 <Divider />
                 <Flex justify="end" gap={12} style={{padding:"0 24px"}}>
-                    <Button>清空</Button>
-                    <Button type="primary">创建细分</Button>
+                    <DefaultButton text={"清空"} />
+                    <PrimaryButton text={"创建细分"} />
                 </Flex>
             </Card>
         </Scoped>
     )
 }
+
+export default observer(ScreeningConditionCard)
 
 const Scoped = styled.div`
     .card{
@@ -166,7 +225,19 @@ const Scoped = styled.div`
                     border-radius: 2px;
                 }
             }
-
+            .select-prefix{
+                .ant-select-selector::before{
+                    content:"重点运营";
+                    margin-right: 12px;
+                    position: relative;
+                    top: 6px;
+                    font-weight: 400;
+                    color: #242833;
+                }
+                .ant-select-selection-item{
+                    font-weight: 500;
+                }
+            }
         }
     }
    

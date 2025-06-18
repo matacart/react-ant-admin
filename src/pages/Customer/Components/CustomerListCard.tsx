@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Input, Table, TableColumnsType, TablePaginationConfig, TableProps } from 'antd';
 import styled from 'styled-components';
 import Tag from 'antd/lib/tag';
-import { getCustomerList } from '@/services/y2/customer';
 import { SearchOutlined } from '@ant-design/icons';
 import DefaultTag from '@/components/Tag/DefaultTag';
 import { useNavigate } from 'react-router-dom';
+import { getCustomerList } from '@/services/y2/api';
 
 // 表单项订单数据类型
 interface DataType {
@@ -44,7 +44,7 @@ export default function CustmoerListAjax() {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: '真实姓名',
+      title: '姓名',
       dataIndex: 'realname',
       width: 100,
       render: (text: string) => (
@@ -112,7 +112,6 @@ export default function CustmoerListAjax() {
   const handleTableChange: TableProps['onChange'] = (pagination, sorter) => {
     setTableParams({
       pagination,
-     
       ...sorter,
     });
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {

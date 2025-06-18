@@ -1,26 +1,19 @@
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider, Dropdown, Flex, MenuProps, message, Space, theme } from "antd";
+import { Button, ConfigProvider, Dropdown, DropdownProps, Flex, MenuProps, message, Space, theme } from "antd";
 import React, { ReactNode, useRef, useState } from "react";
 import { styled } from 'styled-components';
 import { UnfoldIcon } from "../Icons/Icons";
 
 const { useToken } = theme;
 
-interface ButtonDropdownProps {
-  items: MenuProps['items'];
+interface ButtonDropdownProps extends DropdownProps {
   text: string;
 }
 
 // 自定义下拉
-function ButtonDropdown({items,text}:ButtonDropdownProps) {
+function ButtonDropdown({text,...props}:ButtonDropdownProps) {
 
     const Ref = useRef(null)
-
-    const [open,setOpen] = useState(false)
-
-    const onOpenChange = (open:boolean) => {
-      setOpen(open)
-    }
 
     return (
         <Scoped ref={Ref}>
@@ -47,13 +40,12 @@ function ButtonDropdown({items,text}:ButtonDropdownProps) {
               },
             }}
             >
-            <Dropdown onOpenChange={onOpenChange} getPopupContainer={()=>Ref.current!} menu={{items}} trigger={['click']}>
-              <Button className="default-btn">
+            <Dropdown getPopupContainer={()=>Ref.current!} {...props} trigger={['click']}>
+              <Button icon={<UnfoldIcon className={"font-16"} />} iconPosition={"end"} className="default-btn">
                 <Flex align="center">
                   {text}
-                  <UnfoldIcon className={"font-16"} />
                 </Flex>
-              </Button>
+              </Button >
             </Dropdown>
           </ConfigProvider>
         </Scoped>
@@ -61,6 +53,7 @@ function ButtonDropdown({items,text}:ButtonDropdownProps) {
 }
 
 const Scoped = styled.div`
+  font-size: 0;
   .default-btn{
     height: 36px;
     border-color: #d7dbe7;

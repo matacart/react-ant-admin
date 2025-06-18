@@ -48,13 +48,13 @@ function OrdersLabelCard() {
     }
 
     useEffect(()=>{
-        const newTags = order.orderInfo.tags.map(item=>{
+        const newTags = order.orderInfo.tags?.map(item=>{
             return {
                 label:item,
                 value:item
             }
         })
-        setTags(newTags)
+        setTags(newTags ?? [])
     },[])
 
     return (

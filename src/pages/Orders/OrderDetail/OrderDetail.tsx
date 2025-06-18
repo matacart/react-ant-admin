@@ -28,6 +28,7 @@ import { useSleep } from '@/hooks/customHooks';
 import DefaultButton from '@/components/Button/DefaultButton';
 import CancelOrderModal from './Modal/CancelOrderModal';
 import ReturnInProgress from './ReturnInProgress';
+import SuspendDeliveryCard from './SuspendDeliveryCard';
 
 
 function OrderDetail() {
@@ -73,11 +74,10 @@ function OrderDetail() {
   ];
 
   useEffect(() => {
-    console.log(orderId)
     getOrderDetail(orderId || "").then(res=>{
       if(res.data && JSON.stringify(res.data) != "[]"){
         // 未发货商品
-        const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
+        const remainingProductObj = (res.data.order_products??[]).filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
           const groupId = item.group_id;
           if (!acc[groupId]) {
             acc[groupId] = [];
@@ -95,10 +95,11 @@ function OrderDetail() {
             product:remainingProductObj[i],
             shipment:{
               remaining_quantity_count:count
-            }
+            },
+            fulfillment:remainingProductObj[i][0].fulfillment
           })
         }
-        order.setRemainingProductGroup(remainingList)
+        order.setRemainingProductGroup(remainingList || [])
         // 已发货商品
         order.setShippedProductsGroup(res.data.shipped_list || [])
 
@@ -120,6 +121,7 @@ function OrderDetail() {
     }).catch(err=>{
       console.log(err);
     }).finally(()=>{
+      console.log(order)
       setIsSkeleton(false)
     })
   },[]);
@@ -131,7 +133,7 @@ function OrderDetail() {
       await sleep(1000)
       getOrderDetail(orderId).then(res=>{
         if(res.data && JSON.stringify(res.data) != "[]"){
-          // 未发货商品
+          // 未发货商品 --- 
           const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
             const groupId = item.group_id;
             if (!acc[groupId]) {
@@ -150,7 +152,8 @@ function OrderDetail() {
               product:remainingProductObj[i],
               shipment:{
                 remaining_quantity_count:count
-              }
+              },
+              fulfillment:remainingProductObj[i][0].fulfillment
             })
           }
           order.setRemainingProductGroup(remainingList)
@@ -223,7 +226,7 @@ function OrderDetail() {
                   <Flex className='mc-header-right' gap={12} align='center'>
                     {order.orderInfo.payment_status !== 0 && <DefaultButton text="退款" onClick={()=>navigate(`/orders/${orderId}/refund`)} />}
                     {order.shippedProductsGroup.length>0 && <DefaultButton text="退货" onClick={()=>navigate("/orders/afterSales/launch/"+orderId)} />}
-                    <ButtonDropdown items={controlsItems} text="更多" />
+                    <ButtonDropdown menu={{items:controlsItems}} text="更多" />
                     <ButtonIcon icon={<LeftIcon className='font-20' />} disabled={prev == null} onClick={()=>{
                       prev && update(prev)
                     }} />
@@ -235,11 +238,7 @@ function OrderDetail() {
                 <Flex gap={20}>
                   <Flex className='mc-layout-content' vertical gap={20}>
                     {/* 未发货 */}
-                    {order.remainingProductGroup.map((item,index)=>{
-                      return(
-                        <PendingShippedCard groupIndex={index} />
-                      )
-                    })}
+                    {order.remainingProductGroup.map((item,index)=>item.fulfillment.fulfillment_status == "4" ? <SuspendDeliveryCard groupIndex={index} />:<PendingShippedCard groupIndex={index} />)}
                     {/* 已发货 */}
                     {order.shippedProductsGroup.map((item:any,index:number)=>{
                       return(

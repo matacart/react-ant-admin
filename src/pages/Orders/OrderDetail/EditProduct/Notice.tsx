@@ -2,6 +2,7 @@ import { Badge, Button, Card, Checkbox, Divider, Flex, Form, Tooltip } from "ant
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import orderProductEdit from "@/store/order/orderProductEdit";
 
 function Notice() {
 
@@ -16,7 +17,9 @@ function Notice() {
                     <div className="font-w-500 font-16">账单通知</div>
                 </Flex>
                 <div>
-                    <Checkbox>给客户发送账单通知</Checkbox>
+                    <Checkbox value={orderProductEdit.billNotification == 1} onChange={(e)=>{
+                        orderProductEdit.setBillNotification(e.target.checked?1:0)
+                    }}>给客户发送账单通知</Checkbox>
                 </div>
             </Card>
         </Scoped>

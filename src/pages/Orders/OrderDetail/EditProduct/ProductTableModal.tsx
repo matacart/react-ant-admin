@@ -6,10 +6,11 @@ import MySelect from "@/components/Select/MySelect";
 import CommodityClassificationSelector from "@/pages/Products/ProductList/CommodityClassificationSelector";
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
 import { getProductList } from "@/services/y2/api";
-import order from "@/store/order/order";
+import orderProductEdit from "@/store/order/orderProductEdit";
 import {Flex, Form, Input, Modal, Row, Select, Space, Table, TableProps } from "antd"
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
+import { set } from "nprogress";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -17,6 +18,7 @@ import styled from "styled-components";
 interface DataType {
     key: string;
     name: string;
+    title:string;
     age: number;
     address: string;
 }
@@ -26,6 +28,8 @@ function ProductTableModal(){
     const [open, setOpen] = useState(false);
 
     const [loading, setLoading] = useState(false);
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const [productList,setProductList] = useState<any>([])
 
@@ -67,22 +71,56 @@ function ProductTableModal(){
     })
 
     const cancel = () => {
+        setSelectedRowKeys([])
+        setProductList([])
         setOpen(false);
     };
     const handleOk = () => {
-        // order.setProductInfo([...productList])
+        console.log(productList)
+        console.log(orderProductEdit.remainingProductGroup[0].product)
+        const newProduct = productList.map((item,index:number)=>{
+            return {
+                attributes:item.attributes,
+                final_price:item.specialprice,
+                group_id: "0",
+                id: "",
+                vid:(new Date().getTime()+index).toString(),
+                latest_shipment_time:"",
+                num: 1,
+                product_discount_amount: "0",
+                product_discount_description: null,
+                product_discount_type: "0",
+                product_discount_type_from: null,
+                product_id:item.id,
+                product_image:item.product_image,
+                product_model:item.model,
+                product_name:item.title,
+                product_price:item.specialprice,
+                product_quantity: 1,
+                product_source: "1",
+                remaining_quantity:1,
+                shipped_quantity:0,
+            }
+        })
+        orderProductEdit.setRemainingProductGroup([
+            {
+                product:[...orderProductEdit.remainingProductGroup[0].product,...newProduct],
+                remaining:orderProductEdit.remainingProductGroup[0].remaining
+            }
+        ])
+        orderProductEdit.setRemainingProductGroup
+        setProductList([])
+        setSelectedRowKeys([])
         setOpen(false);
     };
 
     const rowSelection: TableProps<DataType>['rowSelection'] = {
-        selectedRowKeys: productList.map(item => item.id), // 同步选中状态
+        selectedRowKeys:selectedRowKeys, // 同步选中状态
         onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
             setProductList(selectedRows)
-
+            setSelectedRowKeys(selectedRowKeys)
             // console.log(order.productInfo)
         },
-        getCheckboxProps: (record: DataType) => ({
-        }),
     };
 
     const fetchData = async (page:number,limit:number) => {
@@ -109,8 +147,9 @@ function ProductTableModal(){
     };
 
     useMemo(()=>{
-        setProductList([...order.productInfo])
-    },[order.productInfo])
+        fetchData(pagination.current,pagination.pageSize)
+        // setProductList([...order.productInfo])
+    },[])
 
     return (
         <Scoped ref={Ref}>

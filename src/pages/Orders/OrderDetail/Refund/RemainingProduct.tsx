@@ -31,7 +31,7 @@ function RemainingProduct({groupIndex}:{groupIndex:number}) {
                     <Row key={index} style={{marginBottom:"20px"}}>
                         <Col span={14}>
                         <Flex style={{paddingRight:"40px"}}>
-                            <img src={item.product_image+"?x-oss-process=image/resize,w_200"} alt={item.product_name} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
+                            <img src={item.product_image ? item.product_image+"?x-oss-process=image/resize,w_200" : "/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_200"} alt={item.product_name} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
                             <Flex vertical align="flex-start" justify="flex-start">
                             <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px" }} className="font-w-500">{item.product_name}</div>
                             <div style={{ fontSize: "14px", color: "#474F5E" }}>{
@@ -43,7 +43,7 @@ function RemainingProduct({groupIndex}:{groupIndex:number}) {
                         </Col>
                         <Col span={5}>
                             <div>
-                                <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.product_price} X {item.remaining_quantity}</span>
+                                <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.final_price} X {item.remaining_quantity}</span>
                             </div>
                             <div style={{marginTop:"12px"}}>
                                 <NumberInput style={{width:"100px"}} value={item.num} min={0} max={item.remaining_quantity} onChange={(value:number)=>{
@@ -59,7 +59,7 @@ function RemainingProduct({groupIndex}:{groupIndex:number}) {
                         </Col>
                         <Col span={5}>
                         <Flex justify="end" style={{height:"100%"}}>
-                            <span style={{ fontSize: "14px", color: "#474F5E" }}>US${(parseInt(item.product_price+"")*parseInt(item.num+"")).toFixed(4)}</span>
+                            <span style={{ fontSize: "14px", color: "#474F5E" }}>US${(parseInt(item.final_price+"")*parseInt(item.num+"")).toFixed(4)}</span>
                         </Flex>
                         </Col>
                     </Row>

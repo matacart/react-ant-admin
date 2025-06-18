@@ -1,24 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { GetProp, Select, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import styled from 'styled-components';
-import { getOrderList,updateOrderStatus} from '@/services/y2/order';
-import { history, useIntl } from '@umijs/max';
-import OrderWarningTag from '@/components/Tag/OrderWarningTag';
+import { getOrderList} from '@/services/y2/order';
 import { observer } from 'mobx-react-lite';
+import orderDraftList from '@/store/order/orderDraftList';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+import OrderWarningTag from '@/components/Tag/OrderWarningTag';
+import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
+
 // 表单项订单数据类型
 interface DataType {
-  orderid: string;
-  orderdata: string;
-  paymentmethod: string;
-  deliveryname: string;
-  shippingmethod: string;
-  price: number;
-  orderstate: string;
-  paymentstate: string;
-  deliverystate: string;
-  paymentchannel: string;
-  tel: string;
-  [key: string]: string | number;
+  id:string;
+  status:string;
+  create_time:string;
+  order_total:string;
+  customer_firstname:string;
+  customer_lastname:string;
 }
 
 interface TableParams {
@@ -28,11 +26,6 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
-interface FilterCondition {
-  id: string;
-  languagesId:string;
-}
-
 const getRandomuserParams = (params: TableParams) => ({
   results: params.pagination?.pageSize,
   page: params.pagination?.current,
@@ -40,8 +33,12 @@ const getRandomuserParams = (params: TableParams) => ({
 });
 
 function OrdersDraftListAjax() {
-  const intl = useIntl();
+
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
+
+
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -60,24 +57,23 @@ function OrdersDraftListAjax() {
     },
     {
       title: "创建日期",
-      dataIndex: 'orderdata',
+      dataIndex: 'create_time',
       render: (text: string) => (
-        <span>
-        </span>
+        <span>{text?dayjs(parseInt(text)*1000).format("YYYY-MM-DD"):""}</span>
       ),
     },
     {
       title: "客户",
-      dataIndex: 'orderstate',
-      render: (text: string) => (
-        <div></div>
+      dataIndex: 'id',
+      render: (text: string,record:any) => (
+        <div>{(record.customer_firstname??"")+(record.customer_lastname??"")}</div>
       ),
     },
     {
       title: "状态",
-      dataIndex: 'orders_status_id',
-      render: (text: string) => <>
-        
+      dataIndex: 'status',
+      render: (value: string) => <>
+        {value == "0" ? <OrderWarningTag text="未结" /> : <OrderDefaultTag text="已结" />}
       </>,
     },
     {
@@ -89,61 +85,24 @@ function OrdersDraftListAjax() {
     },
   ];
 
-  // 
-  const fetchData = () => {
-    setLoading(true);
-    const limit = getRandomuserParams(tableParams).results;
-    const page = getRandomuserParams(tableParams).page;
-    // 构造查询字符串
-    const searchParams = new URLSearchParams();
-    if (page) searchParams.set('page', page.toString());
-    if (limit) searchParams.set('limit', limit.toString());
-   
-    getOrderList(page,limit,"","2",1).then((res) => {
-      setData(res.data || [])
-      setLoading(false);
-      setTableParams({
-        ...tableParams,
-        pagination: {
-          ...tableParams.pagination,
-          total: res.count,
-        },
-      });
-      // 获取当前页面订单ids
-      const pageIds = res.data?.map((item:any)=>item.id)
-      }).catch(error => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    // 在这里监听 `filterCondition` 的变化，并重新获取数据
-    fetchData();
-  }, [tableParams.pagination?.current,tableParams.pagination?.pageSize]);
-
   useMemo(()=>{
-    // fetchData(id,languagesId);
-  },[])
+    setData(orderDraftList.orderDraftList)
+  },[orderDraftList.orderDraftList])
 
   const translateStatus = (statusKey: string, intl: any): string => {
     return intl.formatMessage({ id: statusKey });
   };
 
-  const handleTableChange = (pagination, filters, sorter) => {
-    setTableParams({
-      pagination,
-      filters,
-      ...sorter,
-    });
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([]);
-    }
-  };
-
-  const handleOrderClick = (orderId: string) => {
-    history.push(`/orders/${orderId}`);
-  };
+  // const handleTableChange = (pagination, filters, sorter) => {
+  //   setTableParams({
+  //     pagination,
+  //     filters,
+  //     ...sorter,
+  //   });
+  //   if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+  //     setData([]);
+  //   }
+  // };
 
   return (
     <Scoped>
@@ -155,10 +114,13 @@ function OrdersDraftListAjax() {
       dataSource={data}
       pagination={tableParams.pagination}
       loading={loading}
-      onChange={handleTableChange}
+      // onChange={handleTableChange}
       scroll={{ x: 'max-content' }}
       onRow={(record) => ({
-        onClick: () => handleOrderClick(record.orderid), // 点击行时调用handleOrderClick
+        onClick: () => {
+          // 点击行时调用handleOrderClick
+          navigate(`/orders/draftOrders/edit/${record.id}`);
+        },
       })}
       // rowSelection={{
       //   type: 'checkbox',

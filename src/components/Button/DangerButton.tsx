@@ -1,8 +1,13 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Button, ConfigProvider } from "antd";
+import { Button, ButtonProps, ConfigProvider } from "antd";
 import styled from "styled-components";
 
-export default function DangerButton({text,icon,loading,onClick}:{text:string,icon?:React.ReactNode,loading?:boolean,onClick?:()=>void}){
+interface MyButtonProps extends ButtonProps {
+    text: string;
+    icon?:React.ReactNode;
+}
+
+export default function DangerButton({text,icon,...props}:MyButtonProps){
     
     return (
         <Scoped>
@@ -17,7 +22,7 @@ export default function DangerButton({text,icon,loading,onClick}:{text:string,ic
                     },
                 }}
                 >
-                <Button color="danger" variant="solid" loading={loading} icon={icon} onClick={onClick} className="danger-btn">
+                <Button color="danger" variant="solid" className="danger-btn" {...props}>
                     {text}
                 </Button>
             </ConfigProvider>

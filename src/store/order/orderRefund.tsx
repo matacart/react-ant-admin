@@ -54,6 +54,11 @@ interface remainingProductsGroup{
     product: any;
 }
 
+interface returnInProductsGroup{
+    return: any;
+    product: any;
+}
+
 class orderRefund{
 
     constructor() {
@@ -77,10 +82,34 @@ class orderRefund{
       this.remainingProductGroup = value
     }
 
+    // 退货商品
+    returnedProductGroup:returnInProductsGroup[] = []
+    setReturnedProductGroup(value:returnInProductsGroup[]){
+        this.returnedProductGroup = value
+    }
+
+    // 备注
+    remarks:string = ''
+    setRemarks(value:string){
+        this.remarks = value
+    }
+
+    // 退款金额
+    refundAmount:number = 0
+    setRefundAmount(value:number){
+        this.refundAmount = value
+    }
+    // 退款产品
+    refundProducts:any[] = []
+    setRefundProducts(value:any[]){
+        this.refundProducts = value
+    }
 
     // 清空状态
     reset(){
-       
+       this.remarks = ""
+       this.refundAmount = 0
+       this.refundProducts = []
     }
 }
 

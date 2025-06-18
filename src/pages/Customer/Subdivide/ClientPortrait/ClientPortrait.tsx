@@ -1,12 +1,15 @@
 import { ArrowLeftOutlined, DownOutlined, ExportOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { Card, Dropdown, Flex, MenuProps, Tag } from "antd"
 import SummaryCard from "./SummaryCard"
 import NewAndOldCard from "./NewAndOldCard"
+import RepurchaseCard from "./RepurchaseCard"
+import CustomerGroupAnalysisCard from "./CustomerGroupAnalysisCard"
+import FeatureDistribution from "./FeatureDistribution"
+import ConsumptionCapacityDistribution from "./ConsumptionCapacityDistribution"
+import { useNavigate } from "react-router-dom"
 
 
 const items: MenuProps['items'] = [
@@ -30,6 +33,8 @@ const items: MenuProps['items'] = [
 
 function ClientPortrait() {
 
+    const navigate = useNavigate();
+
     const [isSkeleton,setIsSkeleton] = useState(false)
 
     const [isRenewal,setIsRenewal] = useState(false)
@@ -46,7 +51,7 @@ function ClientPortrait() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/customer/management")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">
@@ -67,6 +72,10 @@ function ClientPortrait() {
                         <div className='mc-layout-content'>
                             <SummaryCard />
                             <NewAndOldCard />
+                            <RepurchaseCard />
+                            <CustomerGroupAnalysisCard />
+                            <FeatureDistribution />
+                            <ConsumptionCapacityDistribution />
                         </div>
                     </div>
                 </div>

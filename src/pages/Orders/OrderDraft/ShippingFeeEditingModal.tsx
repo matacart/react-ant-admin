@@ -3,11 +3,11 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
-import order from "@/store/order/order";
 import { Alert, Checkbox, Flex, Form, Input, Modal, Radio } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import cookie from 'react-cookies';
 import { useState } from "react";
+import orderDraft from "@/store/order/orderDraft";
 
 
 const style: React.CSSProperties = {
@@ -29,8 +29,8 @@ function ShippingFeeEditingModal(){
         form.submit()
         // 
         if(freight == "FREE_SHIPPING"){
-            order.setOrderInfo({
-                ...order.orderInfo,
+            orderDraft.setOrderInfo({
+                ...orderDraft.orderInfo,
                 logisticsType:freight,
                 logisticsName:"",
                 logisticsAmount:0
@@ -41,8 +41,8 @@ function ShippingFeeEditingModal(){
             })
         }
         if(freight == "CUSTOM_SHIPPING_AMOUNT"){
-            order.setOrderInfo({
-                ...order.orderInfo,
+            orderDraft.setOrderInfo({
+                ...orderDraft.orderInfo,
                 logisticsType:freight,
                 logisticsName:form.getFieldsValue().name,
                 logisticsAmount:form.getFieldsValue().cost?form.getFieldsValue().cost:0
@@ -53,10 +53,10 @@ function ShippingFeeEditingModal(){
     }
 
     const cancel = () => {
-        setFreight(order.orderInfo.logisticsType)
+        setFreight(orderDraft.orderInfo.logisticsType)
         form.setFieldsValue({
-            name:order.orderInfo.logisticsName,
-            cost:order.orderInfo.logisticsAmount
+            name:orderDraft.orderInfo.logisticsName,
+            cost:orderDraft.orderInfo.logisticsAmount
         })
         setIsModalOpen(false);
     };

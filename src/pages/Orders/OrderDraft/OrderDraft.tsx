@@ -6,6 +6,7 @@ import { getOrderList } from '@/services/y2/order';
 import orderDraftList from '@/store/order/orderDraftList';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import BlankPage from './BlankPage';
+import { getOrderDraftList } from '@/services/y2/api';
   
 export default function OrderDraft() {
 
@@ -14,11 +15,13 @@ export default function OrderDraft() {
   const [isBlank,setIsBlank] = useState(true)
 
   useEffect(()=>{
-    getOrderList(1,50,"","2",1).then(res=>{
+
+    // ----
+    getOrderDraftList().then(res=>{
       orderDraftList.setOrderDraftList(res.data);
       (res.data.length && res.data.length) > 0 ? setIsBlank(false) : setIsBlank(true);
-    }).catch(error => {
-      console.error('Error fetching data:', error);
+    }).catch(err=>{
+      console.error('Error fetching data:', err);
     }).finally(()=>{
       setIsSkeleton(false)
     })
@@ -27,7 +30,7 @@ export default function OrderDraft() {
   return (
     <Scoped>
       {isSkeleton?<SkeletonCard />:<>
-      {isBlank?<BlankPage />:<OrderDraftList />}
+        {isBlank?<BlankPage />:<OrderDraftList />}
       </>}
     </Scoped>
   )

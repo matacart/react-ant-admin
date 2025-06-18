@@ -2,6 +2,7 @@ import { Badge, Button, Card, Checkbox, Divider, Flex, Form, Input, Tooltip } fr
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
+import orderRefund from "@/store/order/orderRefund";
 
 const { TextArea } = Input;
 
@@ -21,8 +22,12 @@ function Remarks() {
                     <TextArea
                         showCount
                         maxLength={120}
+                        value={orderRefund.remarks}
                         placeholder="填写退款备注"
                         autoSize={{ minRows: 5, maxRows: 5 }}
+                        onChange={(e) => {
+                            orderRefund.setRemarks(e.target.value);
+                        }}
                     />
                 </div>
             </Card>

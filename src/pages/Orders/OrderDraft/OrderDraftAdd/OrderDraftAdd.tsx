@@ -1,40 +1,63 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import { history, useNavigate } from '@umijs/max';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomInformationEdit from '../CustomInformationEdit';
 import DraftPaidCard from '../DraftPaidCard';
 import MaketCard from '../MaketCard';
 import OrderDraftLabel from '../OrderDraftLabel';
 import OrderNotesLable from '../OrderNotesLable';
-import AddProductCard from './AddProductCard';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import order from '@/store/order/order';
+import { useNavigate } from 'react-router-dom';
+import orderDraft from '@/store/order/orderDraft';
+import { addDraftOrder } from '@/services/y2/api';
+import AddProductCard from '../AddProductCard';
+import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
   
 function OrderDraftAdd() {
 
     const [loading, setLoading] = useState(false);
 
+    const [isSkeleton,setIsSkeleton] = useState(true);
+
     const navigate = useNavigate(); // 使用 useNavigate 钩子
-    // 使用 setProducts 更新状态时，确保传递正确的类型
-    // const handleAddProduct = (newProduct: any) => {
-    //   setProducts(prevProducts => [...prevProducts, newProduct]);
-    // };
+   
     const handleCreateOrder = async () => {
         console.log({
-            ...order.orderInfo,
-            products: order.productInfo,
-            customerInfo: order.customerInfo,
-            receiverInfo: order.receiverInfo,
-            payBillInfo: order.payBillInfo
+            order_info:orderDraft.orderInfo,
+            order_products: orderDraft.productInfo,
+            customer_info: orderDraft.customerInfo,
+            receiverInfo: orderDraft.receiverInfo,
+            payBillInfo: orderDraft.payBillInfo,
+        })
+        addDraftOrder({
+            is_draft:true,
+            orderInfo:JSON.stringify(orderDraft.orderInfo),
+            products:JSON.stringify(orderDraft.productInfo),
+            customerInfo:JSON.stringify(orderDraft.customerInfo),
+            receiverInfo: JSON.stringify(orderDraft.receiverInfo),
+            payBillInfo: JSON.stringify(orderDraft.payBillInfo)
+        }).then(res=>{
+            navigate(`/orders/draftOrders/edit/${res.data.draft_id??""}`)
+        }).catch(err=>{ 
         })
     };
+
+    useEffect(()=>{
+        const init = async () => {
+            await orderDraft.reset()
+            setIsSkeleton(false)
+        }
+        init()
+    },[])
+
+    // addDraftOrder
+
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -63,7 +86,7 @@ function OrderDraftAdd() {
                         <PrimaryButton text="创建订单" loading={loading} onClick={handleCreateOrder} />
                     </div>
                 </div>
-            </div>
+            </div>}
         </Scoped>
     )
 }

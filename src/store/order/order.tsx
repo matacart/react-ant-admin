@@ -67,13 +67,13 @@ interface shippedProductsGroup{
 interface remainingProductsGroup{
   shipment: any;
   product: any;
+  fulfillment:any;
 }
 
 interface returnInProductsGroup{
   return: any;
   product: any;
 }
-
 
 class order{
     constructor() {
@@ -132,6 +132,7 @@ class order{
       this.remainingProductGroup = value
     }
 
+    // 退货中商品
     returnInProductsGroup:returnInProductsGroup[] = []
     setReturnInProductsGroup(value:returnInProductsGroup[]){
       this.returnInProductsGroup = value

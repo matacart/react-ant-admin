@@ -14,6 +14,8 @@ import Remarks from './Remarks';
 import orderRefund from '@/store/order/orderRefund';
 import ShippedProduct from './ShippedProduct';
 import RemainingProduct from './RemainingProduct';
+import { title } from 'process';
+import ReturnProduct from './ReturnProduct';
 
 function Refund() {
 
@@ -23,7 +25,9 @@ function Refund() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const { orderId } = useParams();
+    const { orderId,returnsId } = useParams();
+
+    const [title,setTitle] = useState("");
 
     const [form] = Form.useForm();
 
@@ -37,49 +41,78 @@ function Refund() {
         
     }
 
+    
+
     useEffect(() => {
       // 清空状态
+      orderRefund.reset()
+
       getOrderDetail(orderId??"").then(res=>{
         if(res.data && JSON.stringify(res.data) != "[]"){
 
           orderRefund.setOrderInfo(res.data.order_info || {})
-          // 未发货商品
-          const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
-            const groupId = item.group_id;
-            if (!acc[groupId]) {
-              acc[groupId] = [];
-            }
-            acc[groupId].push({...item,num:0});
-            return acc;
-          }, {});
-
-          let remainingList:any = []
-          for(let i in remainingProductObj){
-            let count = 0
-            remainingProductObj[i].forEach((item:any)=>{
-              count += item.remaining_quantity
-            })
-            remainingList.push({
-              product:remainingProductObj[i],
-              shipment:{
-                remaining_quantity_count:count
-              }
-            })
-          }
-          orderRefund.setRemainingProductGroup(remainingList)
-          // 已发货商品
-          const shipList = res.data.shipped_list.map((item:any)=>{
-            return {
-              ...item,
-              product:item.product.map((product:any)=>{
+          
+          if(returnsId){
+            // 退货商品
+            setTitle("退货商品退款")
+            const returnList = [...res.data.return_list].map((item:any)=>{
+              if(item.return && item.return.return_id == returnsId){
                 return {
-                  ...product,
-                  num:0
+                  ...item,
+                  product:item.product.map((product:any)=>{
+                    return {
+                      ...product,
+                      num:0
+                    }
+                  })
+                }
+              }
+            }).filter(item=>item)
+            orderRefund.setReturnedProductGroup(returnList)
+            orderRefund.setRemainingProductGroup([])
+            orderRefund.setShippedProductGroup([])
+          }else{
+            // 商品退款
+            setTitle("退款")
+            // 未发货商品
+            const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
+              const groupId = item.group_id;
+              if (!acc[groupId]) {
+                acc[groupId] = [];
+              }
+              acc[groupId].push({...item,num:0});
+              return acc;
+            }, {});
+            let remainingList:any = []
+            for(let i in remainingProductObj){
+              let count = 0
+              remainingProductObj[i].forEach((item:any)=>{
+                count += item.remaining_quantity
+              })
+              remainingList.push({
+                product:remainingProductObj[i],
+                shipment:{
+                  remaining_quantity_count:count
                 }
               })
             }
-          })
-          orderRefund.setShippedProductGroup(shipList || [])
+            orderRefund.setRemainingProductGroup(remainingList)
+            // 已发货商品
+            const shipList = res.data.shipped_list.map((item:any)=>{
+              return {
+                ...item,
+                product:item.product.map((product:any)=>{
+                  return {
+                    ...product,
+                    num:0
+                  }
+                })
+              }
+            })
+            orderRefund.setShippedProductGroup(shipList || [])
+
+            orderRefund.setReturnedProductGroup([])
+          }
         }
       }).catch(err=>{
         console.log(err);
@@ -102,7 +135,7 @@ function Refund() {
                         </div>
                         <div className="mc-header-left-content">
                         <Flex style={{fontSize: '20px'}} gap={12} align='center'>
-                            <div className='font-w-600'>退款</div>
+                            <div className='font-w-600'>{title}</div>
                         </Flex>
                         </div>
                     </div>
@@ -110,17 +143,19 @@ function Refund() {
                     <Flex gap={20}>
                       <Flex className='mc-layout-content' vertical gap={20}>
                         {/* 未发货 */}
-                        {orderRefund.remainingProductGroup.map((item,index)=>{
+                        {orderRefund.remainingProductGroup?.map((item,index)=>{
                           return(
                             <RemainingProduct groupIndex={index} />
                           )
                         })}
                         {/* 已发货 */}
-                        {orderRefund.shippedProductGroup.map((item,index)=>{
+                        {orderRefund.shippedProductGroup?.map((item,index)=>{
                           return(
                             <ShippedProduct groupIndex={index} />
                           )
                         })}
+                        {/* 退货 */}
+                        {orderRefund.returnedProductGroup.length>0 && <ReturnProduct />}
                         <Remarks />
                       </Flex>
                       <Flex className='mc-layout-extra' vertical gap={20}>

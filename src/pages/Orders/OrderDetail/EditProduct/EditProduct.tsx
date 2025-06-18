@@ -7,18 +7,21 @@ import { observer } from 'mobx-react-lite';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useParams,useNavigate } from 'react-router-dom';
-import { getOrderDetail } from '@/services/y2/api';
+import { editOrderProducts, getOrderDetail } from '@/services/y2/api';
 import orderProductEdit from '@/store/order/orderProductEdit';
 import ShippedCard from './ShippedCard';
 import RemainingCard from './RemainingCard';
 import BillDetails from './BillDetails';
 import Notice from './Notice';
+import { useSleep } from '@/hooks/customHooks';
 
 function EditProduct() {
 
     const [loading,setLoading] = useState(false);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
+
+    const sleep = useSleep();
 
     const { orderId } = useParams();
 
@@ -33,46 +36,79 @@ function EditProduct() {
 
     // 验证通过 -- 
     const submit = async () => {
-        
+      // 数量/则扣
+      const res = {
+        orderId:orderProductEdit.orderInfo.order_id,
+        products:JSON.stringify(orderProductEdit.remainingProductGroup[0].product),
+        // products:orderProductEdit.remainingProductGroup[0].product,
+        deleteProductIds:JSON.stringify(orderProductEdit.deleteProductIds),
+        sendPaymentEmail:orderProductEdit.billNotification
+      }
+      setLoading(true)
+      editOrderProducts(res).then(async res=>{
+        await sleep(1000)
+        navigate(`/orders/${orderId}`)
+      }).catch(err=>{
+        console.log(err)
+      }).finally(()=>{
+        setLoading(false)
+      })
     }
 
     useEffect(() => {
-        // 清空状态
-          getOrderDetail(orderId??"").then(res=>{
-            if(res.data && JSON.stringify(res.data) != "[]"){
-              // 未发货商品
-              const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
-                const groupId = item.group_id;
-                if (!acc[groupId]) {
-                  acc[groupId] = [];
-                }
-                acc[groupId].push({...item,num:item.remaining_quantity});
-                return acc;
-              }, {});
-              let remainingList:any = []
-              for(let i in remainingProductObj){
-                let count = 0
-                remainingProductObj[i].forEach((item:any)=>{
-                  count += item.remaining_quantity
-                })
-                remainingList.push({
-                  product:remainingProductObj[i],
-                  shipment:{
-                    remaining_quantity_count:count
-                  }
-                })
-              }
-              orderProductEdit.setRemainingProductGroup(remainingList)
-              // 已发货商品
-              orderProductEdit.setShippedProductGroup(res.data.shipped_list || [])
-
-              orderProductEdit.setOrderInfo(res.data.order_info || {})
+      // 清空状态
+      orderProductEdit.reset()
+      getOrderDetail(orderId??"").then(res=>{
+        if(res.data && JSON.stringify(res.data) != "[]"){
+          // 未发货商品
+          // const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
+          //   const groupId = item.group_id;
+          //   if (!acc[groupId]) {
+          //     acc[groupId] = [];
+          //   }
+          //   acc[groupId].push({...item,num:item.remaining_quantity});
+          //   return acc;
+          // }, {});
+          // for(let i in remainingProductObj){
+          //   let count = 0
+          //   remainingProductObj[i].forEach((item:any)=>{
+          //     count += item.remaining_quantity
+          //   })
+          //   remainingList.push({
+          //     product:remainingProductObj[i],
+          //     shipment:{
+          //       remaining_quantity_count:count
+          //     }
+          //   })
+          // }
+          let remainingList:any = []
+          let count = 0
+          const newRemainingList = res.data.order_products?.map((item:any)=>{
+            count += item.remaining_quantity
+            if(item.remaining_quantity > 0){
+              return {...item,num:item.remaining_quantity}
             }
-          }).catch(err=>{
-            console.log(err);
-          }).finally(()=>{
-            setIsSkeleton(false)
+            return 
+          }).filter((item:any)=>item)
+
+          remainingList.push({
+            product:newRemainingList,
+            remaining:{
+              remaining_quantity_count:count
+            }
           })
+          orderProductEdit.setRemainingProductGroup(remainingList || [])
+          // 已发货商品
+          orderProductEdit.setShippedProductGroup(res.data.shipped_list || [])
+
+          orderProductEdit.setOrderInfo(res.data.order_info || {})
+          
+        }
+      }).catch(err=>{
+        console.log(err);
+      }).finally(()=>{
+        setIsSkeleton(false)
+      })
     },[]);
 
     return (
@@ -97,11 +133,7 @@ function EditProduct() {
                     <Flex gap={20}>
                     <Flex className='mc-layout-content' vertical gap={20}>
                       {/* 未发货 */}
-                      {orderProductEdit.remainingProductGroup.map((item,index)=>{
-                        return(
-                          <RemainingCard groupIndex={index} />
-                        )
-                      })}
+                      <RemainingCard />
                       {/* 已发货 */}
                       {orderProductEdit.shippedProductGroup.map((item:any,index:number)=>{
                         return(

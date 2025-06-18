@@ -4,7 +4,6 @@ import styled from "styled-components"
 
 function DefaultInput({...props}) {
   return (
-    <Scoped>
         <ConfigProvider
             theme={{
                 token: {
@@ -12,18 +11,10 @@ function DefaultInput({...props}) {
                     borderRadius:4
                 },
             }}
-            >
-            <Input className="default-input" {...props} />
+        >
+            <Input style={{height:"36px"}} {...props} />
         </ConfigProvider>
-    </Scoped>
   )
 }
 
 export default DefaultInput
-
-const Scoped = styled.div`
-    .default-input{
-        height: 36px;
-        width: 100%;
-    }
-`

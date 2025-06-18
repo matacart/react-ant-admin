@@ -1,10 +1,9 @@
 import { SearchOutlined } from "@ant-design/icons"
-import { ConfigProvider, Input, InputNumber } from "antd"
+import { ConfigProvider, InputNumber } from "antd"
 import styled from "styled-components"
 
-
 // 数字输入框
-function NumberInput({...props }) {
+function NumberInput({...props}) {
   return (
     <ConfigProvider
         theme={{
@@ -22,6 +21,5 @@ function NumberInput({...props }) {
 export default NumberInput
 
 const ScopedNumber = styled(InputNumber)`
-    height: 36px;
-    /* width: 100%; */
+  height: 36px;
 `

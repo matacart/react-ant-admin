@@ -3,13 +3,13 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
-import order from "@/store/order/order";
+import orderDraft from "@/store/order/orderDraft";
 import { Checkbox, Flex, Form, Input, Modal } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import { useEffect, useState } from "react";
 import cookie from 'react-cookies';
 
-function DiscountEditModal({pricing}:{pricing:number}){
+function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -17,10 +17,10 @@ function DiscountEditModal({pricing}:{pricing:number}){
 
     const submit = ()=>{
         form.validateFields().then((values)=>{
-            order.setOrderInfo({
-                ...order.orderInfo,
-                discountAmount:values.amount?values.amount:0,
-                discountDesc:values.explanation?values.explanation:"",
+            orderDraft.setOrderInfo({
+                ...orderDraft.orderInfo,
+                orderDiscount:values.amount?values.amount:0,
+                orderDiscountDesc:values.explanation?values.explanation:"",
                 isDiscountAccumulation:values.isSuperposition?1:0
             })
             setIsModalOpen(false);
@@ -32,22 +32,18 @@ function DiscountEditModal({pricing}:{pricing:number}){
 
     const cancel = () => {
         form.setFieldsValue({
-            amount:order.orderInfo.discountAmount,
-            explanation:order.orderInfo.discountDesc,
-            isSuperposition:order.orderInfo.isDiscountAccumulation == 1
+            amount:orderDraft.orderInfo.orderDiscount,
+            explanation:orderDraft.orderInfo.orderDiscountDesc,
+            isSuperposition:orderDraft.orderInfo.isDiscountAccumulation == 1
         })
         setIsModalOpen(false);
     };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
     const remove = ()=>{
-        order.setOrderInfo({
-            ...order.orderInfo,
-            discountAmount:0,
-            discountDesc:"",
+        orderDraft.setOrderInfo({
+            ...orderDraft.orderInfo,
+            orderDiscount:0,
+            orderDiscountDesc:"",
             isDiscountAccumulation:0
         })
         form.setFieldsValue({
@@ -60,19 +56,19 @@ function DiscountEditModal({pricing}:{pricing:number}){
 
     useEffect(()=>{
         form.setFieldsValue({
-            amount:order.orderInfo.discountAmount,
-            explanation:order.orderInfo.discountDesc,
-            isSuperposition:order.orderInfo.isDiscountAccumulation == 1
+            amount:orderDraft.orderInfo.orderDiscount,
+            explanation:orderDraft.orderInfo.orderDiscountDesc,
+            isSuperposition:orderDraft.orderInfo.isDiscountAccumulation == 1
         })
     },[])
 
     return (
         <>
-            <a onClick={()=>setIsModalOpen(true)} style={{width:"20%"}}>编辑折扣</a>
-            <Modal title={<div>编辑折扣</div>} centered open={isModalOpen} onOk={handleOk} onCancel={cancel} 
+            <a onClick={()=>setIsModalOpen(true)} style={{width:"20%"}} className={disable?"color-B8BECC":"color-356DFF"}>编辑折扣</a>
+            <Modal title={<div>编辑折扣</div>} centered open={isModalOpen} width={480} onCancel={cancel} 
                 footer = {(_, { OkBtn, CancelBtn }) => (
                     <Flex justify="space-between">
-                        <DangerButton text={"移除折扣"} onClick={remove} />
+                        {false?<DangerButton text={"移除折扣"} onClick={remove} />:<div></div>}
                         <Flex gap={12}>
                             <DefaultButton text={"取消"} onClick={cancel} />
                             <PrimaryButton text={"更新"} onClick={submit} />
@@ -80,14 +76,14 @@ function DiscountEditModal({pricing}:{pricing:number}){
                     </Flex>
                 )}
             >
-                <Form form={form} layout="vertical">
+                <Form form={form} layout="vertical" style={{marginTop:"20px"}}>
                     <FormItem label="折扣金额" name="amount" rules={[
                         {
                             validator: (_, value) => 
                                 value && value > pricing ? Promise.reject(new Error(`折扣金额不得大于当前订单商品金额`)) : Promise.resolve()
                         }
                     ]}>
-                        <NumberInput min={0} prefix={cookie.load("symbolLeft") || ""} />
+                        <NumberInput style={{width:"100%"}} min={0} prefix={cookie.load("symbolLeft") || ""} />
                     </FormItem>
                     <FormItem label="折扣说明" name="explanation">
                         {/* <Input /> */}

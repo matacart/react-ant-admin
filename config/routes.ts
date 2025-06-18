@@ -34,6 +34,12 @@ import { redirect } from "react-router-dom";
 // }
 
 export default  [
+
+  {
+    path: '/icons',
+    component: './Test/IconsPreview', 
+  },
+
   {
     path: '/',
     redirect: '/home'
@@ -84,11 +90,6 @@ export default  [
         name: 'recallOrders',
         component: './Orders/RecallOrders/RecallOrders',
       },
-      {
-        path: 'draftOrders',
-        name: 'draftOrders',
-        component: './Orders/OrderDraft/OrderDraft',
-      },
       {  
         path: ':orderId',  
         name: 'orderId',
@@ -114,19 +115,34 @@ export default  [
         component: './Orders/OrderDetail/Refund/Refund', 
       },
       {  
+        path: ':orderId/returns/:returnsId/refund', 
+        name: 'orderId',
+        hideInMenu: true,
+        component: './Orders/OrderDetail/Refund/Refund', 
+      },
+      {  
         path: ':orderId/productsEdit', 
         name: 'orderId',
         hideInMenu: true,
         component: './Orders/OrderDetail/EditProduct/EditProduct', 
       },
       {
+        path: 'draftOrders',
+        name: 'draftOrders',
+        component: './Orders/OrderDraft/OrderDraft',
+      },
+      {
         path: 'draftOrders/add',
         name: '',
         component: './Orders/OrderDraft/OrderDraftAdd/OrderDraftAdd',
       },
+      {
+        path: 'draftOrders/edit/:draftOrderId',
+        name: '',
+        component: './Orders/OrderDraft/OrderDraftEdit/OrderDraftEdit',
+      },
     ]    
   },
-  
   // 商品
   {  
       path: '/products',
@@ -212,7 +228,6 @@ export default  [
         }
       ]
   },
-  
   // 客户
   {
     name: 'customer',
@@ -240,7 +255,7 @@ export default  [
         path: 'management/operate/add',
         name: 'management/operate/add',
         menu: false,
-        component: './Customer/CustomerManagement/CustomerManagementAdd/NewCustomer',
+        component: './Customer/CustomerManagement/CustomerAdd/CustomerAdd',
       },
       {
         path: 'persona/list',

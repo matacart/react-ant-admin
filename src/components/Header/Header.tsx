@@ -30,17 +30,22 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
         // 获取用户账号状态信息
         currentUserStatus().then((res:any)=>{
             setUserStatus(res)
-            const endtimer = parseInt(res.data.package.end_time || 0)
-            const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
-            res.code == 0 && setTimer(RemainTime)
-            RemainTime<=15 ? setHeight(100) : setHeight(60)
+            if(res.code == 0){
+                const endtimer = parseInt(res.data.package.end_time || 0)
+                const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
+                res.code == 0 && setTimer(RemainTime)
+                RemainTime<=15 ? setHeight(100) : setHeight(60)
+            }else{
+                setHeight(100)
+            }
+        }).catch(()=>{
+            setHeight(60)
         })
         // 获取商品属性类型
         getOptionType().then((res:any)=>{
             if(res.code == 0){
               sessionStorage["productOptionType"] = JSON.stringify(res.data)
             }else{
-              console.log("获取商品类型失败")
             }
         }).catch(err=>{
             console.log("获取商品类型失败")

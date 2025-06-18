@@ -6,7 +6,7 @@ import MySelect from "@/components/Select/MySelect";
 import CommodityClassificationSelector from "@/pages/Products/ProductList/CommodityClassificationSelector";
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
 import { getProductList } from "@/services/y2/api";
-import order from "@/store/order/order";
+import orderDraft from "@/store/order/orderDraft";
 import {Flex, Form, Input, Modal, Row, Select, Space, Table, TableProps } from "antd"
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -67,24 +67,46 @@ function ProductTableModal(){
     })
 
     const cancel = () => {
+        setProductList(orderDraft.productInfo)
         setOpen(false);
     };
+    // 添加商品
     const handleOk = () => {
-        order.setProductInfo([...productList])
+        // 
+        let newProductList = productList.map(item=>{
+            return {
+                attributes:item.attributes,
+                final_price:item.specialprice,
+                // group_id: "0",
+                product_id:item.id,
+                proudct_imgage:item.product_image,
+                product_model:item.model,
+                product_name:item.title,
+                product_price:item.specialprice,
+                product_cost_price:item.cost_price,
+                product_quantity: 1,
+                product_source: "1",
+                // 折扣信息
+                product_discount_amount: "",
+                product_discount_description: null,
+                product_discount_type: "",
+                product_discount_type_from: null,
+            }
+        })
+        orderDraft.setProductInfo([...newProductList])
         setOpen(false);
     };
 
     const rowSelection: TableProps<DataType>['rowSelection'] = {
-        selectedRowKeys: productList.map(item => item.id), // 同步选中状态
+        selectedRowKeys: productList.map(item => item.product_id), // 同步选中状态
         onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
             setProductList(selectedRows)
-
-            // console.log(order.productInfo)
         },
         getCheckboxProps: (record: DataType) => ({
         }),
     };
 
+    // 获取商品列表
     const fetchData = async (page:number,limit:number) => {
         setLoading(true);
         const res = {
@@ -109,8 +131,8 @@ function ProductTableModal(){
     };
 
     useMemo(()=>{
-        setProductList([...order.productInfo])
-    },[order.productInfo])
+        setProductList([...orderDraft.productInfo])
+    },[orderDraft.productInfo])
 
     return (
         <Scoped ref={Ref}>

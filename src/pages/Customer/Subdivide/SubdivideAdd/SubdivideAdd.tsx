@@ -1,97 +1,69 @@
 import { ArrowLeftOutlined, ExportOutlined, ImportOutlined } from '@ant-design/icons'
 import { Button, Card, Drawer, Dropdown, Flex, Form, Input, MenuProps, message, Select, Space } from 'antd'
 import styled from 'styled-components';
-import { history } from '@umijs/max';
-
-import { UnfoldIcon } from '@/components/Icons/Icons';
-import WarningTag from '@/components/Tag/WarningTag';
 import ScreeningConditionCard from './ScreeningConditionCard';
 import CustomerListCard from "../../Components/CustomerListCard"
+import DefaultButton from '@/components/Button/DefaultButton';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import { useNavigate } from 'react-router-dom';
+import { AddIcon } from '@/components/Icons/Icons';
+import ButtonDropdown from '@/components/Dropdown/ButtonDropdown';
 
-
+// 客户细分 -- 细分/草稿
 function SubdivideAdd(){
 
-  const aItems: MenuProps['items'] = [
-    {
-      key: '1',
-      label:"本地导入",
+  const navigate = useNavigate();
 
+  const controlsItems: MenuProps['items'] = [
+    {
+      label: <div>导出</div>,
+      key: '1',
     },
     {
+      label: <div>重命名</div>,
       key: '2',
-      label: "shopify表格导入",
     },
     {
+      label: <div className='color-F86140'>删除</div>,
       key: '3',
-      label: "店铺搬迁导入",
     }
   ];
 
-
   return (
       <Scoped>
-          <div className='mc-layout-wrap'>
-              <div className="mc-layout">
-                  <div className="mc-header">
-                      <div className="mc-header-left">
-                          <div className="mc-header-left-secondary" onClick={()=>{
-                              history.push('/customer/persona/list')
-                          }}>
-                            <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
-                          </div>
-                          <Flex align='center' className="mc-header-left-content">
-                            <div style={{marginRight:"4px"}}>客户细分：新建细分</div>
-                            <WarningTag text='草稿' />
-                          </Flex>
-                      </div>
-                      <div className='mc-header-right' >
-                        <Flex style={{ fontSize:"14px",marginRight:"24px" }}>
-                          <Dropdown disabled menu={{ items: aItems }} trigger={['click']}>
-                            <Flex style={{cursor:"not-allowed"}} className='cursor-pointer'>
-                              <div style={{marginRight:"8px"}}><ImportOutlined /></div>
-                              <Space>
-                                导入
-                              </Space>
-                              <UnfoldIcon />
-                            </Flex>
-                          </Dropdown>
-                          <Flex style={{marginLeft:"12px",cursor:"not-allowed"}} onClick={()=>{}}>
-                              <div style={{marginRight:"8px"}}><ExportOutlined /></div>
-                              <div>导出</div>
-                          </Flex>
-                        </Flex>
-                        <Button
-                          disabled
-                          style={{
-                            backgroundColor: 'WHITE',
-                            marginRight: '12px',
-                            height: "36px",
-                            fontSize: "14px",
-                          }}>
-                          使用细分
-                        </Button>
-                        <Button
-                          disabled
-                          type="primary"
-                          style={{ height: "36px", fontSize: "14px" }}
-                        >
-                          添加客户
-                        </Button>
-                      </div>
-                  </div>
-                  <div className='mc-layout-main'>
-                      <div className='mc-layout-content'>
-                        <ScreeningConditionCard />
-                        <CustomerListCard />
-                      </div>
-                  </div>
-                  {/* <Divider/>
-                  <div className='mc-footer'>
-                      <Button type='primary' onClick={async ()=>{
-                      }}>创建</Button>
-                  </div> */}
+        <div className='mc-layout-wrap'>
+          <div className="mc-layout">
+            <div className="mc-header">
+              <div className="mc-header-left">
+                <div className="mc-header-left-secondary" onClick={()=>{
+                  navigate('/customer/persona/list')
+                }}>
+                  <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                </div>
+                <Flex align='center' className="mc-header-left-content">
+                  <div style={{marginRight:"4px"}}>客户细分：High-value</div>
+                  {/* <WarningTag text='草稿' /> */}
+                </Flex>
               </div>
+              <Flex gap={12} align='center' >
+                <DefaultButton icon={<AddIcon className='font-16' />} text="添加细分" />
+                <ButtonDropdown menu={{items:controlsItems}} text="其它操作" />
+                <PrimaryButton text="使用细分" />
+              </Flex>
+            </div>
+            <div className='mc-layout-main'>
+                <div className='mc-layout-content'>
+                  <ScreeningConditionCard />
+                  <CustomerListCard />
+                </div>
+            </div>
+            {/* <Divider/>
+            <div className='mc-footer'>
+                <Button type='primary' onClick={async ()=>{
+                }}>创建</Button>
+            </div> */}
           </div>
+        </div>
       </Scoped>
   )
 }
@@ -145,20 +117,13 @@ const Scoped = styled.div`
                     font-size: 20px;
                 }
             }
-
-            &-right {
-              display: flex;
-              align-items: center;
-            }
         }
-
         &-main {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
             gap: 20px;
         }
-
         &-content {
             flex: 9;
             min-width: 510px;

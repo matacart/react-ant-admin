@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import NumberInput from "@/components/Input/NumberInput";
 import MySelect from "@/components/Select/MySelect";
-import { setCancelOrder, splitOrderProducts } from "@/services/y2/api";
+import { pauseOrderShipping, setCancelOrder, splitOrderProducts } from "@/services/y2/api";
 import order from "@/store/order/order";
 import { Checkbox, Flex, Form, Input, message, Modal, Table, TableProps } from "antd";
 import { cloneDeep } from "lodash";
@@ -31,7 +31,7 @@ const reasonOptions = [
     },
     {
         label:"其它",
-        value:"5",
+        value:"0",
     }
 ]
 
@@ -46,13 +46,30 @@ function SplitPackage({groupIndex}:{groupIndex:number}){
     const [loading,setLoading] = useState(false);
 
     const [reasonValue,setReasonValue] = useState<string | undefined>(undefined);
+
+    // 原因说明
+    const [reasonDetail,setReasonDetail] = useState<string>("");
    
     const cancel = ()=>{
+        setReasonValue(undefined);
+        setReasonDetail("");
         setOpen(false);
     }
 
     const submit = ()=>{
-       
+        setLoading(true);
+        pauseOrderShipping({
+            orderId:order.orderInfo.order_id,
+            fulfillmentId:remainingInfo.fulfillment.fulfillment_id,
+            pauseReason:reasonValue??"",
+            ...(reasonValue == "0" && {pauseReasonDetail:reasonDetail})
+        }).then((res)=>{
+            setOpen(false);
+            order.triggerRefresh();
+        }).catch((err)=>{
+        }).finally(()=>{
+            setLoading(false);
+        })
     }
 
     useEffect(()=>{
@@ -75,15 +92,17 @@ function SplitPackage({groupIndex}:{groupIndex:number}){
                 <div className="warp">
                     <div style={{marginTop:"24px",marginBottom:"8px"}} className="font-w-500">请选择暂停发货的原因</div>
                     <div>
-                        <MySelect style={{width:"100%",height:"36px"}} value={reasonValue} onChange={(value:string)=>{
+                        <MySelect style={{width:"100%",height:"36px"}} value={reasonValue} placeholder="选择原因" onChange={(value:string)=>{
                             setReasonValue(value)
                         }} options={reasonOptions} />
                     </div>
                     <div style={{marginTop:"8px",marginBottom:"16px"}}>只有你和你的员工能看到此原因</div>
-                    {reasonValue == "5" && <>
+                    {reasonValue == "0" && <>
                         <div style={{marginBottom:"8px"}} className="font-w-500">填写原因(选填)</div>
                         <div>
-                            <MyInput style={{width:"100%",height:"36px"}} />
+                            <MyInput style={{width:"100%",height:"36px"}} value={reasonDetail} onChange={(e:any)=>{
+                                setReasonDetail(e.target.value)
+                            }} />
                         </div>
                     </>}
                 </div>

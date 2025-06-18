@@ -1,15 +1,12 @@
 import { Badge, Button, Card, Divider, Flex, Form, Input, Tag, Tooltip } from "antd";
-import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { styled } from 'styled-components';
-import { useIntl } from "@umijs/max";
 import TagAutoComplete from "@/components/AutoComplete/TagAutoComplete";
 import { useState } from "react";
 import { CloseIcon } from "@/components/Icons/Icons";
 import ManagementLabelModal from "./ManagementLabelModal";
 
 function OrderDraftLabel() {
-    const intl = useIntl();
 
     const [customerList,setCustomerList] = useState([
         { label: 'John', value: 'John', email: 'john@example.com', tel: '123-456-7890' },
@@ -38,7 +35,7 @@ function OrderDraftLabel() {
 
                 {/*  */}
                 <div className="color-474F5E tags-warp">
-                    {tags.map((tag,index)=>(
+                    {tags?.map((tag,index)=>(
                         <Tag key={index} color={"#e2f0ff"} className="tag" style={{color:"#474F5E"}} bordered={false} closeIcon={<CloseIcon style={{
                             lineHeight: 1,  // 关键属性
                             fontSize:"14px",

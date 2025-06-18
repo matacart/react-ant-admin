@@ -113,7 +113,8 @@ function SplitPackage({groupIndex}:{groupIndex:number}){
             splitOrderProducts({
                 orderProducts:JSON.stringify(orderProducts)
             }).then(res=>{
-                console.log(res)
+                order.triggerRefresh()
+                setOpen(false)
             }).catch(err=>{
             }).finally(()=>{
                 setLoading(false)

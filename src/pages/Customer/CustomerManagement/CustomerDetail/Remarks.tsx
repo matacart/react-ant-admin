@@ -3,6 +3,7 @@ import { Card, Divider, Flex, Switch, Tooltip } from "antd";
 import styled from "styled-components";
 import order from "@/store/order/order";
 import { observer } from "mobx-react-lite";
+import RemarksModal from "./Modal/RemarksModal";
 
 function Remarks() {
   const intl = useIntl();
@@ -16,7 +17,9 @@ function Remarks() {
             </Flex>
             {order.merchantNotes.length>0 ? <>
                 <div className="color-474F5E">{123123}</div>
-            </>:<div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.detail.empitynotes'})}</div>}
+            </>:<>
+                <RemarksModal />
+            </>}
           </Card>
       </Scoped>
   )

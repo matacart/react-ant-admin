@@ -30,7 +30,7 @@ function OrdersPaidCard() {
             <Col span={19}>
                 <Flex justify="space-between">
                     <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.productInfo.length}{intl.formatMessage({ id:'order.detail.commodity'})}</div>
-                    <div style={{ fontSize: '14px', color: '#474F5E' }}>US${order.orderTotal[0].value}</div>
+                    <div style={{ fontSize: '14px', color: '#474F5E' }}>US${order.orderTotal[0]?.value}</div>
                 </Flex>
             </Col>
         </Row>
@@ -41,15 +41,15 @@ function OrdersPaidCard() {
             </Col>
             <Col span={19}>
                 <Flex justify="space-between">
-                    <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.orderTotal[1].title}</div>
-                    <div style={{ fontSize: '14px', color: '#474F5E'}}>US${order.orderTotal[1].value}</div>
+                    <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.orderTotal[1]?.title}</div>
+                    <div style={{ fontSize: '14px', color: '#474F5E'}}>US${order.orderTotal[1]?.value}</div>
                 </Flex>
             </Col>
         </Row>
         {/* 合计 */}
         <Row style={{ marginTop: '20px' }}>
             <Col span={5}><span className="font-w-600 color-242833">{intl.formatMessage({ id:'order.detail.total'})}</span></Col>
-            <Col span={19}><div className="font-w-600 color-242833" style={{textAlign:"right"}}>US${order.orderTotal[2].value}</div></Col>
+            <Col span={19}><div className="font-w-600 color-242833" style={{textAlign:"right"}}>US${order.orderTotal[2]?.value}</div></Col>
         </Row>
       </Form>
       <Divider/>

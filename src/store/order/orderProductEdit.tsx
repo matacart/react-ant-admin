@@ -1,3 +1,4 @@
+import { set } from "lodash";
 import { makeAutoObservable } from "mobx";
 
 interface orderInfoType{
@@ -50,7 +51,7 @@ interface shippedProductsGroup{
 }
 
 interface remainingProductsGroup{
-    shipment: any;
+    remaining: any;
     product: any;
 }
 
@@ -77,10 +78,21 @@ class orderRefund{
       this.remainingProductGroup = value
     }
 
+    // 删除产品id
+    deleteProductIds:string[] = []
+    setDeleteProductIds(value:string[]){
+        this.deleteProductIds = value
+    }
 
+    // 账单通知
+    billNotification = 0
+    setBillNotification(value:number){
+        this.billNotification = value
+    }
     // 清空状态
     reset(){
-       
+        this.deleteProductIds = []
+        this.billNotification = 0
     }
 }
 

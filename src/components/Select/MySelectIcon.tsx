@@ -29,7 +29,7 @@ function MySelectIcon({...props}) {
                     }}
                     suffixIcon={
                         <UnfoldIcon className={open?"font-18 active":"font-18 no-active"} />
-                    } 
+                    }
                 />
             </ConfigProvider>
         </Scoped>

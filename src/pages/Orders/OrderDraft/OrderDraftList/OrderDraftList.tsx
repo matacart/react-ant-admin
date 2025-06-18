@@ -6,6 +6,7 @@ import Icon, { ExportOutlined } from '@ant-design/icons';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { history } from '@umijs/max';
 import OrderDraftTabs from './OrderDraftTabs';
+import { getOrderDraftList } from '@/services/y2/api';
 interface MenuItem {
   key: string;
   label: React.ReactNode;
@@ -17,9 +18,6 @@ interface MenuProps {
 }
 
 export default function OrderDraftList() {
-
-  useEffect(() => {
-  }, []);
 
   return (
     <Scoped>

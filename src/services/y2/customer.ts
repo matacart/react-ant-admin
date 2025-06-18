@@ -1,28 +1,28 @@
 import { request } from '@umijs/max';
 
-export async function getCustomerList(page: any, limit: any) {
-  return request(`/api/ApiAppstore/customers_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: {
-      page: page,
-      limit: limit,
-    }
-  })
-}
+// export async function getCustomerList(page: any, limit: any) {
+//   return request(`/api/ApiAppstore/customers_list`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     data: {
+//       page: page,
+//       limit: limit,
+//     }
+//   })
+// }
 
   
-  export async function getAddressList(page: string, limit: number, additionalParams?: string) {
-    const params = additionalParams ? `${additionalParams}&page=${page}&limit=${limit}` : `?page=${page}&limit=${limit}`;
-    return request(`/api/ApiAppstore/address_info${params}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  }
+// export async function getAddressList(page: string, limit: number, additionalParams?: string) {
+//   const params = additionalParams ? `${additionalParams}&page=${page}&limit=${limit}` : `?page=${page}&limit=${limit}`;
+//   return request(`/api/ApiAppstore/address_info${params}`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
+// }
 
 export async function addCustomers(newCustomerInfo?: { realname: string; familyname: string; email: string; tel: string; }) {
   return request('/api/ApiAppstore/customer_add', {

@@ -26,11 +26,9 @@ import Subscribe from './Subscribe';
 import DangerButton from '@/components/Button/DangerButton';
 import CustomerAddress from './CustomerAddress';
 import CustomerInfo from './CustomerInfo';
+import cousomer from '@/store/customer/cousomer';
 
 function CustomerDetail() {
-
-
-    const [customer,setCustomer] = useState({});
 
     const controlsItems: MenuProps['items'] = [
         {
@@ -40,11 +38,7 @@ function CustomerDetail() {
         {
           label: <div className='color-F86140'>删除个人数据</div>,
           key: '2',
-        },
-        {
-          label: <div className='color-F86140'>删除客户</div>,
-          key: '3',
-        },
+        }
     ];
 
     const [loading,setLoading] = useState(false);
@@ -68,11 +62,8 @@ function CustomerDetail() {
     }
 
     useEffect(() => {
-        getCustomer().then(res=>{
-        if(res.data){
-          // 格式
-          setCustomer(res.data)
-        }
+      getCustomer(customerId??"").then(res=>{
+        cousomer.setCousomerInfo(res.data)
       }).catch(err=>{
         console.log(err);
       }).finally(()=>{
@@ -94,13 +85,13 @@ function CustomerDetail() {
                         </div>
                         <div className="mc-header-left-content">
                             <Flex style={{fontSize: '20px'}} gap={12} align='center'>
-                                <div className='font-w-600'>{customer.name}</div>
+                                <div className='font-w-600'>{cousomer.cousomerInfo.id}</div>
                             </Flex>
                         </div>
                     </div>
                     <Flex className='mc-header-right' gap={12} align='center'>
                         <MyButton style={{height:"36px"}} text="会员系统" icon={<img style={{height:"16px"}} src="https://cdn.myshopline.cn/sl/admin/ec2-admin-customer/20250515155818768/imgs/member-system.394a7.svg" />} />
-                        <ButtonDropdown items={controlsItems} text="其它操作" />
+                        <ButtonDropdown menu={{items:controlsItems}} text="其它操作" />
                         <PrimaryButton text={"发送邀请"} />
                         <ButtonIcon icon={<LeftIcon className='font-20' />} onClick={()=>{
                         }} />

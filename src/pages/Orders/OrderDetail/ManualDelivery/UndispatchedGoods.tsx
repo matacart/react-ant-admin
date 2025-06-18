@@ -25,7 +25,7 @@ function UndispatchedGoods(){
                         return(
                         <Flex key={index} style={{borderBottom: "1px solid #EEF1F6",padding:"20px 0"}}>
                             <Flex style={{paddingRight:"10px"}}>
-                                <img src={item.product_image+"?x-oss-process=image/resize,w_200"} alt={item.product_name} style={{ width: "80px", height: "80px", marginRight: "10px" }} />
+                                <img src={item.product_image?item.product_image+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_200"} alt={item.product_name} style={{ width: "80px", height: "80px", marginRight: "10px" }} />
                             </Flex>
                             <Flex style={{flex:1}} vertical>
                                 <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all" }} className="font-w-500">{item.product_name}</div>

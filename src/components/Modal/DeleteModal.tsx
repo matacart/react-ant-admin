@@ -1,7 +1,10 @@
 import { DeleteOutlined, ExclamationCircleFilled } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Button, Flex, Modal } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
+import PrimaryButton from "../Button/PrimaryButton";
+import DefaultButton from "../Button/DefaultButton";
+import DangerButton from "../Button/DangerButton";
 
 
 // 删除 弹窗提示
@@ -10,17 +13,22 @@ export default function DeleteModal({removeFunc,title,content,okText,tElement}:a
     const [modal, contextHolder] = Modal.useModal();
 
     const confirm = () => {
-        modal.confirm({
+        const newModal = modal.confirm({
             title: title,
             icon: <ExclamationCircleFilled style={{color:"#F86140"}}/>,
             content: content,
             centered: true,
             okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
             okText: okText,
-            cancelText: '取消',
-            onOk() {
-                removeFunc()
-            }
+            footer:()=>(
+                <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
+                    <DefaultButton text="取消" autoInsertSpace={false} onClick={()=>newModal.destroy()} />
+                    <DangerButton text="删除" autoInsertSpace={false} onClick={()=>{
+                        removeFunc();
+                        newModal.destroy();
+                    }} />
+                </Flex>
+            )
         });
     };
     return (

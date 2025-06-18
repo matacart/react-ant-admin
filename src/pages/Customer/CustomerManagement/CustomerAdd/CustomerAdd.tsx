@@ -4,8 +4,9 @@ import styled from "styled-components";
 import { history } from '@umijs/max';
 import BasicInformationCard from "./BasicInformationCard";
 import DeliveryAddressCard from "./DeliveryAddressCard";
-import TagCard from "./TagCard";
 import Remark from "./Remark";
+import Label from "./Label";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 
 // 新增客户
 export default function NewCustomer() {
@@ -29,15 +30,14 @@ export default function NewCustomer() {
                         <DeliveryAddressCard />
                     </div>
                     <div className='mc-layout-extra'>
-                        <TagCard/>
+                        <Label/>
                         <Remark />
                     </div>
                 </div>
                 <Divider/>
                 <div className='mc-footer'>
-                    <Button type='primary' onClick={async ()=>{
-                       
-                    }}>创建</Button>
+                    <PrimaryButton text="创建" onClick={async ()=>{
+                    }} />
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@ const Scoped = styled.div`
             font-size: 30px;
             height: 42px;
             font-weight: bold;
-            margin: 8px 0px 24px;
+            margin: 8px 0px 20px;
 
             display: flex;
             justify-content: space-between;

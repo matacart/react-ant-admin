@@ -48,8 +48,10 @@ function ManualDelivery() {
                     quantityShipped:item.quantity
                 }
             })
+
             setOrderShipped({
                 orderId:orderId,
+                groupId:orderDelivery.deliveryProductList[0].group_id,
                 ordersProductList:JSON.stringify(ordersProductList),
                 ...orderDelivery.delivery,
                 deliveryAddressId:orderDelivery.deliveryAddress.delivery_address_id,
@@ -57,7 +59,6 @@ function ManualDelivery() {
                 deliveryFirstname:orderDelivery.deliveryAddress.delivery_firstname,
                 deliveryLastname:orderDelivery.deliveryAddress.delivery_lastname,
                 deliveryCompany:orderDelivery.deliveryAddress.delivery_company,
-                
                 deliveryStreetAddress:orderDelivery.deliveryAddress.delivery_street_address,
                 deliverySuburb:orderDelivery.deliveryAddress.delivery_suburb,
                 deliveryPostcode:orderDelivery.deliveryAddress.delivery_postcode,

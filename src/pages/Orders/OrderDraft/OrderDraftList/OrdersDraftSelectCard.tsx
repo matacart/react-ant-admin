@@ -1,7 +1,6 @@
 import type { MenuProps } from 'antd';
 import SearchInput from "@/components/Input/SearchInput";
 import orderList from "@/store/order/orderList";
-import LangSelect from "@/pages/components/LangSelect";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 
 function OrdersDraftSelectCard() {
@@ -35,7 +34,6 @@ function OrdersDraftSelectCard() {
                 }}
               >
               <div style={{flex:1}}><SearchInput placeholder={"查询草稿单号或采购订单编号（仅B2B订单有）"} /></div>
-              <LangSelect setLang={setLang} lang={orderList.languages} isLabel={true} />
               <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="状态" btnStyle={{width:"100px"}} />
             </div>
           </div>

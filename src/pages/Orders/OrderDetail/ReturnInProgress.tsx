@@ -1,18 +1,23 @@
-import { Badge, Card, Col, Divider, Flex, Form, Input, message, Row, Tooltip } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { Card, Checkbox, Col, Divider, Flex, Form, Input, message, Modal, Row, Tooltip } from "antd";
+import { EllipsisOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import { ReturnSecondIcon, UnfoldIcon } from "@/components/Icons/Icons";
-import { history } from '@umijs/max';
+import { ReturnCompletedSecondIcon, ReturnSecondIcon, UnfoldIcon } from "@/components/Icons/Icons";
 import order from "@/store/order/order";
 import MyDropdown from "@/components/Dropdown/MyDropdown";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import StatementModalSecondary from "@/components/Modal/StatementModalSecondary";
 import PackageTrackingSecondModal from "./Modal/PackageTrackingSecondModal";
+import { setMarkProductAsRefunded } from "@/services/y2/api";
+import { useNavigate } from "react-router-dom";
 
 
 function ReturnInProgress({groupIndex}:{groupIndex:number}) {
+
+  const [loading,setLoading] = useState(false)
+
+  const navigate = useNavigate();
 
   const returnInfo  = order.returnInProductsGroup[groupIndex]
 
@@ -20,10 +25,17 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
     <Card
       title={
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
-          <Flex align="center" gap={10}>
-            <ReturnSecondIcon className="font-28" />
-            <span className="font-w-500">{"退货中"}（{returnInfo.return.returned_quantity}）</span>
-          </Flex>
+          {returnInfo.return.return_status_id == "3" ? <>
+            <Flex align="center" gap={10}>
+              <ReturnCompletedSecondIcon className="font-28" />
+              <span className="font-w-500">{"已退货"}（{returnInfo.return.returned_quantity}）</span>
+            </Flex>
+          </>:<>
+            <Flex align="center" gap={10}>
+              <ReturnSecondIcon className="font-28" />
+              <span className="font-w-500">{"退货中"}（{returnInfo.return.returned_quantity}）</span>
+            </Flex>
+          </>}
           <MyDropdown
             tiggerEle={
               <div className="cursor-pointer"><EllipsisOutlined /></div>
@@ -96,8 +108,41 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
             } />
         </Flex>
         <Flex justify="flex-end" gap={12}>
-            <DefaultButton text={"标记为已退货"} onClick={()=>{}} />
-            <PrimaryButton text={"退款"} onClick={()=>{}}  />
+            {returnInfo.return.return_status_id !== "3" && <DefaultButton text={"标记为已退货"} onClick={()=>{
+              const modal = Modal.confirm({
+                title: <div className="font-w-600">确认将商品状态标记为已退货？</div>,
+                icon: <ExclamationCircleFilled style={{color:"#1677ff"}} />,
+                content: <div style={{marginBottom:"12px"}}>
+                  <Checkbox>向客户发送通知</Checkbox>
+                </div>,
+                centered:true,
+                footer:(_, { OkBtn, CancelBtn }) => (
+                  <>
+                      <Flex justify='end' align='center'>
+                          <Flex gap={12}>
+                              <DefaultButton text={"取消"} onClick={()=>modal.destroy()} />
+                              <PrimaryButton text={"确定"} onClick={()=>{
+                                setLoading(true)
+                                setMarkProductAsRefunded({
+                                  orderId: order.orderInfo.order_id,
+                                  returnId: returnInfo.return.return_id
+                                }).then(res=>{
+                                  modal.destroy()
+                                  message.success("商品状态已标记为已退货")
+                                  order.triggerRefresh()
+                                }).catch(err=>{
+                                  console.log(err)
+                                }).finally(()=>{
+                                  setLoading(false)
+                                })
+                              }} loading={loading} />
+                          </Flex>
+                      </Flex>
+                  </>
+                ),
+              });
+            }} />}
+            <PrimaryButton text={"退款"} onClick={()=>navigate(`/orders/${order.orderInfo.order_id}/returns/${returnInfo.return.return_id}/refund`)}  />
         </Flex>
         </Flex>}
       </Form>

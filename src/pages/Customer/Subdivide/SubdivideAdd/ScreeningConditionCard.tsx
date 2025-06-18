@@ -36,7 +36,6 @@ export default function ScreeningConditionCard() {
                         </Tooltip>
                     </Flex>
                 </Flex>
-
                 <Divider className="divider" />
                 <Flex style={{padding:"0 24px"}} className="select-box">
                     <Flex className="select-item color-242833 cursor-pointer" gap={8} align="center">
