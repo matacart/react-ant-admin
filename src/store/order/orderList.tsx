@@ -42,6 +42,14 @@ class OrderList{
         this.tagsStatusList = res
     }
 
+    // 标签
+    optionLabel = [
+        {id:0,title:"",value:"",label:""},
+    ]
+    setOptionLabel(res:any){
+        this.optionLabel = res
+    }
+
 
     // 条件
     condition = {
@@ -50,6 +58,12 @@ class OrderList{
 
     setCondition(res:any){
         this.condition = res
+    }
+
+    // 订单状态
+    bizOrderStatuses:string[] = []
+    setBizOrderStatuses(res:string[]){
+        this.bizOrderStatuses = res
     }
 
     // 店铺币种

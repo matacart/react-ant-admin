@@ -1,7 +1,11 @@
-import { ConfigProvider, Input, InputNumber } from "antd"
+import { ConfigProvider, Input, InputProps  } from "antd"
 import styled from "styled-components"
 
-function MyInput({...props}) {
+interface MyInputProps extends InputProps{
+    ref?:any
+}
+
+function MyInput({...props}:MyInputProps) {
   return (
     <ConfigProvider
         theme={{

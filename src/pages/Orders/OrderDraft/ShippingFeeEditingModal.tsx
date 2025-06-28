@@ -6,69 +6,138 @@ import NumberInput from "@/components/Input/NumberInput";
 import { Alert, Checkbox, Flex, Form, Input, Modal, Radio } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import cookie from 'react-cookies';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import orderDraft from "@/store/order/orderDraft";
+import { getDeliveryList } from "@/services/y2/api";
 
 
 const style: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
-    marginBottom:20
+    marginBottom:20,
+    maxHeight:"240px",
+    overflowY:"auto"
 };
 
 function ShippingFeeEditingModal(){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [freight,setFreight] = useState("FREE_SHIPPING")
+    const [loading,setLoading] = useState(false);
+
+    const [options,setOptions] = useState<any[]>([]);
+
+    const [freight,setFreight] = useState("FREE_SHIPPING");
 
     const [form] = Form.useForm();
 
     const submit = ()=>{
-        form.submit()
-        // 
-        if(freight == "FREE_SHIPPING"){
-            orderDraft.setOrderInfo({
-                ...orderDraft.orderInfo,
-                logisticsType:freight,
-                logisticsName:"",
-                logisticsAmount:0
-            })
-            form.setFieldsValue({
-                name:"",
-                cost:0
-            })
-        }
-        if(freight == "CUSTOM_SHIPPING_AMOUNT"){
-            orderDraft.setOrderInfo({
-                ...orderDraft.orderInfo,
-                logisticsType:freight,
-                logisticsName:form.getFieldsValue().name,
-                logisticsAmount:form.getFieldsValue().cost?form.getFieldsValue().cost:0
-            })
-        }
-        // 更新订单数据
-        setIsModalOpen(false);
+        form.validateFields().then((values)=>{
+            // 
+            if(freight == "FREE_SHIPPING"){
+                orderDraft.setOrderInfo({
+                    ...orderDraft.orderInfo,
+                    shippingId:"0",
+                    shippingMethod:"免运费",
+                    shippingModuleCode:null,
+                    shippingTotal:0,
+                    orderTotal:orderDraft.orderInfo.productTotal - orderDraft.orderInfo.orderDiscount + 0,
+                })
+            }else if(freight == "CUSTOM_SHIPPING_AMOUNT"){
+                orderDraft.setOrderInfo({
+                    ...orderDraft.orderInfo,
+                    shippingId:"0",
+                    shippingMethod:values.name,
+                    shippingModuleCode:null,
+                    shippingTotal:values.cost,
+                    orderTotal:orderDraft.orderInfo.productTotal - orderDraft.orderInfo.orderDiscount + values.cost,
+                })
+            }else{
+                const shipping = options.find(item=>item.id==freight)
+                orderDraft.setOrderInfo({
+                    ...orderDraft.orderInfo,
+                    shippingId:shipping.id,
+                    shippingMethod:shipping.label,
+                    shippingModuleCode:null,
+                    shippingTotal:0,
+                    orderTotal:orderDraft.orderInfo.productTotal - orderDraft.orderInfo.orderDiscount + 0,
+                })
+            }
+            // 更新订单数据
+            setIsModalOpen(false);
+        }).catch((errorInfo)=>{
+        })
     }
 
     const cancel = () => {
-        setFreight(orderDraft.orderInfo.logisticsType)
+        if(orderDraft.orderInfo.shippingId == "0"){
+            orderDraft.orderInfo.shippingMethod == "免运费" ? setFreight("FREE_SHIPPING") : setFreight("CUSTOM_SHIPPING_AMOUNT")
+        }else{
+            setFreight(orderDraft.orderInfo.shippingId)
+        }
         form.setFieldsValue({
-            name:orderDraft.orderInfo.logisticsName,
-            cost:orderDraft.orderInfo.logisticsAmount
+            name:orderDraft.orderInfo.shippingMethod,
+            cost:orderDraft.orderInfo.shippingTotal
         })
         setIsModalOpen(false);
     };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
+    const getDeliverys = ()=>{
+        // 配送方式
+        if(orderDraft.receiverInfo && orderDraft.receiverInfo.receiverId){
+            setLoading(true)
+            getDeliveryList("2").then(res=>{
+                const newDeliveryList = res.data.map(item=>{
+                    if(item.status == "1"){
+                        return {
+                            id:item.addons_config_id,
+                            value:item.addons_config_id,
+                            label:item.addons_config_title
+                        }
+                    }
+                    return null
+                }).filter((items:any)=>items)
+                setOptions([
+                    {
+                        id:"FREE_SHIPPING",
+                        value:"FREE_SHIPPING",
+                        label:"免运费"
+                    },
+                    {
+                        id:"CUSTOM_SHIPPING_AMOUNT",
+                        value:"CUSTOM_SHIPPING_AMOUNT",
+                        label:"自定义运费"
+                    },
+                    ...newDeliveryList
+                ])
+            }).catch(err=>{
+            }).finally(()=>{
+                setLoading(false)
+            })
+        }else{
+            setOptions([
+                {
+                    id:"FREE_SHIPPING",
+                    value:"FREE_SHIPPING",
+                    label:"免运费"
+                },
+                {
+                    id:"CUSTOM_SHIPPING_AMOUNT",
+                    value:"CUSTOM_SHIPPING_AMOUNT",
+                    label:"自定义运费"
+                }
+            ])
+        }
+    }
 
     return (
         <>
-            <a onClick={()=>setIsModalOpen(true)} style={{width:"20%"}}>编辑运费</a>
-            <Modal title={<div>编辑运费</div>} centered open={isModalOpen} onOk={handleOk} onCancel={cancel} 
+            <a onClick={()=>{
+                setIsModalOpen(true)
+                getDeliverys()
+            }} style={{width:"20%"}}>编辑运费</a>
+            <Modal title={<div>编辑运费</div>} centered loading={loading} open={isModalOpen} onCancel={cancel} 
                 footer = {(_, { OkBtn, CancelBtn }) => (
                     <Flex justify="end">
                         <Flex gap={12}>
@@ -85,17 +154,14 @@ function ShippingFeeEditingModal(){
                     style={style}
                     value={freight}
                     onChange={(e)=>setFreight(e.target.value)}
-                    options={[
-                        { value: "FREE_SHIPPING", label: '免运费' },
-                        { value: "CUSTOM_SHIPPING_AMOUNT", label: '自定义运费' },
-                    ]}
+                    options={options}
                 />
                 {freight == "CUSTOM_SHIPPING_AMOUNT" && <Form form={form} layout="vertical">
                     <FormItem label="物流名称" name="name">
                         <DefaultInput placeholder="物流名称" />
                     </FormItem>
                     <FormItem label="费用" name="cost">
-                        <NumberInput min={0} prefix={cookie.load("symbolLeft") || ""} />
+                        <NumberInput style={{width:"100%"}} min={0} prefix={cookie.load("symbolLeft") || ""} />
                     </FormItem>
                 </Form>}
             </Modal>

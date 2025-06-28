@@ -1,16 +1,17 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import MyDropDownSecondary from "@/components/Dropdown/MyDropDownSecondary";
 import { UnfoldIcon } from "@/components/Icons/Icons";
+import { batchArcOrder, batchUnarcOrder } from "@/services/y2/api";
 import { batchshipOrders, batchdelOrders, updateOrderStatus } from "@/services/y2/order";
 import orderList from "@/store/order/orderList";
 import { history } from "@umijs/max";
-import { message, Modal, Checkbox, Button, Select, Flex, theme } from "antd";
+import { message, Modal, Checkbox, Button, Select, Flex, theme, notification } from "antd";
 import React, { useRef } from "react";
 import styled from "styled-components";
 
 const { useToken } = theme;
 
-function SelectedActions(){
+function SelectedActions({fetchData}){
 
     const { token } = useToken();
 
@@ -150,7 +151,7 @@ function SelectedActions(){
             if (response.code === 0) {
               message.success('订单状态更新成功');
               // 重新获取数据并更新界面
-              fetchData(); // 直接调用 fetchData 来刷新数据
+              // fetchData(); // 直接调用 fetchData 来刷新数据
             } else {
               message.error('订单状态更新失败');
             }
@@ -188,12 +189,37 @@ function SelectedActions(){
                 items:[
                   {
                     key: "1", label: (
-                      <div onClick={() => {}}>归档订单</div>
+                      <a onClick={() => {
+                        batchArcOrder(JSON.stringify(orderList.orderIds)).then(res=>{
+                          notification.success({
+                            message: `对${orderList.orderIds.length}条订单进行归档`,
+                            description: <div>已成功归档{orderList.orderIds.length}条订单</div>,
+                          })
+                          orderList.setOrderIds([]);
+                          // 重新加载数据
+                          fetchData();
+                        }).catch(err=>{
+                          console.log(err);
+                        })
+                      }}>归档订单</a>
                     )
                   },
                   {
                     key: "2", label: (
-                      <div onClick={() => {}}>取消归档订单</div>
+                      <a onClick={() => {
+                        
+                        batchUnarcOrder(JSON.stringify(orderList.orderIds)).then(res=>{
+                          notification.success({
+                            message: `对${orderList.orderIds.length}条订单进行取消归档`,
+                            description: <div>已成功取消归档{orderList.orderIds.length}条订单</div>,
+                          })
+                          orderList.setOrderIds([]);
+                          // 重新加载数据
+                          fetchData();
+                        }).catch(err=>{
+                          console.log(err);
+                        })
+                      }}>取消归档订单</a>
                     )
                   },
                   {

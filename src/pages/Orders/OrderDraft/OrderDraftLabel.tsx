@@ -2,20 +2,33 @@ import { Badge, Button, Card, Divider, Flex, Form, Input, Tag, Tooltip } from "a
 import { observer } from "mobx-react-lite";
 import { styled } from 'styled-components';
 import TagAutoComplete from "@/components/AutoComplete/TagAutoComplete";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CloseIcon } from "@/components/Icons/Icons";
 import ManagementLabelModal from "./ManagementLabelModal";
+import orderDraft from "@/store/order/orderDraft";
 
 function OrderDraftLabel() {
 
-    const [customerList,setCustomerList] = useState([
-        { label: 'John', value: 'John', email: 'john@example.com', tel: '123-456-7890' },
-        { label: 'John1', value: 'John1', email: 'john@example.com', tel: '123-456-7890' },
-        { label: 'John2', value: 'John2', email: 'john@example.com', tel: '123-456-7890' },
-        { label: 'John3', value: 'John3', email: 'john@example.com', tel: '123-456-7890' },
-    ]);
+    const [customerList,setCustomerList] = useState([]);
 
     const [tags,setTags] = useState<Array<{ label: string; value: string }>>([]);
+
+    // 删除标签
+    const removeTag = (value:any)=>{
+        const newTags = tags.filter(tag => tag.value !== value);
+        orderDraft.setOrderInfo({
+            ...orderDraft.orderInfo,
+            tags: newTags.map(tag => tag.value).join(",")
+        });
+    }
+
+    useEffect(() => {
+        const newTags = orderDraft.orderInfo.tags ? orderDraft.orderInfo.tags.trim().split(",").filter(tag => tag !== "").map(tag => ({
+            label: tag,
+            value: tag
+        })) : [];
+        setTags([...newTags]);
+    }, [orderDraft.orderInfo.tags]);
 
     return (
         <Scoped>
@@ -24,23 +37,28 @@ function OrderDraftLabel() {
                     <div>订单标签</div>
                     <ManagementLabelModal />
                 </Flex>
-                {/* <div className='title font-16 font-w-600 color-242833'>订单标签</div> */}
                 <TagAutoComplete style={{width:"100%"}} options={customerList} placeholder="输入标签，按enter确认" onClick={(value)=>{
-                    console.log(value)
-                    setTags([...tags,{
-                        label:value,
-                        value:value
-                    }])
+                     setTags(prevTags => {
+                        const newTags = [...prevTags, { label: value, value: value }];
+                        orderDraft.setOrderInfo({
+                            ...orderDraft.orderInfo,
+                            tags: newTags.map(tag => tag.value).join(",")
+                        });
+                        return newTags;
+                    });
                 }} />
 
                 {/*  */}
                 <div className="color-474F5E tags-warp">
                     {tags?.map((tag,index)=>(
-                        <Tag key={index} color={"#e2f0ff"} className="tag" style={{color:"#474F5E"}} bordered={false} closeIcon={<CloseIcon style={{
+                        // 使用 index 作为下标时 当删除中间项后，React 会复用后续组件实例，导致状态混乱
+                        <Tag key={tag.value+Date.now()+index} color={"#e2f0ff"} className="tag" style={{color:"#474F5E"}} bordered={false} closeIcon={<CloseIcon style={{
                             lineHeight: 1,  // 关键属性
                             fontSize:"14px",
                             verticalAlign: '-0.15em' // 微调对齐
-                        }} />}>
+                        }}/>}
+                            onClose={()=>removeTag(tag.value)}
+                        >
                             <span>{tag.label}</span>
                         </Tag>
                     ))}

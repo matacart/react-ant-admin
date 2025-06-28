@@ -32,6 +32,8 @@
 
 `dnd-kit`:拖拽
 
+`lodash.debounce`: 防抖
+
 
 # 功能实现情况
 

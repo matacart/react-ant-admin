@@ -1,5 +1,5 @@
 // DraftPaidCard.js
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Form, Divider, Flex, Checkbox, Tooltip, Popover, Popconfirm, DatePicker } from 'antd';
 import SimpleCard from '@/components/Card/SimpleCard';
 import DefaultButton from '@/components/Button/DefaultButton';
@@ -10,7 +10,7 @@ import MyButton from '@/components/Button/MyButton';
 import MySelect from '@/components/Select/MySelect';
 import cookie from 'react-cookies';
 import { observer } from 'mobx-react-lite';
-import { getAddonsList } from '@/services/y2/api';
+import { getAddonsConfigs, getAddonsList, getDeliveryList } from '@/services/y2/api';
 import orderDraft from '@/store/order/orderDraft';
 import MySelectIcon from '@/components/Select/MySelectIcon';
 import { Link } from 'react-router-dom';
@@ -22,14 +22,9 @@ function DraftPaidCard() {
 
   // 成本价 US$0.00
   const [costPrice,setCostPrice] = useState(0);
-  // 小计
-  const [pricing,setPricing] = useState(0);
   // 税费
   const [taxes,setTaxes] = useState(false);
-  // 付款期限方式
-  const [paymentTerm,setPaymentTerm] = useState("");
-  // 付款期限
-  const [deadLine,setDeadLine] = useState("");
+  
   const options = [
     {
         value: 'full_payment_on_invoice',
@@ -69,9 +64,19 @@ function DraftPaidCard() {
     },
   ];
 
+  // 支付方式
+  const [paymentList,setPaymentList] = useState()
+
   const symbolLeft = cookie.load("symbolLeft") || ""
 
+
+  const isFirstRender = useRef(true);
   useMemo(()=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     let newCostPrice = 0;
     let newPricing = 0;
     orderDraft.productInfo.forEach(element => {
@@ -79,25 +84,41 @@ function DraftPaidCard() {
       newPricing = newPricing + element.final_price * element.product_quantity
     });
     setCostPrice(newCostPrice)
-    setPricing(newPricing)
-
     // 如果产品折扣大于小计，则修改折扣
-    if(newPricing<orderDraft.orderInfo.discountAmount){
+    if(newPricing<orderDraft.orderInfo.orderDiscount){
       orderDraft.setOrderInfo({
         ...orderDraft.orderInfo,
-        discountAmount:newPricing
+        orderDiscount:newPricing,
+        productTotal:newPricing,
+        orderTotal:0+orderDraft.orderInfo.shippingTotal,
+      })
+    }else{
+      orderDraft.setOrderInfo({
+        ...orderDraft.orderInfo,
+        productTotal:newPricing,
+        orderTotal:newPricing - orderDraft.orderInfo.orderDiscount + orderDraft.orderInfo.shippingTotal,
       })
     }
-    // console.log(order.discountAmount)
-    // console.log(order.logisticsAmount)
   },[orderDraft.productInfo])
 
 
+
   useEffect(()=>{
-    getAddonsList("2","1","0").then(res=>{
+    // 手动收款方式
+    getAddonsConfigs().then(res=>{
       console.log(res)
+      const newPaymentList = res.data.map(item=>{
+        return {
+          value: item.id,
+          label: item.title,
+        }
+      })
+      setPaymentList(newPaymentList)
+
     }).catch(err=>{
     })
+
+    console.log(orderDraft.orderInfo)
   },[])
 
 
@@ -125,17 +146,17 @@ function DraftPaidCard() {
           </Flex>
           <Flex justify="space-between">
             <div>小计</div>
-            <div>{symbolLeft}{pricing.toFixed(2)}</div>
+            <div>{symbolLeft}{Number(orderDraft.orderInfo.productTotal).toFixed(2)}</div>
           </Flex>
           <Flex justify="space-between" style={orderDraft.productInfo.length>0 ? {}:{ pointerEvents: "none",opacity: 0.6 }}>
-            <DiscountEditModal pricing={pricing} disable={ orderDraft.productInfo.length>0 ? false : true} />
+            <DiscountEditModal pricing={orderDraft.orderInfo.productTotal} disable={ orderDraft.productInfo.length>0 ? false : true} />
             <div style={{flex:1}}>{orderDraft.orderInfo.orderDiscountDesc==""?"-":orderDraft.orderInfo.orderDiscountDesc}</div>
             <div>-{symbolLeft}{orderDraft.orderInfo.orderDiscount?Number(orderDraft.orderInfo.orderDiscount).toFixed(2):Number(0).toFixed(2)}</div>
           </Flex>
           <Flex justify="space-between">
             <ShippingFeeEditingModal />
-            <div style={{flex:1}}>{orderDraft.orderInfo.logisticsType == "FREE_SHIPPING"?"免运费":orderDraft.orderInfo.logisticsName==""?"-":orderDraft.orderInfo.logisticsName}</div>
-            <div>{symbolLeft}{orderDraft.orderInfo.logisticsAmount.toFixed(2)}</div>
+            <div style={{flex:1}}>{orderDraft.orderInfo.shippingId ? orderDraft.orderInfo.shippingMethod : "-"}</div>
+            <div>{symbolLeft}{Number(orderDraft.orderInfo.shippingTotal).toFixed(2)}</div>
           </Flex>
           <Flex justify="space-between">
             <Popover 
@@ -173,49 +194,61 @@ function DraftPaidCard() {
           </Flex>
           <Flex justify="space-between">
             <div className='font-w-600'>合计</div>
-            <div className='font-w-600'>{symbolLeft}{(pricing - orderDraft.orderInfo.orderDiscount + orderDraft.orderInfo.logisticsAmount).toFixed(2)}</div>
+            <div className='font-w-600'>{symbolLeft}{Number(orderDraft.orderInfo.orderTotal).toFixed(2)}</div>
           </Flex>
         </Flex>
         <Divider />
         {/* 付款金额大于零 */}
-        {pricing - orderDraft.orderInfo.orderDiscount + orderDraft.orderInfo.logisticsAmount > 0 && <>
-          <Checkbox checked={orderDraft.orderInfo.deferredPayment} onChange={(e)=>{
+        {orderDraft.orderInfo.orderTotal > 0 && <>
+          <Checkbox checked={orderDraft.orderInfo.paymentTerm?true:false} onChange={(e)=>{
             orderDraft.setOrderInfo({
               ...orderDraft.orderInfo,
-              deferredPayment:e.target.checked
+              paymentTerm:e.target.checked ? "full_payment_on_shipment" :""
             })
           }}>延期支付</Checkbox>
-          {orderDraft.orderInfo.deferredPayment ? <>
+          {orderDraft.orderInfo.paymentTerm ? <>
             <div style={{margin:"8px 0"}}>付款期限</div>
             <Flex style={{width:"100%"}} gap={8}>
-              <MySelectIcon style={{height:"36px",width:"252px"}} options={options} value={paymentTerm} placeholder="请选择" onChange={(value:string)=>{
-                setPaymentTerm(value)
+              <MySelectIcon style={{height:"36px",width:"252px"}} options={options} value={orderDraft.orderInfo.paymentTerm} placeholder="请选择" onChange={(value:string)=>{
+                orderDraft.setOrderInfo({
+                  ...orderDraft.orderInfo,
+                  paymentTerm:value
+                })
                 if(value == "full_payment_on_invoice" || value == "full_payment_on_shipment"){
 
                 }else{
-                  setDeadLine(dayjs(new Date()).add(1, 'day').format("YYYY-MM-DD"))
+                  orderDraft.setOrderInfo({
+                    ...orderDraft.orderInfo,
+                    paymentStartDate:dayjs(new Date()).add(1, 'day').unix().toString()
+                  })
                 }
               }} />
               {/*  */}
-              {!(paymentTerm == "full_payment_on_invoice" || paymentTerm == "full_payment_on_shipment") && <MyDatePicker value={dayjs(deadLine)} onChange={(date)=>{
-                setDeadLine(date.format("YYYY-MM-DD"))
-              }} />}
+              {!(orderDraft.orderInfo.paymentTerm == "full_payment_on_invoice" || orderDraft.orderInfo.paymentTerm == "full_payment_on_shipment") && <MyDatePicker allowClear={false} value={orderDraft.orderInfo.paymentStartDate ? dayjs(parseInt(orderDraft.orderInfo.paymentStartDate)*1000) : ""} 
+                onChange={(date)=>{
+                  orderDraft.setOrderInfo({
+                    ...orderDraft.orderInfo,
+                    paymentStartDate:date ? date.unix().toString() : ""
+                  })
+                }}
+                minDate={dayjs(new Date())}
+              />}
             </Flex>
-            {(paymentTerm == "full_payment_on_invoice" || paymentTerm == "full_payment_on_shipment") ? <div style={{marginTop:"8px"}} className="color-474F5E font-w-400">
+            {(orderDraft.orderInfo.paymentTerm == "full_payment_on_invoice" || orderDraft.orderInfo.paymentTerm == "full_payment_on_shipment") ? <div style={{marginTop:"8px"}} className="color-474F5E font-w-400">
               <span>客户应在账单发送后的24小时内完成付款。</span>
               设置付款<Link to="" className="color-356DFF">通知邮件</Link>
             </div>:<div style={{marginTop:"8px"}} className="color-474F5E font-w-400">
-              <span>客户应在{deadLine}前完成付款。</span>
+              <span>客户应在{dayjs(parseInt(orderDraft.orderInfo.paymentStartDate) * 1000).format("YYYY-MM-DD")}前完成付款。</span>
               设置付款<Link to="" className="color-356DFF">通知邮件</Link>
             </div>}
           </> : <Flex justify='space-between' align='end'>
             <Flex gap={20}>
               <div>
                 <div style={{margin:"14px 0"}}>支付状态</div>
-                <MySelect value={orderDraft.orderInfo.paymentStatus} onChange={(value:string)=>{
+                <MySelect value={orderDraft.orderInfo.ordersStatus} onChange={(value:string)=>{
                   orderDraft.setOrderInfo({
                     ...orderDraft.orderInfo,
-                    paymentStatus:value
+                    ordersStatus:value
                   })
                 }} style={{width:"120px",height:"36px"}} options={[
                   { value: '0', label: '未付款' },
@@ -224,14 +257,13 @@ function DraftPaidCard() {
               </div>
               <div>
                 <div style={{margin:"14px 0"}}>支付方式</div>
-                <MySelect value={orderDraft.orderInfo.paymentMethod} onChange={(value:string)=>{
+                <MySelect value={orderDraft.orderInfo.paymentMethodNo == "0" ? "" : orderDraft.orderInfo.paymentMethodNo} onChange={(value:string,option:any)=>{
                   orderDraft.setOrderInfo({
                     ...orderDraft.orderInfo,
-                    paymentMethod:value
+                    paymentMethodNo:value,
+                    paymentMethod:option.label
                   })
-                }} style={{width:"120px",height:"36px"}} options={[
-                  { value: '0', label: '货到付款' },
-                ]} />
+                }} style={{width:"120px",height:"36px"}} options={paymentList} />
               </div>
             </Flex>
             <DefaultButton text={'发送账单'} />

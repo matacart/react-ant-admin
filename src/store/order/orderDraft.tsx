@@ -1,6 +1,8 @@
 import { makeAutoObservable } from "mobx";
 
 interface productinfo {
+    vid?: string;
+
     product_cost_price: number;
     // group_id: "0",
     product_id:string;
@@ -23,17 +25,26 @@ interface productinfo {
 
 interface orderInfo{
     id?:string;
+    remark:string;
+    productTotal:number;
+    orderTotal:number;
     orderDiscount: number;
     orderDiscountDesc: string;
-    logisticsName: string;
-    paymentStatus: string;
-    paymentMethod: string;
+    paymentTerm:string;
+    paymentStartDate:string;
+
+    shippingId:string;
+    shippingMethod:string;
+    shippingTotal:number;
+    shippingModuleCode:string | null;
+    
+    paymentMethod:string;
+    paymentMethodNo:string;
+    ordersStatus:string;
+
     isTaxe: number;
-    logisticsAmount: number;
-    logisticsType: string;
-    remark:string;
-    tags:any;
-    // 
+    tags: string;
+
     deferredPayment:boolean;
     isDiscountAccumulation:number;
 }
@@ -102,25 +113,42 @@ interface payBillInfo{
 
 
 class orderDraft{
+    
     constructor() {
         makeAutoObservable(this)
+    }
+
+    // 上一个草稿单id
+    prevDraftId:string = "";
+    setPrevDraftId(prevDraftId:string){
+        this.prevDraftId = prevDraftId
+    }
+    nextDraftId:string = "";
+    setNextDraftId(nextDraftId:string){
+        this.nextDraftId = nextDraftId
     }
 
     orderInfo:orderInfo = {
         orderDiscount: 0,
         orderDiscountDesc: "",
-        logisticsName: "",
-        paymentStatus: "0",
-        paymentMethod: "0",
+        productTotal: 0,
+        orderTotal: 0,
+        paymentTerm: "",
+        // 付款期限
+        paymentStartDate: "",
+        shippingId: "",
+        shippingMethod: "",
+        shippingTotal: 0,
+        shippingModuleCode: null,
+        paymentMethod: "",
+        paymentMethodNo: "",
+        ordersStatus:"0",
+        remark: "",
+
         isTaxe: 0,
-        logisticsAmount: 0,
-        logisticsType: "",
         isDiscountAccumulation: 1,
         // 
-        tags: [],
-        remark: "",
-        // 
-        deferredPayment: false,
+        tags:"",
     }
 
     setOrderInfo(value:orderInfo){
@@ -159,18 +187,24 @@ class orderDraft{
     // 重置
     reset(){
         this.orderInfo = {
-            logisticsName: "",
-            paymentStatus: "0",
-            paymentMethod: "0",
-            isTaxe: 0,
-            logisticsAmount: 0,
-            logisticsType: "",
-            discountAmount: 0,
-            discountDesc: "",
-            isDiscountAccumulation:1,
-            tags: [],
+            orderDiscount: 0,
+            orderDiscountDesc: "",
+            productTotal: 0,
+            orderTotal: 0,
+            paymentTerm: "",
+            // 付款期限
+            paymentStartDate: "",
+
+            shippingId:"",
+            shippingMethod: "",
+            shippingTotal: 0,
+            shippingModuleCode: null,
+            paymentMethod: "",
+            paymentMethodNo: "",
+            ordersStatus:"0",
             remark: "",
-            deferredPayment: false
+
+            tags:"",
         };
         this.productInfo = [];
         this.customerInfo = null;

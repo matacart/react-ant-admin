@@ -56,6 +56,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@reduxjs/toolkit": "^2.2.5",
     "@tinymce/tinymce-react": "^5.0.1",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/nprogress": "^0.2.3",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-cookies": "^0.1.4",

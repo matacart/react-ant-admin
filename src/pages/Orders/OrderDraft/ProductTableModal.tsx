@@ -67,12 +67,11 @@ function ProductTableModal(){
     })
 
     const cancel = () => {
-        setProductList(orderDraft.productInfo)
+        // setProductList(orderDraft.productInfo)
         setOpen(false);
     };
     // 添加商品
     const handleOk = () => {
-        // 
         let newProductList = productList.map(item=>{
             return {
                 attributes:item.attributes,
@@ -93,7 +92,7 @@ function ProductTableModal(){
                 product_discount_type_from: null,
             }
         })
-        orderDraft.setProductInfo([...newProductList])
+        orderDraft.setProductInfo([...orderDraft.productInfo,...newProductList])
         setOpen(false);
     };
 
@@ -103,6 +102,7 @@ function ProductTableModal(){
             setProductList(selectedRows)
         },
         getCheckboxProps: (record: DataType) => ({
+            disabled:orderDraft.productInfo.some(item => item.product_id == record.product_id),
         }),
     };
 
@@ -130,13 +130,10 @@ function ProductTableModal(){
         })
     };
 
-    useMemo(()=>{
-        setProductList([...orderDraft.productInfo])
-    },[orderDraft.productInfo])
-
     return (
         <Scoped ref={Ref}>
             <DefaultButtonSecondary type="primary" text="添加商品" onClick={()=>{
+                setProductList([])
                 fetchData(1,10);
                 setOpen(true)
             }} />

@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
+import { getOrderDraftList } from '@/services/y2/api';
 
 // 表单项订单数据类型
 interface DataType {
@@ -42,7 +43,8 @@ function OrdersDraftListAjax() {
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 50,
+      pageSize: 10,
+      total:orderDraftList.orderDraftList.total
     },
   });
   const [data, setData] = useState<DataType[]>([]);
@@ -86,23 +88,35 @@ function OrdersDraftListAjax() {
   ];
 
   useMemo(()=>{
-    setData(orderDraftList.orderDraftList)
+    setData(orderDraftList.orderDraftList.data)
   },[orderDraftList.orderDraftList])
 
   const translateStatus = (statusKey: string, intl: any): string => {
     return intl.formatMessage({ id: statusKey });
   };
 
-  // const handleTableChange = (pagination, filters, sorter) => {
-  //   setTableParams({
-  //     pagination,
-  //     filters,
-  //     ...sorter,
-  //   });
-  //   if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-  //     setData([]);
-  //   }
-  // };
+  const handleTableChange = (pagination,filters,sorter) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    });
+    
+    setLoading(true);
+    getOrderDraftList({
+      page:pagination.current,
+      limit:pagination.pageSize
+    }).then(res=>{
+      orderDraftList.setOrderDraftList({
+        data:res.data,
+        total:res.count
+      });
+    }).catch(err=>{
+    }).finally(()=>{
+      setLoading(false);
+    })
+
+  };
 
   return (
     <Scoped>
@@ -114,7 +128,7 @@ function OrdersDraftListAjax() {
       dataSource={data}
       pagination={tableParams.pagination}
       loading={loading}
-      // onChange={handleTableChange}
+      onChange={handleTableChange}
       scroll={{ x: 'max-content' }}
       onRow={(record) => ({
         onClick: () => {

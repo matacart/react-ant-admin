@@ -137,3 +137,10 @@ export function groupBy(arr:any[], key:string) {
   }));
 
 }
+
+// 根据时间戳生成id
+export function generateId() {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2);
+  return timestamp + random;
+}

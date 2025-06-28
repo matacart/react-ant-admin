@@ -7,11 +7,19 @@ import DefaultButton from "../Button/DefaultButton";
 import DangerButton from "../Button/DangerButton";
 
 
+interface ModalProps {
+  removeFunc: () => void;
+  title: string;
+  content: any;
+  okText?: string;
+  tElement: any;
+  loading?: boolean;
+}
+
 // 删除 弹窗提示
-export default function DeleteModal({removeFunc,title,content,okText,tElement}:any){
+export default function DeleteModal({removeFunc,title,content,okText,tElement,loading}:ModalProps){
 
     const [modal, contextHolder] = Modal.useModal();
-
     const confirm = () => {
         const newModal = modal.confirm({
             title: title,
@@ -23,7 +31,7 @@ export default function DeleteModal({removeFunc,title,content,okText,tElement}:a
             footer:()=>(
                 <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
                     <DefaultButton text="取消" autoInsertSpace={false} onClick={()=>newModal.destroy()} />
-                    <DangerButton text="删除" autoInsertSpace={false} onClick={()=>{
+                    <DangerButton text="删除" loading={loading} autoInsertSpace={false} onClick={async ()=>{
                         removeFunc();
                         newModal.destroy();
                     }} />

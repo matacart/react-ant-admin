@@ -89,6 +89,12 @@ function CustomInformationEdit() {
               orderDraft.setCustomerInfo(null)
               orderDraft.setReceiverInfo(null)
               orderDraft.setPayBillInfo(null)
+              orderDraft.orderInfo.shippingId !== "0" && orderDraft.setOrderInfo({
+                ...orderDraft.orderInfo,
+                shippingId:"",
+                shippingMethod: "",
+                shippingTotal: 0,
+              })
             }} />
           </Flex>
           <Flex>

@@ -3,6 +3,7 @@
 import { data } from '@remix-run/router';
 import { request } from '@umijs/max';
 import cookie from 'react-cookies';
+import { stringify } from 'querystring';
 
 /** 删除规则 DELETE /api/rule */
 export async function removeRule(options?: { [key: string]: any }) {
@@ -15,39 +16,29 @@ export async function removeRule(options?: { [key: string]: any }) {
   });
 }
 
-interface FilterCondition {  
-  id: string;  
-  filter_group_id: string;  
-  filter_name: React.ReactNode;  
-  filter_field: string;  
-  filter_value: string;  
-  module: string;  
-}  
-
-
 // order_type 订单类型：0-客户创建，1-草稿单，2-系统自动创建，3-管理员后台创建，4-第三方平台导入，5-模板订单，6-测试订单，7-已取消订单，8-退货/退款订单，9紧急订单，10-大额订单，11-定制订单
-export async function getOrderList(page?: number, limit?: number,id?:string,languagesId?:string,orderType?:number,condition?:any): Promise<any> {
-  // 构造查询字符串
-  const searchParams = new URLSearchParams();
-
-  // 添加分页参数
-  if (page) searchParams.set('page', page.toString());
-  if (limit) searchParams.set('limit', limit.toString());
-  if (id) searchParams.set('orders_status_id', id.toString());
-  if (languagesId) searchParams.set('languages_id', languagesId.toString());
-  if (orderType) searchParams.set('order_type', orderType.toString());
-  if (condition) searchParams.set('condition', JSON.stringify(condition));
-  if (true) searchParams.set('shipping_status_id', "150");
-  searchParams.set('domain_id', cookie.load("domain")?.id);
-  // 发送请求
-  // /api/ApiStore/order_list
-  return request(`/api/ApiStore/order_list?${searchParams.toString()}`, {
-    method: 'GET', // 使用 GET 请求，因为我们将过滤条件作为查询参数发送
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+// export async function getOrderList(page?: number, limit?: number,id?:string,languagesId?:string,orderType?:number,condition?:any,bizOrderStatuses?:any): Promise<any> {
+//   // 构造查询字符串
+//   const searchParams = new URLSearchParams();
+//   // 添加分页参数
+//   if (page) searchParams.set('page', page.toString());
+//   if (limit) searchParams.set('limit', limit.toString());
+//   if (id) searchParams.set('orders_status_id', id.toString());
+//   if (languagesId) searchParams.set('languages_id', languagesId.toString());
+//   if (orderType) searchParams.set('order_type', orderType.toString());
+//   if (condition) searchParams.set('condition', JSON.stringify(condition));
+//   if (true) searchParams.set('shipping_status_id', "150");
+//   if (bizOrderStatuses && bizOrderStatuses.length > 0) searchParams.set('bizOrderStatuses', JSON.stringify([-1]));
+//   searchParams.set('domain_id', cookie.load("domain")?.id);
+//   // 发送请求
+//   // /api/ApiStore/order_list
+//   return request(`/api/ApiStore/order_list?${searchParams.toString()}`, {
+//     method: 'GET', // 使用 GET 请求，因为我们将过滤条件作为查询参数发送
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
+// }
 export async function addOrders() {
   return request('/api/ApiStore/order_add', {
     method: 'POST',

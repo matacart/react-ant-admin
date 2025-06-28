@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
-import { Divider } from 'antd';
-import { useEffect, useState } from 'react';
+import { Divider, message } from 'antd';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import CustomInformationEdit from '../CustomInformationEdit';
 import DraftPaidCard from '../DraftPaidCard';
 import MaketCard from '../MaketCard';
@@ -11,14 +11,24 @@ import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useNavigate } from 'react-router-dom';
 import orderDraft from '@/store/order/orderDraft';
-import { addDraftOrder } from '@/services/y2/api';
+import { addDraftOrder, editDraftOrder } from '@/services/y2/api';
 import AddProductCard from '../AddProductCard';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
+import Overlay from '@/components/Overlay/Overlay';
 
   
 function OrderDraftAdd() {
 
     const [loading, setLoading] = useState(false);
+    
+    // 提示
+    const [isOverlay,setIsOverlay] = useState(false)
+
+    // 验证提示
+    const [isAlert,setIsAlert] = useState<{isProduct:boolean,isCustomer:boolean} | null>(null);
+
+    // 新增一个ref用于标记是否是初始渲染
+    const initialRender = useRef(true);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
@@ -32,18 +42,47 @@ function OrderDraftAdd() {
             receiverInfo: orderDraft.receiverInfo,
             payBillInfo: orderDraft.payBillInfo,
         })
-        addDraftOrder({
-            is_draft:true,
-            orderInfo:JSON.stringify(orderDraft.orderInfo),
-            products:JSON.stringify(orderDraft.productInfo),
-            customerInfo:JSON.stringify(orderDraft.customerInfo),
-            receiverInfo: JSON.stringify(orderDraft.receiverInfo),
-            payBillInfo: JSON.stringify(orderDraft.payBillInfo)
-        }).then(res=>{
-            navigate(`/orders/draftOrders/edit/${res.data.draft_id??""}`)
-        }).catch(err=>{ 
-        })
+        // addDraftOrder({
+        //     is_draft:true,
+        //     orderInfo:JSON.stringify(orderDraft.orderInfo),
+        //     products:JSON.stringify(orderDraft.productInfo),
+        //     customerInfo:JSON.stringify(orderDraft.customerInfo),
+        //     receiverInfo: JSON.stringify(orderDraft.receiverInfo),
+        //     payBillInfo: JSON.stringify(orderDraft.payBillInfo)
+        // }).then(res=>{
+        //     navigate(`/orders/draftOrders/edit/${res.data.draft_id??""}`)
+        // }).catch(err=>{ 
+        // })
     };
+
+    // 保存
+    const submit = ()=>{
+        if(orderDraft.customerInfo && orderDraft.productInfo?.length>0){
+            setIsAlert(null)
+            setLoading(true)
+            addDraftOrder({
+                is_draft:true,
+                orderInfo:JSON.stringify(orderDraft.orderInfo),
+                products:JSON.stringify(orderDraft.productInfo),
+                customerInfo:JSON.stringify(orderDraft.customerInfo),
+                receiverInfo: JSON.stringify(orderDraft.receiverInfo),
+                payBillInfo: JSON.stringify(orderDraft.payBillInfo)
+            }).then(res=>{
+                setIsOverlay(false)
+                message.success('您的新建内容已添加成功')
+                navigate('/orders/draftOrders')
+            }).catch(err=>{
+
+            }).finally(()=>{
+                setLoading(false)
+            })
+        }else{
+            setIsAlert({
+                isProduct:orderDraft.productInfo?.length>0 ? true : false,
+                isCustomer:orderDraft.customerInfo ? true : false
+            })
+        }
+    }
 
     useEffect(()=>{
         const init = async () => {
@@ -52,6 +91,16 @@ function OrderDraftAdd() {
         }
         init()
     },[])
+
+    useMemo(()=>{
+        if(initialRender.current) {
+            initialRender.current = false;
+            return;
+        }
+        if(!isSkeleton && !initialRender.current){
+            setIsOverlay(true)
+        }
+    },[orderDraft.productInfo,orderDraft.customerInfo,orderDraft.payBillInfo,orderDraft.receiverInfo])
 
     // addDraftOrder
 
@@ -87,6 +136,9 @@ function OrderDraftAdd() {
                     </div>
                 </div>
             </div>}
+            {isOverlay && <Overlay status={loading} okText="保存" onExit={()=>{
+                navigate(`/orders/draftOrders`)
+            }} onSubmit={submit} />}
         </Scoped>
     )
 }

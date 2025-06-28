@@ -246,6 +246,12 @@ export default  [
         component: './Customer/CustomerManagement/CustomerManagement',
       },
       {
+        path: 'management/subdivision/create/:id',
+        name: 'management/subdivision/create/:id',
+        hideInMenu: true,
+        component: './Customer/CustomerManagement/SubdivisionCreate/SubdivisionCreate',
+      },
+      {
         path: 'management/:customerId',
         name: 'management/:customerId',
         menu: false,

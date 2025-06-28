@@ -108,6 +108,8 @@ function OrdersShippedCard({index}:{index:number}) {
           <div style={{ fontSize: "14px", color: "#242833",marginBottom:"20px" }} >{""+dayjs(shippedInfo.shipment.shipment_time*1000).format("YYYY-MM-DD")}</div>
           {/* 处理 productinfo 为 undefined 的情况 */}
           {shippedInfo.product?.map((item,index)=>{
+
+            console.log(item)
             return(
               <Row key={index} style={{ marginBottom: "20px" }}>
                 <Col span={14}>
@@ -124,7 +126,7 @@ function OrdersShippedCard({index}:{index:number}) {
                 </Col>
                 <Col span={5}>
                   <Flex style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.product_price}X {item.quantity_shipped}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.product_price} X {item.quantity_shipped}</span>
                   </Flex>
                 </Col>
                 <Col span={5}>

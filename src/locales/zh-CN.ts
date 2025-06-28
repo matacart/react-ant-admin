@@ -8,6 +8,7 @@ import settings from './zh-CN/settings';
 import login from './zh-CN/login';
 import orders from './zh-CN/orders';
 import theme from './zh-CN/theme';
+import customer from './zh-CN/customer';
 
 export default {
   'navBar.lang': '语言',
@@ -27,4 +28,5 @@ export default {
   ...component,
   ...login,
   ...theme,
+  ...customer,
 };

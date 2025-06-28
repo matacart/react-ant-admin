@@ -134,7 +134,7 @@ function OrderDetail() {
       getOrderDetail(orderId).then(res=>{
         if(res.data && JSON.stringify(res.data) != "[]"){
           // 未发货商品 --- 
-          const remainingProductObj = res.data.order_products.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
+          const remainingProductObj = res.data.order_products?.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
             const groupId = item.group_id;
             if (!acc[groupId]) {
               acc[groupId] = [];
@@ -227,10 +227,10 @@ function OrderDetail() {
                     {order.orderInfo.payment_status !== 0 && <DefaultButton text="退款" onClick={()=>navigate(`/orders/${orderId}/refund`)} />}
                     {order.shippedProductsGroup.length>0 && <DefaultButton text="退货" onClick={()=>navigate("/orders/afterSales/launch/"+orderId)} />}
                     <ButtonDropdown menu={{items:controlsItems}} text="更多" />
-                    <ButtonIcon icon={<LeftIcon className='font-20' />} disabled={prev == null} onClick={()=>{
+                    <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={prev == null} onClick={()=>{
                       prev && update(prev)
                     }} />
-                    <ButtonIcon icon={<RightIcon className='font-20' />} disabled={next == null} onClick={()=>{
+                    <ButtonIcon icon={<RightIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={next == null} onClick={()=>{
                       next && update(next)
                     }} />
                   </Flex>

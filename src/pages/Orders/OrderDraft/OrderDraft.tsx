@@ -15,10 +15,14 @@ export default function OrderDraft() {
   const [isBlank,setIsBlank] = useState(true)
 
   useEffect(()=>{
-
-    // ----
-    getOrderDraftList().then(res=>{
-      orderDraftList.setOrderDraftList(res.data);
+    getOrderDraftList({
+      page:1,
+      limit:10
+    }).then(res=>{
+      orderDraftList.setOrderDraftList({
+        data:res.data,
+        total:res.count
+      });
       (res.data.length && res.data.length) > 0 ? setIsBlank(false) : setIsBlank(true);
     }).catch(err=>{
       console.error('Error fetching data:', err);

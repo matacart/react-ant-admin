@@ -374,6 +374,14 @@ const AdvancedModeSvg = () => (
   </svg>
 )
 
+const FillAddSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <circle opacity="0.2" cx="8" cy="8" r="8" fill="currentColor"></circle>
+    <path d="M5 8L11 8" stroke="#356DFF" stroke-linecap="round"></path>
+    <path d="M8 11L8 5" stroke="#356DFF" stroke-linecap="round"></path>
+  </svg>
+)
+
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
 );
@@ -602,6 +610,12 @@ export const GroupingModeIcon = (props: Partial<CustomIconComponentProps>) => (
 export const AdvancedModeIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={AdvancedModeSvg} {...props} />
 );
+
+export const FillAddIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FillAddSvg} {...props} />
+);
+
+
 
 
 // -----------编辑组件图标-----------------

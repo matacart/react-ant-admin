@@ -60,7 +60,7 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
               <Row key={index} style={{marginBottom:"20px"}}>
                 <Col span={14}>
                   <Flex style={{paddingRight:"40px"}}>
-                    <img src={item.product_image+"?x-oss-process=image/resize,w_200"} alt={item.product_name} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
+                    <img src={item.product_image?item.product_image+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.product_name} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
                     <Flex vertical align="flex-start" justify="flex-start">
                       <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px"}} className="font-w-500">{item.product_name}</div>
                       <div style={{ fontSize: "14px", color: "#474F5E" }}>{

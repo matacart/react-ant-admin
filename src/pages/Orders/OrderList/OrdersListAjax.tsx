@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { GetProp, Select, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import styled from 'styled-components';
-import { getOrderList,updateOrderStatus} from '@/services/y2/order';
 import { history, useIntl } from '@umijs/max';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import orderList from '@/store/order/orderList';
 import SelectedActions from './SelectedActions';
 import { observer } from 'mobx-react-lite';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
+import { getOrderList } from '@/services/y2/api';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;
@@ -138,8 +138,18 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     if (page) searchParams.set('page', page.toString());
     if (limit) searchParams.set('limit', limit.toString());
 
+
    
-    getOrderList(page,limit,id,languagesId,"",orderList.condition).then((res) => {
+    getOrderList({
+      page:page,
+      limit:limit,
+      orders_status_id:id?.toString(),
+      languages_id:languagesId?.toString(),
+      order_type:"",
+      condition:JSON.stringify(orderList.condition),
+      shipping_status_id:"150",
+      bizOrderStatuses:JSON.stringify(orderList.bizOrderStatuses),
+    }).then((res) => {
         console.log('Response from getOrderList:', res);
         const newData: DataType[] = res.data?.map((item: any) => ({
           ...item,
@@ -182,7 +192,7 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     // 在这里监听 `filterCondition` 的变化，并重新获取数据
     console.log('filterCondition changed:',id, languagesId);
     fetchData(id,languagesId);
-  }, [tableParams.pagination?.current,tableParams.pagination?.pageSize,id,languagesId,orderList.condition]);
+  }, [tableParams.pagination?.current,tableParams.pagination?.pageSize,id,languagesId,orderList.condition,orderList.bizOrderStatuses]);
 
   useMemo(()=>{
     // fetchData(id,languagesId);
@@ -209,7 +219,7 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
 
   return (
     <Scoped>
-    <SelectedActions />
+    <SelectedActions fetchData={fetchData} />
     {/* 列表 */}
     <Table
       columns={columns}

@@ -9,6 +9,7 @@ import cookie from 'react-cookies';
 import orderDraft from '@/store/order/orderDraft';
 import ProductTableModal from './ProductTableModal';
 import EditDiscount from './EditDiscount';
+import AddCustomProducts from './AddCustomProducts';
 
 const AddProductCard = ()=> {
 
@@ -34,18 +35,10 @@ const AddProductCard = ()=> {
         </Flex>
       </Flex>} content={
         <Form form={form}>
-          {orderDraft.productInfo.length == 0 && <Flex vertical align='center' justify='center'>
+          {orderDraft.productInfo.length == 0 && <Flex vertical align='center' justify='center' gap={12}>
             <>
               <ProductTableModal />
-              <span
-                style={{
-                  fontSize: "14px",
-                  color: '#356DFF',
-                  marginTop: "20px",
-                }}
-              >
-                添加自定义商品
-              </span>
+              <AddCustomProducts />
             </>
           </Flex>}
           {orderDraft.productInfo.length > 0 && <div>
@@ -59,6 +52,7 @@ const AddProductCard = ()=> {
             {/* body */}
             {orderDraft.productInfo.map((item,index)=>{
               // console.log(item)
+              // console.log(item.product_quantity)
               return(
                 <Flex key={index} className='table-item'>
                   <Flex style={{flex:1}}>
@@ -91,9 +85,10 @@ const AddProductCard = ()=> {
                       min={1}
                       max={99999}
                       onChange={(value)=>{
+                        console.log(item.product_quantity)
                         orderDraft.setProductInfo(
                           orderDraft.productInfo.map((product:any) => {
-                            if (product.product_id === item.product_id) {
+                            if(product.product_id ? product.product_id == item.product_id : product.vid == item.vid) {
                               return {
                                 ...product,
                                 product_quantity: value,
@@ -115,7 +110,7 @@ const AddProductCard = ()=> {
                       okButtonProps={{style: { fontSize: '12px',backgroundColor:"#F86140" }}}
                       onConfirm={() => {
                         orderDraft.setProductInfo(
-                          orderDraft.productInfo.filter(product => product.product_id !== item.product_id)
+                          orderDraft.productInfo.filter(product => (product.product_id ? product.product_id != item.product_id : product.vid != item.vid))
                         );
                       }}
                     >
@@ -130,9 +125,7 @@ const AddProductCard = ()=> {
           {orderDraft.productInfo.length>0 && (
             <Flex style={{marginTop:"16px"}} align='center' gap={20}>
               <ProductTableModal />
-              <div className='color-356DFF cursor-pointer'>
-                添加自定义商品
-              </div>
+              <AddCustomProducts />
             </Flex>
           )}
         </Form>

@@ -75,13 +75,30 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
       <div>
         {/* 标签 */}
         <Flex style={{marginBottom:"10px"}}>
-          {orderList.tagsStatusList.map((item,index)=>(
+          {orderList.optionLabel.map((item,index)=>(
             item.value && <Tag key={index} style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{}}>
                 <span className="color-474F5E font-14">
                   {item.title}：{item.label}
                 </span>
             </Tag>
           ))}
+          {/* 订单状态 */}
+          {orderList.bizOrderStatuses && orderList.bizOrderStatuses.length > 0 && <Tag style={{padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
+            orderList.setBizOrderStatuses([])
+          }}>
+              <span className="color-474F5E font-14">
+                {"订单状态"}：{orderList.bizOrderStatuses.map((item,index)=>{
+                  switch (item) {
+                    case "-1":
+                      return "已归档"
+                    case "0":
+                      return "已取消"
+                    case "1":
+                      return "处理中"
+                  }
+                }).join(",")}
+              </span>
+          </Tag>}
         </Flex>
         {/* {filterCondition.map((element) => (
           <Tag

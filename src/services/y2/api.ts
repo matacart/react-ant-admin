@@ -2465,6 +2465,34 @@ export async function batchAddOrderTags(res:{orderIds:string,tagNames:string}) {
   })
 }
 
+// 获取草稿单标签
+export async function getDraftOrderTagList(draftId:string) {
+  return request(`/api/ApiStore/getDraftOrderTagList`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      draftId:draftId
+    }
+  })
+}
+
+// 草稿单添加标签
+export async function batchAddDraftOrderTags(res:{draftIds:string,tagNames:string}) {
+  return request(`/api/ApiStore/batchAddDraftOrderTags`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
 // 拆分发货
 export async function splitOrderProducts(res:{orderProducts:string}) {
   return request(`/api/ApiStore/splitOrderProducts`, {
@@ -2629,7 +2657,7 @@ export async function addAddress(res:any) {
 
 
 // 草稿单列表
-export async function getOrderDraftList() {
+export async function getOrderDraftList(res:any) {
   return request(`/api/ApiStore/order_draft_list`, {
     method: 'POST',
     headers: {
@@ -2637,6 +2665,7 @@ export async function getOrderDraftList() {
     },
     data: {
       domain_id:cookie.load("domain")?.id,
+      ...res
     }
   })
 }
@@ -2669,7 +2698,58 @@ export async function editDraftOrder(res:any) {
   })
 }
 
+// 删除草稿单
+export async function delDraftOrder(id:any) {
+  return request(`/api/ApiStore/delDraftOrder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      draftId:id
+    }
+  })
+}
 
+// 订单归档
+export async function batchArcOrder(ids:string) {
+  return request(`/api/ApiStore/batchArcOrder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      orderIds:ids
+    }
+  })
+}
 
+// 订单取消归档
+export async function batchUnarcOrder(ids:string) {
+  return request(`/api/ApiStore/batchUnarcOrder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      orderIds:ids
+    }
+  })
+}
 
-
+// 获取订单列表
+export async function getOrderList(res:any){
+  return request(`/api/ApiStore/order_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}

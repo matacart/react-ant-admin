@@ -1,13 +1,13 @@
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
-import { Divider, Flex, message } from 'antd';
+import { Divider, Flex, message, Spin } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import CustomInformationEdit from '../CustomInformationEdit';
 import DraftPaidCard from '../DraftPaidCard';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useNavigate, useParams } from 'react-router-dom';
-import { editDraftOrder, getDraftDetail } from '@/services/y2/api';
+import { delDraftOrder, editDraftOrder, getDraftDetail } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import DangerButton from '@/components/Button/DangerButton';
 import orderDraft from '@/store/order/orderDraft';
@@ -35,10 +35,14 @@ function OrderDraftEdit() {
 
     // 新增一个ref用于标记是否是初始渲染
     const initialRender = useRef(true);
+
+    const [spinning,setSpinning] = useState(false);
+
     // 提示
     const [isOverlay,setIsOverlay] = useState(false)
 
     const [loading, setLoading] = useState(false);
+    const [delLoading, setDelLoading] = useState(false);
 
     // 验证提示
     const [isAlert,setIsAlert] = useState<{isProduct:boolean,isCustomer:boolean} | null>(null);
@@ -72,115 +76,133 @@ function OrderDraftEdit() {
         }
     }
 
-    useEffect(() => {
+    const fetchDraftDetail = ()=>{
+        setSpinning(true)
         getDraftDetail(draftOrderId??"").then(res=>{
             orderDraft.setOrderInfo({
                 ...res.data.orderInfo,
-                logisticsName: "",
-                paymentStatus: "0",
-                paymentMethod:"0",
                 isTaxe: 0,
-                logisticsAmount: 0,
-                logisticsType: "",
-                // 
-                tags:[],
-                deferredPayment:false,
             })
+            orderDraft.setNextDraftId(res.data.orderInfo.nextDraftId)
+            orderDraft.setPrevDraftId(res.data.orderInfo.prevDraftId)
             orderDraft.setCustomerInfo(res.data.customerInfo??null)
             orderDraft.setProductInfo(res.data.products)
             orderDraft.setPayBillInfo(res.data.payBillInfo??null)
             orderDraft.setReceiverInfo(res.data.receiverInfo??null)
-
         }).catch(err=>{
         }).finally(()=>{
             setIsSkeleton(false)
+            setSpinning(false)
         })
-    },[])
+    }
 
     useMemo(()=>{
         if(initialRender.current) {
             initialRender.current = false;
             return;
         }
+        if(spinning){
+            return;
+        }
         if(!isSkeleton && !initialRender.current){
             setIsOverlay(true)
         }
-    },[orderDraft.productInfo,orderDraft.customerInfo,orderDraft.payBillInfo,orderDraft.receiverInfo])
+    },[orderDraft.productInfo,orderDraft.customerInfo,orderDraft.payBillInfo,orderDraft.receiverInfo,orderDraft.orderInfo])
+
+
+    useEffect(()=>{
+        fetchDraftDetail()
+    },[draftOrderId])
 
     return (
         <>
             {isSkeleton ? <SkeletonCard /> : <Scoped>
                 <div className='mc-layout-wrap'>
                     <div className="mc-layout">
-                        <div className="mc-header">
-                            <div className="mc-header-left">
-                                <div className="mc-header-left-secondary" onClick={()=>{
-                                    navigate(`/orders/draftOrders`)
-                                }}>
-                                    <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                        <Spin indicator={<LoadingOutlined spin />} spinning={spinning} >
+                            <div className="mc-header">
+                                <div className="mc-header-left">
+                                    <div className="mc-header-left-secondary" onClick={()=>{
+                                        navigate(`/orders/draftOrders`)
+                                    }}>
+                                        <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                                    </div>
+                                    <div className="mc-header-left-content">#{orderDraft.orderInfo.id}</div>
                                 </div>
-                                <div className="mc-header-left-content">#{orderDraft.orderInfo.id}</div>
+                                <Flex align='center' gap={10}>
+                                    <DefaultButton text="分享" />
+                                    <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.prevDraftId ?false : true} onClick={()=>{
+                                        setIsOverlay(false)
+                                        navigate(`/orders/draftOrders/edit/${orderDraft.prevDraftId}`)
+                                    }} />
+                                    <ButtonIcon icon={<RightIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.nextDraftId ?false : true} onClick={()=>{
+                                        setIsOverlay(false)
+                                        navigate(`/orders/draftOrders/edit/${orderDraft.nextDraftId}`)
+                                    }} />
+                                </Flex>
                             </div>
-                            <Flex align='center' gap={10}>
-                                <DefaultButton text="分享" />
-                                <ButtonIcon icon={<LeftIcon className='font-20' />} onClick={()=>{
-                                }} />
-                                <ButtonIcon icon={<RightIcon className='font-20' />} onClick={()=>{
-                                }} />
+                            {/*  */}
+                            {isAlert && <MyAlert message={<div className='font-14 color-242833 font-w-600'>要保存订单，请完成以下修改：</div>}
+                                description={(
+                                    <>
+                                        {!isAlert.isProduct && <div className='font-14'>至少添加1件商品。</div>}
+                                        {!isAlert.isCustomer && <div className='font-14'>选择或创建客户。</div>}
+                                    </>
+                                )}
+                                showIcon={true}
+                                icon={<WarningIcon style={{fontSize:"20px"}} />}
+                                type="error"  
+                                style={{
+                                    marginBottom:"16px",
+                                    backgroundColor:"#FDE6E0"
+                                }} 
+                            />}
+                            <div className='mc-layout-main'>
+                                <div className='mc-layout-content'>
+                                    <AddProductCard />
+                                    <DraftPaidCard />
+                                </div>
+                                <div className='mc-layout-extra'>
+                                    <CustomInformationEdit/>
+                                    <MaketCard/>
+                                    <OrderNotesLable/>
+                                    <OrderDraftLabel/>
+                                </div>
+                            </div>
+                            <Divider/>
+                            <Flex justify='space-between'>
+                                <DeleteModal
+                                    loading={delLoading}
+                                    tElement={
+                                        <DangerButton text="删除草稿单" />
+                                    }
+                                    removeFunc={()=>{
+                                        setDelLoading(true)
+                                        delDraftOrder(orderDraft.orderInfo.id).then(()=>{
+                                            message.success("删除成功")
+                                            navigate('/orders/draftOrders')
+                                        }).catch(()=>{
+                                        }).finally(()=>{
+                                            setDelLoading(false)
+                                        })
+                                    }} 
+                                    title="确认要删除草稿订单吗？" 
+                                    content={<div style={{color:"rgba(0, 0, 0, 0.65)"}}>此操作无法撤销。</div>}
+                                />
+                                <ConfirmModal
+                                    tElement={
+                                        <PrimaryButton text="创建订单" />
+                                    }
+                                    confirmFun={()=>{
+                                        console.log("创建订单")
+                                        
+                                    }} 
+                                    title="确认要创建订单吗？" 
+                                    content={<div style={{color:"rgba(0, 0, 0, 0.65)"}}>客户将不可修改订单内容，但你可以在订单详情中管理发货、付款和编辑订单商品。</div>}
+                                    okText="创建"
+                                />
                             </Flex>
-                        </div>
-                        {/*  */}
-                        {isAlert && <MyAlert message={<div className='font-14 color-242833 font-w-600'>要保存订单，请完成以下修改：</div>}
-                            description={(
-                                <>
-                                    {!isAlert.isProduct && <div className='font-14'>至少添加1件商品。</div>}
-                                    {!isAlert.isCustomer && <div className='font-14'>选择或创建客户。</div>}
-                                </>
-                            )}
-                            showIcon={true}
-                            icon={<WarningIcon style={{fontSize:"20px"}} />}
-                            type="error"  
-                            style={{
-                                marginBottom:"16px",
-                                backgroundColor:"#FDE6E0"
-                            }} 
-                        />}
-                        <div className='mc-layout-main'>
-                            <div className='mc-layout-content'>
-                                <AddProductCard />
-                                <DraftPaidCard />
-                            </div>
-                            <div className='mc-layout-extra'>
-                                <CustomInformationEdit/>
-                                <MaketCard/>
-                                <OrderNotesLable/>
-                                <OrderDraftLabel/>
-                            </div>
-                        </div>
-                        <Divider/>
-                        <Flex justify='space-between'>
-                            <DeleteModal
-                                tElement={
-                                    <DangerButton text="删除草稿单" />
-                                }
-                                removeFunc={()=>{
-                                }} 
-                                title="确认要删除草稿订单吗？" 
-                                content={<div style={{color:"rgba(0, 0, 0, 0.65)"}}>此操作无法撤销。</div>}
-                            />
-                            <ConfirmModal
-                                tElement={
-                                    <PrimaryButton text="创建订单" />
-                                }
-                                confirmFun={()=>{
-                                    console.log("创建订单")
-                                    
-                                }} 
-                                title="确认要创建订单吗？" 
-                                content={<div style={{color:"rgba(0, 0, 0, 0.65)"}}>客户将不可修改订单内容，但你可以在订单详情中管理发货、付款和编辑订单商品。</div>}
-                                okText="创建"
-                            />
-                        </Flex>
+                        </Spin>
                     </div>
                 </div>
             </Scoped>}

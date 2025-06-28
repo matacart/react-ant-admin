@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, ConfigProvider, Drawer, Flex, Radio } from 'antd';
+import { Button, Checkbox, ConfigProvider, Drawer, Flex, Radio } from 'antd';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
 import { useIntl } from '@umijs/max';
@@ -24,6 +24,9 @@ export default function MoreSelect(){
   // 条件
   const [condition, setCondition] = useState({});
 
+  // 
+  const [bizOrderStatuses,setBizOrderStatuses] = useState<string[]>([]);
+
   // tab
   const [tab, setTab] = useState<any[]>([]);
 
@@ -43,9 +46,15 @@ export default function MoreSelect(){
       label: '订单状态',
       children: (
       <>
+        <Checkbox.Group value={bizOrderStatuses} style={{ display:"flex",flexDirection:"column",gap:"12px" }} options={[
+          { label: '处理中', value: '1' },
+          { label: '已取消', value: '0' },
+          { label: '已归档', value: '-1' },
+        ]} onChange={(e)=>{
+          setBizOrderStatuses(e)
+        }} />
         <div className={'cleanText'}>清除</div>
-      </>)
-      ,
+      </>),
     },
     {
       key: '3',
@@ -335,7 +344,6 @@ export default function MoreSelect(){
                 ...condition,
                 saleStoreHandles:e.target.value
               })
-              console.log(e.target)
               // 
               // let newTab = [...tab]
               // newTab.forEach((item)=>{
@@ -368,7 +376,8 @@ export default function MoreSelect(){
   useEffect(()=>{
     setCondition({...orderList.condition})
     setTab([...orderList.tagsStatusList])
-  },[])
+    setBizOrderStatuses([...orderList.bizOrderStatuses])
+  },[orderList.bizOrderStatuses])
 
   return (
     <Scoped ref={Ref}>
@@ -385,7 +394,7 @@ export default function MoreSelect(){
               setOpen(false);
               orderList.setCondition({...condition})
               orderList.setTagsStatusList([...tab])
-              console.log(condition)
+              orderList.setBizOrderStatuses([...bizOrderStatuses])
             }} />
           </Flex>
         }
@@ -423,7 +432,7 @@ export default function MoreSelect(){
 
 const Scoped = styled.div`
   .cleanText{
-    margin-top: 16px;
+    margin-top: 12px;
     color: #7A8499;
     font-size: 14px;
     font-weight: 500;

@@ -21,7 +21,8 @@ function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
                 ...orderDraft.orderInfo,
                 orderDiscount:values.amount?values.amount:0,
                 orderDiscountDesc:values.explanation?values.explanation:"",
-                isDiscountAccumulation:values.isSuperposition?1:0
+                isDiscountAccumulation:values.isSuperposition?1:0,
+                orderTotal:orderDraft.orderInfo.productTotal-values.amount
             })
             setIsModalOpen(false);
         }).catch(error=>{

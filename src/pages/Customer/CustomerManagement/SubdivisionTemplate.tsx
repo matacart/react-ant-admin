@@ -2,61 +2,60 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import MyButton from "@/components/Button/MyButton";
 import { CloseIcon, TemplateIcon } from "@/components/Icons/Icons";
 import { AimOutlined, ClockCircleOutlined, EyeOutlined, MenuOutlined, RightOutlined, ShoppingCartOutlined, ShoppingOutlined, SyncOutlined, TeamOutlined } from "@ant-design/icons";
-import { Button, Drawer, Flex } from "antd";
+import { Drawer, Flex } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import dayjs from 'dayjs';
-import { attractNewCustomers, attractOldCustomers, keyOperatingCustomers, reAttractCustomers } from "./Subdivision";
+import { all, attractNewCustomers, attractOldCustomers, customerBrowsingBehavior, customerPurchasingBehavior, keyOperatingCustomers, reAttractCustomers, specificGroupOfPeople } from "./Subdivision";
+import { useNavigate } from "react-router-dom";
 
 function SubdivisionTemplate() {
 
-    const [open, setOpen] = useState(false);
+  const navigator = useNavigate();
 
+  const [open, setOpen] = useState(false);
 
-    const [templateCategorys,setTemplateCategorys] = useState([
-      {
-        name: "全部",
-        icon: <MenuOutlined />
-      },
-      {
-        name: "吸引新客户",
-        icon: <ShoppingOutlined />
-      },
-      {
-        name: "吸引老客户",
-        icon: <ClockCircleOutlined />
-      },
-      {
-        name: "重新吸引客户",
-        icon: <SyncOutlined />
-      },
-      {
-        name: "特定人群",
-        icon: <TeamOutlined />
-      },
-      {
-        name: "重点运营客户",
-        icon: <AimOutlined />
-      },
-      {
-        name: "客户浏览行为",
-        icon: <EyeOutlined />
-      },
-      {
-        name: "客户购买行为",
-        icon: <ShoppingCartOutlined />
-      },
-    ])
+  const [templateCategorys,setTemplateCategorys] = useState([
+    {
+      name: "全部",
+      icon: <MenuOutlined />
+    },
+    {
+      name: "吸引新客户",
+      icon: <ShoppingOutlined />
+    },
+    {
+      name: "吸引老客户",
+      icon: <ClockCircleOutlined />
+    },
+    {
+      name: "重新吸引客户",
+      icon: <SyncOutlined />
+    },
+    {
+      name: "特定人群",
+      icon: <TeamOutlined />
+    },
+    {
+      name: "重点运营客户",
+      icon: <AimOutlined />
+    },
+    {
+      name: "客户浏览行为",
+      icon: <EyeOutlined />
+    },
+    {
+      name: "客户购买行为",
+      icon: <ShoppingCartOutlined />
+    },
+  ])
 
-    const [activeIndex, setActiveIndex] = useState(0);  // 默认选中第一个分类
+  const [activeIndex, setActiveIndex] = useState(0);  // 默认选中第一个分类
 
-    const [templateCategoryList,setTemplateCategoryList] = useState<any[]>([])
+  const [templateCategoryList,setTemplateCategoryList] = useState<any[]>([])
 
-
-    useEffect(()=>{
-      const str = {"conditions":{"type":1,"relation":"and","blockType":0,"extInfo":"{\"id\":\"36471d7b-870c-4cc8-8268-d5786b053214\"}","children":[{"type":1,"relation":"and","blockType":0,"extInfo":"{\"id\":\"69776ff8-145f-4c9d-9c15-5189edce2f7a\"}","children":[{"key":"lastAbandonedCreateTime","type":0,"operator":"EQ","value":[2],"extInfo":"{\"componentType\":\"DATE\",\"dateType\":\"LAST_30_DAY\",\"id\":\"ed485cb0-4494-449b-94e6-8a2e15fbd27c\"}"}]}]},"not":{"type":1,"relation":"and","blockType":0,"extInfo":"{\"id\":\"21f524c3-020c-420b-8663-ed19fe9d20aa\"}","children":[{"type":1,"relation":"and","blockType":0,"extInfo":"{\"id\":\"1b420cab-bed4-4c3a-9941-cfc7dd95025f\"}","children":[]}]}}
-      console.log(str)
-    },[])
+  useEffect(()=>{
+  },[])
 
   return (
     <>
@@ -97,7 +96,7 @@ function SubdivisionTemplate() {
                   setActiveIndex(index)
                   switch (item.name){
                     case '全部':
-                      setTemplateCategoryList([])
+                      setTemplateCategoryList(all)
                       break;
                     case '吸引新客户':
                       setTemplateCategoryList(attractNewCustomers)
@@ -109,16 +108,16 @@ function SubdivisionTemplate() {
                       setTemplateCategoryList(reAttractCustomers)
                       break;
                     case '特定人群':
-                      setTemplateCategoryList([])
+                      setTemplateCategoryList(specificGroupOfPeople)
                       break;
                     case '重点运营客户':
                       setTemplateCategoryList(keyOperatingCustomers)
                       break;
                     case '客户浏览行为':
-                      setTemplateCategoryList([])
+                      setTemplateCategoryList(customerBrowsingBehavior)
                       break;
                     case '客户购买行为':
-                      setTemplateCategoryList([])
+                      setTemplateCategoryList(customerPurchasingBehavior)
                       break;
                   }
                 }}>
@@ -131,7 +130,6 @@ function SubdivisionTemplate() {
                   </Flex>
                 </li>
               ))}
-              
             </ul>
           </div>
           {/*  */}
@@ -156,7 +154,7 @@ function SubdivisionTemplate() {
                         {item.crowdTemplateCondition.conditions.children?.map((conditions:any,index:number) =>(
                           <div key={index} className="conditionGroup">
                             <Flex gap={16}>
-                              {conditions.children.length > 1 && (
+                              {(conditions.children.length > 1 || conditions.children[0]?.children?.length > 1 ) && (
                                 <Flex className="switch">
                                   <div className="line"></div>
                                   <Flex className="switch-condition font-12" justify="center" align="center">
@@ -166,60 +164,98 @@ function SubdivisionTemplate() {
                                 </Flex>
                               )}
                               <div className="conditionGroupItem" style={{width:"100%"}}>
-                                {conditions.children.map((conditionsItem:any, index:number) => (
-                                  <Flex key={index} className="conditionItem font-w-500">
-                                    <div className="color-7A8499" style={{flex:1}}>
-                                      {
-                                        conditionsItem.key == "status" ? "客户状态" : 
-                                        conditionsItem.key == "rfm" ? "RFM价值" :
-                                        conditionsItem.key == "payOrderCnt" ? "订单数量" :
-                                        conditionsItem.key == "totalAmount" ? "消费金额" :
-                                        conditionsItem.key == "lastOrderTime" ? "上次购买时间" :
-                                        conditionsItem.key == "purchasedCate" ? "购买过指定分类" :
-                                        conditionsItem.key == "customerCycle" ? "客户生命周期" :
-                                        conditionsItem.key == "emailSubscribeStatus" ? "邮箱订阅状态" :
-                                        conditionsItem.key == "lastLoginTime" ? "最近一次登录时间" :
-                                        conditionsItem.key == "isBirthdayInNextMonth" ? "重点运营" :
-                                        conditionsItem.key == "lastCartCreateTime" ? "最近一次加购时间" :
-                                        conditionsItem.key == "purchasedItem" ? "购买过指定商品" :
-                                        conditionsItem.key == "createTime" ? "客户加入日期" :
-                                        conditionsItem.key == "lastAbandonedCreateTime" ? "最近一次弃单时间" : ""
-                                      }
-                                    </div>
-                                    <Flex className="color-474F5E" gap={8} style={{flex:1,textAlign:"right"}} justify="end">
-                                      {
-                                        conditionsItem?.children ? <>
-                                          <span>包含</span>
-                                          <span>{"{分类名称}"}</span>
-                                        </>:<>
-                                          {
-                                            conditionsItem.extInfo.componentType == "DATE" ? <>
-                                              {conditionsItem.operator == "BETWEEN" ? <span>{dayjs(conditionsItem.value[0]).format("YYYY-MM-DD")} - {dayjs(conditionsItem.value[1]).format("YYYY-MM-DD")}</span>:<span>{conditionsItem.value[0]}</span>}
-                                            </>:<>
-                                              {
-                                                (conditionsItem.extInfo.componentType == "TAG") ? <></> : 
-                                                  <span>
-                                                  {
-                                                    (conditionsItem.operator == "EQ" || conditionsItem.operator == "IN") ? "等于" :
-                                                    conditionsItem.operator == "NEQ" ? "不等于" :
-                                                    conditionsItem.operator == "GT" ? "大于" :
-                                                    conditionsItem.operator == "LT" ? "小于" :""
-                                                  }
-                                                </span>
-                                              } 
-                                              <span>
+                                {conditions.children.map((conditionsItem:any, index:number) => {
+                                  if(conditionsItem?.children){
+                                    return(
+                                      <>
+                                        {conditionsItem.children.map((conditionsChildItem:any,index:number)=>(
+                                          <Flex className="font-w-500 conditionItem">
+                                            <Flex>
+                                              <div className="color-7A8499" style={{flex:1}}>
                                                 {
-                                                  conditionsItem.extInfo.componentType == "PRICE" ? "US$"+conditionsItem.value.join(","):
-                                                  conditionsItem.value.join(",")
+                                                  conditionsChildItem.key == "purchasedItem" ? "购买过指定商品" :
+                                                  conditionsChildItem.key == "purchasedCate" ? "购买过指定分类" :
+                                                  conditionsChildItem.key == "viewedItem" ? "浏览过指定商品" :
+                                                  conditionsChildItem.key == "viewedCate" ? "浏览过指定分类" :
+                                                  conditionsChildItem.key == "viewedItemDate" ? "浏览时间" :
+                                                  conditionsChildItem.key == "purchasedItemTime" ? "下单时间" : ""
                                                 }
-                                              </span>
+                                              </div>
+                                            </Flex>
+                                            <Flex className="color-474F5E" gap={8} style={{flex:1,textAlign:"right"}} justify="end">
+                                              {conditionsChildItem.operator == "IN" && <span>包含</span>}
+                                              {conditionsChildItem.extInfo.listSource == "productList" ? <span>
+                                                {
+                                                  conditionsChildItem.value.length > 0 ? conditionsChildItem.value.join(",") : "{商品名称}"
+                                                }
+                                              </span> : <span>
+                                                {
+                                                  conditionsChildItem.value.length > 0 ? conditionsChildItem.value.join(",") : "{分类名称}"
+                                                }
+                                              </span>}
+                                              
+                                            </Flex>
+                                          </Flex>
+                                        ))}
+                                      </>
+                                    )
+                                  }else{
+                                    return(
+                                      <Flex key={index} className="conditionItem font-w-500">
+                                        <div className="color-7A8499" style={{flex:1}}>
+                                          {
+                                            conditionsItem.key == "status" ? "客户状态" : 
+                                            conditionsItem.key == "rfm" ? "RFM价值" :
+                                            conditionsItem.key == "payOrderCnt" ? "订单数量" :
+                                            conditionsItem.key == "totalAmount" ? "消费金额" :
+                                            conditionsItem.key == "lastOrderTime" ? "上次购买时间" :
+                                            conditionsItem.key == "customerCycle" ? "客户生命周期" :
+                                            conditionsItem.key == "emailSubscribeStatus" ? "邮箱订阅状态" :
+                                            conditionsItem.key == "lastLoginTime" ? "最近一次登录时间" :
+                                            conditionsItem.key == "isBirthdayInNextMonth" ? "重点运营" :
+                                            conditionsItem.key == "lastCartCreateTime" ? "最近一次加购时间" :
+                                            conditionsItem.key == "createTime" ? "客户加入日期" :
+                                            conditionsItem.key == "lastAbandonedCreateTime" ? "最近一次弃单时间" :
+                                            conditionsItem.key == "address" ? "地址" :
+                                            conditionsItem.key == "language" ? "客户语言" :
+                                            conditionsItem.key == "singleOrderAmount" ? "单次消费金额" :
+                                            conditionsItem.key == "singleOrderAmountTime" ? "下单时间" : ""
+                                          }
+                                        </div>
+                                        <Flex className="color-474F5E" gap={8} style={{flex:1,textAlign:"right"}} justify="end">
+                                          {
+                                            <>
+                                              {
+                                                conditionsItem.extInfo.componentType == "DATE" ? <>
+                                                  {conditionsItem.operator == "BETWEEN" ? <span>{dayjs(conditionsItem.value[0]).format("YYYY-MM-DD")} - {dayjs(conditionsItem.value[1]).format("YYYY-MM-DD")}</span>:<span>{conditionsItem.value[0]}</span>}
+                                                </>:<>
+                                                  {
+                                                    (conditionsItem.extInfo.componentType == "TAG") ? <></> : 
+                                                      <span>
+                                                      {
+                                                        (conditionsItem.operator == "EQ" || conditionsItem.operator == "IN") ? "等于" :
+                                                        conditionsItem.operator == "NEQ" ? "不等于" :
+                                                        conditionsItem.operator == "GT" ? "大于" :
+                                                        conditionsItem.operator == "LT" ? "小于" :""
+                                                      }
+                                                    </span>
+                                                  } 
+                                                  <span>
+                                                    {
+                                                      conditionsItem.extInfo.componentType == "PRICE" ? "US$"+conditionsItem.value.join(","):
+                                                      conditionsItem.value.join(",")
+                                                    }
+                                                  </span>
+                                                </>
+                                              }
                                             </>
                                           }
-                                        </>
-                                      }
-                                    </Flex>
-                                  </Flex>
-                                ))}
+                                        </Flex>
+                                      </Flex>
+                                    )
+                                  }
+                                }
+                                )}
                               </div>
                             </Flex>
                           </div>
@@ -273,7 +309,7 @@ function SubdivisionTemplate() {
                   </div>
                   {/*  */}
                   <Flex style={{marginTop:"12px"}} justify="flex-end" gap={8}>
-                    <MyButton text={"创建细分"} className="color-242833 font-w-500" />
+                    <MyButton text={"创建细分"} className="color-242833 font-w-500" onClick={()=>navigator(`/customer/management/subdivision/create/${item.id}`)} />
                     <MyButton text={"筛选客户"} className="font-w-500" color="primary" variant="outlined" />
                   </Flex>
                 </div>
