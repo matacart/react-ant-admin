@@ -32,6 +32,8 @@ function SelectCheckBox({options,setStatusOptions,text,style}:{options:any,setSt
                             <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
                                 let newOption = [...options]
                                 newOption[index].checked = e.target.checked
+                                const newValues = conditionValue.includes(item.value) ? conditionValue.filter((v) => v !== item.value) : [...conditionValue, item.value];
+                                setConditionValue(newValues);
                                 // e.target.checked?checkedList.push(item):checkedList.splice(checkedList.indexOf(item),1)
                                 // setCheckedStatus(checkedList)
                                 setStatusOptions(newOption)
@@ -51,7 +53,7 @@ function SelectCheckBox({options,setStatusOptions,text,style}:{options:any,setSt
 
 const Scoped = styled.div`
     .item:hover{
-    background-color: #f0f7ff;
+        background-color: #f0f7ff;
     }
 `
 

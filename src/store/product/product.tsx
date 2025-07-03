@@ -14,6 +14,13 @@ interface ProductType {
   status: string;
   ad_waf_status: string;
   template_id: string | undefined;
+
+  cod_languages_id: string;
+  cod_currency: string;
+  cod_fb_pix_id:string;
+  cod_gg_pix_id:string;
+  cod_tk_pix_id:string;
+
   diversion: any[];
   is_share: number;
   is_sys: number;
@@ -100,6 +107,12 @@ class Product{
         status: "1",
         ad_waf_status: "",
         template_id: "0",
+        cod_languages_id:"",
+        cod_currency:"",
+        cod_fb_pix_id:"",
+        cod_gg_pix_id:"",
+        cod_tk_pix_id:"",
+
         diversion: [],
         is_share: 0,
         is_sys: 0,

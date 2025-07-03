@@ -1,7 +1,11 @@
-import { ConfigProvider, Select } from "antd";
+import { ConfigProvider, Select, SelectProps } from "antd";
+
+interface MySelectProps extends SelectProps {
+    Ref?:React.RefObject<HTMLElement>
+}
 
 // 自定义筛选框
-function MySelect({...props}) {
+function MySelect({Ref,...props}:MySelectProps) {
     return (
         <ConfigProvider
             theme={{
@@ -13,7 +17,7 @@ function MySelect({...props}) {
                 },
             }}
             >
-            <Select {...props} dropdownStyle={{
+            <Select getPopupContainer={()=>Ref?.current!} {...props} dropdownStyle={{
                 padding: '8px 0',
             }} />
         </ConfigProvider>

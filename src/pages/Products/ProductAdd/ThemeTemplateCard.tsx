@@ -1,17 +1,31 @@
-import { Card, Select } from "antd";
+import product from "@/store/product/product";
+import { Card, Flex, Select } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
+import ThemeTemplateManagement from "./ThemeTemplateManagement";
 
 const ThemeTemplateCard = () =>{
+
+    const handleChange = (value: string) => {
+        product.setProductInfo({
+            ...product.productInfo,
+            template_id:value
+        })
+    };
+
     return (
         <Scoped>
             <Card>
                 <div className="title">
-                    主题模板
+                    <Flex justify="space-between">
+                        <div>主题模板</div>
+                        <ThemeTemplateManagement />
+                    </Flex>
                 </div>
                 <Select
                     style={{ width: "100%" }}
-                    defaultValue={"0"}
+                    value={product.productInfo.template_id}
+                    onChange={handleChange}
                     options={[
                         { value: '0', label: '默认模板' },
                         { value: '1', label: 'v1' },

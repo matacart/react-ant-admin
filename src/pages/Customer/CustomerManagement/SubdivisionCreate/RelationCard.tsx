@@ -2,13 +2,15 @@ import MyButton from "@/components/Button/MyButton";
 import { DeleteIcon, EditorAddBtnIcon, WarningIcon } from "@/components/Icons/Icons";
 import { SwapOutlined } from "@ant-design/icons";
 import { useDndMonitor, useDroppable } from "@dnd-kit/core/dist";
-import { Button, Card, ConfigProvider, Flex, Popover } from "antd";
+import { Button, Card, Checkbox, ConfigProvider, Flex, Form, Popover, Select } from "antd";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
-import debounce from 'lodash.debounce';
 import { generateId } from "@/utils/dataStructure";
 import { useIntl } from "@/.umi/plugin-locale/localeExports";
+import MySelect from "@/components/Select/MySelect";
+import useClickOutside from "@/hooks/customHooks";
+import SelectCheckBox from "./SelectCheckBox";
 
 interface RelationCardProps {
     overlayRef: React.RefObject<HTMLElement>;
@@ -78,11 +80,24 @@ function RelationCard({overlayRef}: RelationCardProps){
 
     // 选中容器
     const [active,setActive] = useState("")
+    // 选中条件
+    const [activeCondition,setActiveCondition] = useState("")
+    // 使用 hook 并绑定回调
+    const clickOutsideRef = useClickOutside(() => {
+        setActiveCondition("");
+        let newCondition = {...condition}
+        newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].children[conditionIndex].value = conditionValue
+        setCondition(newCondition)
+    });
 
     // 条件
-    const [activeCondition,setActiveCondition] = useState("")
-
     const [condition,setCondition] = useState(conditionResult)
+    // 条件值
+    const [conditionValue,setConditionValue] = useState([]);
+
+    // 条件下标
+    const [conditionGroupIndex,setConditionGroupIndex] = useState()
+    const [conditionIndex,setConditionIndex] = useState()
 
     const [popoverOpen,setPopoverOpen] = useState(false);
 
@@ -306,9 +321,10 @@ function RelationCard({overlayRef}: RelationCardProps){
                             </Flex>
                             <Droppable id={condition.crowdTemplateCondition.conditions.extInfo.id}>
                                 {/* 区域一 */}
-                                {condition.crowdTemplateCondition.conditions.children?.map((conditionGroup:any,index:number)=>{
+                                {condition.crowdTemplateCondition.conditions.children?.map((conditionGroup:any,conditionGroupIndex:number)=>{
+
                                     return(
-                                        <div key={index} className={conditionGroup.extInfo.id == active ? "conditionGroup cursor-pointer active":"conditionGroup cursor-pointer"} onClick={()=>setActive(conditionGroup.extInfo.id)}>
+                                        <div ref={clickOutsideRef} key={conditionGroupIndex} className={conditionGroup.extInfo.id == active ? "conditionGroup cursor-pointer active":"conditionGroup cursor-pointer"} onClick={()=>setActive(conditionGroup.extInfo.id)}>
                                             <Flex gap={16}>
                                                 {conditionGroup.children.length > 1 && (
                                                     <Flex className="switch">
@@ -316,7 +332,7 @@ function RelationCard({overlayRef}: RelationCardProps){
                                                             <div className={conditionGroup.relation == "and" ? "line andLine":"line orLine"}></div>
                                                             <Flex className={conditionGroup.relation == "and" ? "switch-condition and font-12":"switch-condition or font-12"} vertical justify="center" align="center" onClick={()=>{
                                                                 let newCondition = {...condition}
-                                                                newCondition.crowdTemplateCondition.conditions.children[index].relation == "and" ? newCondition.crowdTemplateCondition.conditions.children[index].relation = "or" : newCondition.crowdTemplateCondition.conditions.children[index].relation = "and"
+                                                                newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].relation == "and" ? newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].relation = "or" : newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].relation = "and"
                                                                 setCondition(newCondition)
                                                             }}>
                                                                 {conditionGroup.relation == "and" ? <>
@@ -337,17 +353,94 @@ function RelationCard({overlayRef}: RelationCardProps){
                                                 <Droppable id={conditionGroup.extInfo.id}>
                                                     {/* 区域二 */}
                                                     {conditionGroup.children.map((conditionItem:any,index:number)=>{
-                                                        // console.log(conditionItem)
+                                                        // setConditionIndex(index)
+                                                        const options = [
+                                                            { label : "重要价值客户", value : "重要价值客户",tip:""},
+                                                            { label : "重要挽留客户", value : "重要挽留客户",tip:""},
+                                                            { label : "重要保持客户", value : "重要保持客户",tip:""},
+                                                        ]
+
                                                         if(conditionItem.extInfo.id == activeCondition){
                                                             return(
-                                                            <div key={index} className="conditionEdit">
-                                                               123
-                                                            </div>
+                                                                <div key={index} className="conditionEdit">
+                                                                    <Form>
+                                                                        <Flex justify="space-between" style={{marginBottom:"8px"}}>
+                                                                            <div className="font-w-600 color-242833">{intl.formatMessage({ id: "customer.management.subdivision."+conditionItem.key })}</div>
+                                                                            <div>
+                                                                                <DeleteIcon className="font-20" onClick={()=>{
+                                                                                    let newCondition = {...condition}
+                                                                                    newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].children = newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].children.filter(item=>item.extInfo.id !== conditionItem.extInfo.id)
+                                                                                    setCondition(newCondition)
+                                                                                }} />
+                                                                            </div>
+                                                                        </Flex>
+                                                                        <MySelect Ref={clickOutsideRef} value={conditionItem.extInfo.operatorType} style={{width:"100px"}} options={[
+                                                                            {
+                                                                                label:"等于",
+                                                                                value:"EQ"
+                                                                            },
+                                                                            {
+                                                                                label:"不等于",
+                                                                                value:"NEQ"
+                                                                            }
+                                                                        ]}
+                                                                        onChange={(value)=>{
+                                                                            let newCondition = {...condition}
+                                                                            newCondition.crowdTemplateCondition.conditions.children[conditionGroupIndex].children[index].extInfo.operatorType = value
+                                                                            setCondition(newCondition)
+                                                                        }}
+                                                                        />
+                                                                        <Form.Item>
+                                                                            <MySelect
+                                                                                key={conditionItem.extInfo.id}
+                                                                                style={{marginTop:"8px"}}
+                                                                                mode={"multiple"}
+                                                                                tagRender={(props)=>{
+                                                                                    return (
+                                                                                        <div style={{marginLeft:"10px"}}>{props.label}</div>
+                                                                                    )
+                                                                                }}
+                                                                                options={options}
+                                                                                getPopupContainer={()=>clickOutsideRef?.current!}
+                                                                                value={conditionValue}
+                                                                                dropdownStyle={{padding:"6px 0"}}
+                                                                                dropdownRender={(menu) => {
+                                                                                    const list = options.map((item,index)=>{
+                                                                                        return (
+                                                                                            <Checkbox checked={conditionValue.includes(item.value)} className="item" style={{padding:"8px 12px",width:"100%"}}
+                                                                                            onChange={(e)=>{
+                                                                                                const newValues = conditionValue.includes(item.value) ? conditionValue.filter((v) => v !== item.value) : [...conditionValue, item.value];
+                                                                                                setConditionValue([...newValues]);
+                                                                                            }}
+                                                                                            >{item.label}</Checkbox>
+                                                                                        )
+                                                                                    })
+                                                                                    return (
+                                                                                        <div style={{backgroundColor:"#FFF"}}>
+                                                                                            {list}
+                                                                                        </div>
+                                                                                    )
+                                                                                }}
+                                                                            />
+                                                                            {/* <SelectCheckBox Ref={clickOutsideRef} options={[
+                                                                                { label : "重要价值客户", value : "重要价值客户",tip:""},
+                                                                                { label : "重要挽留客户", value : "重要挽留客户",tip:""},
+                                                                                { label : "重要保持客户", value : "重要保持客户",tip:""},
+                                                                            ]}
+                                                                            values = {conditionItem.value}
+                                                                            setConditionValue = {setConditionValue}
+                                                                            /> */}
+                                                                        </Form.Item>
+                                                                    </Form>
+                                                                </div>
                                                             )
                                                         }
                                                         return(
                                                             <div key={index} className="conditionItem" onClick={()=>{
                                                                 setActiveCondition(conditionItem.extInfo.id)
+                                                                setConditionValue(conditionItem.value)
+                                                                setConditionIndex(index)
+                                                                setConditionGroupIndex(conditionGroupIndex)
                                                             }}>
                                                                 {conditionItem.children?.length>0 ? <>
                                                                     <div className="color-7A8499">
@@ -373,7 +466,15 @@ function RelationCard({overlayRef}: RelationCardProps){
                                                                         {intl.formatMessage({ id: "customer.management.subdivision."+conditionItem.key })}
                                                                     </div>
                                                                     <Flex className="color-474F5E" gap={8}>
-                                                                        <span>{(conditionItem.operator == "EQ" || conditionItem.operator == "IN") ? "等于" : ""}</span>
+                                                                        <span>
+                                                                        {
+                                                                            conditionItem.extInfo.operatorType == "EQ" ? "等于" : 
+                                                                            conditionItem.extInfo.operatorType == "NEQ" ? "不等于" : 
+                                                                            conditionItem.operator == "IN" ? "包含" : 
+                                                                            conditionItem.operator == "NIN" ? "不包含" : ""
+
+                                                                        }
+                                                                        </span>
                                                                         {conditionItem.value.join(",")}
                                                                     </Flex>
                                                                 </>}
@@ -633,6 +734,11 @@ const MyCard = styled(Card)`
                 border-top: 1px solid #eef1f7;
             }
 
+            .conditionEdit{
+                padding: 16px;
+                background-color: #f7f8fb;
+            }
+
         }
         .active{
             border:2px solid #356DFF;
@@ -676,6 +782,7 @@ const Scoped = styled.div`
     .groupCount{
         height: 68px;
         position: absolute;
+        z-index: 99;
         bottom: 1px;
         left: 1px;
         right: 1px;
@@ -684,6 +791,10 @@ const Scoped = styled.div`
         background-color: #FFF;
         border-bottom-left-radius:6px;
         border-bottom-right-radius:6px;
+    }
+
+    .item:hover{
+        background-color: #f0f7ff;
     }
 `
 

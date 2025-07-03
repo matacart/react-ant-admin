@@ -645,8 +645,7 @@ function ConditionCard(){
                             setTimeout(() => {
                                 isProgrammaticScroll.current = false;
                             }, 500); // 略大于滚动动画时间
-                        }
-                        }>
+                        }}>
                             {intl.formatMessage({ id: "customer.management.subdivision."+item.key })}
                         </div>
                     ))}

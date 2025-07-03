@@ -390,7 +390,7 @@ const endProgress = () => {
 };
 // 请求封装
 export const request: RequestConfig = {
-  timeout: 15000, //超时处理，请求超过0.1分钟，取消请求
+  timeout: 30000, //超时处理，请求超过0.1分钟，取消请求
   // 错误统一处理
   errorConfig: {
     // 抛出错误

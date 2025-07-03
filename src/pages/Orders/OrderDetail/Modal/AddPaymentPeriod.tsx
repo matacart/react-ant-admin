@@ -136,7 +136,6 @@ function AddPaymentPeriod() {
                             <PrimaryButton text={"保存"} onClick={submit} loading={loading} />
                         </Flex>
                     </>
-                    
                 )}
             >
                 <Form layout="vertical" style={{marginTop:"20px"}}>
