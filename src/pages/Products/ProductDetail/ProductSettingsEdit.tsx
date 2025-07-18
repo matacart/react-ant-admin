@@ -175,7 +175,7 @@ function ProductSettingsEdit() {
 
     const getTagsList = (langId:string)=>{
         selectTags(langId).then(res=>{
-            console.log(res)
+            // console.log(res)
         }).catch((err)=>{
 
         }

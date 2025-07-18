@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { Col, Flex, Form, Input, message, Modal, Select, Tooltip } from "antd";
+import { Checkbox, Col, Flex, Form, Input, message, Modal, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MySelect from "@/components/Select/MySelect";
@@ -16,6 +16,11 @@ export default function ThemeTemplateManagement() {
 
     const [form] = Form.useForm();
 
+    const [currency,setCurrency] = useState<string | undefined>(undefined);
+    const [store711,setStore711] = useState(false);
+    const [storeFamily,setStoreFamily] = useState(false);
+
+
     const [currencyList,setCurrencyList] = useState<any>([]);
     const [languageList,setLanguageList] = useState<any>([]);
     
@@ -25,7 +30,9 @@ export default function ThemeTemplateManagement() {
                 ...product.productInfo,
                 template_id:values.themeId,
                 cod_languages_id:values.themeLanguage,
-                cod_currency:values.themeCurrency,
+                cod_currency:currency ?? "",
+                cod_is_711_enabled:store711 ? "1":"0",
+                cod_is_family_enabled:storeFamily ? "1":"0",
                 cod_fb_pix_id:values.themeFBID,
                 cod_gg_pix_id:values.themeGoogleId,
                 cod_tk_pix_id:values.themeTikTokId,
@@ -39,10 +46,12 @@ export default function ThemeTemplateManagement() {
     
        
     const reset = ()=>{
+        setCurrency((product.productInfo.cod_currency ? product.productInfo.cod_currency : undefined))
+        setStore711(product.productInfo.cod_is_711_enabled == "1" ? true : false)
+        setStoreFamily(product.productInfo.cod_is_family_enabled == "1" ? true : false)
         form.setFieldsValue({
             themeId:product.productInfo.template_id,
             themeLanguage:product.productInfo.cod_languages_id,
-            themeCurrency:product.productInfo.cod_currency,
             themeFBID:product.productInfo.cod_fb_pix_id,
             themeGoogleId:product.productInfo.cod_gg_pix_id,
             themeTikTokId:product.productInfo.cod_tk_pix_id,
@@ -79,7 +88,7 @@ export default function ThemeTemplateManagement() {
             )}
             >
                 <MyForm form={form} layout="vertical" style={{marginTop:"20px"}}>
-                    <Form.Item label="主题" name="themeId">
+                    <Form.Item label="主题:" name="themeId">
                         <MySelect style={{height:"36px"}} placeholder="主题" options={[
                             { value: '0', label: '默认模板' },
                             { value: '1', label: 'v1' },
@@ -87,19 +96,28 @@ export default function ThemeTemplateManagement() {
                             { value: '3', label: 'v3' },
                         ]} />
                     </Form.Item>
-                    <Form.Item label="语言" name="themeLanguage">
+                    <Form.Item label="语言:" name="themeLanguage">
                         <MySelect style={{height:"36px"}} placeholder="语言" options={languageList} />
                     </Form.Item>
-                    <Form.Item label="货币" name="themeCurrency">
-                        <MySelect style={{height:"36px"}} placeholder="货币" options={currencyList} />
+                    <Form.Item label="货币:">
+                        <MySelect style={{height:"36px"}} placeholder="货币" options={currencyList} value={currency} onChange={(value:string) => setCurrency(value)} />
                     </Form.Item>
-                    <Form.Item label="FB像素ID" name="themeFBID">
+                    {/* <Form.Item label="FB像素ID" name="themeFBID">
+                        <MyInput style={{height:"36px"}} placeholder="FB像素ID" />
+                    </Form.Item> */}
+                    {currency == "10" && <Flex gap={12} style={{marginBottom:"24px"}}>
+                        <div>台湾商超:</div>
+                        <Checkbox checked={store711} onChange={(e)=>setStore711(e.target.checked)}>711超商取貨</Checkbox>
+                        <Checkbox checked={storeFamily} onChange={(e)=>setStoreFamily(e.target.checked)}>全家超商取貨</Checkbox>
+                    </Flex>}
+
+                    <Form.Item label="FB像素ID:" name="themeFBID">
                         <MyInput style={{height:"36px"}} placeholder="FB像素ID" />
                     </Form.Item>
-                    <Form.Item label="Google分析ID" name="themeGoogleId">
+                    <Form.Item label="Google分析ID:" name="themeGoogleId">
                         <MyInput style={{height:"36px"}} placeholder="Google分析ID" />
                     </Form.Item>
-                    <Form.Item label="TikTok像素ID" name="themeTikTokId">
+                    <Form.Item label="TikTok像素ID:" name="themeTikTokId">
                         <MyInput style={{height:"36px"}} placeholder="TikTok像素ID" />
                     </Form.Item>
                 </MyForm>

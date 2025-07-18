@@ -123,7 +123,7 @@ function MyStylesCard() {
                 <div>
                   <Flex gap={12}>
                     <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="操作" />
-                    <PrimaryButton text="设计" onClick={()=>history.push("/theme/home")} />
+                    <PrimaryButton text="设计" />
                   </Flex>
                 </div>
               </Flex>
@@ -201,9 +201,11 @@ function MyStylesCard() {
                   <div className="font-12 color-7A8499">当前版本：1.4.34<Divider type="vertical" />保存时间：2025/03/27 22:25</div>
                 </Flex>
                 <Flex gap={12}>
-                  <DefaultButton text="预览" />
+                  <a href="/theme/preview?themeId=10011&&page=index" target="_blank" >
+                    <DefaultButton text="预览" />
+                  </a>
                   <ButtonDropdownSecondary menu={{items:controlsItemsSecond}} trigger={['click']} text="操作" />
-                  <DefaultButton text="设计" onClick={()=>history.push("/theme/home")} />
+                  <DefaultButton text="设计" onClick={()=>history.push("/theme/editor?themeId=10011")} />
                 </Flex>
               </Flex>
               <Flex justify="space-between" className="themeList-item">
@@ -212,9 +214,11 @@ function MyStylesCard() {
                   <div className="font-12 color-7A8499">当前版本：1.4.34<Divider type="vertical" />保存时间：2025/03/27 22:25</div>
                 </Flex>
                 <Flex gap={12}>
-                  <DefaultButton text="预览" />
+                  <a href="/theme/preview?themeId=10012&&page=index" target="_blank" >
+                    <DefaultButton text="预览" />
+                  </a>
                   <ButtonDropdownSecondary menu={{items:controlsItemsSecond}} trigger={['click']} text="操作" />
-                  <DefaultButton text="设计" onClick={()=>history.push("/theme/home")} />
+                  <DefaultButton text="设计" onClick={()=>history.push("/theme/editor?themeId=10011")} />
                 </Flex>
               </Flex>
             </div>

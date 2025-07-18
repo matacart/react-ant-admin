@@ -1,7 +1,8 @@
-import { request } from '@umijs/max';
+
+import request from "@/utils/request";
 
 // export async function getCustomerList(page: any, limit: any) {
-//   return request(`/api/ApiAppstore/customers_list`, {
+//   return request(`/ApiAppstore/customers_list`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -13,10 +14,9 @@ import { request } from '@umijs/max';
 //   })
 // }
 
-  
 // export async function getAddressList(page: string, limit: number, additionalParams?: string) {
 //   const params = additionalParams ? `${additionalParams}&page=${page}&limit=${limit}` : `?page=${page}&limit=${limit}`;
-//   return request(`/api/ApiAppstore/address_info${params}`, {
+//   return request(`/ApiAppstore/address_info${params}`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ import { request } from '@umijs/max';
 // }
 
 export async function addCustomers(newCustomerInfo?: { realname: string; familyname: string; email: string; tel: string; }) {
-  return request('/api/ApiAppstore/customer_add', {
+  return request('/ApiAppstore/customer_add', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -76,7 +76,7 @@ export async function addCustomers(newCustomerInfo?: { realname: string; familyn
 //   };
 
 //   try {
-//     const response = await request('/api/ApiAppstore/customer_add', {
+//     const response = await request('/ApiAppstore/customer_add', {
 //       method: 'POST',
 //       headers: {
 //         'Content-Type': 'application/json', // 如果使用 JSON 格式的数据

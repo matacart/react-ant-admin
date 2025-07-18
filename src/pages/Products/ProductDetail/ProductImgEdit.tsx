@@ -81,7 +81,6 @@ function ProductImgEdit() {
   const [selectFileCount,setSelectFileCount] = useState(0);
 
   useEffect(() => {
-    console.log(product.productInfo.additional_image)
     // console.log([...product.productInfo.additional_image])
     const newImgList = [...product.productInfo.additional_image].map((item,index)=>{
       return {

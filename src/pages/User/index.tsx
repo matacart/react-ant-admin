@@ -85,7 +85,7 @@ const Scoped = styled.div`
   .login-logo {
     position: 'relative';
     width: '67.5%';
-    background: url(/img/logo-bak-01.jpg);
+    background: url(https://admin-cdn.handingcdn.com/img/logo-bak-02.jpg);
     background-repeat: no-repeat;
     background-size: cover;
 

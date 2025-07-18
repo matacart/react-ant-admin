@@ -797,7 +797,6 @@ export default  [
       },
     ]
   },
-
   // 主题编辑
   {
     path: 'theme',
@@ -805,28 +804,18 @@ export default  [
     icon: 'SettingOutlined',
     hideInMenu: true,
     layout: false,
-    component: './Theme/Editor/Editor',
-    routes: [
+    routes:[
       {
-        path: '',
-        redirect: 'home',
+        path: 'editor',
+        name: 'editor',
+        component: './Theme/Editor/Editor',
       },
       {
-        path: 'home',
-        name: 'home',
-        pure:true,
-        parentKeys: ['/theme'],
-        component: './Theme/Editor/Home/Home',
+        path: 'preview',
+        name: 'preview',
+        component: './Theme/View/View',
       },
-      {
-        path: 'allCollections',
-        name: 'allCollections',
-        pure:true,
-        parentKeys: ['/theme'],
-        component: './Theme/Editor/Category/Category',
-      }
     ]
-
   },
   // {
   //   path: '/test',

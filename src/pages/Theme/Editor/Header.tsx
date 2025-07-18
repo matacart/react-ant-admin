@@ -1,6 +1,7 @@
 
 import { BackIcon, DownIcon, EditorCategoryIcon, EditorHomeIcon, RightIcon } from '@/components/Icons/Icons';
 import SuccessTag from '@/components/Tag/SuccessTag';
+import editor from '@/store/theme/editor';
 import { DownOutlined, SmileOutlined } from '@ant-design/icons';
 import { history, Link } from '@umijs/max';
 import { Button, Dropdown, Flex, MenuProps, Space, Tag, Tooltip } from 'antd';
@@ -54,11 +55,11 @@ export default function Header() {
       };
 
     return(
-        <Scoped>
+        <Scoped className='font-14'>
             {/* left */}
             <Tooltip title="返回管理后台" placement="right">
                 <div className='header-left cursor-pointer' onClick={()=>history.push(`/home`)}>
-                    <BackIcon />
+                    <BackIcon className='font-20' />
                 </div>
             </Tooltip>
             <Flex className='header-main' justify='space-between'>
@@ -80,7 +81,9 @@ export default function Header() {
                 </Flex>
                 <Flex className='header-main-right'>
                     <div className='prev-btn'>预览</div>
-                    <Button type="primary" className='font-14 save-btn'>保存</Button>
+                    <Button type="primary" className='font-14 save-btn' onClick={()=>{
+                        console.log(editor.templateData)
+                    }}>保存</Button>
                 </Flex>
             </Flex>
         </Scoped>
@@ -90,13 +93,14 @@ export default function Header() {
 
 const Scoped = styled.div`
     display: flex;
-    height: 100%;
+    height: 52px;
+    border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     .header-left{
         display: flex;
         align-items: center;
         justify-content: center;
         width: 52px;
-        border-right: 1px solid rgba(5, 5, 5, 0.06);;
+        border-right: 1px solid rgba(5, 5, 5, 0.06);
     }
     .header-main{
         flex: 1;

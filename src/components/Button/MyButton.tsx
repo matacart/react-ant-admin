@@ -9,7 +9,6 @@ interface MyButtonProps extends ButtonProps {
 export default function MyButton({text,...props}:MyButtonProps){
     
     return (
-        <Scoped>
             <ConfigProvider
                 theme={{
                     components: {
@@ -30,10 +29,9 @@ export default function MyButton({text,...props}:MyButtonProps){
                     {text}
                 </Button>
             </ConfigProvider>
-        </Scoped>
     )
 }
 
-const Scoped = styled.div`
-    display: flex;
-`
+// const Scoped = styled.div`
+//     display: flex;
+// `

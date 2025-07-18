@@ -5,12 +5,18 @@ import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
+// 引入 chainWebpack 的配置类型
+import type { Configuration as WebpackConfiguration } from 'webpack';
+
 const { REACT_APP_ENV = 'dev' } = process.env;
 
 
 // const
 
 export default defineConfig({
+
+  publicPath: process.env.NODE_ENV === 'production' ? 'https://admin-cdn.handingcdn.com/' : '/',
+
   /**
    * @name 开启 hash 模式
    * @description 让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存。
@@ -29,7 +35,7 @@ export default defineConfig({
 
   jsMinifier: 'terser',
 
-  links: [{ href: '/foo.css', rel: 'preload' }],
+  // links: [{ href: '/foo.css', rel: 'preload' }],
 
   /**
    * @name 路由的配置，不在路由中引入的文件不会编译
@@ -174,18 +180,10 @@ export default defineConfig({
   // icons: {autoInstall: {}},
   icons: {},
 
-  // chainWebpack: (config) => {
-  //   config.module
-  //   .rule('svg')
-  //   .exclude.add(/node_modules/)
-  //   .end()
-  //   .use('svg')
-  //   .loader('@svgr/webpack')
-  //   .options({
-  //         svgo: false,
-  //       });
-  // },
-
+  // 代码拆分
+  codeSplitting: {
+    jsStrategy: 'granularChunks',
+  },
   // Qiankun 微应用 -- 注册子应用
   // qiankun: {
   //   master: {

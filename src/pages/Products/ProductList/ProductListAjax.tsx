@@ -74,8 +74,8 @@ function ProductListAjax(selectProps:any) {
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 50,
-      pageSizeOptions:[50,200,400,600]
+      pageSize: 10,
+      pageSizeOptions:[10,20,50,100]
     },
   });
   // 复制商品模态框

@@ -1,6 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
-import request from '@//utils/request';
+import { request } from '@umijs/max';
 import { Oauth2 } from '../../../config/myConfig'
 import cookie from 'react-cookies';
 
@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 // --重试--
 // 店铺列表
 export async function getDomainList( options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/ApiAppstore/domain_select', {
+  return request<API.LoginResult>('/api/ApiAppstore/domain_select', {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -18,9 +18,11 @@ export async function getDomainList( options?: { [key: string]: any }) {
   });
 }
 
-/** 获取当前的用户 GET /currentUser */
+/** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request('/ApiAppstore/currentUser', {
+  return request<{
+    data: API.CurrentUser;
+  }>('/api/ApiAppstore/currentUser', {
     method: 'POST',
     retryOnError: true,
     ...(options || {}),
@@ -29,7 +31,7 @@ export async function currentUser(options?: { [key: string]: any }) {
 
 // 店铺币种汇率
 export async function getCurrencies(domainId:string) {
-  return await request(`/ApiAppstore/currencies`, {
+  return await request(`/api/ApiAppstore/currencies`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -43,7 +45,7 @@ export async function getCurrencies(domainId:string) {
 
 // 国家
 export async function getCountryList(){
-  return await request('/ApiAppstore/country_select',{
+  return await request('/api/ApiAppstore/country_select',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -58,7 +60,7 @@ export async function getCountryList(){
 
 // 时区
 export async function getTimeZoneList(){
-  const result = await request('/ApiAppstore/timezones_select',{
+  const result = await request('/api/ApiAppstore/timezones_select',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -70,7 +72,7 @@ export async function getTimeZoneList(){
 
 // 所有币种
 export async function getCurrenciesList() {
-  return await request(`/ApiAppstore/currencies_list`, {
+  return await request(`/api/ApiAppstore/currencies_list`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -86,7 +88,7 @@ export async function getCurrenciesList() {
 
 // 获取语言列表
 export async function getLanguagesList() {
-  const result = await request(`/ApiAppstore/languages_list`, {
+  const result = await request(`/api/ApiAppstore/languages_list`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -103,7 +105,7 @@ export async function getLanguagesList() {
 
 // 物流服务商
 export async function getShippingcourier() {
-  return request(`/ApiAppstore/shippingcourier_select`, {
+  return request(`/api/ApiAppstore/shippingcourier_select`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -122,24 +124,24 @@ export async function getShippingcourier() {
 export async function currentUserStatus(options?: { [key: string]: any }) {
   return request<{
     data: API.CurrentUser;
-  }>('/Api/user_session', {
+  }>('/api/Api/user_session', {
     method: 'POST',
     ...(options || {}),
   });
 }
 
 
-/** 退出登录接口 POST /ApiAppstore/logout */
+/** 退出登录接口 POST /api/ApiAppstore/logout */
 export async function logout(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/ApiAppstore/logout', {
+  return request<Record<string, any>>('/api/ApiAppstore/logout', {
     method: 'POST',
     ...(options || {}),
   });
 }
 
-/** 登录接口 POST /login/account  /y2/ApiAppstore/newlogin */
+/** 登录接口 POST /api/login/account  /y2/ApiAppstore/newlogin */
 export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/ApiAppstore/newlogin', {
+  return request<API.LoginResult>('/api/ApiAppstore/newlogin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -149,15 +151,15 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
   });
 }
 
-/** 此处后端没有提供注释 GET /notices */
+/** 此处后端没有提供注释 GET /api/notices */
 export async function getNotices(options?: { [key: string]: any }) {
-  return request<API.NoticeIconList>('/notices', {
+  return request<API.NoticeIconList>('/api/notices', {
     method: 'GET',
     ...(options || {}),
   });
 }
 
-/** 获取规则列表 GET /rule */
+/** 获取规则列表 GET /api/rule */
 export async function rule(
   params: {
     // query
@@ -168,7 +170,7 @@ export async function rule(
   },
   options?: { [key: string]: any },
 ) {
-  return request<API.RuleList>('/rule', {
+  return request<API.RuleList>('/api/rule', {
     method: 'GET',
     params: {
       ...params,
@@ -177,9 +179,9 @@ export async function rule(
   });
 }
 
-/** 更新规则 PUT /rule */
+/** 更新规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/rule', {
+  return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
     data: {
       method: 'update',
@@ -188,9 +190,9 @@ export async function updateRule(options?: { [key: string]: any }) {
   });
 }
 
-/** 新建规则 POST /rule */
+/** 新建规则 POST /api/rule */
 export async function addRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/rule', {
+  return request<API.RuleListItem>('/api/rule', {
     method: 'POST',
     data: {
       method: 'post',
@@ -199,9 +201,9 @@ export async function addRule(options?: { [key: string]: any }) {
   });
 }
 
-/** 删除规则 DELETE /rule */
+/** 删除规则 DELETE /api/rule */
 export async function removeRule(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/rule', {
+  return request<Record<string, any>>('/api/rule', {
     method: 'POST',
     data: {
       method: 'delete',
@@ -304,7 +306,7 @@ export async function getAccessToken() {
 
 // 账号认证
 export async function accountAuthentication(res:any) {
-  return request("/ApiAppstore/apply_add", {
+  return request("/api/ApiAppstore/apply_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -327,7 +329,7 @@ export async function accountAuthentication(res:any) {
 
 // 删除产品 ----- 产品
 export async function deleteProduct(id: string) {
-  return request('/ApiStore/product_del', {
+  return request('/api/ApiStore/product_del', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -341,18 +343,18 @@ export async function deleteProduct(id: string) {
 
 // 产品列表
 // export async function getProductList(page: any, limit: any) {
-//   return request(`/ApiStore/product_list?page=${page}&limit=${limit}`, {
+//   return request(`/api/ApiStore/product_list?page=${page}&limit=${limit}`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
 //     },
 //   })
 // }
-// /ApiStore/product_detail?page=${page}&limit=${limit}  测试
+// /api/ApiStore/product_detail?page=${page}&limit=${limit}  测试
 // 改用product_list
 // 根据id & languages_id获取产品详情
 export async function getProductDetail(id: string,languagesId: string) {
-  return request(`/ApiStore/product`, {
+  return request(`/api/ApiStore/product`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -368,7 +370,7 @@ export async function getProductDetail(id: string,languagesId: string) {
 
 // 选项类型
 export async function getOptionType() {
-  return request('/ApiStore/product_option_type_select', {
+  return request('/api/ApiStore/product_option_type_select', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -382,7 +384,7 @@ export async function getOptionType() {
 //创建 --- 更新商品 
 export async function upDateProduct(res:any){
   // return
-  return request('/ApiStore/product_add', {
+  return request('/api/ApiStore/product_add', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -398,7 +400,7 @@ export async function upDateProduct(res:any){
 // 获取订单
 export async function getOrderDetail(id:string){
   // return
-  return request('/ApiStore/getOrderDetail', {
+  return request('/api/ApiStore/getOrderDetail', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -414,7 +416,7 @@ export async function getOrderDetail(id:string){
 // completed
 export async function getTaskList(page:number,limit:number,taskStatus:string){
   // return
-  return request('/ApiTask/task_list', {
+  return request('/api/ApiTask/task_list', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -438,7 +440,7 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
 
 // // 订单列表
 // export async function getOrderYList(page?: number, limit?: number,id?:string,languagesId?:string): Promise<any> {
-//   return request(`/ApiStore/order_list`, {
+//   return request(`/api/ApiStore/order_list`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -456,7 +458,7 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
 
 // 文件库
 // export async function getFileList(page: any, limit: any) {
-//   return request(`/ApiStore/file_list?page=${page}&limit=${limit}`, {
+//   return request(`/api/ApiStore/file_list?page=${page}&limit=${limit}`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -466,7 +468,7 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
 
 // 语言
 // export async function getLanguages() {
-//   return await request(`/ApiAppstore/languages_select`, {
+//   return await request(`/api/ApiAppstore/languages_select`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -483,7 +485,7 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
 // title: 
 // tags
 export async function getProductList(res:any) {
-  return await request(`/ApiStore/product_list`, {
+  return await request(`/api/ApiStore/product_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -499,7 +501,7 @@ export async function getProductList(res:any) {
 
 // 修改产品的状态 0：下架 1：上架 2:存档
 export async function upDateProductStatus(productId: string, status: string) {
-  return await request('/ApiStore/product_status_update', {
+  return await request('/api/ApiStore/product_status_update', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -513,7 +515,7 @@ export async function upDateProductStatus(productId: string, status: string) {
 
 // 批量删除
 export async function deleteProductList(ids:string) {
-  return await request('/ApiStore/product_batchdel', {
+  return await request('/api/ApiStore/product_batchdel', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -526,7 +528,7 @@ export async function deleteProductList(ids:string) {
 
 // 批量更新价格
 export async function updataBatchUpdatePrice(res:any) {
-  return await request('/ApiStore/batchUpdatePrice', {
+  return await request('/api/ApiStore/batchUpdatePrice', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -538,7 +540,7 @@ export async function updataBatchUpdatePrice(res:any) {
 
 // 创建款式名称 languages_id product_option_name sort product_option_type_id status
 export async function addStyleName(id:string,languagesId:string,productStyleName:string,productOptionType:string){
-  return await request('/ApiStore/product_option_add',{
+  return await request('/api/ApiStore/product_option_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -561,7 +563,7 @@ export async function addStyleName(id:string,languagesId:string,productStyleName
 // option_id: 1362219716562
 // status: 
 export async function addStyleContent(languagesId:string,productStyleValue:string,styleNameId:number){
-  return await request('/ApiStore/product_option_values_add',{
+  return await request('/api/ApiStore/product_option_values_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -582,7 +584,7 @@ export async function addStyleContent(languagesId:string,productStyleValue:strin
 // productIds: 1363152740171
 // status: 1
 export async function addStyle(styleNameId:number,styleContentId:number,productId:string){
-  return await request('/ApiStore/attribute_add',{
+  return await request('/api/ApiStore/attribute_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -599,7 +601,7 @@ export async function addStyle(styleNameId:number,styleContentId:number,productI
 // model: 12332222111   languages_id
 // ApiStore/attribute_list
 export async function getProductStyleList(model:string,languagesId:string){
-  return await request('/ApiStore/attribute_list',{
+  return await request('/api/ApiStore/attribute_list',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -612,7 +614,7 @@ export async function getProductStyleList(model:string,languagesId:string){
 }
 
 export async function getProductOption(id:string,languagesId:string){
-  return await request('/ApiStore/product_option',{
+  return await request('/api/ApiStore/product_option',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -627,7 +629,7 @@ export async function getProductOption(id:string,languagesId:string){
 
 // 
 export async function getProductOptionSelect(languagesId:string){
-  return await request('/ApiStore/product_option_select',{
+  return await request('/api/ApiStore/product_option_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -651,7 +653,7 @@ export async function getProductOptionSelect(languagesId:string){
 // status: 1
 // 修改产品款式
 export async function updateProductStyle(id:number,price:string,weight:string){
-  return await request('/ApiStore/attribute_add',{
+  return await request('/api/ApiStore/attribute_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -669,7 +671,7 @@ export async function updateProductStyle(id:number,price:string,weight:string){
 
 // 删除款式
 export async function deleteProductStyle(id:number){
-  return await request('/ApiStore/attribute_del',{
+  return await request('/api/ApiStore/attribute_del',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -682,7 +684,7 @@ export async function deleteProductStyle(id:number){
 
 // 获取所有款式
 export async function getProductStyleValueList(optionId:string,language:string){
-  return await request('/ApiStore/product_option_values_select',{
+  return await request('/api/ApiStore/product_option_values_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -698,7 +700,7 @@ export async function getProductStyleValueList(optionId:string,language:string){
 
 // 
 export async function addProductOptionValues(id:string,language:string,optionId:string,optionValuesName:string){
-  return await request('/ApiStore/product_option_values_add',{
+  return await request('/api/ApiStore/product_option_values_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -715,7 +717,7 @@ export async function addProductOptionValues(id:string,language:string,optionId:
 
 // 添加标签
 export async function addTags(languagesId:string,tag:string){
-  return await request('/ApiStore/tags_add',{
+  return await request('/api/ApiStore/tags_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -728,7 +730,7 @@ export async function addTags(languagesId:string,tag:string){
 }
 // 删除标签
 export async function removeTags(languagesId:string,tag:string){
-  return await request('/ApiStore/tags_del',{
+  return await request('/api/ApiStore/tags_del',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -741,7 +743,7 @@ export async function removeTags(languagesId:string,tag:string){
 }
 // 查询标签
 export async function selectTags(languagesId:string){
-  return await request('/ApiStore/tags_select',{
+  return await request('/api/ApiStore/tags_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -753,7 +755,7 @@ export async function selectTags(languagesId:string){
 }
 // 查询标签  -- 排序
 export async function selectTagsSort(languagesId:string,sortArgument:string,sortWay:string){
-  return await request('/ApiStore/tags_select',{
+  return await request('/api/ApiStore/tags_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -769,7 +771,7 @@ export async function selectTagsSort(languagesId:string,sortArgument:string,sort
 
 // 平台分类
 export async function getPlatformCategorySelect(language:string){
-  return await request('/ApiStore/platform_category_select',{
+  return await request('/api/ApiStore/platform_category_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -786,7 +788,7 @@ export async function getPlatformCategorySelect(language:string){
 // ------------商品分类
 // 查询
 export async function getCategorySelect(){
-  return await request('/ApiStore/category_select',{
+  return await request('/api/ApiStore/category_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -799,7 +801,7 @@ export async function getCategorySelect(){
 }
 // 分类查询
 export async function getCategoryList(res:any){
-  return await request('/ApiStore/category_list',{
+  return await request('/api/ApiStore/category_list',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -812,7 +814,7 @@ export async function getCategoryList(res:any){
 }
 // 详情
 export async function getCategory(id:string,languageId:string){
-  return await request('/ApiStore/category',{
+  return await request('/api/ApiStore/category',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -826,7 +828,7 @@ export async function getCategory(id:string,languageId:string){
 }
 // 更新分类 无id时创建
 export async function setCategory(res:any){
-  return await request('/ApiStore/category_add',{
+  return await request('/api/ApiStore/category_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -839,7 +841,7 @@ export async function setCategory(res:any){
 }
 // 删除分类
 export async function deleteCategory(id:string){
-  return await request('/ApiStore/category_del',{
+  return await request('/api/ApiStore/category_del',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -854,7 +856,7 @@ export async function deleteCategory(id:string){
 
 // 供应商货币
 export async function getPurchaseCurrencyList(){
-  return await request('/ApiAppstore/currencies_select',{
+  return await request('/api/ApiAppstore/currencies_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -864,7 +866,7 @@ export async function getPurchaseCurrencyList(){
 
 // 采购订单列表
 export async function getPurchaseList(orderNumber?:string,status?:string,supplier?:string,warehouse?:string,px?:any){
-  return await request('/ApiStore/purchase_orders_list',{
+  return await request('/api/ApiStore/purchase_orders_list',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -880,7 +882,7 @@ export async function getPurchaseList(orderNumber?:string,status?:string,supplie
 
 // 采购订单详情
 export async function getPurchase(id:string){
-  return await request('/ApiStore/purchase_orders',{
+  return await request('/api/ApiStore/purchase_orders',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -893,7 +895,7 @@ export async function getPurchase(id:string){
 
 // 添加采购订单
 export async function addPurchaseOrders(res:any){
-  return await request('/ApiStore/purchase_orders_add',{
+  return await request('/api/ApiStore/purchase_orders_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -937,7 +939,7 @@ export async function addPurchaseOrders(res:any){
 }
 // 编辑采购订单
 export async function editPurchaseOrders(res:any){
-  return await request('/ApiStore/purchase_orders_add',{
+  return await request('/api/ApiStore/purchase_orders_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -981,7 +983,7 @@ export async function editPurchaseOrders(res:any){
 }
 // 删除采购单
 export async function delPurchaseOrders(id:string){
-  return await request('/ApiStore/purchase_orders_del',{
+  return await request('/api/ApiStore/purchase_orders_del',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -995,7 +997,7 @@ export async function delPurchaseOrders(id:string){
 
 // 省
 export async function getProvinceList(countryId:string){
-  return await request('/ApiAppstore/state_select',{
+  return await request('/api/ApiAppstore/state_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1007,7 +1009,7 @@ export async function getProvinceList(countryId:string){
 }
 // 市
 export async function getCityList(cityId:string){
-  return await request('/ApiAppstore/city_select',{
+  return await request('/api/ApiAppstore/city_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1020,7 +1022,7 @@ export async function getCityList(cityId:string){
 
 // 添加供应商
 export async function AddSupplier(res:any){
-  return await request('/ApiAppstore/supplier_add',{
+  return await request('/api/ApiAppstore/supplier_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1057,7 +1059,7 @@ export async function AddSupplier(res:any){
 
 // 查询供应商列表
 export async function selectSupplier(){
-  return await request('/ApiAppstore/supplier_select',{
+  return await request('/api/ApiAppstore/supplier_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1067,7 +1069,7 @@ export async function selectSupplier(){
 
 // 获取供应商
 export async function getSupplier(id:string){
-  return await request('/ApiAppstore/supplier',{
+  return await request('/api/ApiAppstore/supplier',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1080,7 +1082,7 @@ export async function getSupplier(id:string){
 
 // 编辑供应商
 export async function editSupplier(res:any){
-  return await request('/ApiAppstore/supplier_add',{
+  return await request('/api/ApiAppstore/supplier_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1116,7 +1118,7 @@ export async function editSupplier(res:any){
 
 // 添加仓库地址
 export async function addWarehouse(res:any){
-  return await request('/ApiStore/warehouse_add',{
+  return await request('/api/ApiStore/warehouse_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1154,7 +1156,7 @@ export async function addWarehouse(res:any){
 
 // 仓库地址列表
 export async function getAddWarehouseList(){
-  return await request('/ApiStore/warehouse_select',{
+  return await request('/api/ApiStore/warehouse_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1167,7 +1169,7 @@ export async function getAddWarehouseList(){
 
 // 仓库地址详情
 export async function getAddWarehouse(id:string){
-  return await request('/ApiStore/warehouse_select',{
+  return await request('/api/ApiStore/warehouse_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1182,7 +1184,7 @@ export async function getAddWarehouse(id:string){
 // --基本设置
 // 店铺信息
 export async function getStoreInfo(id:string){
-  const result = await request('/ApiAppstore/store',{
+  const result = await request('/api/ApiAppstore/store',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1196,7 +1198,7 @@ export async function getStoreInfo(id:string){
 }
 
 export async function getDomain(id:string){
-  const result = await request('/ApiAppstore/domain',{
+  const result = await request('/api/ApiAppstore/domain',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1210,7 +1212,7 @@ export async function getDomain(id:string){
 
 // 更新店铺信息
 export async function setStoreInfo(res:any){
-  return await request('/ApiAppstore/store_set',{
+  return await request('/api/ApiAppstore/store_set',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1234,7 +1236,7 @@ export async function setStoreInfo(res:any){
 
 // 
 export async function createStore(res:any){
-  return await request('/ApiAppstore/store_add',{
+  return await request('/api/ApiAppstore/store_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1259,7 +1261,7 @@ export async function createStore(res:any){
 
 // 更新币种
 export async function setCurrenciesList(currenciesList:any) {
-  return await request(`/ApiAppstore/domain_currencies_batchadd`, {
+  return await request(`/api/ApiAppstore/domain_currencies_batchadd`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1276,7 +1278,7 @@ export async function setCurrenciesList(currenciesList:any) {
 
 // 添加语言
 export async function addLanguages(languages:any) {
-  const result = await request(`/ApiAppstore/domain_languages_batchadd`, {
+  const result = await request(`/api/ApiAppstore/domain_languages_batchadd`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1290,7 +1292,7 @@ export async function addLanguages(languages:any) {
 
 // 删除语言
 export async function delLanguages(languagesId:string) {
-  const result = await request(`/ApiAppstore/domain_languages_del`, {
+  const result = await request(`/api/ApiAppstore/domain_languages_del`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1305,7 +1307,7 @@ export async function delLanguages(languagesId:string) {
 
 // 文件库 ---
 export async function getFileList(groupId?:string,extType?:number,pageNumber?:number,pageSize?:number,title?:string){
-  return request("/ApiResource/file_list", {
+  return request("/api/ApiResource/file_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1322,7 +1324,7 @@ export async function getFileList(groupId?:string,extType?:number,pageNumber?:nu
 
 // 分组 ---
 export async function getGroupList() {
-  return request("/ApiResource/group_list", {
+  return request("/api/ApiResource/group_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1331,7 +1333,7 @@ export async function getGroupList() {
 }
 // 新增分组
 export async function getGroupAdd(groupName: string,groupId:string) {
-  return request("/ApiResource/group_add", {
+  return request("/api/ApiResource/group_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1346,7 +1348,7 @@ export async function getGroupAdd(groupName: string,groupId:string) {
 
 // 删除分组
 export async function deleteGroup(groupId: string) {
-  return request("/ApiResource/group_del", {
+  return request("/api/ApiResource/group_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1359,7 +1361,7 @@ export async function deleteGroup(groupId: string) {
 }
 // 删除文件
 export async function deleteFile(id: string) {
-  return request('/ApiResource/file_del', {
+  return request('/api/ApiResource/file_del', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1372,7 +1374,7 @@ export async function deleteFile(id: string) {
 
 // 域名
 export async function getDomainNameList() {
-  return request("/ApiAppstore/domain", {
+  return request("/api/ApiAppstore/domain", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1386,7 +1388,7 @@ export async function getDomainNameList() {
 // 添加域名
 
 export async function addDomainName(domainName:string,otherDomain:string) {
-  return request("/ApiAppstore/domain_set", {
+  return request("/api/ApiAppstore/domain_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1401,7 +1403,7 @@ export async function addDomainName(domainName:string,otherDomain:string) {
 
 // 删除插件
 export async function delAddonsConfig(id:string,lang:string) {
-  return request('/ApiAppstore/addons_config_del', {
+  return request('/api/ApiAppstore/addons_config_del', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1415,7 +1417,7 @@ export async function delAddonsConfig(id:string,lang:string) {
 
 // 收款 --手动收款方式  -- 所有/详细
 export async function getAddonsConfigs(id?:string) {
-  return request("/ApiAppstore/addons_config_get", {
+  return request("/api/ApiAppstore/addons_config_get", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1430,7 +1432,7 @@ export async function getAddonsConfigs(id?:string) {
 }
 // 手动收款方式  -- 配置
 export async function getAddonsConfigArray(id?:string,addonsId?:string) {
-  return request("/ApiAppstore/addons_config_array", {
+  return request("/api/ApiAppstore/addons_config_array", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1446,7 +1448,7 @@ export async function getAddonsConfigArray(id?:string,addonsId?:string) {
 }
 // 更新
 export async function upDataAddonsConfig(res:any) {
-  return request("/ApiAppstore/addons_config_set", {
+  return request("/api/ApiAppstore/addons_config_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1478,7 +1480,7 @@ export async function upDataAddonsConfig(res:any) {
 
 // 添加
 export async function setAddonsConfig(res:any) {
-  return request("/ApiAppstore/addons_config_set", {
+  return request("/api/ApiAppstore/addons_config_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1505,7 +1507,7 @@ export async function setAddonsConfig(res:any) {
 
 // 支付插件 group_id  1:信用卡 2：其它 type_id 插件类型1:支付 2配送
 export async function getAddonsList(lang:string,type:string,group_id?:string) {
-  return request("/ApiAppstore/addons_list", {
+  return request("/api/ApiAppstore/addons_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1522,7 +1524,7 @@ export async function getAddonsList(lang:string,type:string,group_id?:string) {
 
 // 支付服务  -- 配置
 export async function getAddonsConfigCreditCard(id:string,addonsId?:string,languagesId:string) {
-  return request("/ApiAppstore/addons_config_array", {
+  return request("/api/ApiAppstore/addons_config_array", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1538,7 +1540,7 @@ export async function getAddonsConfigCreditCard(id:string,addonsId?:string,langu
 }
 // 支付服务  -- 更新
 export async function setAddonsConfigs(res:any) {
-  return request("/ApiAppstore/addons_config_set", {
+  return request("/api/ApiAppstore/addons_config_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1552,7 +1554,7 @@ export async function setAddonsConfigs(res:any) {
 
 // 配送插件
 export async function getDeliveryList(lang:string) {
-  return request("/ApiAppstore/delivery_list", {
+  return request("/api/ApiAppstore/delivery_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1569,7 +1571,7 @@ export async function getDeliveryList(lang:string) {
 
 // 规则
 export async function getRule(id:string,type:string) {
-  return request("/ApiAppstore/rule", {
+  return request("/api/ApiAppstore/rule", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1584,7 +1586,7 @@ export async function getRule(id:string,type:string) {
 }
 
 export async function getRuleList(id:string,languagesId:string) {
-  return request("/ApiAppstore/rule_list", {
+  return request("/api/ApiAppstore/rule_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1600,7 +1602,7 @@ export async function getRuleList(id:string,languagesId:string) {
 
 // 
 export async function setRuleList(res:any,languagesId:string) {
-  return request("/ApiAppstore/rule_batchadd", {
+  return request("/api/ApiAppstore/rule_batchadd", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1618,7 +1620,7 @@ export async function setRuleList(res:any,languagesId:string) {
 
 // 账号信息
 export async function getUserInfo() {
-  return request("/ApiAppstore/user_info", {
+  return request("/api/ApiAppstore/user_info", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1631,7 +1633,7 @@ export async function getUserInfo() {
 
 // 更新账号信息
 export async function setUserInfo(res:any) {
-  return request("/ApiAppstore/user_contact_set", {
+  return request("/api/ApiAppstore/user_contact_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1646,7 +1648,7 @@ export async function setUserInfo(res:any) {
 }
 // 
 export async function upDatePassword(oldPassword:string,newPassword:string) {
-  return request("/ApiAppstore/change_password", {
+  return request("/api/ApiAppstore/change_password", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1660,7 +1662,7 @@ export async function upDatePassword(oldPassword:string,newPassword:string) {
 
 // 移除登录设备
 export async function delLoginRecord(id:string) {
-  return request("/ApiAppstore/login_record_del", {
+  return request("/api/ApiAppstore/login_record_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1672,7 +1674,7 @@ export async function delLoginRecord(id:string) {
 }
 // 更新共享数据状态
 export async function setUserSharing(res:string) {
-  return request("/ApiAppstore/data_sharing_set", {
+  return request("/api/ApiAppstore/data_sharing_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1684,7 +1686,7 @@ export async function setUserSharing(res:string) {
 }
 // 获取用户账号语言
 export async function getUserLanguages() {
-  return request("/ApiAppstore/user_languages_get", {
+  return request("/api/ApiAppstore/user_languages_get", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1693,7 +1695,7 @@ export async function getUserLanguages() {
 }
 // 设置用户账号语言
 export async function setUserLanguages(languagesId:string) {
-  return request("/ApiAppstore/user_languages_set", {
+  return request("/api/ApiAppstore/user_languages_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1706,7 +1708,7 @@ export async function setUserLanguages(languagesId:string) {
 
 // 员工查询
 export async function getEmployeeList() {
-  return request("/ApiAppstore/employee_select", {
+  return request("/api/ApiAppstore/employee_select", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1719,7 +1721,7 @@ export async function getEmployeeList() {
 
 // 创建应用 -- 更新
 export async function creatAppStore(res:any) {
-  return request("/ApiAppstore/app_add", {
+  return request("/api/ApiAppstore/app_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1740,7 +1742,7 @@ export async function creatAppStore(res:any) {
 // 获取应用列表--开发
 
 export async function getDevAppStores() {
-  return request("/ApiAppstore/app_list", {
+  return request("/api/ApiAppstore/app_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1756,7 +1758,7 @@ export async function getDevAppStores() {
 }
 
 export async function getAppStores() {
-  return request("/ApiAppstore/app_store_list", {
+  return request("/api/ApiAppstore/app_store_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1771,7 +1773,7 @@ export async function getAppStores() {
 }
 // 店铺已安装应用
 export async function getDomainAppStores() {
-  return request("/ApiAppstore/app_list", {
+  return request("/api/ApiAppstore/app_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1788,7 +1790,7 @@ export async function getDomainAppStores() {
 
 // 开发应用操作记录
 export async function getAppActionlogs() {
-  return request("/ApiAppstore/app_actionlog_list", {
+  return request("/api/ApiAppstore/app_actionlog_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1803,7 +1805,7 @@ export async function getAppActionlogs() {
 
 // 开发应用信息
 export async function getAppInfo({id,langId}:{id:string,langId:string}) {
-  return request("/ApiAppstore/app_info", {
+  return request("/api/ApiAppstore/app_info", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1817,7 +1819,7 @@ export async function getAppInfo({id,langId}:{id:string,langId:string}) {
 }
 // API权限范围 permission_level 1 2
 export async function getPermissionsList(appId:string,type:string,langId:string) {
-  return request("/ApiAppstore/permissions_list", {
+  return request("/api/ApiAppstore/permissions_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1833,7 +1835,7 @@ export async function getPermissionsList(appId:string,type:string,langId:string)
 }
 // 更新权限信息
 export async function upDatePermissionsList(appId:string,permissions:any) {
-  return request("/ApiAppstore/app_permissions_batchadd", {
+  return request("/api/ApiAppstore/app_permissions_batchadd", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1849,7 +1851,7 @@ export async function upDatePermissionsList(appId:string,permissions:any) {
 
 // 上线应用状态设置 1安装  0卸载 -1删除
 export async function setAppStatus(appId:string,status:string) {
-  return request("/ApiAppstore/domain_app_add", {
+  return request("/api/ApiAppstore/domain_app_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1865,7 +1867,7 @@ export async function setAppStatus(appId:string,status:string) {
 
 // 开发应用--删除
 export async function delDevApp(appId:string) {
-  return request("/ApiAppstore/app_del", {
+  return request("/api/ApiAppstore/app_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1877,7 +1879,7 @@ export async function delDevApp(appId:string) {
 }
 // 开发应用--卸载
 export async function unInstallDevApp(appId:string) {
-  return request("/ApiAppstore/app_uninstall", {
+  return request("/api/ApiAppstore/app_uninstall", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1890,7 +1892,7 @@ export async function unInstallDevApp(appId:string) {
 
 // 创建博客
 export async function createArticles(res:any) {
-  return request("/ApiAppstore/article_add", {
+  return request("/api/ApiAppstore/article_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1914,7 +1916,7 @@ export async function createArticles(res:any) {
 }
 // 更新博客
 export async function upDateArticles(res:any) {
-  return request("/ApiAppstore/article_add", {
+  return request("/api/ApiAppstore/article_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1937,7 +1939,7 @@ export async function upDateArticles(res:any) {
 
 // 删除博客 -- 将状态更改为0
 export async function delArticles(id:string) {
-  return request("/ApiAppstore/article_del", {
+  return request("/api/ApiAppstore/article_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1950,7 +1952,7 @@ export async function delArticles(id:string) {
 
 // 博客列表
 export async function getArticleList(page:string,limit:string,languages:string) {
-  return request("/ApiAppstore/article_list", {
+  return request("/api/ApiAppstore/article_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1964,7 +1966,7 @@ export async function getArticleList(page:string,limit:string,languages:string) 
 }
 // 博客详情
 export async function getArticle(id?:string,languagesId?:string) {
-  return request("/ApiAppstore/article_info", {
+  return request("/api/ApiAppstore/article_info", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1978,7 +1980,7 @@ export async function getArticle(id?:string,languagesId?:string) {
 
 // 博客集合
 export async function getArticleCollection() {
-  return request("/ApiAppstore/article_category_select", {
+  return request("/api/ApiAppstore/article_category_select", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1988,7 +1990,7 @@ export async function getArticleCollection() {
 
 // 添加博客集合
 export async function addArticleCollection(res:any) {
-  return request("/ApiAppstore/article_category_add", {
+  return request("/api/ApiAppstore/article_category_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2011,7 +2013,7 @@ export async function addArticleCollection(res:any) {
 
 // 创建自定义页面
 export async function addCustomerPage(res:any) {
-  return request("/ApiAppstore/ezpage_add", {
+  return request("/api/ApiAppstore/ezpage_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2024,7 +2026,7 @@ export async function addCustomerPage(res:any) {
 
 // 删除自定义页面
 export async function delCustomerPage(id:string) {
-  return request("/ApiAppstore/ezpage_del", {
+  return request("/api/ApiAppstore/ezpage_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2037,7 +2039,7 @@ export async function delCustomerPage(id:string) {
 
 // 获取自定义页面详情
 export async function getCustomerPage(id:string,languages_id:string) {
-  return request("/ApiAppstore/ezpage", {
+  return request("/api/ApiAppstore/ezpage", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2052,7 +2054,7 @@ export async function getCustomerPage(id:string,languages_id:string) {
 
 // 自定义页面列表 is_url:0
 export async function getCustomerPageList(page:string,limit:string) {
-  return request("/ApiAppstore/ezpage_list", {
+  return request("/api/ApiAppstore/ezpage_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2067,7 +2069,7 @@ export async function getCustomerPageList(page:string,limit:string) {
 
 // 菜单导航一级列表 is_url:1
 export async function getNavList(page:string,limit:string) {
-  return request("/ApiAppstore/nav_list", {
+  return request("/api/ApiAppstore/nav_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2086,7 +2088,7 @@ export async function getNavList(page:string,limit:string) {
 
 // 批量导入上传
 export async function importProductTask(file:any,type:string,handle:boolean) {
-  return request("/ApiTask/importProductTask", {
+  return request("/api/ApiTask/importProductTask", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2104,7 +2106,7 @@ export async function JobExecResult(id:string) {
   // const searchParams = new URLSearchParams();
   // if (id) searchParams.set('id', id.toString());
   // ?${searchParams.toString()
-  return request(`/ApiTask/jobExecResult`, {
+  return request(`/api/ApiTask/jobExecResult`, {
     method: 'POST',
     responseType: 'blob',
     headers: {
@@ -2118,7 +2120,7 @@ export async function JobExecResult(id:string) {
 
 // 获取上传任务
 export async function getTaskStatus(id :any) {
-  return request("/ApiTask/getTaskStatus", {
+  return request("/api/ApiTask/getTaskStatus", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2134,7 +2136,7 @@ export async function getTaskStatus(id :any) {
 
 // 导出产品
 export async function exportProductTask(res:any) {
-  return request("/ApiTask/exportProductTask", {
+  return request("/api/ApiTask/exportProductTask", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2155,7 +2157,7 @@ export async function exportProductTask(res:any) {
 }
 // 导出订单
 export async function exportOrderTask(res:any) {
-  return request("/ApiTask/exportOrderTask", {
+  return request("/api/ApiTask/exportOrderTask", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2170,7 +2172,7 @@ export async function exportOrderTask(res:any) {
 
 // 客户列表
 export async function getCustomerList(page: any, limit: any) {
-  return request(`/ApiAppstore/customers_list`, {
+  return request(`/api/ApiAppstore/customers_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2185,7 +2187,7 @@ export async function getCustomerList(page: any, limit: any) {
 
 // 创建客户
 export async function createCustomer(res:any) {
-  return request(`/ApiAppstore/customer_add`, {
+  return request(`/api/ApiAppstore/customer_add`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2199,7 +2201,7 @@ export async function createCustomer(res:any) {
 
 
 export async function getCustomer(id:string) {
-  return request(`/ApiAppstore/customer_detail`, {
+  return request(`/api/ApiAppstore/customer_detail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2213,7 +2215,7 @@ export async function getCustomer(id:string) {
 
 // 创建收货地址
 export async function carateAddress(res:any) {
-  return request(`/ApiAppstore/addressAdd`, {
+  return request(`/api/ApiAppstore/addressAdd`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2227,7 +2229,7 @@ export async function carateAddress(res:any) {
 
 // 设置订单收货地址
 export async function setOrderShippingAddress(res:any) {
-  return request(`/ApiStore/setOrderShippingAddress`, {
+  return request(`/api/ApiStore/setOrderShippingAddress`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2245,7 +2247,7 @@ export async function setOrderShippingAddress(res:any) {
 
 // 设置物流单号
 export async function setOrderNumber(res:any) {
-  return request(`/ApiStore/setShippingNo`, {
+  return request(`/api/ApiStore/setShippingNo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2259,7 +2261,7 @@ export async function setOrderNumber(res:any) {
 
 // 设置退货单号
 export async function setOrderNumberReturn(res:any) {
-  return request(`/ApiStore/setReturnShippingNo`, {
+  return request(`/api/ApiStore/setReturnShippingNo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2273,7 +2275,7 @@ export async function setOrderNumberReturn(res:any) {
 
 // 设置订单发货
 export async function setOrderShipped(res:any) {
-  return request(`/ApiStore/setOrderShipped`, {
+  return request(`/api/ApiStore/setOrderShipped`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2287,7 +2289,7 @@ export async function setOrderShipped(res:any) {
 
 // 取消订单发货
 export async function cancelOrderShipment(res:{orderId:string,shippingSn:string,shipmentId:string}) {
-  return request(`/ApiStore/cancelOrderShipment`, {
+  return request(`/api/ApiStore/cancelOrderShipment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2301,7 +2303,7 @@ export async function cancelOrderShipment(res:{orderId:string,shippingSn:string,
 
 // 商家备注
 export async function addOrderRemark(res:{orderId:string,remark:string}) {
-  return request(`/ApiStore/addOrderRemark`, {
+  return request(`/api/ApiStore/addOrderRemark`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2315,7 +2317,7 @@ export async function addOrderRemark(res:{orderId:string,remark:string}) {
 
 // 订单日志
 export async function getOrderLogs(res:any) {
-  return request(`/ApiStore/getOrderLogs`, {
+  return request(`/api/ApiStore/getOrderLogs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2329,7 +2331,7 @@ export async function getOrderLogs(res:any) {
 
 // 联系信息
 export async function setOrderContact(res:any) {
-  return request(`/ApiStore/setOrderContact`, {
+  return request(`/api/ApiStore/setOrderContact`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2342,7 +2344,7 @@ export async function setOrderContact(res:any) {
 }
 // 标记付款
 export async function setOrderPaid(res:any) {
-  return request(`/ApiStore/setOrderPaid`, {
+  return request(`/api/ApiStore/setOrderPaid`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2356,7 +2358,7 @@ export async function setOrderPaid(res:any) {
 
 // 设置付款期限
 export async function setOrderPaymentTerm(res:{orderId:string,paymentTerm:string,startDate:number}) {
-  return request(`/ApiStore/setOrderPaymentTerm`, {
+  return request(`/api/ApiStore/setOrderPaymentTerm`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2370,7 +2372,7 @@ export async function setOrderPaymentTerm(res:{orderId:string,paymentTerm:string
 
 // 设置护照号/身份证号
 export async function setOrderIdNumber(res:{orderId:string,idNumber:string}) {
-  return request(`/ApiStore/setOrderIdNumber`, {
+  return request(`/api/ApiStore/setOrderIdNumber`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2384,7 +2386,7 @@ export async function setOrderIdNumber(res:{orderId:string,idNumber:string}) {
 
 // 删除付款期限
 export async function delOrderPaymentTerm(res:{orderId:string}) {
-  return request(`/ApiStore/delOrderPaymentTerm`, {
+  return request(`/api/ApiStore/delOrderPaymentTerm`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2397,7 +2399,7 @@ export async function delOrderPaymentTerm(res:{orderId:string}) {
 }
 // 订单退货
 export async function setOrderReturned(res:any) {
-  return request(`/ApiStore/setOrderReturned`, {
+  return request(`/api/ApiStore/setOrderReturned`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2410,7 +2412,7 @@ export async function setOrderReturned(res:any) {
 }
 // 标记已退货
 export async function setMarkProductAsRefunded(res:any) {
-  return request(`/ApiStore/markProductAsRefunded`, {
+  return request(`/api/ApiStore/markProductAsRefunded`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2424,7 +2426,7 @@ export async function setMarkProductAsRefunded(res:any) {
 
 // 订单取消
 export async function setCancelOrder(res:any) {
-  return request(`/ApiStore/cancelOrder`, {
+  return request(`/api/ApiStore/cancelOrder`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2438,7 +2440,7 @@ export async function setCancelOrder(res:any) {
 
 // 添加标签
 export async function addOrderTag(res:{orderId:string,tagName:string}) {
-  return request(`/ApiStore/addOrderTag`, {
+  return request(`/api/ApiStore/addOrderTag`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2451,7 +2453,7 @@ export async function addOrderTag(res:{orderId:string,tagName:string}) {
 }
 // 删除标签
 export async function removeOrderTag(res:{orderId:string,tagName:string}) {
-  return request(`/ApiStore/removeOrderTag`, {
+  return request(`/api/ApiStore/removeOrderTag`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2464,7 +2466,7 @@ export async function removeOrderTag(res:{orderId:string,tagName:string}) {
 }
 // 获取标签列表
 export async function getOrderTagList(orderId:string) {
-  return request(`/ApiStore/getOrderTagList`, {
+  return request(`/api/ApiStore/getOrderTagList`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2477,7 +2479,7 @@ export async function getOrderTagList(orderId:string) {
 }
 // 批量添加标签列表
 export async function batchAddOrderTags(res:{orderIds:string,tagNames:string}) {
-  return request(`/ApiStore/batchAddOrderTags`, {
+  return request(`/api/ApiStore/batchAddOrderTags`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2491,7 +2493,7 @@ export async function batchAddOrderTags(res:{orderIds:string,tagNames:string}) {
 
 // 获取草稿单标签
 export async function getDraftOrderTagList(draftId:string) {
-  return request(`/ApiStore/getDraftOrderTagList`, {
+  return request(`/api/ApiStore/getDraftOrderTagList`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2505,7 +2507,7 @@ export async function getDraftOrderTagList(draftId:string) {
 
 // 草稿单添加标签
 export async function batchAddDraftOrderTags(res:{draftIds:string,tagNames:string}) {
-  return request(`/ApiStore/batchAddDraftOrderTags`, {
+  return request(`/api/ApiStore/batchAddDraftOrderTags`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2519,7 +2521,7 @@ export async function batchAddDraftOrderTags(res:{draftIds:string,tagNames:strin
 
 // 拆分发货
 export async function splitOrderProducts(res:{orderProducts:string}) {
-  return request(`/ApiStore/splitOrderProducts`, {
+  return request(`/api/ApiStore/splitOrderProducts`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2532,7 +2534,7 @@ export async function splitOrderProducts(res:{orderProducts:string}) {
 }
 
 export async function getReturnReasons(languagesId:string) {
-  return request(`/ApiStore/getReturnReasons`, {
+  return request(`/api/ApiStore/getReturnReasons`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2544,7 +2546,7 @@ export async function getReturnReasons(languagesId:string) {
   })
 }
 export async function getReturnActions(languagesId:string) {
-  return request(`/ApiStore/getReturnActions`, {
+  return request(`/api/ApiStore/getReturnActions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2556,7 +2558,7 @@ export async function getReturnActions(languagesId:string) {
   })
 }
 export async function getReturnStatuses(languagesId:string) {
-  return request(`/ApiStore/getReturnStatuses`, {
+  return request(`/api/ApiStore/getReturnStatuses`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2570,7 +2572,7 @@ export async function getReturnStatuses(languagesId:string) {
 
 // 编辑订单产品
 export async function editOrderProducts(res:any) {
-  return request(`/ApiStore/editOrderProducts`, {
+  return request(`/api/ApiStore/editOrderProducts`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2584,7 +2586,7 @@ export async function editOrderProducts(res:any) {
 
 // 退款
 export async function setOrderRefunded(res:any) {
-  return request(`/ApiStore/setOrderRefunded`, {
+  return request(`/api/ApiStore/setOrderRefunded`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2598,7 +2600,7 @@ export async function setOrderRefunded(res:any) {
 
 // 暂停发货
 export async function pauseOrderShipping(res:any) {
-  return request(`/ApiStore/pauseOrderShipping`, {
+  return request(`/api/ApiStore/pauseOrderShipping`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2612,7 +2614,7 @@ export async function pauseOrderShipping(res:any) {
 
 // 开始发货
 export async function resumeOrderShipping(res:{orderId:string,fulfillmentId:string}) {
-  return request(`/ApiStore/resumeOrderShipping`, {
+  return request(`/api/ApiStore/resumeOrderShipping`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2626,7 +2628,7 @@ export async function resumeOrderShipping(res:{orderId:string,fulfillmentId:stri
 
 // 添加草稿单
 export async function addDraftOrder(res:any) {
-  return request(`/ApiStore/createOrder`, {
+  return request(`/api/ApiStore/createOrder`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2640,7 +2642,7 @@ export async function addDraftOrder(res:any) {
 
 // 客户地址列表
 export async function getAddressList(res:any) {
-  return request(`/ApiAppstore/addressList`, {
+  return request(`/api/ApiAppstore/addressList`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2654,7 +2656,7 @@ export async function getAddressList(res:any) {
 
 // 修改客户历史地址
 export async function setAddressEdit(res:any) {
-  return request(`/ApiAppstore/addressEdit`, {
+  return request(`/api/ApiAppstore/addressEdit`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2667,7 +2669,7 @@ export async function setAddressEdit(res:any) {
 }
 // 新增客户历史地址
 export async function addAddress(res:any) {
-  return request(`/ApiAppstore/addressAdd`, {
+  return request(`/api/ApiAppstore/addressAdd`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2682,7 +2684,7 @@ export async function addAddress(res:any) {
 
 // 草稿单列表
 export async function getOrderDraftList(res:any) {
-  return request(`/ApiStore/order_draft_list`, {
+  return request(`/api/ApiStore/order_draft_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2696,7 +2698,7 @@ export async function getOrderDraftList(res:any) {
 
 // 草稿单信息
 export async function getDraftDetail(draftId:string) {
-  return request(`/ApiStore/getDraftDetail`, {
+  return request(`/api/ApiStore/getDraftDetail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2710,7 +2712,7 @@ export async function getDraftDetail(draftId:string) {
 
 // 草稿单
 export async function editDraftOrder(res:any) {
-  return request(`/ApiStore/editDraftOrder`, {
+  return request(`/api/ApiStore/editDraftOrder`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2724,7 +2726,7 @@ export async function editDraftOrder(res:any) {
 
 // 删除草稿单
 export async function delDraftOrder(id:any) {
-  return request(`/ApiStore/delDraftOrder`, {
+  return request(`/api/ApiStore/delDraftOrder`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2738,7 +2740,7 @@ export async function delDraftOrder(id:any) {
 
 // 订单归档
 export async function batchArcOrder(ids:string) {
-  return request(`/ApiStore/batchArcOrder`, {
+  return request(`/api/ApiStore/batchArcOrder`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2752,7 +2754,7 @@ export async function batchArcOrder(ids:string) {
 
 // 订单取消归档
 export async function batchUnarcOrder(ids:string) {
-  return request(`/ApiStore/batchUnarcOrder`, {
+  return request(`/api/ApiStore/batchUnarcOrder`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2766,7 +2768,7 @@ export async function batchUnarcOrder(ids:string) {
 
 // 获取订单列表
 export async function getOrderList(res:any){
-  return request(`/ApiStore/order_list`, {
+  return request(`/api/ApiStore/order_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

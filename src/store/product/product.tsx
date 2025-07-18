@@ -17,6 +17,9 @@ interface ProductType {
 
   cod_languages_id: string;
   cod_currency: string;
+  cod_is_711_enabled: string;
+  cod_is_family_enabled: string;
+
   cod_fb_pix_id:string;
   cod_gg_pix_id:string;
   cod_tk_pix_id:string;
@@ -109,6 +112,8 @@ class Product{
         template_id: "0",
         cod_languages_id:"",
         cod_currency:"",
+        cod_is_711_enabled:0,
+        cod_is_family_enabled:0,
         cod_fb_pix_id:"",
         cod_gg_pix_id:"",
         cod_tk_pix_id:"",
@@ -131,7 +136,7 @@ class Product{
         nextProductId: "",
         prevProductId: "",
         product_video: ""
-      } as ProductType;
+      };
     }
 
     // 产品

@@ -374,11 +374,33 @@ const AdvancedModeSvg = () => (
   </svg>
 )
 
+const MenuSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7 8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M7 14H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M7 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+)
+
 const FillAddSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <circle opacity="0.2" cx="8" cy="8" r="8" fill="currentColor"></circle>
     <path d="M5 8L11 8" stroke="#356DFF" stroke-linecap="round"></path>
     <path d="M8 11L8 5" stroke="#356DFF" stroke-linecap="round"></path>
+  </svg>
+)
+
+const FillUserSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M14 13C16.2091 13 18 11.2091 18 9C18 6.79086 16.2091 5 14 5C11.7909 5 10 6.79086 10 9C10 11.2091 11.7909 13 14 13ZM9 14C6.79086 14 5 15.7909 5 18V22C5 22.5523 5.44772 23 6 23H22C22.5523 23 23 22.5523 23 22V18C23 15.7909 21.2091 14 19 14H9Z" fill="currentColor"></path>
+  </svg>
+)
+
+
+const FillLockSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 12C6 11.4477 6.44772 11 7 11H21C21.5523 11 22 11.4477 22 12V22C22 22.5523 21.5523 23 21 23H7C6.44772 23 6 22.5523 6 22V12Z" fill="currentColor"></path>
+    <path d="M18 10C18 11.0677 18.0001 13.5 18.0001 13.5H10.0001L10 10C10 7.79086 11.7909 6 14 6C16.2091 6 18 7.79086 18 10Z" stroke="currentColor" stroke-width="2"></path>
   </svg>
 )
 
@@ -611,9 +633,24 @@ export const AdvancedModeIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={AdvancedModeSvg} {...props} />
 );
 
+export const MenuIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MenuSvg} {...props} />
+);
+
 export const FillAddIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={FillAddSvg} {...props} />
 );
+
+export const FillUserIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FillUserSvg} {...props} />
+);
+
+
+export const FillLockIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FillLockSvg} {...props} />
+);
+
+
 
 
 

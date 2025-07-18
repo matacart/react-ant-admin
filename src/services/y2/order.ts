@@ -1,13 +1,13 @@
 // @ts-ignore
 /* eslint-disable */
 import { data } from '@remix-run/router';
-import { request } from '@umijs/max';
 import cookie from 'react-cookies';
 import { stringify } from 'querystring';
+import request from '@/utils/request';
 
-/** 删除规则 DELETE /api/rule */
+/** 删除规则 DELETE /rule */
 export async function removeRule(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/rule', {
+  return request<Record<string, any>>('/rule', {
     method: 'POST',
     data: {
       method: 'delete',
@@ -31,8 +31,8 @@ export async function removeRule(options?: { [key: string]: any }) {
 //   if (bizOrderStatuses && bizOrderStatuses.length > 0) searchParams.set('bizOrderStatuses', JSON.stringify([-1]));
 //   searchParams.set('domain_id', cookie.load("domain")?.id);
 //   // 发送请求
-//   // /api/ApiStore/order_list
-//   return request(`/api/ApiStore/order_list?${searchParams.toString()}`, {
+//   // /ApiStore/order_list
+//   return request(`/ApiStore/order_list?${searchParams.toString()}`, {
 //     method: 'GET', // 使用 GET 请求，因为我们将过滤条件作为查询参数发送
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ export async function removeRule(options?: { [key: string]: any }) {
 //   });
 // }
 export async function addOrders() {
-  return request('/api/ApiStore/order_add', {
+  return request('/ApiStore/order_add', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -106,7 +106,7 @@ export async function addOrders() {
 //批量 入账付款
 // 批量 入账付款
 export async function updateOrderStatus(ids: string[]): Promise<any> {
-  return request(`/api/ApiStore/order_batchpay`, {
+  return request(`/ApiStore/order_batchpay`, {
     method: 'POST',  
     headers: {  
       'Content-Type': 'multipart/form-data',  
@@ -118,7 +118,7 @@ export async function updateOrderStatus(ids: string[]): Promise<any> {
 }
 //读取订单详情
 export async function getOrderDetail(id:string): Promise<any> {
-  return request(`/api/ApiStore/order_detail`, {
+  return request(`/ApiStore/order_detail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -130,7 +130,7 @@ export async function getOrderDetail(id:string): Promise<any> {
 }
 // 批量删除订单
 export async function batchdelOrders(ids: string[]) {  
-  return request('/api/ApiStore/order_batchdel', {  
+  return request('/ApiStore/order_batchdel', {  
     method: 'POST',  
     headers: {  
       'Content-Type': 'multipart/form-data',  
@@ -142,7 +142,7 @@ export async function batchdelOrders(ids: string[]) {
 }
 //批量发货
 export async function batchshipOrders(ids: string[]): Promise<any> {
-  return request('/api/ApiStore/order_batchship', {
+  return request('/ApiStore/order_batchship', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

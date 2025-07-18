@@ -1,14 +1,15 @@
-import { Footer, Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
-import { GlobalOutlined, RightOutlined, SettingOutlined, ShopOutlined } from '@ant-design/icons';
-import { ProLayout, type Settings as LayoutSettings } from '@ant-design/pro-components';
-import { history,Link,RunTimeLayoutConfig,RequestConfig } from '@umijs/max';
-import { getOptionType, getAccessToken, currentUser as queryCurrentUser, currentUserStatus } from '@/services/y2/api';
+import { Footer } from '@/components';
+import { SettingOutlined } from '@ant-design/icons';
+
+import { type Settings as LayoutSettings } from '@ant-design/pro-components';
+import { history,Link,RequestConfig,RunTimeLayoutConfig } from '@umijs/max';
+import { getAccessToken, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
-import { App, Avatar, Flex, Menu, message, Modal } from 'antd';
+import cookie from 'react-cookies';
+
+import { App, Flex, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 // layout
-import { FormattedMessage, useLocation } from 'umi';  //多语言
-import cookie from 'react-cookies'
 import defaultSettings from '../config/defaultSettings';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -17,42 +18,45 @@ const loginPath = '/user/signIn';
 // 进度条提示
 import NProgress from "nprogress"; 
 import "nprogress/nprogress.css";
-import Header from './components/Header/Header';
-import MCPaymentHead from './components/Header/MCPaymentHead';
-import { AddIcon, NailIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
-import SalesChannel from './components/Menu/SalesChannel';
-import config from 'config/config';
+
+
+import { AddIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
+// 懒加载
+const SalesChannel = React.lazy(() => import('./components/Menu/SalesChannel'));
+const MCPaymentHead = React.lazy(() => import('./components/Header/MCPaymentHead'));
+const Header = React.lazy(() => import('./components/Header/Header'));
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
-
-let currentVersion = '';
+// let currentVersion = '';
 
 // 配置NProgress
 NProgress.configure({ showSpinner: false }) // 是否显示右上角螺旋加载提示
 
-const checkVersion = async () => {
-  try {
-    const res = await fetch('/version.json?t=' + Date.now()); // 跳过缓存
-    const { version } = await res.json();
-    
-    if (!currentVersion) {
-      currentVersion = version; // 初始化当前版本
-      return;
-    }
 
-    if (version !== currentVersion) {
-      Modal.confirm({
-        title: '发现新版本',
-        centered: true,
-        content: '是否立即刷新以获取最新内容？',
-        okText: '刷新',
-        onOk: () => location.reload(),
-      });
-    }
-  } catch (err) {
-    console.error('版本检测失败:', err);
-  }
-};
+// 版本轮询
+// const checkVersion = async () => {
+//   try {
+//     const res = await fetch('/version.json?t=' + Date.now()); // 跳过缓存
+//     const { version } = await res.json();
+    
+//     if (!currentVersion) {
+//       currentVersion = version; // 初始化当前版本
+//       return;
+//     }
+
+//     if (version !== currentVersion) {
+//       Modal.confirm({
+//         title: '发现新版本',
+//         centered: true,
+//         content: '是否立即刷新以获取最新内容？',
+//         okText: '刷新',
+//         onOk: () => location.reload(),
+//       });
+//     }
+//   } catch (err) {
+//     console.error('版本检测失败:', err);
+//   }
+// };
 
 
 // 配置化请求参数
@@ -117,8 +121,6 @@ Promise.allSettled(
   }
 });
 
-
-
 // getInitialState 获取初始化状态
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
@@ -174,28 +176,6 @@ export async function getInitialState(): Promise<{
   };
 }
 
-
-// 全局
-// Promise.all([axios.post('/api/ApiAppstore/languages_select'),axios.post('/api/ApiAppstore/currencies_select'),axios.post('/api/ApiAppstore/country_select'),axios.post('/api/ApiAppstore/timezones_select')]).then(([res,res2,res3,res4])=>{
-//   if(res.data.code == 0){
-//     sessionStorage["languages"] = JSON.stringify(res.data.data)
-//   }
-//   if(res2.data.code == 0){
-//     sessionStorage["currencies"] = JSON.stringify(res2.data.data)
-//   }
-//   if(res3.data.code == 0){
-//     sessionStorage["country"] = JSON.stringify(res3.data.data)
-//   }
-//   if(res4.data.code == 0){
-//     sessionStorage["timezones"] = JSON.stringify(res4.data.data)
-//   }
-// }).catch((err)=>{
-//   console.log(err)
-// })
-
-
-
-
 // 运行时布局配置
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
@@ -204,10 +184,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const stores = window.location.pathname
 
   // 版本轮询
-  useEffect(() => {
-    const timer = setInterval(checkVersion, 1000000);
-    return () => clearInterval(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setInterval(checkVersion, 1000000);
+  //   return () => clearInterval(timer);
+  // }, []);
   // 获取数据
 
   return {
@@ -351,8 +331,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
-
-
 // 运行时路由配置
 export function patchRoutes({ routes, routeComponents }) {
   console.log('patchRoutes', routes, routeComponents);
@@ -388,6 +366,20 @@ const endProgress = () => {
     NProgress.done(); // 只有当计数器回到 0 时才关闭进度条
   }
 };
+
+let isMessageShown = false;
+const showErrorMessage = () => {
+  if (!isMessageShown) {
+    message.error("网络错误，请稍后处理");
+    isMessageShown = true;
+
+    // 5秒后允许再次提示
+    setTimeout(() => {
+      isMessageShown = false;
+    }, 5000);
+  }
+};
+
 // 请求封装
 export const request: RequestConfig = {
   timeout: 30000, //超时处理，请求超过0.1分钟，取消请求
@@ -396,12 +388,31 @@ export const request: RequestConfig = {
     // 抛出错误
     errorThrower: (res: any) => {
       if (!res) throw new Error('空响应');
-      },
+    },
     // 错误接收及处理
     errorHandler(error: any, opts: any) {
       endProgress();
-      message.error("网络繁忙，请刷新页面");
       console.log(error)
+      // 处理网络错误和超时
+      if (error.config?.retryOnError && (error.code === 'ECONNABORTED' || !navigator.onLine)) {
+        return new Promise((resolve, reject) => {
+          let retryCount = 0;
+          const maxRetries = 3;
+          const retryRequest = () => {
+            if (retryCount >= maxRetries) {
+              showErrorMessage(); // 使用节流提示
+              return reject(error);
+            }
+            retryCount++;
+            setTimeout(() => {
+              axios.request(error.config)
+                .then(response => resolve(response))
+                .catch(() => retryRequest());
+            }, Math.min(1000 * Math.pow(2, retryCount), 10000));
+          };
+          retryRequest();
+        });
+      }
       return error;
     },
   },
@@ -418,10 +429,9 @@ export const request: RequestConfig = {
         result += characters.charAt(randomIndex);
       }
 
-      // console.log(str)
-
       if(config.method == "post"){
         config.url = config.url+"?__trackId__="+result
+        // config.url = config.url
       }
 
       if (!config.skipAuthRefresh) {
@@ -429,6 +439,7 @@ export const request: RequestConfig = {
       }
       // 在请求拦截器中带token（除登录接口）
       const token = cookie.load("token")
+      // console.log(config)
       if (token && config.url != loginPath){
         config.headers['token'] = token;
         // 携带access_token
@@ -437,26 +448,24 @@ export const request: RequestConfig = {
       return config;
     },
   ],
-  // // 响应拦截器
+  // 响应拦截器
   responseInterceptors: [
     // access_token 过期
     (res:any) =>{
-    
+
       if(!res.data){
-        console.log(res)
         const error = new Error('Empty response data');
         return error
       }
 
       endProgress();
-      // return res
       // 过滤
-      if(res.config.url == "/api/Oauth2/gettoken"){
+      if(res.config.url == "/Oauth2/gettoken"){
         return res
       }
       let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
+      // access_token过期
       if(res.data.code==40013){
-        // access_token过期
         getAccessToken().then(res => {
           if(window.location.hostname.startsWith("localhost")){
             cookie.save("access_token",res.access_token,{path:"/"})
@@ -464,7 +473,7 @@ export const request: RequestConfig = {
             cookie.save('access_token', res.access_token, { domain:test,path: '/' });
           }
         }).catch((err) => { 
-          console.log(err) 
+          console.log(err)
         });
       }else if(res.data.code==1001){
         // token过期
