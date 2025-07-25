@@ -323,7 +323,20 @@ export async function accountAuthentication(res:any) {
 
 // 基础设置 ---
 
-
+// 
+export async function getTodayData(startDate:number,endDate:number) {
+  return request('/ApiStore/today_statistics', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domainID: cookie.load("domain")?.id,
+      startDate:startDate,
+      endDate:endDate
+    },
+  })
+}
 
 // 删除产品 ----- 产品
 export async function deleteProduct(id: string) {

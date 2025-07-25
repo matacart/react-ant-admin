@@ -1,18 +1,23 @@
 import { makeAutoObservable } from "mobx";
 
-interface productinfo {
-    vid?: string;
+interface variants{
+    
+}
 
-    product_cost_price: number;
+interface productinfo {
+    variants: any;
+    vid?: string;
+    sku_id?:string;
+    cost_price: number;
     // group_id: "0",
     product_id:string;
     proudct_imgage:string;
     product_model:string;
     product_name:string;
-    product_price:number;
+    product_price:number; //特价
     product_quantity: number;
     product_source: string;
-    final_price:number;
+    final_price:number; //最终价
     attributes:any;
     // 折扣信息
     product_discount_amount: string;

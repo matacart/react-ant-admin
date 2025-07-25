@@ -1,9 +1,34 @@
-import { Link } from '@umijs/max';
-import { Card } from 'antd';
+import { Card, Tooltip } from 'antd';
 import styles from './DataCard.modules.scss'
+import { useEffect, useState } from 'react';
+import { getTodayData } from '@/services/y2/api';
+import { Link } from 'react-router-dom';
+import dayjs from "dayjs";
+
+interface todayDataType{
+    currencySymbol:string;
+    visitorCount:number;
+    domainID:string;
+    orderCount:number;
+    totalSales:number;
+}
+
+
 export default function DataCard({
 
 }) {
+
+    const [todayData,setTodayData] = useState<todayDataType | null>();
+
+    useEffect(()=>{
+        const startTimer = dayjs().startOf('day').valueOf();
+        const endTimer = dayjs().endOf('day').valueOf();
+        getTodayData(startTimer/1000,endTimer/1000).then((res:any)=>{
+            setTodayData(res.data)
+        }).catch(err=>{
+            console.log(err)
+        })
+    },[])
 
     return (
         <Card>
@@ -21,7 +46,7 @@ export default function DataCard({
                     lineHeight: "22px"
                 }}>今日数据
                 </div>
-                <Link to="/data">查看更多 &gt;</Link>
+                <Link to="/">查看更多 &gt;</Link>
             </div>
 
             <div style={{
@@ -42,12 +67,14 @@ export default function DataCard({
                         display: 'flex',
                     }}>
                         <img src='./icons/salesRevenue.svg' />
-                        <div className={styles.title}>
-                            销售额
-                        </div>
+                        <Tooltip title="今天到目前为止的销售额">
+                            <div className={styles.title}>
+                                销售额
+                            </div>
+                        </Tooltip>
                     </div>
                     <div className={styles.value}>
-                        <span>US$0.00</span>
+                        <span>{todayData?.currencySymbol}{todayData?.totalSales.toFixed(2)}</span>
                     </div>
 
 
@@ -70,15 +97,15 @@ export default function DataCard({
                             display: 'flex',
                         }}>
                             <img src='./icons/orderNumber.svg' />
-                            <div className={styles.title}>
-                                订单数
-                            </div>
+                            <Tooltip title="今天到目前为止的订单数">
+                                <div className={styles.title}>
+                                    订单数
+                                </div>
+                            </Tooltip>
                         </div>
                         <div className={styles.value}>
-                            <span>0</span>
+                            <span>{todayData?.orderCount}</span>
                         </div>
-
-
                     </div>
                     {/* 3 */}
                     <div style={{
@@ -93,18 +120,17 @@ export default function DataCard({
                             display: 'flex',
                         }}>
                             <img src='./icons/visitorCount.svg' />
-                            <div className={styles.title}>
-                                销售额
-                            </div>
+                            <Tooltip title="今天到目前为止的访客数">
+                                <div className={styles.title}>
+                                    访客数
+                                </div>
+                            </Tooltip>
                         </div>
                         <div className={styles.value}>
-                            <span>0</span>
+                            <span>{todayData?.visitorCount}</span>
                         </div>
-
                     </div>
                 </div>
-
-
             </div>
         </Card>
     )

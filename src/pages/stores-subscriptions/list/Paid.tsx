@@ -161,17 +161,17 @@ const layerText = [
 ]
 
 const priceMonth = {
-    icon: '$',
-    start: "",
-    base: 79,
-    flagship: 269,
-    text: 'mo'
+    icon: '￥',
+    start: 199,
+    base: 499,
+    flagship: 999,
+    text: '月'
 }
 const priceYear = {
     icon: '￥',
-    start: "3w",
-    base: 65.83,
-    flagship: 224.17,
+    start: 1999,
+    base: 4999,
+    flagship: 9999,
     text: '年',
 }
 
@@ -223,7 +223,7 @@ export default function Paid() {
                             {/* swich */}
                             <div className="introductionPeriodContainer">
                                 <ul className="introduction-period">
-                                    {/* <li className={"introduction-period__item " + (
+                                    <li className={"introduction-period__item " + (
                                         activeNum == 1 && 'active'
                                     )} onClick={() => {
                                         setActiveNum(1)
@@ -231,7 +231,7 @@ export default function Paid() {
                                     }
                                     }>
                                         月付
-                                    </li> */}
+                                    </li>
                                     <li className={"introduction-period__item " + (
                                         activeNum == 2 && 'active'
                                     )} onClick={() => {
@@ -268,7 +268,7 @@ export default function Paid() {
                                                     低成本体验建站 多重礼包助力业务启动
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"1999"} text={price.text} origin={activeNum == 2 ? priceMonth.start : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={price.start} text={price.text} origin={activeNum == 2 ? priceMonth.start : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{
@@ -314,7 +314,7 @@ export default function Paid() {
                                                     绝佳的启动方式 适合新手卖家快速上手
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"4999"} text={price.text} origin={activeNum == 2 ? priceMonth.base : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={price.base} text={price.text} origin={activeNum == 2 ? priceMonth.base : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{
@@ -366,7 +366,7 @@ export default function Paid() {
                                                     玩转流量积聚品牌效应 长效赋能海外DTC业务
                                                 </div>
                                                 <div className="introduction-packages__item__charges">
-                                                    <Charges icon={price.icon} price={"9999"} text={price.text} origin={activeNum == 2 ? priceMonth.flagship : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
+                                                    <Charges icon={price.icon} price={price.flagship} text={price.text} origin={activeNum == 2 ? priceMonth.flagship : undefined} desc={activeNum == 2 ? '按年结算' : undefined} />
                                                 </div>
                                                 <a>
                                                     <Button type="primary" style={{

@@ -1,4 +1,4 @@
-import { ColorPicker, Flex, Form, Input, Slider, Switch } from "antd";
+import { Breadcrumb, ColorPicker, Flex, Form, Input, Radio, Slider, Switch } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import editor from '@/store/theme/editor';
@@ -9,6 +9,11 @@ import MyInput from "@/components/Input/MyInput";
 import ImagePicker from "./ImagePicker";
 import MenuPicker from "./MenuPicker";
 import MinTinyMce from "@/components/MCE/MinTinyMce";
+import TextAlign from "./TextAlign";
+import BlogCollection from "./BlogCollection";
+import FontFamily from "./FontFamily";
+import Video from "./Video";
+import ProductPicker from "./ProductPicker";
 
 
 
@@ -26,6 +31,16 @@ function Right(){
 
     const [title,setTitle] = useState<string>("");
 
+    const [value, setValue] = useState("");
+
+    const [head,setHead] = useState([
+        {
+            title: 'Home',
+        },
+        {
+            title: 'Application Center',
+        },
+    ]);
 
     useEffect(()=>{
 
@@ -33,14 +48,37 @@ function Right(){
             switch(editor.component.type){
                 case 'section':
                     const section = editor.templateData.find(res => res.config?.sectionId === editor.component?.id)
-                    setTitle(section.config.schema.name ?? "")
-                    setComponents(section.config.schema.settings ?? [])
-                    setComponentsData(section.config.settingsData.settings)
+                    if(editor.component?.itemId){
+                        const component = section.config.schema.blocks.filter(item=>item.type == section.config.settingsData.blocks[editor.component.itemId].type)
+                        if(component){
+                            setHead([
+                                {
+                                    title: intl.formatMessage({id: section.config.schema.name}),
+                                },
+                                {
+                                    title: intl.formatMessage({id: component[0]?.name ?? "" }) ,
+                                }
+                            ])
+                            setComponents(component[0].settings??[])
+                            setComponentsData(section.config.settingsData.blocks[editor.component.itemId].settings)
+                        }
+                    }else{
+                        setHead([
+                            {
+                                title: intl.formatMessage({id: section.config.schema.name ?? ""}) ,
+                            }
+                        ])
+                        setComponents(section.config.schema.settings ?? [])
+                        setComponentsData(section.config.settingsData.settings)
+                    }
                     break;
                 case 'template':
                     const template = editor.templateData[2].sections[editor.component?.id]
-                    console.log("template",template)
-                    setTitle(template.schema.name ?? "")
+                    setHead([
+                        {
+                            title: intl.formatMessage({id: template.schema.name ?? ""}) ,
+                        }
+                    ])
                     setComponents(template.schema.settings ?? [])
                     setComponentsData(template.settingsData.settings)
                     break;
@@ -53,8 +91,15 @@ function Right(){
     return (
         <Scoped>
             {
+                // {intl.formatMessage({id: title})}
                 components ? <div className="right-content">
-                    <div className="header">{intl.formatMessage({id: title})}</div>
+                    <div className="header">
+                        <Breadcrumb
+                            style={{fontSize:"12px"}}
+                            separator=">"
+                            items={head}
+                        />
+                    </div>
                     <div className="content font-14">
                         <Form layout="vertical" className="form color-474F5E">
                             {components?.map((item:any,index:number)=>{
@@ -258,7 +303,7 @@ function Right(){
                                                 <div>{intl.formatMessage({id: item.label})}</div>
                                                 {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
                                             </div>}>
-                                                
+                                                <ProductPicker item={item} componentsData={componentsData} />
                                             </Form.Item>
                                         )
                                     case "video":
@@ -267,20 +312,62 @@ function Right(){
                                                 <div>{intl.formatMessage({id: item.label})}</div>
                                                 {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
                                             </div>}>
-                                                
+                                                <Video item={item} componentsData={componentsData} />
                                             </Form.Item>
                                         )
                                     case "video_url":
+                                        // 组件拆分 优化输入
+                                        return(
+                                            <Form.Item key={index} name={item.id} rules={[
+                                                {
+                                                    validator: (_, value) => {
+                                                        if (!value || value.startsWith('https://')) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        return Promise.reject(
+                                                            new Error(intl.formatMessage({ id: "请输入有效的视频链接地址" }))
+                                                        );
+                                                    },
+                                                },
+                                            ]} label={<div>
+                                                <div>{intl.formatMessage({id: item.label})}</div>
+                                                {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
+                                            </div>}>
+                                                <MyInput value={componentsData[item.id]?.value ?? ""} onChange={(e)=>{
+                                                    setComponentsData({
+                                                        ...componentsData,
+                                                        [item.id]: {value:e.target.value}
+                                                    })
+                                                }} placeholder="https://www.youtube.com/watch?v=V7BEzkRBp_g" style={{height:"36px"}} />
+                                            </Form.Item>
+                                        )
+                                    case "font":
                                         return(
                                             <Form.Item key={index} label={<div>
                                                 <div>{intl.formatMessage({id: item.label})}</div>
                                                 {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
                                             </div>}>
-                                                
+                                                <FontFamily item={item} componentsData={componentsData} />
                                             </Form.Item>
                                         )
-
-                                        
+                                    case "text_align":
+                                        return(
+                                            <Form.Item key={index} label={<div>
+                                                <div>{intl.formatMessage({id: item.label})}</div>
+                                                {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
+                                            </div>}>
+                                                <TextAlign item={item} componentsData={componentsData} />
+                                            </Form.Item>
+                                        )
+                                    case "blog":
+                                        return(
+                                            <Form.Item key={index} label={<div>
+                                                <div>{intl.formatMessage({id: item.label})}</div>
+                                                {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
+                                            </div>}>
+                                                <BlogCollection item={item} componentsData={componentsData} />
+                                            </Form.Item>
+                                        )
                                 }
                             })}
                         </Form>
@@ -313,7 +400,6 @@ const Scoped = styled.div`
         .header{
             position: absolute;
             padding: 14px 16px;
-            height: 40px;
             width: 100%;
             z-index: 99;
             background-color: #F7F8FB;

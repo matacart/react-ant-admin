@@ -114,9 +114,7 @@ function Left(){
                                                 ...prev,
                                                 [sectionId]: !prev[sectionId]
                                             }))
-
                                             setActiveCollapsed(sectionId)
-
                                             editor.setComponent({id:sectionId,type:'section'})
                                         }}
                                     >
@@ -141,6 +139,7 @@ function Left(){
                                                 return(
                                                     <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
                                                         setActiveCollapsed(order)
+                                                        editor.setComponent({id:sectionId,type:'section',itemId:order})
                                                     }}>
                                                         <Flex align="center" className="sortItem" gap={8} >
                                                             <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
@@ -203,6 +202,7 @@ function Left(){
                                                 return(
                                                     <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
                                                         setActiveCollapsed(order)
+                                                        editor.setComponent({id:sectionId,type:'section',itemId:order})
                                                     }}>
                                                         <Flex align="center" className="sortItem" gap={8}>
                                                             <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
@@ -338,6 +338,7 @@ function Left(){
                                                 return(
                                                     <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
                                                         setActiveCollapsed(order)
+                                                        editor.setComponent({id:sectionId,type:'section',itemId:order})
                                                     }}>
                                                         <Flex align="center" className="sortItem" gap={8}>
                                                             <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />

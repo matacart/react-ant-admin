@@ -10,6 +10,7 @@ import orderDraft from '@/store/order/orderDraft';
 import ProductTableModal from './ProductTableModal';
 import EditDiscount from './EditDiscount';
 import AddCustomProducts from './AddCustomProducts';
+import { join } from 'path';
 
 const AddProductCard = ()=> {
 
@@ -23,6 +24,8 @@ const AddProductCard = ()=> {
       // 初始化进行校验
       form.submit();
     }
+
+    console.log(orderDraft.productInfo)
   }, [orderDraft.productInfo.length]);
 
   return (
@@ -51,8 +54,6 @@ const AddProductCard = ()=> {
             </Flex>
             {/* body */}
             {orderDraft.productInfo.map((item,index)=>{
-              // console.log(item)
-              // console.log(item.product_quantity)
               return(
                 <Flex key={index} className='table-item'>
                   <Flex style={{flex:1}}>
@@ -61,34 +62,36 @@ const AddProductCard = ()=> {
                     </div>
                     <Flex vertical style={{marginLeft:"12px"}} gap={6}>
                       <div className='font-w-600'>{item.product_name}</div>
+                      {item?.variants && item.variants[0]?.option_values_names && <div className='color-242833'>{item.variants[0]?.option_values_names}</div>}
                       <div className='color-242833'>成本价：{cookie.load("symbolLeft") || ""}{Number(item.product_cost_price).toFixed(2)}</div>
                       <EditDiscount index={index} />
                     </Flex>
                   </Flex>
-                  <Form.Item style={{width:"90px"}} initialValue={item.product_quantity} name={[index, 'quantity']} rules={[
-                    {
-                      validator: (_, value) => {
-                        if (item.product_quantity == 0 || quantityRules[index] == false) {
-                          setQuantityRules((prev:any)=>{
-                            return {
-                              ...prev,
-                              [index]:false
-                            }
-                          })
-                          return Promise.reject(<span style={{ fontSize: '12px' }}>库存未达到起批量，请重新选择或删除</span>)
-                        }
-                      }
-                    },
+                  <Form.Item style={{width:"90px"}} initialValue={item.product_quantity} rules={[
+                    // {
+                    //   validator: (_, value) => {
+                    //     if (item.product_quantity == 0 || quantityRules[index] == false) {
+                    //       setQuantityRules((prev:any)=>{
+                    //         return {
+                    //           ...prev,
+                    //           [index]:false
+                    //         }
+                    //       })
+                    //       return Promise.reject(<span style={{ fontSize: '12px' }}>库存未达到起批量，请重新选择或删除</span>)
+                    //     }
+                    //   }
+                    // },
                   ]}>
                     <InputNumber
                       style={{ width: '100%' }}
                       min={1}
                       max={99999}
+                      value={item.product_quantity}
                       onChange={(value)=>{
                         console.log(item.product_quantity)
                         orderDraft.setProductInfo(
                           orderDraft.productInfo.map((product:any) => {
-                            if(product.product_id ? product.product_id == item.product_id : product.vid == item.vid) {
+                            if(product.sku_id ? product.sku_id == item.sku_id : product.vid == item.vid) {
                               return {
                                 ...product,
                                 product_quantity: value,
@@ -109,8 +112,10 @@ const AddProductCard = ()=> {
                       cancelButtonProps={{style: { fontSize: '12px' }}}
                       okButtonProps={{style: { fontSize: '12px',backgroundColor:"#F86140" }}}
                       onConfirm={() => {
+                        console.log(item)
+                        console.log(orderDraft.productInfo)
                         orderDraft.setProductInfo(
-                          orderDraft.productInfo.filter(product => (product.product_id ? product.product_id != item.product_id : product.vid != item.vid))
+                          orderDraft.productInfo.filter(product => (product.sku_id ? product.sku_id != item.sku_id : product.vid != item.vid))
                         );
                       }}
                     >

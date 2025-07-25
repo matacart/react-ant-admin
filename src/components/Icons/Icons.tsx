@@ -655,6 +655,8 @@ export const FillLockIcon = (props: Partial<CustomIconComponentProps>) => (
 
 
 
+
+
 // -----------编辑组件图标-----------------
 const EditorHomeSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -718,6 +720,25 @@ const EditorMoreSvg = () => (
     <path d="M4 10.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM11.5 10.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM17.5 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path>
   </svg>
 )
+
+const EditorTextLeftASvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" color="currentColor"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M9 10.75H23V9.25H9V10.75ZM9 18.75H16V17.25H9V18.75ZM16 14.75H9V13.25H16V14.75ZM9 21.25V22.75H23V21.25H9Z" fill="currentColor" stroke-width="0"></path></svg>
+)
+const EditorTextLeftSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M9 10.75H23V9.25H9V10.75ZM9 18.75H16V17.25H9V18.75ZM16 14.75H9V13.25H16V14.75ZM9 21.25V22.75H23V21.25H9Z" fill="currentColor" stroke-width="0"></path></svg>
+)
+const EditorTextCenterASvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M13 18H20" stroke="currentColor" stroke-width="1.5"></path><path d="M13 14H20" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+)
+const EditorTextCenterSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M13 18H20" stroke="currentColor" stroke-width="1.5"></path><path d="M13 14H20" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+)
+const EditorTextRightASvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#356DFF" color="#356DFF"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 14H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 18H23" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+)
+const EditorTextRightSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 14H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 18H23" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+)
 // const EditorCircleSvg = () => (
 //   <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 //     <circle cx="4" cy="4" r="3" stroke="#FE9E0F" stroke-width="2"></circle>
@@ -756,4 +777,24 @@ export const EditorAddBtnIcon = (props: Partial<CustomIconComponentProps>) => (
 );
 export const EditorMoreIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorMoreSvg} {...props} />
+);
+export const EditorTextLeftIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextLeftSvg} {...props} />
+);
+export const EditorTextLeftAIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextLeftASvg} {...props} />
+);
+
+export const EditorTextCenterIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextCenterSvg} {...props} />
+);
+export const EditorTextCenterAIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextCenterASvg} {...props} />
+);
+
+export const EditorTextRightIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextRightSvg} {...props} />
+);
+export const EditorTextRightAIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextRightASvg} {...props} />
 );

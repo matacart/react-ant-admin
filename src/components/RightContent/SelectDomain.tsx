@@ -1,7 +1,7 @@
 import { getCurrencies, getCurrenciesList, getDomain, getDomainList, getTimeZoneList } from "@/services/y2/api";
 import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { result, set } from 'lodash';
 import { useIntl } from '@umijs/max';
@@ -59,10 +59,12 @@ export default function SelectDomain() {
     const [searching, setSearching] = useState(false)
     const intl = useIntl();// 多语言
 
+    const mRef = useRef(null);
+
     const getDomainCurrent = (id:string)=>{
-        getCurrencies(id).then(res=>{
-            // console.log(res)
-        })
+        // getCurrencies(id).then(res=>{
+        //     // console.log(res)
+        // })
     }
     function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
         try {
@@ -289,12 +291,13 @@ export default function SelectDomain() {
     )
 
     return (
-        <Scoped>
+        <Scoped ref={mRef}>
             <Popover content={content} className="title"
                 onOpenChange={(open) => {
                     setIsActive(open);
                 }}
                 open={isActive}
+                getPopupContainer={() => mRef.current!}
                 trigger="click">
                 <div>
                     <h4>{defaultDomain}</h4>

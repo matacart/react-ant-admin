@@ -22,7 +22,7 @@ import ConfirmModal from '@/components/Modal/ConfirmModal';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import Overlay from '@/components/Overlay/Overlay';
 import MyAlert from '@/components/Alert/MyAlert';
-import { data } from '@remix-run/router';
+import { convertFlatToNested } from '../ProductTableModal';
 
   
 function OrderDraftEdit() {
@@ -49,6 +49,8 @@ function OrderDraftEdit() {
 
     // 保存
     const submit = ()=>{
+        const productInfo = convertFlatToNested(orderDraft.productInfo);
+        console.log(productInfo)
         if(orderDraft.customerInfo && orderDraft.productInfo?.length>0){
             setIsAlert(null)
             setLoading(true)
@@ -56,7 +58,7 @@ function OrderDraftEdit() {
             editDraftOrder({
                 draft_id :orderDraft.orderInfo.id,
                 orderInfo:JSON.stringify(orderDraft.orderInfo),
-                products:JSON.stringify(orderDraft.productInfo),
+                products:JSON.stringify(productInfo),
                 customerInfo:JSON.stringify(orderDraft.customerInfo),
                 receiverInfo: JSON.stringify(orderDraft.receiverInfo),
                 payBillInfo: JSON.stringify(orderDraft.payBillInfo)
@@ -86,7 +88,82 @@ function OrderDraftEdit() {
             orderDraft.setNextDraftId(res.data.orderInfo.nextDraftId)
             orderDraft.setPrevDraftId(res.data.orderInfo.prevDraftId)
             orderDraft.setCustomerInfo(res.data.customerInfo??null)
-            orderDraft.setProductInfo(res.data.products)
+            // 扁平化 -- 数据结构转化
+            let newProductList = res.data.products.reduce((acc: any[], item: any) => {
+                if (item.variants?.length > 0) {
+                    
+                    // 如果有variants，为每个variant创建一个独立的商品项
+                    const variantItems = item.variants.map(variant => {
+                        // 如果没有variants，直接使用原商品
+                        let finalAmount = item.specialprice + Number(variant.price);
+
+                        if(variant.product_discount_type == "1"){
+                            finalAmount = finalAmount - variant.product_discount_amount
+                        }
+                        // 百分比折扣
+                        if(variant.product_discount_type == "2"){
+                            // console.log(product.product_price)
+                            finalAmount = finalAmount * (100 - variant.product_discount_amount)/100
+                        }
+
+                        return {
+                            attributes: item.attributes,
+                            variants: [variant],
+                            final_price: finalAmount,
+                            id: item.id,
+                            product_id: item.id,
+                            sku_id:variant.id,
+                            proudct_imgage: item.product_image,
+                            product_model: item.model,
+                            product_name: item.title,
+                            product_price: item.specialprice,
+                            product_cost_price: variant.cost_price,
+                            product_quantity: variant.product_quantity || 1,
+                            product_source: "1",
+                            // 折扣信息
+                            product_discount_amount: variant.product_discount_amount || "",
+                            product_discount_description: variant.product_discount_description || "",
+                            product_discount_type: variant.product_discount_type || "",
+                            product_discount_type_from: null,
+                        };
+                    });
+                    return [...acc, ...variantItems];
+                } else {
+                    // 如果没有variants，直接使用原商品
+                    let finalAmount = item.specialprice;
+
+                    if(item.product_discount_type == "1"){
+                        finalAmount = finalAmount - item.product_discount_amount
+                    }
+                    // 百分比折扣
+                    if(item.product_discount_type == "2"){
+                        // console.log(product.product_price)
+                        finalAmount = finalAmount * (100 - item.product_discount_amount)/100
+                    }
+
+                    return [...acc, {
+                        attributes: item.attributes,
+                        variants: item.variants,
+                        final_price:finalAmount,
+                        id: item.id,
+                        sku_id: item.id,
+                        product_id: item.id,
+                        proudct_imgage: item.product_image,
+                        product_model: item.model,
+                        product_name: item.title,
+                        product_price: item.specialprice,
+                        product_cost_price: item.cost_price,
+                        product_source: "1",
+                        product_quantity: item.product_quantity || 1,
+                        // 折扣信息
+                        product_discount_amount: item.product_discount_amount || "",
+                        product_discount_description: item.product_discount_description || "",
+                        product_discount_type: item.product_discount_type || "",
+                        product_discount_type_from: null,
+                    }];
+                }
+            }, []);
+            orderDraft.setProductInfo(newProductList)
             orderDraft.setPayBillInfo(res.data.payBillInfo??null)
             orderDraft.setReceiverInfo(res.data.receiverInfo??null)
         }).catch(err=>{

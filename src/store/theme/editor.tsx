@@ -1,5 +1,11 @@
 import { makeAutoObservable } from "mobx";
 
+interface componentType {
+  id: string;
+  type:string;
+  itemId:string;
+}
+
 class editor {
     constructor() {
       makeAutoObservable(this)
@@ -13,8 +19,9 @@ class editor {
     }
 
     updateComponentSettings(componentId:string, newSettings:any) {
+      console.log(componentId, newSettings)
       const updatedTemplateData = this.templateData.map((res:any) => {
-        if (res.config?.sectionId === componentId) {
+        if (res.type == "SECTION" && res.config?.sectionId === componentId) {
           return {
             ...res,
             config: {
@@ -26,14 +33,29 @@ class editor {
             }
           };
         }
+        if(res.type == "TEMPLATE" && res.sections[componentId]){
+          return {
+            ...res,
+            sections:{
+              ...res.sections,
+              [componentId]:{
+                ...res.sections[componentId],
+                settingsData: {
+                  ...res.sections[componentId].settingsData,
+                  settings: newSettings
+                }
+              }
+            }
+          }
+        }
         return res;
       });
-  
+
       this.templateData = updatedTemplateData; // 替换整个数组以触发响应式更新
     }
 
     // 模板组件数据
-    component = null;
+    component:componentType | null = null;
 
     setComponent(value:any) {
       this.component = value;

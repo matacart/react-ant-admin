@@ -18,69 +18,12 @@ interface DataType {
     key: string;
     id: string;
     title:string;
-    model:string;
     product_id: string;
     product_image:string;
-    specialprice:number;
-    cost_price:number;
-    product_quantity?:number;
-    product_discount_amount?:string;
-    product_discount_description?:string;
-    product_discount_type?:string;
     age: number;
     address: string;
     variants:any[];
-    attributes:any[];
 }
-
-// 添加转换函数
-export const convertFlatToNested = (flatData: any[]) => {
-    // 使用reduce将扁平数据按product_id分组
-    const grouped = flatData.reduce((acc, item) => {
-    const productId = item.product_id;
-    
-    // 提取通用字段
-    const commonFields = {
-        product_quantity: item.product_quantity,
-        // 折扣信息
-        product_discount_amount: item.product_discount_amount,
-        product_discount_description: item.product_discount_description,
-        product_discount_type: item.product_discount_type,
-        // product_discount_type_from: null,
-    };
-
-    
-    // 如果是首次遇到该product_id，初始化产品对象
-    if (!acc[productId]) {
-        acc[productId] = {
-            ...commonFields,
-            id: item.product_id, // 使用product_id作为主键
-            product_id: item.product_id,
-            title: item.product_name,
-            model: item.product_model,
-            product_image: item.proudct_imgage,
-            specialprice: item.product_price,
-            cost_price: item.product_cost_price,
-            variants: [],
-            attributes: item.attributes || [],
-        };
-    }
-    
-    // 如果当前项代表一个具体的variant，将其添加到variants数组
-    if (item.sku_id && item.sku_id !== item.product_id) {
-        // 这是一个variant项
-        const variant = item.variants?.[0]; // 获取variant信息
-        if (variant) {
-            acc[productId].variants.push({...variant,...commonFields});
-        }
-    }
-    
-    return acc;
-    }, {} as Record<string, DataType>);
-    
-    // 返回重组后的嵌套数据数组
-    return Object.values(grouped);
-};
 
 function ProductTableModal(){
 
@@ -93,14 +36,7 @@ function ProductTableModal(){
     const Ref = useRef(null)
 
     // 管理所有选中的项（包括父项和子项）
-    const [selectedRowKeys, setSelectedRowKeys] = useState<any[][]>([[],[]]);
-
-    const [defaultChildKeys,setDefaultChildKeys] = useState<string[]>([]);
-    // 将二维数组改为嵌套方式
-
-    // selectedRowKeys[0]: 存储父表格的选中项（主商品 ID）
-    // selectedRowKeys[1]: 存储子表格的选中项（子项 variant ID）
-    // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -148,77 +84,46 @@ function ProductTableModal(){
     };
     // 添加商品
     const handleOk = () => {
-        console.log(productList)
-
-        // 扁平化 -- 数据结构转化
-        let newProductList = productList.reduce((acc: any[], item: DataType) => {
-            if (item.variants?.length > 0) {
-                // 如果有variants，为每个variant创建一个独立的商品项
-                const variantItems = item.variants.map(variant => ({
-                    attributes: item.attributes,
-                    variants: [variant],
-                    final_price: Number(item.specialprice) + Number(variant.price),
-                    id: item.id,
-                    product_id: item.id,
-                    sku_id:variant.id,
-                    proudct_imgage: item.product_image,
-                    product_model: item.model,
-                    product_name: item.title,
-                    product_price: item.specialprice,
-                    product_cost_price: variant.cost_price,
-                    product_quantity: variant.product_quantity || 1,
-                    product_source: "1",
-                    // 折扣信息
-                    product_discount_amount: variant.product_discount_amount || "",
-                    product_discount_description: variant.product_discount_description || "",
-                    product_discount_type: variant.product_discount_type || "",
-                    product_discount_type_from: null,
-                }));
-                return [...acc, ...variantItems];
-            } else {
-                // 如果没有variants，直接使用原商品
-                return [...acc, {
-                    attributes: item.attributes,
-                    variants: item.variants,
-                    final_price: item.specialprice,
-                    id: item.id,
-                    sku_id: item.id,
-                    product_id: item.id,
-                    proudct_imgage: item.product_image,
-                    product_model: item.model,
-                    product_name: item.title,
-                    product_price: item.specialprice,
-                    product_cost_price: item.cost_price,
-                    product_source: "1",
-                    product_quantity: item.product_quantity || 1,
-                    // 折扣信息
-                    product_discount_amount: item.product_discount_amount || "",
-                    product_discount_description: item.product_discount_description || "",
-                    product_discount_type: item.product_discount_type || "",
-                    product_discount_type_from: null,
-                }];
+        let newProductList = productList.map(item=>{
+            return {
+                attributes:item.attributes,
+                variants:item.variants,
+                final_price:item.specialprice,
+                // group_id: "0",
+                id:item.id,
+                product_id:item.id,
+                proudct_imgage:item.product_image,
+                product_model:item.model,
+                product_name:item.title,
+                product_price:item.specialprice,
+                product_cost_price:item.cost_price,
+                product_quantity: 1,
+                product_source: "1",
+                // 折扣信息
+                product_discount_amount: "",
+                product_discount_description: null,
+                product_discount_type: "",
+                product_discount_type_from: null,
             }
-        }, []);
+        })
+        orderDraft.setProductInfo([...orderDraft.productInfo,...newProductList])
 
         console.log(newProductList)
-
-        orderDraft.setProductInfo(newProductList)
         setOpen(false);
     };
 
     const rowSelection: TableProps<DataType>['rowSelection'] = {
-        selectedRowKeys:selectedRowKeys[0], // 同步选中状态
+        selectedRowKeys:productList.map(item => item.product_id), // 同步选中状态
         onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {},
         onSelect: (record, selected, selectedRows) => {
-            handleSelect(record, selected, selectedRows);
+            handleSelect(record, selected, selectedRows,selectedRowKeys);
         },
         getCheckboxProps: (record: DataType) => {
-            // 并检查子项是否部分选中
-            const allChildrenSelected = record.variants?.every(variant => selectedRowKeys[1].includes(variant.id));
-            const someChildrenSelected = record.variants?.some(variant => selectedRowKeys[1].includes(variant.id));
-            const indeterminate = someChildrenSelected && !allChildrenSelected;
+            // // 并检查子项是否部分选中
+            // const allChildrenSelected = record.variants?.every(variant => selectedRowKeys[1].includes(variant.id));
+            // const someChildrenSelected = record.variants?.some(variant => selectedRowKeys[1].includes(variant.id));
+            // const indeterminate = someChildrenSelected && !allChildrenSelected;
             return {
-                indeterminate: indeterminate,
                 disabled: orderDraft.productInfo.some(item => {
                     if(item.product_id === record.product_id){
                         if(record.variants?.length>0){
@@ -235,43 +140,13 @@ function ProductTableModal(){
         },
     };
     // 父项选中 → 子项自动选中
-    const handleSelect = (record:DataType, selected:Boolean, selectedRows) => {
-        // console.log(record, selected, selectedRows);
-        let newParentKeys = [...selectedRowKeys[0]];
-        let newChildKeys = [...selectedRowKeys[1]];
+    const handleSelect = (record:DataType, selected:Boolean, selectedRows,selectedRowKeys) => {
+        console.log(selectedRowKeys)
 
-        // 半选 -- 选中全选
-        const someChildrenSelected = record.variants?.some(variant =>
-            newChildKeys.includes(variant.id)
-        );
-        const allChildrenSelected = record.variants?.every(variant =>
-            newChildKeys.includes(variant.id)
-        ) ?? true;
-
-        if(!selected && allChildrenSelected){
-            // 取消选中父项 → 移除父项 + 所有子项
-            console.log("取消选中父项")
-            let hasChildKeys = false;
-            if (record.variants?.length > 0) {
-                record.variants.forEach(variant => {
-                    if (defaultChildKeys.includes(variant.id)) {
-                        // 父项有子项，则不能取消选中父项
-                        hasChildKeys = true;
-                    }else{
-                        newChildKeys = newChildKeys.filter(key => key !== variant.id);
-                    }
-                });
-            }
-            if (!hasChildKeys) {
-                // 父项没有子项，则移除父项
-                newParentKeys = newParentKeys.filter(key => key !== record.id);
-                setProductList(productList.filter(item => item.id !== record.id))
-            }
-        }else{
+        if (selected) {
             // 选中父项 → 添加父项 
             if (!newParentKeys.includes(record.id)) {
                 newParentKeys.push(record.id);
-                setProductList([...productList,record]);
             }
             // 所有子项
             if (record.variants?.length > 0) {
@@ -281,9 +156,22 @@ function ProductTableModal(){
                     }
                 });
             }
+        } else {
+            // 取消选中父项 → 移除父项 + 所有子项
+            newParentKeys = newParentKeys.filter(key => key !== record.id);
+            if (record.variants?.length > 0) {
+                record.variants.forEach(variant => {
+                    newChildKeys = newChildKeys.filter(key => key !== variant.id);
+                });
+            }
         }
 
-        setSelectedRowKeys([newParentKeys, newChildKeys]);
+
+        setSelectedRowKeys([{
+            pid: record.id,
+            cid: record.variants?.map(variant => variant.id)
+        }])
+        setProductList(selectedRows);
     };
    
     // 子表单展开项
@@ -323,19 +211,15 @@ function ProductTableModal(){
                 rowSelection={{
                     type: "checkbox",
                     selectedRowKeys: selectedRowKeys[1], // 子表格选中项
-                    onChange:(keys,selectedRows,info) => {
-                    },
-                    onSelect:(childRecord, selected, selectedRows) => {
+                    onChange:(keys) => {
                         // 创建新数组，避免直接修改原数组
-                        let newKeys = selectedRows.map(item=>item?.id).filter(item=>item);
-                        const oldVariants = productList.filter(item => item.product_id == record.product_id)[0]?.variants || [];
-                        let newVariants = oldVariants;
-                        if(selected){
-                            newVariants = [...oldVariants,childRecord];
-                        }else{
-                            newVariants = oldVariants.filter(item=>item.id != childRecord.id);
-                        }
-                        console.log(newVariants)
+                        let newKeys = [...keys];
+
+                        let newVariants = record.variants.map(variant => {
+                            if (newKeys.includes(variant.id)) {
+                                return variant
+                            }
+                        }).filter(item=>item);
 
                         let allKeysExceptChildren = [...selectedRowKeys[0]];
                         // 确保父项仍保持选中
@@ -354,8 +238,8 @@ function ProductTableModal(){
                         );
                         // 合并非子项 key + 当前子项 key
                         setSelectedRowKeys([allKeysExceptChildren,[...updatedChildKeys,...newKeys]]);
-                    },
 
+                    },
                     renderCell: (checked, record, index, node) => {
                         return (
                           <div style={{ marginLeft: '50px' }}>
@@ -365,8 +249,10 @@ function ProductTableModal(){
                     },
                     getCheckboxProps: (record: DataType) => {
                         // 并检查子项是否部分选中
+                        console.log(record.id)
                         return {
-                            disabled: orderDraft.productInfo.some((item) => item.variants?.some((variant) => variant.id === record.id)),
+                            disabled: orderDraft.productInfo.some((item) => item.variants?.some((variant) => variant.id === record.id)
+                          ),
                         };
                     },
                 }}
@@ -401,8 +287,8 @@ function ProductTableModal(){
             })
             // 当 data 更新时，自动将所有有 variants 的项的 key 加入 expandedRowKeys
             const keys = res.data.filter(item => item.variants?.length > 0).map(item => item.id);
-            console.log(keys)
             setExpandedRowKeys(keys);
+            console.log(keys)
             setData(res.data)
             console.log(res)
         }).catch(err=>{
@@ -412,25 +298,10 @@ function ProductTableModal(){
         })
     };
 
-    
-
     return (
         <Scoped ref={Ref}>
             <DefaultButtonSecondary type="primary" text="添加商品" onClick={()=>{
-                // 将扁平化数据转为原数据结构
-                const nestedData = convertFlatToNested(orderDraft.productInfo);
-                console.log(nestedData)
-                setProductList(nestedData);
-
-                const parentKeys = orderDraft.productInfo.map(item => item.product_id);
-                const childKeys = orderDraft.productInfo.flatMap(item =>
-                    item.variants?.map(variant => variant.id) || []
-                );
-                // 默认
-                setDefaultChildKeys(childKeys);
-                console.log(parentKeys,childKeys)
-                setSelectedRowKeys([parentKeys,childKeys]);
-
+                setProductList([])
                 fetchData(1,10);
                 setOpen(true)
             }} />
@@ -482,7 +353,7 @@ function ProductTableModal(){
                             fetchData(page,pageSize)
                         },
                     }}
-                    expandable={expandable}
+                    // expandable={expandable}
                 />
             </Modal>
         </Scoped>

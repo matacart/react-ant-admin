@@ -59,7 +59,7 @@ function EditDiscount({index}:{index:number}){
         <>
             <Flex>
                 <div onClick={()=>{
-                // console.log(product)
+                    console.log(product)
                     if(product.product_discount_type && product.product_discount_type !== "0"){
                         setDiscountType(parseInt(product.product_discount_type.toString()))
                         form.setFieldsValue({
@@ -71,8 +71,8 @@ function EditDiscount({index}:{index:number}){
                         form.resetFields()
                     }
                     setOpen(true)
-                }} className="cursor-pointer color-356DFF">US$ {parseInt(product.final_price+"").toFixed(4)}</div>
-                {(product.product_discount_type && product.product_discount_type!=="0") && <div style={{marginLeft:"6px",textDecoration:"line-through"}} className="color-7A8499">US$ {parseInt(product.product_price+"").toFixed(4)}</div>}
+                }} className="cursor-pointer color-356DFF">US$ {parseFloat(product.final_price+"").toFixed(2)}</div>
+                {(product.product_discount_type && product.product_discount_type!=="0") && <div style={{marginLeft:"6px",textDecoration:"line-through"}} className="color-7A8499">US$ {parseFloat(product.product_price+"").toFixed(2)}</div>}
             </Flex>
             
             <Modal title={<div>编辑折扣</div>} width={480} centered open={open} onOk={submit} onCancel={cancel} 

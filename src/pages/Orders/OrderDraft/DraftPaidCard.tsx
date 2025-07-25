@@ -90,13 +90,13 @@ function DraftPaidCard() {
         ...orderDraft.orderInfo,
         orderDiscount:newPricing,
         productTotal:newPricing,
-        orderTotal:0+orderDraft.orderInfo.shippingTotal,
+        orderTotal:0+Number(orderDraft.orderInfo.shippingTotal),
       })
     }else{
       orderDraft.setOrderInfo({
         ...orderDraft.orderInfo,
         productTotal:newPricing,
-        orderTotal:newPricing - orderDraft.orderInfo.orderDiscount + orderDraft.orderInfo.shippingTotal,
+        orderTotal:newPricing - orderDraft.orderInfo.orderDiscount + Number(orderDraft.orderInfo.shippingTotal),
       })
     }
   },[orderDraft.productInfo])
@@ -106,7 +106,6 @@ function DraftPaidCard() {
   useEffect(()=>{
     // 手动收款方式
     getAddonsConfigs().then(res=>{
-      console.log(res)
       const newPaymentList = res.data.map(item=>{
         return {
           value: item.id,

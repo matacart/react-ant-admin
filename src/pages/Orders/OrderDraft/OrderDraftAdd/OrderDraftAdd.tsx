@@ -15,6 +15,7 @@ import { addDraftOrder, editDraftOrder } from '@/services/y2/api';
 import AddProductCard from '../AddProductCard';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
+import { convertFlatToNested } from '../ProductTableModal';
 
   
 function OrderDraftAdd() {
@@ -42,28 +43,19 @@ function OrderDraftAdd() {
             receiverInfo: orderDraft.receiverInfo,
             payBillInfo: orderDraft.payBillInfo,
         })
-        // addDraftOrder({
-        //     is_draft:true,
-        //     orderInfo:JSON.stringify(orderDraft.orderInfo),
-        //     products:JSON.stringify(orderDraft.productInfo),
-        //     customerInfo:JSON.stringify(orderDraft.customerInfo),
-        //     receiverInfo: JSON.stringify(orderDraft.receiverInfo),
-        //     payBillInfo: JSON.stringify(orderDraft.payBillInfo)
-        // }).then(res=>{
-        //     navigate(`/orders/draftOrders/edit/${res.data.draft_id??""}`)
-        // }).catch(err=>{ 
-        // })
     };
 
     // 保存
     const submit = ()=>{
+        // 将扁平化数据转为原数据结构
+        const productInfo = convertFlatToNested(orderDraft.productInfo);
         if(orderDraft.customerInfo && orderDraft.productInfo?.length>0){
             setIsAlert(null)
             setLoading(true)
             addDraftOrder({
                 is_draft:true,
                 orderInfo:JSON.stringify(orderDraft.orderInfo),
-                products:JSON.stringify(orderDraft.productInfo),
+                products:JSON.stringify(productInfo),
                 customerInfo:JSON.stringify(orderDraft.customerInfo),
                 receiverInfo: JSON.stringify(orderDraft.receiverInfo),
                 payBillInfo: JSON.stringify(orderDraft.payBillInfo)
