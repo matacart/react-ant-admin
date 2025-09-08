@@ -1,7 +1,6 @@
-import baseInfoStore from "@/store/set-up/baseInfoStore";
+import baseInfoStore from "@/store/setUp/baseInfoStore";
 import { DeleteOutlined, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Card, Form, GetProp, Input, message, Spin, Upload, UploadProps } from "antd";
-import { Image } from "antd";
 import modal from "antd/es/modal";
 import axios from "axios";
 import { observer } from "mobx-react-lite";

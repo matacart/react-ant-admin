@@ -1,71 +1,35 @@
 import styled from "styled-components"
-import { Button, Card, Col, ConfigProvider, Divider, Flex, MenuProps, Progress, Row } from 'antd';
+import { Button, Card, Col, ConfigProvider, Divider, Flex, MenuProps, Pagination, Progress, Row } from 'antd';
 import { RocketIcon, StarsIcon } from "@/components/Icons/Icons";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import DefaultButton from "@/components/Button/DefaultButton";
-import { history } from "@umijs/max";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getTemplateInstanceList, getTemplateInstanceUsing, setInstanceStatus } from "@/services/y2/api";
+import { observer } from "mobx-react-lite";
+import shopSetting, { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
+import dayjs from 'dayjs';
+import RenameModal from "./RenameModal";
+import UploadTemplateModal from "./UploadTemplateModal";
+import DownloadModal from "./DownloadModal";
 
 
-function MyStylesCard() {
+interface MyStylesCardProps {
+  onSwitchToStore: () => void;
+}
 
-  const controlsItems: MenuProps['items'] = [
-    {
-      label: <div>查看店铺</div>,
-      key: '1',
-    },
-    {
-      label: <div>复制</div>,
-      key: '2',
-    },
-    {
-      label: <div>重命名</div>,
-      key: '3',
-    },
-    {
-      label: <div>编辑语言</div>,
-      key: '4',
-    },
-    {
-      label: <div>编辑代码</div>,
-      key: '5',
-    },
-  ];
+function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
 
-  const controlsItemsSecond: MenuProps['items'] = [
-    {
-      label: <div>查看店铺</div>,
-      key: '1',
-    },
-    {
-      label: <div>复制</div>,
-      key: '2',
-    },
-    {
-      label: <div>重命名</div>,
-      key: '3',
-    },
-    {
-      label: <div>编辑语言</div>,
-      key: '4',
-    },
-    {
-      label: <div>编辑代码</div>,
-      key: '5',
-    },
-    {
-      label: <div>删除</div>,
-      key: '6',
-    },
-  ];
+  const navgate = useNavigate();
 
   const themeItems: MenuProps['items'] = [
     {
-      label: <div>添加主题</div>,
+      label: <a onClick={onSwitchToStore}>添加模板</a>,
       key: '1',
     },
     {
-      label: <div>上传主题</div>,
+      label: <UploadTemplateModal />,
       key: '2',
     },
     {
@@ -73,6 +37,41 @@ function MyStylesCard() {
       key: '3',
     }
   ];
+
+  // 分页数据
+  const [pagination,setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 5,
+  });
+
+  useEffect(()=>{
+    // 用户添加模板
+    getTemplateInstanceList({
+      page: pagination.current,
+      limit: pagination.pageSize
+    }).then((res:any)=>{
+      if(res.data.length !== 0){
+        shopSetting.setTemplateInstanceList(res.data);
+        setPagination({
+          ...pagination,
+          total:res.count
+        })
+      }
+    }).catch(err=>{
+      console.log(err)
+    })
+  },[pagination.current]) // 依赖项添加分页参数
+
+  // 处理分页变化
+  const handlePageChange = (page: number, size: number) => {
+    setPagination({
+      ...pagination,
+      current: page,
+      pageSize: size,
+    })
+  };
+
 
   return (
     <Scoped>
@@ -82,7 +81,7 @@ function MyStylesCard() {
             </div>
             <div className="color-FFFFFF aiContent">
               <h3 className="font-20">全新 AI 建站功能，闪电完成网店搭建！<span className="aiCount">限1次</span></h3>
-              <p>MATACART AI建站！根据你的品类，我们提供最合适的主题，让你的网站独具特色。根据你的喜好调整色系和风格，完美展示网站个性。通过AI生成的图片和文本，让你的网站内容充满创意和吸引力。立即体验，让你的网站与众不同！</p>
+              <p>MATACART AI建站！根据你的品类，我们提供最合适的模板，让你的网站独具特色。根据你的喜好调整色系和风格，完美展示网站个性。通过AI生成的图片和文本，让你的网站内容充满创意和吸引力。立即体验，让你的网站与众不同！</p>
             </div>
             <Flex gap={8} vertical>
               <ConfigProvider
@@ -102,27 +101,63 @@ function MyStylesCard() {
                 }}
                 >
                 <Button className="aiBtn" icon={<StarsIcon className="font-16" style={{margin:"0 2px"}} />}>立即体验</Button>
-                <Button className="aiBtn">查看过往主题</Button>
+                <Button className="aiBtn">查看过往模板</Button>
               </ConfigProvider>
             </Flex>
         </Flex>
+        {/* 当前模板 */}
         <Card>
           <Flex className="current-topic-box">
             <div className="current-topic-left">
-              <h2 className="font-16 title">当前主题</h2>
+              <h2 className="font-16 title">当前模板</h2>
               <p className="des">这是当前你向客户展示的店面样式</p>
             </div>
             <div className="current-topic-right">
               <Flex justify="space-between" align="center">
                 <div>
-                  <h3>Modern1</h3>
+                  <h3>{shopSetting.templateInstanceUsing?.template_name}</h3>
                   <p className="font-12 color-7A8499">
-                    <span>当前版本：1.4.34 <Divider type="vertical" /> 上次修改时间：2025/03/25 22:41</span>
+                    {/* 2025/03/25 22:41 */}
+                    <span>
+                      当前版本：{shopSetting.templateInstanceUsing?.template_version}
+                      <Divider type="vertical" />
+                      语言：
+                      {
+                        JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===shopSetting.templateInstanceUsing?.languages_id)?.name
+                      }
+                      <Divider type="vertical" />
+                      上次修改时间：{dayjs(JSON.parse(shopSetting.templateInstanceUsing?.update_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
+                    </span>
                   </p>
                 </div>
                 <div>
                   <Flex gap={12}>
-                    <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="操作" />
+                    <ButtonDropdownSecondary menu={{items:[
+                      {
+                        label: <a onClick={()=>navgate(`/theme/preview?preview=1&templateId=${shopSetting.templateInstanceUsing?.id}`)}>查看店铺</a>,
+                        key: '1',
+                      },
+                      {
+                        label: <div>复制</div>,
+                        key: '2',
+                      },
+                      {
+                        label: <RenameModal template={shopSetting.templateInstanceUsing} />,
+                        key: '3',
+                      },
+                      {
+                        label: <div>编辑语言</div>,
+                        key: '4',
+                      },
+                      {
+                        label: <a onClick={()=>navgate(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}`)}>编辑代码</a>,
+                        key: '5',
+                      },
+                      {
+                        label: <DownloadModal template={shopSetting.templateInstanceUsing} />,
+                        key: '6',
+                      }
+                    ]}} trigger={['click']} text="操作" />
                     <PrimaryButton text="设计" />
                   </Flex>
                 </div>
@@ -164,10 +199,10 @@ function MyStylesCard() {
                 <Flex className="text-warp" justify="center" gap={8} vertical>
                   <h3 className="title color-242833 font-16">您的在线商店接入速度评分：-</h3>
                   <div className="color-356DFF"><a className="ant-typography">为什么无法显示评分？&nbsp;</a></div>
-                  <p className="color-474F5E">商店速度受已安装的应用、已编辑的主题代码以及图像和视频的大小影响。</p>
+                  <p className="color-474F5E">商店速度受已安装的应用、已编辑的模板代码以及图像和视频的大小影响。</p>
                 </Flex>
                 <Flex align="center">
-                  <DefaultButton text="查看报告" />
+                  <DefaultButton text="查看报告" onClick={()=>navgate(`/analyse/reports/behavior/speed`)} />
                 </Flex>
               </Flex>
             </div>
@@ -190,36 +225,102 @@ function MyStylesCard() {
           {/*  */}
           <Flex className="themeList-warp">
             <div className="left">
-              <h2 className="font-16">主题库</h2>
-              <p className="des">管理商店可使用的其他主题</p>
-              <ButtonDropdownSecondary menu={{items:themeItems}} trigger={['click']} text="添加主题" />
+              <h2 className="font-16">模板库</h2>
+              <p className="des">管理商店可使用的其他模板</p>
+              <ButtonDropdownSecondary menu={{items:themeItems}} trigger={['click']} text="添加模板" />
             </div>
             <div className="right">
-              <Flex justify="space-between" className="themeList-item">
-                <Flex vertical gap={8} justify="center">
-                  <div>Modern1 copy2</div>
-                  <div className="font-12 color-7A8499">当前版本：1.4.34<Divider type="vertical" />保存时间：2025/03/27 22:25</div>
-                </Flex>
-                <Flex gap={12}>
-                  <a href="/theme/preview?themeId=10011&&page=index" target="_blank" >
-                    <DefaultButton text="预览" />
-                  </a>
-                  <ButtonDropdownSecondary menu={{items:controlsItemsSecond}} trigger={['click']} text="操作" />
-                  <DefaultButton text="设计" onClick={()=>history.push("/theme/editor?themeId=10011")} />
-                </Flex>
-              </Flex>
-              <Flex justify="space-between" className="themeList-item">
-                <Flex vertical gap={8} justify="center">
-                  <div>Modern1 copy1</div>
-                  <div className="font-12 color-7A8499">当前版本：1.4.34<Divider type="vertical" />保存时间：2025/03/27 22:25</div>
-                </Flex>
-                <Flex gap={12}>
-                  <a href="/theme/preview?themeId=10012&&page=index" target="_blank" >
-                    <DefaultButton text="预览" />
-                  </a>
-                  <ButtonDropdownSecondary menu={{items:controlsItemsSecond}} trigger={['click']} text="操作" />
-                  <DefaultButton text="设计" onClick={()=>history.push("/theme/editor?themeId=10011")} />
-                </Flex>
+              {shopSetting.templateInstanceList?.map((template:TemplateInstance)=>{
+                return (
+                  <Flex key={template.id} justify="space-between" className="themeList-item">
+                    <Flex vertical gap={8} justify="center">
+                      <div>{template.template_name}</div>
+                      <div className="font-12 color-7A8499">
+                        当前版本：{template.template_version}
+                        <Divider type="vertical" />
+                        语言：{JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===template?.languages_id)?.name}
+                        <Divider type="vertical" />
+                        保存时间：{dayjs(JSON.parse(template?.create_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
+                      </div>
+                    </Flex>
+                    <Flex gap={12}>
+                      <a href={`/theme/preview?preview=1&templateId=${template.id}`} target="_blank" >
+                        <DefaultButton text="预览" />
+                      </a>
+                      <ButtonDropdownSecondary 
+                        menu={{
+                          items:[
+                            {
+                              label: <a onClick={()=>{
+                                setInstanceStatus(template.id,"1").then(async res=>{
+                                  console.log(res)
+                                  // 
+                                  const { data } = await getTemplateInstanceUsing() as any;
+                                  shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
+
+                                  getTemplateInstanceList({
+                                    page: pagination.current,
+                                    limit: pagination.pageSize
+                                  }).then((res:any)=>{
+                                    if(res.data.length !== 0){
+                                      shopSetting.setTemplateInstanceList(res.data);
+                                      setPagination({
+                                        ...pagination,
+                                        total:res.count
+                                      })
+                                    }
+                                  }).catch(err=>{
+                                    console.log(err)
+                                  })
+
+                                })
+                              }}>发布</a>,
+                              key: '1',
+                            },
+                            {
+                              label: <div>复制</div>,
+                              key: '2',
+                            },
+                            {
+                              label: <RenameModal template={template} />,
+                              key: '3',
+                            },
+                            {
+                              label: <div>编辑语言</div>,
+                              key: '4',
+                            },
+                            {
+                              label: <a onClick={()=>navgate(`/theme/codeEditor/${template?.id}/${template?.template_id}`)}>编辑代码</a>,
+                              key: '5',
+                            },
+                            {
+                              label: <DownloadModal template={template} />,
+                              key: '6',
+                            },
+                            {
+                              label: <div className="color-F86140">删除</div>,
+                              key: '7',
+                            },
+                          ]
+                        }} 
+                        trigger={['click']} 
+                        text="操作"
+                      />
+                      <DefaultButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${template.id}`)} />
+                    </Flex>
+                  </Flex>
+                )
+              })}
+              {/*  */}
+              <Flex style={{marginTop:"24px"}} align="center" justify="space-between">
+                <span className="ant-pagination-total-text">
+                  共 {pagination.total} 条记录
+                </span>
+                <Pagination 
+                  {...pagination}
+                  onChange={handlePageChange}
+                  showSizeChanger={false}
+                />
               </Flex>
             </div>
           </Flex>
@@ -429,4 +530,4 @@ const Scoped = styled.div`
   
 `
 
-export default MyStylesCard
+export default observer(MyStylesCard)

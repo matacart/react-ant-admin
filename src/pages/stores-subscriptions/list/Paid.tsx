@@ -162,14 +162,14 @@ const layerText = [
 
 const priceMonth = {
     icon: '￥',
-    start: 199,
+    start: 299,
     base: 499,
     flagship: 999,
     text: '月'
 }
 const priceYear = {
     icon: '￥',
-    start: 1999,
+    start: 2999,
     base: 4999,
     flagship: 9999,
     text: '年',

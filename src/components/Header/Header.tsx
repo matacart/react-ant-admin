@@ -3,16 +3,18 @@ import styled from "styled-components";
 import { Ping, Question, SelectLang } from "../RightContent";
 import SelectDomain from "../RightContent/SelectDomain";
 import { AvatarDropdown, AvatarName } from "../RightContent/AvatarDropdown";
-import { GlobalOutlined, SearchOutlined } from "@ant-design/icons";
-import { history } from "@umijs/max";
+import { GithubOutlined, GlobalOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import { useEffect, useState } from 'react';
 import { observer } from "mobx-react-lite";
 import { currentUserStatus, getOptionType, getPlatformCategorySelect, getShippingcourier } from "@/services/y2/api";
+import { useNavigate } from "react-router-dom";
+import CheckUpdates from "../RightContent/CheckUpdates";
+import cookie from 'react-cookies';
 
-
-// const { token } = theme.useToken();
 
 function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialState:any}){
+
+    const navigate = useNavigate();
 
     // 剩余天数
     const [timer,setTimer] = useState(999);
@@ -20,11 +22,14 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
     const [userStatus,setUserStatus] = useState<any>({})
 
     const goMerchantApplication = ()=>{
-        history.push("/stores/merchantApplication")
+        navigate("/stores/merchantApplication")
     }
     const goCreateStores = ()=>{
-        history.push("/stores/create")
+        navigate("/stores/create")
     }
+
+    // 站点配置
+    const PLATFORM_INFO = JSON.parse(localStorage["MC_DATA_PLATFORM_INFO"] || "{}")
 
     useEffect(()=>{
         // 获取用户账号状态信息
@@ -37,24 +42,41 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                 RemainTime<=15 ? setHeight(100) : setHeight(60)
             }else{
                 setHeight(100)
+                // 默认店铺
+                cookie.save('domain', JSON.stringify({
+                    default_currency: "USD",
+                    default_lang: "en-us",
+                    default_lang_name: "English",
+                    domain_name: "",
+                    id: "0",
+                    package_id: "3",
+                    package_name: "高级版",
+                    second_domain: "htj4yk94",
+                    status: "1",
+                    store_logo: "",
+                    store_name: "YIKEC",
+                    timezone: "Pacific/Honolulu"
+                }), { path: '/' });
+
             }
         }).catch(()=>{
             setHeight(60)
         })
         // 获取商品属性类型
-        getOptionType().then((res:any)=>{
-            if(res.code == 0){
-              sessionStorage["productOptionType"] = JSON.stringify(res.data)
-            }else{
-            }
-        }).catch(err=>{
-            console.log("获取商品类型失败")
-        })
+        // getOptionType().then((res:any)=>{
+        //     if(res.code == 0){
+        //       sessionStorage["productOptionType"] = JSON.stringify(res.data)
+        //     }else{
+        //     }
+        // }).catch(err=>{
+        //     console.log("获取商品类型失败")
+        // })
         // 获取物流服务
-        getShippingcourier().then(res=>{
+        getShippingcourier().then((res:any)=>{
             localStorage["MC_DATA_SHIPPING_COURIER"] = JSON.stringify(res.data)
         }).catch(err=>{
         })
+
     },[])
 
 
@@ -70,17 +92,17 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">未开通套餐！请先开通套餐</div>
                     {/* 开通套餐 */}
-                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>开通套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>开通套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 3 ?
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">店铺已到期！购买套餐后恢复使用</div>
-                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 4 ? 
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">店铺已停用！</div>
-                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 5 ? 
                     <Flex className="tips-box" justify="center" align="center">
@@ -90,12 +112,12 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                 { userStatus.code == 0 && timer<=15 ? 
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">{timer == 0?"你的套餐剩余时间不足1天":"你的套餐剩余"+timer+"天"}</div>
-                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:""}
                 <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
                     <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>
                         <div><GlobalOutlined className="font-24" /></div>
-                        <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>history.push("/")}>MataCart</h1>
+                        <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>navigate("/")}>{PLATFORM_INFO.brand_name}</h1>
                     </div>
                     <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-60px"}}>
                         {url == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder="搜索" />}
@@ -103,6 +125,9 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                     <Flex className="mc-header-left-content" align='center'>
                         {userStatus.code == 0 && <div className="item">{url == "/stores/"?<></>:<SelectDomain/>}</div>}
                         <div className="item"><Question key="doc" /></div>
+                        <div className="item"><GithubOutlined key="github" onClick={()=>window.open('https://github.com/matacart/react-ant-admin/tree/master')} /></div>
+                        {/* 检查更新 */}
+                        <div className="item"><CheckUpdates /></div>
                         <div className="item"><SelectLang key="SelectLang" /></div>
                         <div className="item"><Ping key="Ping" /></div>
                         <div style={{margin:"0 20px"}} className="cursor-pointer"><AvatarDropdown>{<Avatar src={initialState?.currentUser?.avatar} />} <AvatarName /></AvatarDropdown></div>
@@ -137,6 +162,7 @@ const Scoped = styled.div`
             padding:8px;
             width: auto;
             line-height: 0;
+            /* cursor: pointer; */
         }
         .item:hover{
             background-color: rgba(0, 0, 0, 0.03)

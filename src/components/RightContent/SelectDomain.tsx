@@ -1,16 +1,13 @@
-import { getCurrencies, getCurrenciesList, getDomain, getDomainList, getTimeZoneList } from "@/services/y2/api";
+import { getCurrencies, getCurrenciesList, getDomainList, getTimeZoneList } from "@/services/y2/api";
 import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { result, set } from 'lodash';
 import { useIntl } from '@umijs/max';
 import cookie from 'react-cookies';
-import { history } from 'umi';
 import SuccessTag from "../Tag/SuccessTag";
 import DefaultTag from "../Tag/DefaultTag";
-import globalStore from "@/store/globalStore";
-
+import { useNavigate } from "react-router-dom";
 // 定义一个函数来高亮搜索词  
 function highlightSearchTerm(text: string, term: string) {
     // 使用正则表达式来匹配搜索词，并替换为带有<mark>标签的文本
@@ -51,6 +48,9 @@ async function getFilterResultArray(term: string) {
     2. 搜索防抖
 **/
 export default function SelectDomain() {
+
+    const navigate = useNavigate();
+
     const [domainListCurrent, setDomainListCurrent] = useState<any>([])
     const [defaultDomain, setDefaultDomain] = useState('')
     // 店铺列表popover是否展开
@@ -101,7 +101,7 @@ export default function SelectDomain() {
 
     // 货币符号
     const setCurrencys = (defaultCurrency:string)=>{
-        (defaultCurrency == "" || defaultCurrency == undefined) ? cookie.save('symbolLeft', '', { path: '/' }) : getCurrenciesList().then(res=>{
+        (defaultCurrency == "" || defaultCurrency == undefined) ? cookie.save('symbolLeft', '', { path: '/' }) : getCurrenciesList().then((res:any)=>{
             cookie.save('symbolLeft', res.data.filter(item=>item.code == defaultCurrency)[0].symbol_left, { path: '/' });
         })
     }
@@ -174,19 +174,21 @@ export default function SelectDomain() {
                 // 缓存店铺数据
                 sessionStorage["domain"] = JSON.stringify(domainList);
                 if(flag.length == 0){
-                    cookie.save('domain', JSON.stringify(domainList[0]), { path: '/' });
-                    cookie.save('default_lang', domainList[0].defaultLang, { path: '/' });
+                    const defaultDomain = {...domainList[0],domainName:domainList[0].domainName ? domainList[0].domainName : domainList[0].secondDomain+'.v.hdyshop.cn'}
+                    cookie.save('domain', JSON.stringify(defaultDomain), { path: '/' });
+                    cookie.save('default_lang', defaultDomain.defaultLang, { path: '/' });
                     setCurrencys(res.data[0]?.default_currency)
                     setTimeZone(cookie.load("domain")?.timeZone);
                     setDefaultDomain(res.data[0]?.store_name);
                     getDomainCurrent(res.data[0]?.id);
                 }else{
-                    cookie.save('domain', JSON.stringify(flag[0]), { path: '/' });
-                    cookie.save('default_lang', flag[0].defaultLang, { path: '/' });
+                    const defaultDomain = {...flag[0],domainName:flag[0].domainName ? flag[0].domainName : flag[0].secondDomain+'.v.hdyshop.cn'}
+                    cookie.save('domain', JSON.stringify(defaultDomain), { path: '/' });
+                    cookie.save('default_lang', defaultDomain.defaultLang, { path: '/' });
                     setCurrencys(res.data[0]?.default_currency)
                     setTimeZone(cookie.load("domain")?.timeZone);
-                    setDefaultDomain(flag[0].storeName);
-                    getDomainCurrent(flag[0].id);
+                    setDefaultDomain(defaultDomain.storeName);
+                    getDomainCurrent(defaultDomain.id);
                 }
             }).catch((error) => {
                 message.error('未获取到店铺列表，请检查网络')
@@ -280,7 +282,7 @@ export default function SelectDomain() {
             </div>}
             <div className="popover_footer">
                 <Button onClick={()=>{
-                    history.push('/stores/list')
+                    navigate('/stores/list')
                 }} type="primary" size='large' block>
                 {intl.formatMessage({
                     id:'menu.stores.manage'

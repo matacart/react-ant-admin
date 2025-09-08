@@ -1,15 +1,17 @@
 import { ArrowLeftOutlined, ExportOutlined, RightOutlined } from "@ant-design/icons"
 import { Button, Card, Divider, Flex, List, Select, TabsProps } from "antd"
-import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import baseInfoStore from "@/store/set-up/baseInfoStore";
+import baseInfoStore from "@/store/setUp/baseInfoStore";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 function Markets() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -34,7 +36,7 @@ function Markets() {
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                history.push("/settings/index")
+                                navigate("/settings/index")
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>

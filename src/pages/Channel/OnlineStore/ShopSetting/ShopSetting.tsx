@@ -1,38 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { history } from '@umijs/max';
 import styled from 'styled-components';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { useSleep } from '@/hooks/customHooks';
 import { TabsProps, Tabs } from 'antd';
 import MyStylesCard from './MyStylesCard';
 import StylesStoreCard from './StylesStoreCard';
+import { getTemplateInstanceUsing, getTemplateMallList } from '@/services/y2/api';
+import shopSetting from '@/store/channel/shopSetting/shopSetting';
 
 function ShopSetting(){
 
-    const [isSkeleton,setIsSkeleton] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true)
+
+    const [activeTab, setActiveTab] = useState('1'); // 添加状态控制当前激活的标签页
 
     const items: TabsProps['items'] = [
         {
           key: '1',
-          label: <div className='font-16 color-242833'>我的主题</div>,
-          children: <MyStylesCard />,
+          label: <div className='font-16 color-242833'>我的模板</div>,
+          children: <MyStylesCard onSwitchToStore={() => {
+            setActiveTab('2');
+          }} />,
         },
         {
           key: '2',
-          label: <div className='font-16 color-242833'>主题商城</div>,
+          label: <div className='font-16 color-242833'>模板商城</div>,
           children: <StylesStoreCard />,
         }
     ];
 
-    useEffect(()=>{
-        // getNavList("1","10").then(res=>{
-        //     setList(res.data)
-        //     setCount(res.count)
-        // }).catch((err)=>{
+    const fetchData = async ()=>{
+      try{
+        const [usingRes, mallRes] = await Promise.all([
+          getTemplateInstanceUsing() as any,
+          getTemplateMallList({
+            page: 1,
+            limit:10
+          }) as any
+        ]);
 
-        // }).finally(()=>{
-        //     setIsSkeleton(false)
-        // })
+        shopSetting.setTemplateMallList(mallRes.data)
+        shopSetting.setTemplateInstanceUsing(usingRes.data)
+
+
+        if(usingRes.data.toString() !== "[]"){
+          console.log(usingRes)
+        }
+
+      }catch(err){
+        console.log("获取数据失败",err)
+      }finally{
+        setIsSkeleton(false)
+      }
+    }
+
+    useEffect(()=>{
+      fetchData()
     },[]);
 
   return (
@@ -45,7 +67,7 @@ function ShopSetting(){
                     </div>
                 </div>
                 <div className='create-content'>
-                    <Tabs defaultActiveKey="1" items={items} />
+                    <Tabs activeKey={activeTab} onChange={(activeKey:string)=>setActiveTab(activeKey)} items={items} />
                 </div>
             </div>
         </div>}

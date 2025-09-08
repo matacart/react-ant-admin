@@ -1,17 +1,15 @@
 import { Line } from '@ant-design/plots';
 import { DatePicker, Button,Tooltip,Popover,Select  } from "antd";
-// // 
-{/* <script src="https://unpkg.com/@antv/g2plot@latest/dist/g2plot.js"></script> */}
 import { Masonry } from "react-masonry-component2";
 import { getAnalyse } from "@/services/analyse/api"
 import { ExpandOutlined,QuestionCircleOutlined,InfoCircleOutlined,CloseOutlined,RightOutlined} from '@ant-design/icons';
 import React, { useState,useRef, useEffect } from 'react';
-import './index.scss';
 // 日期
 import type { TimeRangePickerProps } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 import { useSleep } from '@/hooks/customHooks';
+import styled from 'styled-components';
 
 // 格式化日期
 function formatDate(str:string) {
@@ -112,7 +110,8 @@ function getLastYear(time:Date){
   // console.log(currTime)
   return formatDate((currTime.getFullYear()-1)+"-"+(currTime.getMonth()+1)+"-"+(currTime.getDate()));
 }
-export default function(this: any) {
+
+export default function Center(this: any) {
 
   const [loading,setLoading] = useState(false);
 
@@ -879,7 +878,7 @@ export default function(this: any) {
   }, []);
 
   return (
-    <div>
+    <Scoped>
       <div className="head">
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ fontSize: '25px', fontWeight: 'bold' }}>分析</div>
@@ -1148,6 +1147,275 @@ export default function(this: any) {
         }
         </Masonry>
       </div>
-    </div>
+    </Scoped>
   )
 }
+
+const Scoped = styled.div`
+    .head{
+        margin-bottom:20px;
+        display: flex;
+        align-items:center;
+        justify-content:space-between;
+    }
+    .date {
+        display: flex;
+        margin-bottom: 20px;
+        justify-content:space-between;
+    }
+    .sell {
+        background-color: #ffffff;
+        padding:20px;
+        border-radius:8px;
+        border: 1px solid #ccc;
+        box-shadow:0 2px 4px rgba(0,0,0,0.1);
+        width:auto;
+        height:auto;
+        margin-bottom:20px;
+        .sell-message{
+            font-weight:bold;
+        }
+    }
+    // 布局
+
+    .shadow{
+        position:relative;
+    }
+    .shadow-container {
+        position: relative;
+        transition: opacity 0.3s;
+    }
+    .shadow-1{
+        padding:16px !important;
+        align-items:center;
+    }
+    .shadow-1-1 {
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-direction: column;
+    }
+    .shandow-1-item {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content:space-between;
+        line-height:22px;
+    }
+    .shandow-1-item-title {
+        border-bottom: 1px dashed #b8becc;
+        color: #242833;
+        font-size: 14px;
+        font-weight: 600;
+        word-wrap: break-word;
+    }
+    .shadow-2-item{
+        margin-top:8px;
+        color:#242833;
+        font-size:24px;
+        font-variant:normal;
+        line-height:1;
+        word-wrap:break-word;
+        font-feature-settings:normal;
+    }
+    .shadow-3-item{
+        margin-top:8px;
+        font-weight:normal;
+    }
+    .shadow-1-2{
+        -webkit-box-flex:1;
+        -ms-flex:1;
+        flex:1;
+        margin-top:16px;
+    }
+    .shadow-1-2-item{
+        display:flex;
+        -webkit-box-pack:justify;
+        justify-content:space-between;
+        margin-bottom:12px;
+        font-size:16px;
+        line-height:1.2;
+    }
+    .shadow-1-2-container {
+        box-sizing: border-box;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        width: 0;
+    }
+    .shadow-1-2-left {
+        height: 44px;
+        background-color: #f7f8fb;
+        text-align: center;
+    }
+    .shadow-1-2-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .shadow-1-2-right{
+        display:flex;
+        position:relative;
+        width:70px;
+        height:44px;
+        margin-left:8px;
+    }
+
+
+
+    .arrow_2k {
+        position: absolute;
+        z-index: 2;
+
+    }
+    .right_2n {
+        display: inline-block;
+        width: 70px;
+        text-align: center;
+    }
+    .value_5s{
+        position:absolute;
+        z-index:1;
+        -webkit-box-pack:center;
+        width:100%;
+    }
+    .ratio {
+        color: #242833;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+    .thinLine {
+        display: inline-block;
+    }
+    .treadRation {
+        position: relative;
+        z-index: 1;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .noRate {
+        display: inline-block;
+        padding-left: 2px;
+    }
+    .legendWrapper{
+        display:flex;
+        justify-content:center;
+        border-radius:4px;
+        -ms-flex-wrap:wrap;
+        flex-wrap:wrap;
+        margin-top:12px;
+        background:#f8f9fc;
+        font-size:12px;
+        padding:6px;
+    }
+    .container_1B{
+        flex-shrink:1;
+        display:flex;
+        -webkit-box-pack:center;
+        justify-content:center;
+        -webkit-box-align:center;
+        -ms-flex-align:center;
+        align-items:center;
+        flex-wrap:wrap;
+    }
+    .legend_k{
+        display:flex;
+        -webkit-box-align:center;
+        align-items:center;
+        padding:0 6px;
+        cursor:pointer;
+    }
+    .iconWrapper {
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        height: 10px;
+    }
+    .lineIcon{
+        display:inline-block;
+        width:10px;
+        border-top:2px solid #356dff;
+        margin-right:4px;
+        vertical-align:middle;
+        margin-left:1px;
+        border-bottom:0;
+        border-radius:2px;
+        height:0;
+    }
+    .bottomBox{
+        display:flex;
+        -webkit-box-pack:justify;
+        justify-content:space-between;
+        margin-top:12px;
+    }
+    .title_3k {
+        border-bottom: 1px dashed #b8becc;
+        color: #242833;
+        font-weight: 600;
+        word-wrap: break-word;
+    }
+
+
+
+
+    // ?????
+    // 提示样式
+    .visitorData{
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        border: 1px solid rgba(53, 109, 255, .2);
+        padding: 8px 16px;
+        margin-top: 8px;
+        background-color: #E2F0FF;
+        .visitor{
+            display: flex;
+            div{
+            margin-right: 8px;
+            }
+        }
+    }
+    .contributionDegree{
+        color: rgb(122, 132, 153);
+        background-color: #f8f9fc;
+        padding: 10px 16px;
+    .num{
+        margin-top: 10px;
+        font-size: 20px;
+        color: #000000;
+        font-weight: 500;
+    }
+    }
+    // 
+    // .rate{
+    //   color: rgb(122, 132, 153);
+    //   background-color: #f8f9fc;
+    //   padding: 10px 16px;
+    //   text-align: center;
+    //   .num{
+    //     margin-top: 10px;
+    //     color: #000000;
+    //   }
+    // }
+
+    .rate{
+        margin-top: 10px;
+        color: rgb(122, 132, 153);
+        background-color: #f8f9fc;
+        padding: 10px 16px;
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+        div{
+            flex: 1;
+        }
+        .num{
+            margin-top: 10px;
+            color: #000000;
+        }
+    }
+
+`

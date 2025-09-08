@@ -86,8 +86,7 @@ export default {
   'menu.products.gift-cards':'礼品卡',
   'menu.products.giftCardsNew':'新增礼品卡',
 
-  'menu.appStore':'应用市场',
-  'menu.orderInvoiceCustomization':'订单票据定制插件',
+  
 
   'menu.customer': '客户',
   'menu.customer.management': '客户管理',
@@ -96,10 +95,12 @@ export default {
   'menu.discount': '折扣',
 
   'menu.marketing': '营销',
+  'menu.marketing.overview': '店铺营销',
   'menu.marketing.campaigns': '宣传活动',
   'menu.marketing.automation': '自动化',
 
   'menu.analyse': '分析',
+  'menu.analyse.center' : '数据分析',
   'menu.analyse.reports': '报告',
   'menu.analyse.realtime': '实时分析',
 
@@ -107,6 +108,9 @@ export default {
   'menu.warehouse':"仓库",
   'menu.warehouse.inventory':"库存",
   'menu.warehouse.transfers':"转移",
+
+  'menu.appStore':'应用市场',
+  'menu.orderInvoiceCustomization':'订单票据定制插件',
 
   'menu.website':"在线商店",
   'menu.website.shopSetting':'店铺设计',

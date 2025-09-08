@@ -7,7 +7,6 @@ type CustomIconComponentProps = GetProps<typeof Icon>;
 
 // 自定义图标 组件 全局
 
-
 const HeartSvg = () => (
   <svg width="1em" height="1em" fill="currentColor" viewBox="0 0 1024 1024">
     <title>heart icon</title>
@@ -81,9 +80,10 @@ const QuitSvg = () => (
 )
 
 const RemitSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconImport" font-size="18">
-    <path d="M9.35 2a.1.1 0 0 0-.1.1v9.348a.1.1 0 0 1-.17.07L7.6 10.04a.1.1 0 0 0-.141 0l-.92.92a.1.1 0 0 0 0 .141l2.93 2.93a.75.75 0 0 0 1.06 0l2.93-2.93a.1.1 0 0 0 0-.141l-.92-.92a.1.1 0 0 0-.141 0l-1.478 1.479a.1.1 0 0 1-.171-.071V2.1a.1.1 0 0 0-.1-.1h-1.3ZM2 6.25a.75.75 0 0 0-.75.75v10c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V7a.75.75 0 0 0-.75-.75h-2.4a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h1.55a.1.1 0 0 1 .1.1v8.3a.1.1 0 0 1-.1.1H2.85a.1.1 0 0 1-.1-.1v-8.3a.1.1 0 0 1 .1-.1H3.9a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1H2Z"></path>
-  </svg>
+  // <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconImport" font-size="18">
+  //   <path d="M9.35 2a.1.1 0 0 0-.1.1v9.348a.1.1 0 0 1-.17.07L7.6 10.04a.1.1 0 0 0-.141 0l-.92.92a.1.1 0 0 0 0 .141l2.93 2.93a.75.75 0 0 0 1.06 0l2.93-2.93a.1.1 0 0 0 0-.141l-.92-.92a.1.1 0 0 0-.141 0l-1.478 1.479a.1.1 0 0 1-.171-.071V2.1a.1.1 0 0 0-.1-.1h-1.3ZM2 6.25a.75.75 0 0 0-.75.75v10c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V7a.75.75 0 0 0-.75-.75h-2.4a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h1.55a.1.1 0 0 1 .1.1v8.3a.1.1 0 0 1-.1.1H2.85a.1.1 0 0 1-.1-.1v-8.3a.1.1 0 0 1 .1-.1H3.9a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1H2Z"></path>
+  // </svg>
+  <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.35 2a.1.1 0 0 0-.1.1v9.348a.1.1 0 0 1-.17.07L7.6 10.04a.1.1 0 0 0-.141 0l-.92.92a.1.1 0 0 0 0 .141l2.93 2.93a.75.75 0 0 0 1.06 0l2.93-2.93a.1.1 0 0 0 0-.141l-.92-.92a.1.1 0 0 0-.141 0l-1.478 1.479a.1.1 0 0 1-.171-.071V2.1a.1.1 0 0 0-.1-.1h-1.3ZM2 6.25a.75.75 0 0 0-.75.75v10c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V7a.75.75 0 0 0-.75-.75h-2.4a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h1.55a.1.1 0 0 1 .1.1v8.3a.1.1 0 0 1-.1.1H2.85a.1.1 0 0 1-.1-.1v-8.3a.1.1 0 0 1 .1-.1H3.9a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1H2Z" fill="#474F5E"></path></svg>
 )
 
 const ExportSvg = () => (
@@ -404,6 +404,22 @@ const FillLockSvg = () => (
   </svg>
 )
 
+const HelpSvg = () => (
+  <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M9.001 4c-.853 0-1.658.295-2.268.827-.634.555-.983 1.3-.983 2.099v.154c0 .09.073.163.163.163h.975c.09 0 .162-.073.162-.163v-.154c0-.896.876-1.626 1.951-1.626 1.075 0 1.95.73 1.95 1.626 0 .632-.446 1.21-1.14 1.477a2.271 2.271 0 0 0-1.462 2.15v.437c0 .09.073.162.162.162h.976c.089 0 .162-.073.162-.162v-.462a.981.981 0 0 1 .628-.91c1.199-.461 1.973-1.518 1.973-2.692.002-.799-.348-1.544-.981-2.099A3.425 3.425 0 0 0 9 4ZM8.426 13.84a.813.813 0 1 1 1.15-1.15.813.813 0 0 1-1.15 1.15Z" fill="#474F5E"></path><path d="M9 .25a8.75 8.75 0 1 0 0 17.5A8.75 8.75 0 0 0 9 .25ZM1.75 9a7.25 7.25 0 1 1 14.5 0 7.25 7.25 0 0 1-14.5 0Z" fill="#474F5E"></path></svg>
+)
+const PreviewSvg = () => (
+  <svg viewBox="64 64 896 896" focusable="false" data-icon="eye" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z"></path></svg>
+)
+const FolderSvg = () => (
+  <svg width="1em" height="1em" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 1.8C0 .695.695 0 1.8 0h10.03c1.105 0 1.795.695 1.795 1.8v.881H4.683c-.678 0-1.272.454-1.45 1.108l-1.056 3.87a.69.69 0 1 0 1.333.363l1.055-3.87a.122.122 0 0 1 .118-.09h9.497a1.997 1.997 0 0 1 1.95 2.358l-1.394 6.08c-.173.951-.8 1.5-1.766 1.5H1.8C.695 14 0 13.305 0 12.2V1.8Z" fill="#474F5E"></path></svg>
+)
+const StartSvg = () => (
+  <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7 323.1 772l36.1-210.3-152.8-149L417.6 382 512 190.7 606.4 382l211.2 30.7-152.8 148.9z"></path></svg>
+)
+const CompressedFileSvg = () => (
+  <svg width="1em" height="1em" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4h4.8A1.2 1.2 0 0124 5.2v17.6a1.2 1.2 0 01-1.2 1.2H18V4z" fill="#FE9E0F"></path><path d="M0 1.2A1.2 1.2 0 011.2 0h15.6A1.2 1.2 0 0118 1.2V24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFC164"></path><path d="M0 1.2A1.2 1.2 0 011.2 0H6v24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFCE85"></path><path fill="#FFC774" d="M6 0h6v24H6z"></path><path fill="#FFF4E3" d="M4 0h2v1.5H4zM4 3h2v1.5H4zM4 6h2v1.5H4zM4 9h2v1.5H4zM6 1.5h2V3H6zM6 4.5h2V6H6zM6 7.5h2V9H6z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 12a.5.5 0 00-.5.5V16a1 1 0 001 1h2a1 1 0 001-1v-3.5a.5.5 0 00-.5-.5h-3zM7 15H5v1h2v-1z" fill="#FFF4E3"></path><path fill="#FFCE85" d="M5 15h1v1H5z"></path><path fill="#FFC774" d="M6 15h1v1H6z"></path></svg>
+)
+
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
 );
@@ -650,10 +666,22 @@ export const FillLockIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={FillLockSvg} {...props} />
 );
 
+export const HelpIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={HelpSvg} {...props} />
+);
+export const PreviewIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PreviewSvg} {...props} />
+);
+export const FolderIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={FolderSvg} {...props} />
+);
+export const StartIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={StartSvg} {...props} />
+);
 
-
-
-
+export const CompressedFileIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CompressedFileSvg} {...props} />
+);
 
 
 
@@ -744,6 +772,53 @@ const EditorTextRightSvg = () => (
 //     <circle cx="4" cy="4" r="3" stroke="#FE9E0F" stroke-width="2"></circle>
 //   </svg>
 // )
+const EditorTextImgSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 4C4.67157 4 4 4.67157 4 5.5V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V5.5C20 4.67157 19.3284 4 18.5 4H5.5ZM13 7.5C13 7.22386 13.2239 7 13.5 7H16.5C16.7761 7 17 7.22386 17 7.5V8C17 8.27614 16.7761 8.5 16.5 8.5H13.5C13.2239 8.5 13 8.27614 13 8V7.5ZM13 11.5C13 11.2239 13.2239 11 13.5 11H16.5C16.7761 11 17 11.2239 17 11.5V12C17 12.2761 16.7761 12.5 16.5 12.5H13.5C13.2239 12.5 13 12.2761 13 12V11.5ZM7.5 15H16.5C16.7761 15 17 15.2239 17 15.5V16C17 16.2761 16.7761 16.5 16.5 16.5H7.5C7.22386 16.5 7 16.2761 7 16V15.5C7 15.2239 7.22386 15 7.5 15ZM7 7.5C7 7.22386 7.22386 7 7.5 7H10.5C10.7761 7 11 7.22386 11 7.5V12C11 12.2761 10.7761 12.5 10.5 12.5H7.5C7.22386 12.5 7 12.2761 7 12V7.5Z" fill="#474F5E"></path></svg>
+)
+
+const EditorCarouselImgSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.5 5.5C4.5 4.67157 5.17157 4 6 4H18C18.8284 4 19.5 4.67157 19.5 5.5V18.5C19.5 19.3284 18.8284 20 18 20H6C5.17157 20 4.5 19.3284 4.5 18.5V5.5ZM8.5 10C9.32843 10 10 9.32843 10 8.5C10 7.67157 9.32843 7 8.5 7C7.67157 7 7 7.67157 7 8.5C7 9.32843 7.67157 10 8.5 10ZM9.23077 18.5H12.9231H18V15L15.5982 12.398C15.4002 12.1835 15.0613 12.1835 14.8634 12.398L11.1058 16.4688L9.14186 14.2736C8.94311 14.0515 8.59535 14.0515 8.3966 14.2736L6 16.9524V18.5H9.23077ZM1 7C1 6.44772 1.44772 6 2 6C2.55228 6 3 6.44772 3 7V17C3 17.5523 2.55228 18 2 18C1.44772 18 1 17.5523 1 17V7ZM21 7C21 6.44772 21.4477 6 22 6C22.5523 6 23 6.44772 23 7V17C23 17.5523 22.5523 18 22 18C21.4477 18 21 17.5523 21 17V7Z" fill="#474F5E"></path></svg>
+)
+const EditorRichTextSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 4C4.67157 4 4 4.67157 4 5.5V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V5.5C20 4.67157 19.3284 4 18.5 4H5.5ZM17 8.75L7 8.75C6.72386 8.75 6.5 8.52614 6.5 8.25V7.75C6.5 7.47386 6.72386 7.25 7 7.25H17C17.2761 7.25 17.5 7.47386 17.5 7.75V8.25C17.5 8.52614 17.2761 8.75 17 8.75ZM17 12.75L7 12.75C6.72386 12.75 6.5 12.5261 6.5 12.25V11.75C6.5 11.4739 6.72386 11.25 7 11.25L17 11.25C17.2761 11.25 17.5 11.4739 17.5 11.75V12.25C17.5 12.5261 17.2761 12.75 17 12.75ZM13 16.25C13 16.5261 12.7761 16.75 12.5 16.75L7 16.75C6.72386 16.75 6.5 16.5261 6.5 16.25V15.75C6.5 15.4739 6.72386 15.25 7 15.25H12.5C12.7761 15.25 13 15.4739 13 15.75V16.25Z" fill="#474F5E"></path></svg>
+)
+
+const EditorVideoSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 4C4.67157 4 4 4.67157 4 5.5V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V5.5C20 4.67157 19.3284 4 18.5 4H5.5ZM14.7596 12.4319L10.2519 15.0614C9.91861 15.2558 9.5 15.0154 9.5 14.6295L9.5 9.37052C9.5 8.98462 9.91861 8.74419 10.2519 8.93863L14.7596 11.5681C15.0904 11.761 15.0904 12.239 14.7596 12.4319Z" fill="#474F5E"></path></svg>
+)
+
+const EditorMultilevelFilterSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 5.5C4 4.67188 4.67139 4 5.5 4H18.5C19.3286 4 20 4.67188 20 5.5V18.5C20 19.3281 19.3286 20 18.5 20H5.5C5.34424 20 5.19434 19.9766 5.05322 19.9326C4.44287 19.7422 4 19.1729 4 18.5V5.5ZM14.844 7.70894C15.3417 6.98512 14.8235 6 13.9451 6H7.09279C6.21441 6 5.6962 6.98512 6.19383 7.70894L8.82655 11.5383C8.95158 11.7202 9.01851 11.9357 9.01851 12.1564V16.2474C9.01851 16.5949 9.18408 16.9217 9.46434 17.1272L10.2825 17.7271C11.0031 18.2555 12.0185 17.7409 12.0185 16.8473V12.1576C12.0185 11.9369 12.0854 11.7214 12.2105 11.5396L14.844 7.70894ZM14.3078 12.4286C14.3078 12.1919 14.4996 12 14.7363 12H17.5715C17.8082 12 18.0001 12.1919 18.0001 12.4286V12.956C18.0001 13.1927 17.8082 13.3846 17.5715 13.3846H14.7363C14.4996 13.3846 14.3078 13.1927 14.3078 12.956V12.4286ZM14.7365 14.3078C14.4998 14.3078 14.3079 14.4996 14.3079 14.7363V15.2638C14.3079 15.5005 14.4998 15.6924 14.7365 15.6924H17.5717C17.8083 15.6924 18.0002 15.5005 18.0002 15.2638V14.7363C18.0002 14.4996 17.8083 14.3078 17.5717 14.3078H14.7365ZM14.3079 17.0441C14.3079 16.8074 14.4998 16.6155 14.7365 16.6155H17.5717C17.8083 16.6155 18.0002 16.8074 18.0002 17.0441V17.5716C18.0002 17.8083 17.8083 18.0001 17.5717 18.0001H14.7365C14.4998 18.0001 14.3079 17.8083 14.3079 17.5716V17.0441Z" fill="#474F5E"></path></svg>
+)
+
+const EditorCollectionListSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.94287 14.8838L5.36416 18.9484C5.44957 19.7724 6.1868 20.3711 7.01081 20.2857L9.02037 20.0774C8.9505 20.0071 8.88406 19.9318 8.82153 19.8518L4.94287 14.8838Z" fill="#474F5E"></path><path d="M5.93164 14.5244L9.61035 19.2363C10.1202 19.8893 11.0628 20.0053 11.7158 19.4955L12.9172 18.5575L5.93164 14.5244Z" fill="#474F5E"></path><path d="M4.93588 12.1012C5.01386 12.5824 5.32149 13.0166 5.76622 13.2734L14.671 18.4146C15.4513 18.8651 16.4197 18.6487 16.8339 17.9313L20.7355 11.1735C21.1497 10.456 20.8529 9.5092 20.0726 9.05867L11.1678 3.91752C10.7231 3.66075 10.1932 3.61148 9.7375 3.78453L4.30646 5.84694C4.09198 5.92839 3.96976 6.14009 4.00646 6.36656L4.93588 12.1012ZM9.09918 8.96057C8.68497 9.67801 7.76758 9.92382 7.05014 9.50961C6.3327 9.0954 6.08689 8.17801 6.50111 7.46057C6.91532 6.74313 7.8327 6.49732 8.55014 6.91153C9.26758 7.32575 9.5134 8.24313 9.09918 8.96057Z" fill="#474F5E"></path></svg>
+)
+
+
+const EditorFeaturedCollectionSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.5221 18.6612L13.624 18.7631C14.2098 19.3488 15.1595 19.3488 15.7453 18.7631L21.2631 13.2453C21.8488 12.6595 21.8488 11.7098 21.2631 11.124L14.5784 4.43935C14.2446 4.1055 13.773 3.94832 13.3056 4.01509L12.0069 4.20061L18.5806 10.7743C19.3616 11.5553 19.3616 12.8216 18.5806 13.6027L13.5221 18.6612Z" fill="#474F5E"></path><path d="M2.51509 10.8082C2.44832 11.2756 2.6055 11.7471 2.93935 12.081L9.624 18.7656C10.2098 19.3514 11.1595 19.3514 11.7453 18.7656L17.2631 13.2479C17.8488 12.6621 17.8488 11.7123 17.2631 11.1266L10.5784 4.44191C10.2446 4.10806 9.773 3.95087 9.30561 4.01764L3.73514 4.81343C3.51515 4.84485 3.3423 5.0177 3.31087 5.23769L2.51509 10.8082ZM6.50434 9.50727C5.67592 9.50727 5.00434 8.8357 5.00434 8.00727C5.00434 7.17885 5.67592 6.50727 6.50434 6.50727C7.33277 6.50727 8.00434 7.17885 8.00434 8.00727C8.00434 8.8357 7.33277 9.50727 6.50434 9.50727Z" fill="#474F5E"></path></svg>
+)
+
+const EditorFeaturedProductSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.78804 11.4253C3.72127 11.8927 3.87845 12.3642 4.2123 12.6981L11.8137 20.2995C12.3995 20.8853 13.3492 20.8853 13.935 20.2995L20.299 13.9355C20.8848 13.3497 20.8848 12.4 20.299 11.8142L12.6976 4.21279C12.3637 3.87894 11.8922 3.72176 11.4248 3.78853L5.11387 4.69009C4.89388 4.72152 4.72103 4.89436 4.6896 5.11435L3.78804 11.4253ZM7.99999 9.50041C7.17157 9.50041 6.49999 8.82884 6.49999 8.00041C6.49999 7.17198 7.17157 6.50041 7.99999 6.50041C8.82842 6.50041 9.49999 7.17198 9.49999 8.00041C9.49999 8.82884 8.82842 9.50041 7.99999 9.50041Z" fill="#474F5E"></path></svg>
+)
+
+const EditorShoppableImageSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 5.5C2.5 4.67157 3.17157 4 4 4H16C16.8284 4 17.5 4.67157 17.5 5.5V18.5C17.5 19.3284 16.8284 20 16 20H4C3.17157 20 2.5 19.3284 2.5 18.5V5.5ZM19 7.75C19 7.33579 19.3358 7 19.75 7H22.25C22.6642 7 23 7.33579 23 7.75C23 8.16421 22.6642 8.5 22.25 8.5H19.75C19.3358 8.5 19 8.16421 19 7.75ZM19.75 15C19.3358 15 19 15.3358 19 15.75C19 16.1642 19.3358 16.5 19.75 16.5H22.25C22.6642 16.5 23 16.1642 23 15.75C23 15.3358 22.6642 15 22.25 15H19.75ZM19 11.75C19 11.3358 19.3358 11 19.75 11H21.25C21.6642 11 22 11.3358 22 11.75C22 12.1642 21.6642 12.5 21.25 12.5H19.75C19.3358 12.5 19 12.1642 19 11.75ZM5.25897 12.2605C5.06219 12.0637 4.96954 11.7858 5.00889 11.5103L5.54031 7.79038C5.55883 7.66071 5.66071 7.55883 5.79038 7.54031L9.51027 7.00889C9.78577 6.96954 10.0637 7.06219 10.2605 7.25897L14.741 11.7395C15.0863 12.0848 15.0863 12.6446 14.741 12.9899L10.9899 16.741C10.6446 17.0863 10.0848 17.0863 9.73951 16.741L5.25897 12.2605ZM6.60742 9.49153C6.60742 9.97983 7.00327 10.3757 7.49157 10.3757C7.97988 10.3757 8.37573 9.97983 8.37573 9.49153C8.37573 9.00323 7.97988 8.60738 7.49157 8.60738C7.00327 8.60738 6.60742 9.00323 6.60742 9.49153Z" fill="#474F5E"></path></svg>
+)
+
+const EditorSignUpAndSaveSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 4C4.67157 4 4 4.67157 4 5.5V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V5.5C20 4.67157 19.3284 4 18.5 4H5.5ZM6.5 8.75013C6.5 8.47399 6.72386 8.25013 7 8.25013H17C17.2761 8.25013 17.5 8.47399 17.5 8.75013V9.00153L11.728 11.2817L6.5 9.00993V8.75013ZM11.9898 12.791L17.5 10.6143V15.2501C17.5 15.5263 17.2761 15.7501 17 15.7501H7C6.72386 15.7501 6.5 15.5263 6.5 15.2501V10.6454L11.4154 12.7813L11.7006 12.9053L11.9898 12.791Z" fill="#474F5E"></path></svg>
+)
+
+const EditorIconListSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 5.5C4 4.67157 4.67157 4 5.5 4H18.5C19.3284 4 20 4.67157 20 5.5V18.5C20 19.3284 19.3284 20 18.5 20H5.5C4.67157 20 4 19.3284 4 18.5V5.5ZM17.5 12C17.5 15.0376 15.0376 17.5 12 17.5C8.96243 17.5 6.5 15.0376 6.5 12C6.5 8.96243 8.96243 6.5 12 6.5C15.0376 6.5 17.5 8.96243 17.5 12ZM9.40039 10.1C9.40039 9.49249 9.89288 9 10.5004 9H12.7504C13.7721 9 14.6004 9.82827 14.6004 10.85C14.6004 11.5972 14.1574 12.2409 13.5198 12.5329L14.6365 14.3942C14.7965 14.6608 14.6044 15 14.2935 15H13.9349C13.7593 15 13.5966 14.9079 13.5062 14.7573L12.2714 12.7H10.6004V14.5C10.6004 14.7761 10.3765 15 10.1004 15H9.90039C9.62425 15 9.40039 14.7761 9.40039 14.5V10.1ZM10.6004 11.5H12.7504C13.1094 11.5 13.4004 11.209 13.4004 10.85C13.4004 10.491 13.1094 10.2 12.7504 10.2H10.6004V11.5Z" fill="#474F5E"></path></svg>
+)
+const EditorBlogSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.2929 17.0071L17.5 12.8L18.5929 11.7071C18.9834 11.3166 19.6166 11.3166 20.0071 11.7071L21.2929 12.9929C21.6834 13.3834 21.6834 14.0166 21.2929 14.4071L15.9929 19.7071C15.8054 19.8946 15.551 20 15.2858 20H13.5C13.2239 20 13 19.7761 13 19.5V17.7142C13 17.449 13.1054 17.1946 13.2929 17.0071Z" fill="#474F5E"></path><path d="M17.5 12.7998L20.2 15.4998" stroke="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 4C3.67157 4 3 4.67157 3 5.5V18.5C3 19.3284 3.67157 20 4.5 20H11C11.1684 20 11.3351 19.9931 11.5 19.9795V17.4142C11.5 17.149 11.6054 16.8946 11.7929 16.7071L16 12.5L17 11.5V5.5C17 4.67157 16.3284 4 15.5 4H4.5Z" fill="#474F5E"></path><path d="M5 14.5C5 14.2239 5.22386 14 5.5 14H8.5C8.77614 14 9 14.2239 9 14.5V15C9 15.2761 8.77614 15.5 8.5 15.5H5.5C5.22386 15.5 5 15.2761 5 15V14.5Z" fill="white"></path><path d="M5 17.5C5 17.2239 5.22386 17 5.5 17H7.5C7.77614 17 8 17.2239 8 17.5V18C8 18.2761 7.77614 18.5 7.5 18.5H5.5C5.22386 18.5 5 18.2761 5 18V17.5Z" fill="white"></path><path d="M5 6.5C5 6.22386 5.22386 6 5.5 6H11.5C11.7761 6 12 6.22386 12 6.5V11.5C12 11.7761 11.7761 12 11.5 12H5.5C5.22386 12 5 11.7761 5 11.5V6.5Z" fill="white"></path></svg>
+)
+
 
 export const EditorHomeIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorHomeSvg} {...props} />
@@ -784,17 +859,51 @@ export const EditorTextLeftIcon = (props: Partial<CustomIconComponentProps>) => 
 export const EditorTextLeftAIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorTextLeftASvg} {...props} />
 );
-
 export const EditorTextCenterIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorTextCenterSvg} {...props} />
 );
 export const EditorTextCenterAIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorTextCenterASvg} {...props} />
 );
-
 export const EditorTextRightIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorTextRightSvg} {...props} />
 );
 export const EditorTextRightAIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorTextRightASvg} {...props} />
+);
+export const EditorTextImgIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorTextImgSvg} {...props} />
+);
+export const EditorCarouselImgIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorCarouselImgSvg} {...props} />
+);
+export const EditorRichTextIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorRichTextSvg} {...props} />
+);
+export const EditorVideoIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorVideoSvg} {...props} />
+);
+export const EditorMultilevelFilterIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorMultilevelFilterSvg} {...props} />
+);
+export const EditorCollectionListIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorCollectionListSvg} {...props} />
+);
+export const EditorFeaturedCollectionIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorFeaturedCollectionSvg} {...props} />
+);
+export const EditorFeaturedProductIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorFeaturedProductSvg} {...props} />
+);
+export const EditorShoppableImageIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorShoppableImageSvg} {...props} />
+);
+export const EditorSignUpAndSaveIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorSignUpAndSaveSvg} {...props} />
+);
+export const EditorIconListIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorIconListSvg} {...props} />
+);
+export const EditorBlogIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorBlogSvg} {...props} />
 );

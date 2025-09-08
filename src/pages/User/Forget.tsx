@@ -3,8 +3,7 @@ import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl, Link ,history,useModel} from '@umijs/max';
 import React,{ useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { request } from '@umijs/max';
-import { getCountryList, getFakeCaptcha, resetPassword } from '@/services/y2/api';
+import { getFakeCaptcha, resetPassword } from '@/services/y2/api';
 import styled from 'styled-components';
 import { UnfoldIcon } from '@/components/Icons/Icons';
 
@@ -87,6 +86,7 @@ export default function LoginForm() {
             <h3>
                 <FormattedMessage id="forget.title" defaultMessage="忘记密码" />
             </h3>
+            <p className='login-tip'>请验证你的登录账号，以进行重设密码</p>
             <div className="login-form-content">
                 <div className='user-box' ref={Ref}></div>
                 <Form
@@ -286,6 +286,12 @@ export default function LoginForm() {
 }
 
 const Scoped = styled.div`
+    .login-tip{
+        font-weight: 600;
+        font-size: 16px;
+        margin-top: -20px;
+        margin-bottom: 32px;
+    }
 
     .user-box{
         position: relative;

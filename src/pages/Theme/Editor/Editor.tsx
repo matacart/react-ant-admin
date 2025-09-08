@@ -1,46 +1,95 @@
-import {
-  DefaultFooter,
-  PageContainer,
-  ProLayout,
-} from '@ant-design/pro-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from './Header';
-import { Route } from 'react-router-dom';
 import Left from './Left/Left';
 import Right from './Right.tsx/Right';
 import { Flex, Spin } from 'antd';
-import styled from 'styled-components';
-
+import styled, { createGlobalStyle } from 'styled-components';
 import home from "./data/InstalledSections/home.json"
 import editor from '@/store/theme/editor';
-export default function Editor() {
+import { observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
+import SkeletonCard from '@/components/Skeleton/SkeletonCard';
+import { useSearchParams } from 'react-router-dom';
 
+
+function Editor() {
+
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const templateId = searchParams.get("templateId");
+
+    const [isSkeleton,setIsSkeleton] = useState(true);
+
+    const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
       // 获取组件数据
-      editor.setTemplateData(home.data)
+      document.body.style.height = "100vh !important";
+        editor.setTemplateData(home.data);
+        setIsSkeleton(false);
     }, [])
 
+    const [iframeReady, setIframeReady] = useState(false);
+
+    // 监听iframe就绪消息
+    useEffect(() => {
+      function handleMessage(event: MessageEvent) {
+        if (event.data.type === 'IFRAME_READY') {
+          setIframeReady(true);
+          console.log("准备通讯");
+        }
+      }
+      window.addEventListener('message', handleMessage);
+      return () => {
+        window.removeEventListener('message', handleMessage);
+      };
+    }, []);
+
+    useEffect(() => {
+      // 更新组件数据
+      if(!isSkeleton && editor.templateData && iframeRef.current && iframeReady){
+        const data = toJS(editor.templateData);
+        iframeRef.current.contentWindow?.postMessage({
+          type: 'TEMPLATE_DATA',
+          data: data
+        }, '*');
+      }
+    }, [editor.templateData,iframeReady])
+
     return <Scoped>
+      <GlobalStyle />
       {/* header */}
-      <Header />
-      <Flex>
-        {/* left */}
-        <div className="left">
-          <Left />
-        </div>
-        <div className="center">
-            <div className="viewBox">
-              <iframe src="/theme/preview?themeId=10011&&page=index" width="100%" height="100%" style={{border:"0"}} />
-            </div>
-        </div>
-        {/* right */}
-        <div className="right">
-            <Right />
-        </div>
-      </Flex>
+      {isSkeleton?<SkeletonCard />:<>
+        <Header />
+        <Flex>
+          {/* left */}
+          <div className="left">
+            <Left />
+          </div>
+          <div className="center">
+              <div className="viewBox">
+                <iframe ref={iframeRef} src={`/theme/preview?templateId=${templateId}&page=index`} width="100%" height="100%" style={{border:"0"}} />
+              </div>
+          </div>
+          {/* right */}
+          <div className="right">
+              <Right />
+          </div>
+        </Flex>
+      </>}
     </Scoped>
 }
+
+// 修改全局样式
+const GlobalStyle = createGlobalStyle`
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+      font-size: 14px;
+      height: 100vh !important;
+      overflow: hidden;
+    }
+`;
+
 
 const Scoped = styled.div`
 
@@ -70,3 +119,5 @@ const Scoped = styled.div`
     height: 100%;
   }
 `;
+
+export default observer(Editor);

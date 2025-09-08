@@ -1,10 +1,8 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
+import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
+import { Divider } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import GeneralFreight from "./GeneralFreight"
 import CustomFreight from "./CustomFreight"
@@ -13,9 +11,12 @@ import StorePickup from "./StorePickup"
 import Parcel from "./Parcel"
 import CarrierAccount from "./CarrierAccount"
 import PlatformPopularChannels from "./PlatformPopularChannels"
+import { useNavigate } from "react-router-dom"
 
 
 function ShippingAndDistribution() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -33,7 +34,7 @@ function ShippingAndDistribution() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">发货与配送</div>

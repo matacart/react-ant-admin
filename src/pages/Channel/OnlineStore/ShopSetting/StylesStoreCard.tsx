@@ -1,22 +1,56 @@
 import { CompilationIcon, EyeIcon, TiledIcon } from "@/components/Icons/Icons"
-import { Row, Col, Card, Tooltip } from "antd"
-import { useState } from "react"
+import shopSetting, { TemplateMall } from "@/store/channel/shopSetting/shopSetting"
+import { Row, Col, Tooltip, Flex } from "antd"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
+
+
+
 
 function StylesStoreCard() {
 
+  const navigator = useNavigate();
+
+  // 模板列表
+  const [tempList,setTempList] = useState<TemplateMall[]>([]);
+
+  const [groupedByTheme,setGroupedByTheme] = useState<TemplateMall[]>([]);
+
+  useEffect(()=>{
+    setTempList(shopSetting.templateMallList)
+
+    // 分组
+    // const newGroupedByTheme = shopSetting.templateMallList.reduce((acc, current) => {
+    //   const key = current.themeKey;
+    //   if (!acc[key]) {
+    //     acc[key] = [];
+    //   }
+    //   acc[key].push(current);
+    //   return acc;
+    // }, {} as Record<string, typeof tempList>);
+
+    setGroupedByTheme(shopSetting.templateMallList)
+
+
+  },[])
+  // 按类型 
+  // business_id
+  // 按版本
+
   const [list,setList] = useState([
-    {text:"全部主题",check:true},
-    {text:"3C家电",check:false},
-    {text:"美妆保养",check:false},
-    {text:"食品饮料",check:false},
-    {text:"户外运动",check:false},
-    {text:"图书文具",check:false},
-    {text:"宠物用品",check:false},
-    {text:"流行服装",check:false},
-    {text:"生活家居",check:false},
-    {text:"服务行业",check:false},
-    {text:"珠宝首饰",check:false},
+    {text:"全部模板",check:true,value:"0"},
+    {text:"时尚/服装/内衣",check:false,value:"1"},
+    {text:"鞋靴/箱包/首饰",check:false,value:"2"},
+    {text:"运动/户外/休闲",check:false,value:"3"},
+    {text:"五金/配件/工具",check:false,value:"4"},
+    {text:"电子/数码/科技",check:false,value:"5"},
+    {text:"母婴/玩具/儿童",check:false,value:"6"},
+    {text:"综合/多类品",check:false,value:"7"},
+    {text:"健康/美妆/护理",check:false,value:"8"},
+    {text:"家居/园艺/宠物",check:false,value:"9"},
+    {text:"保健/食品/医药",check:false,value:"10"},
+    {text:"防疫类产品",check:false,value:"11"},
   ])
 
   const [ctrList,setCtrList] = useState([
@@ -24,73 +58,61 @@ function StylesStoreCard() {
     {content:<TiledIcon className="font-20" />,check:false},
   ])
 
-  const tempList = [
-    {
-      themeKey:"Arise Pro",
-      style:"简约",
-      version:"OS 2.1",
-      themeColor:"rgb(177, 148, 96)",
-      img:"https://img.myshopline.com/image/shopline/c540d1c306b040789bead710af861371.jpeg",
-    },
-    {
-      themeKey:"Arise Pro",
-      style:"食物",
-      version:"OS 2.1",
-      themeColor:"rgb(255, 15, 0)",
-      img:"https://img.myshopline.com/image/shopline/80dda01943be4ab185144ad63d0de624.jpeg",
-    },
-    {
-      themeKey:"Arise",
-      style:"机械",
-      version:"OS 2.1",
-      themeColor:"rgb(255, 228, 106)",
-      img:"https://img.myshopline.com/image/shopline/66a2caf453884c748b946018cfc7d11c.jpeg",
-    },
-    {
-      themeKey:"Arise Pro",
-      style:"动感",
-      version:"OS 2.1",
-      themeColor:"rgb(253, 80, 11)",
-      img:"https://img.myshopline.com/image/shopline/f970183136af49bc8fa2d800ae2d8c7b.jpeg",
-    },
-    {
-      themeKey:"North",
-      style:"简约",
-      version:"OS 2.1",
-      themeColor:"rgb(24, 70, 115)",
-      img:"https://img.myshopline.com/image/shopline/3338b941e5c849eaa59d016a271da831.jpeg",
-    }
-  ]
-  // 分组
-  const groupedByTheme = tempList.reduce((acc, current) => {
-    const key = current.themeKey;
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(current);
-    return acc;
-  }, {} as Record<string, typeof tempList>);
-
-  // 默认选中第一个
-  const [selectedThemes, setSelectedThemes] = useState<Record<string, number>>(() => {
-    const initial: Record<string, number> = {};
-    Object.keys(groupedByTheme).forEach(theme => {
-      initial[theme] = 0; // 默认每个主题选中第一个
-    });
-    return initial;
-  });
-
+  // const tempList = [
+  //   {
+  //     themeKey:"Arise Pro",
+  //     style:"简约",
+  //     version:"OS 2.1",
+  //     themeColor:"rgb(177, 148, 96)",
+  //     img:"https://img.myshopline.com/image/shopline/c540d1c306b040789bead710af861371.jpeg",
+  //   },
+  //   {
+  //     themeKey:"Arise Pro",
+  //     style:"食物",
+  //     version:"OS 2.1",
+  //     themeColor:"rgb(255, 15, 0)",
+  //     img:"https://img.myshopline.com/image/shopline/80dda01943be4ab185144ad63d0de624.jpeg",
+  //   },
+  //   {
+  //     themeKey:"Arise",
+  //     style:"机械",
+  //     version:"OS 2.1",
+  //     themeColor:"rgb(255, 228, 106)",
+  //     img:"https://img.myshopline.com/image/shopline/66a2caf453884c748b946018cfc7d11c.jpeg",
+  //   },
+  //   {
+  //     themeKey:"Arise Pro",
+  //     style:"动感",
+  //     version:"OS 2.1",
+  //     themeColor:"rgb(253, 80, 11)",
+  //     img:"https://img.myshopline.com/image/shopline/f970183136af49bc8fa2d800ae2d8c7b.jpeg",
+  //   },
+  //   {
+  //     themeKey:"North",
+  //     style:"简约",
+  //     version:"OS 2.1",
+  //     themeColor:"rgb(24, 70, 115)",
+  //     img:"https://img.myshopline.com/image/shopline/3338b941e5c849eaa59d016a271da831.jpeg",
+  //   }
+  // ]
   
-
+  // // 默认选中第一个
+  // const [selectedThemes, setSelectedThemes] = useState<Record<string, number>>(() => {
+  //   const initial: Record<string, number> = {};
+  //   Object.keys(groupedByTheme).forEach(theme => {
+  //     initial[theme] = 0; // 默认每个主题选中第一个
+  //   });
+  //   return initial;
+  // });
 
     return (
       <Scoped>
         {/*  */}
         <div className="themeOptionsWrapper">
           <div className="m">
-            {list.map(item=>{
+            {list.map((item,index:number)=>{
               return (
-                <div onClick={()=>{
+                <div key={index} onClick={()=>{
                   setList(list.map(res=>{
                     if(item.text===res.text){
                       res.check=true
@@ -126,37 +148,36 @@ function StylesStoreCard() {
         <div className="themeContainerWrapper">
           {/* 合集视图 */}
           {ctrList[0].check && <Row gutter={[24, 24]}>
-            {Object.entries(groupedByTheme).map(([theme,items])=>{
-              const selectedIndex = selectedThemes[theme];
-              const selectedItem = items[selectedIndex];
+            {groupedByTheme.map((item:TemplateMall)=>{
+              // const selectedIndex = selectedThemes[theme];
+              // const selectedItem = items[selectedIndex];
               return (
                 <Col span={6}>
                   <div className="bg-color-FFFFFF item-card cursor-pointer">
                     <div className="container" role="button">
                       <div className="containerInner">
                         <div className="tempItemBody">
-                          <img className="tempImg" src={selectedItem.img} alt="" />
+                          <img className="tempImg" src={`https://img.myshopline.com/image/shopline/80dda01943be4ab185144ad63d0de624.jpeg`} alt="" />
                         </div>
                       </div>
                     </div>
                     <div className="tempItemTitleWrapper" style={{paddingBottom:"12px"}}>
-                      <div className="tempItemTitle typography-title-3">
-                        <span className="color-242833 font-16 font-w-600">{selectedItem.themeKey}</span>
-                      </div>
-                      <div className="tempItemVersion color-7A8499 font-12">{selectedItem.version}</div>
+                      <Flex className="tempItemTitle typography-title-3" justify="space-between" gap={12}>
+                        <span className="tempItemTitleName color-242833 font-16 font-w-600">{item.template_name}</span>
+                        <span className="color-242833 font-16 font-w-600">{item.need_buy == "0" ? "Free":"Paid"}</span>
+                      </Flex>
+                      <div className="tempItemVersion color-7A8499 font-14">{item.os_version}</div>
                     </div>
-                    {/*  */}
                     <div className="stylesWrapper">
-                      {items.map((res,index)=>(
+                      {/* {items.map((res,index)=>(
                         <div key={index} onClick={(e)=>{
                           setSelectedThemes(prev => ({
                             ...prev,
                             [theme]: index
                           }));
                         }}  className={selectedIndex == index ? "styleItem styleItemActive":"styleItem"} style={{backgroundColor:res.themeColor,color:res.themeColor}}></div>
-                      ))}
+                      ))} */}
                     </div>
-                    {/*  */}
                     <Tooltip title="预览">
                       <div className="preview-btn">
                         <EyeIcon className="font-16" />
@@ -169,23 +190,25 @@ function StylesStoreCard() {
           </Row>}
           {/* 平铺视图 */}
           {ctrList[1].check && <Row gutter={[24, 24]}>
-            {tempList.map(item=>(
+            {tempList.map((item:TemplateMall)=>(
               <Col span={6}>
-                <div className="bg-color-FFFFFF item-card cursor-pointer">
+                <div className="bg-color-FFFFFF item-card cursor-pointer" onClick={()=>window.open(`/theme/styles/${item.id}/${'Default'}`)}>
                   <div className="container" role="button">
                     <div className="containerInner">
                       <div className="tempItemBody">
-                        <img className="tempImg" src={item.img} alt="" />
+                        <img className="tempImg" src={`https://img.myshopline.com/image/shopline/80dda01943be4ab185144ad63d0de624.jpeg`} alt="" />
                       </div>
                     </div>
                   </div>
                   <div className="tempItemTitleWrapper">
-                    <div className="tempItemTitle typography-title-3">
-                      <span className="color-242833 font-16 font-w-600">{item.themeKey} ·{item.style}</span>
-                    </div>
-                    <div className="tempItemVersion color-7A8499 font-12">{item.version}</div>
+                    <Flex className="tempItemTitle typography-title-3" justify="space-between" gap={12}>
+                      <span className="tempItemTitleName color-242833 font-16 font-w-600">{item.template_name} · {"基础"}</span>
+                      <span className="color-242833 font-16 font-w-600">{item.need_buy == "0" ? "Free":"Paid"}</span>
+                    </Flex>
                   </div>
-                  {/*  */}
+                  <div className="tempItemDescWrapper">
+                    <div className="tempItemVersion color-7A8499 font-14">{item.os_version}</div>
+                  </div>
                   <Tooltip title="预览">
                     <div className="preview-btn">
                       <EyeIcon className="font-16" />
@@ -329,7 +352,7 @@ const Scoped = styled.div`
       }
 
       .tempItemTitleWrapper{
-        padding: 12px 16px;
+        padding: 12px 16px 4px 16px;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
@@ -342,6 +365,19 @@ const Scoped = styled.div`
         -webkit-box-pack: justify;
         -ms-flex-pack: justify;
         justify-content: space-between;
+        .tempItemTitle{
+          width: 100%;
+          .tempItemTitleName{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+
+      .tempItemDescWrapper{
+        padding: 0 16px;
+        padding-bottom: 12px;
       }
 
       .preview-btn{

@@ -4,18 +4,18 @@ import { join } from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
-
+import dayjs from 'dayjs';
 // 引入 chainWebpack 的配置类型
-import type { Configuration as WebpackConfiguration } from 'webpack';
 
 const { REACT_APP_ENV = 'dev' } = process.env;
 
-
+const timestamp = dayjs().format('YYYYMMDDHHmm');
 // const
 
 export default defineConfig({
 
-  publicPath: process.env.NODE_ENV === 'production' ? 'https://admin-cdn.handingcdn.com/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? `https://admin-cdn.handingcdn.com/us01/${timestamp}/` : '/',
+  // publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
 
   /**
    * @name 开启 hash 模式
@@ -166,9 +166,12 @@ export default defineConfig({
       projectName: 'swagger',
     },
   ],
-  mfsu: {
-    strategy: 'normal',
-  },
+  mfsu: false,
+
+  // 插件
+  // plugins: [
+  //   './config/plugin.ts',
+  // ],
 
   // title:{
   //   template:"123"
@@ -181,23 +184,16 @@ export default defineConfig({
   icons: {},
 
   // 代码拆分
-  codeSplitting: {
-    jsStrategy: 'granularChunks',
-  },
-  // Qiankun 微应用 -- 注册子应用
-  // qiankun: {
-  //   master: {
-  //     apps: [
-  //       {
-  //         name: 'orderInvoiceCustomization',
-  //         entry: '//localhost:7001',
-  //       },
-  //       {
-  //         name: 'app2',
-  //         entry: '//localhost:7002',
-  //       },
-  //     ],
-  //   },
+  codeSplitting: false,
+
+  outputPath: `dist/us01/${timestamp}`,
+
+  // chainWebpack(memo) {
+  //   memo.plugin('monaco-editor').use(MonacoWebpackPlugin, [{
+  //     languages: ['javascript', 'typescript', 'json', 'sql'] // 按需加载:cite[1]:cite[2]
+  //   }]);
+  //   return memo;
   // },
+
 });
 

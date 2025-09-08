@@ -34,6 +34,8 @@
 
 `lodash.debounce`: 防抖
 
+`monaco-editor`: 代码编辑器
+
 
 # 功能实现情况
 

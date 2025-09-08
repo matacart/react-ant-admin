@@ -1,13 +1,10 @@
 import { Divider, Form, Cascader, Input, Select, Space,Button, message } from 'antd'
 import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone } from '@ant-design/icons'
-import SelectCountry from '../../components/Stores/SelectCountry'
-import SelectCurrency from '../../components/Stores/SelectCurrency'
-import SelectContryCode from '../../components/Stores/SelectCountryCode'
 import { useEffect, useState } from 'react'
 import { createStore, currentUserStatus } from '@/services/y2/api'
 import styled from 'styled-components'
-import { history } from '@umijs/max'
 import userInfo from '@/store/userInfo'
+import { useNavigate } from 'react-router-dom'
 
 
 interface SelectListType {
@@ -16,6 +13,8 @@ interface SelectListType {
 }
 
 export default function Create() {
+
+    const navigate = useNavigate();
 
     const [form] = Form.useForm();
 
@@ -59,7 +58,7 @@ export default function Create() {
                     // console.log(err)
                     message.error("请求异常，请刷新")
                 }).finally(()=>{
-                    history.push("/stores/list")
+                    navigate("/stores/list")
                 })
             }
             res.code == 201 && message.error(res.msg)
@@ -112,7 +111,7 @@ export default function Create() {
                                     { required: true, message: '请输入网址' },
                                     { min: 4, max: 15 ,message:"URL长度需在4-15个字符之间"}
                                 ]}>
-                                    <Input className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>.demo.hdyshop.cn</div>} />
+                                    <Input className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>.v.hdyshop.cn</div>} />
                                 </Form.Item>
                             </div>
                         </div>

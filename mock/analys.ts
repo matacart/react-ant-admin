@@ -117,6 +117,21 @@ export default{
         // "data": []
     
         // })   
+    },
+
+    'POST  /api/ApiStore/today_statistics': (req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "",
+            "data": {
+                "domainID": "140285",
+                "totalSales": 0,
+                "orderCount": 0,
+                "customerCount": 0,
+                "visitorCount": 0,
+                "currencySymbol": "$"
+            }
+        })
     }
 }
 // {

@@ -1,18 +1,17 @@
 import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import InformationCard from "./InformationCard"
+import { useNavigate } from "react-router-dom"
 
 
 function AdministratorsPermissionsAdd() {
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const navigate = useNavigate()
 
-    const [isRenewal,setIsRenewal] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true)
 
     useEffect(()=>{
         baseInfoStore.getStore().then(res=>{
@@ -26,7 +25,7 @@ function AdministratorsPermissionsAdd() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/adminpermission")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/adminpermission")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">添加员工账号</div>

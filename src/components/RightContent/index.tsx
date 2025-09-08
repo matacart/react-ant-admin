@@ -137,11 +137,10 @@ export const Ping = () => {
 
   return(
     <>
-      <Popover content={pingTime.toFixed(2)+'ms'}
-      >
-      <WifiOutlined style={{
-        color: color
-      }}/>
+      <Popover content={pingTime.toFixed(2)+'ms'}>
+        <WifiOutlined style={{
+          color: color
+        }}/>
       </Popover>
     </>
   )

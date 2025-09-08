@@ -1,14 +1,14 @@
 import { Footer } from '@/components';
 import { SettingOutlined } from '@ant-design/icons';
-
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RequestConfig,RunTimeLayoutConfig } from '@umijs/max';
-import { getAccessToken, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { getAccessToken, getPlatformInfo, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 import cookie from 'react-cookies';
-
 import { App, Flex, message } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { AddIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
+import { useIntl } from './.umi/plugin-locale/localeExports';
 // layout
 import defaultSettings from '../config/defaultSettings';
 
@@ -19,8 +19,6 @@ const loginPath = '/user/signIn';
 import NProgress from "nprogress"; 
 import "nprogress/nprogress.css";
 
-
-import { AddIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
 // 懒加载
 const SalesChannel = React.lazy(() => import('./components/Menu/SalesChannel'));
 const MCPaymentHead = React.lazy(() => import('./components/Header/MCPaymentHead'));
@@ -75,11 +73,6 @@ const CONFIG_REQUESTS = [
     url: '/api/ApiAppstore/country_select',
     storageKey: 'country',
     retry: 3
-  },
-  {
-    url: '/api/ApiAppstore/timezones_select',
-    storageKey: 'timezones',
-    retry: 3
   }
 ];
 
@@ -133,12 +126,43 @@ export async function getInitialState(): Promise<{
     //调用(mock中的)接口获取用户信息
     try {
       const msg = await queryCurrentUser();
+      // 用户语言
+      localStorage.setItem("use_lang", msg?.data?.languages_id ?? "2")
+
       return msg.data // 返回用户信息
     } catch (error) {
       // history.push(loginPath);
     }
     return undefined;
   };
+
+  // 设置 favicon 的函数
+  const updateFavicon = (href: string) => {
+    // 移除现有的 favicon
+    const existingIcons = document.querySelectorAll("link[rel*='icon']");
+    existingIcons.forEach(icon => icon.remove());
+    
+    // 创建新的 favicon
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = href;
+    document.head.appendChild(link);
+  };
+
+  getPlatformInfo().then((res:any)=>{
+    if (res.data) {
+      localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data));
+      // 动态设置 favicon
+      // updateFavicon(res.data?.faviconUrl);
+    } else {
+      // 使用默认 favicon
+      // updateFavicon('/img/logo.png');
+    }
+  }).catch(error => {
+    // 使用默认 配置
+    // updateFavicon('/img/logo.png');
+  });
+
   // access_token 初始化
   // let access_token = localStorage.getItem('access_token')
   let access_token = cookie.load('access_token')
@@ -236,11 +260,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     ],
     // menu菜单底部
     menuFooterRender: () => {
+      const intl = useIntl(); // 获取国际化实例
+      const settingText = intl.formatMessage({ id: 'menu.settings' }); // 根据 key 获取对应语言的文本
       return (
         <div className='menu-item-settings'>
           <Link style={stores.slice(0,8) == "/setting"?{color:"#1677FF",backgroundColor:"#F7F8FB"}:{color:"rgba(0, 0, 0, .65)"}} to={"/settings"}>
             <SettingOutlined />
-            <span style={{marginLeft:"8px"}}>设置</span>
+            <span style={{marginLeft:"8px"}}>{settingText}</span>
           </Link>
         </div>
       )
@@ -382,7 +408,7 @@ const showErrorMessage = () => {
 
 // 请求封装
 export const request: RequestConfig = {
-  timeout: 30000, //超时处理，请求超过0.1分钟，取消请求
+  timeout: 120000, //超时处理，请求超过0.1分钟，取消请求
   // 错误统一处理
   errorConfig: {
     // 抛出错误

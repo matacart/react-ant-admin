@@ -18,5 +18,14 @@ export default {
                 }
             ]
         })
+    },
+    'POST  /api/ApiAppstore/platform_info': (req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "ok",
+            "count": "0",
+            "data": [
+            ]
+        })
     }
 }

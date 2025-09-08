@@ -1,7 +1,8 @@
-import { FormattedMessage, history, useIntl, useModel, SelectLang, Outlet } from '@umijs/max';
+import { useIntl, Outlet } from '@umijs/max';
 import langShow from '@/locales/langShow';
 import ILang from '@/components/Lang/lang';
 import styled from 'styled-components';
+import bgImage from '@/../public/img/logo-bak-02.jpg';
 
 
 const Login: React.FC = () => {
@@ -85,7 +86,7 @@ const Scoped = styled.div`
   .login-logo {
     position: 'relative';
     width: '67.5%';
-    background: url(https://admin-cdn.handingcdn.com/img/logo-bak-02.jpg);
+    background: url(${bgImage});
     background-repeat: no-repeat;
     background-size: cover;
 

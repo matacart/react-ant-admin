@@ -14,6 +14,7 @@ import BlogCollection from "./BlogCollection";
 import FontFamily from "./FontFamily";
 import Video from "./Video";
 import ProductPicker from "./ProductPicker";
+import CollectionPicker from "./CollectionPicker";
 
 
 
@@ -43,14 +44,15 @@ function Right(){
     ]);
 
     useEffect(()=>{
-
+        console.log(editor.component)
         if(editor.component){
             switch(editor.component.type){
                 case 'section':
                     const section = editor.templateData.find(res => res.config?.sectionId === editor.component?.id)
                     if(editor.component?.itemId){
-                        const component = section.config.schema.blocks.filter(item=>item.type == section.config.settingsData.blocks[editor.component.itemId].type)
-                        if(component){
+                        const component = section.config.schema.blocks.filter(item=>item.type == section.config.settingsData.blocks[editor.component.itemId]?.type)
+                        // 匹配元素
+                        if(component.length > 0){
                             setHead([
                                 {
                                     title: intl.formatMessage({id: section.config.schema.name}),
@@ -74,17 +76,36 @@ function Right(){
                     break;
                 case 'template':
                     const template = editor.templateData[2].sections[editor.component?.id]
-                    setHead([
-                        {
-                            title: intl.formatMessage({id: template.schema.name ?? ""}) ,
+                    if(editor.component?.itemId){
+                        const component = template.schema.blocks.filter(item=>item.type == template.settingsData.blocks[editor.component.itemId].type)
+                        if(component){
+                            setHead([
+                                {
+                                    title: intl.formatMessage({id: template.schema.name}),
+                                },
+                                {
+                                    title: intl.formatMessage({id: component[0]?.name ?? "" }) ,
+                                }
+                            ])
+                            setComponents(component[0].settings??[])
+                            setComponentsData(template.settingsData.blocks[editor.component.itemId].settings)
                         }
-                    ])
-                    setComponents(template.schema.settings ?? [])
-                    setComponentsData(template.settingsData.settings)
-                    break;
+                    }else{
+                        setHead([
+                            {
+                                title: intl.formatMessage({id: template.schema.name ?? ""}) ,
+                            }
+                        ])
+                        setComponents(template.schema.settings ?? [])
+                        setComponentsData(template.settingsData.settings)
+                        break;
+                    }
+                  
             }
+        }else{
+            console.log("no component")
+            setComponents(null) 
         }
-
         // 监听组件
     },[editor.component])
 
@@ -306,6 +327,16 @@ function Right(){
                                                 <ProductPicker item={item} componentsData={componentsData} />
                                             </Form.Item>
                                         )
+                                    case "collection_picker":
+                                        return(
+                                            <Form.Item key={index} label={<div>
+                                                <div>{intl.formatMessage({id: item.label})}</div>
+                                                {item.info && <div className="font-12 color-7A8499" style={{marginTop:"4px"}}>{intl.formatMessage({id: item.info})}</div>}
+                                            </div>}>
+                                                <CollectionPicker item={item} componentsData={componentsData} />
+                                            </Form.Item>
+                                        )
+                                        
                                     case "video":
                                         return(
                                             <Form.Item key={index} label={<div>

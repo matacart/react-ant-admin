@@ -301,6 +301,10 @@ export default  [
     icon: 'BlockOutlined',
     routes:[
       {
+        path: 'overview',
+        name: 'overview',
+      },
+      {
         path: 'campaigns',
         name: 'campaigns',
       },
@@ -317,14 +321,25 @@ export default  [
     icon: 'PieChartOutlined',
     routes: [
       {
+        path: 'center',
+        name: 'center',
+        component: './Analyse/Center/Center'
+      },
+      {
         path: 'reports',
         name: 'reports',
-        component: './Analyse/index'
+        component: './Analyse/Report/Report'
+      },
+      {
+        path: 'reports/:classification/:detail',
+        name: 'reports/detail',
+        hideInMenu: true,
+        component: './Analyse/Report/Detail/Detail'
       },
       {
         path: 'realtime',
         name: 'realtime',
-        component:'./Analyse/report'
+        component:'./Analyse/Report/Report'
       },
       {
         path: 'batch',
@@ -797,7 +812,7 @@ export default  [
       },
     ]
   },
-  // 主题编辑
+  // 主题
   {
     path: 'theme',
     name: 'theme',
@@ -815,7 +830,20 @@ export default  [
         name: 'preview',
         component: './Theme/View/View',
       },
+      {
+        path: 'codeEditor/:id/:templateId',
+        name: 'codeEditor',
+        component: './Theme/CodeEditor/CodeEditor',
+      }
     ]
+  },
+  {
+    path: 'theme/styles/:templateId/:styleId',
+    name: 'theme/styles',
+    hideInMenu: true,
+    menuRender: false,
+    layout: false,
+    component: './Theme/Styles/Styles',
   },
   // {
   //   path: '/test',

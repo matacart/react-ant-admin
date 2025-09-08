@@ -92,6 +92,9 @@ ol {
 .color-FF0000{
   color: #FF0000;
 }
+.color-D33612{
+  color: #D33612;
+}
 .color-F86140{
   color: #F86140;
 }
@@ -167,6 +170,10 @@ ol {
 
 .bg-color-FFFFFF{
   background-color: #FFFFFF;
+}
+
+.font-48{
+  font-size: 48px;
 }
 
 .font-28{

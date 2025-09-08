@@ -1,6 +1,6 @@
 import InputSearch from "@/components/Search/InputSearch";
 import { getCityList, getCurrenciesList, getProvinceList, getTimeZoneList } from "@/services/y2/api";
-import baseInfoStore from "@/store/set-up/baseInfoStore";
+import baseInfoStore from "@/store/setUp/baseInfoStore";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";

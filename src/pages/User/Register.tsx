@@ -1,12 +1,17 @@
 import { Button, Form, Input, Divider, Checkbox, message, Select, ConfigProvider, Dropdown, Flex } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { FormattedMessage, useIntl, Link, history, useModel } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
-import { getCountryList, getFakeCaptcha, register } from '@/services/y2/api';
+import { getFakeCaptcha, register } from '@/services/y2/api';
 import {state} from '../../../config/myConfig'
 import styled from 'styled-components';
 import { UnfoldIcon } from '@/components/Icons/Icons';
+// 在文件顶部导入所有图标
+import googleIcon from '@/../public/icons/logos/google.svg';
+import facebookIcon from '@/../public/icons/logos/facebook.svg';
+import appleIcon from '@/../public/icons/logos/apple.svg';
+import linkieIcon from '@/../public/icons/logos/linkie.svg';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface Props {
     changeForm: (value: number) => void
@@ -26,6 +31,8 @@ const style: React.CSSProperties = {
 
 
 export default function Register(props: Props) {
+
+    const navigate = useNavigate();
 
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
@@ -96,7 +103,7 @@ export default function Register(props: Props) {
                                     defaultMessage: '注册成功！',
                                 });
                                 message.success(defaultLoginSuccessMessage);
-                                history.push('/user/signIn');
+                                navigate('/user/signIn');
                                 return;
                             }else if(msg.status == -1){
                                 message.error('手机号已被注册');
@@ -359,7 +366,7 @@ export default function Register(props: Props) {
             >
                 <Button className="external-register-button" block>
                     <img
-                        src="/icons/google.svg"
+                        src={googleIcon}
                         style={{
                             objectFit: 'contain',
                             height: '62%',
@@ -368,19 +375,19 @@ export default function Register(props: Props) {
                     {intl.formatMessage({ id: 'pages.register.link.google' })}
                 </Button>
                 <Button className="external-register-button" block>
-                    <img src="/icons/facebook.svg" />
+                    <img src={facebookIcon} />
                     {intl.formatMessage({ id: 'pages.register.link.facebook' })}
                 </Button>
                 <Button className="external-register-button" block>
-                    <img src="/icons/apple.svg" />
+                    <img src={appleIcon} />
                     {intl.formatMessage({ id: 'pages.register.link.apple' })}
                 </Button>
                 <Button className="external-register-button" block>
-                    <img src="/icons/linkie.svg" style={{ height: '100%', objectFit: 'contain' }} />
+                    <img src={linkieIcon} style={{ height: '100%', objectFit: 'contain' }} />
                     {intl.formatMessage({ id: 'pages.register.link.linkie' })}
                 </Button>
                 <div>
-                    <FormattedMessage id={'pages.alreadyHavaAccount'} />，
+                    <FormattedMessage id={'pages.alreadyHavaAccount'} />,
                     <Link to="/user/signIn"><FormattedMessage id={'pages.goToLogin'} /></Link>
                 </div>
             </div>

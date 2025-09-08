@@ -2,13 +2,14 @@
 import { BackIcon, DownIcon, EditorCategoryIcon, EditorHomeIcon, RightIcon } from '@/components/Icons/Icons';
 import SuccessTag from '@/components/Tag/SuccessTag';
 import editor from '@/store/theme/editor';
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
-import { history, Link } from '@umijs/max';
 import { Button, Dropdown, Flex, MenuProps, Space, Tag, Tooltip } from 'antd';
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function Header() {
+
+    const navigate = useNavigate();
 
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -58,7 +59,7 @@ export default function Header() {
         <Scoped className='font-14'>
             {/* left */}
             <Tooltip title="返回管理后台" placement="right">
-                <div className='header-left cursor-pointer' onClick={()=>history.push(`/home`)}>
+                <div className='header-left cursor-pointer' onClick={()=>navigate(`/website/shopSetting`)}>
                     <BackIcon className='font-20' />
                 </div>
             </Tooltip>

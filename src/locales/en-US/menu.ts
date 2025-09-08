@@ -55,41 +55,59 @@ export default {
   "menu.stores_bills":"Bill management",
   "menu.stores_data":"Data management",
   'menu.stores.create': 'Create Store',
-//
-'menu.search.stores': "Search Store Name/Subdomain/Main Domain",  
-'menu.stores.running': "Open",
-'menu.stores.default': "Closed",
-"menu.stores.stop": "Stop",  
-'menu.search.none': 'No stores matching the criteria',  
-'menu.stores.manage': 'Manage Stores',
-//
-'menu.orders': 'Orders',  
-'menu.orders.manages': 'Order Management',  
-'menu.orders.recallOrders': 'Cancelled Orders',  
-'menu.orders.draftOrders': 'Draft Orders',  
-// 
-'menu.products': 'Products',  
-'menu.products.index': 'ProductList',
-'menu.products.inventory': 'Inventory',  
-'menu.products.transfers': 'Transfers',  
-'menu.products.purchase_orders':'Purchase Orders',  
-'menu.products.categories':'Categories',  
-'menu.products.gift-cards':'Gift Cards',  
-  
-'menu.customer': 'Customers',  
-'menu.customer.management': 'Customers',
-'menu.customer.persona': 'Segmentation',  
-  
-'menu.discount': 'Discount',  
-  
-'menu.marketing': 'Marketing',  
-'menu.marketing.campaigns': 'Campaigns',  
-'menu.marketing.automation': 'Automation',  
-  
-'menu.analyse': 'Analysis',  
-'menu.analyse.reports': 'Reports',  
-'menu.analyse.realtime': 'Realtime Analysis',
+  //
+  'menu.search.stores': "Search Store Name/Subdomain/Main Domain",  
+  'menu.stores.running': "Open",
+  'menu.stores.default': "Closed",
+  "menu.stores.stop": "Stop",  
+  'menu.search.none': 'No stores matching the criteria',  
+  'menu.stores.manage': 'Manage Stores',
+  //
+  'menu.orders': 'Orders',  
+  'menu.orders.manages': 'Order Management',  
+  'menu.orders.recallOrders': 'Cancelled Orders',  
+  'menu.orders.draftOrders': 'Draft Orders',  
+  // 
+  'menu.products': 'Products',  
+  'menu.products.index': 'Product List',
+  'menu.products.inventory': 'Inventory',  
+  'menu.products.transfers': 'Transfers',  
+  'menu.products.categories':'Categories',  
+  'menu.products.gift-cards':'Gift Cards',  
+    
+  'menu.customer': 'Customers',
+  'menu.customer.management': 'Customers',
+  'menu.customer.persona': 'Segmentation',  
+    
+  'menu.discount': 'Discount',  
+    
+  'menu.marketing': 'Marketing',
+  'menu.marketing.overview': 'Store Marketing',
+  'menu.marketing.campaigns': 'Campaigns',  
+  'menu.marketing.automation': 'Automation',  
+    
+  'menu.analyse': 'Analysis',
+  'menu.analyse.center': 'Data Analysis',
+  'menu.analyse.reports': 'Reports',  
+  'menu.analyse.realtime': 'Realtime Analysis',
 
-// 设置
-// 'menu.setting': 'Setting',
+  'menu.purchase_orders':'Purchase Orders',  
+
+  'menu.warehouse':"Warehouse",
+  'menu.warehouse.inventory':"Inventory",
+  'menu.warehouse.transfers':"Transfer",
+
+
+  'menu.appStore':'apps',
+  'menu.orderInvoiceCustomization':'Order Invoice Customization',
+
+  'menu.channel':"channels",
+  'menu.website':"Online Store",
+  'menu.website.shopSetting':'Shop Design',
+  'menu.website.articles':'Blog',
+  'menu.website.customPage':'Custom Page',
+  'menu.website.navList':'Navigation',
+  'menu.website.preferences':'Preferences',
+  // 设置
+  'menu.settings': 'Settings',
 }

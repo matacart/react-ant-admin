@@ -150,7 +150,7 @@ function ProductListAjax(selectProps:any) {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          maxWidth:"100%"
+          maxWidth:'calc(100% - 48px)',
         }}>{record.title}</span>
       </div>
     },

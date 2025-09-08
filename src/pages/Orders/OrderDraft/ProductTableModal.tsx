@@ -107,7 +107,7 @@ function ProductTableModal(){
           title: '商品/款式',
           dataIndex: 'id',
           key: 'id',
-          onCell: () => ({ style: { flex: 2 } }), // 设置比例为 2
+          width: 500,
           render: (value,record) => <Flex gap={12} align="center">
             <div>
                 <img style={{width:"40px",height:"40px",objectFit:"contain"}} src={record.product_image?record.product_image+"?x-oss-process=image/resize,w_100":"/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_100"} />
@@ -119,7 +119,7 @@ function ProductTableModal(){
           title: '库存',
           dataIndex: 'quantity',
           key: 'quantity',
-          onCell: () => ({ style: { flex: 1 } }), // 设置比例为 2
+          width: 150,
           render: (value,record) => <div>
             {value}
           </div>,
@@ -128,7 +128,7 @@ function ProductTableModal(){
           title: '价格',
           dataIndex: 'specialprice',
           key: 'specialprice',
-          onCell: () => ({ style: { flex: 1 } }), // 设置比例为 2
+          width: 150,
           render: (value,record) => <div>
             {value}
           </div>,
@@ -295,20 +295,20 @@ function ProductTableModal(){
           title: '商品/款式',
           dataIndex: 'option_values_names',
           key: 'option_values_names',
-          onCell: () => ({ style: { flex: 2 } }), // 设置比例为 2
+          width: 450,
         },
         {
           title: '库存',
           dataIndex: 'quantity',
           key: 'quantity',
-          width:158
+          width:150
         },
         {
           title: '价格',
           dataIndex: 'price',
           key: 'price',
           onCell: () => ({ style: { flex: 1 } }), // 设置比例为 2
-          width:177
+          width:150
         },
     ];
     // 子表格

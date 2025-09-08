@@ -73,6 +73,7 @@
     "mobx": "^6.12.3",
     "mobx-react": "^9.1.1",
     "mobx-react-lite": "^4.0.7",
+    "monaco-editor": "0.45.0",
     "nprogress": "^0.2.0",
     "omit.js": "^2.0.2",
     "querystring": "^0.2.1",

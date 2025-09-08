@@ -2,7 +2,7 @@ import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import CustomerMail from "./CustomerMail"
 import LocalDistribution from "./LocalDistribution"
@@ -11,9 +11,12 @@ import LogisticsUpdate from "./LogisticsUpdate"
 import Customer from "./Customer"
 import CustomerSubscription from "./CustomerSubscription"
 import MerchantMail from "./MerchantMail"
+import { useNavigate } from "react-router-dom"
 
 
 function Notification() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -31,7 +34,7 @@ function Notification() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">通知</div>

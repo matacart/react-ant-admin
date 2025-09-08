@@ -317,7 +317,7 @@ function ConditionProductsAndDate({condition,index}:propsType){
                     <Flex style={{margin:"12px 0"}} justify="space-between">
                         <Flex gap={12}>
                             <Space.Compact style={{width:"320px"}} >
-                                <MySelect  defaultValue={0} options={[
+                                <MySelect defaultValue={0} options={[
                                     { value: 0, label: '全部' },
                                     { value: 1, label: '商品名称' },
                                     { value: 3, label: '商品SKU' },

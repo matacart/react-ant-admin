@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 import { getTodayData } from '@/services/y2/api';
 import { Link } from 'react-router-dom';
 import dayjs from "dayjs";
+import salesRevenue from '@/../public/icons/commons/salesRevenue.svg';
+import orderNumber from '@/../public/icons/commons/orderNumber.svg';
+import visitorCount from '@/../public/icons/commons/visitorCount.svg';
 
 interface todayDataType{
+    customerCount:number;
     currencySymbol:string;
     visitorCount:number;
     domainID:string;
@@ -18,13 +22,22 @@ export default function DataCard({
 
 }) {
 
-    const [todayData,setTodayData] = useState<todayDataType | null>();
+    const [todayData,setTodayData] = useState<todayDataType | null>({
+        currencySymbol: "$",
+        customerCount: 0,
+        domainID: "140285",
+        orderCount: 0,
+        totalSales: 0,
+        visitorCount: 0,
+    });
 
     useEffect(()=>{
         const startTimer = dayjs().startOf('day').valueOf();
         const endTimer = dayjs().endOf('day').valueOf();
         getTodayData(startTimer/1000,endTimer/1000).then((res:any)=>{
-            setTodayData(res.data)
+            if(res.code !== 201){
+                setTodayData(res.data)
+            }
         }).catch(err=>{
             console.log(err)
         })
@@ -66,7 +79,7 @@ export default function DataCard({
                     <div style={{
                         display: 'flex',
                     }}>
-                        <img src='./icons/salesRevenue.svg' />
+                        <img src={salesRevenue} />
                         <Tooltip title="今天到目前为止的销售额">
                             <div className={styles.title}>
                                 销售额
@@ -74,10 +87,8 @@ export default function DataCard({
                         </Tooltip>
                     </div>
                     <div className={styles.value}>
-                        <span>{todayData?.currencySymbol}{todayData?.totalSales.toFixed(2)}</span>
+                        <span>{todayData?.currencySymbol}{todayData?.totalSales?.toFixed(2)}</span>
                     </div>
-
-
                 </div>
                 <div style={{
                     display: 'flex',
@@ -96,7 +107,7 @@ export default function DataCard({
                         <div style={{
                             display: 'flex',
                         }}>
-                            <img src='./icons/orderNumber.svg' />
+                            <img src={orderNumber} />
                             <Tooltip title="今天到目前为止的订单数">
                                 <div className={styles.title}>
                                     订单数
@@ -119,7 +130,7 @@ export default function DataCard({
                         <div style={{
                             display: 'flex',
                         }}>
-                            <img src='./icons/visitorCount.svg' />
+                            <img src={visitorCount} />
                             <Tooltip title="今天到目前为止的访客数">
                                 <div className={styles.title}>
                                     访客数

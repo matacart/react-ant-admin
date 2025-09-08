@@ -1,24 +1,25 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
+import { ArrowLeftOutlined } from "@ant-design/icons"
+// import { history } from "@umijs/max"
+import { Button, Divider, message } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import SettlementCurrencyCard from "./SettlementCurrencyCard"
 import BaseInfoCard from "./BaseInfoCard"
 import ShopOperationInformation from "./ShopOperationInformation"
 import ShopStatusCard from './ShopStatusCard';
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
 import cookie from 'react-cookies';
-import OverlayEdit from "@/components/Overlay/OverlayEdit"
+import { useNavigate } from "react-router-dom"
 
 function Base() {
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const navigate = useNavigate();
 
-    const [isRenewal,setIsRenewal] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true);
+
+    const [isRenewal,setIsRenewal] = useState(false);
 
     useEffect(()=>{
         baseInfoStore.getStore().then(res=>{
@@ -32,7 +33,7 @@ function Base() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">基础设置</div>
@@ -116,7 +117,7 @@ function Base() {
                     <div className="submit-btn">
                         <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
                             setIsRenewal(true)
-                            baseInfoStore.setStore().then(res=>{
+                            baseInfoStore.setStore().then((res:any)=>{
                                 if(res.code==0){
                                     cookie.save('timeZone', JSON.stringify(JSON.parse(sessionStorage["timezones"]).filter(item=>item.time_zone_name == baseInfoStore.timezone)[0]), { path: '/' });
                                     message.success('更新成功')

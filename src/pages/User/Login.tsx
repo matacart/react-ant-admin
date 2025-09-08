@@ -1,12 +1,18 @@
 import { getAccessToken, login } from '@/services/y2/api';
-import { Alert, message, Tabs, Button, Form, Input, Divider,Checkbox, Flex, MenuProps, Dropdown, ConfigProvider } from 'antd';
+import { Alert, message, Button, Form, Input, Divider,Checkbox, Flex, Dropdown, ConfigProvider } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { FormattedMessage, Link, history, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import cookie, { load } from 'react-cookies'
-import { DownIcon, FoldIcon, UnfoldIcon } from '@/components/Icons/Icons';
+import { UnfoldIcon } from '@/components/Icons/Icons';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+// 在文件顶部导入所有图标
+import googleIcon from '@/../public/icons/logos/google.svg';
+import facebookIcon from '@/../public/icons/logos/facebook.svg';
+import appleIcon from '@/../public/icons/logos/apple.svg';
+import linkieIcon from '@/../public/icons/logos/linkie.svg';
 
 const style = {
   color: '#7A8499',
@@ -19,7 +25,7 @@ const style = {
   overflow:"auto",
 }
 
-export default  function Login() {
+export default function Login() {
     //国际化
     const intl = useIntl();
     const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
@@ -144,7 +150,7 @@ export default  function Login() {
         //   id: 'pages.login.failure',
         //   defaultMessage: error.message,
         // });
-        console.log(error.message);
+        // console.log(error.message);
         message.error(error.message);
       }
     };
@@ -320,7 +326,7 @@ export default  function Login() {
             >
               <Button className="external-login-button" block>
                 <img
-                  src="/icons/google.svg"
+                  src={googleIcon}
                   style={{
                     objectFit: 'contain',
                     height: '62%',
@@ -329,15 +335,15 @@ export default  function Login() {
                 {intl.formatMessage({ id: 'pages.login.link.google' })}
               </Button>
               <Button className="external-login-button" block>
-                <img src="/icons/facebook.svg" />
+                <img src={facebookIcon} />
                 {intl.formatMessage({ id: 'pages.login.link.facebook' })}
               </Button>
               <Button className="external-login-button" block>
-                <img src="/icons/apple.svg" />
+                <img src={appleIcon} />
                 {intl.formatMessage({ id: 'pages.login.link.apple' })}
               </Button>
               <Button className="external-login-button" block>
-                <img src="/icons/linkie.svg" style={{ height: '100%',objectFit: 'contain' }} />
+                <img src={linkieIcon} style={{ height: '100%',objectFit: 'contain' }} />
                 {intl.formatMessage({ id: 'pages.login.link.linkie' })}
               </Button>
             </div>

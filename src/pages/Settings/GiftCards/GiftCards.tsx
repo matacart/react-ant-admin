@@ -2,16 +2,18 @@ import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/ap
 import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
-import { history } from "@umijs/max"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import AutomaticFailure from "./AutomaticFailure"
 import GiftCardDisplay from "./GiftCardDisplay"
+import { useNavigate } from "react-router-dom"
 
 
 
 function GiftCards() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -29,7 +31,7 @@ function GiftCards() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">礼品卡</div>

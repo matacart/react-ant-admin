@@ -5,7 +5,18 @@ import styles from './OpenStoreGuidance.module.scss'
 import { ShopOutlined,CheckCircleFilled ,ShopTwoTone} from '@ant-design/icons';
 import { useState } from 'react';
 import classNames from 'classnames';
-import { history } from '@umijs/max';
+import { useNavigate } from 'react-router-dom';
+
+
+// 改为使用相对路径（会基于 publicPath 解析）
+const assetPaths = {
+    addProductDone: 'icons/commons/addProductDone.svg',
+    setupLogisticsDone: 'icons/commons/setupLogisticsDone.svg',
+    setCollectionDone: 'icons/commons/setCollectionDone.svg',
+    createPageDone: 'icons/commons/createPageDone.svg',
+    organizeNavigation: 'icons/commons/organizeNavigation.svg',
+};
+
 // 渐变
 const twoColors: ProgressProps['strokeColor'] = {
     '0%': '#108ee9',
@@ -34,12 +45,12 @@ const tabs: Tab[] = [
         title: "添加商品",
         desc: "您还可以继续添加更多新产品",
         buttonText: "去添加",
-        img: 'icons/addProductDone.svg',
+        img: assetPaths.addProductDone,
         done: true,
         doneTitle: "您已添加了新产品",
         doneDesc: "您还可以继续添加更多新产品",
         doneButtonText: "去添加",
-        doneImg: 'icons/addProductDone.svg',
+        doneImg: assetPaths.addProductDone,
         url:"/products/new"
     },{
         svg: <ShopOutlined />,
@@ -47,12 +58,12 @@ const tabs: Tab[] = [
         title: "配置物流",
         desc: "您还可以继续添加更多新产品",
         buttonText: "去添加",
-        img: 'icons/addProductDone.svg',
+        img: assetPaths.addProductDone,
         done: true,
         doneTitle: "您已配置了物流",
         doneDesc: "MataCart支持按重量等多个维度设置不同国家/地区的物流模版，也可同时支持多个方案。在后台也可以添加物流商",
         doneButtonText: "设置物流方式",
-        doneImg: 'icons/setupLogisticsDone.svg',
+        doneImg: assetPaths.setupLogisticsDone,
         url:"/settings/delivery"
     },{
         svg: <ShopOutlined />,
@@ -60,12 +71,12 @@ const tabs: Tab[] = [
         title: "设定收款",
         desc: "您还可以继续添加更多新产品",
         buttonText: "去添加",
-        img: 'icons/addProductDone.svg',
+        img: assetPaths.addProductDone,
         done: true,
         doneTitle: "您已配置了收款方式",
         doneDesc: "可根据您售卖的地区设置合适的付款方式",
         doneButtonText: "设置收款方式",
-        doneImg: 'icons/setCollectionDone.svg',
+        doneImg: assetPaths.setCollectionDone,
         url:"/settings/payments"
     },{
         svg: <ShopOutlined />,
@@ -73,12 +84,12 @@ const tabs: Tab[] = [
         title: "创建自定义页面",
         desc: "您还可以继续添加更多新产品",
         buttonText: "去添加",
-        img: 'icons/addProductDone.svg',
+        img: assetPaths.addProductDone,
         done: true,
         doneTitle: "创建自定义页面",
         doneDesc: "您已成功添加页面，您可以继续添加更多页面或者完善已有页面信息。",
         doneButtonText: "去设置",
-        doneImg: 'icons/createPageDone.svg',
+        doneImg: assetPaths.createPageDone,
         url:"/website/page"
     },{
         svg: <ShopOutlined />,
@@ -86,12 +97,12 @@ const tabs: Tab[] = [
         title: "整理导航",
         desc: "",
         buttonText: "去添加",
-        img: 'icons/organizeNavigation.svg',
+        img: assetPaths.addProductDone,
         done: false,
         doneTitle: "整理导航",
         doneDesc: "",
         doneButtonText: "",
-        doneImg: '',
+        doneImg: assetPaths.organizeNavigation,
         url:"/website/navList"
     },
 ]
@@ -104,6 +115,7 @@ const App: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
+    const navigator = useNavigate();
 
     //   头部
     const header = (
@@ -147,12 +159,13 @@ const App: React.FC = () => {
     // 内容
     const content = (
         <>
-            <div className={styles.wrapper}
+        {/*  */}
+            <div 
                 style={{
                     display: "flex",
                     width: "100%",
-                    
                 }}
+                className={styles.wrapper}
             >
                 {/* tab-space */}
                 <Space.Compact direction='vertical'
@@ -189,7 +202,7 @@ const App: React.FC = () => {
                     </div>
                     <div className={styles.buttonContainer}>
                         <Button type='primary' onClick={()=>{
-                            activeTab.url !== "" && history.push(activeTab.url)
+                            activeTab.url !== "" && navigator(activeTab.url)
                         }}>{activeTab.done ? activeTab.doneButtonText : activeTab.buttonText}</Button>
                         <div className={styles.link}>{activeTab.done? '':'跳过'}</div>
                     </div>
@@ -201,8 +214,7 @@ const App: React.FC = () => {
                     justifyContent: 'center',
                     alignItems: 'center'
                   }}>
-                  <img className={styles.icon} src={activeTab.done ? activeTab.doneImg : activeTab.img} />
-
+                    <img className={styles.icon} src={activeTab.done ? activeTab.doneImg : activeTab.img} />
                   </div>
                 </div>
             </div>

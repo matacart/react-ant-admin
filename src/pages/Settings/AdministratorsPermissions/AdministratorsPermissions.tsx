@@ -1,16 +1,17 @@
-import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
+import { ArrowLeftOutlined } from "@ant-design/icons"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import StoreManagerAccount from "./StoreManagerAccount"
 import Employee from "./Employee"
 import BusinessPartner from "./BusinessPartner"
 import DualVerification from "./DualVerification"
+import { useNavigate } from "react-router-dom"
 
 function AdministratorsPermissions() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -28,7 +29,7 @@ function AdministratorsPermissions() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">管理员和权限</div>

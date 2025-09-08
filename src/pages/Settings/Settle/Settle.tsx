@@ -1,10 +1,8 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form } from "antd"
+import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
+import { Button, Divider } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import TopicConfiguration from "./TopicConfiguration"
 import CustomerAccountInformation from "./CustomerAccountInformation"
@@ -17,9 +15,12 @@ import OrderProcessing from "./OrderProcessing"
 import UsePromoCode from "./UsePromoCode"
 import CheckoutButton from "./CheckoutButton"
 import CheckoutSecurityTrust from "./CheckoutSecurityTrust"
+import { useNavigate } from "react-router-dom"
 
 
 function Settle() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -37,7 +38,7 @@ function Settle() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">结账</div>

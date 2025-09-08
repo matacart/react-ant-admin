@@ -1,14 +1,16 @@
-import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
-import { history } from "@umijs/max"
+import { ArrowLeftOutlined } from "@ant-design/icons"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/set-up/baseInfoStore"
+import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { Card, Tag } from "antd"
 import SelectHeader from "./SelectHeader"
 import OperationTable from "./OperationTable"
+import { useNavigate } from "react-router-dom"
 
 function OperationLog() {
+
+    const navigate = useNavigate()
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -26,7 +28,7 @@ function OperationLog() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">

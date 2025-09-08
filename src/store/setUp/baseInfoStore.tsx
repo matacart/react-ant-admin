@@ -77,15 +77,17 @@ class baseInfoStore{
 
         await getStoreInfo(cookie.load("domain")?.id).then(obj=>{
             console.log(obj)
-            this.id = obj.id;
-            this.storeStauts = obj.status;
-            this.storeLogo = obj.store_logo;
-            this.storeName = obj.store_name;
-            this.merchantEmail = obj.merchant_email;
-            this.serviceEmail = obj.service_email;
-            this.productType = obj.product_type;
-            this.timezone = obj.timezone;
-            this.ordersPrefix = obj.orders_prefix;
+            if( obj.code !== 201){
+                this.id = obj.id;
+                this.storeStauts = obj.status;
+                this.storeLogo = obj.store_logo;
+                this.storeName = obj.store_name;
+                this.merchantEmail = obj.merchant_email;
+                this.serviceEmail = obj.service_email;
+                this.productType = obj.product_type;
+                this.timezone = obj.timezone;
+                this.ordersPrefix = obj.orders_prefix;
+            }
         })
         return true;
         

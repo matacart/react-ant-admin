@@ -1,34 +1,35 @@
-import { DownIcon, EditorAddBtnIcon, EditorAddIcon, EditorAnnouncementIcon, EditorApplyIcon, EditorComponentIcon, EditorConfigurationIcon, EditorMoreIcon, EditorRightIcon } from "@/components/Icons/Icons"
-import { Dropdown, Flex, MenuProps, Tooltip } from "antd"
-import { useEffect, useState } from "react"
+import { DeleteIcon, DownIcon, EditorAddBtnIcon, EditorAddIcon, EditorAnnouncementIcon, EditorApplyIcon, EditorComponentIcon, EditorConfigurationIcon, EditorMoreIcon, EditorRightIcon } from "@/components/Icons/Icons"
+import { Dropdown, Flex, MenuProps, Popover, Tooltip } from "antd"
+import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
-import { useIntl } from "@/.umi/plugin-locale/localeExports"
 import editor from "@/store/theme/editor"
 import { observer } from "mobx-react-lite"
+import MyDropdown from "@/components/Dropdown/MyDropdown"
+import { generateId } from "@/utils/dataStructure"
+import { useIntl } from '@umijs/max';
+import ComponentAdd from "./ComponentAdd"
 
 interface CollapsedState {
     [key: string]: boolean;
 }
 
-const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <a style={{color:"#F86140"}}>
-          删除组件
-        </a>
-      ),
-    },
-];
-
 function Left(){
 
     const intl = useIntl();
 
-    // 0: 组件 1: 全局设置 2: 应用嵌入
-    const [active, setActive] = useState(0)
+    const mRef = useRef(null);
 
+    // 0: 组件 1: 全局设置 2: 应用嵌入
+    const [active, setActive] = useState(0);
+
+    // 为Popover添加状态管理
+    const [popoverStates, setPopoverStates] = useState<{[key: string]: boolean}>({});
+
+    // 在组件中添加状态管理下拉菜单的显示
+    const [dropdownVisible, setDropdownVisible] = useState<{[key: string]: boolean}>({});
+
+    // 组件选中项
     const [activeCollapsed, setActiveCollapsed] = useState<string | undefined>(undefined);
 
     // 初始化所有区块为折叠状态
@@ -43,7 +44,6 @@ function Left(){
                 })
             }
             // 将order加入
-            console.log(acc.order)
             return acc;
         }, {} as CollapsedState)
     );
@@ -51,10 +51,58 @@ function Left(){
     // 使用函数式更新确保状态正确
     const handleCollapse = (sectionId: string) => {
         setCollapsedSections(prev => ({
-        ...prev,
-        [sectionId]: !prev[sectionId]
+            ...prev,
+            [sectionId]: !prev[sectionId]
         }));
     };
+
+    // 控制特定Popover的显示/隐藏
+    const handlePopoverOpenChange = (id: string, open: boolean) => {
+        setPopoverStates(prev => ({
+            ...prev,
+            [id]: open
+        }));
+    };
+
+    // 添加内容
+    const AddBlockContent = (id:string,type:string,blocks:any[],popoverId:string,sectionId:string)=>{
+        return (
+            <div className="add-block-content">
+                <div className="title color-242833">添加内容</div>
+                <div className="item-box">
+                    {blocks?.map((item,index)=>(
+                        <Flex className="item" key={index} gap={8} onClick={(e)=>{
+                            e.stopPropagation();
+                            console.log(item);
+                            let newSettings:any = {};
+                            item.settings.forEach((element:any) => {
+                                if(element.default !== undefined){
+                                    newSettings[element.id] = {
+                                        value:element.default
+                                    }
+                                }
+                            });
+                            const block = {
+                                type:item.type,
+                                settings:newSettings
+                            }
+                            // 生成随机id
+                            const blockOrder = generateId();
+                            editor.addComponentBlock(id,type,block,blockOrder)
+                            // 添加完成后隐藏对应的Popover
+                            handlePopoverOpenChange(popoverId, false)
+                            // 设置组件选中项 需要blockorder
+                            setActiveCollapsed(blockOrder)
+                            editor.setComponent({id:sectionId,type:'section',itemId:blockOrder})
+                        }}>
+                            <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
+                            <div>{intl.formatMessage({id: item.name})}</div>
+                        </Flex>
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     useEffect(() => {
         if (editor.templateData && editor.templateData.length > 0) {
@@ -68,13 +116,15 @@ function Left(){
             }
             return acc;
           }, {} as CollapsedState);
-      
           setCollapsedSections(initialCollapsedState);
         }
-      }, [editor.templateData]);
+
+        console.log("11111");
+
+      }, []);
 
     return(
-        <Scoped>
+        <Scoped ref={mRef}>
             <div className="toolBar-toolMenu">
                 <div className="toolBar-buttonGroup">
                     <Tooltip title="组件" placement="right">
@@ -102,10 +152,14 @@ function Left(){
                 </Flex>
                 {/* content */}
                 <div className="design-sidebarContent">
-                    {editor.templateData.map((res,index)=>{
-                        // 公告栏
-                        if(res.type == "SECTION" && res.id == "announcement-bar"){
+                    {editor.templateData.map((res:any,index:number)=>{
+                        if(res.type == "SECTION"){
                             const sectionId = res.config.sectionId!;
+                            const popoverId = `popover-${sectionId}`; // 为每个Popover创建唯一ID
+
+                            const maxBlock = res.config.schema.max_blocks;
+                            const current = res.config.settingsData.block_order.length;
+
                             return(
                                 <div key={sectionId} className="fixedCompItem-sectionWrapper" id={res.config.sectionId}>
                                     <Flex id="section-announcement-bar" className={sectionId == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 
@@ -123,6 +177,24 @@ function Left(){
                                             <EditorAnnouncementIcon className="font-20" /> 
                                             <div>{intl.formatMessage({id: res.config.schema.name})}</div>
                                         </Flex>
+                                        <Flex className="addBlockBtn" align="center" gap={2}>
+                                            <Popover
+                                                open={popoverStates[popoverId] || false}
+                                                onOpenChange={(open) => current == maxBlock ? ()=>{} : handlePopoverOpenChange(popoverId,open)}
+                                                getPopupContainer={()=>mRef.current!} 
+                                                overlayInnerStyle={{ padding: 0,marginLeft:"12px" }} 
+                                                placement="rightTop" 
+                                                arrow={false} 
+                                                trigger={"click"} 
+                                                content={()=>AddBlockContent(res.id,res.type,res.config.schema.blocks,popoverId,sectionId)}
+                                            >
+                                                <Tooltip placement="top" title={`添加内容 (${current}/${maxBlock})`}>
+                                                    <div style={{cursor: current == maxBlock ? "not-allowed" : "pointer"}} onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
+                                                        <EditorAddIcon />
+                                                    </div>
+                                                </Tooltip>
+                                            </Popover>
+                                        </Flex>
                                     </Flex>
                                     {/* 折叠面板内容 */}
                                     <div 
@@ -134,96 +206,68 @@ function Left(){
                                         }}
                                         >
                                         {/* 这里放折叠内容 */}
-                                        {res.config?.settingsData.block_order.map((order, index) => {
-                                            if(res.config.settingsData.blocks[order].type == "item"){
-                                                return(
-                                                    <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
-                                                        setActiveCollapsed(order)
-                                                        editor.setComponent({id:sectionId,type:'section',itemId:order})
-                                                    }}>
-                                                        <Flex align="center" className="sortItem" gap={8} >
-                                                            <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
-                                                            <div>{intl.formatMessage({id:"t:sections.announcement-bar.blocks.item.name"})}</div>
-                                                        </Flex>
-                                                        <Flex className="addBlockBtn" align="center">
-                                                            <Dropdown menu={{ items }} placement="bottomLeft" trigger={["click"]}>
-                                                                <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
-                                                                    <EditorMoreIcon />
-                                                                </div>
-                                                            </Dropdown>
-                                                        </Flex>
-                                                    </Flex>
-                                                )
-                                            }
-                                        }
-                                        )}
-                                        <Flex className="btn-add color-356DFF cursor-pointer" align="center" gap={8}>
-                                            <EditorAddBtnIcon className="font-20" />
-                                            <div>添加内容</div>
-                                        </Flex>
-                                    </div>
-                                </div>
-                            )
-                        }
-                        // 页头
-                        if(res.type == "SECTION" && res.id == "header"){
-                            const sectionId = res.config.sectionId!;
-                            return(
-                                <div key={sectionId} className="fixedCompItem-sectionWrapper" id={res.config.sectionId}>
-                                    <Flex id="section-announcement-bar" className={sectionId == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 
-                                        onClick={() => {
-                                            setCollapsedSections(prev => ({
-                                                ...prev,
-                                                [sectionId]: !prev[sectionId]
-                                            })) 
-                                            setActiveCollapsed(sectionId)
+                                        {res.config?.settingsData.block_order.map((order:string, index:number) => {
+                                            const biockType = res.config?.settingsData.blocks[order].type
+                                            const blocks = res.config.schema.blocks.filter(block => block.type == biockType)
+                                            const block = blocks[0] ?? {}
 
-                                            editor.setComponent({id:sectionId,type:'section'})
-                                        }}
-                                    >
-                                        <Flex align="center" className="sortItem" gap={8}>
-                                            <DownIcon className={collapsedSections[sectionId]?"font-12 icon":"font-12 actIcon"} />
-                                            <EditorAnnouncementIcon className="font-20" /> 
-                                            <div>{intl.formatMessage({id: res.config.schema.name})}</div>
-                                        </Flex>
-                                    </Flex>
-                                    {/* 折叠面板内容 */}
-                                    <div 
-                                        className="fixedCompItem-foldContainer"
-                                        style={{
-                                            maxHeight: collapsedSections[sectionId] ? 0 : '500px',
-                                            overflow: 'hidden',
-                                            transition: 'max-height 0.3s ease-out'
-                                        }}
-                                        >
-                                        {/* 这里放折叠内容 */}
-                                        {res.config?.settingsData.block_order.map((order, index) => {
-                                            if(res.config.settingsData.blocks[order].type == "menuImage"){
-                                                return(
-                                                    <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
-                                                        setActiveCollapsed(order)
-                                                        editor.setComponent({id:sectionId,type:'section',itemId:order})
-                                                    }}>
-                                                        <Flex align="center" className="sortItem" gap={8}>
-                                                            <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
-                                                            <div>{intl.formatMessage({id:"t:sections.header.blocks.menuImage.name"})}</div>
-                                                        </Flex>
-                                                        <Flex className="addBlockBtn" align="center">
-                                                            <Dropdown menu={{ items }} placement="bottomLeft" trigger={["click"]}>
+                                            const dropdownId = `dropdown-${sectionId}-${order}`;
+
+                                            return (
+                                                <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
+                                                    setActiveCollapsed(order)
+                                                    editor.setComponent({id:sectionId,type:'section',itemId:order})
+                                                }}>
+                                                    <Flex align="center" className="sortItem" gap={8}>
+                                                        <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
+                                                        <div>{intl.formatMessage({id:block?.name})}</div>
+                                                    </Flex>
+                                                    <Flex className="addBlockBtn" align="center">
+                                                        <MyDropdown
+                                                            open={dropdownVisible[dropdownId] || false}
+                                                            onOpenChange={(open:boolean) => {
+                                                                setDropdownVisible(prev => ({
+                                                                    ...prev,
+                                                                    [dropdownId]: open
+                                                                }));
+                                                            }}
+                                                            tiggerEle={
                                                                 <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
                                                                     <EditorMoreIcon />
                                                                 </div>
-                                                            </Dropdown>
-                                                        </Flex>
+                                                            }
+                                                            menu={{
+                                                                items:[
+                                                                    {
+                                                                        key: "1", label: (
+                                                                            <a onClick={(e) => {
+                                                                                e.stopPropagation(); // 阻止事件冒泡
+                                                                                editor.deleteComponentBlock(res.id, res.type, order);
+                                                                                // 移除组件选中项
+                                                                                setActiveCollapsed(undefined)
+                                                                                // 手动关闭下拉菜单
+                                                                                setDropdownVisible(prev => {
+                                                                                    const newVisible = { ...prev };
+                                                                                    delete newVisible[dropdownId];
+                                                                                    return newVisible;
+                                                                                });
+                                                                            }}>
+                                                                                <Flex gap={6} align="center">
+                                                                                    <DeleteIcon className="color-F86140 font-16" />
+                                                                                    <div className="color-474F5E">删除组件</div>
+                                                                                </Flex>
+                                                                            </a>
+                                                                        )
+                                                                    }
+                                                                ]
+                                                            }}
+                                                            placement="bottomLeft" 
+                                                            trigger={["click"]}>
+                                                        </MyDropdown>
                                                     </Flex>
-                                                )
-                                            }
-                                        }
-                                        )}
-                                        <Flex className="btn-add color-356DFF cursor-pointer" align="center" gap={8}>
-                                            <EditorAddBtnIcon className="font-20" />
-                                            <div>添加内容</div>
-                                        </Flex>
+                                                </Flex>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             )
@@ -231,6 +275,10 @@ function Left(){
                         // 模板
                         if(res.type == "TEMPLATE"){
                             const template = res.order.map((order:string,index:number)=>{
+                                // console.log(order)
+
+                                const dropdownId = `dropdown-TEMPLATE-${order}`;
+
                                 return (
                                     <div key={order} className="fixedCompItem-sectionWrapper-template" id={order}>
                                         <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 
@@ -244,16 +292,52 @@ function Left(){
                                             }}
                                         >
                                             <Flex align="center" className="sortItem" gap={8}>
-                                                <DownIcon className={collapsedSections[order]?"font-12 icon":"font-12 actIcon"} />
+                                                {res.sections[order].settingsData.block_order?.length > 0 ? <DownIcon className={collapsedSections[order]?"font-12 icon":"font-12 actIcon"} /> : <div style={{width:"12px"}}></div>}
                                                 <EditorAnnouncementIcon className="font-20" /> 
                                                 <div>{intl.formatMessage({id: res.sections[order].schema.name})}</div>
                                             </Flex>
                                             <Flex className="addBlockBtn" align="center">
-                                                <Dropdown menu={{ items }} placement="bottomLeft" trigger={["click"]}>
-                                                    <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
-                                                        <EditorMoreIcon />
-                                                    </div>
-                                                </Dropdown>
+                                                <MyDropdown
+                                                    open={dropdownVisible[dropdownId] || false}
+                                                    onOpenChange={(open:boolean) => {
+                                                        setDropdownVisible(prev => ({
+                                                            ...prev,
+                                                            [dropdownId]: open
+                                                        }));
+                                                    }}
+                                                    tiggerEle={
+                                                        <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
+                                                            <EditorMoreIcon />
+                                                        </div>
+                                                    }
+                                                    menu={{
+                                                        items:[
+                                                            {
+                                                                key: "1", label: (
+                                                                    <a onClick={(e) => {
+                                                                        e.stopPropagation(); // 阻止事件冒泡
+                                                                        editor.deleteComponentBlock(order,res.sections[order].type,"");
+                                                                        // 移除组件选中项
+                                                                        setActiveCollapsed(undefined)
+                                                                        // 手动关闭下拉菜单
+                                                                        setDropdownVisible(prev => {
+                                                                            const newVisible = { ...prev };
+                                                                            delete newVisible[dropdownId];
+                                                                            return newVisible;
+                                                                        });
+                                                                    }}>
+                                                                        <Flex gap={6} align="center">
+                                                                            <DeleteIcon className="color-F86140 font-16" />
+                                                                            <div className="color-474F5E">删除组件</div>
+                                                                        </Flex>
+                                                                    </a>
+                                                                )
+                                                            }
+                                                        ]
+                                                    }}
+                                                    placement="bottomLeft" 
+                                                    trigger={["click"]}>
+                                                </MyDropdown>
                                             </Flex>
                                         </Flex>
                                         {/* 折叠面板内容 */}
@@ -265,26 +349,68 @@ function Left(){
                                                 transition: 'max-height 0.3s ease-out'
                                             }}
                                             >
-                                            {/* 这里放折叠内容 */}
-                                            {/* {res.sections[order].schema.blocks?.map((block, index) => (
-                                                <Flex id="section-announcement-bar" className="fixedCompItem-sortItem" justify="space-between" >
-                                                    <Flex align="center" className="sortItem" gap={8}>
-                                                        <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
-                                                        <div>{block.name}</div>
+                                            {res.sections[order].settingsData.block_order?.map((blockOrder:string, index:number) => {
+                                                const biockType = res.sections[order].settingsData.blocks[blockOrder].type
+                                                const blocks = res.sections[order].schema.blocks.filter(block => block.type == biockType)
+                                                const block = blocks[0] ?? {}
+
+                                                const dropdownId = `dropdown-${order}-${blockOrder}`;
+
+                                                return (
+                                                    <Flex id="section-announcement-bar" className={blockOrder == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
+                                                        setActiveCollapsed(blockOrder)
+                                                        editor.setComponent({id:order,type:'template',itemId:blockOrder})
+                                                    }}>
+                                                        <Flex align="center" className="sortItem" gap={8}>
+                                                            <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
+                                                            <div>{intl.formatMessage({id:block?.name})}</div>
+                                                        </Flex>
+                                                        <Flex className="addBlockBtn" align="center">
+                                                            <MyDropdown
+                                                                open={dropdownVisible[dropdownId] || false}
+                                                                onOpenChange={(open:boolean) => {
+                                                                    setDropdownVisible(prev => ({
+                                                                        ...prev,
+                                                                        [dropdownId]: open
+                                                                    }));
+                                                                }}
+                                                                tiggerEle={
+                                                                    <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
+                                                                        <EditorMoreIcon />
+                                                                    </div>
+                                                                }
+                                                                menu={{
+                                                                    items:[
+                                                                        {
+                                                                            key: "1", label: (
+                                                                                <a onClick={(e) => {
+                                                                                    e.stopPropagation(); // 阻止事件冒泡
+                                                                                    editor.deleteComponentBlock(order, res.sections[order].type, blockOrder);
+                                                                                    // 移除组件选中项
+                                                                                    setActiveCollapsed(undefined)
+                                                                                    // 手动关闭下拉菜单
+                                                                                    setDropdownVisible(prev => {
+                                                                                        const newVisible = { ...prev };
+                                                                                        delete newVisible[dropdownId];
+                                                                                        return newVisible;
+                                                                                    });
+                                                                                }}>
+                                                                                    <Flex gap={6} align="center">
+                                                                                        <DeleteIcon className="color-F86140 font-16" />
+                                                                                        <div className="color-474F5E">删除组件</div>
+                                                                                    </Flex>
+                                                                                </a>
+                                                                            )
+                                                                        }
+                                                                    ]
+                                                                }}
+                                                                placement="bottomLeft" 
+                                                                trigger={["click"]}>
+                                                            </MyDropdown>
+                                                        </Flex>
                                                     </Flex>
-                                                    <Flex className="addBlockBtn" align="center">
-                                                        <Dropdown menu={{ items }} placement="bottomLeft" trigger={["click"]}>
-                                                            <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
-                                                                <EditorMoreIcon />
-                                                            </div>
-                                                        </Dropdown>
-                                                    </Flex>
-                                                </Flex>
-                                            ))} */}
-                                            <Flex className="btn-add color-356DFF cursor-pointer" align="center" gap={8}>
-                                                <EditorAddBtnIcon className="font-20" />
-                                                <div>添加内容</div>
-                                            </Flex>
+                                                )
+                                            })}
                                         </div>
                                     </div>
                                 )
@@ -292,94 +418,9 @@ function Left(){
 
                             return (
                                 <div style={{borderTop: "1px solid #eaedf1"}}>
-                                    {/* <div className="template-title font-w-600">模块</div> */}
+                                    <div className="template-title font-w-500">模板</div>
                                     {template}
-                                    <Flex className="template-add color-356DFF cursor-pointer" align="center" gap={8}>
-                                        <EditorAddBtnIcon className="font-20" />
-                                        <div>添加组件</div>
-                                    </Flex>
-                                </div>
-                            )
-                        }
-                        // 页脚
-                        if(res.type == "SECTION" && res.id == "footer"){
-                            const sectionId = res.config.sectionId!;
-                            return(
-                                <div key={sectionId} className="fixedCompItem-sectionWrapper" id={res.config.sectionId}>
-                                    <Flex id="section-announcement-bar" className={sectionId == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 
-                                        onClick={() => {
-                                            setCollapsedSections(prev => ({
-                                                ...prev,
-                                                [sectionId]: !prev[sectionId]
-                                            }))
-                                            setActiveCollapsed(sectionId)
-
-                                            editor.setComponent({id:sectionId,type:'section'})
-                                        }}
-                                    >
-                                        <Flex align="center" className="sortItem" gap={8}>
-                                            <DownIcon className={collapsedSections[sectionId]?"font-12 icon":"font-12 actIcon"} />
-                                            <EditorAnnouncementIcon className="font-20" /> 
-                                            <div>{intl.formatMessage({id: res.config.schema.name})}</div>
-                                        </Flex>
-                                    </Flex>
-                                    {/* 折叠面板内容 */}
-                                    <div 
-                                        className="fixedCompItem-foldContainer"
-                                        style={{
-                                            maxHeight: collapsedSections[sectionId] ? 0 : '500px',
-                                            overflow: 'hidden',
-                                            transition: 'max-height 0.3s ease-out'
-                                        }}
-                                        >
-                                        {/* 这里放折叠内容 */}
-                                        {res.config?.settingsData.block_order.map((order, index) => {
-                                            if(res.config.settingsData.blocks[order].type == "menu"){
-                                                return(
-                                                    <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
-                                                        setActiveCollapsed(order)
-                                                        editor.setComponent({id:sectionId,type:'section',itemId:order})
-                                                    }}>
-                                                        <Flex align="center" className="sortItem" gap={8}>
-                                                            <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
-                                                            <div>{intl.formatMessage({id:"t:sections.footer.blocks.menu.name"})}</div>
-                                                        </Flex>
-                                                        <Flex className="addBlockBtn" align="center">
-                                                            <Dropdown menu={{ items }} placement="bottomLeft" trigger={["click"]}>
-                                                                <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
-                                                                    <EditorMoreIcon />
-                                                                </div>
-                                                            </Dropdown>
-                                                        </Flex>
-                                                    </Flex>
-                                                )
-                                            }
-                                            if(res.config.settingsData.blocks[order].type == "custom"){
-                                                return(
-                                                    <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
-                                                        setActiveCollapsed(order)
-                                                    }}>
-                                                        <Flex align="center" className="sortItem" gap={8}>
-                                                            <img style={{width:"20px"}} src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOSA0QzE5LjU1MjMgNCAyMCA0LjQ0NzcyIDIwIDVMMjAgOS41TDE5IDkuNUMxOC40NDc3IDkuNSAxOCA5LjA1MjI4IDE4IDguNUwxOCA2TDE1LjUgNkMxNC45NDc3IDYgMTQuNSA1LjU1MjI4IDE0LjUgNUwxNC41IDRMMTkgNFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01IDIwQzQuNDQ3NzIgMjAgNCAxOS41NTIzIDQgMTlMNCAxNC41TDUgMTQuNUM1LjU1MjI5IDE0LjUgNiAxNC45NDc3IDYgMTUuNUw2IDE4TDguNSAxOEM5LjA1MjI4IDE4IDkuNSAxOC40NDc3IDkuNSAxOUw5LjUgMjBMNSAyMFoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00IDVDNCA0LjQ0NzcyIDQuNDQ3NzIgNCA1IDRMOS41IDRWNUM5LjUgNS41NTIyOCA5LjA1MjI4IDYgOC41IDZMNiA2TDYgOC41QzYgOS4wNTIyOCA1LjU1MjI4IDkuNSA1IDkuNUg0TDQgNVoiIGZpbGw9IiM0NzRGNUUiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yMCAxOUMyMCAxOS41NTIzIDE5LjU1MjMgMjAgMTkgMjBMMTQuNSAyMEwxNC41IDE5QzE0LjUgMTguNDQ3NyAxNC45NDc3IDE4IDE1LjUgMThMMTggMThMMTggMTUuNUMxOCAxNC45NDc3IDE4LjQ0NzcgMTQuNSAxOSAxNC41TDIwIDE0LjVMMjAgMTlaIiBmaWxsPSIjNDc0RjVFIi8+Cjwvc3ZnPgo=" />
-                                                            <div>{intl.formatMessage({id:"t:sections.footer.blocks.custom.name"})}</div>
-                                                        </Flex>
-                                                        <Flex className="addBlockBtn" align="center">
-                                                            <Dropdown menu={{ items }} placement="bottomLeft" trigger={["click"]}>
-                                                                <div onClick={(e) => e.stopPropagation()} className="blockContainer-addBlockBtn ant-dropdown-trigger">
-                                                                    <EditorMoreIcon />
-                                                                </div>
-                                                            </Dropdown>
-                                                        </Flex>
-                                                    </Flex>
-                                                )
-                                            }
-                                        }
-                                        )}
-                                        <Flex className="btn-add color-356DFF cursor-pointer" align="center" gap={8}>
-                                            <EditorAddBtnIcon className="font-20" />
-                                            <div>添加内容</div>
-                                        </Flex>
-                                    </div>
+                                    <ComponentAdd />
                                 </div>
                             )
                         }
@@ -682,15 +723,12 @@ const Scoped = styled.div`
                 }
             }
             .template-title{
-                padding-left: 24px;
-                padding-top: 6px;
-                padding-bottom: 6px;
+                color: #474F5E;
+                padding-left: 30px;
+                padding-top: 10px;
+                padding-bottom: 10px;
             }
-            .template-add{
-                padding-left: 24px;
-                padding-top: 8px;
-                padding-bottom: 8px;
-            }
+            
             .btn-add{
                 padding-left: 52px;
                 padding-top: 8px;
@@ -700,6 +738,28 @@ const Scoped = styled.div`
             
         }
     }
+    
+    .add-block-content{
+        min-width: 240px;
+        max-width: 240px;
+        .title{
+            padding: 6px 12px;
+            font-weight: 500;
+        }
+        .item-box{
+            padding-bottom: 4px;
+            .item{
+                padding: 5px 12px;
+                cursor: pointer;
+                color:#474F5E;
+                &:hover{
+                    background-color: #f5f5f5;
+                }
+            }
+        }
+        
+    }
+   
 `
 
 export default observer(Left)

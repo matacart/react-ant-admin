@@ -6,6 +6,19 @@ import cookie from 'react-cookies';
 
 
 // --重试--
+// 平台信息
+export async function getPlatformInfo(){
+  return await request('/ApiAppstore/platform_info',{
+    method: 'POST',
+    retryOnError: true,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+}
+
+
+
 // 店铺列表
 export async function getDomainList( options?: { [key: string]: any }) {
   return request<API.LoginResult>('/ApiAppstore/domain_select', {
@@ -1205,7 +1218,7 @@ export async function getStoreInfo(id:string){
       languages_id:""
     }
   })
-  return result.code == 0 ? result.data : null
+  return result.data
 }
 
 export async function getDomain(id:string){
@@ -1652,7 +1665,8 @@ export async function setUserInfo(res:any) {
     data:{
       contact_email:res.contact_email,
       contact_code:res.contact_code,
-      contact_phone:res.contact_phone
+      contact_phone:res.contact_phone,
+      languages_id:"2"
       // domain_id: cookie.load("domain")?.id
     }
   });
@@ -2101,6 +2115,7 @@ export async function getNavList(page:string,limit:string) {
 export async function importProductTask(file:any,type:string,handle:boolean) {
   return request("/ApiTask/importProductTask", {
     method: 'POST',
+
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -2790,3 +2805,205 @@ export async function getOrderList(res:any){
     }
   })
 }
+
+
+// mode == 智能 用户 开发
+// theme id
+// 获取模板文件列表 ApiTemplate/file_list
+export async function getThemeFileList(id:string,templateId:string,mode:string){
+  return request(`/ApiTemplate/file_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      id:id,
+      templateId:templateId,
+      mode:mode
+    }
+  })
+}
+
+// 获取文件详情
+export async function getThemeFileDetail(id:string,templateId:string,fileName:string,versionId:string,mode:string){
+  return request(`/ApiTemplate/file_detail`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      id:id,
+      templateId:templateId,
+      fileName:fileName,
+      version:versionId,
+      mode:mode
+    }
+  })
+}
+
+// 版本
+export async function getFileVersion(id:string,templateId:string,fileName:string,mode:string){
+  return request(`/ApiTemplate/file_version`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      id:id,
+      templateId:templateId,
+      fileName:fileName,
+      mode:mode
+    }
+  })
+}
+// 文件内容修改
+export async function setFileSave(id:string,templateId:string,fileName:string,fileContent:string,mode:string){
+  return request(`/ApiTemplate/file_save`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      id:id,
+      templateId:templateId,
+      fileName:fileName,
+      fileContent:fileContent,
+      mode:mode
+    }
+  })
+}
+
+// 客户使用模板
+export async function getTemplateInstanceUsing(){
+  return request(`/ApiTemplate/instance_using`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languages_id:localStorage.getItem("use_lang"),
+    }
+  })
+}
+
+// 客户模板实例
+export async function getTemplateInstanceList(res:any){
+  return request(`/ApiTemplate/instance_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languages_id:localStorage.getItem("use_lang"),
+      ...res
+    }
+  })
+}
+
+// 模板商城实例
+export async function getTemplateMallList(res:any){
+  return request(`/ApiTemplate/templatemall_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languages_id:localStorage.getItem("use_lang"),
+      ...res
+    }
+  })
+}
+
+// 模板发布
+export async function setInstanceStatus(templateId:string,status:string){
+  return request(`/ApiTemplate/instance_status`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languages_id:localStorage.getItem("use_lang"),
+      id:templateId,
+      status:status
+    }
+  })
+}
+// 模板重命名
+export async function templateRename(templateId:string,templateName:string){
+  return request(`/ApiTemplate/template_rename`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languages_id:localStorage.getItem("use_lang"),
+      id:templateId,
+      new_name:templateName
+    }
+  })
+}
+// instance_status
+// 上传压缩文件 -- 模板
+export async function uploadTemplate(file:any){
+  return request(`/ApiTemplate/template_upload`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      zip_file:file
+    }
+  })
+}
+// 下载压缩文件 -- 模板
+export async function downloadTemplate(historyId:string){
+  return request(`/ApiTemplate/template_download`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      history_id:historyId
+    }
+  })
+}
+
+// 模板安装
+export async function installTemplate(templateId:string){
+  return request(`/ApiTemplate/template_install`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      template_id:templateId
+    }
+  })
+}
+
+// 模板信息
+export async function getTemplateInfo(templateId:string){
+  return request(`/ApiTemplate/template_info`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      template_id:templateId
+    }
+  })
+}
+

@@ -1,14 +1,8 @@
-import MyButton from "@/components/Button/MyButton";
 import MyDropdown from "@/components/Dropdown/MyDropdown"
 import { CloseIcon, UnfoldIcon } from "@/components/Icons/Icons";
-import { Checkbox, Col, Flex, Form, Input, InputNumber, Modal, Popover, Row, Select, Tooltip } from "antd"
+import { Flex, Form, Input, InputNumber, Modal, Popover, Row, Select, Tooltip } from "antd"
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import MyInput from "@/components/Input/MyInput";
-import MySelect from "@/components/Select/MySelect";
-import DefaultButton from "@/components/Button/DefaultButton";
-import PrimaryButton from "@/components/Button/PrimaryButton";
-import { getCityList, getProvinceList } from "@/services/y2/api";
 import cousomerManagement from "@/store/customer/cousomerManagement";
 
 
