@@ -1,8 +1,6 @@
-import { useIntl } from "@/.umi/plugin-locale/localeExports";
-import DefaultButton from "@/components/Button/DefaultButton";
-import { DragOverlay, useDraggable } from "@dnd-kit/core/dist";
+import { useDraggable } from "@dnd-kit/core/dist";
+import { useIntl } from "@umijs/max";
 import { Card, Flex } from "antd";
-import { action } from "mobx";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 

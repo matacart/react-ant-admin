@@ -39,6 +39,12 @@ class shopsetting {
         makeAutoObservable(this)
     }
 
+    // 语言
+    languagesId = "2";
+    setLanguagesId(value:string) {
+        this.languagesId = value;
+    }
+
     // 模板商城列表
     templateMallList:TemplateMall[] = []
 

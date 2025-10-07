@@ -1,6 +1,6 @@
 import { QuestionCircleOutlined, WifiOutlined } from '@ant-design/icons';
-import { SelectLang as UmiSelectLang } from '@umijs/max';
-import { Popover } from 'antd';
+import { SelectLang as UmiSelectLang, useIntl } from '@umijs/max';
+import { Popover, Tooltip } from 'antd';
 import React,{ useEffect } from 'react';
 import  { useState } from 'react';
 export type SiderTheme = 'light' | 'dark';
@@ -8,15 +8,17 @@ export type SiderTheme = 'light' | 'dark';
 export const SelectLang = () => {
   return (
     <UmiSelectLang
+      reload={false}
       style={{
-        padding: 0,
+        display: 'flex',
+        padding:'8px',
       }}
-      postLocalesData={()=>{return[  
+      postLocalesData={()=>{return[
         {  
-            "lang": "zh-CN",  
-            "label": "简体中文",  
-            "icon": "🇨🇳", // 中国国旗  
-            "title": "语言"  
+          "lang": "zh-CN",  
+          "label": "简体中文",  
+          "icon": "🇨🇳", // 中国国旗  
+          "title": "语言"  
         },  
         {  
           "lang": "zh-TW",  
@@ -68,7 +70,7 @@ export const SelectLang = () => {
             "title": "Язык"  
         },  
         {  
-            "lang": "ar-SA",  
+            "lang": "ar",  
             "label": "العربية",  
             "icon": "🇸🇦", // 沙特阿拉伯国旗（作为阿拉伯语的代表）  
             "title": "لغة"  
@@ -78,31 +80,79 @@ export const SelectLang = () => {
             "label": "Português",  
             "icon": "🇧🇷", // 巴西国旗（作为葡萄牙语的代表）  
             "title": "Idioma"  
-        }  
+        },
+        {
+            "lang": "pt-PT",  
+            "label": "Portuguese",
+            "icon": "🇵🇹"
+        },
+        {
+            "lang": "th-TH",
+            "label": "ไทย",
+            "icon": "🇹🇭"
+        },
+        {
+            "lang": "ms-MY",
+            "label": "Malaysia",
+            "icon": "🇲🇾"
+        },
+        {
+            "lang": "bn-BD",
+            "label": "টাকা",
+            "icon": "🇧🇩"
+        },
+        {
+            "lang": "vi-VN",
+            "label": "Vietnamese",
+            "icon": "🇻🇳"
+        },
+        {
+            "lang": "en-AU",
+            "label": "Australian",
+            "icon": "🇦🇺"
+        },
+        {
+            "lang": "id-ID",
+            "label": "Indonesia",
+            "icon": "🇮🇩"
+        },
+        {
+            "lang": "es-MX",
+            "label": "Mexican Spanish",
+            "icon": "🇲🇽"
+        },
+        {
+            "lang": "it-IT",
+            "label": "Italiano",
+            "icon": "🇮🇹"
+        }
       ]}
-   }
+      }
     />
   );
 };
 
 export const Question = () => {
-  return (
 
-    <div
-      style={{
-        display: 'flex',
-        // height: 26,
-      }}
-      onClick={() => {
-        window.open('http://help.handingyun.cn/');
-      }}
-    >
-      <QuestionCircleOutlined />
-    </div>
+  const intl = useIntl();
+
+  return (
+    <Tooltip title={intl.formatMessage({id: 'header.help'})}>
+      <div
+        style={{
+          display: 'flex',
+          padding:'8px'
+          // height: 26,
+        }}
+        onClick={() => {
+          window.open('http://help.handingyun.cn/');
+        }}
+      >
+        <QuestionCircleOutlined />
+      </div>
+    </Tooltip>
   );
 };
-
-
 
 
 async function measureLatency() {  
@@ -139,6 +189,8 @@ export const Ping = () => {
     <>
       <Popover content={pingTime.toFixed(2)+'ms'}>
         <WifiOutlined style={{
+          display: 'flex',
+          padding:'8px',
           color: color
         }}/>
       </Popover>

@@ -30,7 +30,7 @@ import categories from "@/store/product/categories";
                         }} setSEO={setSEO} type={"-c"}  />
                     </span>
                 </div>
-                <div className="webUrl">{cookie.load("domain")?.domainName}</div>
+                <div className="webUrl">{cookie.load("domain")?.domain_name}</div>
                 <div className="webTitle">{categories.categoriesInfo.meta_title==""?(categories.categoriesInfo.title==""?"未填写标题":categories.categoriesInfo.title):categories.categoriesInfo.meta_title}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{categories.categoriesInfo.meta_description==""?(categories.categoriesInfo.content==""?"未填写描述":categories.categoriesInfo.content.replace(/<[^>]*>/g,"")):categories.categoriesInfo.meta_description}</div>

@@ -1,11 +1,12 @@
 import { ArrowLeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
-import { Card, Flex, Input, List } from "antd"
+import { Card, Flex, Input, List, message } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
 import { getAddonsList, setAddonsConfig } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import LangSelect from "@/pages/components/LangSelect";
+import LangSelect from "@/components/Select/LangSelect";
+import cookie from 'react-cookies';
 
 function OtherCollection() {
 
@@ -13,15 +14,10 @@ function OtherCollection() {
 
     const [supportPayments,setSupportPayments] = useState<any>([]);
 
-    const [language,setLanguage] = useState("2");
+    const [language,setLanguage] = useState(cookie.load("shop_lang") || '2');
 
     const setLang = (lang:string) => {
-        getAddonsList(lang,"1","2").then(res=>{
-            setSupportPayments(res.data)
-            setLanguage(lang)
-        }).catch(err=>{
-        }).finally(()=>{
-        })
+        setLanguage(lang)
     }
     // const [config,setConfig] = useState<any>({
     //     isAddressRequired:"0",
@@ -33,10 +29,11 @@ function OtherCollection() {
         getAddonsList(language,"1","2").then(res=>{
             setSupportPayments(res.data)
         }).catch(err=>{
+            message.error("error")
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[])
+    },[language])
 
     return (
         <Scoped>

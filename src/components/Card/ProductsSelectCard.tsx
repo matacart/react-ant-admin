@@ -26,7 +26,9 @@ export default function ProductsSelectCard(){
     const [openTagsList,setOpenTagsList] = useState(false);
     // 添加标签 
     function getTags(language:string){
-        selectTags(language).then(res=>{
+        selectTags({
+            languages_id:language
+        }).then(res=>{
             if(res.code == 0){
                 res.data.forEach((element:any) => {
                     timeTags.push({

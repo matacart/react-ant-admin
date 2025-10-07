@@ -1,7 +1,7 @@
-import { useIntl } from "@/.umi/plugin-locale/localeExports"
 import { EditorBlogIcon, EditorCarouselImgIcon, EditorCollectionListIcon, EditorFeaturedCollectionIcon, EditorFeaturedProductIcon, EditorIconListIcon, EditorMultilevelFilterIcon, EditorRichTextIcon, EditorShoppableImageIcon, EditorSignUpAndSaveIcon, EditorTextImgIcon, EditorVideoIcon } from "@/components/Icons/Icons"
+import { useIntl } from "@umijs/max"
 import { Flex } from "antd"
-import { ReactNode, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 

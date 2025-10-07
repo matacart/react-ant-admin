@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import ConditionCard from "./ConditionCard";
 import RelationCard from "./RelationCard";
 import { DndContext, DragOverlay } from "@dnd-kit/core/dist";
-import { useIntl } from "@/.umi/plugin-locale/localeExports";
+import { useIntl } from "@umijs/max";
 
 // 新增客户
 export default function SubdivisionCreate() {

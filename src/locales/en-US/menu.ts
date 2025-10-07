@@ -51,9 +51,9 @@ export default {
   'menu.editor.koni': 'Koni Editor',
   
   "menu.stores": 'Stores',
-  "menu.stores_list":"Store management",
-  "menu.stores_bills":"Bill management",
-  "menu.stores_data":"Data management",
+  'menu.stores/list':'Store management',
+  "menu.stores/bills":"Bill management",
+  "menu.stores/data":"Data management",
   'menu.stores.create': 'Create Store',
   //
   'menu.search.stores': "Search Store Name/Subdomain/Main Domain",  
@@ -63,7 +63,8 @@ export default {
   'menu.search.none': 'No stores matching the criteria',  
   'menu.stores.manage': 'Manage Stores',
   //
-  'menu.orders': 'Orders',  
+  'menu.orders': 'Orders',
+  'menu.orders.orderId': 'Orders', 
   'menu.orders.manages': 'Order Management',  
   'menu.orders.recallOrders': 'Cancelled Orders',  
   'menu.orders.draftOrders': 'Draft Orders',  

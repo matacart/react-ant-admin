@@ -33,7 +33,7 @@ function ComponentAdd(){
         }
     });
 
-    console.log(menuList)
+    // console.log(menuList)
 
     // const menuData = [
     //     {   

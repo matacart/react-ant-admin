@@ -25,7 +25,7 @@ export default function DataCard({
     const [todayData,setTodayData] = useState<todayDataType | null>({
         currencySymbol: "$",
         customerCount: 0,
-        domainID: "140285",
+        domainID: "0",
         orderCount: 0,
         totalSales: 0,
         visitorCount: 0,

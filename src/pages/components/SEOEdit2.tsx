@@ -1,9 +1,7 @@
 import { Button, Drawer, Form, Input, Tag } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import globalStore from "@/store/globalStore";
 import { observer } from "mobx-react-lite"
-import { lastIndexOf, set } from "lodash";
 // 
 import cookie from 'react-cookies';
 
@@ -17,12 +15,6 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
     const [description,setDescription] = useState("");
     const [keyword,setKeyword] = useState("");
     const [url,setUrl] = useState("");
-    let id:string;
-    if(type == "-a"){
-        id = seo.id
-    }else if(type == "-p"){
-        id = seo.productId
-    }
 
     useEffect(()=>{
         setTitle(seo.metaTitle)
@@ -44,7 +36,7 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
 
     // 完成
     const seoEidtConfirm = () => {
-        let newURL = url.trim()+type+id+".html"
+        let newURL = url.trim()+type+seo.id+".html"
         setSEO?.(title,description,keyword,newURL)
         setOpen(false)
     }
@@ -104,7 +96,7 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
                             <Form.Item label="链接" tooltip="描述性URL，例：product-item">
                                 <Input value={url} onChange={(e)=>{
                                     setUrl(e.target.value)
-                                }} suffix={type+(id?id:"id")+".html"} />
+                                }} suffix={type+(seo.id?seo.id:"id")+".html"} />
                             </Form.Item>
                             <Form.Item label="搜索引擎关键词" tooltip="关键词可以提高搜索结果排名，建议1-2个关键词即可，堆砌关键词可能会降低排名！">
                                 <Input placeholder="输入关键词后，按enter键完成输入" value={keyword} defaultValue={seo.metaKeyword} onChange={(e)=>{

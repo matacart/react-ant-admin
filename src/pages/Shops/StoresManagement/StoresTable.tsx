@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tag, Tooltip } from 'antd';
-import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import { CopyOutlined, DeleteOutlined, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { history, Link, useIntl } from '@umijs/max';
+import { Avatar, Button, message, Modal, Popover, Switch, Table, Tooltip } from 'antd';
+import type { GetProp, TableColumnsType, TableProps } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { getDomainList } from '@/services/y2/api';
+import shopsManagement from "@/store/shops/shopsManagementStore";
 import SuccessTag from '@/components/Tag/SuccessTag';
 import DefaultTag from '@/components/Tag/DefaultTag';
 import ErrorTag from '@/components/Tag/ErrorTag';
 import WarningTag from '@/components/Tag/WarningTag';
+import { useNavigate } from 'react-router-dom';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -16,6 +17,9 @@ type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>
 // 表单项商品数据类型
 interface DataType {
   id: string;
+  storeName:string;
+  status:string;
+  secondDomain:string;
 }
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -58,9 +62,9 @@ function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
   }
 }
 
-
-// 商品复制
 function StoresTable() {
+  const navigate = useNavigate()
+
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [modalOpen, setModalOpen] = useState(false);
@@ -71,7 +75,7 @@ function StoresTable() {
     pagination: {
       current: 1,
       pageSize: 10,
-    },
+    }
   });
  
   //列表数据
@@ -90,7 +94,7 @@ function StoresTable() {
 
         dataIndex: 'storeName',
         width: 160,
-      },
+    },
     {
       title: 'handle',
       dataIndex: 'secondDomain',
@@ -98,7 +102,7 @@ function StoresTable() {
     },
     {
       title: '域名',
-      dataIndex: 'domainName',
+      dataIndex: 'domain_name',
       width: 200,
     },
   //   <Tag className="tag tag-success" style={{
@@ -144,21 +148,21 @@ function StoresTable() {
     },
     {
       title: '店铺套餐',
-      dataIndex: 'packageName',
+      dataIndex: 'package_id',
       width: 120,
     },
     {
       title: '商家账号',
-      dataIndex: 'model',
+      dataIndex: 'employee_id',
       width: 120,
     },
     {
       title: <div>角色
       <Tooltip title={
         <div>
-          <div>· 店主：店铺的创建人，拥有店铺的所有权限。</div>
-          <div>· 店长：帮助店主管理店铺，拥有店铺绝大部分权限。</div>
-          <div>· 员工：帮助店主管理店铺，仅拥有店主/店长授予的权限。</div>
+          {/* <div>· ：店铺的创建人，拥有店铺的所有权限。</div> */}
+          <div>· 管理员：帮助店主管理店铺，拥有店铺绝大部分权限。</div>
+          <div>· 操作员：帮助店主管理店铺，仅拥有店主/店长授予的权限。</div>
         </div>
       }>
           <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
@@ -166,7 +170,7 @@ function StoresTable() {
           </span>
         </Tooltip>
       </div>,
-      dataIndex: 'model',
+      dataIndex: 'employee_realname',
       width: 120,
     },
     {
@@ -215,7 +219,6 @@ function StoresTable() {
 
           }} >
             <Button onClick={()=>{
-              // console.log(record)
             }}>进入后台</Button>
             {/* <ButtonIcon>
               <Tooltip title="复制">
@@ -234,14 +237,8 @@ function StoresTable() {
     },
 
   ];
-
-//   const fetchData = () => {
-//     setLoading(true);
-//     const limit  = getRandomuserParams(tableParams).results;
-//     const page = getRandomuserParams(tableParams).page;
-//   };
   
-  const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+  const handleTableChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
     setTableParams({
       pagination,
       filters,
@@ -249,43 +246,29 @@ function StoresTable() {
     });
   };
 
-  const handleOrderClick = (id: string,languages_id:string) => {
-    console.log('Clicked product:', id); // 添加调试日志
-    // 
-    history.push(`/products/categories/edit?id=`+id+`&languages_id=`+languages_id)
-  };
-
   useEffect(()=>{
-    // 获取店铺数据
-    setLoading(true)
-    getDomainList().then(res=>{
-      if(res.code == 0){
-        let domainList:any = [];
-        res?.data?.forEach((item: any, index: any) => {
-          domainList.push({
-              id: item.id,
-              storeName: item.store_name,
-              packageName:item.package_name,
-              domainName: item.domain_name,
-              secondDomain: item.second_domain.toLowerCase(),
-              status: item.status,
-          })
-        })
-        sessionStorage["domain"] = JSON.stringify(domainList)
-        setData(domainList)
-        setLoading(false)
+    setLoading(true);
+    getDomainList({
+      data:{
+        page:tableParams?.pagination?.current,
+        limit:tableParams?.pagination?.pageSize
       }
+    }).then((res)=>{
+      shopsManagement.setEnalbeCount(res.count)
+      setData(res.data);
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams?.pagination,
+          total: res.count
+        }
+      });
+    }).catch(err=>{
+        console.log(err)
+    }).finally(()=>{
+      setLoading(false)
     })
-    // 刷新
-    // console.log(JSON.parse(sessionStorage["domain"]))
-    
-    // getCategoryList().then(res=>{
-    //     console.log(res.data)
-    //     setData([...res.data])
-    //     setLoading(false);
-    // })
-  },[])
-
+  },[tableParams?.pagination?.current,tableParams?.pagination?.pageSize,shopsManagement.employee,shopsManagement.role])
 
   return (
     <Scoped>
@@ -294,19 +277,18 @@ function StoresTable() {
         columns={columns}
         // rowKey={(record) => record.key}
         dataSource={data}
-        pagination={tableParams.pagination}
+        pagination={tableParams?.pagination}
         loading={loading}
         onChange={handleTableChange}
         scroll={{ x: 1300 }}
         rowKey={(record) => record.id}
         onRow={(record) => ({
           onClick: () => {
-            // 
+            // 跳转店铺
             if(!window.location.hostname.startsWith("localhost")){
               const newUrl = replaceSubdomain(window.location.href,record.secondDomain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
               window.open(newUrl)
             }
-            // console.log('Row clicked:', record);
           },
         })}
         // rowSelection={{
@@ -326,6 +308,14 @@ export default StoresTable;
 const Scoped = styled.div`
   .ant-table-tbody > tr > td {
     padding: 10px; 
+  }
+  /* 确保加载指示器在表格容器内居中 */
+  .ant-table-wrapper .ant-spin-nested-loading .ant-spin {
+    position: absolute;
+    left: 50%;
+    top: calc(50% - 30px);
+    transform: translate(-50%, -50%);
+    z-index: 1000;
   }
 `
 const ButtonIcon = styled.div`

@@ -7,6 +7,7 @@ import purchaseOrderList from "@/store/product/purchaseOrder/purchaseOrderListSt
 import { observer } from "mobx-react-lite";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import SelectCheckBox from "@/components/Select/SelectCheckBox";
+import SelectCheckBox2 from "@/components/Select/SelectCheckBox2";
 
 const { Search } = Input;
 
@@ -213,7 +214,7 @@ function SelectCard(){
                         <div><Input style={{height:"36px"}} prefix={<SearchOutlined />} value={purchaseOrderList.tagsOrderNumber} onChange={(e)=>{
                           purchaseOrderList.setTagsOrderNumber(e.target.value)
                         }} placeholder="采购单号" /></div>
-                        <SelectCheckBox options={statusOptions} setStatusOptions={setStatusOptions} text="状态" style={{width:"180px",height:"36px"}}/>
+                        <SelectCheckBox options={statusOptions} setOptions={()=>{}} placeholder="状态" style={{ width: "180px", height: "36px" }} />
                         <Select
                             value={"供应商"}
                             style={{ width: 180,height:"36px" }}

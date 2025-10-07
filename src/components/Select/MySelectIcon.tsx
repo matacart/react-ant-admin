@@ -24,7 +24,7 @@ function MySelectIcon({...props}) {
                 }}
                 >
                 <Select getPopupContainer={() => Ref.current!} {...props}
-                    onDropdownVisibleChange={(open)=>{
+                    onOpenChange={(open)=>{
                         setOpen(open)
                     }}
                     suffixIcon={

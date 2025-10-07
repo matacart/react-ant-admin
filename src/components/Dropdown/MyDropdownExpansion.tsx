@@ -2,7 +2,7 @@ import { ConfigProvider, Dropdown, MenuProps, theme } from "antd";
 import React from "react";
 
 const { useToken } = theme;
-// 自定义下拉
+// 自定义下拉  最大高度300px
 export default function MyDropdownExpansion({tiggerEle,theme,...props}:any) {
 
     const { token } = useToken();
@@ -16,6 +16,7 @@ export default function MyDropdownExpansion({tiggerEle,theme,...props}:any) {
     const menuStyle: React.CSSProperties = {
         padding: "8px 0",
         boxShadow: 'none',
+        maxHeight: "300px",
     };
 
     return (

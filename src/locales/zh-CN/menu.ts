@@ -57,9 +57,9 @@ export default {
   'menu.products.edit': '编辑商品',
   "menu.stores": "店铺",
 
-  "menu.stores_list":"店铺管理",
-  "menu.stores_bills":"账单管理",
-  "menu.stores_data":"数据管理",
+  'menu.stores/list':'店铺管理',
+  "menu.stores/bills":"账单管理",
+  "menu.stores/data":"数据管理",
 
   'menu.stores.create': '创建店铺',
   //
@@ -86,11 +86,14 @@ export default {
   'menu.products.gift-cards':'礼品卡',
   'menu.products.giftCardsNew':'新增礼品卡',
 
-  
-
   'menu.customer': '客户',
   'menu.customer.management': '客户管理',
   'menu.customer.persona': '细分',
+  'menu.customer.management/subdivision/create/:id': '创建细分',
+  'menu.customer.persona/list': '细分',
+  'menu.customer.personaDetail': '客户细分',
+  'menu.customer.persona/all': '客户细分',
+
 
   'menu.discount': '折扣',
 
@@ -109,13 +112,13 @@ export default {
   'menu.warehouse.inventory':"库存",
   'menu.warehouse.transfers':"转移",
 
-  'menu.appStore':'应用市场',
+  'menu.app-store': '应用市场',
   'menu.orderInvoiceCustomization':'订单票据定制插件',
 
   'menu.website':"在线商店",
   'menu.website.shopSetting':'店铺设计',
   'menu.website.articles':'博客',
-  'menu.website.customPage':'自定义页面',
+  'menu.website.page': '自定义页面',
   'menu.website.navList':'菜单导航',
   'menu.website.preferences':'偏好设置',
   'menu.channel':"渠道",
@@ -130,5 +133,7 @@ export default {
   'menu.settings.adminpermission':"管理员和权限",
   'menu.settings.adminpermissionAdd':"添加员工账号",
   'menu.settings.logisticsEditCustom':'通用运费编辑',
+  'menu.settings.logistics/add/custom':'自定义运费',
+
 
 };

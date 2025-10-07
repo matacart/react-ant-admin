@@ -169,9 +169,7 @@ export default defineConfig({
   mfsu: false,
 
   // 插件
-  // plugins: [
-  //   './config/plugin.ts',
-  // ],
+  plugins: [],
 
   // title:{
   //   template:"123"
@@ -184,7 +182,9 @@ export default defineConfig({
   icons: {},
 
   // 代码拆分
-  codeSplitting: false,
+  codeSplitting: {
+    jsStrategy:'granularChunks'
+  },
 
   outputPath: `dist/us01/${timestamp}`,
 

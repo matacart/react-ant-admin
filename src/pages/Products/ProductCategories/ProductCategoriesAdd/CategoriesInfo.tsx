@@ -14,9 +14,9 @@ function CategoriesInfo({form}:{form:any}) {
     }
 
     useEffect(()=>{
-        globalStore.getCategory().then(res=>{
-            setTreeData(res)
-        })
+        // globalStore.getCategory().then(res=>{
+        //     setTreeData(res)
+        // })
         form.setFieldsValue({
             title: categories.categoriesInfo.title,
             parentId: categories.categoriesInfo.pid == "0" ? undefined : categories.categoriesInfo.pid,

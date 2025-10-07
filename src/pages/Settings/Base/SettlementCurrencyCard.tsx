@@ -103,7 +103,7 @@ function SettlementCurrencyCard() {
     ];
     useEffect(()=>{
         console.log()
-        setCurrency(cookie.load("domain").defaultCurrency)
+        setCurrency(cookie.load("domain").default_currency)
         // console.log()
     },[])
     // 获取
@@ -141,11 +141,11 @@ function SettlementCurrencyCard() {
                 // console.log(current)
                 newDomain = {
                     ...newDomain,
-                    defaultCurrency:current.code,
+                    default_currency:current.code,
                     // defaultLang:current.defaultLang
                 }
                 cookie.save('domain', newDomain, { path: '/' });
-                setCurrency(newDomain.defaultCurrency)
+                setCurrency(newDomain.default_currency)
             }
         })
     }

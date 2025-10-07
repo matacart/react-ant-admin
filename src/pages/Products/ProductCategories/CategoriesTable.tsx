@@ -201,9 +201,7 @@ function CategoriesTable() {
   };
 
   const handleOrderClick = (id: string,languages_id:string) => {
-    console.log('Clicked product:', id); // 添加调试日志
-    // 
-    history.push(`/products/categories/edit?id=`+id+`&languages_id=`+languages_id)
+    history.push(`/products/categories/edit/${id}/${languages_id}`)
   };
 
   // 获取数据

@@ -1,5 +1,5 @@
 import { history } from "@umijs/max"
-import { Button, Card, Flex, MenuProps, message, Space, Table, TableProps, Tooltip } from "antd"
+import { Card, Flex, MenuProps, message, Space, Table, TableProps, Tooltip } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs"
@@ -9,13 +9,13 @@ import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { delArticles, getArticleList } from "@/services/y2/api";
 import cookie from 'react-cookies';
-import { status } from 'nprogress';
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
-import { set } from 'lodash';
-import { SelectLang } from "@/components";
-import LangSelect from "@/pages/components/LangSelect";
+import shop from "@/store/shops/shop";
+import { observer } from "mobx-react-lite";
+import articlesList from "@/store/channel/articles/articlesList";
+import LangSelect from "@/components/Select/LangSelect";
 
 
 interface DataType {
@@ -30,13 +30,11 @@ interface DataType {
     tags: string[];
 }
 
-export default function ArticlesListCard({articlesList,count}) {
+function ArticlesListCard() {
 
-    const [data,setData] = useState(articlesList)
+    const [data,setData] = useState([]);
 
     const [loading,setLoading] = useState(false)
-
-    const [language,setLanguage] = useState("2")
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -98,8 +96,8 @@ export default function ArticlesListCard({articlesList,count}) {
             <Space size="middle">
               <div className='wrap' onClick={(e) => {
                   e.stopPropagation()
-                  if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
-                    window.open(`https://`+cookie.load("domain").domainName+`/`+record.title.replace(/\s+/g, "-")+`-a`+record.id+`.html`)
+                  if(cookie.load("domain").domain_name && cookie.load("domain").domain_name!==""){
+                    window.open(`https://`+cookie.load("domain").domain_name+`/`+record.title.replace(/\s+/g, "-")+`-a`+record.id+`.html`)
                   }else{
                     message.error("请先设置店铺")
                   }
@@ -171,21 +169,20 @@ export default function ArticlesListCard({articlesList,count}) {
     const [pagination,setPagination] = useState({
         current: 1,
         pageSize: 10,
-        total: count,
+        total: 0
     })
 
     // 获取文章列表
     const fetchArticleList = (page:number,limit:number,lang:string)=>{
       setLoading(true)
-      getArticleList(page.toString(),limit.toString(),lang).then(res=>{
-        console.log(res)
+      getArticleList(page.toString(),limit.toString(),lang).then((res:any)=>{
         setData(res.data)
         setPagination({
           ...pagination,
           current: page,
           pageSize: limit,
+          total: res.count
         })
-        setLanguage(lang)
       }).catch(err=>{
   
       }).finally(()=>{
@@ -193,9 +190,14 @@ export default function ArticlesListCard({articlesList,count}) {
       })
     }
 
-    const setLang = (lang:string)=>{
-      fetchArticleList(pagination.current,pagination.pageSize,lang)
+    // 切换语言
+    const setLang = (value:string)=>{
+      articlesList.setLanguagesId(value)
     }
+
+    useEffect(()=>{
+      fetchArticleList(pagination.current,pagination.pageSize,articlesList.languagesId)
+    },[articlesList.languagesId])
 
     return (
         <Scoped>
@@ -219,7 +221,7 @@ export default function ArticlesListCard({articlesList,count}) {
                     ]} onChange={()=>{}} />
                   </Flex>
                   <Flex gap={12}>
-                    <LangSelect isLabel={true} lang={language} setLang={setLang} />
+                    <LangSelect lang={articlesList.languagesId} setLang={setLang} />
                     <DropdownSort items={items} styled={{maxHeight:"290px",overflowY:"auto"}} />
                   </Flex>
                 </Flex>
@@ -227,8 +229,7 @@ export default function ArticlesListCard({articlesList,count}) {
                 <Table<DataType> columns={columns} dataSource={data} 
                   onRow={(record) => ({
                     onClick: () => {
-                      console.log('Row clicked:', record);
-                      history.push(`/website/articles/edit?id=${record.id}&langId=${record.languages_id}`);
+                      history.push(`/website/articles/edit/${record.id}/${record.languages_id}`);
                     },
                   })}
                   rowSelection={{ type: selectionType, ...rowSelection }}
@@ -236,7 +237,7 @@ export default function ArticlesListCard({articlesList,count}) {
                     ...pagination,
                     showSizeChanger: true,
                     onChange: (page, pageSize) => {
-                      fetchArticleList(page,pageSize,language)
+                      fetchArticleList(page,pageSize,shop.language)
                     },
                   }}
                   loading={loading}
@@ -245,6 +246,8 @@ export default function ArticlesListCard({articlesList,count}) {
         </Scoped>
     )
 }
+
+export default observer(ArticlesListCard)
 
 const Scoped = styled.div`
 

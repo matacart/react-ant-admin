@@ -7,6 +7,7 @@ import cookie from 'react-cookies';
 import { data } from '@remix-run/router';
 import DefaultButton from "../Button/DefaultButton";
 import PrimaryButton from "../Button/PrimaryButton";
+import { useIntl } from "@umijs/max";
 
 interface VersionType {
     comparison: any;
@@ -16,6 +17,8 @@ interface VersionType {
 }
 
 function CheckUpdates(){
+
+    const intl = useIntl();
 
     const [open,setOpen] = useState(false);
 
@@ -63,8 +66,8 @@ function CheckUpdates(){
   
     return(
       <>
-        <Tooltip title="检测更新">
-            <div onClick={checkUpdate}>
+        <Tooltip title={intl.formatMessage({id: 'header.update'})} >
+            <div style={{padding:"8px",display:"flex"}} onClick={checkUpdate}>
                 <SyncOutlined />
             </div>
         </Tooltip>

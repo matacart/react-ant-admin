@@ -26,9 +26,9 @@ function CategoriesInfo({form}:{form:any}) {
     },[])
 
     useEffect(()=>{
-        globalStore.getCategory().then(res=>{
-            setTreeData(res)
-        })
+        // globalStore.getCategory().then(res=>{
+        //     setTreeData(res)
+        // })
     },[])
     return (
         <Card title="分类信息" className='product-data-card' extra={

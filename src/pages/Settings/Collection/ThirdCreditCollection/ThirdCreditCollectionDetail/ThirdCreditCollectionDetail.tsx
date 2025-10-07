@@ -9,9 +9,9 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import DangerButton from "@/components/Button/DangerButton";
 import { observer } from "mobx-react-lite";
-import LangSelect from "@/pages/components/LangSelect";
 import collection from "@/store/settings/collection";
 import DefaultButton from "@/components/Button/DefaultButton";
+import LangSelect from "@/components/Select/LangSelect";
 
 // 新增类型定义
 interface FormItem {

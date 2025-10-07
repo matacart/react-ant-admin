@@ -7,10 +7,7 @@ import Main from "./Main";
 import styled, { createGlobalStyle } from "styled-components";
 import AnnouncementBar from "./AnnouncementBar";
 import ComponentViewCard from "./ComponentViewCard";
-
 // 获取数据
-import pageData from "../Editor/data/InstalledSections/home.json"
-
 function View(){
 
     const vRef = useRef<HTMLDivElement>(null);
@@ -19,13 +16,7 @@ function View(){
 
     const [isComponentReady, setIsComponentReady] = useState(false);
 
-    const [searchParams, setSearchParams] = useSearchParams();
-
     const [templateData,setTemplateData] = useState<any[]>([]);
-
-    const id = searchParams.get("templateId");
-    const page = searchParams.get("page");
-    const preview = searchParams.get("preview");
 
     // const data = index.data
     function renderTemplate(data:any[]) {
@@ -35,11 +26,10 @@ function View(){
     }
 
     useEffect(()=>{
-
-        if(preview == "1"){
-            renderTemplate(pageData.data)
-            return;
-        }
+        // if(preview == "1"){
+        //     renderTemplate(pageData.data)
+        //     return;
+        // }
         // 通知父页面 iframe 已准备就绪 可以发送消息
         window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
         function handleMessage(event: MessageEvent) {

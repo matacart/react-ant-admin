@@ -1,11 +1,13 @@
 
-import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Divider, Form, Cascader, Input, Select, Space, Button, Dropdown, Tabs, Modal } from 'antd';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Tabs } from 'antd';
 import { history } from '@umijs/max';
 import CategoriesSelect from './CategoriesSelect';
 import productList from '@/store/product/productList';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import categoriesList from '@/store/product/categoriesList';
+import cookie from 'react-cookies';
 
 const TabLabel = styled.div`
     font-size: 16px;
@@ -70,6 +72,9 @@ const App: React.FC = () => {
       remove(targetKey);
     }
   };
+
+  // 
+  categoriesList.setLanguagesId(cookie.load("shop_lang") || '2');
 
   return (
     <Scoped>

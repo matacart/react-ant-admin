@@ -31,11 +31,11 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import DangerButton from '@/components/Button/DangerButton';
 import DefaultButton from '@/components/Button/DefaultButton';
-import { useSleep } from '@/hooks/customHooks';
 import ButtonIcon from '@/components/Button/ButtonSvg';
 import { LeftIcon, RightIcon } from '@/components/Icons/Icons';
 import ButtonDropdownSecondary from '@/components/Dropdown/ButtonDropdownSecondary';
 import Overlay from '@/components/Overlay/Overlay';
+import LangSelect from '@/components/Select/LangSelect';
 
 
 // 信息
@@ -60,18 +60,19 @@ interface ProductDetail {
 
 function ProductDetail() {
 
-    const sleep = useSleep();
     const navigate = useNavigate(); // 使用 useNavigate 钩子
-    const {productId,languageId} = useParams()
+    const {productId,languageId} = useParams();
 
     const domainCookie = cookie.load("domain");
+
+    const [languagesId,setLanguagesId] = useState<string>(languageId??"2");
 
     // 分享链接
     const items: MenuProps['items'] = [
         {
             key: '1',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://www.facebook.com/share_channel/?type=reshare&link=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DFacebook%26utm_medium%3Dproduct-links%26utm_content%3Dweb&app_id=966242223397117&source_surface=external_reshare&display&hashtag"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://www.facebook.com/share_channel/?type=reshare&link=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DFacebook%26utm_medium%3Dproduct-links%26utm_content%3Dweb&app_id=966242223397117&source_surface=external_reshare&display&hashtag"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareFacebook.97f9a.svg"/><span style={{marginLeft:"8px"}}>Facebook</span></div>
                 </a>
             ),
@@ -79,7 +80,7 @@ function ProductDetail() {
         {
             key: '2',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://twitter.com/share?text="+product.productInfo.title.trim()+"%26url%3Dhttps%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DTwitter%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://twitter.com/share?text="+product.productInfo.title.trim()+"%26url%3Dhttps%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DTwitter%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareTwitter.f35cb.svg"/><span style={{marginLeft:"8px"}}>Twitter</span></div>
                 </a>
             ),
@@ -87,7 +88,7 @@ function ProductDetail() {
         {
             key: '3',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://social-plugins.line.me/lineit/share?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DLine%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://social-plugins.line.me/lineit/share?url=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DLine%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLine.8cbc7.svg"/><span style={{marginLeft:"8px"}}>Line</span></div>
                 </a>
             ),
@@ -95,7 +96,7 @@ function ProductDetail() {
         {
             key: '4',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://api.whatsapp.com/send/?text=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DWhatsapp%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://api.whatsapp.com/send/?text=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DWhatsapp%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareWhatsapp.60743.svg"/><span style={{marginLeft:"8px"}}>Whatsapp</span></div>
               </a>
             ),
@@ -103,7 +104,7 @@ function ProductDetail() {
         {
             key: '5',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DTumblr%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.tumblr.com/widgets/share/tool?posttype=link&canonicalUrl=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%26utm_source%3DTumblr%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareTumblr.b0ed6.svg"/><span style={{marginLeft:"8px"}}>Tumblr</span></div>
               </a>
             ),
@@ -111,7 +112,7 @@ function ProductDetail() {
         {
             key: '6',
             label: (
-                <a target="_blank" rel="noopener noreferrer" href={"https://pinterest.com/pin/create/button/?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"&media=undefined&description="+product.productInfo.title+"&utm_source%3DPinterest%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+                <a target="_blank" rel="noopener noreferrer" href={"https://pinterest.com/pin/create/button/?url=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"&media=undefined&description="+product.productInfo.title+"&utm_source%3DPinterest%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                     <div style={{display:"flex",alignItems:"center"}}><img src="/icons/SharePinterest.e96e2.svg"/><span style={{marginLeft:"8px"}}>Pinterest</span></div>
                 </a>
             ),
@@ -119,7 +120,7 @@ function ProductDetail() {
         {
             key: '7',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.reddit.com/submit?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DReddit%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.reddit.com/submit?url=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DReddit%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareReddit.d1395.svg"/><span style={{marginLeft:"8px"}}>Reddit</span></div>
               </a>
             ),
@@ -127,7 +128,7 @@ function ProductDetail() {
         {
             key: '8',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+domainCookie?.domainName+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLinkedin.4a174.svg"/><span style={{marginLeft:"8px"}}>Linkedin</span></div>
               </a>
             ),
@@ -145,9 +146,7 @@ function ProductDetail() {
     // const [saveLoading,setSaveLoading] = useState(false);
     const params = new URL(location.href).searchParams
 
-    const [language,setLanguage] = useState("");
     const [modal, contextHolder] = Modal.useModal();
-    
     
     const [style, setStyle] = useState([]);
     // 变体---控制变体组合
@@ -316,8 +315,8 @@ function ProductDetail() {
     }
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
-        fetchProductDetail(productId || "",languageId || "2");
-    },[productId]);
+        fetchProductDetail(productId || "",languagesId);
+    },[productId,languagesId]);
 
 
     // 监听product.productInfo 变化 --- 
@@ -348,6 +347,7 @@ function ProductDetail() {
                                 <div className="mc-header-left-content">{productTitle}</div>
                             </div>
                             <Flex className='mc-header-right' align='center' gap={8}>
+                                <LangSelect lang={languagesId} setLang={(value:string)=>setLanguagesId(value)} />
                                 <ButtonIcon icon={<LeftIcon className='font-20' />} onClick={()=>{
                                     prevProduct(product.productInfo.prevProductId)
                                 }} />
@@ -357,12 +357,11 @@ function ProductDetail() {
                                 }} />
                                 <div style={{borderRight:"1px solid #d7dbe7",height:"36px"}}></div>
                                 <DefaultButton text={"复制"} onClick={()=>{
-                                    const domainCookie = cookie.load("domain")
-                                    copy(`https://`+domainCookie?.domainName+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
+                                    copy(`https://`+domainCookie?.domain_name+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
                                     message.success('复制成功')
                                 }} />
                                 <DefaultButton text={"预览"} onClick={()=>{
-                                    window.open(`https://`+domainCookie?.domainName+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
+                                    window.open(`https://`+domainCookie?.domain_name+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
                                 }} />
                                 <ButtonDropdownSecondary text='分享' menu={{items:items}} trigger={['click']} />
                             </Flex>

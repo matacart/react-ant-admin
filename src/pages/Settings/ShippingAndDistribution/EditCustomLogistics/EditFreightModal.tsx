@@ -3,7 +3,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import { AddIcon, EditIcon } from "@/components/Icons/Icons";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import { getAddonsConfigCreditCard, getCurrenciesList, setAddonsConfigs } from "@/services/y2/api";
+import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight";
 import { transformConfig } from "@/utils/dataStructure";
 import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";

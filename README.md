@@ -28,14 +28,13 @@
 
 `tinymce`: 富文本编辑器
 
+`monaco-editor`:web编辑器
+
 `react-nprogress`: 请求进度条
 
 `dnd-kit`:拖拽
 
 `lodash.debounce`: 防抖
-
-`monaco-editor`: 代码编辑器
-
 
 # 功能实现情况
 

@@ -1,0 +1,2037 @@
+{
+    "Langset": {
+        "language": {
+            "bg": "保加利亚语",
+            "cs": "捷克语",
+            "da": "丹麦语",
+            "de": "德语",
+            "el": "希腊语",
+            "en": "英语",
+            "es": "西班牙语",
+            "et": "爱沙尼亚语",
+            "fi": "芬兰语",
+            "fr": "法语",
+            "hi": "印地语",
+            "hr": "克罗地亚语",
+            "hu": "匈牙利语",
+            "id": "印度尼西亚语",
+            "it": "意大利语",
+            "ja": "日语",
+            "ko": "韩语",
+            "la": "拉丁语",
+            "lt": "立陶宛语",
+            "lv": "拉脱维亚语",
+            "ms": "马来语",
+            "nb": "挪威语（博克马尔语）",
+            "nl": "荷兰语",
+            "pl": "波兰语",
+            "pt": "葡萄牙语（巴西）",
+            "pt-pt": "葡萄牙语（葡萄牙）",
+            "ro": "罗马尼亚语",
+            "ru": "俄语",
+            "sk": "斯洛伐克语",
+            "sl": "斯洛文尼亚语",
+            "sv": "瑞典语",
+            "th": "泰语",
+            "tr": "土耳其语",
+            "vi": "越南语",
+            "zh-hans-cn": "简体中文",
+            "zh-hant-tw": "繁體中文"
+        }
+    },
+    "ai": {
+        "accuracyOption1": "高细节",
+        "accuracyOption2": "高品质",
+        "accuracyOption3": "高分辨率",
+        "accuracyOption4": "全高清",
+        "accuracyOption5": "8K流畅",
+        "error": {
+            "INVALID_QUESTION": "我无法帮助你解决这个问题，我只能被用于回答前台代码定制的问题"
+        },
+        "exit": {
+            "btn": "离开",
+            "tip": "确认要离开AI代码助手吗？"
+        },
+        "first": {
+            "pop": {
+                "desc": "AI代码助手，高效定制视觉效果",
+                "title": "新功能"
+            }
+        },
+        "imagePlaceholder": "请填写关键词，描述你想要生成的图片内容，点击按钮生成",
+        "imageTitle": "AI绘图",
+        "lackOfMonth": "本月剩余",
+        "option": {
+            "accuracy": "精度",
+            "persepective": "视角",
+            "width_height": "长宽比"
+        },
+        "perspectiveOption1": "特写",
+        "perspectiveOption2": "中特写",
+        "perspectiveOption3": "中景",
+        "perspectiveOption4": "中远景",
+        "perspectiveOption5": "远景",
+        "premissionTip": "是否查看上一次生成的图片？",
+        "recoverBtn": "恢复任务",
+        "suggest": {
+            "page": {
+                "text1": "可以帮我把{{name}}页面的背景色调整为白色吗？",
+                "text2": "可以帮我把{{name}}页面的标题全部居中对齐吗？",
+                "text3": "可以帮我把{{name}}页面的页头高度收窄一些吗？"
+            },
+            "section": {
+                "text1": "如何修改{{name}}上文字的字号？",
+                "text2": "帮我把{{name}}内的模块居左对齐",
+                "text3": "请把{{name}}上的文字修改为深黄色"
+            }
+        },
+        "textPlaceHolder": "请填写关键词，描述你想要生成的文本内容，点击按钮生成",
+        "textTitle": "AI写作",
+        "tool": {
+            "chat": {
+                "error": "系统开小差了，请重新尝试",
+                "loading": "思考中",
+                "regenerate": "再次生成",
+                "stop": "已停止生成"
+            },
+            "code": {
+                "apply": "应用"
+            },
+            "comment": {
+                "dislinkeLabel1": "没有解决问题",
+                "dislinkeLabel2": "有害/不安全",
+                "dislinkeLabel3": "虚假信息",
+                "dislinkeLabel4": "其他",
+                "label": "该回答是否有帮助？",
+                "placeholder": "输入更多反馈信息，可使AI助手的回答更加精准",
+                "submit": "提交",
+                "success": "提交成功，感谢你的反馈"
+            },
+            "desc": "用代码优化视觉效果，如此简单",
+            "his": {
+                "clear": "清空历史",
+                "title": "历史记录"
+            },
+            "input": {
+                "btn": "生成",
+                "placeholder": "开始向AI表达你的定制诉求吧",
+                "stop": "停止生成"
+            },
+            "loading": {
+                "generating": "正在生成代码…",
+                "parsing": "原网页代码理解中…",
+                "thinking": "思考中…",
+                "understanding": "正在理解问题…",
+                "waiting": "稍等，我正在处理…"
+            },
+            "suggest": {
+                "title": "试试以下建议："
+            },
+            "title": "AI代码助手",
+            "tooltip": {
+                "new": "开启新对话"
+            }
+        },
+        "validTIp1": "内容涉嫌违规，请重新输入",
+        "validTIp2": "AI服务拥挤，请稍后再试"
+    },
+    "button": {
+        "detail": {
+            "tips": "了解完整更新内容"
+        },
+        "faqcenter": {
+            "text": "帮助中心"
+        },
+        "ikonw": {
+            "text": "我知道了"
+        },
+        "media": {
+            "title": "切换设备"
+        },
+        "media_default": {
+            "tips": "所有尺寸的设备，除非额外调整了移动设备",
+            "title": "默认设备"
+        },
+        "media_mb": {
+            "title": "移动设备"
+        },
+        "media_mobile": {
+            "tips": "屏宽960px及以下的设备，包括平板和手机"
+        }
+    },
+    "editor": {
+        "appblock": {
+            "add": "添加应用内容",
+            "app": "应用",
+            "deeplink": {
+                "error": {
+                    "content": "添加App Block失败，请联系应用开发者寻求帮助。",
+                    "title": "App Block添加失败"
+                },
+                "popover": {
+                    "content": "拖动组件到您希望的位置，点击保存后生效。",
+                    "title": "“{{name}}”已添加",
+                    "title2": "“{{name}}”已启动"
+                }
+            },
+            "emptytips": "你尚未安装提供组件的应用，或你的应用组件不支持在此主题使用。",
+            "recomendation": {
+                "tips": "若要使用{{blockName}}功能，请添加{{appName}}插件"
+            }
+        },
+        "blocks": {
+            "addBtn": "添加{{text}}",
+            "addLimit": "已添加 {{n}} 个内容，请先删除再进行添加",
+            "content": "内容",
+            "deleteContent": "删除内容",
+            "emptyConfig": "暂无配置",
+            "invaild": "该类型配置已失效"
+        },
+        "button": {
+            "golink": "立即前往"
+        },
+        "color": {
+            "choose": "选择颜色",
+            "currentUsed": "当前使用",
+            "latestUsed": "最近使用",
+            "none": "无颜色"
+        },
+        "colro_background": {
+            "delete": "移除渐变",
+            "label1": "色点选取",
+            "label2": "色点位置",
+            "title1": "选择渐变以开始编辑",
+            "title2": "渐变形态"
+        },
+        "common": {
+            "oneShop": "一页商店",
+            "submit": "确定",
+            "title": "Shopline 编辑器"
+        },
+        "comp": {
+            "empty": {
+                "tips": "请先从左侧菜单点击选择要编辑的组件"
+            }
+        },
+        "component": {
+            "file": {
+                "btn": "上传文件",
+                "change": "更换文件",
+                "uploadlimit": "请上传{{value}}以内的文件"
+            },
+            "page": {
+                "change": "更换页面"
+            },
+            "product": {
+                "change": "更换商品"
+            }
+        },
+        "components": {
+            "anchor_picker": {
+                "none": "无"
+            },
+            "articleTribeChoice": {
+                "create": "创建博客文章",
+                "edit": "编辑博客文章",
+                "invalidSelected": "该博客文章已失效",
+                "manager": "管理博客文章",
+                "noFound": "没有查找到相关博客文章",
+                "noList": "暂无博客文章",
+                "placeholder": "请选择博客文章",
+                "selectId": "选择博客文章"
+            },
+            "blog": {
+                "create": "创建博客"
+            },
+            "blogDetailTribeChoice": {
+                "placeholder": "请选择博客"
+            },
+            "blogTribeChoice": {
+                "create": "创建博客集合",
+                "edit": "编辑集合",
+                "invalidSelected": "该集合已失效",
+                "manager": "管理集合",
+                "noFound": "没有查找到相关博客集合",
+                "noList": "暂无博客集合",
+                "placeholder": "请选择博客集合",
+                "selectId": "选择博客集合"
+            },
+            "bulletin": {
+                "content": "公告内容",
+                "contentPlaceholder": "请输入公告内容",
+                "hide": "隐藏公告栏",
+                "title": "公告栏"
+            },
+            "colorScheme": {
+                "addScheme": "添加方案",
+                "addSchemeDisable": "无法添加更多",
+                "editTip": "编辑此方案的配色将影响使用此方案的所有分区",
+                "editTitle": "正在编辑 方案{{number}}",
+                "errorTip": "无法显示配色方案，必须在 settings_ data 和 settings_schema 中定义方案",
+                "previewError": "若要预览您的更改，必须在settings_data 和 settings_schema 文件中定义配色方案。",
+                "scheme": "方案 {{number}}",
+                "toColorSettings": "若要编辑所有方案的颜色，请前往<alink>颜色设置</alink>"
+            },
+            "common": {
+                "atlTag": "ALT标签",
+                "atlTagPlaceholder": "多个标签请以,隔开",
+                "autoplay": "自动轮播",
+                "backgroundColor": "背景色",
+                "buttonAlign": "按钮对齐",
+                "buttonBackgroundColor": "按钮背景颜色",
+                "buttonShow": "展示按钮",
+                "buttonText": "按钮文本",
+                "buttonTextPlaceholder": "请输入按钮文本",
+                "buyButton": "展示购买按钮",
+                "buyButtonText": "购买按钮文案",
+                "buyButtonTextPlaceholder": "请输入购买按钮文案",
+                "cols": "列数",
+                "comparePrice": "展示对比价格",
+                "content": "内容",
+                "ctaButtonText": "CTA按钮文案",
+                "ctaButtonTextPlaceholder": "请输入CTA按钮文案",
+                "desc": "描述",
+                "descPlaceholder": "请输入描述",
+                "graphicSequence": "图文顺序",
+                "h1tag": "H1标题",
+                "image": "图片",
+                "imageAdaptive1": "，图片可自适应",
+                "imageAdaptive2": "图片可自适应",
+                "imageFillType": "图片展示规则",
+                "imageHeight": "图片高度",
+                "imageRatio": "图片比例",
+                "imageScale": "商品图比例",
+                "imageSubtitle": "图片正文",
+                "imageSubtitlePlaceholder": "请输入图片正文",
+                "imageTitle": "图片标题",
+                "imageTitlePlaceholder": "请输入图片标题",
+                "imageUrl": "图片",
+                "jumpLink": "跳转链接",
+                "jumpType": "链接打开方式",
+                "maskColor": "叠加层颜色",
+                "maskTransparent": "叠加层不透明度",
+                "mobileAddImage": "添加移动端图片",
+                "mobileImageRecommendedWidth": "移动端图片建议宽度 >750px，若不上传则移动端也将展示PC端图片。",
+                "mobileImageRecommendedWidthTip": "，若不上传则移动端也将展示电脑端图片。",
+                "moreButtonText": "更多按钮文案",
+                "moreButtonTextPlaceholder": "请输入更多按钮文案",
+                "paragraph": "文本段落",
+                "paragraphContent": "文本段落内容",
+                "pcAddImage": "添加PC端图片",
+                "pcImageRecommendedWidth": "PC端图片建议宽度",
+                "product": "商品",
+                "productCategory": "商品分类",
+                "recommendProduct": "推荐商品",
+                "recommendedHeight": "建议高度",
+                "recommendedSize": "建议尺寸",
+                "recommendedWidth": "建议宽度",
+                "rows": "行数",
+                "seo": "图文SEO描述",
+                "seoPlaceholder": "请输入图文SEO描述",
+                "settings": "设置",
+                "showCATButton": "Show CAT button",
+                "showCTAButton": "展示CTA按钮",
+                "showComparePrice": "展示对比价格",
+                "showLabels": "展示商品标签",
+                "showMask": "展示遮罩",
+                "showMoreButton": "展示更多按钮",
+                "showTitle": "展示标题",
+                "subtitle": "副标题",
+                "subtitlePlaceholder": "请输入副标题",
+                "textAlign": "文本对齐",
+                "textColor": "文本颜色",
+                "textPosition": "文本位置",
+                "textSize": "文字大小",
+                "textWidthSize": "文本宽度",
+                "title": "标题",
+                "titleAlign": "标题对齐",
+                "titlePlaceholder": "请输入标题",
+                "upgradableTip": "{{name}}组件有新版本可升级",
+                "upgrade": "升级",
+                "upgradeFailed": "升级失败",
+                "upgradeModalContent": "新版本页脚新增配置LOGO、导航菜单、说明、 订阅邮箱等内容，且支持自定义内容排版。需注意升级后需要重新配置页脚内容。",
+                "upgradeModalTitle": "升级{{name}}组件",
+                "upgradeSuccess": "升级成功"
+            },
+            "customHtml": {
+                "componentTitle": "自定义HTML",
+                "placeholder": "输入代码内容",
+                "themeCheckTips": "此代码有错误。改正语法以保存您的自定义 HTML。",
+                "title": "HTML代码"
+            },
+            "customTabChoice": {
+                "drawerTitle": "选择自定义页面",
+                "groupTitle": "商品附加内容",
+                "invalid": "该页面已失效",
+                "loadMore": "加载更多",
+                "noData": "暂无自定义页面",
+                "pageChoise": "选择自定义页面",
+                "pageCreate": "创建页面",
+                "pageEdit": "编辑页面",
+                "pagesView": "管理页面",
+                "title": "自定义内容"
+            },
+            "fb": {
+                "align": "组件对齐方式",
+                "componentTitle": "Facebook",
+                "pageActivities": "专页活动",
+                "pageLink": "个人主页链接",
+                "pageMessages": "专页信息",
+                "pageTimelines": "专页贴文",
+                "title": "Facebook贴文"
+            },
+            "file": {
+                "title": "文件"
+            },
+            "footer": {
+                "addContent": "添加内容",
+                "backgroundColor": "背景颜色",
+                "childComponentName": {
+                    "logoAndSocial": "LOGO与社交账号",
+                    "navigation": "快速导航",
+                    "subscription": "订阅",
+                    "textDescription": "文本说明"
+                },
+                "chooseLogo": "选择Logo",
+                "componentTitle": "全站页脚",
+                "deleteContent": "删除内容",
+                "describe": "店铺说明",
+                "facebook": "Facebook主页",
+                "instagram": "Instagram主页",
+                "limitFooterContent": "已添加{{n}}个内容，请先删除再进行添加",
+                "limitNumberOfContent": "最多只能添加{{n}}个内容",
+                "line": "Line主页",
+                "logoWidth": "Logo大小(%)",
+                "moduleTitle": "模块标题",
+                "navGroupId": "导航菜单",
+                "navGroupId1": "选择导航菜单1",
+                "navGroupId2": "选择导航菜单2",
+                "navGroupId3": "选择导航菜单3",
+                "navIndependentId": "选择独立导航",
+                "navigationTitle": "导航标题",
+                "pinterest": "Pinterest主页",
+                "placeholder": {
+                    "subscribeBarButtonText": "订阅",
+                    "subscribeBarDescription": "输入文案",
+                    "subscribeBarTip": "订阅提示",
+                    "subscribeBarTitle": "订阅我们"
+                },
+                "settingLabel": "设置",
+                "showPayChannel": "展示支付渠道图标",
+                "showPoweredBy": "展示由SHOPLINE提供支持",
+                "showShopDescription": "展示店铺说明",
+                "showSocialAccounts": "展示社交账号",
+                "showSubscribeBar": "展示邮箱订阅栏",
+                "showSubscribeBarSubTitle": "展示栏目副标题",
+                "snapchat": "Snapchat主页",
+                "socialAccountsColor": "社交账号颜色",
+                "subscribeBarButtonText": "订阅按钮文案",
+                "subscribeBarDescription": "订阅栏目描述",
+                "subscribeBarTitle": "订阅栏目标题",
+                "subscriptButtonText": "按钮文案",
+                "subscriptInputTip": "输入框提示文案",
+                "subscriptionDesc": "订阅描述",
+                "subscriptionTitle": "订阅标题",
+                "textColor": "文字颜色",
+                "textDescriptionDesc": "内容",
+                "title": "页脚",
+                "twitter": "Twitter主页",
+                "widthMode": "页脚宽度"
+            },
+            "gallery": {
+                "componentTitle": "画廊",
+                "linkText": "链接文字",
+                "linkTextPlaceholder": "请输入链接文字",
+                "maskOpacity": "遮罩透明度",
+                "title": "画廊"
+            },
+            "global": {
+                "advance": {
+                    "hideFooter": "隐藏页脚组件",
+                    "hideHeader": "隐藏页头组件",
+                    "imageFit": "图片填充方式",
+                    "mainTitle": "高级设置",
+                    "productImageFit": "商品图填充方式",
+                    "productImageRatio": "商品图比例",
+                    "showBackTop": "展示回到顶部按钮",
+                    "showLangSelectText": "入口会根据「货币设置」与「语言选择器开关」共同决定是否展示"
+                },
+                "color": {
+                    "body": "正文",
+                    "body2": "正文2",
+                    "buttonBackground": "按钮背景",
+                    "buttonText": "按钮文字",
+                    "buttonText2": "按钮文字2",
+                    "discountTag": "折扣标签",
+                    "link": "链接文字",
+                    "mainTitle": "颜色",
+                    "primaryBackground": "模块背景",
+                    "productTitle": "商品标题",
+                    "sale": "售价",
+                    "sale2": "售价2",
+                    "star": "评价星级",
+                    "title": "标题"
+                },
+                "font": {
+                    "bodyFontFamily": "正文字体",
+                    "bodySize": "正文字体大小",
+                    "buttonFontFamily": "按钮字体",
+                    "mainTitle": "字体",
+                    "productTitleFontFamily": "商品标题字体",
+                    "productTitleSize": "商品标题字体大小",
+                    "titleFontFamily": "标题字体",
+                    "titleSize": "标题字体大小"
+                },
+                "logo": {
+                    "favicon": "浏览器标签icon",
+                    "faviconPlaceholder": "尺寸：32*32px",
+                    "mainTitle": "网站logo"
+                }
+            },
+            "grid": {
+                "cols": "PC端列数",
+                "componentAlign": "组件对齐方式",
+                "displayType": "展示方式",
+                "layout": "布局",
+                "limitTips1": "各列宽和",
+                "limitTips2": "不能大于总列宽",
+                "mobileCols": "移动端列数",
+                "title": "布局调整组件"
+            },
+            "h1Tag": {
+                "componentTitle": "H1标题",
+                "title": "H1标题"
+            },
+            "header": {
+                "backgroundColor": "背景颜色",
+                "componentTitle": "全站页头",
+                "logo": "Logo",
+                "logoSize": "Logo大小(%)",
+                "logoTransparent": "透明页头Logo",
+                "navGroupId": "选择导航菜单",
+                "showCart": "展示购物车入口",
+                "showCurrencySelect": "展示货币选择器",
+                "showLangSelect": "展示语言选择器",
+                "showSearch": "展示搜索入口",
+                "showTransparent": "启用透明页头",
+                "showTransparentText": "在顶部部分是轮播图时适用,透明页头可以直接叠加在轮播图上",
+                "showUserCenter": "展示个人中心入口",
+                "textColor": "文字颜色",
+                "textColorTransparent": "透明页头文字颜色",
+                "title": "页头",
+                "type": "页头样式"
+            },
+            "icon": {
+                "title": "图标"
+            },
+            "image": {
+                "componentTitle": "图片",
+                "displayType": "展示方式",
+                "title": "图片",
+                "widthSize": "图片宽度"
+            },
+            "ins": {
+                "approval": "授权链接",
+                "approvalTips": "请授权连接您的Instagram账户，以将您的推文内容展示在网站中",
+                "backgroundColor": "背景颜色",
+                "bindFail": "绑定失败",
+                "bindSuccess": "绑定成功",
+                "binding": "绑定中...",
+                "caption": "贴文标题",
+                "codeError": "无效的code",
+                "componentTitle": "Instagram",
+                "disconnect": "断开",
+                "linkTo": "已链接至",
+                "loading": "加载中...",
+                "moreLink": "更多链接",
+                "showCaption": "展示贴文标题",
+                "showSubtitle": "展示贴文正文",
+                "subtitle": "贴文正文",
+                "title": "Instagram贴文"
+            },
+            "layout": {
+                "lock": "锁定对称边距",
+                "title": "自由布局",
+                "unlock": "解锁对称边距"
+            },
+            "logo": {
+                "title": "Logo"
+            },
+            "logoSet": {
+                "componentTitle": "Logo集",
+                "title": "Logo集"
+            },
+            "mainProduct": {
+                "chooseImages": "选择商品图片",
+                "saleNumber": "售卖数量",
+                "showActivityTimeDown": "展示活动倒计时",
+                "showBuyMessage": "展示购买消息",
+                "showOrigin": "展示商品原价",
+                "timeDownSeconds": "倒计时时长",
+                "timeDownTip": "用户每次进入商店时将开始新的倒计时",
+                "timeDownTitle": "倒计时标题",
+                "title": "主商品"
+            },
+            "map": {
+                "address": "详细地址",
+                "componentTitle": "GoogleMap",
+                "lat": "纬度",
+                "lng": "经度",
+                "search": "搜索Google地图",
+                "title": "地图",
+                "zoom": "比例"
+            },
+            "mediaLr": {
+                "componentTitle": "带文本图片",
+                "moduleTitle": "模块标题",
+                "moduleTitlePlaceholder": "请输入标题",
+                "orderDesc": "为保证阅读顺畅，手机端固定为先图后文的顺序",
+                "showModuleTitle": "展示模块标题",
+                "title": "带文本图片"
+            },
+            "mediaUd": {
+                "colDesc": "此设置为电脑端可显示的最大列数，不同宽度的设备可显示列数将自动适配",
+                "componentTitle": "图文列表",
+                "itemTitle": "图文",
+                "otherImage": "其他图片",
+                "title": "图文列表"
+            },
+            "mediaUdB": {
+                "componentTitle": "图文陈列组件UDB",
+                "title": "图文陈列组件UDB"
+            },
+            "payIcon": {
+                "711_payment": "711Payment",
+                "AMEXnew": "AMEXnew",
+                "BLIK": "BLIK",
+                "Bancontact": "Bancontact",
+                "CardKR": "CardKR",
+                "Clearpaynew": "Clearpaynew",
+                "FPS": "FPS",
+                "GCashnew": "GCash",
+                "GrabPaynew": "GrabPay",
+                "Paymayanew": "PayMaya",
+                "Przelewy24": "Przelewy24",
+                "Skrill": "Skrill",
+                "VISAElectron": "VISAElectron",
+                "affirm": "Affirm",
+                "affrim": "Affrim",
+                "after_pay": "AfterPay",
+                "afterpay": "AfterPay",
+                "air_plus": "Airplus",
+                "airtel_money": "Airtel Money",
+                "airtm": "Airtm",
+                "alfamart": "Alfamart",
+                "alipay": "Alipay",
+                "alipay_cn": "Alipay",
+                "alipay_hk": "Alipay",
+                "alipay_qr": "Alipay",
+                "alipay_wap": "Alipay",
+                "ame": "Ame",
+                "american_express": "American Express",
+                "apple_pay": "ApplePay",
+                "argencard": "Argencard",
+                "atm_bersama": "ATMBersama",
+                "atome": "AtomeBNPL",
+                "aura": "Aura",
+                "aurore": "Aurore",
+                "baloto": "Baloto",
+                "bancodo_brasil": "BancodoBrasil",
+                "bancomer": "Bancomer",
+                "bancontact": "Bancontact Mister Cash",
+                "bank_alfalah": "Bank Alfalah",
+                "bca": "BCA",
+                "bcp": "BCP",
+                "billeaseph": "billeaseph",
+                "bitcash": "BitCash",
+                "bitcoin": "Bitcoin",
+                "blik": "blik",
+                "bni": "BNI",
+                "bni_syariah": "BNI Syariah",
+                "boleto": "Boleto",
+                "boost": "Boost",
+                "bradesco": "Bradesco",
+                "brasil_credit": "Credit Card",
+                "brazil_bank": "BankingBrazil",
+                "bri": "BRI",
+                "cabal": "Cabal",
+                "caixa": "Caixa",
+                "carnet": "Carnet",
+                "carte_bancaire": "Carte Bancaire",
+                "carte_bleue": "carte-bleue",
+                "cencousd": "Cencosud",
+                "clabe": "Clabe",
+                "clear_pay": "ClearPay",
+                "clearpay": "Clearpay",
+                "cmr": "CMR",
+                "codensa": "Codensa",
+                "creditcard": "Credit Card",
+                "culturevoucher": "CultureVoucher",
+                "dana": "DANA",
+                "dankort": "Dankort",
+                "de_bijenkorf": "de Bijenkorf Card",
+                "default": "default",
+                "diners_club": "Diners club",
+                "diners_international": "DinersInternational",
+                "discover": "Discover",
+                "doku": "Doku",
+                "dragon_pay": "Dragonpay",
+                "dragonpay": "dragonpay",
+                "duit_now": "DuitNow",
+                "efecty": "efecty",
+                "elo": "ELO",
+                "enets": "Enets",
+                "eps": "EPS",
+                "family_mart": "FamilyMart",
+                "fave_pay": "FavePay",
+                "fawry": "Fawry",
+                "forbrugs_foreningen": "Forbrugsforeningen",
+                "fps": "FPS",
+                "fpx": "FPX",
+                "ge_capital": "GE capital",
+                "giro_pay": "GiroPay",
+                "globe_gcash": "GlobeGCash",
+                "google_pay": "GooglePay",
+                "grab_pay": "GrabPay",
+                "happy_money": "HappyMoney",
+                "hiper_card": "Hipercard",
+                "hipercard": "Hipercard",
+                "ideal": "iDeal",
+                "in_wallet": "inWallet",
+                "india_bank": "India Bank Transfer",
+                "indonesia_credit": "Credit Card",
+                "insta_pay": "Instapay",
+                "interbank": "Interbank",
+                "itau": "Itau",
+                "japan_bank": "Japan Bank Transfer",
+                "japan_post_bank": "JapanPostBank",
+                "jcb": "JCB",
+                "jp_carrierbilling": "CarrierBilling",
+                "jp_webmoney": "WebMoney",
+                "kakao_pay": "KakaoPay",
+                "kakaopay": "KakaoPay",
+                "karen_millen_giftcard": "Karen Millen GiftCard",
+                "klarna": "KlarnaBNPL",
+                "konbini": "Konbini",
+                "kr_carrierbilling": "CarrierBilling",
+                "laser": "Laser",
+                "lawson": "Lawson",
+                "line_pay": "LinePay",
+                "linkaja": "Linkaja",
+                "mach": "MACH",
+                "maestro": "Maestro",
+                "magna": "Magna",
+                "malaysia_bank": "BankingMalaysia",
+                "mandiri": "Mandiri",
+                "master": "Master Card",
+                "mastercard_alphabank": "Alpha Bank",
+                "maybank_qr": "MaybankQR",
+                "mer_pay": "Merpay",
+                "mercado_livre": "Cartao Mercadol Jvre",
+                "mexico_credit": "Credit Card",
+                "ministop": "Ministop",
+                "mnp": "MIR",
+                "multibanco": "multibanco",
+                "mybank": "Mybank",
+                "nativa": "Nativa",
+                "naver_pay": "NaverPay",
+                "neosurf": "Neosurf",
+                "net_cash": "NETCASH",
+                "nigeria_credit": "Credit Card",
+                "nigeria_debit": "Debit",
+                "oasis_giftcard": "Oasis GiftCard",
+                "onecard": "Onecard",
+                "ovo": "OVO",
+                "oxxo": "OXXO",
+                "pago_efectivo": "Pagoefectivo",
+                "pago_facil": "PagoFacil",
+                "pagsmile": "Pagsmile",
+                "paidy": "Paidy",
+                "pay_by_bank": "Paybybank",
+                "payby_bank": "PayByBank",
+                "payco": "Payco",
+                "paycoinq": "Payconiq",
+                "payeasy": "Payeasy",
+                "paynow": "Paynow",
+                "paynow_qr": "PaynowQR",
+                "paypal": "PayPal",
+                "paypay": "PayPay",
+                "paysafe_card": "Paysafecard",
+                "paysafe_cash": "Paysafecash",
+                "payu": "PayU",
+                "permata": "PERMATA",
+                "peso": "PESO",
+                "philippines_bank": "BankingPhilippines",
+                "pic_pay": "PicPay",
+                "pix": "Pix",
+                "poli": "POLi",
+                "presto": "Presto",
+                "prezelwy24": "Prezelwy24",
+                "pse": "PSE",
+                "qiwi": "QIWI",
+                "qris": "QRIS",
+                "rakuten_pay": "RakutenPay",
+                "rapipago": "Rapipago",
+                "redpagos": "Redpagos",
+                "ru_pay": "RuPay",
+                "samsung_pay": "SamsungPay",
+                "santander": "Santander",
+                "santander_rio": "SantanderRio",
+                "satis_pay": "SatisPay",
+                "seicomart": "Seicomart",
+                "shopee_pay": "ShopeePay",
+                "singapore_bank": "BankingSingapore",
+                "skrill": "Skrill",
+                "sofort": "Sofort",
+                "solo": "Solo",
+                "southafrica_bank": "SouthAfrica Bank Transfer",
+                "southafrica_credit": "Credit Card",
+                "southkorea_bank": "SouthKorea Bank Transfer",
+                "southkorea_credit": "Credit Card",
+                "spei": "SPEI",
+                "ssg_pay": "SSGPay",
+                "stripe": "Stripe",
+                "tarjeta_naranja": "Tarjeta Naranja",
+                "tarjeta_shopping": "Tarjeta Shopping",
+                "tesco_lotus": "TescoLotus",
+                "thailand_bank": "BankingThailand",
+                "toss": "Toss",
+                "touch_n_go": "TouchNGo",
+                "troy": "Troy",
+                "trust_pay": "TrustPay",
+                "trustly": "Trustly",
+                "turkey_bank": "Turkey Bank Transfer",
+                "turkey_credit": "Credit Card",
+                "turkey_debit": "Debit",
+                "uatp": "UATP",
+                "union-pay": "银联",
+                "union_pay": "银联",
+                "upi": "UPI",
+                "vietnam_bank": "BankingVietnam",
+                "virtual": "Virtual",
+                "visa": "Visa",
+                "visa-electron": "Visa(Electron)",
+                "visa_alphabank": "Alpha Bank",
+                "visa_electron": "Visa(Electron)",
+                "warehouse_gifycard": "Warehouse GiftCard",
+                "webmoney": "WebMoney",
+                "webpay_plus": "WebPayPlus",
+                "wechat_pay": "WechatPay",
+                "zip": "Zip"
+            },
+            "placeOrder": {
+                "buyKnowContent": "购物须知内容",
+                "buyKnowContentPlaceholder": "请输入内容",
+                "buyKnowTitle": "购物须知标题",
+                "buyKnowTitlePlaceholder": "输入文案",
+                "title": "下单模块"
+            },
+            "poster": {
+                "buttonColor": "按钮颜色",
+                "buttonTextColor": "按钮文字颜色",
+                "componentTitle": "单图",
+                "heightSize": "图片高度",
+                "maskOpacityTip": "仅在添加文字和按钮时生效",
+                "title": "单图"
+            },
+            "product": {
+                "componentTitle": "单个商品",
+                "editProduct": "编辑商品",
+                "manageProduct": "管理商品",
+                "title": "选择商品"
+            },
+            "productCategories": {
+                "add": "添加商品分类",
+                "canAddTips1": "可选择{{n}}个分类",
+                "canAddTips2": "个分类",
+                "categoryTitle": "商品分类",
+                "componentTitle": "热门商品分类",
+                "limitFooterContent": "已添加{{n}}个内容，请先删除再进行添加",
+                "limitNumberTips1": "最多只能添加",
+                "limitNumberTips2": "个商品分类",
+                "link": "立即前往",
+                "removeCategoriesTips": "你正在减少展示数量，部分内容将不可展示，确认要移除该部分内容吗？",
+                "showNumberCount": "展示个数",
+                "tips": "如需更换分类封面图，可前往商品分类管理进行配置。",
+                "title": "热门商品分类"
+            },
+            "productComments": {
+                "link": "立即前往",
+                "tips": "评价内容可以在[商品] - [商品评价]中进行设置和管理。",
+                "title": "商品评论"
+            },
+            "productDetail": {
+                "contentPlaceholder": "请输入内容",
+                "title": "商品详情"
+            },
+            "productInfo": {
+                "componentTitle": "商品信息",
+                "showRecommendProduct": "展示推荐商品信息",
+                "showSocialShare": "展示社交分享",
+                "skuSelectorStyle": {
+                    "dropdown": "下拉框",
+                    "flattened": "平铺",
+                    "title": "商品规格展示样式"
+                }
+            },
+            "productTag": {
+                "allTag": "全部商品标签",
+                "allTagTitle": "所有标签",
+                "applyTag": "已应用的标签",
+                "chooseTag": "选择商品标签",
+                "dragTip": "可拖动进行排序",
+                "moreTag": "选择更多标签",
+                "placeholder": "搜索标签（例如：复古/夏季）",
+                "searchTag": "搜索标签",
+                "searchTagTitle": "搜索标签",
+                "selectAll": "全选",
+                "specifyTag": "指定商品标签",
+                "tip": "最多展示前{{n}}个标签"
+            },
+            "productsA": {
+                "componentTitle": "商品列表",
+                "editCategory": "编辑分类",
+                "manageCategory": "管理分类",
+                "selectId": "选择商品分类",
+                "title": "商品列表"
+            },
+            "productsB": {
+                "componentContent": "内容",
+                "componentTitle": "精选商品",
+                "componentTitlePlaceholder": "请输入标题",
+                "selectId": "商品分类",
+                "title": "精选商品"
+            },
+            "promo": {
+                "noData": "暂无活动",
+                "selectPlaceholder": "请选择活动"
+            },
+            "recommendProduct": {
+                "product": "推荐商品",
+                "showComparePrice": "展示对比价格",
+                "showPackageSale": "以套餐形式进行售卖",
+                "showPackageSaleLink": "满减活动",
+                "showPackageSaleText": "开启后，若商品参与满减活动，将按套餐形式售卖（仅活动期间生效）。你可前往配置",
+                "title": "推荐商品"
+            },
+            "sns": {
+                "componentTitle": "SNS",
+                "facebookHome": "facebook主页",
+                "inputText": "输入文案",
+                "instagramHome": "instagram主页",
+                "lineHome": "line主页",
+                "pinterestHome": "pinterest主页",
+                "registerGuideDescription": "注册引导说明",
+                "registerGuideTitle": "注册引导标题",
+                "snapchatHome": "snapchat主页",
+                "socialAccountDescription": "社交账号说明",
+                "socialAccountTitle": "社交账号标题",
+                "title": "栏目标题",
+                "twitterHome": "twitter主页",
+                "youtubeHome": "youtube主页"
+            },
+            "swiper": {
+                "autoplay": "自动轮播",
+                "buttonColor": "按钮颜色",
+                "buttonGhostColor": "按钮文字与边框颜色",
+                "buttonText": "按钮文案",
+                "buttonTextColor": "按钮文字颜色",
+                "componentTitle": "轮播图",
+                "interval": "轮播间隔(秒)",
+                "maskColor": "叠加层颜色",
+                "maskOpacity": "叠加层不透明度 (%)",
+                "mobileImage": "手机端图片",
+                "pcImage": "电脑端图片",
+                "showButton": "展示按钮",
+                "title": "轮播图"
+            },
+            "swiperB": {
+                "componentTitle": "轮播图B",
+                "interval": "轮播间隔(秒)",
+                "title": "轮播图B"
+            },
+            "text": {
+                "componentTitle": "富文本",
+                "standardDisplay": "标准显示",
+                "title": "富文本",
+                "titleLink": "标题跳转链接",
+                "wideDisplay": "宽屏显示"
+            },
+            "type": {
+                "image": "图片",
+                "layout": "布局",
+                "media": "其他多媒体",
+                "product": "商品",
+                "text": "文字"
+            },
+            "video": {
+                "autoplay": "自动播放",
+                "componentTitle": "视频",
+                "repeat": "重复播放",
+                "slient": "默认静音",
+                "title": "视频",
+                "url": "输入YouTube或Vimeo嵌入链接"
+            }
+        },
+        "controls": {
+            "button": {
+                "backgroundColor": "按钮背景颜色",
+                "buyButtonText": "购买按钮文案",
+                "moreButtonText": "更多按钮文案",
+                "text": "按钮文本"
+            },
+            "footerWidthMode": {
+                "auto": "适应",
+                "full": "全屏"
+            },
+            "headerType": {
+                "nav": "展示导航菜单",
+                "title": "展示标题"
+            },
+            "horizontalPosition": {
+                "left": "左",
+                "right": "右"
+            },
+            "imageFit": {
+                "contain": "适应",
+                "fill": "填充"
+            },
+            "imageRatio": {
+                "lv1": "1:1",
+                "lv2": "2:3",
+                "lv3": "3:2",
+                "lv4": "3:4",
+                "lv5": "4:3"
+            },
+            "imageSize": {
+                "auto": "适应第一张图",
+                "imageAuto": "适应图片",
+                "large": "大",
+                "medium": "中",
+                "small": "小"
+            },
+            "layoutType": {
+                "center": "适应",
+                "full": "全屏"
+            },
+            "linkType": {
+                "current": "当前页面打开链接",
+                "open": "新开窗口打开链接"
+            },
+            "mixedMediaDisplayType": {
+                "ImageText": "先图后文",
+                "TextImage": "先文后图"
+            },
+            "productCategoriesTitlePosition": {
+                "overlayPic": "叠加图片",
+                "picBelow": "图片下方"
+            },
+            "productImageRatio": {
+                "picOriginRatio": "原始比例"
+            },
+            "swiperAutoplay": {
+                "close": "关",
+                "open": "开"
+            },
+            "textAlign": {
+                "center": "居中对齐",
+                "left": "左对齐",
+                "right": "右对齐"
+            },
+            "textSize": {
+                "large": "大",
+                "medium": "中",
+                "small": "小"
+            },
+            "textWidthSize": {
+                "large": "宽屏显示",
+                "medium": "标准显示"
+            },
+            "verticalAlign": {
+                "bottom": "底对齐",
+                "middle": "居中对齐",
+                "top": "顶对齐"
+            },
+            "verticalPosition": {
+                "bottom": "下",
+                "top": "上"
+            }
+        },
+        "customCss": {
+            "error": {
+                "codeError": "代码内容有误，请根据提示信息修改后提交。",
+                "illegalAtRule": "无效的自定义 CSS: 某些 @ 规则不受支持。 删除以保存更改。",
+                "illegalAtRuleInSection": "无效的自定义 CSS:  暂不支持@ 规则，请尝试使用全局 CSS。",
+                "illegalUrl": "无效的自定义 CSS: URL 无效。 删除以保存更改。",
+                "overMaxLength": "已达到{{limit}}字符上限，请删除部分CSS。"
+            },
+            "globalCssTip": "您设置的代码将在整个店铺生效。<linkMore>了解更多</linkMore>",
+            "sectionCssTip": "设置的代码仅对该组件生效。可打开「<linkGlobal>主题设置</linkGlobal>」面板，以设置全局的CSS代码。<linkMore>了解更多</linkMore>",
+            "title": "自定义CSS"
+        },
+        "emblock": {
+            "deeplink": {
+                "popover": {
+                    "content": "开启后，在主题编辑器点击保存后生效。"
+                }
+            }
+        },
+        "file": {
+            "upload": {
+                "warn": {
+                    "title": "上传失败"
+                }
+            }
+        },
+        "fileUpload": {
+            "add": "添加文件"
+        },
+        "fixedAttr": {
+            "artitleTitle": "博客标题",
+            "blogsTitle": "博客集合标题",
+            "collectionTitle": "商品分类标题",
+            "logo": "默认 Logo",
+            "pageTitle": "页面标题",
+            "productBrand": "商品品牌",
+            "productSummary": "商品摘要",
+            "productTitle": "商品标题",
+            "productVendor": "商品品牌"
+        },
+        "header": {
+            "closeInspectorTip": "关闭检查器",
+            "currentPage": "当前页面",
+            "draft": "草稿",
+            "fullpage": "全屏",
+            "inUse": "使用中",
+            "ipad": "平板",
+            "notice": "提醒",
+            "openInspectorTip": "打开检查器",
+            "operation": "操作",
+            "pc": "电脑",
+            "phone": "手机",
+            "preview": "预览",
+            "previewStore": "查看网店",
+            "publish": "发布",
+            "qrcodeCodeTip": "用移动设备扫码，以预览网店",
+            "save": "保存",
+            "trial": "试用"
+        },
+        "icons": {
+            "back": "返回",
+            "delete": "删除",
+            "display": "显示",
+            "drag": "拖动",
+            "fb": "Fackbook",
+            "footer": "页脚",
+            "gallery": "画廊",
+            "h1Tag": "H1标题",
+            "header": "页头",
+            "hidden": "隐藏",
+            "image": "图片",
+            "ins": "Instagram贴文",
+            "loading": "加载中",
+            "map": "地图",
+            "mediaLr": "图文陈列模块LR",
+            "mediaUd": "图文陈列模块UD",
+            "mediaUdB": "图文陈列模块UDB",
+            "poster": "图文海报",
+            "product": "商品",
+            "productCategories": "商品分类集",
+            "products": "商品集",
+            "swiper": "轮播图",
+            "swiperB": "轮播图B",
+            "text": "文本段落"
+        },
+        "image": {
+            "scale": {
+                "option1": "原图比例",
+                "tips": "非特殊情况下建议选择80%及以下的压缩比，以保证店铺性能及用户体验。",
+                "title": "压缩比"
+            },
+            "tips": {
+                "changeImage": "更换图片",
+                "editAlt": "编辑ALT属性"
+            }
+        },
+        "inspector": {
+            "demoBtn": "查看示例商店",
+            "demoBtnGroupLabel": "demo商店",
+            "demoTips1": "丰富的组件类型",
+            "demoTips2": "更灵活的功能和样式配置",
+            "demoTips3": "所有主题均可使用",
+            "demoTitle": "为主题添加高阶组件",
+            "demolink": "示例商店"
+        },
+        "leave": {
+            "cancelBtn": "取消",
+            "confirmButton": "离开此页",
+            "message": "如果离开此页，未保存的设定将会遗失",
+            "title": "未保存设定"
+        },
+        "menu": {
+            "block": {
+                "common": "通用内容",
+                "private": "功能性内容"
+            },
+            "component": "组件",
+            "design": "设计",
+            "theme": "主题",
+            "themeSetting": "主题设置"
+        },
+        "metafields": {
+            "add": "添加动态源",
+            "change": "更换动态源",
+            "delete": "删除动态源",
+            "editlink": "编辑链接",
+            "invalid": "动态源已失效",
+            "tabs": {
+                "component": "当前组件",
+                "page": "当前页面"
+            },
+            "text": {
+                "nosee": "看不到已添加的内容？"
+            },
+            "tips": {
+                "noinstall": "动态源可用于在页面模板中展示动态数据，安装<metafieldslink></metafieldslink>应用后方可使用。",
+                "nolength": "当前页面暂无可用的动态源，请前往<metafieldslink></metafieldslink>创建。"
+            }
+        },
+        "metafileds": {
+            "link": "连接动态源",
+            "name": "动态源",
+            "selectFile": "选择静态文件",
+            "selectImage": "选择静态图片",
+            "selectLink": "选择静态链接",
+            "selectPage": "选择静态页面",
+            "selectProduct": "选择静态商品",
+            "value": {
+                "change": "编辑值"
+            }
+        },
+        "normal": {
+            "all": "全部",
+            "template": "模板"
+        },
+        "offcial": {
+            "install": {
+                "label": "安装高阶组件库"
+            }
+        },
+        "official": {
+            "app": "扩展组件",
+            "enter": {
+                "tips": "所有主题可用",
+                "title": "高阶组件库"
+            },
+            "faq": {
+                "text": "设置指引"
+            },
+            "global": {
+                "faq": {
+                    "text": "了解更多"
+                }
+            },
+            "install": {
+                "tips": "前往<0>{{label}}</0><1 />，即可添加使用扩展组件，所有主题均可使用。"
+            },
+            "modal": {
+                "title": "添加高阶组件"
+            },
+            "tab": {
+                "style": "样式"
+            }
+        },
+        "officomp": {
+            "demo": {
+                "tip": "查看Demo"
+            },
+            "demo1": {
+                "name": "流行服装"
+            },
+            "demo2": {
+                "name": "生活家居"
+            },
+            "demo3": {
+                "name": "3C家电"
+            },
+            "empty": "查无组件",
+            "notallow": {
+                "tip": "这个组件需要升级套餐，升级后即可使用。"
+            },
+            "search": {
+                "placeholder": "请输入组件名称"
+            },
+            "section": {
+                "notallow": "该组件已过期，请前往<prolink>订阅页</prolink>续费"
+            },
+            "version": {
+                "basic": {
+                    "tag": "Basic版本"
+                },
+                "pro": {
+                    "btn": "升级Pro",
+                    "tag": "Pro版本"
+                }
+            }
+        },
+        "officompLoadError": "出现未知错误，请尝试清理浏览器Cookie后重试。",
+        "operation": {
+            "add": "添加",
+            "addComponent": "添加组件",
+            "addComponentDisabled": "已添加 {{num}} 个组件，请先删除再进行添加",
+            "allSettings": "全局设置",
+            "back": "返回",
+            "backHome": "回到首页",
+            "backHomepage": "返回管理后台",
+            "cancel": "取消",
+            "confirm": "确定",
+            "create": "创建",
+            "delete": "删除",
+            "deleteComponent": "删除组件",
+            "deleteConfirm": "删除",
+            "finish": "完成",
+            "leave": "退出",
+            "leavePage": "退出页面",
+            "nextStep": "下一步",
+            "openmore": "展开更多",
+            "prevStep": "上一步",
+            "reDo": "重做",
+            "refresh": "刷新",
+            "retry": "重试",
+            "selected": "已选 {{x}} 个",
+            "toggle": {
+                "close": "折叠",
+                "open": "展开"
+            },
+            "unDo": "撤销",
+            "update": "更新"
+        },
+        "other": {
+            "allcurrent": "暂无{{x}}未分配至当前模板",
+            "assign": "分配",
+            "assignAll": "分配给全部",
+            "assignFail": "无法分配模板",
+            "assignFailTip": "当前有批量分配模板的操作正在运行，请等待操作完成后再进行新的分配。",
+            "assignIngTip": "批量操作可能需要较长时间，请耐心等待。您亦可前往「<checkoutlink>批量处理进度</checkoutlink>」页面查看进度",
+            "assignMax": "最多选择{{n}}个{{x}}",
+            "assignSearchAll": "确定要将当前模板分配给筛选结果中的全部{{x}}吗？",
+            "assignSuccess": "成功分配 {{n}}个{{x}}至当前模板",
+            "assignTempToAll": "确定要将当前模板分配给店铺全部的{{x}}吗？",
+            "assignTemplate": "分配模板",
+            "assignToAllIng": "正在对模板进行批量分配",
+            "assignTotal": "共 {{n}} 个{{x}}",
+            "assigned": "已分配",
+            "change": "更换",
+            "checked": "已选{{x}}",
+            "currentItem": "当前{{x}}",
+            "default": "默认",
+            "delete": "删除",
+            "edit": "编辑",
+            "noInclude": "不包括之后创建的{{x}}",
+            "noassign": "未分配",
+            "nocurrent": "暂无{{x}}分配至当前模板",
+            "reset": "恢复默认",
+            "search": "搜索",
+            "select": "选择"
+        },
+        "page-404": "404页",
+        "page-ActivateAccount": "激活页",
+        "page-AddressEdit": "客户编辑地址",
+        "page-AddressNew": "客户地址",
+        "page-AllCollections": "分类页",
+        "page-BlogsDetail": "博客页",
+        "page-BlogsList": "博客集合页",
+        "page-Cart": "购物车页",
+        "page-Center": "个人中心页",
+        "page-Checkout": "结账页",
+        "page-Company": "公司账号注册页",
+        "page-CompanyRegistration": "公司账号注册页",
+        "page-CustomerPage": "客户账户",
+        "page-Home": "首页",
+        "page-OrderDetail": "订单详情",
+        "page-OrderList": "客户订单",
+        "page-Other": "功能页面",
+        "page-Page": "自定义页面",
+        "page-Password": "密码保护页",
+        "page-PasswordNew": "忘记密码",
+        "page-Policy": "政策",
+        "page-Products": "商品列表页",
+        "page-ProductsDetail": "商品详情页",
+        "page-ProductsSearch": "搜索页",
+        "page-SignIn": "登录页",
+        "page-SignUp": "注册页",
+        "page-UserCenter": "个人中心页",
+        "page-address": "地址",
+        "page-orderList": "客户订单",
+        "page": {
+            "title": {
+                "checkout_editor": "结账编辑器"
+            }
+        },
+        "preview": {
+            "iframeLoadError": {
+                "desc": "由于以下问题之一，此页面与编辑器不兼容：",
+                "reason1": "页面正重定向到不受支持的 URL",
+                "reason2": "由于出现错误，页面无法加载",
+                "storeClose": "打烊状态下不支持店铺装修，请将店铺调整为营业状态",
+                "title": "加载页面失败"
+            },
+            "openLinkByNewTab": "通过新标签页访问链接",
+            "openThirdLinkTip": "这个链接无法在编辑器内打开。将打开新标签页进行页面展示（URL:第三方链接）。请点击是否确定，以便继续下一步操作"
+        },
+        "rjfs": {
+            "addCategory": "创建商品分类",
+            "addLink": "添加链接",
+            "addMetafields": "创建动态源",
+            "addNavMenu": "创建导航菜单",
+            "addProduct": "创建商品",
+            "addTag": "添加标签",
+            "allBlog": "全部博客",
+            "allPages": "所有页面",
+            "allProductCategory": "全部商品分类",
+            "allProducts": "全部商品",
+            "assignPages": "指定页面",
+            "blog": "博客",
+            "blogs": "博客集合",
+            "categoryFailed": "该分类已失效",
+            "categoryPlaceholder": "请输入商品分类",
+            "categorySelectPlaceholder": "请选择商品分类",
+            "createCategory": "创建分类",
+            "currentPage": "当前页",
+            "customPage": "自定义页面",
+            "deleteBlogTribConfirm": "删除后将不展示博客模块，确定删除吗？",
+            "deleteBlogTribe": "删除博客集合",
+            "deleteImage": "删除图片",
+            "deleteImageConfirm": "确定删除该图片吗？",
+            "deleteNav": "删除导航菜单",
+            "deleteNavConfirm": "删除后将不展示导航菜单模块，确定删除吗？",
+            "deletePage": "删除页面",
+            "deletePageConfirm": "删除后将不展示页面模块，确定删除吗？",
+            "deleteProduct": "删除商品",
+            "deleteProductCategory": "删除商品分类",
+            "deleteProductCategoryConfirm": "删除后将不展示商品分类模块，确定删除吗？",
+            "deleteProductConfirm": "删除后将不展示商品模块，确定删除吗？",
+            "done": "完成",
+            "editImageAlt": "编辑图片ALT关键词",
+            "editImageAltPlaceholder": "多个关键词请以“,”隔开",
+            "editImageAltTip": "关键词将应用于搜索引擎优化（SEO），也有助于提升无障碍访问分数",
+            "editInFullScreen": "全屏编辑",
+            "editNavMenu": "编辑菜单",
+            "editorModelTitle": "内容",
+            "emptyTip": "看不到已添加的内容？",
+            "fileViladError": "不合法的文件对象",
+            "formatExample": "格式如：",
+            "hour": "小时",
+            "href": "超链接",
+            "imageLibrary": "文件库",
+            "imgCannotEdit": "该图片暂不支持编辑",
+            "inputLink": "输入链接",
+            "inputText": "输入文案",
+            "insertImages": "插入图片",
+            "isUsed": "使用中",
+            "link": "链接",
+            "linkPlaceholder": "输入链接",
+            "linkRequired": "输入链接或选择页面",
+            "linkedAccount": "已链接账号",
+            "loadMore": "加载更多",
+            "manageNavMenu": "管理菜单",
+            "mapAddressSelect": "选择地点",
+            "mapAddressSelectDesc": "拖动标签到你想定位的地方",
+            "minute": "分钟",
+            "navFailed": "导航菜单已失效",
+            "noBlog": "暂无博客",
+            "noBlogCollection": "暂无博客集合",
+            "noCategory": "暂无商品分类",
+            "noCategoryFound": "没有查找到相关商品分类",
+            "noPageFound": "没有查找到相关自定义页面",
+            "noProduct": "暂无商品",
+            "noProductFound": "没有查找到相关商品",
+            "noSelectCategory": "暂无分类",
+            "noSelectCategory1": "可前往",
+            "noSelectCategory2": "商品分类",
+            "noSelectCategory3": "添加分类",
+            "noSelectCategoryConfirmCancel": "取消",
+            "noSelectCategoryConfirmMessage": "此操作将会跳转至商品分类配置页面，尚未保存的内容将不应用修改，请确认后再操作。",
+            "noSelectCategoryConfirmOk": "跳出",
+            "noSelectCategoryConfirmTitle": "将跳出页面",
+            "noSelectProduct": "没有查找到相关商品",
+            "noTag": "暂无标签",
+            "notFindFontFamily": "暂无相关字体",
+            "notFound": "没有找到相关内容",
+            "notOpenEditorCategory": "商品分类编辑功能暂未开放",
+            "notOpenEditorProduct": "商品编辑功能暂未开放",
+            "notOpenNav": "导航菜单编辑功能暂未开放",
+            "numLimit": "超出字符个数：{{numLimit}}",
+            "options": "个项目",
+            "page": "页面",
+            "pageSelectPlaceholder": "请输入页面名称",
+            "policy": {
+                "privacy": "隐私政策",
+                "refund": "退款政策",
+                "service": "服务条款",
+                "shipping": "发货政策"
+            },
+            "policyPage": "政策",
+            "presetPage": "系统预设页面",
+            "productFailed": "该商品已失效",
+            "productPlaceholder": "请输入商品名称",
+            "refresh": "刷新",
+            "refreshTip": "看不到数据？",
+            "remove": "移除",
+            "resetImagesConfirm": "确定恢复默认图片吗？",
+            "resetImagesError": "恢复默认图片失败！",
+            "searchFontFamily": "搜索名称",
+            "selectFontFamily": "请选择字体",
+            "selectMetafields": "选择动态源",
+            "selectNavMenu": "选择菜单导航",
+            "selectPages": "输入链接或选择页面",
+            "selectProduct": "选择商品",
+            "selectProductCategory": "创建商品分类",
+            "selectStyles": "选择样式",
+            "text": "文本",
+            "textRequired": "请输入要添加链接的文本内容",
+            "tipsText": "提示",
+            "uploadImageByFit": "请上传32 x 32尺寸大小的图片",
+            "uploadImageBySize": "请选择小于 20MB 的图片",
+            "uploadImageByType": "请选择 PNG/ICO 格式的图片"
+        },
+        "schema": {
+            "empty": {
+                "desc": "在画布中点击组件进行编辑",
+                "title": "选择要编辑的组件"
+            },
+            "emptytips": "暂无可编辑的内容",
+            "linkTips": "了解详细信息"
+        },
+        "select": {
+            "option": {
+                "noval": "此选项已失效，请重新选择"
+            }
+        },
+        "template": {
+            "base": "基于模板",
+            "blog": {
+                "allnosetTips": "当前模板未分配给任何博客",
+                "nosetTips": "当前模板未分配给此博客",
+                "search": "搜索博客"
+            },
+            "blogCollection": {
+                "allnosetTips": "当前模板未分配给任何博客集合",
+                "nosetTips": "当前模板未分配给此博客集合"
+            },
+            "create": "创建模板",
+            "delSuccess": "模板删除成功",
+            "delete": {
+                "assigned": "当前有{{n}}个{{type}}正在使用此模版，删除后将改为使用默认模版",
+                "none": "当前没有{{type}}正在使用此模版",
+                "title": "确认要删除此模板吗？"
+            },
+            "name": "模板名称",
+            "nameBase": "基础模板",
+            "nameDefault": "默认模板",
+            "nameRequired": "请输入模版名称",
+            "nameValid": "文件名包含无效字符，请重新输入；可使用_-等符号；",
+            "page": {
+                "allnosetTips": "当前模板未分配给任何自定义页面"
+            },
+            "preview": {
+                "nofound": "没有查找到相关{{x}}",
+                "placeholder": "搜索{{x}}名称",
+                "reset": "重置搜索条件"
+            },
+            "products": {
+                "nosetTips": "当前模板未分配给此商品分类"
+            },
+            "productsDetail": {
+                "nosetTips": "当前模板未分配给此商品"
+            },
+            "rename": {
+                "modal": "重命名模版",
+                "tip": "重命名",
+                "tip2": "改动模板名称可能导致{{type}}丢失模板关联，影响在线商店，请谨慎操作"
+            },
+            "renameSucess": "模板重命名成功",
+            "repeat": "此名称已被使用，请修改",
+            "richtext": {
+                "nosetTips": "当前模板未分配给此自定义页面"
+            },
+            "tips": {
+                "assignNum": {
+                    "products": "已分配给  {{num}} 个分类",
+                    "productsDetail": "已分配给  {{num}} 个商品"
+                },
+                "error": "创建失败",
+                "setNum": "已分配给  {{num}}  个",
+                "success": "创建成功"
+            }
+        },
+        "theme": {
+            "component": "主题组件"
+        },
+        "tips": {
+            "addComponent": "拖动组件至右侧即可添加",
+            "apiError": "接口异常",
+            "blogDetailNotExist": "暂时无法编辑，请发布博客后重试",
+            "checking": "正在检测登陆状态，请稍后...",
+            "clickToAdd": "点击添加组件",
+            "customPageNotExist": "暂时无法编辑，请创建自定义页面后重试",
+            "deleteComponent": "确定要删除当前这个组件？",
+            "deleteCurrentCategory": "确认要删除此商品分类吗？",
+            "deleteCurrentComponent": "你确认要删除此组件吗？",
+            "deleteCurrentImage": "确认要删除此图片吗？",
+            "deleteCurrentItem": "确认要删除此内容吗？",
+            "dragHere": "请拖放组件至此区域",
+            "dropComponentTips": "松开鼠标建立模块",
+            "getAreaError": "获取商店区域异常，请稍后重试",
+            "leaveConfirmTip": "未保存的内容将丢失，确认退出页面？",
+            "leavePageConfirmTip": "您确定要离开此页面吗？",
+            "maxPageSize": "您的配置项过多、将会影响配置加载效率",
+            "moduleLoading": "正在为您加载模块，请稍后...",
+            "notAddH1Tag": "当前页面已存在H1标题组件",
+            "notSupportLayout": "该组件不支持自由布局",
+            "oldComponentTip": "功能升级后，此组件不再支持编辑，请添加新的组件",
+            "pageCanNotEdit": "此页面暂不支持编辑",
+            "pageNotFound": "页面不存在",
+            "pageTipForCheckout": "结账暂无组件可配置，可点击下方「主题设置-结账」设置结账内容。",
+            "pageTipForCheckoutEditor": "本功能已搬迁到结账编辑器。 现在您可以通过应用、字体、颜色等内容来优化结账流程。",
+            "pageTipForCheckoutv2": "结账暂无组件可配置，可点击下方「<checkoutlink>主题设置-结账</checkoutlink>」设置结账内容。",
+            "payThemeTipTitle": "购买主题后可进行发布",
+            "productNotExist": "暂时无法编辑，请上架商品后重试",
+            "publishConfirmTip1": "在线商店页面效果将会替换成新主题。",
+            "publishConfirmTip2": "若商品、博客、自定义页面等内容应用了自定义模板，发布后将会应用新主题的默认模板。",
+            "publishConfirmTitle": "确定要发布主题吗？",
+            "publishError": "发布失败！",
+            "publishSuccess": "发布成功！",
+            "savePreviewError": "保存失败！",
+            "savePreviewErrorByArea": "保存成功,商家域名请求失败,无法预览",
+            "savePreviewSuccess": "保存成功",
+            "saveProductError": "保存失败！",
+            "saveProductErrorByArea": "保存成功,商家域名请求失败,无法发布",
+            "saveProductSuccess": "保存成功",
+            "selectAnotherPage": "请选择页面",
+            "supportLayout": "将组件拖动到此区域",
+            "themeLoaderError": "主题类型错误，暂不支持当前主题",
+            "themeSupport": "由 {{name}} 设计并提供技术支持"
+        },
+        "upload": {
+            "add": "添加图片",
+            "addTips": "可选择{{n}}张图片",
+            "delete": "删除内容",
+            "draging": "松开鼠标上传",
+            "error": "上传发生了错误，请重试",
+            "filteredOverNumImage": "单次最多可上传{{num}}张图片，已过滤超出部分",
+            "filteredOverSizeImage": "已过滤超出{{size}}的图片",
+            "filteredUnsupportTypeImage": "已过滤不支持的图片格式",
+            "limitNumberTips1": "最多只能添加",
+            "limitNumberTips2": "张图片",
+            "limitTips": "已添加{{n}}个图片，请先删除再进行添加",
+            "noImage": "暂无图片",
+            "submit": "确认选择",
+            "uploadImage": "上传图片",
+            "uploading": "上传中"
+        },
+        "url": {
+            "userCenter": "个人中心页"
+        },
+        "widgetVideo": {
+            "chooseFile": "选择视频文件",
+            "chooseFileInfo": "点击后，可上传/选择20M以内mp4格式视频文件"
+        }
+    },
+    "faq": {
+        "customcss": {
+            "faq": "https://help.shopline.com/hc/zh-cn/articles/24363424144025-%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89CSS"
+        },
+        "official_comp": {
+            "faq": "https://help.shopline.com/hc/zh-cn/articles/29554064531481-%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6%E5%BA%93%E6%94%AF%E6%8C%81%E5%85%A8%E5%B1%80%E6%A0%B7%E5%BC%8F%E8%AE%BE%E7%BD%AE"
+        }
+    },
+    "footer": {
+        "mobile": {
+            "changeMobile": "切换预览机型",
+            "nomobile": "无设备：跟随画布",
+            "previewMobile": "预览机型",
+            "qrcode": "用移动设备扫码，以预览网店"
+        }
+    },
+    "header": {
+        "tool": {
+            "exitPreview": "返回编辑",
+            "fullscreen": "在编辑器预览",
+            "publish": "发布网站",
+            "viewHome": "查看在线网店"
+        }
+    },
+    "inspector": {
+        "add": {
+            "limit": "无法添加：已达到组件添加上限"
+        }
+    },
+    "lang": {
+        "cn": "简体中文",
+        "en": "英语",
+        "id": "印度尼西亚语",
+        "ms": "马来西亚语",
+        "th": "泰语",
+        "tw": "繁体中文",
+        "vi": "越南语"
+    },
+    "market": {
+        "confirm": {
+            "btn": "继续",
+            "content": "修改后，默认设置 中的组件添加、删除和排序将不会再应用在 {{marketName}}：{{templateTitle}}中。",
+            "content2": "修改后，默认设置中该组件的内容添加、删除和排序调整将不会再应用在{{marketName}}：{{sectionName}}。",
+            "title": "当前市场的组件设置将不再跟随默认设置，确认要继续吗？"
+        },
+        "diff": {
+            "order": {
+                "tips": "当前市场不会继承默认设置的组件顺序"
+            },
+            "tips": "当前设置仅在该市场生效"
+        },
+        "options": {
+            "default": "默认设置"
+        },
+        "order": {
+            "title": "当前市场的组件顺序"
+        },
+        "reset": {
+            "btn": "重置为默认设置"
+        },
+        "select": {
+            "primaryMark": "主市场",
+            "tip1": "对不同市场进行差异化装修:"
+        }
+    },
+    "modal": {
+        "know": "知道了"
+    },
+    "network": {
+        "pageconfig": {
+            "error": "服务器繁忙，请稍后再试"
+        }
+    },
+    "noraml": {
+        "asyncbtn": "一键同步",
+        "asyncbtn2": "同步"
+    },
+    "normal": {
+        "busy": "系统繁忙，请稍后重试",
+        "knowmore": "了解详情"
+    },
+    "officialcomp": {
+        "theme": {
+            "tabtype": {
+                "base": "基础",
+                "button": "按钮",
+                "content": "正文",
+                "font": "标题",
+                "pro_settings": "高级设置"
+            }
+        },
+        "tips": {
+            "loadingSettings": "样式应用中，请稍侯",
+            "sectionTipBtn": "立即使用",
+            "sectionTipDesc": "逐个修改样式太麻烦？使用全局设置功能，批量修改高阶组件样式。",
+            "sectionTipTag": "新",
+            "sectionTipTitle": "组件全局设置",
+            "setTips": "已成功更改为主题样式",
+            "setTips2": "样式应用成功"
+        },
+        "tools": {
+            "getSettings": "获取主题样式",
+            "previewBtn": "更新并预览",
+            "title": "高阶组件库全局样式："
+        }
+    },
+    "operation": {
+        "addWord": "增加字数",
+        "clear": "清除",
+        "copy": "复制成功",
+        "copyBtn": "复制",
+        "copyBtn2": "复制组件",
+        "copyLimit": "无法复制：已达到组件添加上限",
+        "copyLimit2": "已达到组件添加上限",
+        "copyName": "复制名称",
+        "hideMore": "隐藏部分",
+        "increaseWord": "减少字数",
+        "make": "生成",
+        "makeing": "生成中",
+        "openMore": "查看更多",
+        "putin": "填入",
+        "remake": "重新生成"
+    },
+    "opration": {
+        "close": "关闭",
+        "open": "开启"
+    },
+    "opteration": {
+        "aimaking": "努力生成中，请耐心等待"
+    },
+    "oseid": {
+        "modal": {
+            "coverContent": "最近对此主题进行了更改，保存您的更改将覆盖任何最近的配置。您可以刷新页面以加载最近的配置，但您将丢失所做的更改。"
+        },
+        "model": {
+            "coverBtn1": "刷新页面",
+            "coverBtn2": "覆盖并保存更改",
+            "coverTitle": "覆盖最近的保存内容"
+        }
+    },
+    "prompt": {
+        "attractClick": "吸引客户点击邮件订阅",
+        "attractClick_text": "Help me write a copy that engage customers to accept email marketting.",
+        "bestSellers": "首页畅销商品",
+        "bestSellers_text": "Suggest a layout and copy for showcasing our top-selling products on the homepage.",
+        "discount": "折扣",
+        "discountPromotion": "折扣推广",
+        "discountPromotion_text": "Generate a discount image, displaying the discounted price and the discount amount.",
+        "discount_text": "Help me write a 【discount name】 discount slogan for 【Brand】 that sells 【product/service】.",
+        "fullDiscounts": "满减优惠",
+        "fullDiscounts_text": "Generate a discount for a certain amount of purchase image, displaying the discount and the minimum purchase amount required.",
+        "limitDiscounts": "限时折扣",
+        "limitDiscounts_text": "Generate a limited-time promotion image, displaying the discount and the deadline of the promotion.",
+        "newProduct": "新品推介",
+        "newProduct_text": "Generate a new product promotion image, displaying the promotion for new products and the deadline.",
+        "promotion": "促销文案",
+        "promotion_text": "Write a promotional content for our 48-hour flash sale, offering a 20% discount on selected items."
+    },
+    "shop": {
+        "setting": {
+            "select": {
+                "failMore": "主题数量已达到上限，请先删除再添加"
+            }
+        }
+    },
+    "sline": {
+        "guide": {
+            "cancelText": "略过",
+            "desc": "可选中组件的各个元素，并可针对不同设备灵活调整尺寸和布局，满足个性化装修的诉求。",
+            "okText": "5步快速上手",
+            "step1": {
+                "desc": "想要修改某个特定元素？可直接选中进行编辑，以更改其样式和内容。",
+                "title": "支持直接选中需要编辑的元素"
+            },
+            "step2": {
+                "desc": "组件排版不够灵活？新增布局设置，以满足更加个性化的布局装修需求。",
+                "title": "新增灵活布局设置"
+            },
+            "step3": {
+                "desc": "可切换设备类型为移动设备，进一步编辑网店在移动设备的展示样式",
+                "title": "切换移动设备视图进行编辑"
+            },
+            "step4": {
+                "desc": "可单独调整移动设备的布局方式，修改后的内容会单独保存，这不会影响原本电脑设备的展示效果。",
+                "title": "针对移动设备调整布局样式"
+            },
+            "step5": {
+                "desc": "可以在此处修改整个站点的通用样式，如商品、颜色等。新增配色方案，可以为组件应用各种颜色搭配，无需逐个调整色值。",
+                "title": "修改全局的样式设计"
+            },
+            "title": "新版OS3.0主题，隆重登场"
+        },
+        "guideCard": {
+            "desc": "最小元素选择，多断点布局修改，配色方案设置，以及更多功能上新。",
+            "title": "新OS3.0主题，功能全面升级"
+        }
+    },
+    "style": {
+        "option1": "专业的",
+        "option2": "活泼的",
+        "option3": "生动的",
+        "option4": "精致的",
+        "option5": "大胆的",
+        "option6": "有趣的"
+    },
+    "supportFileMaxSizeErrorTip": "文件大小超出20MB的限制",
+    "supportFileTypesErrorTip": "文件类型不支持",
+    "template": {
+        "goods": {
+            "Tooltips": {
+                "msg": "当前模板未分配给此商品"
+            }
+        },
+        "goodsCate": {
+            "Tooltips": {
+                "msg": "当前模板未分配给此商品分类"
+            }
+        }
+    },
+    "theme": {
+        "app": {
+            "embed": {
+                "block": {
+                    "schema": {
+                        "empty": "此应用没有可自定义的设置"
+                    }
+                },
+                "blocks": {
+                    "appblocks": {
+                        "info": "探索更多为主题精心打造的精品应用"
+                    },
+                    "going": {
+                        "apps": "前往应用市场",
+                        "plugin": "前往应用"
+                    },
+                    "title": "应用嵌入"
+                }
+            }
+        },
+        "style": {
+            "changebtn": "修改风格",
+            "tab": "主题风格",
+            "tips": "更改您主题风格的样式将影响网店的样式设置。 更改主题风格后，某些设置内容可能会被重置，但不会丢失任何已填入的文字、图片等内容。",
+            "tooltip": "修改风格前，请先保存您的修改内容"
+        }
+    },
+    "tips": {
+        "brush": {
+            "content": "将当前的设置内容覆盖至所有的设备中，包括电脑、平板、手机",
+            "title": "应用至所有设备"
+        },
+        "confirmNotSave": "当前有未保存的内容，确认要退出吗？",
+        "confirmProSettings": "确认要将高阶组件同步为主题样式吗？",
+        "confirmProSettingsContent": "同步后，当前的高阶组件将一键更新为主题全局样式，包括字体、颜色、布局、按钮等。",
+        "onboard": {
+            "addblock": {
+                "content": "鼠标移动到菜单上方可进行查看",
+                "title": "“添加内容“已收起在菜单右侧"
+            },
+            "mobile": {
+                "content": "切换至移动设备，可切换需要预览的机型或社媒渠道，以预览消费者查看网店的真实效果。",
+                "title": "移动端预览机型和扫码功能"
+            },
+            "style": {
+                "content": "一旦修改了内容，移动端的内容会单独保存，这不会影响原本电脑端的展示效果。",
+                "title": "移动设备的布局样式已单独生效"
+            }
+        },
+        "updateSettings": "将高阶组件更新为主题样式",
+        "updateSettingsContent": "具体包括背景颜色，标题、副标题、正文的字体和颜色，按钮字体，边框颜色和阴影等。",
+        "widgets": {
+            "mb": {
+                "text": "当前设置仅在移动设备生效",
+                "text2": "修改后的配置仅对移动设备生效"
+            },
+            "pc": {
+                "text": "当前设置仅在默认设备生效"
+            }
+        }
+    },
+    "widget": {
+        "html": {
+            "validtip": "内容不符合规范，请重新输入"
+        },
+        "layout": {
+            "value": {
+                "column": "垂直",
+                "justify-center": "居中",
+                "justify-column-end": "居下",
+                "justify-column-start": "居上",
+                "justify-row-end": "居右",
+                "justify-row-start": "居左",
+                "row": "水平",
+                "space-around": "周围分布",
+                "space-between": "两端分布",
+                "space-evenly": "平均分布",
+                "strech": "拉伸对齐"
+            }
+        },
+        "product_id": {
+            "bottom_tips": "*仅限非实时渲染商品展示场景使用"
+        },
+        "product_list": {
+            "choost_product": "已选商品"
+        }
+    },
+    "widgets": {
+        "align_items": {
+            "title": "对齐方式"
+        },
+        "column": {
+            "title": "列"
+        },
+        "direction": {
+            "title": "排布方向"
+        },
+        "flex_wrap": {
+            "title": "自动换行"
+        },
+        "gap": {
+            "title": "间距"
+        },
+        "height": {
+            "title": "高度"
+        },
+        "justify_content": {
+            "title": "展示位置"
+        },
+        "margin": {
+            "title": "外边距"
+        },
+        "padding": {
+            "title": "内边距"
+        },
+        "row": {
+            "title": "行"
+        },
+        "width": {
+            "auto": {
+                "title": "自适应"
+            },
+            "fix": {
+                "title": "固定值"
+            },
+            "full": {
+                "title": "填满容器"
+            },
+            "title": "宽度"
+        }
+    },
+    "不透明度": "不透明度",
+    "主按钮": "主按钮",
+    "全屏宽度": "全屏宽度",
+    "内容区边框": "内容区边框",
+    "内容区阴影": "内容区阴影",
+    "内间距": "内间距",
+    "卡片边框": "卡片边框",
+    "卡片阴影": "卡片阴影",
+    "厚度": "厚度",
+    "叠加投影": "叠加投影",
+    "图片边框": "图片边框",
+    "圆角半径": "圆角半径",
+    "垂直偏移": "垂直偏移",
+    "外间距": "外间距",
+    "媒体边框": "媒体边框",
+    "媒体阴影": "媒体阴影",
+    "字体": "字体",
+    "字体颜色": "字体颜色",
+    "左右扫光": "左右扫光",
+    "布局": "布局",
+    "带箭头按钮": "带箭头按钮",
+    "开启全屏宽度时不生效": "开启全屏宽度时不生效",
+    "悬浮放大": "悬浮放大",
+    "按钮动效": "按钮动效",
+    "按钮样式": "按钮样式",
+    "按钮边框": "按钮边框",
+    "按钮阴影": "按钮阴影",
+    "文本链接按钮": "文本链接按钮",
+    "最大显示宽度": "最大显示宽度",
+    "样式": "样式",
+    "模糊": "模糊",
+    "次级按钮": "次级按钮",
+    "水平偏移": "水平偏移",
+    "注意：调整按钮样式后可能导致字体不可见，请调整字体颜色后查看": "注意：调整按钮样式后可能导致字体不可见，请调整字体颜色后查看",
+    "电脑端字体大小": "电脑端字体大小",
+    "移动端字体大小": "移动端字体大小",
+    "组件背景颜色": "组件背景颜色",
+    "背景颜色": "背景颜色",
+    "行高": "行高",
+    "视频边框": "视频边框",
+    "视频阴影": "视频阴影",
+    "边框颜色": "边框颜色",
+    "间距": "边距",
+    "阴影": "阴影",
+    "阴影颜色": "阴影颜色",
+    "颜色": "颜色"
+}

@@ -49,7 +49,8 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     // 用户添加模板
     getTemplateInstanceList({
       page: pagination.current,
-      limit: pagination.pageSize
+      limit: pagination.pageSize,
+      languages_id:shopSetting.languagesId,
     }).then((res:any)=>{
       if(res.data.length !== 0){
         shopSetting.setTemplateInstanceList(res.data);
@@ -61,7 +62,16 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     }).catch(err=>{
       console.log(err)
     })
-  },[pagination.current]) // 依赖项添加分页参数
+  },[pagination.current,shopSetting.languagesId]) // 依赖项添加分页参数
+
+  // 获取当前模板
+  useEffect(()=>{
+    getTemplateInstanceUsing(shopSetting.languagesId).then((res:any)=>{
+      shopSetting.setTemplateInstanceUsing(res.data)
+    }).catch(err=>{
+      console.log(err)
+    })
+  },[shopSetting.languagesId])
 
   // 处理分页变化
   const handlePageChange = (page: number, size: number) => {
@@ -71,7 +81,6 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
       pageSize: size,
     })
   };
-
 
   return (
     <Scoped>
@@ -86,20 +95,20 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
             <Flex gap={8} vertical>
               <ConfigProvider
                 theme={{
-                    components: {
-                        Button: {
-                            defaultActiveBorderColor:"#d7dbe7",
-                            defaultBorderColor:"#d7dbe7",
-                            defaultHoverBorderColor:"#d7dbe7",
-                            defaultHoverColor:"#ab71fe",
-                            defaultActiveColor:"#ab71fe",
-                            defaultHoverBg:"#f7f8fb",
-                            defaultActiveBg:"#f7f8fb",
-                            borderRadius:4
-                        },
+                  components: {
+                    Button: {
+                        defaultActiveBorderColor:"#d7dbe7",
+                        defaultBorderColor:"#d7dbe7",
+                        defaultHoverBorderColor:"#d7dbe7",
+                        defaultHoverColor:"#ab71fe",
+                        defaultActiveColor:"#ab71fe",
+                        defaultHoverBg:"#f7f8fb",
+                        defaultActiveBg:"#f7f8fb",
+                        borderRadius:4
                     },
+                  },
                 }}
-                >
+              >
                 <Button className="aiBtn" icon={<StarsIcon className="font-16" style={{margin:"0 2px"}} />}>立即体验</Button>
                 <Button className="aiBtn">查看过往模板</Button>
               </ConfigProvider>
@@ -117,7 +126,6 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                 <div>
                   <h3>{shopSetting.templateInstanceUsing?.template_name}</h3>
                   <p className="font-12 color-7A8499">
-                    {/* 2025/03/25 22:41 */}
                     <span>
                       当前版本：{shopSetting.templateInstanceUsing?.template_version}
                       <Divider type="vertical" />
@@ -132,6 +140,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                 </div>
                 <div>
                   <Flex gap={12}>
+                    <DefaultButton text="预览" />
                     <ButtonDropdownSecondary menu={{items:[
                       {
                         label: <a onClick={()=>navgate(`/theme/preview?preview=1&templateId=${shopSetting.templateInstanceUsing?.id}`)}>查看店铺</a>,
@@ -150,7 +159,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                         key: '4',
                       },
                       {
-                        label: <a onClick={()=>navgate(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}`)}>编辑代码</a>,
+                        label: <a onClick={()=>navgate(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
                         key: '5',
                       },
                       {
@@ -158,7 +167,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                         key: '6',
                       }
                     ]}} trigger={['click']} text="操作" />
-                    <PrimaryButton text="设计" />
+                    <PrimaryButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json`)} />
                   </Flex>
                 </div>
               </Flex>
@@ -253,9 +262,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             {
                               label: <a onClick={()=>{
                                 setInstanceStatus(template.id,"1").then(async res=>{
-                                  console.log(res)
-                                  // 
-                                  const { data } = await getTemplateInstanceUsing() as any;
+                                  const { data } = await getTemplateInstanceUsing(shopSetting.languagesId) as any;
                                   shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
 
                                   getTemplateInstanceList({
@@ -272,7 +279,6 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                   }).catch(err=>{
                                     console.log(err)
                                   })
-
                                 })
                               }}>发布</a>,
                               key: '1',
@@ -290,7 +296,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                               key: '4',
                             },
                             {
-                              label: <a onClick={()=>navgate(`/theme/codeEditor/${template?.id}/${template?.template_id}`)}>编辑代码</a>,
+                              label: <a onClick={()=>navgate(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
                               key: '5',
                             },
                             {

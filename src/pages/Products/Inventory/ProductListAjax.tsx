@@ -276,8 +276,8 @@ function ProductListAjax(selectProps:any) {
     setLoading(false);
   };
   useEffect(() => {
-    fetchData();
-  }, [productList.languagesId,productList.condition,productList.isAlliance,productList.isHosted,productList.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize]);
+    // fetchData();
+  }, []);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
     setTableParams({

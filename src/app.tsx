@@ -1,14 +1,13 @@
 import { Footer } from '@/components';
 import { SettingOutlined } from '@ant-design/icons';
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
-import { history,Link,RequestConfig,RunTimeLayoutConfig } from '@umijs/max';
-import { getAccessToken, getPlatformInfo, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { history,Link,RequestConfig,RunTimeLayoutConfig,setLocale,useIntl } from '@umijs/max';
+import { getAccessToken, getCurrenciesList, getPlatformInfo, getShippingcourier, getTimeZoneList, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { App, Flex, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AddIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
-import { useIntl } from './.umi/plugin-locale/localeExports';
 // layout
 import defaultSettings from '../config/defaultSettings';
 
@@ -18,18 +17,16 @@ const loginPath = '/user/signIn';
 // 进度条提示
 import NProgress from "nprogress"; 
 import "nprogress/nprogress.css";
-
-// 懒加载
-const SalesChannel = React.lazy(() => import('./components/Menu/SalesChannel'));
-const MCPaymentHead = React.lazy(() => import('./components/Header/MCPaymentHead'));
-const Header = React.lazy(() => import('./components/Header/Header'));
+import globalStore from './store/globalStore';
+import SalesChannel from './components/Menu/SalesChannel';
+import Header from './components/Header/Header';
+import MCPaymentHead from './components/Header/MCPaymentHead';
 
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 // let currentVersion = '';
 
 // 配置NProgress
 NProgress.configure({ showSpinner: false }) // 是否显示右上角螺旋加载提示
-
 
 // 版本轮询
 // const checkVersion = async () => {
@@ -78,7 +75,7 @@ const CONFIG_REQUESTS = [
 
 // 带重试的请求封装
 const fetchWithRetry = (url: string, retries: number): Promise<any> => {
-  return axios.post(url).catch(err => {
+  return axios.post(url,{},{ timeout: 60000 }).catch(err => {
     return retries > 0 
       ? fetchWithRetry(url, retries - 1)
       : Promise.reject(err);
@@ -127,8 +124,37 @@ export async function getInitialState(): Promise<{
     try {
       const msg = await queryCurrentUser();
       // 用户语言
-      localStorage.setItem("use_lang", msg?.data?.languages_id ?? "2")
-
+      localStorage.setItem("use_lang", msg?.data?.languages_id ?? "2");
+      // 设置语言
+      const language = globalStore.language.filter(item => item.id === msg?.data?.languages_id)[0]?.code
+      setLocale(language,false);
+      // 获取平台信息
+      getPlatformInfo().then((res:any)=>{
+        if (res.data) {
+          localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data));
+          // 动态设置 favicon
+          // updateFavicon(res.data?.faviconUrl);
+        } else {
+          // 使用默认 favicon
+          // updateFavicon('/img/logo.png');
+        }
+      }).catch(error => {
+          // 使用默认 配置
+          // updateFavicon('/img/logo.png');
+      });
+      // 获取物流服务
+      getShippingcourier().then((res:any)=>{
+        localStorage["MC_DATA_SHIPPING_COURIER"] = JSON.stringify(res.data)
+      }).catch(err=>{
+      })
+      // 获取时区列表
+      getTimeZoneList().then(res=>{
+        localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res??[]));
+      })
+      // 获取币种列表
+      getCurrenciesList().then(res=>{
+        localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res??[]));
+      })
       return msg.data // 返回用户信息
     } catch (error) {
       // history.push(loginPath);
@@ -149,19 +175,7 @@ export async function getInitialState(): Promise<{
     document.head.appendChild(link);
   };
 
-  getPlatformInfo().then((res:any)=>{
-    if (res.data) {
-      localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data));
-      // 动态设置 favicon
-      // updateFavicon(res.data?.faviconUrl);
-    } else {
-      // 使用默认 favicon
-      // updateFavicon('/img/logo.png');
-    }
-  }).catch(error => {
-    // 使用默认 配置
-    // updateFavicon('/img/logo.png');
-  });
+  
 
   // access_token 初始化
   // let access_token = localStorage.getItem('access_token')
@@ -206,14 +220,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   const [height,setHeight] = useState(120)
 
   const stores = window.location.pathname
-
-  // 版本轮询
-  // useEffect(() => {
-  //   const timer = setInterval(checkVersion, 1000000);
-  //   return () => clearInterval(timer);
-  // }, []);
-  // 获取数据
-
+  
   return {
     footerRender: () => <Footer />,
     onPageChange: () => {
@@ -222,6 +229,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
+
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
@@ -283,6 +291,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             <AddIcon className='font-12 color-7A8499' />
           </Flex>
         </Link>
+        // 
       }else if(item.path == "/channel"){
         return <SalesChannel dom={dom} />
       }else if(item.path == "/settings"){
@@ -301,23 +310,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       }else{
         return menuData.filter(item => item.path.slice(0,8) !== "/stores/" )
       }
-      // return (stores == "/stores/" ? [
-      //   {
-      //     path: '/stores/list',
-      //     icon: <ShopOutlined />,
-      //     name: '店铺管理',
-      //   },
-      //   {
-      //     path: '/stores/bills',
-      //     icon: <ProfileOutlined />,
-      //     name: '账单管理',
-      //   },
-      //   {
-      //     path: '/stores/data',
-      //     icon: <DashboardOutlined />,
-      //     name: '数据管理',
-      //   }
-      // ]:menuData)
     },
     menuProps: {
       // className:stores.slice(0,8) == "/stores/"?"":"mc-menu-item"
@@ -346,14 +338,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     pageTitleRender:(props,defaultPageTitle,info)=>{
       const title = window.location.hostname.startsWith("localhost") ? "localhost": window.location.hostname.slice(0,window.location.hostname.indexOf("."));
-      // console.log(title)
-      // console.log(info)
       return (
-        // title+" - "+info?.pageName+" - "+"MataCart"
         title+" - "+defaultPageTitle
       )
     },
-    // title:"MataCart",
   };
 };
 
@@ -375,7 +363,6 @@ interface ResponseStructure {
 }
 
 
-// ------ 暂无接口重试机制
 // 全局计数器
 let requestCount = 0;
 // 启动进度条
@@ -408,7 +395,7 @@ const showErrorMessage = () => {
 
 // 请求封装
 export const request: RequestConfig = {
-  timeout: 120000, //超时处理，请求超过0.1分钟，取消请求
+  timeout: 60000, //默认超时时间 超时处理，请求超过1分钟，取消请求
   // 错误统一处理
   errorConfig: {
     // 抛出错误
@@ -445,7 +432,12 @@ export const request: RequestConfig = {
   // 请求拦截器
   requestInterceptors: [
     (config: any) => {
-
+      // 根据接口URL设置不同的超时时间
+      if(config.url === '/api/ApiTemplate/file_list'){
+        config.timeout = 300000;
+      }else{
+        config.timeout = 60000;
+      }
       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       const length = 8;
       let result = '';

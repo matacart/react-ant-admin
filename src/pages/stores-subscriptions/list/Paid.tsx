@@ -1,12 +1,9 @@
-import { ArrowLeftOutlined, BackwardOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
-import { Icon } from 'umi'
-import { wrap } from 'lodash';
 import Charges from "@/components/Card/Charges";
 import { Divider } from "antd";
-import { context } from './../../../.umi-production/core/helmetContext';
 
 
 const funcArray = [  

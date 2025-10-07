@@ -7,7 +7,6 @@ import styled from "styled-components"
 const { Search } = Input;
 // 自定义搜索框
 const MySearch = ({...props})=>{
-
   return (
     <ConfigProvider
         theme={{

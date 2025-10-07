@@ -1,21 +1,21 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Flex, Form, FormInstance, Input, message, Select } from 'antd'
+import { Flex, FormInstance, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useSearchParams } from '@umijs/max';
-import DefaultButton from '@/components/Button/DefaultButton';
 import { observer } from 'mobx-react-lite';
-import LangSelect from '@/pages/components/LangSelect';
-import { addCustomerPage, createArticles, getCustomerPage } from '@/services/y2/api';
+import { addCustomerPage, getCustomerPage } from '@/services/y2/api';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useRef, useState } from 'react';
 import customPage from '@/store/channel/customPage/customPage';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import TitleCard from './TitleCard';
-import ContentCard from './ContentCard';
-import PublishPageCard from './PublishPageCard';
-import SEOCard from './SEOCard';
-import ThemeTemplate from './ThemeTemplate';
+import LangSelect from '@/components/Select/LangSelect';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import TitleCard from '../Custompage/TitleCard';
+import PublishPageCard from '../Custompage/PublishPageCard';
+import ContentCard from '../Custompage/ContentCard';
+import SEOCard from '../Custompage/SEOCard';
+import ThemeTemplate from '../Custompage/ThemeTemplate';
 
 function EditPage(){
 
@@ -25,7 +25,9 @@ function EditPage(){
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const sleep = useSleep()
+    const sleep = useSleep();
+
+    const [languagesId,setLanguagesId] = useState("2");
 
     const id = searchParams.get('id') ?? ""
     const langId = searchParams.get('langId') ?? "2"
@@ -34,10 +36,7 @@ function EditPage(){
     const titleCardRef = useRef<FormInstance>(null);
 
     const setLang = (lang:string)=>{
-        customPage.setOldCustomPage({
-            ...customPage.oldCustomPage,
-            languages_id:lang
-        })
+        setLanguagesId(lang);
     }
 
     useEffect(()=>{
@@ -46,9 +45,8 @@ function EditPage(){
                 message.error('无权限')
                 history.push('/website/page')
             }else{
-                customPage.setOldCustomPage(res.data)
+                customPage.setCustomPage(res.data)
             }
-                
         }).catch(err=>{
             console.log(err)
         }).finally(()=>{
@@ -66,7 +64,7 @@ function EditPage(){
             // 全部校验通过后提交
             // console.log(customPage.oldCustomPage);
             setLoading(true)
-            addCustomerPage(customPage.oldCustomPage).then(async res=>{
+            addCustomerPage(customPage.customPage).then(async res=>{
                 // await sleep(2000)
                 message.success('修改内容已更新')
                 // history.push('/website/page')
@@ -93,11 +91,11 @@ function EditPage(){
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
-                            <div className="mc-header-left-content">{customPage.oldCustomPage.title}</div>
+                            <div className="mc-header-left-content">{customPage.customPage.title}</div>
                         </div>
                         <Flex className='mc-header-right' gap={12}>
                             {/* 语言 */}
-                            <LangSelect lang={customPage.oldCustomPage.languages_id} setLang={setLang} />
+                            <LangSelect lang={languagesId} setLang={setLang} />
                         </Flex>
                     </div>
                     <div className='mc-layout-main'>
@@ -113,7 +111,7 @@ function EditPage(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' loading={loading} onClick={()=>{validateAll()}}>更新</Button>
+                        <PrimaryButton loading={loading} onClick={()=>{validateAll()}} text="保存" />
                     </div>
                 </div>
             </div>}

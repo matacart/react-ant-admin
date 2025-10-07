@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
+import { getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import SelectedActions from './SelectedActions';
@@ -221,8 +221,8 @@ function ProductListAjax(selectProps:any) {
               {/* <Link to={`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`} target='_blank'> */}
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
-                      window.open(`https://`+cookie.load("domain").domainName+`/h-product-detail-p`+record.productid+`.html`)
+                    if(cookie.load("domain").domain_name && cookie.load("domain").domain_name!==""){
+                      window.open(`https://`+cookie.load("domain").domain_name+`/h-product-detail-p`+record.productid+`.html`)
                     }else{
                       message.error("请先设置店铺")
                     }
@@ -331,14 +331,6 @@ function ProductListAjax(selectProps:any) {
 
   const handleOrderClick = (productId: string,languages_id:string) => {
     // console.log('Clicked product:', productId); // 添加调试日志
-    // 
-    // history.push(`/products/productId/edit`,{
-    //   query: {
-    //     productId:productId,
-    //     languages_id:languages_id
-    //   }
-    // })
-    // history.push(`/products/edit?productId=`+productId+`&languagesId=`+languages_id)
     history.push(`/products/edit/${productId}/${languages_id}`)
   };
   

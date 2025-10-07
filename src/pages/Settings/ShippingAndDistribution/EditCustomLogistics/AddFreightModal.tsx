@@ -4,7 +4,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton"
 import { AddIcon } from "@/components/Icons/Icons";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import { useSleep } from "@/hooks/customHooks";
-import { getCurrenciesList, getDeliveryList, setAddonsConfigs } from "@/services/y2/api";
+import { getDeliveryList, setAddonsConfigs } from "@/services/y2/api";
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight";
 import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Col, ConfigProvider, Divider, Flex, Form, Input, InputNumber, message, Modal, Radio, Row, Select, Space, Spin, Tooltip } from "antd"

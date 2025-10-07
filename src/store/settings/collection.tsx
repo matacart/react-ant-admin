@@ -9,7 +9,7 @@ class collection {
     manualCollection = []
 
     setManualCollection(res:any){
-        this.manualCollection = res
+      this.manualCollection = res
     }
 
     // 其它方式

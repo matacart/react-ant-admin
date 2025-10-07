@@ -2,7 +2,6 @@ import product from "@/store/product/product"
 import { Card, Checkbox, Flex, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { event } from './../../../.umi/plugin-locale/localeExports';
 
  function Recommendation(){
 

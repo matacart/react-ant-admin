@@ -5,10 +5,10 @@ import type { MenuProps } from 'antd';
 import React from "react";
 import { useEffect } from "react"
 import CategoriesTable from "./CategoriesTable";
-import LangSelect from "@/pages/components/LangSelect";
 import categoriesList from "@/store/product/categoriesList";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import { observer } from "mobx-react-lite";
+import LangSelect from "@/components/Select/LangSelect";
 
 const items: MenuProps['items'] = [
     {
@@ -111,7 +111,7 @@ function CategoriesSelect(){
                         ]} />
                     </Flex>
                     <Flex gap={12}>
-                      <LangSelect isLabel={true} lang={categoriesList.languagesId} setLang={setLang} />
+                      <LangSelect lang={categoriesList.languagesId} setLang={setLang} />
                       <DropdownSort items={items} />
                     </Flex>
                 </div>

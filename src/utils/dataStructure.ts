@@ -144,3 +144,69 @@ export function generateId() {
   const random = Math.random().toString(36).substring(2);
   return timestamp + random;
 }
+
+
+// codeEditor
+// 在 treeData 中查找或创建目录结构
+export function insertFileInTree(treeData: any[], fileName: string, fileType: string, fullPath: string,filePath:string){
+  const newTreeData = JSON.parse(JSON.stringify(treeData));
+  // 查找filePath节点
+  const sectionsNode = newTreeData.find((node: any) => node.title === filePath);
+  if (!sectionsNode) return {
+      newTreeData:newTreeData,
+      level: 0
+  };
+  // 处理路径
+  if (!fullPath.includes('/')) {
+      // 没有目录结构，直接添加到filePath根目录
+      sectionsNode.children.push({
+          title: fileName + "." + fileType,
+          key: filePath + "/" + fileName + "." + fileType + "-1",
+          children: undefined,
+          level: 1,
+          fileType: fileType,
+      });
+      return {
+          newTreeData:newTreeData,
+          level: 1
+      };
+  }
+  // 有目录结构，需要处理目录
+  const pathParts = fullPath.split('/');
+  const actualFileName = pathParts.pop()!; // 文件名
+  let currentNodeChildren = sectionsNode.children;
+  // 逐级查找或创建目录
+  for (const dirName of pathParts) {
+      // 查找目录是否存在
+      let dirNode = currentNodeChildren.find((node: any) => node.title === dirName);
+      if (!dirNode) {
+          // 目录不存在，创建新目录
+          dirNode = {
+              title: dirName,
+              key: filePath + "/" + pathParts.slice(0, pathParts.indexOf(dirName) + 1).join('/') + "-folder",
+              children: [],
+              fileType: undefined,
+              level: pathParts.indexOf(dirName) + 1 ,
+          };
+          currentNodeChildren.push(dirNode);
+      }
+      // 如果节点没有 children 属性，添加它
+      if (!dirNode.children) {
+          dirNode.children = [];
+      }
+      // 移动到下一级
+      currentNodeChildren = dirNode.children;
+  }
+  // 在最终目录中添加文件
+  currentNodeChildren.push({
+      title: actualFileName + "." + fileType,
+      key: filePath + "/" + fullPath + "." + fileType +"-"+ (pathParts.length + 1),
+      children: undefined,
+      fileType: fileType,
+      level: pathParts.length + 1,
+  });
+  return {
+      newTreeData:newTreeData,
+      level: pathParts.length + 1
+  };
+};

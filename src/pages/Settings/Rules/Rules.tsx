@@ -1,7 +1,6 @@
-import { getAddWarehouseList, getRuleList, setRuleList } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
+import { Divider, message } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
@@ -10,9 +9,13 @@ import PrivacyPolicy from "./PrivacyPolicy"
 import TermsOfService from "./TermsOfService"
 import ShippingPolicy from "./ShippingPolicy"
 import rules from "@/store/settings/rules"
-import LangSelect from "@/pages/components/LangSelect"
 import StatementModal from "@/components/Modal/StatementModal"
+import cookie from 'react-cookies';
 import { useSleep } from "@/hooks/customHooks"
+import { getRuleList, setRuleList } from "@/services/y2/api"
+import LangSelect from "@/components/Select/LangSelect"
+import { observer } from "mobx-react-lite"
+import MyButton from "@/components/Button/MyButton"
 
 function Rules() {
 
@@ -20,7 +23,7 @@ function Rules() {
 
     const [isRenewal,setIsRenewal] = useState(false)
 
-    const sleep = useSleep()
+    const sleep = useSleep();
 
     // 免责声明
     const content = (<div>
@@ -33,32 +36,16 @@ function Rules() {
     </div>)
 
     const setLang = (lang:string) => {
-        getRuleList("",lang).then(res=>{
-            (res.data && res.data.length>0) && res.data.forEach((item:any)=>{
-                switch (item.page_type) {
-                    case "terms_of_service":
-                        rules.setTermsofUse(item)
-                        break;
-                    case "refund_policy":
-                        rules.setReturnPolicy(item)
-                        break;
-                    case "shipping_policy":
-                        rules.setShippingPolicy(item)
-                        break;
-                    case "privacy_policy":
-                        rules.setPrivacyPolicy(item)
-                }
-            })
-            rules.setLanguagesId(lang)
-        }).catch(err=>{
-            console.log(err)
-        }).finally(()=>{
-            // setIsSkeleton(false)
-        })
+        rules.setLanguagesId(lang)
     }
 
     useEffect(()=>{
-        getRuleList("",rules.languagesId).then(res=>{
+        // 默认语言
+        rules.setLanguagesId(cookie.load("shop_lang") || '2');
+    },[])
+
+    useEffect(()=>{
+        getRuleList("",rules.languagesId).then((res:any)=>{
             (res.data && res.data.length>0) && res.data.forEach((item:any)=>{
                 switch (item.page_type) {
                     case "terms_of_service":
@@ -79,7 +66,7 @@ function Rules() {
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[])
+    },[rules.languagesId])
 
     return (
         <Scoped>
@@ -157,7 +144,7 @@ function Rules() {
                     >
                     </Divider>
                     <div className="submit-btn">
-                        <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
+                        <MyButton text="更新" type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
                             setIsRenewal(true)
                             setRuleList(JSON.stringify([{...rules.privacyPolicy,is_sys:'0'},{...rules.returnPolicy,is_sys:'0'},{...rules.shippingPolicy,is_sys:'0'},{...rules.termsofUse,is_sys:'0'}]),rules.languagesId).then(async res=>{
                                 // 重新获取规则
@@ -169,14 +156,14 @@ function Rules() {
                             }).finally(()=>{
                                 setIsRenewal(false)
                             })
-                        }}>更新</Button>
+                        }} />
                     </div>
                 </div>
             </div>}
         </Scoped>
     )
 }
-export default Rules
+export default observer(Rules)
 
 const Scoped = styled.div`
 .mc-layout-wrap{

@@ -4,12 +4,16 @@ import MyDropdownExpansion from '@/components/Dropdown/MyDropdownExpansion';
 import { UnfoldIcon } from '@/components/Icons/Icons';
 import { Flex, message, version } from 'antd';
 import React, { useState } from 'react';
-// 全部导入
-import * as monaco from 'monaco-editor';
-// 导入基础版 （不含功能）
-// import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
-// import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding';
-// import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution"; // 代码高亮&提示
+// 离线版本
+import { loader } from '@monaco-editor/react';
+// 配置 loader 使用本地的 monaco 实例
+loader.config({ 
+    paths: {
+        vs: '/monaco-editor/vs' // 指向你本地的 monaco 资源路径
+        // vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.43.0/min/vs'
+    }
+});
+
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { getFileVersion, getThemeFileDetail, setFileSave } from '@/services/y2/api';
@@ -17,16 +21,18 @@ import { useLocation, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useSleep } from '@/hooks/customHooks';
 import codeEditor from '@/store/theme/codeEditor';
+import { observer } from 'mobx-react-lite';
+// 使用 @monaco-editor/react 组件
+import MonacoEditor from '@monaco-editor/react';
+
 
 function MyMonacoEditor({file}:{file:any}){
+
+    const [fileInfo, setFileInfo] = useState<any>(file);
 
     const sleep = useSleep();
 
     const mRef = useRef<any>(null);
-
-    const cRef = useRef<any>(null);
-
-    const editorRef = useRef<any>(null); // 新增 ref 用于保存编辑器实例
 
     const searchParams = new URLSearchParams(useLocation().search);
 
@@ -36,34 +42,54 @@ function MyMonacoEditor({file}:{file:any}){
 
     const [loading,setLoading] = useState(false);
 
-    const initMonacoEditor = async (file:any) => {
-        editorRef.current = monaco.editor.create(cRef.current, {
-            value: file?.fileContent || "",
-            language: "html",
-            theme: "vs",
-            minimap: { enabled: true },
-        });
-    }
+    const editorRef = useRef<any>(null); // 用于保存编辑器实例
 
     const [versionList,setVersionList] = useState<any[]>([]);
     const [fileVersionList,setFileVersionList] = useState([]);
 
     // 当前版本
     const [version,setVersion] = useState("");
+    // 语言状态
+    const [language, setLanguage] = useState<string>("html");
+    // 编辑器内容状态
+    const [code, setCode] = useState<string>("");
+    // 原始内容状态，用于比较是否有变化
+    const [originalCode, setOriginalCode] = useState<string>("");
+    // 编辑器就绪处理
+    const handleEditorDidMount = (editor: any) => {
+        editorRef.current = editor;
+    };
+    // 资源
+    const [imageUrl,setImageUrl] = useState<string>("");
 
     const submit = ()=>{
         if (editorRef.current) {
             const content = editorRef.current.getValue();
             setLoading(true)
-            setFileSave(id??"",templateId??"",key??"",content,codeEditor.mode).then(async (res:any)=>{
-                if(file){
+            setFileSave({
+                id:id??"",
+                templateId:templateId??"",
+                languagesId:codeEditor.languageId,
+                fileName:key??"",
+                mode:codeEditor.mode,
+                fileContent:content,
+            }).then(async (res:any)=>{
+                if(fileInfo){
                     await sleep(1000);
                     // 获取文件版本
-                    getFileVersion(id??"",templateId??"",key??"",codeEditor.mode).then((res:any)=>{
+                    getFileVersion({
+                        id:id??"",
+                        templateId:templateId??"",
+                        languagesId:codeEditor.languageId,
+                        fileName:key??"",
+                        mode:codeEditor.mode,
+                    }).then((res:any)=>{
                         setFileVersionList(res.data)
                     })
                     setVersion("");
                 }
+                // 更新原始代码为当前保存的代码
+                setOriginalCode(content);
                 message.success(res.msg)
             }).catch(err=>{
                 message.error("请求失败")
@@ -73,18 +99,91 @@ function MyMonacoEditor({file}:{file:any}){
         }
     }
     
+    // 添加首次渲染标记
+    const isFirstRender = useRef(true);
     useEffect(()=>{
-        if(file){
-            getThemeFileDetail(id??"",templateId??"",key??"","",codeEditor.mode).then((res:any)=>{
-                setVersion(res.data?.version);
-                initMonacoEditor(res.data);
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+        // 激活文件重新读取 -- 且文件id或文件languageId需要改变
+        if(fileInfo && fileInfo.key == codeEditor.activeFileKey){
+            if(codeEditor.mode == fileInfo.mode && codeEditor.languageId == fileInfo.languagesId){
+                return;
+            }
+            getThemeFileDetail({
+                id:id??"",
+                templateId:templateId??"",
+                languagesId:codeEditor.languageId,
+                fileName:fileInfo.url??"",
+                versionId:"",
+                mode:codeEditor.mode,
+            }).then((res:any)=>{
+                if(res.code == 0){
+                    const fileTypeList = res.data?.fileType.split("/");
+                    if(fileTypeList[0] == "image"){
+                        setImageUrl(res.data?.fileUrl);
+                    }else{
+                        setCode(res.data?.fileContent || "");
+                        setOriginalCode(res.data?.fileContent || "");
+                        setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
+                    }
+                } 
+            }).catch(err=>{
+                message.error("请求失败")
             })
             // 获取文件版本
-            getFileVersion(id??"",templateId??"",key??"",codeEditor.mode).then((res:any)=>{
+            getFileVersion({
+                id:id??"",
+                templateId:templateId??"",
+                languagesId:codeEditor.languageId,
+                fileName:fileInfo.url??"",
+                mode:codeEditor.mode
+            }).then((res:any)=>{
+                setFileVersionList(res.data)
+            })
+            // 修改文件信息
+            setFileInfo({
+                ...fileInfo,
+                mode:codeEditor.mode,
+                languagesId:codeEditor.languageId,
+            })
+        }
+    },[codeEditor.mode,codeEditor.languageId,codeEditor.activeFileKey])
+
+    // 组件卸载时销毁编辑器
+    useEffect(()=>{
+        if(fileInfo){
+            getThemeFileDetail({
+                id:id??"",
+                templateId:templateId??"",
+                languagesId:codeEditor.languageId,
+                fileName:fileInfo.url??"",
+                versionId:"",
+                mode:codeEditor.mode,
+            }).then((res:any)=>{
+                const fileTypeList = res.data?.fileType.split("/");
+                if(fileTypeList[0] == "image"){
+                    setImageUrl(res.data?.fileUrl);
+                }else{
+                    setCode(res.data?.fileContent || "");
+                    setOriginalCode(res.data?.fileContent || "");
+                    setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
+                }
+            }).catch(err=>{
+                message.error("请求失败")
+            })
+            // 获取文件版本
+            getFileVersion({
+                id:id??"",
+                templateId:templateId??"",
+                languagesId:codeEditor.languageId,
+                fileName:fileInfo.url??"",
+                mode:codeEditor.mode
+            }).then((res:any)=>{
                 setFileVersionList(res.data)
             })
         }
-        // 组件卸载时销毁编辑器
         return () => {
             if (editorRef.current) {
                 editorRef.current.dispose();
@@ -92,25 +191,39 @@ function MyMonacoEditor({file}:{file:any}){
         };
     },[])
 
+
+    // 切换版本变化或新增版本
     useEffect(()=>{
         if(fileVersionList){
             const newVersionList = fileVersionList.map((item:any,index:number)=>{
                 return {
                     key:index,
-                    label: <div onClick={() => {
-                        getThemeFileDetail(id??"",templateId??"",key??"",item.id == "current" ? "": (item.id??""),codeEditor.mode).then((res:any)=>{
-                            res.data?.version && setVersion(res.data.version);
-                            initMonacoEditor(res.data);
+                    label: <a onClick={() => {
+                        getThemeFileDetail({
+                            id:id??"",
+                            templateId:templateId??"",
+                            languagesId:codeEditor.languageId,
+                            fileName:fileInfo.url??"",
+                            versionId:item.id??"",
+                            mode:codeEditor.mode,
+                        }).then((res:any)=>{
+                            if(res.code == 0){
+                                setVersion(item.id);
+                                setCode(res.data?.fileContent || "");
+                                setOriginalCode(res.data?.fileContent || "");
+                                const fileTypeList = res.data?.fileType.split("/");
+                                setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
+                            }
                         })
                     }}>
-                        <div className={version == item?.version ? 'color-356DFF':'color-242833'}>
-                            {item.id == "current" ?<>
+                        <div className={version == (item.id??"") ? 'color-356DFF':'color-242833'}>
+                            {item.id == null ?<>
                                 当前版本
                             </>:item.id?<>
                                 {item.version} - {dayjs(item?.updateTime).format("YYYY/MM/DD HH:mm:ss")}
                             </>:<></>}
                         </div>
-                    </div>
+                    </a>
                 }
             })
             setVersionList(newVersionList);
@@ -144,17 +257,32 @@ function MyMonacoEditor({file}:{file:any}){
                 </div>
                 <Flex className='right' gap={8}>
                     <DefaultButton text="查找" />
-                    <PrimaryButton text="保存" loading={loading} onClick={submit} />
+                    <PrimaryButton text="保存" disabled={code === originalCode} loading={loading} onClick={submit} />
                 </Flex>
             </div>
-            {/*  */}
-            <div id="container" ref={cRef} className='container'></div>
+            {/* 使用 MonacoEditor 组件 */}
+            {imageUrl ? <div className='image-box'>
+                {/* 图片预览 */}
+                <img src={imageUrl} alt="图片预览" />
+            </div>:<MonacoEditor
+                height="100%"
+                language={language}
+                value={code}
+                onChange={(newValue) => setCode(newValue || "")}
+                onMount={handleEditorDidMount}
+                theme="vs"
+                options={{
+                    minimap: { enabled: true },
+                    automaticLayout: true,
+                }}
+            />}
         </Scoped>
     )
 }
 
 const Scoped = styled.div`
     width: 100%;
+    height: calc(100vh - 164px);
     .actionBar{
         display: flex;
         align-items: center;
@@ -170,10 +298,19 @@ const Scoped = styled.div`
         }
 
     }
-    .container{
-        height: calc(100vh - 164px);
-        width: 100%;
+    .image-box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ebf5fa;
+        height: 100%;
+        padding: 80px;
+        img{
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
     }
 `
 
-export default MyMonacoEditor;
+export default observer(MyMonacoEditor);

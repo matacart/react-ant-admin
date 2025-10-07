@@ -8,8 +8,9 @@ import { useEffect, useState } from "react"
 import { getDeliveryList } from "@/services/y2/api"
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
-import LangSelect from "@/pages/components/LangSelect"
 import { observer } from "mobx-react-lite"
+import LangSelect from "@/components/Select/LangSelect"
+import cookie from 'react-cookies';
 
 
 
@@ -17,25 +18,23 @@ function EditCustomLogistics() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
     const setLang = (lang:string)=>{
-        getDeliveryList(lang).then(res=>{
-            generalFreight.setDeliverys(res.data)
-            generalFreight.setDeliverysLanguage(lang)
-        }).catch(err=>{
-            console.log(err)
-        }).finally(()=>{
-        })
+        generalFreight.setDeliverysLanguage(lang)
     }
 
+    // 语言
     useEffect(()=>{
-        generalFreight.setDeliverysLanguage("2")
-        getDeliveryList("2").then(res=>{
+        generalFreight.setDeliverysLanguage(cookie.load("shop_lang") || '2')
+    },[])
+
+    useEffect(()=>{
+        getDeliveryList(generalFreight.deliverysLanguage).then((res:any)=>{
             generalFreight.setDeliverys(res.data)
         }).catch(err=>{
             console.log(err)
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[])
+    },[generalFreight.deliverysLanguage])
     
     return (
         <Scoped>
@@ -61,11 +60,6 @@ function EditCustomLogistics() {
                             <ManagementGroup />
                         </div>
                     </div>
-                    {/* <Divider className="divider" />
-                    <div className="submit-btn">
-                        <Button type="primary" style={{height: "36px"}} loading={false} onClick={()=>{
-                        }}>更新</Button>
-                    </div> */}
                 </div>
             </div>}
         </Scoped>

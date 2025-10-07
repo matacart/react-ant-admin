@@ -1,6 +1,6 @@
-import { getCurrencies, getCurrenciesList, getDomainList, getTimeZoneList } from "@/services/y2/api";
-import { DownOutlined, LoadingOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Input, message, Popover, Select, Spin, Tag } from "antd";
+import { domainSelect } from "@/services/y2/api";
+import { DownOutlined, EllipsisOutlined, LoadingOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
+import { Button, Flex, Input, message, Popover, Select, Spin, Tag, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useIntl } from '@umijs/max';
@@ -47,25 +47,50 @@ async function getFilterResultArray(term: string) {
     1. 虚拟列表
     2. 搜索防抖
 **/
+
+interface storeType{
+    id:string;
+    store_name:string;
+    domain_name:string;
+    second_domain:string;
+    timezone:string;
+    default_currency:string;
+    default_lang:string;
+    status:number;
+}
+
 export default function SelectDomain() {
 
+    const intl = useIntl();// 多语言
+    const mRef = useRef(null);
     const navigate = useNavigate();
 
-    const [domainListCurrent, setDomainListCurrent] = useState<any>([])
-    const [defaultDomain, setDefaultDomain] = useState('')
+    // 店铺列表
+    const [storeList, setStoreList] = useState<storeType[]>([]);
+    // 店铺
+    const [store, setStore] = useState<storeType | null>();
+
+    const [page,setPage] = useState(1);
+
+    // 关键字
+    const [keyword, setKeyword] = useState('');
+
+    const [loadingMore, setLoadingMore] = useState(false); // 是否正在加载更多
+
+    const [loading,setLoading] = useState(false);
+
     // 店铺列表popover是否展开
     const [isActive, setIsActive] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('')
-    const [searching, setSearching] = useState(false)
-    const intl = useIntl();// 多语言
+    const [hasMore, setHasMore] = useState(true); // 是否还有更多数据
 
-    const mRef = useRef(null);
+    const scrollRef = useRef<HTMLDivElement>(null); // 添加滚动容器的引用
+     // 添加一个状态来控制是否应该忽略滚动事件
+     const [ignoreScrollEvents, setIgnoreScrollEvents] = useState(false);
 
-    const getDomainCurrent = (id:string)=>{
-        // getCurrencies(id).then(res=>{
-        //     // console.log(res)
-        // })
-    }
+    // 添加一个ref来存储防抖定时器ID
+    const loadMoreTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // 替换域名
     function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
         try {
           // 创建一个新的URL对象
@@ -98,188 +123,244 @@ export default function SelectDomain() {
           return null;
         }
     }
-
-    // 货币符号
-    const setCurrencys = (defaultCurrency:string)=>{
-        (defaultCurrency == "" || defaultCurrency == undefined) ? cookie.save('symbolLeft', '', { path: '/' }) : getCurrenciesList().then((res:any)=>{
-            cookie.save('symbolLeft', res.data.filter(item=>item.code == defaultCurrency)[0].symbol_left, { path: '/' });
-        })
+    // 默认货币符号 -- 店铺
+    const setCurrencys = (store:storeType | null)=>{
+        const currencies = JSON.parse(localStorage.getItem('MC_DATA_CURRENCIES') || '[]');
+        let currency = null;
+        if(store?.default_currency && currencies.length > 0){
+            currency = currencies.filter((item:any)=>item.code == store.default_currency)[0].symbol_left;
+        }else{
+            currency = 'US$'
+        }
+        cookie.save('symbolLeft', currency, { path: '/' })
+    }
+    // 默认时区对象
+    const setTimeZone = (store:storeType | null)=>{
+        const timeZones = JSON.parse(localStorage.getItem('MC_DATA_TIME_ZONEZ') || '[]');
+        let timeZone = null;
+        if(store?.timezone && timeZones.length > 0 ){
+            timeZone = timeZones.filter((item:any)=>item.time_zone_name == store.timezone)[0]
+        }else{
+            timeZone = {
+                country_id: "12",
+                dst_offset: null,
+                id: "90",
+                is_dst: "0",
+                status: "1",
+                time_zone_label: "UTC+08:00",
+                time_zone_name: "Asia/Shanghai",
+                utc_offset: "8",
+            }
+        }
+        cookie.save('timeZone', JSON.stringify(timeZone), { path: '/' });
     }
 
-    // 时区
-    const setTimeZone = (timeZone:string)=>{
-        getTimeZoneList().then(res=>{
-            cookie.save('timeZone', JSON.stringify(res.filter(item=>item.time_zone_name == timeZone)[0]), { path: '/' });
-        })
+    // 店铺语言
+    const setLanguage = (store:storeType | null)=>{
+        // 根据code 查找对应的id
+        const languages = JSON.parse(sessionStorage['languages'] || '[]');
+        const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
+        cookie.save('shop_lang', languagesId, { path: '/' });
     }
 
-    // 默认语言
-    const setLanguage = (defaultLang:string)=>{
-        cookie.save('default_lang', defaultLang, { path: '/' });
-    }
+    // 加载更多数据的函数
+    const loadMore = () => {
+        if (loadingMore || !hasMore) return;
+        setLoadingMore(true);
+        const nextPage = page + 1;
+        domainSelect({
+            data: {
+                keyword: keyword,
+                page: nextPage,
+                limit: 10
+            }
+        }).then((res: any) => {
+            if (res.code == 0) {
+                if (res.data.length > 0) {
+                    setStoreList(prev => [...prev, ...res.data]);
+                    setPage(nextPage);
+                } else {
+                    setHasMore(false); // 没有更多数据了
+                }
+            }
+        }).catch(() => {
+            message.error('加载更多失败');
+        }).finally(() => {
+            setLoadingMore(false);
+        });
+    };
 
+    // 防抖版本的loadMore函数
+    const debouncedLoadMore = () => {
+        // 清除之前的定时器
+        if (loadMoreTimeoutRef.current) {
+            clearTimeout(loadMoreTimeoutRef.current);
+        }
+        // 设置新的定时器
+        loadMoreTimeoutRef.current = setTimeout(() => {
+            loadMore();
+        }, 300);
+    };
+
+     // 滚动事件处理函数
+     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        // 如果应该忽略滚动事件，则直接返回
+        if (ignoreScrollEvents) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+        // 当滚动到底部时加载更多
+        if (scrollHeight - scrollTop <= clientHeight + 10) {
+            // loadMore();
+            debouncedLoadMore();
+        }
+    };
     
-    const changeDomain = (item: any) => {
+    // 选择店铺
+    const changeDomain = (item:storeType) => {
         if(!window.location.hostname.startsWith("localhost")){
-            const newUrl = replaceSubdomain(window.location.href,item.secondDomain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
+            const newUrl = replaceSubdomain(window.location.href,item.second_domain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
             window.open(newUrl)
         }
         setIsActive(false);
     }
-    useEffect(() => {
 
-        // 平台大类
-        // globalStore.getPlatformCategory();
-        // getDomain("140285").then((res) => {
-        //     console.log(res)
-        // });
-        domainList = [];
-        // 判断会话中是否存在店铺数据
-        if(sessionStorage["domain"] && JSON.parse(sessionStorage["domain"]).length !== 0){
-            setDomainListCurrent(JSON.parse(sessionStorage["domain"]));
-            setDefaultDomain(cookie.load("domain")?.storeName);
-            getDomainCurrent(cookie.load("domain")?.id);
-            setCurrencys(cookie.load("domain")?.defaultCurrency);
-            setTimeZone(cookie.load("domain")?.timeZone);
-            setLanguage(cookie.load("domain")?.defaultLang);
-            domainList = JSON.parse(sessionStorage["domain"])
+    // 获取店铺信息
+    const initStore = async ()=>{
+        let store:storeType | null = null;
+        // 获取店铺信息 cookie是否存在店铺数据
+        if(cookie.load("domain") && cookie.load("domain") !== 'undefined'){
+            store = cookie.load("domain")
         }else{
-            getDomainList().then((res) => {
-                let flag:any = [];
-                res?.data?.forEach((item: any, index: any) => {
-                    domainList.push({
-                        id: item.id,
-                        domainName: item.domain_name,
-                        storeName: item.store_name,
-                        secondDomain: item.second_domain.toLowerCase(),
-                        defaultCurrency: item.default_currency,
-                        timeZone:item.timezone,
-                        status: item.status,
-                        defaultLang: item.default_lang,
-                    })
-                    if(item.second_domain == window.location.hostname.slice(0,window.location.hostname.indexOf("."))){
-                        flag.push({
-                            id: item.id,
-                            domainName: item.domain_name,
-                            storeName: item.store_name,
-                            secondDomain: item.second_domain.toLowerCase(),
-                            defaultCurrency: item.default_currency,
-                            timeZone:item.timezone,
-                            status: item.status,
-                            defaultLang: item.default_lang,
-                        })
+            // 获取当前域名
+            const domain = window.location.hostname.slice(0,window.location.hostname.indexOf("."))
+            if(window.location.hostname.startsWith("localhost") || domain == 'admin'){
+                // 域名location
+                await domainSelect().then((res:any)=>{
+                    if(res?.data?.length > 0){
+                        store = res.data[0];
+                        cookie.save('domain', res.data[0], { path: '/' });
                     }
                 })
-                setDomainListCurrent(domainList);
-                // 缓存店铺数据
-                sessionStorage["domain"] = JSON.stringify(domainList);
-                if(flag.length == 0){
-                    const defaultDomain = {...domainList[0],domainName:domainList[0].domainName ? domainList[0].domainName : domainList[0].secondDomain+'.v.hdyshop.cn'}
-                    cookie.save('domain', JSON.stringify(defaultDomain), { path: '/' });
-                    cookie.save('default_lang', defaultDomain.defaultLang, { path: '/' });
-                    setCurrencys(res.data[0]?.default_currency)
-                    setTimeZone(cookie.load("domain")?.timeZone);
-                    setDefaultDomain(res.data[0]?.store_name);
-                    getDomainCurrent(res.data[0]?.id);
-                }else{
-                    const defaultDomain = {...flag[0],domainName:flag[0].domainName ? flag[0].domainName : flag[0].secondDomain+'.v.hdyshop.cn'}
-                    cookie.save('domain', JSON.stringify(defaultDomain), { path: '/' });
-                    cookie.save('default_lang', defaultDomain.defaultLang, { path: '/' });
-                    setCurrencys(res.data[0]?.default_currency)
-                    setTimeZone(cookie.load("domain")?.timeZone);
-                    setDefaultDomain(defaultDomain.storeName);
-                    getDomainCurrent(defaultDomain.id);
-                }
-            }).catch((error) => {
-                message.error('未获取到店铺列表，请检查网络')
-            })
+            }else{
+                // 域名
+                await domainSelect({
+                    data:{
+                        keyword: domain
+                    }
+                }).then((res:any)=>{
+                    if(res?.data?.length > 0){
+                        store = res.data.filter((item:any)=>item.second_domain == domain)[0];
+                        cookie.save('domain', res.data.filter((item:any)=>item.second_domain == domain)[0], { path: '/' });
+                    }
+                })
+            }
         }
-    }, [])
+
+        setTimeZone(store);
+        setCurrencys(store);
+        setLanguage(store);
+        setStore(store);
+    }
+    
+    useEffect(() => {
+        initStore();
+        // 清理防抖定时器
+        return () => {
+            if (loadMoreTimeoutRef.current) {
+                clearTimeout(loadMoreTimeoutRef.current);
+            }
+        };
+    }, []);
 
     const content = (
         <ContentWrap>
             <div className="popover_header">
                 <div className="popover_input">
-                    <Input size="large" suffix={<SearchOutlined />}
+                    <Input value={keyword} size="large" suffix={<SearchOutlined />}
                         // 店铺搜索
                         onChange={(e) => {
-                            let term = e.target.value
-                            setSearchTerm(term);
-                            if (!domainList) return;
-                            if (term == '') {
-                                setDomainListCurrent([...domainList]);
-                                return;
-                            };
-                            // map 没return时 返回 undefine
-                            // let resultArray = domainList.map(item=>{
-                            //     if(item.id.includes(term)){
-                            //         return item;
-                            //     }
-                            // })
-                            setSearching(true);
-                            getFilterResultArray(term)
-                                .then(resultArray => setDomainListCurrent(resultArray))
-                                .finally(() => setTimeout(() => { setSearching(false) }, 100)) // 可以优化速度
-
+                            setKeyword(e.target.value)
+                        }}
+                        onBlur={(e) => {
+                            setLoading(true);
+                            domainSelect({
+                                data:{
+                                    keyword:e.target.value,
+                                    page:1,
+                                    limit:10,
+                                }
+                            }).then((res:any)=>{
+                                if(res.code == 0){
+                                    // 重置无限滚动相关状态
+                                    setPage(1);
+                                    setHasMore(true);
+                                    setLoadingMore(false);
+                                    // 设置忽略滚动事件标志
+                                    setIgnoreScrollEvents(true);
+                                    // 重置滚动条位置
+                                    if (scrollRef.current) {
+                                        scrollRef.current.scrollTop = 0;
+                                    }
+                                    // 延迟重置忽略滚动事件标志
+                                    setTimeout(() => {
+                                        setIgnoreScrollEvents(false);
+                                    }, 100);
+                                    // 
+                                    setStoreList(res.data);
+                                }
+                            }).catch(() => {
+                                message.error('失败')
+                            }).finally(() => {
+                                setLoading(false)
+                            })
                         }}
                         placeholder={intl.formatMessage({
                             id: 'menu.search.stores'
                         })} />
                 </div>
             </div>
-            {/* 加载动画 */}
-            {searching && <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignContent: "center",
-                height: "290px"
-            }}
-            >
-                <Spin indicator={<LoadingOutlined style={{ fontSize: 80, height: 80, top: 50 }} spin />} />
-            </div>}
-
             {/* 店铺项 */}
-            {!searching && <div className="popover_content">{
-                domainListCurrent.length>0 ? (domainListCurrent.map((item: any, index: any) => {
-                    return (
-                        <div className="popover_item" key={index} onClick={() => {
-                            changeDomain(item)
-                        }}>
-                            <img src='/img/storeLogo.png' className="storeLogo" />
-                            <div className="storeInfo">
-                                <div className="storeName">
-                                    <div className="shopTitle" dangerouslySetInnerHTML={{
-                                        __html: item?.storeName
-                                    }}>
+            <Spin spinning={loading}>
+                {<div ref={scrollRef} className="popover_content" onScroll={handleScroll}>{
+                    storeList.length > 0 ? (storeList.map((item: any, index: any) => {
+                        return (
+                            <div className="popover_item" key={index} onClick={() => {
+                                changeDomain(item)
+                            }}>
+                                <img src='/img/storeLogo.png' className="storeLogo" />
+                                <div className="storeInfo">
+                                    <div className="storeName">
+                                        <div className="shopTitle" dangerouslySetInnerHTML={{
+                                            __html: item?.store_name
+                                        }}>
+                                        </div>
+                                        {item?.status == 1 && <SuccessTag text={intl.formatMessage({id:"menu.stores.running"})} />}
+                                        {item?.status == 0 && <DefaultTag text={intl.formatMessage({id:"menu.stores.default"})} />}
                                     </div>
-
-                                    {item?.status == 1 && <SuccessTag text={intl.formatMessage({id:"menu.stores.running"})} />}
-                                    {item?.status == 0 && <DefaultTag text={intl.formatMessage({id:"menu.stores.default"})} />}
-                                    {/* <Tag className="tag tag-success" style={{
-                                        display: 'flex',
-                                        alignContent: 'center'
-                                    }}>
-                                        <span className="tag-right">
-                                            <span className={"tag-dot " + ((item?.status == 1) ? 'tag-dot-success ' : 'tag-dot-error')} />
-                                        </span>
-                                        {(item?.status == 1) ?intl.formatMessage({id:"menu.stores.running"}): intl.formatMessage({id:"menu.stores.stop"})}
-                                    </Tag> */}
-
-                                </div>
-                                <div className="shopInfo">
-                                    {item?.id}
-                                </div>
-                                <div className="email">
-                                    {item?.domainName}
+                                    <div className="shopInfo">
+                                        {item?.id}
+                                    </div>
+                                    <div className="email">
+                                        {item?.domain_name}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )
-                })):<div>{intl.formatMessage({
-                    id:'menu.search.none'
-                })} </div>
-            }
-            </div>}
+                        )
+                    })):<Flex align="center" justify="center"
+                        style={{
+                            minHeight: "60px",
+                        }}
+                    >
+                        {intl.formatMessage({id:'menu.search.none'})}
+                    </Flex>
+                }
+                </div>}
+                {loadingMore && (
+                    <Flex align="center" justify="center" style={{ padding: '10px' }}>
+                        <Spin />
+                    </Flex>
+                )}
+            </Spin>
             <div className="popover_footer">
                 <Button onClick={()=>{
                     navigate('/stores/list')
@@ -294,53 +375,68 @@ export default function SelectDomain() {
 
     return (
         <Scoped ref={mRef}>
-            <Popover content={content} className="title"
-                onOpenChange={(open) => {
-                    setIsActive(open);
-                }}
-                open={isActive}
-                getPopupContainer={() => mRef.current!}
-                trigger="click">
-                <div>
-                    <h4>{defaultDomain}</h4>
-                    <DownOutlined style={{
-                        transition: 'all 0.3s ease',
-                        color: (isActive ? 'green' : ''),
-                    }} />
-                </div>
-            </Popover>
+            <div className="item">
+                <Popover content={content} className="title"
+                    onOpenChange={(open) => {
+                        setIsActive(open);
+                        // 获取店铺列表
+                        storeList.length == 0 && domainSelect({
+                            data:{
+                                page:page,
+                                limit:10 
+                            }
+                        }).then((res:any) => {
+                            if(res.code == 0){
+                                setStoreList(res.data);
+                            }
+                        }).catch(error => {
+                            message.error('请求失败');
+                        })
+                    }}
+                    open={isActive}
+                    getPopupContainer={() => mRef.current!}
+                    trigger="click">
+                    <div style={{padding:"8px"}}>
+                        <h4>{store?.store_name}</h4>
+                        <DownOutlined style={{
+                            transition: 'all 0.3s ease',
+                            color: (isActive ? 'green' : ''),
+                        }} />
+                    </div>
+                </Popover>
+            </div>
         </Scoped>
     )
 }
 
 const Scoped = styled.div`
-  .title{
-    display: flex;
-    align-content: center;
-    transition: all 0.3s ease;
-    color: #242833;
-    h4{
-        max-width: 200px;
-        margin: 0;
-        margin-right: 10px;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 22px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: inline-block;
-    }
-    .isActive{
-        transform: rotate(180deg);
-    }
+    .title{
+        display: flex;
+        align-content: center;
+        transition: all 0.3s ease;
+        color: #242833;
+        h4{
+            max-width: 200px;
+            margin: 0;
+            margin-right: 10px;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 22px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .isActive{
+            transform: rotate(180deg);
+        }
 
-  }
+    }
 `
 const ContentWrap = styled.div`
     width: 420px;
-    max-height:418px;
+    max-height:448px;
     padding:0;
     .popover_header{
         padding: 5px 10px 18px 10px;

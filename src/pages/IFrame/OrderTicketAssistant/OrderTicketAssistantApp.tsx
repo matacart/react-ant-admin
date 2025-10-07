@@ -2,7 +2,6 @@
 import { styled } from 'styled-components';
 import Header from './Header';
 import { Outlet } from '@umijs/max';
-import { Flex } from 'antd';
 import "./orderTicketAssistant.scss"
 
 // 模拟插件 -- 入口文件

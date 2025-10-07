@@ -28,7 +28,7 @@ import product from "@/store/product/product";
                         <SEOEdit seo={product.productInfo} setSEO={setSEO} type="-p" />
                     </span>
                 </div>
-                <div className="webUrl">{cookie.load("domain").domainName}</div>
+                <div className="webUrl">{cookie.load("domain").domain_name}</div>
                 <div className="webTitle">{product.productInfo.meta_title==""?(product.productInfo.title==""?"未填写标题":product.productInfo.title):product.productInfo.meta_title}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{product.productInfo.meta_description==""?"未填写描述":product.productInfo.meta_description}</div>

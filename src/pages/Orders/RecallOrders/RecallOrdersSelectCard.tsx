@@ -1,11 +1,12 @@
 import { Flex, type MenuProps } from 'antd';
 import SearchInput from "@/components/Input/SearchInput";
-import orderList from "@/store/order/orderList";
-import LangSelect from "@/pages/components/LangSelect";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import DropdownSort from '@/components/Dropdown/DropdownSort';
 import MoreSelect from './MoreSelect';
 import EditTableHead from './EditTableHead';
+import LangSelect from '@/components/Select/LangSelect';
+import recallOrdersList from '@/store/order/recallOrders/recallOrdersList';
+import { observer } from 'mobx-react-lite';
 
 function RecallOrdersSelectCard() {
 
@@ -109,7 +110,7 @@ function RecallOrdersSelectCard() {
     ];
 
     const setLang = (lang:string)=>{
-      orderList.setLanguages(lang)
+      recallOrdersList.setLanguages(lang)
     }
 
     return (
@@ -121,7 +122,7 @@ function RecallOrdersSelectCard() {
               <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="召回状态" btnStyle={{width:"100px"}} />
               <MoreSelect />
               <EditTableHead />
-              <LangSelect setLang={setLang} lang={orderList.languages} isLabel={true} />
+              <LangSelect setLang={setLang} lang={recallOrdersList.languages} />
               <DropdownSort items={items} styled={{maxHeight:"290px",overflowY:"auto"}} />
             </Flex>
           </div>
@@ -129,4 +130,4 @@ function RecallOrdersSelectCard() {
     );
 }
 
-export default RecallOrdersSelectCard
+export default observer(RecallOrdersSelectCard)

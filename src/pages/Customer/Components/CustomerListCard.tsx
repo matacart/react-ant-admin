@@ -88,15 +88,15 @@ export default function CustmoerListAjax() {
 
   const fetchData = () => {
     setLoading(true);
-
     getCustomerList(tableParams.pagination?.current, tableParams.pagination?.pageSize).then((res) => {
+      console.log(res.data)
         setData(res.data)
         setTableParams({
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
             total: res.count,
-          },
+          }
         });
       }).catch(error => {
         console.error('Error fetching data:', error);
@@ -131,7 +131,7 @@ export default function CustmoerListAjax() {
         <Table
           className='table'
           columns={columns}
-          rowKey={(record) => record.realname}
+          rowKey={(record) => record.id}
           onRow={(record) => ({
             onClick: () => {
               console.log('Row clicked:', record);

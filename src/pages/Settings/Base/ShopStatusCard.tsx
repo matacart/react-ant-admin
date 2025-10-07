@@ -1,5 +1,4 @@
 import InputSearch from "@/components/Search/InputSearch";
-import { getCurrenciesList, getTimeZoneList } from "@/services/y2/api";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Modal, Select, Switch, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";

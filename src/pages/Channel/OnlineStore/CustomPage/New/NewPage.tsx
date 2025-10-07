@@ -1,20 +1,20 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Flex, Form, FormInstance, Input, message, Select } from 'antd'
+import { Button, Drawer, Flex, FormInstance, Input, message, Select } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
-import DefaultButton from '@/components/Button/DefaultButton';
 import { observer } from 'mobx-react-lite';
-import LangSelect from '@/pages/components/LangSelect';
-import { addCustomerPage, createArticles } from '@/services/y2/api';
+import { addCustomerPage } from '@/services/y2/api';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useRef, useState } from 'react';
-import TitleCard from './TitleCard';
-import ContentCard from './ContentCard';
-import PublishPageCard from './PublishPageCard';
-import ThemeTemplate from './ThemeTemplate';
 import customPage from '@/store/channel/customPage/customPage';
-import SEOCard from './SEOCard';
+import LangSelect from '@/components/Select/LangSelect';
+import PublishPageCard from '../Custompage/PublishPageCard';
+import TitleCard from '../Custompage/TitleCard';
+import ContentCard from '../Custompage/ContentCard';
+import ThemeTemplate from '../Custompage/ThemeTemplate';
+import SEOCard from '../Custompage/SEOCard';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 function NewPage(){
 
@@ -26,8 +26,8 @@ function NewPage(){
     const titleCardRef = useRef<FormInstance>(null);
 
     const setLang = (lang:string)=>{
-        customPage.setNewCustomPage({
-            ...customPage.newCustomPage,
+        customPage.setCustomPage({
+            ...customPage.customPage,
             languages_id:lang
         })
     }
@@ -42,7 +42,7 @@ function NewPage(){
             // 全部校验通过后提交
             // console.log(customPage.newCustomPage);
             setLoading(true)
-            addCustomerPage(customPage.newCustomPage).then(async res=>{
+            addCustomerPage(customPage.customPage).then(async res=>{
                 await sleep(2000)
                 message.success('创建成功')
                 history.push('/website/page')
@@ -75,7 +75,7 @@ function NewPage(){
                         </div>
                         <Flex className='mc-header-right' gap={12}>
                             {/* 语言 */}
-                            <LangSelect lang={customPage.newCustomPage.languages_id} setLang={setLang} />
+                            <LangSelect lang={customPage.customPage.languages_id} setLang={setLang} />
                         </Flex>
                     </div>
                     <div className='mc-layout-main'>
@@ -91,7 +91,7 @@ function NewPage(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' loading={loading} onClick={()=>{validateAll()}}>创建</Button>
+                        <PrimaryButton loading={loading} onClick={()=>{validateAll()}} text='创建' />
                     </div>
                 </div>
             </div>

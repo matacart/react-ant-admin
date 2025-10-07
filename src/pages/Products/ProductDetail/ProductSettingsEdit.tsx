@@ -9,6 +9,7 @@ import ProductCategoryModal from "@/components/Modal/ProductCategoryModal";
 import { observer } from "mobx-react-lite";
 import { useForm } from "antd/es/form/Form";
 import product from "@/store/product/product";
+import SearchRemote from "@/components/Search/SearchRemote";
 
 type WebChannel = {
     name: string;
@@ -85,10 +86,6 @@ function ProductSettingsEdit() {
     // const inputTagRef = useRef<InputRef>(null);
     const editInputRef = useRef<InputRef>(null);
    
-    const [options, setOptions] = useState([
-        '标签一','标签二'
-    ]);
-    
     // 商品类型 -- 平台
     const [productTypeOptions,setProductTypeOptions] = useState<any>();
 
@@ -185,17 +182,17 @@ function ProductSettingsEdit() {
     }
 
     // 平台类型
-    const getPlatformCategoryList = async (langId:string)=>{
-        const temp = await getPlatformCategorySelect(langId).then(res=>{
-            return Array.from(res.data,(obj:any)=>{
-                return {
-                    value: obj.id,
-                    label: obj.category_name
-                }
-            })
-        })
-        return temp
-    }
+    // const getPlatformCategoryList = async (langId:string)=>{
+    //     const temp = await getPlatformCategorySelect(langId).then(res=>{
+    //         return Array.from(res.data,(obj:any)=>{
+    //             return {
+    //                 value: obj.id,
+    //                 label: obj.category_name
+    //             }
+    //         })
+    //     })
+    //     return temp
+    // }
 
     // 店铺商品类型
     const getCategoryList = async ()=>{
@@ -231,24 +228,24 @@ function ProductSettingsEdit() {
 
     useEffect(() => {
 
-        getTagsList(product.productInfo.languages_id)
+        // getTagsList(product.productInfo.languages_id)
 
-        getPlatformCategoryList(product.productInfo.languages_id).then(res=>{
-            setProductTypeOptions(res)
-        })
+        // getPlatformCategoryList(product.productInfo.languages_id).then(res=>{
+        //     setProductTypeOptions(res)
+        // })
 
-        getCategoryList().then(res=>{
-            let temp:any = [];
-            res.forEach((item:any)=>{
-                if(product.productInfo.categoryIds.split(",").includes(item.value)){
-                    temp.push({
-                        id:item.value,
-                        name:item.label
-                    })
-                }
-            })
-            setCategoryTags(temp)
-        })
+        // getCategoryList().then(res=>{
+        //     let temp:any = [];
+        //     res.forEach((item:any)=>{
+        //         if(product.productInfo.categoryIds.split(",").includes(item.value)){
+        //             temp.push({
+        //                 id:item.value,
+        //                 name:item.label
+        //             })
+        //         }
+        //     })
+        //     setCategoryTags(temp)
+        // })
 
         form.setFieldsValue({
             SPU: product.productInfo.spu,
@@ -384,8 +381,12 @@ function ProductSettingsEdit() {
                             }}
                         ></Input>
                     </Form.Item>
+
+
+                    
+
                     {/* 标签问题 */}
-                    {/* <Form.Item
+                    <Form.Item
                         className="moreLink"
                         name="tags"
                         label={
@@ -400,21 +401,9 @@ function ProductSettingsEdit() {
                             </div>
                         }
                     >   
-                        <Select
-                            mode="tags"
-                            placeholder="添加标签（例如：复古/夏季）"
-                            options={options.map((item) => ({ label: item, value: item }))}
-                            showSearch={false}
-                            tagRender={(props) => <></>}
-                            onChange={(value)=>{
-                                product.setProductInfo({
-                                    ...product.productInfo,
-                                    tag:value.join(",")
-                                })
-                            }}
-                        />
+                        <SearchRemote placeholder="添加标签（例如：复古/夏季）" style={{height:"36px"}} />
                         <div style={{height:"10px"}}></div>
-                        <Flex gap="4px 0" wrap>
+                        {/* <Flex gap="4px 0" wrap>
                             {product.productInfo.tag.split(",").map<React.ReactNode>((tag, index) => {
                                 if (editInputIndex === index) {
                                     return (
@@ -461,8 +450,8 @@ function ProductSettingsEdit() {
                                 tagElem
                                 );
                             })}
-                        </Flex>
-                    </Form.Item> */}
+                        </Flex> */}
+                    </Form.Item>
                     <Form.Item
                         name="platformCategory"
                         className="moreLink"
@@ -490,7 +479,7 @@ function ProductSettingsEdit() {
                         }}
                         label={<div className="label-content between">
                             <span>商品分类</span>
-                            <ProductCategoryModal tags={categoryTags} language={product.productInfo.languages_id} upDateCategoryTags={upDateCategoryTags} />
+                            {/* <ProductCategoryModal tags={categoryTags} language={product.productInfo.languages_id} upDateCategoryTags={upDateCategoryTags} /> */}
                         </div>}
                     >
                         <div className="desc">

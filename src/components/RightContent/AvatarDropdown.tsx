@@ -147,6 +147,8 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
     //   }}
     // >
     // </HeaderDropdown>
-    <Popover trigger="hover" overlayInnerStyle={{padding: "0"}} arrow={false} content={content}><div>{children}</div></Popover>
+    <Popover trigger="hover" styles={{ body: {
+      padding:0
+    } }} arrow={false} content={content}><div>{children}</div></Popover>
   );
 };

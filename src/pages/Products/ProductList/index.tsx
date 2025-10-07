@@ -14,7 +14,7 @@ import MyAlert from '@/components/Alert/MyAlert';
 import { observer } from 'mobx-react-lite';
 import ProductCard from './ProductCard';
 import ExportProductModal from './ExportProductModal';
-
+import cookie from 'react-cookies';
 
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
@@ -169,6 +169,9 @@ const App: React.FC = () => {
   
 
   useEffect(()=>{
+
+    productList.setLanguagesId(cookie.load("shop_lang") || '2');
+
     // 重新渲染初始化状态
     productList.setFlag("");
     productList.setIsAlliance("");

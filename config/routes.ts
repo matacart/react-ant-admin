@@ -198,16 +198,11 @@ export default  [
           component: './Products/ProductCategories/ProductCategoriesAdd/ProductCategoriesAdd',
         },
         {
-          path: 'categories/edit',
+          path: 'categories/edit/:id/:languageId',
           name: 'categories/edit',
           menu: false,
           component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
         },
-        // {
-        //   path: 'categories/blankPage',
-        //   name: '商品分类',
-        //   component: './Products/ProductCategories/BlankPage',
-        // },
         {
           path: 'gift-cards',
           name: 'gift-cards',
@@ -265,12 +260,12 @@ export default  [
       },
       {
         path: 'persona/list',
-        name: 'persona',
+        name: 'persona/list',
         component: './Customer/Subdivide/Subdivide',
       },
       {
         path: 'persona/detail',
-        name: 'persona',
+        name: 'personaDetail',
         hideInMenu: true,
         parentKeys: ['/customer/persona/list'],
         component: './Customer/Subdivide/SubdivideAdd/SubdivideAdd',
@@ -278,7 +273,7 @@ export default  [
 
       {
         path: 'persona/all',
-        name: 'persona',
+        name: 'persona/all',
         hideInMenu: true,
         parentKeys: ['/customer/persona/list'],
         component: './Customer/Subdivide/ClientPortrait/ClientPortrait',
@@ -332,7 +327,6 @@ export default  [
       },
       {
         path: 'reports/:classification/:detail',
-        name: 'reports/detail',
         hideInMenu: true,
         component: './Analyse/Report/Detail/Detail'
       },
@@ -389,7 +383,7 @@ export default  [
 
   {
     path: 'app-store',
-    name: 'appStore',
+    name: 'app-store',
     component: './AppStore/AppStore/AppStore',
     // component: './Products/Inventory/BlankPage',
   },
@@ -501,13 +495,13 @@ export default  [
         component: './Channel/OnlineStore/Articles/New/NewArticles',
       },
       {
-        path: 'articles/edit',
+        path: 'articles/edit/:id/:languagesId',
         hideInMenu: true,
         component: './Channel/OnlineStore/Articles/Edit/EditArticles',
       },
       {
         path: 'page',
-        name: 'customPage',
+        name: 'page',
         component: './Channel/OnlineStore/CustomPage/CustomPage',
       },
       {
@@ -558,19 +552,19 @@ export default  [
   },
   {
     path: '/stores/list',
-    name: 'stores_list',
+    name: 'stores/list',
     icon: 'ShopOutlined',
     component: './Shops/StoresManagement/Index',
   },
   {
     path: '/stores/bills',
-    name: 'stores_bills',
+    name: 'stores/bills',
     icon: 'ProfileOutlined',
     component: './Shops/Bills',
   },
   {
     path: '/stores/data',
-    name: 'stores_data',
+    name: 'stores/data',
     icon: 'DashboardOutlined',
     component: './Shops/Data',
   },
@@ -668,7 +662,7 @@ export default  [
       // -------------------
       {
         path:"payments/thirdCreditCard",
-        name:"thirdCreditCard",
+        name:"payments",
         component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollection"
       },
       {
@@ -708,13 +702,13 @@ export default  [
       // 自定义运费
       {
         path:"logistics/add/custom",
-        name:"logisticsAddCustom",
+        name:"delivery",
         component:"./Settings/ShippingAndDistribution/AddCustomLogistics/AddCustomLogistics"
       },
       // 通用运费
       {
         path:"logistics/edit/custom/:id",
-        name:"logisticsEditCustom",
+        name:"delivery",
         component:"./Settings/ShippingAndDistribution/EditCustomLogistics/EditCustomLogistics"
       },
       // 仓库地址
@@ -748,7 +742,7 @@ export default  [
       },
       {
         path:"adminpermission/add",
-        name:"adminpermissionAdd",
+        name:"adminpermission",
         component:"./Settings/AdministratorsPermissions/AdministratorsPermissionsAdd/AdministratorsPermissionsAdd"
       },
 
@@ -831,15 +825,15 @@ export default  [
         component: './Theme/View/View',
       },
       {
-        path: 'codeEditor/:id/:templateId',
-        name: 'codeEditor',
+        path: 'codeEditor/:id/:templateId/:languagesId',
+        name: 'codeEditor/:id/:templateId/:languagesId',
         component: './Theme/CodeEditor/CodeEditor',
       }
     ]
   },
   {
     path: 'theme/styles/:templateId/:styleId',
-    name: 'theme/styles',
+    name: 'theme/styles/:templateId/:styleId',
     hideInMenu: true,
     menuRender: false,
     layout: false,

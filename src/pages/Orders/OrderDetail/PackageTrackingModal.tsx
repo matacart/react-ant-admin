@@ -1,10 +1,10 @@
-import { useIntl } from "@/.umi/plugin-locale/localeExports";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
 import { setOrderNumber } from "@/services/y2/api";
 import order from "@/store/order/order";
+import { useIntl } from "@umijs/max";
 import { Checkbox, Flex, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
 

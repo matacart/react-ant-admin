@@ -1,27 +1,20 @@
-import { Button, Card, Select, Tabs, TabsProps } from "antd"
+import { Button, Card, Flex, Select, Tabs, TabsProps } from "antd"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
-import { history } from 'umi';
 import StoresCard from "./StoresCard";
 import shopsManagement from "@/store/shops/shopsManagementStore";
 import { observer } from 'mobx-react-lite';
-
+import DefaultButton from "@/components/Button/DefaultButton";
+import SkeletonCard from "@/components/Skeleton/SkeletonCard";
+import { useNavigate } from "react-router-dom";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import { employeeSelect, getRoleList } from "@/services/y2/api";
 
 const onChange = (key: string) => {
     console.log(key);
 };
 
-
-
 type PositionType = 'right';
-const OperationsSlot: Record<PositionType, React.ReactNode> = {
-    // right: <Button type="primary" onClick={()=>{
-    //     history.push('/stores-subscriptions/list/paid')
-    // }}>+ 购买开店套餐</Button>,
-    right: <Button type="primary" onClick={()=>{
-        history.push('/stores/create')
-    }}>+ 创建店铺</Button>,
-};
 
 // 上午、下午、晚上、凌晨、深夜
 function getCurrentTimeText(){
@@ -45,13 +38,28 @@ const timeText = getCurrentTimeText()
 
 function Index(){
 
-    const [enableCount,setEnalbeCount] = useState(0)
+    const navigate = useNavigate();
+
+    const [employeeList,setEmployeeList] = useState([]);
+
+    const [rolesList,setRolesList] = useState([]);
+
+    const OperationsSlot: Record<PositionType, React.ReactNode> = {
+        // right: <Button type="primary" onClick={()=>{
+        //     history.push('/stores-subscriptions/list/paid')
+        // }}>+ 购买开店套餐</Button>,
+        right: <PrimaryButton text="+ 创建店铺" onClick={()=>{
+            navigate('/stores/create')
+        }} />,
+    };
+
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
     const items: TabsProps['items'] = [
         {
           key: '1',
-          label: '已启用店铺（'+enableCount+'）',
-          children: <StoresCard/>,
+          label: '已启用店铺（'+shopsManagement.enableCount+'）',
+          children: <StoresCard rolesList={rolesList} employeeList={employeeList} />,
         },
         {
           key: '2',
@@ -60,39 +68,69 @@ function Index(){
         }
     ];
 
+    const fetch = async ()=>{
+        // 子账号
+        try {
+            const employee = await employeeSelect();
+            if(employee.code == 0){
+                setEmployeeList(employee.data.map((item:any)=>{
+                    return {
+                        label:item.id,
+                        value:item.id
+                    }
+                }))
+            }
+        } catch (error) {
+        }
+
+        try {
+            const roleList = await getRoleList();
+            if(roleList.code == 0){
+                setRolesList(roleList.data.map((item:any)=>{
+                    return {
+                        label:item.title,
+                        value:item.id
+                    }
+                }))
+            }
+        } catch (error) {
+        }
+        
+        setIsSkeleton(false)
+    }
+
     // 获取店铺列表
     useEffect(()=>{
-        shopsManagement.getShops().then(res=>{
-            setEnalbeCount(res.length)
-        })
+        fetch();
+        shopsManagement.reset();
     },[])
+
+
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-content">{timeText}好，请选择一个店铺开始你的生意</div>
                         </div>
-                        <div className='mc-header-right'>
-                            <Button style={{marginRight:"10px"}}>复制店铺</Button>
-                            <Button>转让&接收店铺</Button>
+                        <Flex className='mc-header-right' gap={10}>
+                            <DefaultButton text="复制店铺" />
+                            <DefaultButton text="转让&接收店铺" />
                             {/* <Select  defaultValue="更多" /> */}
-                        </div>
+                        </Flex>
                     </div>
                     <div className='card-wrap'>
                         <Card>
                             <Tabs tabBarExtraContent={OperationsSlot} defaultActiveKey="1" items={items} onChange={onChange} />
                         </Card>
                         <div className='mc-layout-content'>
-                          
                         </div>
                         <div className='mc-layout-extra'>
-                            
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
         </Scoped>
     )
 }

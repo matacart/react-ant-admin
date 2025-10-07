@@ -1,8 +1,6 @@
 import { Checkbox, Flex, Select, Space } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { getCurrencies } from '@/services/y2/api';
-import PrimaryButton from "../Button/PrimaryButton";
 import MyButton from "../Button/MyButton";
 
 interface CheckSelectSubmitProps extends React.ComponentProps<typeof Select> {
@@ -47,7 +45,6 @@ function CheckSelectSubmit({options,setOptions,...props}:CheckSelectSubmitProps)
                         return (
                             <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
                                 let newOption = [...customizeOptions]
-
                                 newOption[index].checked = e.target.checked
                                 setCustomizeOptions(newOption)
                                 console.log(options)

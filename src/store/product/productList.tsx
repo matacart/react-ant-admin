@@ -24,8 +24,7 @@ class productList {
         makeAutoObservable(this)
     }
 
-    // 语言
-    languagesId = "2";
+    languagesId = '2';
 
     setLanguagesId(value:string){
         this.languagesId = value;

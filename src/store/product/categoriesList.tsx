@@ -21,7 +21,7 @@ class categoriesList {
     }
 
     // 语言
-    languagesId = "2";
+    languagesId = "1";
 
     setLanguagesId(value:string){
         this.languagesId = value;

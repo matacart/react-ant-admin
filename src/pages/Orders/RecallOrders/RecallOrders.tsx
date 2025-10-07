@@ -2,8 +2,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Flex, Modal, Space, Upload } from 'antd';
 import styled from 'styled-components'
-import Icon, { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined } from '@ant-design/icons';
 import RecallOrderTabs from './RecallOrderTabs';
+import recallOrdersList from '@/store/order/recallOrders/recallOrdersList';
+import cookie from 'react-cookies';
+
 interface MenuItem {
   key: string;
   label: React.ReactNode;
@@ -17,6 +20,7 @@ interface MenuProps {
 export default function RecallOrders() {
 
   useEffect(() => {
+    recallOrdersList.setLanguages(cookie.load("shop_lang") || '2')
   }, []);
 
   return (

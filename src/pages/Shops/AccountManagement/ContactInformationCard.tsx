@@ -1,9 +1,9 @@
-import SuccessTag from "@/components/Tag/SuccessTag";
-import { Button, Card, Flex, Form, Input, Select, Space } from "antd";
+import { Card, Flex, Form, Input, Select, Space } from "antd";
 import styled from "styled-components";
 import accountManagement from "@/store/shops/accountManagementStore";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { getCountryList } from "@/services/y2/api";
+import MyInput from "@/components/Input/MyInput";
+import MySelect from "@/components/Select/MySelect";
 
 
 const ContactInformationCard = forwardRef((prop,ref)=>{
@@ -22,9 +22,6 @@ const ContactInformationCard = forwardRef((prop,ref)=>{
    
 
     useEffect(()=>{
-
-
-
        
         let newList = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
             if(item.codes !== null){
@@ -41,8 +38,8 @@ const ContactInformationCard = forwardRef((prop,ref)=>{
         setCountryList(newList);
 
         form.setFieldsValue({
-            email: accountManagement.user.contact_email,
-            phone: accountManagement.user.contact_phone
+            email: accountManagement.userInfo.contact_email,
+            phone: accountManagement.userInfo.contact_phone
         })
 
     },[])
@@ -54,21 +51,21 @@ const ContactInformationCard = forwardRef((prop,ref)=>{
                     <Form.Item name="email" label={<div className="font-w-600 color-242833">账户联系邮箱</div>} rules={[
                         {required:true,message:"请输入账户联系邮箱"}
                     ]}>
-                        <Input style={{width:"60%"}} onChange={(e)=>{
-                            accountManagement.setUser({...accountManagement.user,contact_email: e.target.value})
-                        }} defaultValue={accountManagement.user.contact_email} placeholder="请输入账户联系邮箱" />
+                        <MyInput style={{width:"60%",height:"36px"}} onChange={(e)=>{
+                            accountManagement.setUserInfo({...accountManagement.userInfo,contact_email: e.target.value})
+                        }} defaultValue={accountManagement.userInfo.contact_email} placeholder="请输入账户联系邮箱" />
                     </Form.Item>
                     <Form.Item name="phone" label={<div className="font-w-600 color-242833">账户联系手机号</div>} rules={[
                         {required:true,message:"请输入账户联系手机号"}
                     ]}>
                         <Space.Compact style={{width:"60%"}}>
-                            <Select onChange={(e)=>{
-                                const newUser = {...accountManagement.user,contact_code: e}
-                                accountManagement.setUser(newUser)
-                            }} defaultValue={accountManagement.user.contact_code} options={countryList} style={{width:"fit-content"}} />
-                            <Input onChange={(e)=>{
-                                accountManagement.setUser({...accountManagement.user,contact_phone: e.target.value})
-                            }} defaultValue={accountManagement.user.contact_phone} placeholder="请输入账户联系手机号" />
+                            <MySelect style={{height:"36px",width:"fit-content"}} onChange={(e)=>{
+                                const newUser = {...accountManagement.userInfo,contact_code: e}
+                                accountManagement.setUserInfo(newUser)
+                            }} defaultValue={accountManagement.userInfo.contact_code} options={countryList} />
+                            <MyInput style={{height:"36px"}} onChange={(e)=>{
+                                accountManagement.setUserInfo({...accountManagement.userInfo,contact_phone: e.target.value})
+                            }} defaultValue={accountManagement.userInfo.contact_phone} placeholder="请输入账户联系手机号" />
                         </Space.Compact>
                     </Form.Item>
                 </Form>

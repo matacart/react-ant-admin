@@ -13,6 +13,7 @@ import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import EditFreightModal from "./EditFreightModal";
 import { observer } from "mobx-react-lite";
+import CustomButton from "@/components/Button/CustomButton";
 
 
 interface DataType {
@@ -30,8 +31,6 @@ function ManagementGroup() {
 
     const [isExpansionDetails,setIsExpansionDetails] = useState(false)
     // 
-    // const [data,setData] = useState( || [])
-
     const columns: TableProps<DataType>['columns'] = [
         {
           title: '运费名称',
@@ -154,7 +153,7 @@ function ManagementGroup() {
     
 
     const operations = <Dropdown menu={{ items }} trigger={["click"]}>
-        <Button style={{height:"36px"}}>管理分组<UnfoldIcon className="font-20" /></Button>
+        <CustomButton element={<>管理分组<UnfoldIcon className="font-20" /></>} style={{height:"36px"}} />
     </Dropdown>
 
     const GroupTemplate = (
@@ -167,7 +166,7 @@ function ManagementGroup() {
                     <div>发货地址</div>
                 </Flex>
                 <div>
-                    <Button>添加</Button>
+                    <DefaultButton text="添加" />
                 </div>
             </Flex>
             {/*  */}
@@ -178,7 +177,6 @@ function ManagementGroup() {
             {/*  */}
             {isExpansionDetails && <>
                 <List style={{margin:"12px 0"}}>
-
                 </List>
                 <Flex align="center" className="cursor-pointer" onClick={()=>setIsExpansionDetails(false)}><span className="color-356DFF">隐藏详情</span><FoldIcon className="font-20" /></Flex>
             </>}

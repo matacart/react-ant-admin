@@ -14,7 +14,7 @@ function QuickLoginCard() {
                 <div className="color-7A8499">您还没有连接使用外部登录服务。</div>
                 <div>
                     <Flex className="content-item" onClick={()=>window.open("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&redirect_uri=https://www.google.com/&response_type=code&client_id=1078619649323-02qhqfq9vq0vqhqhq")}>
-                        <img style={{width:"20px"}} src="/icons/google.svg" />
+                        <img style={{width:"20px"}} src="/icons/logos/google.svg" />
                         <div className="color-356DFF" style={{marginLeft:"8px"}}>连接到Google</div>
                     </Flex>
                     <Flex className="content-item" onClick={()=>window.open("https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&access_type=offline&redirect_uri=https://www.google.com/&response_type=code&client_id=1078619649323-02qhqfq9vq0vqhqhq")}>

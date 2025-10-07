@@ -100,3 +100,91 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 }
+
+declare namespace ApiStore {
+  type selectTags = {
+    code:number,
+    count:string,
+    data:any,
+    msg:string,
+  }
+}
+
+
+declare namespace ApiAppstore {
+  type addressAdd = {
+  }
+  type employeeSelect = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type roleList = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type domainList = {
+    code:number,
+    count:string,
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiTemplate {
+  type addTemplateFile = {
+    code:string | number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type deleteTemplateFile = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type RenameFile = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type templateFileUpload = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+}
+
+declare namespace ApiEditor{
+  type languageSchema = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type installedSections = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type templateInfo = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type settingsSections = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+}
+

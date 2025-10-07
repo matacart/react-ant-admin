@@ -38,6 +38,10 @@ body,
   }
 }
 
+.css-dev-only-do-not-override-1kn8nr7{
+  /* max-height: 500px; */
+}
+
 
 /* 设置 */
 /* .ant-menu-item:has(.ant-menu-title-content):has(.menu-item-settings){
@@ -156,6 +160,9 @@ ol {
 
 .color-356DFF{
   color: #356dff;
+}
+.color-366AB3{
+  color: #366AB3;
 }
 .color-101AA4{
   color: #101AA4;

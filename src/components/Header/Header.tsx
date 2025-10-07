@@ -6,13 +6,16 @@ import { AvatarDropdown, AvatarName } from "../RightContent/AvatarDropdown";
 import { GithubOutlined, GlobalOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import { useEffect, useState } from 'react';
 import { observer } from "mobx-react-lite";
-import { currentUserStatus, getOptionType, getPlatformCategorySelect, getShippingcourier } from "@/services/y2/api";
+import { currentUserStatus } from "@/services/y2/api";
 import { useNavigate } from "react-router-dom";
 import CheckUpdates from "../RightContent/CheckUpdates";
 import cookie from 'react-cookies';
+import { useIntl } from "@umijs/max";
 
 
 function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialState:any}){
+
+    const intl = useIntl();
 
     const navigate = useNavigate();
 
@@ -71,12 +74,6 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
         // }).catch(err=>{
         //     console.log("获取商品类型失败")
         // })
-        // 获取物流服务
-        getShippingcourier().then((res:any)=>{
-            localStorage["MC_DATA_SHIPPING_COURIER"] = JSON.stringify(res.data)
-        }).catch(err=>{
-        })
-
     },[])
 
 
@@ -120,12 +117,16 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                         <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>navigate("/")}>{PLATFORM_INFO.brand_name}</h1>
                     </div>
                     <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-60px"}}>
-                        {url == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder="搜索" />}
+                        {url == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder={intl.formatMessage({id: 'header.search'})} />}
                     </div>
                     <Flex className="mc-header-left-content" align='center'>
-                        {userStatus.code == 0 && <div className="item">{url == "/stores/"?<></>:<SelectDomain/>}</div>}
+                        {userStatus.code == 0 && url == "/stores/"?<></>:<SelectDomain/>}
                         <div className="item"><Question key="doc" /></div>
-                        <div className="item"><GithubOutlined key="github" onClick={()=>window.open('https://github.com/matacart/react-ant-admin/tree/master')} /></div>
+                        <div className="item">
+                            <div style={{padding:"8px",display:"flex"}} onClick={()=>window.open('https://github.com/matacart/react-ant-admin/tree/master')}>
+                                <GithubOutlined key="github" />
+                            </div>
+                        </div>
                         {/* 检查更新 */}
                         <div className="item"><CheckUpdates /></div>
                         <div className="item"><SelectLang key="SelectLang" /></div>
@@ -159,10 +160,7 @@ const Scoped = styled.div`
     .mc-header-left-content{
         line-height: 60px;
         .item{
-            padding:8px;
-            width: auto;
-            line-height: 0;
-            /* cursor: pointer; */
+            cursor: pointer;
         }
         .item:hover{
             background-color: rgba(0, 0, 0, 0.03)

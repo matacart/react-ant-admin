@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import LangSelect from '@/pages/components/LangSelect';
 import { useSleep } from '@/hooks/customHooks';
 import { useRef, useState } from 'react';
 import { FormInstance } from 'antd/lib';
@@ -13,6 +12,8 @@ import MenuItemCard from './MenuItemCard';
 import HandleCard from './HandleCard';
 import navListStore from '@/store/channel/navList/navListStore';
 import { flattenTreeWithDepth } from '@/utils/dataStructure';
+import LangSelect from '@/components/Select/LangSelect';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 function NewPage(){
 
@@ -87,7 +88,7 @@ function NewPage(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' loading={loading} onClick={()=>{validateAll()}}>创建</Button>
+                        <PrimaryButton loading={loading} onClick={()=>{validateAll()}} text="创建" />
                     </div>
                 </div>
             </div>

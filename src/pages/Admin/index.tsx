@@ -1,7 +1,7 @@
 import Callapse from '@/components/Card/OpenStoreGuidance';
-import { Card, Space } from 'antd';
+import { Space } from 'antd';
 import DataCard from '@/components/Card/DataCard';
-import TextCard, {ButtonContent,CardContent} from '@/components/Card/TextCard'
+import TextCard from '@/components/Card/TextCard';
 import ShopTimeDisplay from '@/components/Admin/Time';
 
 export default () => {

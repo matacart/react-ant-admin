@@ -3,14 +3,15 @@ import { makeAutoObservable } from "mobx";
 type customPageType = {
     languages_id:string;
     title:string;
+    content:string;
     meta_title:string;
     meta_description:string;
     meta_keywords:string;
-    content:string;
     status:string;
     url:string;
     alt_url:string;
-  
+    
+    publish_time: string,
 }
 
 
@@ -29,7 +30,9 @@ class customPage {
         meta_title: '',
         meta_description: '',
         meta_keywords: '',
+        status:'0',
         url: '',
+        alt_url:'',
         
         app_id:"19", //商店ID
         is_sys:'0',
@@ -43,29 +46,21 @@ class customPage {
         page_open_new_window:'0',
         is_url:'0',
         pid:'0',
-        alt_url:'',
         template_id:'0',
-        status:'1',
+        // 
+        publish_time: "",
     }
 
-    newCustomPage:customPageType = this.default;
+    customPage:customPageType = this.default;
 
-    setNewCustomPage(customPage: any) {
-        this.newCustomPage = customPage
+    setCustomPage(customPage: customPageType) {
+        this.customPage = customPage
     }
 
     resetNewCustomPage = () => {
         // 或者使用初始值
-        this.newCustomPage = this.default;
+        this.customPage = this.default;
     };
-
-
-    oldCustomPage:customPageType = this.default;
-
-    setOldCustomPage(customPage: any) {
-        this.oldCustomPage = customPage
-    }
-
 }
 
 export default new customPage();

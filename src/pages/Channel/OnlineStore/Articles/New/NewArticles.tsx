@@ -4,22 +4,22 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import DefaultButton from '@/components/Button/DefaultButton';
-import TitleCard from './TitleCard';
-import ContentCard from './ContentCard';
-import PublishBlogCard from './PublishBlogCard';
-import TissueCard from './TissueCard';
-import CoverPictureCard from './CoverPictureCard';
-import SEOCard from './SEOCard';
-import ThemeTemplate from './ThemeTemplate';
-import articles from "@/store/channel/website/articles";
 import { observer } from 'mobx-react-lite';
-import LangSelect from '@/pages/components/LangSelect';
 import { createArticles } from '@/services/y2/api';
-import ProtectionInformation from './ProtectionInformation';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useRef, useState } from 'react';
-import ThirdPartyLink from './ThirdPartyLink';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import LangSelect from '@/components/Select/LangSelect';
+import articles from '@/store/channel/articles/articles';
+import PublishBlogCard from '../Articles/PublishBlogCard';
+import ContentCard from '../Articles/ContentCard';
+import TitleCard from '../Articles/TitleCard';
+import TissueCard from '../Articles/TissueCard';
+import CoverPictureCard from '../Articles/CoverPictureCard';
+import SEOCard from '../Articles/SEOCard';
+import ProtectionInformation from '../Articles/ProtectionInformation';
+import ThirdPartyLink from '../Articles/ThirdPartyLink';
+import ThemeTemplate from '../Articles/ThemeTemplate';
 
 function NewArticles(){
 
@@ -28,9 +28,9 @@ function NewArticles(){
     // 表单1
     const titleCardRef = useRef<FormInstance>(null);
     const setLang = (lang:string)=>{
-        articles.setNewArticles({
-            ...articles.newArticles,
-            lang:lang
+        articles.setArticles({
+            ...articles.articles,
+            languages_id:lang
         })
     }
 
@@ -44,7 +44,7 @@ function NewArticles(){
             console.log(articles)
             // 全部校验通过后提交
             setLoading(true)
-            createArticles(articles.newArticles).then(async res=>{
+            createArticles(articles.articles).then(async res=>{
                 await sleep(2000)
                 message.success('创建成功')
                 history.push('/website/articles')
@@ -59,7 +59,7 @@ function NewArticles(){
     };
 
     useEffect(()=>{
-        articles.resetNewArticles()
+        articles.reset()
     },[])
     
 
@@ -79,7 +79,7 @@ function NewArticles(){
                         </div>
                         <Flex className='mc-header-right' align='center' gap={12}>
                             {/* 语言 */}
-                            <LangSelect lang={articles.newArticles.lang} setLang={setLang} />
+                            <LangSelect lang={articles.articles.languages_id} setLang={setLang} />
                             <DefaultButton text='AI创建博客' />
                         </Flex>
                     </div>

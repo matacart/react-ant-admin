@@ -4,58 +4,54 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { TabsProps, Tabs } from 'antd';
 import MyStylesCard from './MyStylesCard';
 import StylesStoreCard from './StylesStoreCard';
-import { getTemplateInstanceUsing, getTemplateMallList } from '@/services/y2/api';
+import { getTemplateMallList } from '@/services/y2/api';
 import shopSetting from '@/store/channel/shopSetting/shopSetting';
+import LangSelect from '@/components/Select/LangSelect';
+import cookie from 'react-cookies';
+import { observer } from 'mobx-react-lite';
+
 
 function ShopSetting(){
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+  const [isSkeleton,setIsSkeleton] = useState(true);
 
-    const [activeTab, setActiveTab] = useState('1'); // 添加状态控制当前激活的标签页
+  const [activeTab, setActiveTab] = useState('1'); // 添加状态控制当前激活的标签页
 
-    const items: TabsProps['items'] = [
-        {
-          key: '1',
-          label: <div className='font-16 color-242833'>我的模板</div>,
-          children: <MyStylesCard onSwitchToStore={() => {
-            setActiveTab('2');
-          }} />,
-        },
-        {
-          key: '2',
-          label: <div className='font-16 color-242833'>模板商城</div>,
-          children: <StylesStoreCard />,
-        }
-    ];
-
-    const fetchData = async ()=>{
-      try{
-        const [usingRes, mallRes] = await Promise.all([
-          getTemplateInstanceUsing() as any,
-          getTemplateMallList({
-            page: 1,
-            limit:10
-          }) as any
-        ]);
-
-        shopSetting.setTemplateMallList(mallRes.data)
-        shopSetting.setTemplateInstanceUsing(usingRes.data)
-
-
-        if(usingRes.data.toString() !== "[]"){
-          console.log(usingRes)
-        }
-
-      }catch(err){
-        console.log("获取数据失败",err)
-      }finally{
-        setIsSkeleton(false)
+  const items: TabsProps['items'] = [
+      {
+        key: '1',
+        label: <div className='font-16 color-242833'>我的模板</div>,
+        children: <MyStylesCard onSwitchToStore={() => {
+          setActiveTab('2');
+        }} />,
+      },
+      {
+        key: '2',
+        label: <div className='font-16 color-242833'>模板商城</div>,
+        children: <StylesStoreCard />,
       }
-    }
+  ];
 
-    useEffect(()=>{
-      fetchData()
-    },[]);
+  useEffect(()=>{
+    // 默认语言
+    shopSetting.setLanguagesId(cookie.load("shop_lang") || '2');
+    getTemplateMallList({
+      page: 1,
+      limit:10
+    }).then((res:any)=>{
+      if(res.code == 0){
+        shopSetting.setTemplateMallList(res.data)
+      }
+    }).catch(err=>{
+      console.log("获取数据失败",err)
+    }).finally(()=>{
+      setIsSkeleton(false)
+    })
+  },[]);
+
+  const setLang = (value:string)=>{
+    shopSetting.setLanguagesId(value);
+  }
 
   return (
     <Scoped>
@@ -63,20 +59,19 @@ function ShopSetting(){
             <div className="create-warp">
                 <div className='create-title'>
                     <div className='create-title-left'>
-                        <h3>店铺设计</h3>
+                      <h3>店铺设计</h3>
                     </div>
                 </div>
                 <div className='create-content'>
-                    <Tabs activeKey={activeTab} onChange={(activeKey:string)=>setActiveTab(activeKey)} items={items} />
+                  <Tabs activeKey={activeTab} onChange={(activeKey:string)=>setActiveTab(activeKey)} items={items} tabBarExtraContent={<LangSelect lang={shopSetting.languagesId} setLang={setLang} />} />
                 </div>
             </div>
         </div>}
     </Scoped>
-    
   );
 }
 
-export default ShopSetting;
+export default observer(ShopSetting);
 
 
 const Scoped = styled.div`

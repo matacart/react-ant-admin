@@ -1,5 +1,4 @@
 import { ConfigProvider, Input, InputProps  } from "antd"
-import styled from "styled-components"
 
 interface MyInputProps extends InputProps{
     ref?:any

@@ -5,7 +5,8 @@ import styled from "styled-components"
 import { useEffect, useState } from "react";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { getAddonsList } from "@/services/y2/api";
-import LangSelect from "@/pages/components/LangSelect";
+import cookie from 'react-cookies';
+import LangSelect from "@/components/Select/LangSelect";
 
 function ThirdCreditCollection() {
 
@@ -13,15 +14,10 @@ function ThirdCreditCollection() {
 
     const [supportPayments,setSupportPayments] = useState<any>([]);
 
-    const [language,setLanguage] = useState("2");
+    const [language,setLanguage] = useState(cookie.load("shop_lang") || '2');
 
     const setLang = (lang:string) => {
-        getAddonsList(lang,"1","1").then(res=>{
-            setSupportPayments(res.data)
-            setLanguage(lang)
-        }).catch(err=>{
-        }).finally(()=>{
-        })
+        setLanguage(lang)
     }
 
     useEffect(()=>{
@@ -31,7 +27,7 @@ function ThirdCreditCollection() {
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[])
+    },[language])
 
 
 

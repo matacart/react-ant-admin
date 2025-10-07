@@ -3,67 +3,54 @@ import { history } from '@umijs/max';
 import styled from 'styled-components';
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import BlankPage from './BlankPage';
-import { getArticleList } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import ArticlesListCard from './ArticlesListCard';
 import { Flex } from 'antd';
+import articlesList from '@/store/channel/articles/articlesList';
+import cookie from 'react-cookies';
+
 
 function Articles(){
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(false);
 
-    const [articlesList,setArticlesList] = useState([])
+    articlesList.setLanguagesId(cookie.load("shop_lang") || '2')
 
-    const [count,setCount] = useState(0)
-
-    useEffect(()=>{
-        getArticleList("1","10","2").then(res=>{
-            setArticlesList(res.data)
-            setCount(res.count)
-        }).catch(err=>{
-
-        }).finally(()=>{
-            setIsSkeleton(false)
-        })
-    },[]);
-
-  return (
-    <Scoped>
-        {isSkeleton?<SkeletonCard />:<div className='create-warp-flex'>
-            <div className="create-warp">
-                <div className='create-title'>
-                    <div className='create-title-left'>
-                        <h3 style={{ position: 'relative', display: 'inline-block' }}>博客</h3>
+    return (
+        <Scoped>
+            {isSkeleton?<SkeletonCard />:<div className='create-warp-flex'>
+                <div className="create-warp">
+                    <div className='create-title'>
+                        <div className='create-title-left'>
+                            <h3 style={{ position: 'relative', display: 'inline-block' }}>博客</h3>
+                        </div>
+                        <div className='create-title-right'>
+                            <Flex gap={12}>
+                                <DefaultButton text="管理博客评论" />
+                                <DefaultButton text="管理博客集合" />
+                                <PrimaryButton text="创建博客" onClick={()=>history.push("/website/articles/new")} />
+                            </Flex>
+                        </div>
                     </div>
-                    <div className='create-title-right'>
-                        <Flex gap={12}>
-                            <DefaultButton text="管理博客评论" />
-                            <DefaultButton text="管理博客集合" />
-                            <PrimaryButton text="创建博客" onClick={()=>history.push("/website/articles/new")} />
+                    <div className='create-content'>
+                        <Flex className='create-content-app' justify='space-between' align='center' gap={12}>
+                            <img style={{ width: "48px" }} src="https://cdn.myshopline.cn/sl/admin/ec2-admin-onlineshop/20250311110516973/imgs/easyRank.5de17.png" />
+                            <div>
+                                <div className='font-16 color-474F5E font-w-600 create-content-app-title'>使用EasyRank，AI创建博客</div>
+                                <div className='font-14'>EasyRank集成GPT AI，通过GPT能高效智能的生成具有创意、符合SEO要求的博客文章，从而提高博客的搜索排名和自然流量。</div>
+                            </div>
+                            <div className='create-content-app-btn'>
+                                <DefaultButton text="立即安装EasyRank" />
+                            </div>
                         </Flex>
+                        {/*  */}
+                        <ArticlesListCard />
                     </div>
                 </div>
-                <div className='create-content'>
-                    <Flex className='create-content-app' justify='space-between' align='center' gap={12}>
-                        <img style={{ width: "48px" }} src="https://cdn.myshopline.cn/sl/admin/ec2-admin-onlineshop/20250311110516973/imgs/easyRank.5de17.png" />
-                        <div>
-                            <div className='font-16 color-474F5E font-w-600 create-content-app-title'>使用EasyRank，AI创建博客</div>
-                            <div className='font-14'>EasyRank集成GPT AI，通过GPT能高效智能的生成具有创意、符合SEO要求的博客文章，从而提高博客的搜索排名和自然流量。</div>
-                        </div>
-                        <div className='create-content-app-btn'>
-                            <DefaultButton text="立即安装EasyRank" />
-                        </div>
-                    </Flex>
-                    {/*  */}
-                    {articlesList.length == 0?<BlankPage />:<ArticlesListCard articlesList={articlesList} count={count} />}
-                    
-                </div>
-            </div>
-        </div>}
-    </Scoped>
-    
-  );
+            </div>}
+        </Scoped>
+        
+    );
 }
 
 export default Articles;

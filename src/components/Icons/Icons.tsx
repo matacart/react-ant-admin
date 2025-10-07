@@ -80,10 +80,7 @@ const QuitSvg = () => (
 )
 
 const RemitSvg = () => (
-  // <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconImport" font-size="18">
-  //   <path d="M9.35 2a.1.1 0 0 0-.1.1v9.348a.1.1 0 0 1-.17.07L7.6 10.04a.1.1 0 0 0-.141 0l-.92.92a.1.1 0 0 0 0 .141l2.93 2.93a.75.75 0 0 0 1.06 0l2.93-2.93a.1.1 0 0 0 0-.141l-.92-.92a.1.1 0 0 0-.141 0l-1.478 1.479a.1.1 0 0 1-.171-.071V2.1a.1.1 0 0 0-.1-.1h-1.3ZM2 6.25a.75.75 0 0 0-.75.75v10c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V7a.75.75 0 0 0-.75-.75h-2.4a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h1.55a.1.1 0 0 1 .1.1v8.3a.1.1 0 0 1-.1.1H2.85a.1.1 0 0 1-.1-.1v-8.3a.1.1 0 0 1 .1-.1H3.9a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1H2Z"></path>
-  // </svg>
-  <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.35 2a.1.1 0 0 0-.1.1v9.348a.1.1 0 0 1-.17.07L7.6 10.04a.1.1 0 0 0-.141 0l-.92.92a.1.1 0 0 0 0 .141l2.93 2.93a.75.75 0 0 0 1.06 0l2.93-2.93a.1.1 0 0 0 0-.141l-.92-.92a.1.1 0 0 0-.141 0l-1.478 1.479a.1.1 0 0 1-.171-.071V2.1a.1.1 0 0 0-.1-.1h-1.3ZM2 6.25a.75.75 0 0 0-.75.75v10c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V7a.75.75 0 0 0-.75-.75h-2.4a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h1.55a.1.1 0 0 1 .1.1v8.3a.1.1 0 0 1-.1.1H2.85a.1.1 0 0 1-.1-.1v-8.3a.1.1 0 0 1 .1-.1H3.9a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1H2Z" fill="#474F5E"></path></svg>
+  <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true" focusable="false"><path fillRule="evenodd" clipRule="evenodd" d="M9.35 2a.1.1 0 0 0-.1.1v9.348a.1.1 0 0 1-.17.07L7.6 10.04a.1.1 0 0 0-.141 0l-.92.92a.1.1 0 0 0 0 .141l2.93 2.93a.75.75 0 0 0 1.06 0l2.93-2.93a.1.1 0 0 0 0-.141l-.92-.92a.1.1 0 0 0-.141 0l-1.478 1.479a.1.1 0 0 1-.171-.071V2.1a.1.1 0 0 0-.1-.1h-1.3ZM2 6.25a.75.75 0 0 0-.75.75v10c0 .414.336.75.75.75h16a.75.75 0 0 0 .75-.75V7a.75.75 0 0 0-.75-.75h-2.4a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h1.55a.1.1 0 0 1 .1.1v8.3a.1.1 0 0 1-.1.1H2.85a.1.1 0 0 1-.1-.1v-8.3a.1.1 0 0 1 .1-.1H3.9a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1H2Z" fill="#474F5E"></path></svg>
 )
 
 const ExportSvg = () => (
@@ -123,7 +120,7 @@ const DiscountedGraphSvg = () => (
 
 const TemplateSvg = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.742 2.492a.75.75 0 01.75-.75h14.862a.75.75 0 01.75.75v2.972a.75.75 0 01-.75.75H2.492a.75.75 0 01-.75-.75V2.492zm1.5.75v1.472h13.362V3.242H3.242zM8.678 8.436a.75.75 0 01.75-.75h7.926a.75.75 0 01.75.75v8.918a.75.75 0 01-.75.75H9.428a.75.75 0 01-.75-.75V8.436zm1.5.75v7.418h6.426V9.186h-6.426zM7.205 8.436a.75.75 0 00-.75-.75H2.492a.75.75 0 00-.75.75v8.918c0 .414.336.75.75.75h3.963a.75.75 0 00.75-.75V8.436zm-3.963.75h2.463v7.418H3.242V9.186z" fill="currentColor"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M1.742 2.492a.75.75 0 01.75-.75h14.862a.75.75 0 01.75.75v2.972a.75.75 0 01-.75.75H2.492a.75.75 0 01-.75-.75V2.492zm1.5.75v1.472h13.362V3.242H3.242zM8.678 8.436a.75.75 0 01.75-.75h7.926a.75.75 0 01.75.75v8.918a.75.75 0 01-.75.75H9.428a.75.75 0 01-.75-.75V8.436zm1.5.75v7.418h6.426V9.186h-6.426zM7.205 8.436a.75.75 0 00-.75-.75H2.492a.75.75 0 00-.75.75v8.918c0 .414.336.75.75.75h3.963a.75.75 0 00.75-.75V8.436zm-3.963.75h2.463v7.418H3.242V9.186z" fill="currentColor"></path>
   </svg>
 )
 
@@ -153,12 +150,12 @@ const NailSvg = () => (
 
 const FaceBookSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconBrandFacebook">
-    <g clip-path="url(#id-SLIconBrandFacebook-a)"><path d="M18 10c0 4.866-1.838 9.104-6.441 10H8.44C3.886 19.067 2 14.832 2 10c0-5.523 2.477-7.652 8-7.652s8 2.13 8 7.652Z" fill="#fff"></path><path d="M20 10.061C20 4.505 15.523 0 10 0S0 4.505 0 10.061C0 15.083 3.657 19.245 8.438 20v-7.03h-2.54V10.06h2.54V7.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.243 0-1.63.775-1.63 1.57v1.888h2.773l-.443 2.908h-2.33V20c4.78-.755 8.437-4.917 8.437-9.939Z" fill="#1877F2"></path></g><defs><clipPath id="id-SLIconBrandFacebook-a"><path fill="#fff" d="M0 0h20v20H0z"></path></clipPath></defs>
+    <g clipPath="url(#id-SLIconBrandFacebook-a)"><path d="M18 10c0 4.866-1.838 9.104-6.441 10H8.44C3.886 19.067 2 14.832 2 10c0-5.523 2.477-7.652 8-7.652s8 2.13 8 7.652Z" fill="#fff"></path><path d="M20 10.061C20 4.505 15.523 0 10 0S0 4.505 0 10.061C0 15.083 3.657 19.245 8.438 20v-7.03h-2.54V10.06h2.54V7.845c0-2.522 1.492-3.915 3.777-3.915 1.094 0 2.238.197 2.238.197v2.476h-1.26c-1.243 0-1.63.775-1.63 1.57v1.888h2.773l-.443 2.908h-2.33V20c4.78-.755 8.437-4.917 8.437-9.939Z" fill="#1877F2"></path></g><defs><clipPath id="id-SLIconBrandFacebook-a"><path fill="#fff" d="M0 0h20v20H0z"></path></clipPath></defs>
   </svg>
 )
 
 const AppleSvg = () => (
-  <svg width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#apple_svg__clip0_8018_2869)"><path d="M17.762 6.818c-.116.09-2.164 1.244-2.164 3.81 0 2.968 2.606 4.018 2.684 4.044-.012.064-.414 1.438-1.374 2.838-.856 1.232-1.75 2.462-3.11 2.462-1.36 0-1.71-.79-3.28-.79-1.53 0-2.074.816-3.318.816-1.244 0-2.112-1.14-3.11-2.54C2.934 15.814 2 13.26 2 10.836c0-3.888 2.528-5.95 5.016-5.95 1.322 0 2.424.868 3.254.868.79 0 2.022-.92 3.526-.92.57 0 2.618.052 3.966 1.984zm-4.68-3.63c.622-.738 1.062-1.762 1.062-2.786A1.92 1.92 0 0014.106 0c-1.012.038-2.216.674-2.942 1.516-.57.648-1.102 1.672-1.102 2.71 0 .156.026.312.038.362.064.012.168.026.272.026.908 0 2.05-.608 2.71-1.426z" fill="#000"></path></g><defs><clipPath id="apple_svg__clip0_8018_2869"><path fill="#fff" transform="translate(2)" d="M0 0h16.28v20H0z"></path></clipPath></defs></svg>
+  <svg width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g clipPath="url(#apple_svg__clip0_8018_2869)"><path d="M17.762 6.818c-.116.09-2.164 1.244-2.164 3.81 0 2.968 2.606 4.018 2.684 4.044-.012.064-.414 1.438-1.374 2.838-.856 1.232-1.75 2.462-3.11 2.462-1.36 0-1.71-.79-3.28-.79-1.53 0-2.074.816-3.318.816-1.244 0-2.112-1.14-3.11-2.54C2.934 15.814 2 13.26 2 10.836c0-3.888 2.528-5.95 5.016-5.95 1.322 0 2.424.868 3.254.868.79 0 2.022-.92 3.526-.92.57 0 2.618.052 3.966 1.984zm-4.68-3.63c.622-.738 1.062-1.762 1.062-2.786A1.92 1.92 0 0014.106 0c-1.012.038-2.216.674-2.942 1.516-.57.648-1.102 1.672-1.102 2.71 0 .156.026.312.038.362.064.012.168.026.272.026.908 0 2.05-.608 2.71-1.426z" fill="#000"></path></g><defs><clipPath id="apple_svg__clip0_8018_2869"><path fill="#fff" transform="translate(2)" d="M0 0h16.28v20H0z"></path></clipPath></defs></svg>
 )
 
 const PrintSvg = () => (
@@ -186,7 +183,7 @@ const MailFilledSvg = () => (
 
 const StarsSvg = () => (
   <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <g clip-path="url(#AIIcon_svg__clip0_1679_90259)" fill="currentColor">
+    <g clipPath="url(#AIIcon_svg__clip0_1679_90259)" fill="currentColor">
       <path d="M10.29 5.153c.06-.204.36-.204.42 0l.156.53c.668 2.263 2.505 4.031 4.857 4.673.37.1.37.604 0 .705-2.352.642-4.19 2.41-4.857 4.672-.104.356-.628.356-.732 0-.668-2.262-2.505-4.03-4.857-4.672a.363.363 0 010-.705c2.352-.642 4.19-2.41 4.856-4.672l.157-.531zM2.885 4.083c.033-.11.197-.11.23 0l.085.29C3.564 5.607 4.566 6.57 5.849 6.92a.198.198 0 010 .385c-1.283.35-2.285 1.315-2.65 2.549-.056.193-.342.193-.399 0C2.436 8.62 1.434 7.656.151 7.306a.198.198 0 010-.385c1.283-.35 2.285-1.314 2.65-2.548l.084-.29zM7.405.07c.027-.093.163-.093.19 0l.072.24C7.97 1.34 8.805 2.144 9.874 2.436a.165.165 0 010 .32c-1.069.292-1.904 1.096-2.207 2.124-.048.161-.286.161-.334 0C7.03 3.85 6.195 3.047 5.126 2.755a.165.165 0 010-.32C6.195 2.143 7.03 1.339 7.333.31l.072-.242z"></path>
     </g>
     <defs>
@@ -197,7 +194,7 @@ const StarsSvg = () => (
 
 const RocketSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconBrandBooster">
-    <g clip-path="url(#id-SLIconBrandBooster-a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.244 19.587a6.213 6.213 0 0 1-1.152-.91c-2.488-2.486-2.428-6.579.133-9.14 2.561-2.561 6.654-2.62 9.14-.133.356.354.659.742.91 1.153a9.388 9.388 0 0 0-6.266 2.765 9.388 9.388 0 0 0-2.765 6.265Z" fill="url(#id-SLIconBrandBooster-b)"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M15.648 11.454a9.501 9.501 0 0 0-2.639 1.868 9.5 9.5 0 0 0-1.864 2.633 10.13 10.13 0 0 1-4.524-2.622C4.14 10.851 3.21 7.39 3.814 4.118c3.27-.603 6.73.327 9.212 2.808a10.131 10.131 0 0 1 2.622 4.528Z" fill="url(#id-SLIconBrandBooster-c)"></path><g filter="url(#id-SLIconBrandBooster-d)"><path d="M10.965 9.203 7.767 6.224c-.113-.105-.292.005-.25.153l.534 1.887a.153.153 0 0 1-.116.19l-1.114.235a.152.152 0 0 0-.072.26l3.325 3.098c.118.11.303-.014.247-.165l-.736-1.965a.152.152 0 0 1 .112-.203l1.195-.25a.153.153 0 0 0 .073-.261Z" fill="#fff"></path></g><rect width="2.908" height="12.657" rx="1.333" transform="scale(-1 1) rotate(45 -22.727 -11.164)" fill="url(#id-SLIconBrandBooster-e)"></rect><rect width="1.939" height="7.743" rx="0.969" transform="scale(-1 1) rotate(45 -22.707 -15.385)" fill="url(#id-SLIconBrandBooster-f)"></rect><rect width="1.939" height="7.813" rx="0.969" transform="scale(-1 1) rotate(45 -26.163 -7.324)" fill="url(#id-SLIconBrandBooster-g)"></rect></g><defs><linearGradient id="id-SLIconBrandBooster-b" x1="9.653" y1="9.991" x2="13.872" y2="14.156" gradientUnits="userSpaceOnUse"><stop stop-color="#68DBFF"></stop><stop offset="0.876" stop-color="#2E46E2"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-c" x1="4.567" y1="4.891" x2="11.944" y2="12.031" gradientUnits="userSpaceOnUse"><stop stop-color="#68DBFF"></stop><stop offset="0.876" stop-color="#3350E7"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-e" x1="1.448" y1="0.051" x2="1.128" y2="8.805" gradientUnits="userSpaceOnUse"><stop stop-color="#2E46E2"></stop><stop offset="1" stop-color="#69DCFF" stop-opacity="0"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-f" x1="0.965" y1="0.031" x2="0.971" y2="3.782" gradientUnits="userSpaceOnUse"><stop stop-color="#2E46E2"></stop><stop offset="1" stop-color="#69DCFF" stop-opacity="0"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-g" x1="0.965" y1="0.032" x2="0.916" y2="6.356" gradientUnits="userSpaceOnUse"><stop stop-color="#2E46E2"></stop><stop offset="0.599" stop-color="#69DCFF" stop-opacity="0"></stop></linearGradient><clipPath id="id-SLIconBrandBooster-a"><rect width="20" height="20" rx="3.333" fill="#fff"></rect></clipPath><filter id="id-SLIconBrandBooster-d" x="6.09" y="6.182" width="5.533" height="7.127" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix><feOffset dy="0.61"></feOffset><feGaussianBlur stdDeviation="0.305"></feGaussianBlur><feComposite in2="hardAlpha" operator="out"></feComposite><feColorMatrix values="0 0 0 0 0.279167 0 0 0 0 0.3945 0 0 0 0 1 0 0 0 0.8 0"></feColorMatrix><feBlend in2="BackgroundImageFix" result="effect1_dropShadow_59791_50085"></feBlend><feBlend in="SourceGraphic" in2="effect1_dropShadow_59791_50085" result="shape"></feBlend></filter></defs>
+    <g clipPath="url(#id-SLIconBrandBooster-a)"><path fillRule="evenodd" clipRule="evenodd" d="M10.244 19.587a6.213 6.213 0 0 1-1.152-.91c-2.488-2.486-2.428-6.579.133-9.14 2.561-2.561 6.654-2.62 9.14-.133.356.354.659.742.91 1.153a9.388 9.388 0 0 0-6.266 2.765 9.388 9.388 0 0 0-2.765 6.265Z" fill="url(#id-SLIconBrandBooster-b)"></path><path fillRule="evenodd" clipRule="evenodd" d="M15.648 11.454a9.501 9.501 0 0 0-2.639 1.868 9.5 9.5 0 0 0-1.864 2.633 10.13 10.13 0 0 1-4.524-2.622C4.14 10.851 3.21 7.39 3.814 4.118c3.27-.603 6.73.327 9.212 2.808a10.131 10.131 0 0 1 2.622 4.528Z" fill="url(#id-SLIconBrandBooster-c)"></path><g filter="url(#id-SLIconBrandBooster-d)"><path d="M10.965 9.203 7.767 6.224c-.113-.105-.292.005-.25.153l.534 1.887a.153.153 0 0 1-.116.19l-1.114.235a.152.152 0 0 0-.072.26l3.325 3.098c.118.11.303-.014.247-.165l-.736-1.965a.152.152 0 0 1 .112-.203l1.195-.25a.153.153 0 0 0 .073-.261Z" fill="#fff"></path></g><rect width="2.908" height="12.657" rx="1.333" transform="scale(-1 1) rotate(45 -22.727 -11.164)" fill="url(#id-SLIconBrandBooster-e)"></rect><rect width="1.939" height="7.743" rx="0.969" transform="scale(-1 1) rotate(45 -22.707 -15.385)" fill="url(#id-SLIconBrandBooster-f)"></rect><rect width="1.939" height="7.813" rx="0.969" transform="scale(-1 1) rotate(45 -26.163 -7.324)" fill="url(#id-SLIconBrandBooster-g)"></rect></g><defs><linearGradient id="id-SLIconBrandBooster-b" x1="9.653" y1="9.991" x2="13.872" y2="14.156" gradientUnits="userSpaceOnUse"><stop stopColor="#68DBFF"></stop><stop offset="0.876" stopColor="#2E46E2"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-c" x1="4.567" y1="4.891" x2="11.944" y2="12.031" gradientUnits="userSpaceOnUse"><stop stopColor="#68DBFF"></stop><stop offset="0.876" stopColor="#3350E7"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-e" x1="1.448" y1="0.051" x2="1.128" y2="8.805" gradientUnits="userSpaceOnUse"><stop stopColor="#2E46E2"></stop><stop offset="1" stopColor="#69DCFF" stopOpacity="0"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-f" x1="0.965" y1="0.031" x2="0.971" y2="3.782" gradientUnits="userSpaceOnUse"><stop stopColor="#2E46E2"></stop><stop offset="1" stopColor="#69DCFF" stopOpacity="0"></stop></linearGradient><linearGradient id="id-SLIconBrandBooster-g" x1="0.965" y1="0.032" x2="0.916" y2="6.356" gradientUnits="userSpaceOnUse"><stop stopColor="#2E46E2"></stop><stop offset="0.599" stopColor="#69DCFF" stopOpacity="0"></stop></linearGradient><clipPath id="id-SLIconBrandBooster-a"><rect width="20" height="20" rx="3.333" fill="#fff"></rect></clipPath><filter id="id-SLIconBrandBooster-d" x="6.09" y="6.182" width="5.533" height="7.127" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB"><feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix><feOffset dy="0.61"></feOffset><feGaussianBlur stdDeviation="0.305"></feGaussianBlur><feComposite in2="hardAlpha" operator="out"></feComposite><feColorMatrix values="0 0 0 0 0.279167 0 0 0 0 0.3945 0 0 0 0 1 0 0 0 0.8 0"></feColorMatrix><feBlend in2="BackgroundImageFix" result="effect1_dropShadow_59791_50085"></feBlend><feBlend in="SourceGraphic" in2="effect1_dropShadow_59791_50085" result="shape"></feBlend></filter></defs>
   </svg>
 )
 
@@ -233,26 +230,26 @@ const SuccessSvg = () => (
 )
 
 const SuccessSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" stroke-width="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" stroke-width="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stop-color="#46917F" stop-opacity="0.08"></stop><stop offset="1" stop-color="#46917F" stop-opacity="0"></stop></linearGradient></defs></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" strokeWidth="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
 )
 
 const PauseSecondSvg = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
 )
 
 const PendingSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle><circle cx="14" cy="14" r="7.1" stroke="#FE9E0F" stroke-width="1.8"></circle><path d="M14.1818 10.0908V14.1817L17.5909 16.2272" stroke="#FE9E0F" stroke-width="1.8"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle><circle cx="14" cy="14" r="7.1" stroke="#FE9E0F" strokeWidth="1.8"></circle><path d="M14.1818 10.0908V14.1817L17.5909 16.2272" stroke="#FE9E0F" strokeWidth="1.8"></path></svg>
 )
 const ReturnSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><path d="M14.5 14L9 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M18 14L16 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M21.5 14L19.5 14" stroke="#FE9E0F" stroke-width="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#FE9E0F" stroke-width="2"></path><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" stroke-width="2"></circle></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><path d="M14.5 14L9 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M18 14L16 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M21.5 14L19.5 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#FE9E0F" strokeWidth="2"></path><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle></svg>
 )
 const ReturnCompletedSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" stroke-width="2"></circle><path d="M20 14L9 14" stroke="#369F87" stroke-width="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#369F87" stroke-width="2"></path><defs><linearGradient id="paint0_linear_11975_10802" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stop-color="#46917F" stop-opacity="0.08"></stop><stop offset="1" stop-color="#46917F" stop-opacity="0"></stop></linearGradient></defs></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" strokeWidth="2"></circle><path d="M20 14L9 14" stroke="#369F87" strokeWidth="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10802" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
 )
 
 const BackSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.875 9.225C17.875 9.16977 17.8302 9.125 17.775 9.125L8.42708 9.125C8.33799 9.125 8.29337 9.01729 8.35637 8.95429L9.83462 7.47604C9.87367 7.43699 9.87367 7.37367 9.83462 7.33462L8.91538 6.41538C8.87633 6.37633 8.81301 6.37633 8.77396 6.41538L5.84467 9.34467C5.55178 9.63756 5.55178 10.1124 5.84467 10.4053L8.77396 13.3346C8.81301 13.3737 8.87633 13.3737 8.91538 13.3346L9.83462 12.4154C9.87367 12.3763 9.87367 12.313 9.83462 12.274L8.35637 10.7957C8.29337 10.7327 8.33799 10.625 8.42708 10.625L17.775 10.625C17.8302 10.625 17.875 10.5802 17.875 10.525L17.875 9.225ZM13.625 1.875C13.625 1.46079 13.2892 1.125 12.875 1.125L2.875 1.125C2.46079 1.125 2.125 1.46079 2.125 1.875L2.125 17.875C2.125 18.2892 2.46079 18.625 2.875 18.625L12.875 18.625C13.2892 18.625 13.625 18.2892 13.625 17.875L13.625 15.475C13.625 15.4198 13.5802 15.375 13.525 15.375L12.225 15.375C12.1698 15.375 12.125 15.4198 12.125 15.475L12.125 17.025C12.125 17.0802 12.0802 17.125 12.025 17.125L3.725 17.125C3.66977 17.125 3.625 17.0802 3.625 17.025L3.625 2.725C3.625 2.66977 3.66977 2.625 3.725 2.625L12.025 2.625C12.0802 2.625 12.125 2.66977 12.125 2.725L12.125 3.775C12.125 3.83023 12.1698 3.875 12.225 3.875L13.525 3.875C13.5802 3.875 13.625 3.83023 13.625 3.775L13.625 1.875Z" fill="currentColor"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M17.875 9.225C17.875 9.16977 17.8302 9.125 17.775 9.125L8.42708 9.125C8.33799 9.125 8.29337 9.01729 8.35637 8.95429L9.83462 7.47604C9.87367 7.43699 9.87367 7.37367 9.83462 7.33462L8.91538 6.41538C8.87633 6.37633 8.81301 6.37633 8.77396 6.41538L5.84467 9.34467C5.55178 9.63756 5.55178 10.1124 5.84467 10.4053L8.77396 13.3346C8.81301 13.3737 8.87633 13.3737 8.91538 13.3346L9.83462 12.4154C9.87367 12.3763 9.87367 12.313 9.83462 12.274L8.35637 10.7957C8.29337 10.7327 8.33799 10.625 8.42708 10.625L17.775 10.625C17.8302 10.625 17.875 10.5802 17.875 10.525L17.875 9.225ZM13.625 1.875C13.625 1.46079 13.2892 1.125 12.875 1.125L2.875 1.125C2.46079 1.125 2.125 1.46079 2.125 1.875L2.125 17.875C2.125 18.2892 2.46079 18.625 2.875 18.625L12.875 18.625C13.2892 18.625 13.625 18.2892 13.625 17.875L13.625 15.475C13.625 15.4198 13.5802 15.375 13.525 15.375L12.225 15.375C12.1698 15.375 12.125 15.4198 12.125 15.475L12.125 17.025C12.125 17.0802 12.0802 17.125 12.025 17.125L3.725 17.125C3.66977 17.125 3.625 17.0802 3.625 17.025L3.625 2.725C3.625 2.66977 3.66977 2.625 3.725 2.625L12.025 2.625C12.0802 2.625 12.125 2.66977 12.125 2.725L12.125 3.775C12.125 3.83023 12.1698 3.875 12.225 3.875L13.525 3.875C13.5802 3.875 13.625 3.83023 13.625 3.775L13.625 1.875Z" fill="currentColor"></path>
   </svg>
 )
 const ReceiveGoodsSvg = () => (
@@ -273,7 +270,7 @@ const DeleteSvg = () => (
 )
 const WarningSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" data-icon="SLIconFeedbackWarning">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12Zm10.166 5.155a1.179 1.179 0 1 1 1.667-1.667 1.179 1.179 0 0 1-1.667 1.667Zm1.423-3.584h-1.178a.197.197 0 0 1-.197-.196V6.696c0-.108.088-.196.197-.196h1.178c.108 0 .197.088.197.196v6.679a.197.197 0 0 1-.197.196Z"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12Zm10.166 5.155a1.179 1.179 0 1 1 1.667-1.667 1.179 1.179 0 0 1-1.667 1.667Zm1.423-3.584h-1.178a.197.197 0 0 1-.197-.196V6.696c0-.108.088-.196.197-.196h1.178c.108 0 .197.088.197.196v6.679a.197.197 0 0 1-.197.196Z"></path>
   </svg>
 )
 const SearchSvg = () => (
@@ -301,7 +298,7 @@ const TelSvg = () => (
 )
 const EmailSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 13.5C4.5 14.0523 4.94771 14.5 5.5 14.5H14.5C15.0523 14.5 15.5 14.0523 15.5 13.5V8.07788L10.5289 10.5681C10.3446 10.6604 10.1291 10.6668 9.93964 10.5857L4.5 8.25439V13.5ZM4.5 6.73124L10.1924 9.17085L15.5 6.51204V6.5C15.5 5.94772 15.0523 5.5 14.5 5.5H5.5C4.94772 5.5 4.5 5.94772 4.5 6.5V6.73124Z"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M4.5 13.5C4.5 14.0523 4.94771 14.5 5.5 14.5H14.5C15.0523 14.5 15.5 14.0523 15.5 13.5V8.07788L10.5289 10.5681C10.3446 10.6604 10.1291 10.6668 9.93964 10.5857L4.5 8.25439V13.5ZM4.5 6.73124L10.1924 9.17085L15.5 6.51204V6.5C15.5 5.94772 15.0523 5.5 14.5 5.5H5.5C4.94772 5.5 4.5 5.94772 4.5 6.5V6.73124Z"></path>
   </svg>
 )
 const GlobalSvg = () => (
@@ -328,7 +325,7 @@ const FillCollectionSvg = () => (
 
 const CustomerInformationSvg = () => (
   <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="6.435" cy="5.767" fill="currentColor" r="2.435"></circle><path d="M9.59 10.059c-.644-.72-1.795-.671-2.75-.522a2.91 2.91 0 01-.935-.006c-.97-.166-2.152-.232-2.809.501l-.71.792c-.828.925-.241 2.507.931 2.507h6.03c1.172 0 1.76-1.582.93-2.507l-.686-.765z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M14 5.167a.5.5 0 01-.5.5h-3a.5.5 0 010-1h3a.5.5 0 01.5.5zM14 7.165a.5.5 0 01-.5.5h-2.333a.5.5 0 110-1H13.5a.5.5 0 01.5.5zM11.335 9.164a.5.5 0 01.5-.5H13.5a.5.5 0 110 1h-1.666a.5.5 0 01-.5-.5z" fill="currentColor"></path>
+    <circle cx="6.435" cy="5.767" fill="currentColor" r="2.435"></circle><path d="M9.59 10.059c-.644-.72-1.795-.671-2.75-.522a2.91 2.91 0 01-.935-.006c-.97-.166-2.152-.232-2.809.501l-.71.792c-.828.925-.241 2.507.931 2.507h6.03c1.172 0 1.76-1.582.93-2.507l-.686-.765z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M14 5.167a.5.5 0 01-.5.5h-3a.5.5 0 010-1h3a.5.5 0 01.5.5zM14 7.165a.5.5 0 01-.5.5h-2.333a.5.5 0 110-1H13.5a.5.5 0 01.5.5zM11.335 9.164a.5.5 0 01.5-.5H13.5a.5.5 0 110 1h-1.666a.5.5 0 01-.5-.5z" fill="currentColor"></path>
   </svg>
 )
 
@@ -355,7 +352,7 @@ const MetaFieldSvg = () => (
   <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M2.808 4.8a1.2 1.2 0 011.2-1.2H4.8a.4.4 0 110 .8h-.792a.4.4 0 00-.4.4v2.133L2.56 8l1.047 1.067V10.8a.8.8 0 00.8.8H4.8a.4.4 0 010 .8h-.392a1.6 1.6 0 01-1.6-1.6V9.394L1.742 8.308a.44.44 0 010-.616l1.066-1.086V4.8zM11.2 4c0-.22.18-.4.4-.4h.793a1.2 1.2 0 011.2 1.2v1.806l1.065 1.086a.44.44 0 010 .616l-1.065 1.086V11.2a1.2 1.2 0 01-1.2 1.2H11.6a.4.4 0 010-.8h.793a.4.4 0 00.4-.4V9.067L13.84 8l-1.047-1.067V4.8a.4.4 0 00-.4-.4H11.6a.4.4 0 01-.4-.4z" fill="currentColor">
     </path>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.927 9.294h1.336l.214.706H8.4L7.105 6h-1.01L4.8 10h.913l.214-.706zm.668-2.217l.444 1.464h-.882l.438-1.464z" fill="currentColor">
+    <path fillRule="evenodd" clipRule="evenodd" d="M5.927 9.294h1.336l.214.706H8.4L7.105 6h-1.01L4.8 10h.913l.214-.706zm.668-2.217l.444 1.464h-.882l.438-1.464z" fill="currentColor">
     </path>
     <path d="M8.6 8.394c0-.32.058-.6.174-.841.12-.242.28-.428.484-.558.202-.13.429-.195.679-.195.213 0 .4.045.56.134.162.089.287.206.374.351v-.44h.93v3.11h-.93v-.44c-.09.145-.217.262-.38.351-.16.09-.346.134-.56.134-.246 0-.47-.065-.673-.195a1.4 1.4 0 01-.484-.563 1.962 1.962 0 01-.174-.848zm2.271.006c0-.238-.065-.426-.196-.563a.61.61 0 00-.467-.206.628.628 0 00-.472.206c-.127.134-.19.32-.19.557 0 .238.063.428.19.57.13.137.287.205.472.205a.61.61 0 00.467-.206c.13-.137.196-.325.196-.563z" fill="currentColor">
     </path>
@@ -376,23 +373,23 @@ const AdvancedModeSvg = () => (
 
 const MenuSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M7 8H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-    <path d="M7 14H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-    <path d="M7 20H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    <path d="M7 8H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"></path>
+    <path d="M7 14H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"></path>
+    <path d="M7 20H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"></path>
   </svg>
 )
 
 const FillAddSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <circle opacity="0.2" cx="8" cy="8" r="8" fill="currentColor"></circle>
-    <path d="M5 8L11 8" stroke="#356DFF" stroke-linecap="round"></path>
-    <path d="M8 11L8 5" stroke="#356DFF" stroke-linecap="round"></path>
+    <path d="M5 8L11 8" stroke="#356DFF" strokeLinecap="round"></path>
+    <path d="M8 11L8 5" stroke="#356DFF" strokeLinecap="round"></path>
   </svg>
 )
 
 const FillUserSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M14 13C16.2091 13 18 11.2091 18 9C18 6.79086 16.2091 5 14 5C11.7909 5 10 6.79086 10 9C10 11.2091 11.7909 13 14 13ZM9 14C6.79086 14 5 15.7909 5 18V22C5 22.5523 5.44772 23 6 23H22C22.5523 23 23 22.5523 23 22V18C23 15.7909 21.2091 14 19 14H9Z" fill="currentColor"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M14 13C16.2091 13 18 11.2091 18 9C18 6.79086 16.2091 5 14 5C11.7909 5 10 6.79086 10 9C10 11.2091 11.7909 13 14 13ZM9 14C6.79086 14 5 15.7909 5 18V22C5 22.5523 5.44772 23 6 23H22C22.5523 23 23 22.5523 23 22V18C23 15.7909 21.2091 14 19 14H9Z" fill="currentColor"></path>
   </svg>
 )
 
@@ -400,7 +397,7 @@ const FillUserSvg = () => (
 const FillLockSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M6 12C6 11.4477 6.44772 11 7 11H21C21.5523 11 22 11.4477 22 12V22C22 22.5523 21.5523 23 21 23H7C6.44772 23 6 22.5523 6 22V12Z" fill="currentColor"></path>
-    <path d="M18 10C18 11.0677 18.0001 13.5 18.0001 13.5H10.0001L10 10C10 7.79086 11.7909 6 14 6C16.2091 6 18 7.79086 18 10Z" stroke="currentColor" stroke-width="2"></path>
+    <path d="M18 10C18 11.0677 18.0001 13.5 18.0001 13.5H10.0001L10 10C10 7.79086 11.7909 6 14 6C16.2091 6 18 7.79086 18 10Z" stroke="currentColor" strokeWidth="2"></path>
   </svg>
 )
 
@@ -417,8 +414,11 @@ const StartSvg = () => (
   <svg viewBox="64 64 896 896" focusable="false" data-icon="star" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M908.1 353.1l-253.9-36.9L540.7 86.1c-3.1-6.3-8.2-11.4-14.5-14.5-15.8-7.8-35-1.3-42.9 14.5L369.8 316.2l-253.9 36.9c-7 1-13.4 4.3-18.3 9.3a32.05 32.05 0 00.6 45.3l183.7 179.1-43.4 252.9a31.95 31.95 0 0046.4 33.7L512 754l227.1 119.4c6.2 3.3 13.4 4.4 20.3 3.2 17.4-3 29.1-19.5 26.1-36.9l-43.4-252.9 183.7-179.1c5-4.9 8.3-11.3 9.3-18.3 2.7-17.5-9.5-33.7-27-36.3zM664.8 561.6l36.1 210.3L512 672.7 323.1 772l36.1-210.3-152.8-149L417.6 382 512 190.7 606.4 382l211.2 30.7-152.8 148.9z"></path></svg>
 )
 const CompressedFileSvg = () => (
-  <svg width="1em" height="1em" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4h4.8A1.2 1.2 0 0124 5.2v17.6a1.2 1.2 0 01-1.2 1.2H18V4z" fill="#FE9E0F"></path><path d="M0 1.2A1.2 1.2 0 011.2 0h15.6A1.2 1.2 0 0118 1.2V24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFC164"></path><path d="M0 1.2A1.2 1.2 0 011.2 0H6v24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFCE85"></path><path fill="#FFC774" d="M6 0h6v24H6z"></path><path fill="#FFF4E3" d="M4 0h2v1.5H4zM4 3h2v1.5H4zM4 6h2v1.5H4zM4 9h2v1.5H4zM6 1.5h2V3H6zM6 4.5h2V6H6zM6 7.5h2V9H6z"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 12a.5.5 0 00-.5.5V16a1 1 0 001 1h2a1 1 0 001-1v-3.5a.5.5 0 00-.5-.5h-3zM7 15H5v1h2v-1z" fill="#FFF4E3"></path><path fill="#FFCE85" d="M5 15h1v1H5z"></path><path fill="#FFC774" d="M6 15h1v1H6z"></path></svg>
+  <svg width="1em" height="1em" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4h4.8A1.2 1.2 0 0124 5.2v17.6a1.2 1.2 0 01-1.2 1.2H18V4z" fill="#FE9E0F"></path><path d="M0 1.2A1.2 1.2 0 011.2 0h15.6A1.2 1.2 0 0118 1.2V24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFC164"></path><path d="M0 1.2A1.2 1.2 0 011.2 0H6v24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFCE85"></path><path fill="#FFC774" d="M6 0h6v24H6z"></path><path fill="#FFF4E3" d="M4 0h2v1.5H4zM4 3h2v1.5H4zM4 6h2v1.5H4zM4 9h2v1.5H4zM6 1.5h2V3H6zM6 4.5h2V6H6zM6 7.5h2V9H6z"></path><path fillRule="evenodd" clipRule="evenodd" d="M4.5 12a.5.5 0 00-.5.5V16a1 1 0 001 1h2a1 1 0 001-1v-3.5a.5.5 0 00-.5-.5h-3zM7 15H5v1h2v-1z" fill="#FFF4E3"></path><path fill="#FFCE85" d="M5 15h1v1H5z"></path><path fill="#FFC774" d="M6 15h1v1H6z"></path></svg>
 )
+
+
+
 
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
@@ -688,7 +688,7 @@ export const CompressedFileIcon = (props: Partial<CustomIconComponentProps>) => 
 // -----------编辑组件图标-----------------
 const EditorHomeSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.4391 3.69126C11.7898 3.43625 12.2648 3.43625 12.6155 3.69126L20.5403 9.45477C21.3236 10.0244 20.9206 11.2635 19.9521 11.2635H19.0273V18.2635C19.0273 19.3681 18.1319 20.2635 17.0273 20.2635H7.02732C5.92275 20.2635 5.02732 19.3681 5.02732 18.2635V11.2635H4.1025C3.13402 11.2635 2.73109 10.0244 3.51433 9.45477L11.4391 3.69126ZM10.5821 13.8545C10.5017 13.533 10.176 13.3375 9.85448 13.4179C9.533 13.4983 9.33755 13.824 9.41791 14.1455C9.74777 15.4649 10.9076 16.1 12 16.1C13.0924 16.1 14.2522 15.4649 14.5821 14.1455C14.6625 13.824 14.467 13.4983 14.1455 13.4179C13.824 13.3375 13.4983 13.533 13.4179 13.8545C13.2478 14.5351 12.6576 14.9 12 14.9C11.3424 14.9 10.7522 14.5351 10.5821 13.8545Z"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M11.4391 3.69126C11.7898 3.43625 12.2648 3.43625 12.6155 3.69126L20.5403 9.45477C21.3236 10.0244 20.9206 11.2635 19.9521 11.2635H19.0273V18.2635C19.0273 19.3681 18.1319 20.2635 17.0273 20.2635H7.02732C5.92275 20.2635 5.02732 19.3681 5.02732 18.2635V11.2635H4.1025C3.13402 11.2635 2.73109 10.0244 3.51433 9.45477L11.4391 3.69126ZM10.5821 13.8545C10.5017 13.533 10.176 13.3375 9.85448 13.4179C9.533 13.4983 9.33755 13.824 9.41791 14.1455C9.74777 15.4649 10.9076 16.1 12 16.1C13.0924 16.1 14.2522 15.4649 14.5821 14.1455C14.6625 13.824 14.467 13.4983 14.1455 13.4179C13.824 13.3375 13.4983 13.533 13.4179 13.8545C13.2478 14.5351 12.6576 14.9 12 14.9C11.3424 14.9 10.7522 14.5351 10.5821 13.8545Z"></path>
   </svg>
 )
 
@@ -707,7 +707,7 @@ const ReductionSvg = () => (
 
 const EditorComponentSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconComponent">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.742 2.492a.75.75 0 0 1 .75-.75h14.861a.75.75 0 0 1 .75.75v2.972a.75.75 0 0 1-.75.75H2.492a.75.75 0 0 1-.75-.75V2.492Zm1.5.75v1.472h13.361V3.242H3.242ZM8.677 8.436a.75.75 0 0 1 .75-.75h7.927a.75.75 0 0 1 .75.75v8.918a.75.75 0 0 1-.75.75H9.427a.75.75 0 0 1-.75-.75V8.436Zm1.5.75v7.418h6.427V9.186h-6.426ZM7.205 8.436a.75.75 0 0 0-.75-.75H2.492a.75.75 0 0 0-.75.75v8.918c0 .414.336.75.75.75h3.963a.75.75 0 0 0 .75-.75V8.436Zm-3.963.75h2.463v7.418H3.242V9.186Z"></path>
+    <path fillRule="evenodd" clipRule="evenodd" d="M1.742 2.492a.75.75 0 0 1 .75-.75h14.861a.75.75 0 0 1 .75.75v2.972a.75.75 0 0 1-.75.75H2.492a.75.75 0 0 1-.75-.75V2.492Zm1.5.75v1.472h13.361V3.242H3.242ZM8.677 8.436a.75.75 0 0 1 .75-.75h7.927a.75.75 0 0 1 .75.75v8.918a.75.75 0 0 1-.75.75H9.427a.75.75 0 0 1-.75-.75V8.436Zm1.5.75v7.418h6.427V9.186h-6.426ZM7.205 8.436a.75.75 0 0 0-.75-.75H2.492a.75.75 0 0 0-.75.75v8.918c0 .414.336.75.75.75h3.963a.75.75 0 0 0 .75-.75V8.436Zm-3.963.75h2.463v7.418H3.242V9.186Z"></path>
   </svg>
 )
 
@@ -732,15 +732,15 @@ const EditorAnnouncementSvg = () => (
   </svg>
 )
 const EditorAddSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" font-size="16">
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M9.25 10.607v5.321h1.5v-5.321h5.321v-1.5H10.75V3.786h-1.5v5.32H3.93v1.5h5.32Z"></path>
   </svg>
 )
 const EditorAddBtnSvg = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor">
     <circle cx="10" cy="10" r="8"></circle>
-    <path d="M10 6V13.9992" stroke="white" stroke-width="1.2"></path>
-    <path d="M14 10H6.00034" stroke="white" stroke-width="1.2"></path>
+    <path d="M10 6V13.9992" stroke="white" strokeWidth="1.2"></path>
+    <path d="M14 10H6.00034" stroke="white" strokeWidth="1.2"></path>
   </svg>
 )
 const EditorMoreSvg = () => (
@@ -750,26 +750,26 @@ const EditorMoreSvg = () => (
 )
 
 const EditorTextLeftASvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" color="currentColor"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M9 10.75H23V9.25H9V10.75ZM9 18.75H16V17.25H9V18.75ZM16 14.75H9V13.25H16V14.75ZM9 21.25V22.75H23V21.25H9Z" fill="currentColor" stroke-width="0"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" color="currentColor"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path fillRule="evenodd" clipRule="evenodd" d="M9 10.75H23V9.25H9V10.75ZM9 18.75H16V17.25H9V18.75ZM16 14.75H9V13.25H16V14.75ZM9 21.25V22.75H23V21.25H9Z" fill="currentColor" strokeWidth="0"></path></svg>
 )
 const EditorTextLeftSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path fill-rule="evenodd" clip-rule="evenodd" d="M9 10.75H23V9.25H9V10.75ZM9 18.75H16V17.25H9V18.75ZM16 14.75H9V13.25H16V14.75ZM9 21.25V22.75H23V21.25H9Z" fill="currentColor" stroke-width="0"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path fillRule="evenodd" clipRule="evenodd" d="M9 10.75H23V9.25H9V10.75ZM9 18.75H16V17.25H9V18.75ZM16 14.75H9V13.25H16V14.75ZM9 21.25V22.75H23V21.25H9Z" fill="currentColor" strokeWidth="0"></path></svg>
 )
 const EditorTextCenterASvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M13 18H20" stroke="currentColor" stroke-width="1.5"></path><path d="M13 14H20" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path d="M9 10H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M13 18H20" stroke="currentColor" strokeWidth="1.5"></path><path d="M13 14H20" stroke="currentColor" strokeWidth="1.5"></path><path d="M9 22H23" stroke="currentColor" strokeWidth="1.5"></path></svg>
 )
 const EditorTextCenterSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M13 18H20" stroke="currentColor" stroke-width="1.5"></path><path d="M13 14H20" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path d="M9 10H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M13 18H20" stroke="currentColor" strokeWidth="1.5"></path><path d="M13 14H20" stroke="currentColor" strokeWidth="1.5"></path><path d="M9 22H23" stroke="currentColor" strokeWidth="1.5"></path></svg>
 )
 const EditorTextRightASvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#356DFF" color="#356DFF"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 14H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 18H23" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#356DFF" color="#356DFF"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="#F0F7FF"></rect><path d="M9 10H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M16 14H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M16 18H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M9 22H23" stroke="currentColor" strokeWidth="1.5"></path></svg>
 )
 const EditorTextRightSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path d="M9 10H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 14H23" stroke="currentColor" stroke-width="1.5"></path><path d="M16 18H23" stroke="currentColor" stroke-width="1.5"></path><path d="M9 22H23" stroke="currentColor" stroke-width="1.5"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#D7DBE7"><rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill=""></rect><path d="M9 10H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M16 14H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M16 18H23" stroke="currentColor" strokeWidth="1.5"></path><path d="M9 22H23" stroke="currentColor" strokeWidth="1.5"></path></svg>
 )
 // const EditorCircleSvg = () => (
 //   <svg width="1em" height="1em" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-//     <circle cx="4" cy="4" r="3" stroke="#FE9E0F" stroke-width="2"></circle>
+//     <circle cx="4" cy="4" r="3" stroke="#FE9E0F" strokeWidth="2"></circle>
 //   </svg>
 // )
 const EditorTextImgSvg = () => (
@@ -788,7 +788,7 @@ const EditorVideoSvg = () => (
 )
 
 const EditorMultilevelFilterSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 5.5C4 4.67188 4.67139 4 5.5 4H18.5C19.3286 4 20 4.67188 20 5.5V18.5C20 19.3281 19.3286 20 18.5 20H5.5C5.34424 20 5.19434 19.9766 5.05322 19.9326C4.44287 19.7422 4 19.1729 4 18.5V5.5ZM14.844 7.70894C15.3417 6.98512 14.8235 6 13.9451 6H7.09279C6.21441 6 5.6962 6.98512 6.19383 7.70894L8.82655 11.5383C8.95158 11.7202 9.01851 11.9357 9.01851 12.1564V16.2474C9.01851 16.5949 9.18408 16.9217 9.46434 17.1272L10.2825 17.7271C11.0031 18.2555 12.0185 17.7409 12.0185 16.8473V12.1576C12.0185 11.9369 12.0854 11.7214 12.2105 11.5396L14.844 7.70894ZM14.3078 12.4286C14.3078 12.1919 14.4996 12 14.7363 12H17.5715C17.8082 12 18.0001 12.1919 18.0001 12.4286V12.956C18.0001 13.1927 17.8082 13.3846 17.5715 13.3846H14.7363C14.4996 13.3846 14.3078 13.1927 14.3078 12.956V12.4286ZM14.7365 14.3078C14.4998 14.3078 14.3079 14.4996 14.3079 14.7363V15.2638C14.3079 15.5005 14.4998 15.6924 14.7365 15.6924H17.5717C17.8083 15.6924 18.0002 15.5005 18.0002 15.2638V14.7363C18.0002 14.4996 17.8083 14.3078 17.5717 14.3078H14.7365ZM14.3079 17.0441C14.3079 16.8074 14.4998 16.6155 14.7365 16.6155H17.5717C17.8083 16.6155 18.0002 16.8074 18.0002 17.0441V17.5716C18.0002 17.8083 17.8083 18.0001 17.5717 18.0001H14.7365C14.4998 18.0001 14.3079 17.8083 14.3079 17.5716V17.0441Z" fill="#474F5E"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M4 5.5C4 4.67188 4.67139 4 5.5 4H18.5C19.3286 4 20 4.67188 20 5.5V18.5C20 19.3281 19.3286 20 18.5 20H5.5C5.34424 20 5.19434 19.9766 5.05322 19.9326C4.44287 19.7422 4 19.1729 4 18.5V5.5ZM14.844 7.70894C15.3417 6.98512 14.8235 6 13.9451 6H7.09279C6.21441 6 5.6962 6.98512 6.19383 7.70894L8.82655 11.5383C8.95158 11.7202 9.01851 11.9357 9.01851 12.1564V16.2474C9.01851 16.5949 9.18408 16.9217 9.46434 17.1272L10.2825 17.7271C11.0031 18.2555 12.0185 17.7409 12.0185 16.8473V12.1576C12.0185 11.9369 12.0854 11.7214 12.2105 11.5396L14.844 7.70894ZM14.3078 12.4286C14.3078 12.1919 14.4996 12 14.7363 12H17.5715C17.8082 12 18.0001 12.1919 18.0001 12.4286V12.956C18.0001 13.1927 17.8082 13.3846 17.5715 13.3846H14.7363C14.4996 13.3846 14.3078 13.1927 14.3078 12.956V12.4286ZM14.7365 14.3078C14.4998 14.3078 14.3079 14.4996 14.3079 14.7363V15.2638C14.3079 15.5005 14.4998 15.6924 14.7365 15.6924H17.5717C17.8083 15.6924 18.0002 15.5005 18.0002 15.2638V14.7363C18.0002 14.4996 17.8083 14.3078 17.5717 14.3078H14.7365ZM14.3079 17.0441C14.3079 16.8074 14.4998 16.6155 14.7365 16.6155H17.5717C17.8083 16.6155 18.0002 16.8074 18.0002 17.0441V17.5716C18.0002 17.8083 17.8083 18.0001 17.5717 18.0001H14.7365C14.4998 18.0001 14.3079 17.8083 14.3079 17.5716V17.0441Z" fill="#474F5E"></path></svg>
 )
 
 const EditorCollectionListSvg = () => (
@@ -805,20 +805,27 @@ const EditorFeaturedProductSvg = () => (
 )
 
 const EditorShoppableImageSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.5 5.5C2.5 4.67157 3.17157 4 4 4H16C16.8284 4 17.5 4.67157 17.5 5.5V18.5C17.5 19.3284 16.8284 20 16 20H4C3.17157 20 2.5 19.3284 2.5 18.5V5.5ZM19 7.75C19 7.33579 19.3358 7 19.75 7H22.25C22.6642 7 23 7.33579 23 7.75C23 8.16421 22.6642 8.5 22.25 8.5H19.75C19.3358 8.5 19 8.16421 19 7.75ZM19.75 15C19.3358 15 19 15.3358 19 15.75C19 16.1642 19.3358 16.5 19.75 16.5H22.25C22.6642 16.5 23 16.1642 23 15.75C23 15.3358 22.6642 15 22.25 15H19.75ZM19 11.75C19 11.3358 19.3358 11 19.75 11H21.25C21.6642 11 22 11.3358 22 11.75C22 12.1642 21.6642 12.5 21.25 12.5H19.75C19.3358 12.5 19 12.1642 19 11.75ZM5.25897 12.2605C5.06219 12.0637 4.96954 11.7858 5.00889 11.5103L5.54031 7.79038C5.55883 7.66071 5.66071 7.55883 5.79038 7.54031L9.51027 7.00889C9.78577 6.96954 10.0637 7.06219 10.2605 7.25897L14.741 11.7395C15.0863 12.0848 15.0863 12.6446 14.741 12.9899L10.9899 16.741C10.6446 17.0863 10.0848 17.0863 9.73951 16.741L5.25897 12.2605ZM6.60742 9.49153C6.60742 9.97983 7.00327 10.3757 7.49157 10.3757C7.97988 10.3757 8.37573 9.97983 8.37573 9.49153C8.37573 9.00323 7.97988 8.60738 7.49157 8.60738C7.00327 8.60738 6.60742 9.00323 6.60742 9.49153Z" fill="#474F5E"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M2.5 5.5C2.5 4.67157 3.17157 4 4 4H16C16.8284 4 17.5 4.67157 17.5 5.5V18.5C17.5 19.3284 16.8284 20 16 20H4C3.17157 20 2.5 19.3284 2.5 18.5V5.5ZM19 7.75C19 7.33579 19.3358 7 19.75 7H22.25C22.6642 7 23 7.33579 23 7.75C23 8.16421 22.6642 8.5 22.25 8.5H19.75C19.3358 8.5 19 8.16421 19 7.75ZM19.75 15C19.3358 15 19 15.3358 19 15.75C19 16.1642 19.3358 16.5 19.75 16.5H22.25C22.6642 16.5 23 16.1642 23 15.75C23 15.3358 22.6642 15 22.25 15H19.75ZM19 11.75C19 11.3358 19.3358 11 19.75 11H21.25C21.6642 11 22 11.3358 22 11.75C22 12.1642 21.6642 12.5 21.25 12.5H19.75C19.3358 12.5 19 12.1642 19 11.75ZM5.25897 12.2605C5.06219 12.0637 4.96954 11.7858 5.00889 11.5103L5.54031 7.79038C5.55883 7.66071 5.66071 7.55883 5.79038 7.54031L9.51027 7.00889C9.78577 6.96954 10.0637 7.06219 10.2605 7.25897L14.741 11.7395C15.0863 12.0848 15.0863 12.6446 14.741 12.9899L10.9899 16.741C10.6446 17.0863 10.0848 17.0863 9.73951 16.741L5.25897 12.2605ZM6.60742 9.49153C6.60742 9.97983 7.00327 10.3757 7.49157 10.3757C7.97988 10.3757 8.37573 9.97983 8.37573 9.49153C8.37573 9.00323 7.97988 8.60738 7.49157 8.60738C7.00327 8.60738 6.60742 9.00323 6.60742 9.49153Z" fill="#474F5E"></path></svg>
 )
 
 const EditorSignUpAndSaveSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 4C4.67157 4 4 4.67157 4 5.5V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V5.5C20 4.67157 19.3284 4 18.5 4H5.5ZM6.5 8.75013C6.5 8.47399 6.72386 8.25013 7 8.25013H17C17.2761 8.25013 17.5 8.47399 17.5 8.75013V9.00153L11.728 11.2817L6.5 9.00993V8.75013ZM11.9898 12.791L17.5 10.6143V15.2501C17.5 15.5263 17.2761 15.7501 17 15.7501H7C6.72386 15.7501 6.5 15.5263 6.5 15.2501V10.6454L11.4154 12.7813L11.7006 12.9053L11.9898 12.791Z" fill="#474F5E"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M5.5 4C4.67157 4 4 4.67157 4 5.5V18.5C4 19.3284 4.67157 20 5.5 20H18.5C19.3284 20 20 19.3284 20 18.5V5.5C20 4.67157 19.3284 4 18.5 4H5.5ZM6.5 8.75013C6.5 8.47399 6.72386 8.25013 7 8.25013H17C17.2761 8.25013 17.5 8.47399 17.5 8.75013V9.00153L11.728 11.2817L6.5 9.00993V8.75013ZM11.9898 12.791L17.5 10.6143V15.2501C17.5 15.5263 17.2761 15.7501 17 15.7501H7C6.72386 15.7501 6.5 15.5263 6.5 15.2501V10.6454L11.4154 12.7813L11.7006 12.9053L11.9898 12.791Z" fill="#474F5E"></path></svg>
 )
 
 const EditorIconListSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 5.5C4 4.67157 4.67157 4 5.5 4H18.5C19.3284 4 20 4.67157 20 5.5V18.5C20 19.3284 19.3284 20 18.5 20H5.5C4.67157 20 4 19.3284 4 18.5V5.5ZM17.5 12C17.5 15.0376 15.0376 17.5 12 17.5C8.96243 17.5 6.5 15.0376 6.5 12C6.5 8.96243 8.96243 6.5 12 6.5C15.0376 6.5 17.5 8.96243 17.5 12ZM9.40039 10.1C9.40039 9.49249 9.89288 9 10.5004 9H12.7504C13.7721 9 14.6004 9.82827 14.6004 10.85C14.6004 11.5972 14.1574 12.2409 13.5198 12.5329L14.6365 14.3942C14.7965 14.6608 14.6044 15 14.2935 15H13.9349C13.7593 15 13.5966 14.9079 13.5062 14.7573L12.2714 12.7H10.6004V14.5C10.6004 14.7761 10.3765 15 10.1004 15H9.90039C9.62425 15 9.40039 14.7761 9.40039 14.5V10.1ZM10.6004 11.5H12.7504C13.1094 11.5 13.4004 11.209 13.4004 10.85C13.4004 10.491 13.1094 10.2 12.7504 10.2H10.6004V11.5Z" fill="#474F5E"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M4 5.5C4 4.67157 4.67157 4 5.5 4H18.5C19.3284 4 20 4.67157 20 5.5V18.5C20 19.3284 19.3284 20 18.5 20H5.5C4.67157 20 4 19.3284 4 18.5V5.5ZM17.5 12C17.5 15.0376 15.0376 17.5 12 17.5C8.96243 17.5 6.5 15.0376 6.5 12C6.5 8.96243 8.96243 6.5 12 6.5C15.0376 6.5 17.5 8.96243 17.5 12ZM9.40039 10.1C9.40039 9.49249 9.89288 9 10.5004 9H12.7504C13.7721 9 14.6004 9.82827 14.6004 10.85C14.6004 11.5972 14.1574 12.2409 13.5198 12.5329L14.6365 14.3942C14.7965 14.6608 14.6044 15 14.2935 15H13.9349C13.7593 15 13.5966 14.9079 13.5062 14.7573L12.2714 12.7H10.6004V14.5C10.6004 14.7761 10.3765 15 10.1004 15H9.90039C9.62425 15 9.40039 14.7761 9.40039 14.5V10.1ZM10.6004 11.5H12.7504C13.1094 11.5 13.4004 11.209 13.4004 10.85C13.4004 10.491 13.1094 10.2 12.7504 10.2H10.6004V11.5Z" fill="#474F5E"></path></svg>
 )
 const EditorBlogSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.2929 17.0071L17.5 12.8L18.5929 11.7071C18.9834 11.3166 19.6166 11.3166 20.0071 11.7071L21.2929 12.9929C21.6834 13.3834 21.6834 14.0166 21.2929 14.4071L15.9929 19.7071C15.8054 19.8946 15.551 20 15.2858 20H13.5C13.2239 20 13 19.7761 13 19.5V17.7142C13 17.449 13.1054 17.1946 13.2929 17.0071Z" fill="#474F5E"></path><path d="M17.5 12.7998L20.2 15.4998" stroke="white"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4.5 4C3.67157 4 3 4.67157 3 5.5V18.5C3 19.3284 3.67157 20 4.5 20H11C11.1684 20 11.3351 19.9931 11.5 19.9795V17.4142C11.5 17.149 11.6054 16.8946 11.7929 16.7071L16 12.5L17 11.5V5.5C17 4.67157 16.3284 4 15.5 4H4.5Z" fill="#474F5E"></path><path d="M5 14.5C5 14.2239 5.22386 14 5.5 14H8.5C8.77614 14 9 14.2239 9 14.5V15C9 15.2761 8.77614 15.5 8.5 15.5H5.5C5.22386 15.5 5 15.2761 5 15V14.5Z" fill="white"></path><path d="M5 17.5C5 17.2239 5.22386 17 5.5 17H7.5C7.77614 17 8 17.2239 8 17.5V18C8 18.2761 7.77614 18.5 7.5 18.5H5.5C5.22386 18.5 5 18.2761 5 18V17.5Z" fill="white"></path><path d="M5 6.5C5 6.22386 5.22386 6 5.5 6H11.5C11.7761 6 12 6.22386 12 6.5V11.5C12 11.7761 11.7761 12 11.5 12H5.5C5.22386 12 5 11.7761 5 11.5V6.5Z" fill="white"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.2929 17.0071L17.5 12.8L18.5929 11.7071C18.9834 11.3166 19.6166 11.3166 20.0071 11.7071L21.2929 12.9929C21.6834 13.3834 21.6834 14.0166 21.2929 14.4071L15.9929 19.7071C15.8054 19.8946 15.551 20 15.2858 20H13.5C13.2239 20 13 19.7761 13 19.5V17.7142C13 17.449 13.1054 17.1946 13.2929 17.0071Z" fill="#474F5E"></path><path d="M17.5 12.7998L20.2 15.4998" stroke="white"></path><path fillRule="evenodd" clipRule="evenodd" d="M4.5 4C3.67157 4 3 4.67157 3 5.5V18.5C3 19.3284 3.67157 20 4.5 20H11C11.1684 20 11.3351 19.9931 11.5 19.9795V17.4142C11.5 17.149 11.6054 16.8946 11.7929 16.7071L16 12.5L17 11.5V5.5C17 4.67157 16.3284 4 15.5 4H4.5Z" fill="#474F5E"></path><path d="M5 14.5C5 14.2239 5.22386 14 5.5 14H8.5C8.77614 14 9 14.2239 9 14.5V15C9 15.2761 8.77614 15.5 8.5 15.5H5.5C5.22386 15.5 5 15.2761 5 15V14.5Z" fill="white"></path><path d="M5 17.5C5 17.2239 5.22386 17 5.5 17H7.5C7.77614 17 8 17.2239 8 17.5V18C8 18.2761 7.77614 18.5 7.5 18.5H5.5C5.22386 18.5 5 18.2761 5 18V17.5Z" fill="white"></path><path d="M5 6.5C5 6.22386 5.22386 6 5.5 6H11.5C11.7761 6 12 6.22386 12 6.5V11.5C12 11.7761 11.7761 12 11.5 12H5.5C5.22386 12 5 11.7761 5 11.5V6.5Z" fill="white"></path></svg>
 )
 
+const EditorRevokeSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.9"><path d="M4 7L3.46967 6.46967L2.93934 7L3.46967 7.53033L4 7ZM11.5 6.25H4V7.75H11.5V6.25ZM4.53033 7.53033L7.53033 4.53033L6.46967 3.46967L3.46967 6.46967L4.53033 7.53033ZM3.46967 7.53033L6.46967 10.5303L7.53033 9.46967L4.53033 6.46967L3.46967 7.53033ZM11.5 15.25H6V16.75H11.5V15.25ZM16.75 11.5C16.75 8.60051 14.3995 6.25 11.5 6.25V7.75C13.5711 7.75 15.25 9.42893 15.25 11.5H16.75ZM15.25 11.5C15.25 13.5711 13.5711 15.25 11.5 15.25V16.75C14.3995 16.75 16.75 14.3995 16.75 11.5H15.25Z" fill="#474F5E"></path></g></svg>
+)
+
+const EditorRedoSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.9"><path d="M16 7L16.5303 6.46967L17.0607 7L16.5303 7.53033L16 7ZM8.5 6.25H16V7.75H8.5V6.25ZM15.4697 7.53033L12.4697 4.53033L13.5303 3.46967L16.5303 6.46967L15.4697 7.53033ZM16.5303 7.53033L13.5303 10.5303L12.4697 9.46967L15.4697 6.46967L16.5303 7.53033ZM8.5 15.25H14V16.75H8.5V15.25ZM3.25 11.5C3.25 8.60051 5.6005 6.25 8.5 6.25V7.75C6.42893 7.75 4.75 9.42893 4.75 11.5H3.25ZM4.75 11.5C4.75 13.5711 6.42893 15.25 8.5 15.25V16.75C5.6005 16.75 3.25 14.3995 3.25 11.5H4.75Z" fill="#474F5E"></path></g></svg>
+)
 
 export const EditorHomeIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorHomeSvg} {...props} />
@@ -907,3 +914,12 @@ export const EditorIconListIcon = (props: Partial<CustomIconComponentProps>) => 
 export const EditorBlogIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorBlogSvg} {...props} />
 );
+
+export const EditorRevokeIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorRevokeSvg} {...props} />
+);
+
+export const EditorRedoIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorRedoSvg} {...props} />
+);
+

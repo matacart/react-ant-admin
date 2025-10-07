@@ -1,15 +1,13 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Form, message, Select, Spin } from 'antd'
+import { Button, Flex, Form, message, Select, Spin } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import { history } from '@umijs/max';
+import { history, useParams } from '@umijs/max';
 import { useEffect, useState } from 'react';
 import ThemeTemplateCard from '../../ProductAdd/ThemeTemplateCard';
 import CategoriesInfo from './CategoriesInfo';
 import CategoriesCover from './CategoriesCover';
 import CategoriesBanner from './CategoriesBanner';
-import editCategories from '@/store/categories/editCategories';
-import { observer } from 'mobx-react-lite';
 import cookie from 'react-cookies';
 import EditSeo from './EditSeo';
 import RelevanceEdit from './RelevanceEdit';
@@ -21,26 +19,29 @@ import { getCategory, setCategory } from '@/services/y2/api';
 import DefaultButton from '@/components/Button/DefaultButton';
 import categories from '@/store/product/categories';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import LangSelect from '@/components/Select/LangSelect';
 // 表单项商品数据类型
 
 function EditProductCategories(){
 
-    const params = new URL(location.href).searchParams;
+    const {id,languageId} = useParams();
+
     const [loading,setLoading] = useState(false);
+
     const [isSkeleton,setIsSkeleton] = useState(true);
+
+    const [languagesId,setLanguagesId] = useState<string>(languageId??"2");
 
     const [form] = Form.useForm();
 
     useEffect(()=>{
-        let id = params.get("id") || ""
-        let languageId = params.get("languages_id") || "2"
-        getCategory(id,languageId).then(res=>{
+        getCategory(id??"",languagesId).then(res=>{
             categories.setCategoriesInfo(res.data)
         }).catch(err=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[])
+    },[languagesId])
    
     return (
         <Scoped>
@@ -55,7 +56,8 @@ function EditProductCategories(){
                             </div>
                             <div className="mc-header-left-content">编辑分类</div>
                         </div>
-                        <div className='mc-header-right'>
+                        <Flex className='mc-header-right' gap={8}>
+                            <LangSelect lang={languagesId} setLang={(value:string)=>setLanguagesId(value)} />
                             <DefaultButton text="预览" onClick={()=>{
                                 if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
                                     window.open(`https://`+cookie.load("domain").domainName+`/`+categories.categoriesInfo.title.replace(new RegExp(" ","gm"),"-")+`-c`+categories.categoriesInfo.id+`.html`)
@@ -63,7 +65,7 @@ function EditProductCategories(){
                                 message.error("找不到店铺名称，请刷新")
                                 }
                             }} />
-                        </div>
+                        </Flex>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>

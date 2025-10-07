@@ -1,8 +1,8 @@
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Dropdown, Flex, message, Modal, Space, Upload } from 'antd';
 import styled from 'styled-components'
-import Icon, { ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { ExportOutlined } from '@ant-design/icons';
 import { history, useIntl } from '@umijs/max';
 import OrderTabs from '../OrderList/OrderTabs';
 import DefaultButton from '@/components/Button/DefaultButton';
@@ -12,6 +12,8 @@ import ExportShippingModal from './ExportShippingModal';
 import orderList from '@/store/order/orderList';
 import ExportOrderPageModal from './ExportOrderPageModal';
 import ExportOrderDetailModal from './ExportOrderDetailModal';
+import cookie from 'react-cookies';
+
 interface MenuItem {
   key: string;
   label: React.ReactNode;
@@ -88,6 +90,7 @@ export default function Orders() {
 
 
   useEffect(() => {
+    orderList.setLanguages(cookie.load("shop_lang") || '2');
     orderList.setOrderIds([])
   }, []);
 

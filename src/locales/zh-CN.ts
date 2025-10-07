@@ -9,6 +9,7 @@ import login from './zh-CN/login';
 import orders from './zh-CN/orders';
 import theme from './zh-CN/theme';
 import customer from './zh-CN/customer';
+import header from './zh-CN/header';
 
 export default {
   'navBar.lang': '语言',
@@ -18,6 +19,7 @@ export default {
   'app.preview.down.block': '下载此页面到本地项目',
   'app.welcome.link.fetch-blocks': '获取全部区块',
   'app.welcome.link.block-list': '基于 block 开发，快速构建标准页面',
+  ...header,
   ...pages,
   ...globalHeader,
   ...menu,

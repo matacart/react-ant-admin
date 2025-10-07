@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MySelect from "@/components/Select/MySelect";
 import MyInput from "@/components/Input/MyInput";
-import { set } from 'lodash';
 import product from "@/store/product/product";
 
 export default function ThemeTemplateManagement() {

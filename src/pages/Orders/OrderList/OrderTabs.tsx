@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Button, Modal, Tag, Input, Flex, Dropdown, Radio, Popover } from 'antd';
+import { Tabs, Button, Modal, Tag, Input, Flex, Dropdown, Radio, Popover, TabsProps } from 'antd';
 import OrdersListAjax from '@/pages/Orders/OrderList/OrdersListAjax';
 import OrdersSelectCard from './OrdersSelectCard';
 import orderList from '@/store/order/orderList';
@@ -7,29 +7,26 @@ import { observer } from 'mobx-react-lite';
 import { useIntl } from '@umijs/max';
 import { DownIcon } from '@/components/Icons/Icons';
 
-const { TabPane } = Tabs;
-
 interface FilterCondition {
   id: string;
   languagesId:string;
 }
 
 // 获取今天的开始和结束时间
-const getTodayStart = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-const getTodayEnd = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day} 23:59:59`;
-};
+// const getTodayStart = () => {
+//   const now = new Date();
+//   const year = now.getFullYear();
+//   const month = String(now.getMonth() + 1).padStart(2, '0');
+//   const day = String(now.getDate()).padStart(2, '0');
+//   return `${year}-${month}-${day}`;
+// };
+// const getTodayEnd = () => {
+//   const now = new Date();
+//   const year = now.getFullYear();
+//   const month = String(now.getMonth() + 1).padStart(2, '0');
+//   const day = String(now.getDate()).padStart(2, '0');
+//   return `${year}-${month}-${day} 23:59:59`;
+// };
 
 const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activeKey: string }) => {
   const [filterCondition,setFilterCondition] = useState(
@@ -100,16 +97,6 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
               </span>
           </Tag>}
         </Flex>
-        {/* {filterCondition.map((element) => (
-          <Tag
-            key={element.id}
-            className='tag'
-            closable
-            onClose={() => handleRemoveCondition(element.id)}
-          >
-            {element.filter_name}
-          </Tag>
-        ))} */}
         {/* <Button  onClick={addNewTab}>
           新建选项卡
         </Button> */}
@@ -135,13 +122,41 @@ function OrderTabs() {
   const [newTabName, setNewTabName] = useState('');
   const [activeKey, setActiveKey] = useState('');
   const intl = useIntl();
-  const [panes, setPanes] = useState([
-    { title: intl.formatMessage({ id: 'order.tabs.all' }), content: <FilteredOrdersComponent id={''} activeKey={activeKey} />, key: '' },
-    { title: intl.formatMessage({ id: 'order.tabs.readytoship' }), content: <FilteredOrdersComponent id={'4'} activeKey={activeKey} />, key: '4' },
-    { title: intl.formatMessage({ id: 'order.tabs.cancelled' }), content: <FilteredOrdersComponent id={'3'} activeKey={activeKey} />, key: '3' },
-    { title: intl.formatMessage({ id: 'order.tabs.process' }), content: <FilteredOrdersComponent id={'2'} activeKey={activeKey} />, key: '2' },
-    { title: intl.formatMessage({ id: 'order.tabs.neworders' }), content: <FilteredOrdersComponent id={'5'} activeKey={activeKey} />, key: '5' },
+
+
+  const [items,setItems] = useState<TabsProps['items']>([
+    { 
+      key:'',
+      label: intl.formatMessage({ id: 'order.tabs.all' }), 
+      children: <FilteredOrdersComponent id={''} activeKey={''} />,
+      closable:false
+    },
+    { 
+      key:'4',
+      label: intl.formatMessage({ id: 'order.tabs.readytoship' }), 
+      children: <FilteredOrdersComponent id={'4'} activeKey={'4'} />,
+      closable:false
+    },
+    { 
+      key:'3',
+      label: intl.formatMessage({ id: 'order.tabs.cancelled' }), 
+      children: <FilteredOrdersComponent id={'3'} activeKey={'3'} />,
+      closable:false
+    },
+    { 
+      key:'2',
+      label: intl.formatMessage({ id: 'order.tabs.process' }), 
+      children: <FilteredOrdersComponent id={'2'} activeKey={'2'} />,
+      closable:false
+    },
+    { 
+      key:'5',
+      label: intl.formatMessage({ id: 'order.tabs.neworders' }), 
+      children: <FilteredOrdersComponent id={'5'} activeKey={'5'} />,
+      closable:false
+    },
   ]);
+
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const addNewTab = () => {
@@ -149,16 +164,16 @@ function OrderTabs() {
   };
 
   const handleOk = () => {
-    const newPanes = [
-      ...panes,
-      {
-        title: newTabName,
-        content: <FilteredOrdersComponent id={(panes.length + 1).toString()} activeKey={activeKey} />,
-        key: (panes.length + 1).toString(),
-      }
+    const newItems = [
+      ...(items || []),
+      { 
+        key: ((items || []).length + 1).toString(),
+        label: newTabName, 
+        children: <FilteredOrdersComponent id={''} activeKey={''} />,
+        closable: true
+      },
     ];
-    setPanes(newPanes);
-    setActiveKey((panes.length + 1).toString());
+    setItems(newItems);
     setIsModalVisible(false);
   };
 
@@ -174,24 +189,15 @@ function OrderTabs() {
     }
   };
 
-  const onEdit = (targetKey: string, action: string) => {
+  const onEdit = (targetKey: any, action: string) => {
+    console.log(targetKey, action);
     if (action === 'add') {
       addNewTab();
-    } else if (action === 'remove') {
-      const newPanes = panes.filter(pane => pane.key !== targetKey);
-      setPanes(newPanes);
-    } else if (action === 'rename') {
-      const newPanes = panes.map(pane => {
-        if (pane.key === targetKey) {
-          return { ...pane, title: '重命名标签' };
-        }
-        return pane;
-      });
-      setPanes(newPanes);
+    }else if(action === 'remove'){
+      setItems((items || []).filter(item => item.key !== targetKey));
+      setActiveKey('');
     }
   };
-
-  
 
   return (
     <div>
@@ -200,7 +206,6 @@ function OrderTabs() {
         onChange={onChange}
         destroyInactiveTabPane={true}
         type="editable-card"
-        onEdit={onEdit}
         tabBarExtraContent={<>
           <Dropdown placement="bottomRight" trigger={["click"]} menu={{items:[
             {
@@ -226,13 +231,9 @@ function OrderTabs() {
             </Flex>
           </Dropdown>
         </>}
-      >
-        {panes.map(pane => (
-          <TabPane tab={pane.title} key={pane.key} closable={parseInt(pane.key, 10) > 5} >
-            {pane.content}
-          </TabPane>
-        ))}
-      </Tabs>
+        onEdit={onEdit}
+        items={items}
+      />
       <Modal
         title="创建新选项卡"
         visible={isModalVisible}

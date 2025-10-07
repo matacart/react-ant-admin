@@ -17,20 +17,25 @@ class codeEditor {
       this.mode = value;
     }
 
+    languageId = '2';
+    setLanguageId(value:string){
+      this.languageId = value;
+    }
+
     templateInfo:TemplateInfo | null = null;
 
     setTemplateInfo(value:TemplateInfo){
       this.templateInfo = value;
     }
 
-    // 
+    // 文件列表
     fileList:any[] = [];
 
     setFileList(value:any[]) {
       this.fileList = value;
     }
 
-    // 
+    // 打开文件列表
     openFileList:any = [];
 
     setOpenFileList(value:any) {

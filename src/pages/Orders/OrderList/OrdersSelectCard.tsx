@@ -6,14 +6,12 @@ import SearchInput from "@/components/Input/SearchInput";
 import CheckSelectClear from "@/components/Select/CheckSelectClear";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import orderList from "@/store/order/orderList";
-import LangSelect from "@/pages/components/LangSelect";
 import { observer } from "mobx-react-lite";
 import EditTableHead from "./EditTableHead";
 import OrdersMoreSelect from "./OrdersMoreSelect";
+import LangSelect from "@/components/Select/LangSelect";
 
 
-
-const { Search } = Input;
 function OrdersSelectCard() {
     const intl = useIntl();
 
@@ -148,8 +146,6 @@ function OrdersSelectCard() {
       
     },[paymentstatusOptions,shippingStatusOptions])
 
-    const [resultList, setResultList] = useState([]); // 初始化状态
-
     return (
         <>
           <div className="Orders-select">
@@ -166,7 +162,7 @@ function OrdersSelectCard() {
               <div style={{flex:1}}><SearchInput placeholder={intl.formatMessage({ id: 'order.select.text' })} /></div>
               <CheckSelectClear options={paymentstatusOptions} setStatusOptions={setPaymentStatusOptions} text="付款状态" style={{width:"180px",height:"36px"}}/>
               <CheckSelectClear options={shippingStatusOptions} setStatusOptions={setShippingStatusOptions} text="发货状态" style={{width:"180px",height:"36px"}}/>
-              <LangSelect setLang={setLang} lang={orderList.languages} isLabel={true} />
+              <LangSelect lang={orderList.languages} setLang={setLang} />
               <OrdersMoreSelect />
               <EditTableHead />
               {/* <TableEdit/> */}

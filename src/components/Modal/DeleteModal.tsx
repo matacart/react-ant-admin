@@ -1,8 +1,6 @@
 import { DeleteOutlined, ExclamationCircleFilled } from "@ant-design/icons";
-import { Button, Flex, Modal } from "antd";
-import { useState } from "react";
+import { Flex, Modal } from "antd";
 import styled from "styled-components";
-import PrimaryButton from "../Button/PrimaryButton";
 import DefaultButton from "../Button/DefaultButton";
 import DangerButton from "../Button/DangerButton";
 

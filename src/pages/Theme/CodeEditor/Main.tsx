@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import codeEditor from "@/store/theme/codeEditor";
 import { observer } from "mobx-react-lite";
 import { useLocation, useParams } from "react-router-dom";
-import { getThemeFileDetail } from "@/services/y2/api";
 import MyMonacoEditor from "./MyMonacoEditor";
 
 interface FileType{
@@ -18,18 +17,9 @@ function Main(){
 
     const searchParams = new URLSearchParams(useLocation().search);
 
-    const [currentFile,setCurrentFile] = useState();
-
-    // const [activeKey,setActiveKey] = useState(key || '1');
     const [items,setItems] = useState([]);
-    // http://localhost:8000/theme/codeEditor/10001?key=layout/theme.html
     // key 当前文件
     useEffect(()=>{
-      // 获取文件详细信息
-      // getThemeFileDetail(id??"",templateId??"",key??"").then((res:any)=>{
-      //   setCurrentFile(res.data)
-      // })
-
       // 所有文件
       const newItems = codeEditor.openFileList.map((file:FileType)=>{
         return {
@@ -53,7 +43,6 @@ function Main(){
                   codeEditor.setActiveFileKey(newOpenFileList[0]?.key || "")
                 }
               }
-
             }}>
               <CloseOutlined className="close-icon" />
             </div>
@@ -76,7 +65,9 @@ function Main(){
                 activeKey={codeEditor.activeFileKey}
                 tabBarGutter={0} 
                 items={items} 
-                onChange={(activeKey:string)=>codeEditor.setActiveFileKey(activeKey)}
+                onChange={(activeKey:string)=>{
+                  codeEditor.setActiveFileKey(activeKey)
+                }}
             />}
         </Scoped>
     )

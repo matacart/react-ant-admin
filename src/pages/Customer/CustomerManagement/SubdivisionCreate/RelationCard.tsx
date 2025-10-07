@@ -7,10 +7,11 @@ import React, { MutableRefObject, useEffect, useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import { generateId } from "@/utils/dataStructure";
-import { useIntl } from "@/.umi/plugin-locale/localeExports";
 import MySelect from "@/components/Select/MySelect";
 import useClickOutside from "@/hooks/customHooks";
 import SelectCheckBox from "./SelectCheckBox";
+import { useIntl } from '@umijs/max';
+
 
 interface RelationCardProps {
     overlayRef: React.RefObject<HTMLElement>;

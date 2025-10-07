@@ -230,31 +230,33 @@ export default function TagsModal(prop:any){
         setCleanInputText(e.target.value)
     }
     useEffect(()=>{
-        setTags(prop.tags)
-        // 获取标签
-        selectTags(prop.language).then(res=>{
-            let tempList:any = [];
-            // console.log(res)
-            if(res.code == 0){
-                res.data.forEach((element:any) => {
-                    tempList.push(element.tag)
-                });
-            }
-            setTagCount(tempList);
-            setSearchTags(tempList);
-            setTagList(tempList);
-            setSelectedTags(tempList.filter((v:any)=>prop.tags.includes(v)))
-            // console.log(tempList.filter((v:any)=>prop.tags.includes(v)))
-        }).catch((err)=>{
-        })
+        // setTags(prop.tags)
+        // // 获取标签
+        // selectTags(prop.language).then(res=>{
+        //     let tempList:any = [];
+        //     // console.log(res)
+        //     if(res.code == 0){
+        //         res.data.forEach((element:any) => {
+        //             tempList.push(element.tag)
+        //         });
+        //     }
+        //     setTagCount(tempList);
+        //     setSearchTags(tempList);
+        //     setTagList(tempList);
+        //     setSelectedTags(tempList.filter((v:any)=>prop.tags.includes(v)))
+        //     // console.log(tempList.filter((v:any)=>prop.tags.includes(v)))
+        // }).catch((err)=>{
+        // })
     },[prop.tags])
+
+    
     return(
             <div>
                 <a onClick={()=>{
                     setIsTagsOpen(true);
                 }}>查看所有标签</a>
                 <Spin spinning={isLoading}>
-                    <Modal width="620px" destroyOnClose title="查看所有标签" centered open={isTagsOpen} onOk={handleOk} onCancel={handleCancel}>
+                    <Modal width="620px" title="查看所有标签" centered open={isTagsOpen} onOk={handleOk} onCancel={handleCancel}>
                         <Scoped>
                             <div className="column">已应用的标签（{tags.length}/250）</div>
                             <div>

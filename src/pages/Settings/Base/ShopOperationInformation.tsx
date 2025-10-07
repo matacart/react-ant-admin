@@ -1,5 +1,5 @@
 import InputSearch from "@/components/Search/InputSearch";
-import { getCityList, getCurrenciesList, getProvinceList, getTimeZoneList } from "@/services/y2/api";
+import { getCityList, getProvinceList } from "@/services/y2/api";
 import baseInfoStore from "@/store/setUp/baseInfoStore";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select, Switch, Table, TableProps } from "antd";
@@ -67,16 +67,16 @@ function ShopOperationInformation() {
     }
 
     useEffect(()=>{
-        getTimeZoneList().then(res=>{
-            let newTimeZone:any = [];
-            res.forEach((e:any) => {
-                newTimeZone.push({
-                    label:"("+e.time_zone_label+")"+" "+e.time_zone_name,
-                    value:e.time_zone_name
-                })
-            });
-            setTimeZone(newTimeZone)
-        })
+
+        const timeZones = JSON.parse(localStorage.getItem('MC_DATA_TIME_ZONEZ') || '[]')
+        let newTimeZone:any = [];
+        timeZones.forEach((e:any) => {
+            newTimeZone.push({
+                label:"("+e.time_zone_label+")"+" "+e.time_zone_name,
+                value:e.time_zone_name
+            })
+        });
+        setTimeZone(newTimeZone)
 
         setCountryList(
             JSON.parse(sessionStorage.getItem("country") || "").map(

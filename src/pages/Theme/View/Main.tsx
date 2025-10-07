@@ -48,13 +48,13 @@ function Main({templateData}:{templateData:any}){
     }
 
     useEffect(() => {
-        console.log(templateData);
+        // console.log(templateData);
     }, []);
 
     return (
         <Scoped>
             {templateData.order.map((block_order:string)=>{
-                console.log(templateData.sections[block_order]);
+                // console.log(templateData.sections[block_order]);
                 switch (templateData.sections[block_order].type) {
                     case "featured-slideshow":
                         return (

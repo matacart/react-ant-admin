@@ -1,57 +1,86 @@
-import { Checkbox, Select, Space } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { Checkbox, ConfigProvider, Flex, Select, Space } from "antd";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
+interface CheckSelectProps extends React.ComponentProps<typeof Select> {
+    options: any;
+    setOptions:any;
+  }
 // 自定义筛选框
-function SelectCheckBox({options,setStatusOptions,text,style}:{options:any,setStatusOptions:any,text:string,style?:any}) {
+function SelectCheckBox({options,setOptions,...props}:CheckSelectProps) {
 
     const [open,setOpen] = useState(false);
 
     const Ref = useRef<HTMLDivElement>(null)
 
-    useEffect(()=>{
-        console.log(options)
-        // setStatusOptions(options)
-    },[options])
+    const [customizeOptions,setCustomizeOptions] = useState(options.map((item:any) => ({ ...item })))
+
+    const submit = () => {
+        setOpen(false)
+        setOptions([...customizeOptions])
+    }
 
     return (
         <Scoped ref={Ref}>
-            <Select mode={"multiple"} style={style} options={options} showSearch={false}
-                labelRender={()=><div>{text}</div>}
-                defaultValue="-1"
-                tagRender={(props)=>{
-                    return (
-                        <div style={{marginLeft:"10px"}}>{props.label}</div>
-                    )
+            <ConfigProvider
+                theme={{
+                    token: {
+                    /* 这里是你的全局 token */
+                        borderRadius:4,
+                        paddingXXS:0,
+                        // paddingSM:12
+                        // paddingXS:200
+                    },
                 }}
-                getPopupContainer={()=>Ref.current!}
-                dropdownStyle={{padding:"6px 0"}}
-                dropdownRender={(menu) => {
-                    const list = options.map((item,index)=>{
+            >
+                <Select
+                    open={open}
+                    onOpenChange={(open)=>{
+                        setOpen(open)
+                    }}
+                    {...props} 
+                    className="select" 
+                    showSearch={false}
+                    mode={"multiple"} 
+                    options={customizeOptions} 
+                    tagRender={(props)=>{
                         return (
-                            <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
-                                let newOption = [...options]
-                                newOption[index].checked = e.target.checked
-                                const newValues = conditionValue.includes(item.value) ? conditionValue.filter((v) => v !== item.value) : [...conditionValue, item.value];
-                                setConditionValue(newValues);
-                                // e.target.checked?checkedList.push(item):checkedList.splice(checkedList.indexOf(item),1)
-                                // setCheckedStatus(checkedList)
-                                setStatusOptions(newOption)
-                            }}>{item.label}</Checkbox>
+                            <div style={{marginLeft:"10px"}}>{props.label}</div>
                         )
-                    })
-                    return (
-                        <>
-                            {list}
-                        </>
-                    )
-                }}
-            />
+                    }}
+                    getPopupContainer={()=>Ref.current!}
+                    popupRender={(menu) => {
+                        const list = options.map((item:any,index:number)=>{
+                            return (
+                                <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
+                                    let newOption = [...customizeOptions]
+                                    newOption[index].checked = e.target.checked
+                                    setCustomizeOptions(newOption)
+                                    console.log(options)
+                                }}>{item.label}</Checkbox>
+                            )
+                        })
+                        return (
+                            <>
+                                <div className="select-dropdown-warp">
+                                    {list}
+                                </div>
+                            </>
+                        )
+                    }}
+                />
+            </ConfigProvider>
         </Scoped>
     )
 }
 
 const Scoped = styled.div`
+    .ant-select-dropdown{
+        padding: 8px 0;
+    }
+    .ant-select-selection-wrap{
+        height: 100%;
+    }
     .item:hover{
         background-color: #f0f7ff;
     }

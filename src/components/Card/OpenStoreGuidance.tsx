@@ -51,7 +51,7 @@ const tabs: Tab[] = [
         doneDesc: "您还可以继续添加更多新产品",
         doneButtonText: "去添加",
         doneImg: assetPaths.addProductDone,
-        url:"/products/new"
+        url:"/products/index"
     },{
         svg: <ShopOutlined />,
         name: "配置物流",
@@ -247,7 +247,7 @@ const App: React.FC = () => {
                     backgroundColor: "white",
                     overflow: "hidden"
                 }}
-                expandIconPosition="right"
+                expandIconPosition="end"
                 defaultActiveKey={['1']}
             />
         </ConfigProvider>

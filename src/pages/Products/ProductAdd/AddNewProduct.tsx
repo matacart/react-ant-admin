@@ -1,15 +1,11 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Flex, Form, Input, message, Select } from 'antd'
+import { Flex, Form, Input, message, Select } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 import MultipleStylesCard from './MultipleStylesCard';
-import PriceOrTransactionCard from './PriceOrTransactionCard';
-import ProductDataCard from './ProductDataCard';
-import ProductImgCard from './ProductImgCard';
-import ProductSettingsCard from './ProductSettingsCard';
 import ProductStyleList from './ProductStyleList';
 import SEOCard from './SEOCard';
 import StockCard from './StockCard';
@@ -25,8 +21,12 @@ import ProtectionInformation from './ProtectionInformation';
 import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 import { addTags, upDateProduct } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import LangSelect from '@/pages/components/LangSelect';
 import Overlay from '@/components/Overlay/Overlay';
+import ProductData from '../product/ProductData';
+import ProductImg from '../product/ProductImg';
+import PriceOrTransaction from '../product/PriceOrTransaction';
+import LangSelect from '@/components/Select/LangSelect';
+import ProductSettingsCard from '../product/ProductSettingsCard';
 
 // 表单项商品数据类型
 interface DataType {
@@ -61,13 +61,10 @@ function AddNewProduct(){
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
     const [style, setStyle] = useState([]);
-    // 语言
-    const [language,setLanguage] = useState("2");
 
     const [isSkeleton,setIsSkeleton] = useState(true)
     const [loading,setLoading] = useState(false) 
     const [isOverlay,setIsOverlay] = useState(false)
-
 
     const [form] = Form.useForm();
 
@@ -112,7 +109,6 @@ function AddNewProduct(){
             ...product.productInfo,
             languages_id:lang
         })
-        setLanguage(lang)
     }
 
     // 表单验证
@@ -162,6 +158,8 @@ function AddNewProduct(){
                 ...product.productInfo,
                 model:randomModal
             })
+
+            // 预加载Tinymce
             setIsSkeleton(false)
         };
         init();
@@ -184,6 +182,8 @@ function AddNewProduct(){
         return '您确定要离开页面吗？'
     }
 
+    // 预加载PTinymce ，让ProductDataCard 子组件使用PTinymce时，没有空白延迟
+
     return (
         <Scoped>
             {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
@@ -199,19 +199,15 @@ function AddNewProduct(){
                             <div className="mc-header-left-content">添加商品</div>
                         </div>
                         <Flex className='mc-header-right' align='center' gap={12}>
-                            {/* 语言 */}
-                            {/* <Select className='selector' defaultValue="更多" /> */}
-                            <LangSelect lang={language} setLang={setLang} />
+                            <LangSelect lang={product.productInfo.languages_id} setLang={setLang} />
                         </Flex>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <ProductDataCard form={form} />
-                            <ProductImgCard />
-                            <PriceOrTransactionCard />
+                            <ProductData form={form} />
+                            <ProductImg />
+                            <PriceOrTransaction />
                             <StockCard form={form} />
-                            {/* 海关信息 */}
-                            {/* <CustomsDeclaration/> */}
                             <MultipleStylesCard style = {style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
                             {onVariant && <ProductStyleList style = {style} setStyle={setStyle} />}
                         </div>

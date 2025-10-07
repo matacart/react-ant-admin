@@ -1,13 +1,10 @@
 import { Space, Select, Input, Tag, Button, ConfigProvider, Flex } from "antd";
 import { useEffect, useRef, useState } from "react"
-import { selectTags } from "@/services/y2/api";
-import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
 import styled from "styled-components";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import cookie from 'react-cookies';
 import MySelect from "@/components/Select/MySelect";
 import MySearch from "@/components/Input/MySearch";
-import LangSelect from "@/pages/components/LangSelect";
 import productList from "@/store/product/productList";
 import { observer } from "mobx-react-lite";
 import CommodityClassificationSelector from "./CommodityClassificationSelector";
@@ -86,7 +83,7 @@ const ProductsSelectCard = ()=>{
                             gap: '12px 12px',
                         }}>
                         {/*  */}
-                        <LangSelect isLabel={true} lang={productList.languagesId} setLang={setLang} />
+                        {/* <LangSelect isLabel={true} lang={productList.languagesId} setLang={setLang} /> */}
                         {/* 5 */}
                         {/* <MoreSelect /> */}
                         {/* 6 */}

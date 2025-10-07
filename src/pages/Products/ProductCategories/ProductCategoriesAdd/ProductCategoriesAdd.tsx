@@ -17,11 +17,11 @@ import CategoriesSubnumber from './CategoriesSubnumber';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import categories from '@/store/product/categories';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import LangSelect from '@/pages/components/LangSelect';
 import CategroiesMethod from './CategroiesMethod';
 import RelatedProduct from './RelatedProduct';
 import { observer } from 'mobx-react-lite';
 import ProductScreeningConditions from './ProductScreeningConditions';
+import LangSelect from '@/components/Select/LangSelect';
 
 
 function NewProductCategories(){
@@ -29,9 +29,6 @@ function NewProductCategories(){
     const [loading,setLoading] = useState(false);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
-
-    // 语言
-    const [language,setLanguage] = useState("2");
 
     const [form] = Form.useForm();
 
@@ -41,7 +38,6 @@ function NewProductCategories(){
             ...categories.categoriesInfo,
             languages_id:lang
         })
-        setLanguage(lang)
     }
 
     // 表单验证
@@ -95,7 +91,7 @@ function NewProductCategories(){
                         </div>
                         <div className='mc-header-right'>
                             {/* 语言 */}
-                            <LangSelect lang={language} setLang={setLang} />
+                            <LangSelect lang={categories.categoriesInfo.languages_id} setLang={setLang} />
                         </div>
                     </div>
                     <div className='mc-layout-main'>

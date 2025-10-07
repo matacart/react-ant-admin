@@ -1,8 +1,6 @@
-import { Button, Card, Divider, Input, message, Select, Space } from "antd"
+import { Card, Divider, Input, message, Select, Space } from "antd"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
-import { history } from 'umi';
-import { ExportOutlined } from "@ant-design/icons";
 import LoginAccountCard from "./LoginAccountCard";
 import QuickLoginCard from "./QuickLoginCard";
 import ContactInformationCard from "./ContactInformationCard";
@@ -12,10 +10,10 @@ import { getUserInfo, setUserInfo } from "@/services/y2/api";
 import AgreementAndPolicy from "./AgreementAndPolicy";
 import accountManagement from "@/store/shops/accountManagementStore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
+import MyButton from "@/components/Button/MyButton";
+import globalStore from "@/store/globalStore";
+import { setLocale } from "@umijs/max";
 
-
-
-const { Search } = Input;
 
 function AccountManagement(){
 
@@ -26,7 +24,14 @@ function AccountManagement(){
     const contactFormRef = useRef();
 
     useEffect(()=>{
-        accountManagement.getUser().then(res=>{
+        getUserInfo().then((res:any)=>{
+            if(res.code == 0){
+                accountManagement.setLoginRecord(res.data.login_record??[])
+                accountManagement.setUserInfo(res.data.user)
+            }
+        }).catch(err=>{
+            console.log(err)
+        }).finally(()=>{
             setIsSkeleton(false)
         })
     },[])
@@ -115,31 +120,34 @@ function AccountManagement(){
                         <Divider />
                         {/* 更新 */}
                         <div className="submit-btn">
-                            <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={async ()=>{
-                                
+                            <MyButton type="primary" style={{ height: "36px" }} loading={isRenewal} onClick={async () => {
                                 // console.log(contactFormRef.current.validate())
-                                let isPass = true
-                                await contactFormRef.current?.validate().then().catch(()=>{
-                                    isPass = false
-                                    return
-                                })
+                                let isPass = true;
+                                await contactFormRef.current?.validate().then().catch(() => {
+                                    isPass = false;
+                                    return;
+                                });
 
-
-                                if(isPass){
-                                    setIsRenewal(true)
+                                if (isPass) {
+                                    setIsRenewal(true);
                                     try {
-                                        setUserInfo(accountManagement.user).then(res=>{
-                                            if(res.code == "0"){
-                                                message.success("更新成功")
-                                                setIsRenewal(false)
+                                        setUserInfo(accountManagement.userInfo).then(res => {
+                                            if (res.code == "0") {
+                                                const languagesId = accountManagement.userInfo.languages_id
+                                                localStorage.setItem("use_lang",languagesId);
+                                                // // 设置语言
+                                                const language = globalStore.language.filter(item => item.id === languagesId)[0]?.code
+                                                setLocale(language,false);
+                                                message.success("更新成功");
                                             }
-                                        })
+                                        });
                                     } catch (error) {
-                                        message.error("失败，请重试")
-                                        setIsRenewal(false)
+                                        message.error("失败，请重试");
+                                    } finally {
+                                        setIsRenewal(false);
                                     }
                                 }
-                            }}>更新</Button>
+                            } } text={"更新"} />
                         </div>
                         {/* 注销 */}
                         <div className="sign-out color-7A8499 font-14">

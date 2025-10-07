@@ -1,6 +1,5 @@
 import { Space, Select, Input, Tag, Button, ConfigProvider, Flex } from "antd";
 import { useEffect, useRef, useState } from "react"
-import { selectTags } from "@/services/y2/api";
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
 import styled from "styled-components";
 import TagSelector from "./TagSelector";
@@ -10,12 +9,10 @@ import cookie from 'react-cookies';
 import EditTableHead from "./EditTableHead";
 import MySelect from "@/components/Select/MySelect";
 import MySearch from "@/components/Input/MySearch";
-import LangSelect from "@/pages/components/LangSelect";
 import productList from "@/store/product/productList";
 import { observer } from "mobx-react-lite";
 import MoreSelect from "./MoreSelect";
-
-const { Search } = Input;
+import LangSelect from "@/components/Select/LangSelect";
 
 
 // type TagRender = SelectProps['tagRender'];
@@ -73,18 +70,6 @@ const ProductsSelectCard = ()=>{
     const setLang = (value: string) => {
         productList.setLanguagesId(value)
     };
-    
-    let str = ""
-    // 标签选择
-    // const handleTagChange = (value: string,option:any)=>{
-    //     console.log(option)
-    //     str = ""
-    //     option.forEach((element:any) => {
-    //         // console.log(element.label)
-    //         str+=","+element.label
-    //     });
-    //     // setTags(str.slice(1))
-    // }
 
     return (
         <Scoped> 
@@ -142,9 +127,8 @@ const ProductsSelectCard = ()=>{
                             display: 'flex',
                             flexWrap: 'wrap',
                             gap: '12px 12px',
-                        }}>
-                        {/*  */}
-                        <LangSelect isLabel={true} lang={productList.languagesId} setLang={setLang} />
+                    }}>
+                        <LangSelect lang={productList.languagesId} setLang={setLang} />
                         {/* 5 */}
                         <MoreSelect />
                         {/* 6 */}

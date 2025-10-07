@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import accountManagement from "@/store/shops/accountManagementStore";
 import { observer } from "mobx-react-lite";
-
+import DefaultButton from "@/components/Button/DefaultButton";
 
 function LoginAccountCard() {
 
@@ -18,22 +18,17 @@ function LoginAccountCard() {
 
     const [isModifyPassword,seIsModifyPassword] = useState(false)
 
-    useEffect(()=>{
-        console.log(accountManagement)
-    },[])
-
-
     return (
         <Scoped>
             <Card>
                 <Flex justify="space-between">
                     <div>
                         <Flex align="center"><div style={{marginRight:"8px"}}>当前登录账号</div><SuccessTag text={"已验证"} /></Flex>
-                        <div className="color-474F5E" style={{marginTop:"8px"}}>+{accountManagement.user.area_code} {accountManagement.user.mobile}</div>
+                        <div className="color-474F5E" style={{marginTop:"8px"}}>+{accountManagement.userInfo.area_code} {accountManagement.userInfo.mobile}</div>
                     </div>
                     <Flex gap={12}>
-                        <Button onClick={()=>setIsModifyAccount(true)}>修改账号</Button>
-                        <Button onClick={()=>seIsModifyPassword(true)}>修改密码</Button>
+                        <DefaultButton text="修改账号" onClick={()=>setIsModifyAccount(true)} />
+                        <DefaultButton text="修改密码" onClick={()=>seIsModifyPassword(true)} />
                     </Flex>
                 </Flex>
             </Card>

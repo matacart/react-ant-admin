@@ -13,7 +13,7 @@ export default function CommodityClassificationSelector() {
     const [isFocus,setIsFocus] = useState(false);
 
     useEffect(()=>{
-        getCategorySelect().then(res=>{
+        getCategorySelect(1,10).then(res=>{
             const newOption = res.data.map((item:any)=>{
                 return {
                     value: item.id,

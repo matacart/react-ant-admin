@@ -84,7 +84,7 @@ export default function Settings() {
             icon: '/icons/set/lang.svg',
             title: intl.formatMessage({ id: 'settings.index.Language' }),
             desc: intl.formatMessage({ id: 'settings.index.LanguageDesc' }),
-            more: intl.formatMessage({ id: 'settings.index.currentLanguage' })+lang(cookie.load("default_lang")),
+            // more: intl.formatMessage({ id: 'settings.index.currentLanguage' })+lang(cookie.load("default_lang")),
             url:"/settings/lang",
         },{
             icon: '/icons/set/account.svg',

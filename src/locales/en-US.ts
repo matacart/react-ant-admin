@@ -7,6 +7,7 @@ import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import login from './en-US/login';
 import orders from './en-US/orders';
+import header from './en-US/header';
 
 export default {
   'navBar.lang': 'Languages',
@@ -16,6 +17,7 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   'app.welcome.link.fetch-blocks': 'Get all block',
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
+  ...header,
   ...globalHeader,
   ...menu,
   ...orders,

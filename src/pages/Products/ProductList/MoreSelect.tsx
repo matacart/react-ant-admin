@@ -171,17 +171,17 @@ export default function MoreSelect(){
 
 
   useEffect(()=>{
-    // 平台类型 --- 平台多语言
-    getPlatformCategorySelect("2").then(res=>{
-      const newProductTypeOption = res.data.map(item=>{
-        return {
-          value: item.id,
-          label: item.category_name,
-          checked:false
-        }
-      })
-      setProductTypeOption(newProductTypeOption)
-    })
+    // // 平台类型 --- 平台多语言
+    // getPlatformCategorySelect("2").then(res=>{
+    //   const newProductTypeOption = res.data.map(item=>{
+    //     return {
+    //       value: item.id,
+    //       label: item.category_name,
+    //       checked:false
+    //     }
+    //   })
+    //   setProductTypeOption(newProductTypeOption)
+    // })
   },[])
 
 

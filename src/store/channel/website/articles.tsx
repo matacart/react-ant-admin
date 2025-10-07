@@ -12,7 +12,6 @@ type ArticlesType = {
     content:string;
     abstract:string;
     releaseTime:string;
-
     template_id:string;
     status:string;
     ad_waf_status:string;
