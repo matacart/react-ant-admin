@@ -279,7 +279,7 @@ function GiftCardsTableCard(selectProps:any) {
   };
   useEffect(() => {
     // 初始化商品
-    fetchData();
+    // fetchData();
   }, []);
 
   const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {

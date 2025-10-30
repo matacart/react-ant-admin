@@ -27,7 +27,6 @@ function Header({templateId,languageId}:{templateId:string,languageId:string}){
             </>,
             onClick: () => {
                 history.push(`/theme/editor?templateId=${templateId}&languagesId=${languageId}&templateName=templates/index.json`)
-                console.log("design")
             }
         },
         {

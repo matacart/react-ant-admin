@@ -9,6 +9,7 @@ import SelectedActions from './SelectedActions';
 import cookie from 'react-cookies';
 import productList from '@/store/product/productList';
 import { observer } from 'mobx-react-lite';
+import { useAbortController } from '@/hooks/customHooks';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -23,6 +24,7 @@ interface DataType {
   content?: string;
   price?: number;
   costPrice?: number;
+  specialprice?:number;
   ISBN?: string;
   inventory?: number;
   HSCode?:string;
@@ -61,11 +63,13 @@ const getRandomuserParams = (params: TableParams) => ({
 });
 
 function ProductListAjax(selectProps:any) {
+
+  const { createAbortController } = useAbortController();
+
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [onLoadingList, setOnLoadingList] = useState<any>([]);
-  // 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
+  // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -251,6 +255,8 @@ function ProductListAjax(selectProps:any) {
   ];
 
   const fetchData = async () => {
+
+
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
@@ -269,7 +275,9 @@ function ProductListAjax(selectProps:any) {
     }
 
     try {
-      const result = await getProductList(res)
+
+      const signal = createAbortController();
+      const result = await getProductList(res,signal)
       setLoading(false);
       // 201 空
       if(result.code == 0 || result.code == 201){
@@ -313,7 +321,9 @@ function ProductListAjax(selectProps:any) {
       }
       throw new Error(result);
     }catch(error){
-      message.error('获取数据失败');
+      if (error.name !== 'CanceledError') {
+        message.error('获取数据失败');
+      }
     }
     setLoading(false);
   };

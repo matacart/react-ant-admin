@@ -39,4 +39,109 @@ export default function useClickOutside(callback: () => void) {
 }
 
 
+/**
+ * 自定义hook，用于创建和管理多个AbortController
+ * 可以在组件卸载时自动取消所有未完成的请求
+ */
+export const useAbortController = () => {
+  const abortControllersRef = useRef<AbortController[]>([]);
+
+  // 创建新的AbortController
+  const createAbortController = () => {
+    const abortController = new AbortController();
+    abortControllersRef.current.push(abortController);
+    return abortController.signal;
+  };
+
+  // 获取所有signals
+  const getAllSignals = () => {
+    return abortControllersRef.current.map(controller => controller.signal);
+  };
+
+  // 手动取消特定请求
+  const abort = (signal?: AbortSignal) => {
+    if (signal) {
+      // 终止特定请求
+      const controller = abortControllersRef.current.find(
+        ctrl => ctrl.signal === signal
+      );
+      if (controller) {
+        controller.abort();
+      }
+    } else {
+      // 终止所有请求
+      abortControllersRef.current.forEach(controller => {
+        if (!controller.signal.aborted) {
+          controller.abort();
+        }
+      });
+    }
+  };
+
+  // 组件卸载时自动取消所有请求
+  useEffect(() => {
+    return () => {
+      abortControllersRef.current.forEach(controller => {
+        if (!controller.signal.aborted) {
+          controller.abort();
+        }
+      });
+    };
+  }, []);
+
+  return {
+    createAbortController,
+    getAllSignals,
+    abort,
+  };
+};
+
+// /**
+//  * 自定义hook，用于创建和管理AbortController
+//  * 可以在组件卸载时自动取消未完成的请求
+//  */
+// export const useAbortController = () => {
+//   const abortControllerRef = useRef<AbortController | null>(null);
+
+//   // 创建新的AbortController
+//   const createAbortController = () => {
+//     // 如果已存在，先取消之前的请求
+//     if (abortControllerRef.current) {
+//       abortControllerRef.current.abort();
+//     }
+    
+//     // 创建新的控制器
+//     abortControllerRef.current = new AbortController();
+//     return abortControllerRef.current.signal;
+//   };
+
+//   // 获取当前的signal
+//   const getSignal = () => {
+//     return abortControllerRef.current?.signal;
+//   };
+
+//   // 手动取消请求
+//   const abort = () => {
+//     if (abortControllerRef.current) {
+//       abortControllerRef.current.abort();
+//     }
+//   };
+
+//   // 组件卸载时自动取消请求
+//   useEffect(() => {
+//     return () => {
+//       if (abortControllerRef.current) {
+//         abortControllerRef.current.abort();
+//       }
+//     };
+//   }, []);
+
+//   return {
+//     createAbortController,
+//     getSignal,
+//     abort,
+//   };
+// };
+
+
 

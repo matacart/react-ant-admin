@@ -1,15 +1,18 @@
-import { removeTags, selectTags, selectTagsSort } from "@/services/y2/api";
+import { removeTags, selectTags } from "@/services/y2/api";
 import { useToken } from "@ant-design/pro-components";
-import { AutoComplete, AutoCompleteProps, Button, Divider, Dropdown, Flex, Input, MenuProps, message, Modal, Popover, Select, Space, Spin, Tag } from "antd";
-import React from "react";
+import { Dropdown, Flex, MenuProps, message, Modal, Popover, Select, Space, Spin, Tag } from "antd";
+import React, { useCallback, useMemo, useRef } from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import MyInput from "../Input/MyInput";
+import DefaultButton from "../Button/DefaultButton";
+import PrimaryButton from "../Button/PrimaryButton";
+import MyButton from "../Button/MyButton";
+import { LoadingOutlined } from "@ant-design/icons";
 
 
 
 export default function TagsModal(prop:any){
-
-
 
     const { token } = useToken();
 
@@ -21,260 +24,393 @@ export default function TagsModal(prop:any){
 
     const menuStyle: React.CSSProperties = {
         boxShadow: 'none',
+        padding: "6px 0",
     };
 
     // 标签管理弹窗
     const [isTagsOpen, setIsTagsOpen] = useState(false);
     const [openCleanTags, setOpenCleanTags] = useState(false);
-    const showTags = () => {
-        setIsTagsOpen(true);
-    };
-
-    // 状态更新
-    const handleOk = () => {
-        // 清空tags
-        // setTags([]);
-        setIsTagsOpen(false);
-        prop.updatetag(tags);
-    };
-
-    const handleCancel = () => {
-        setIsTagsOpen(false);
-        handleReset();
-    };
 
     // 加载状态
     const [isLoading,setIsLoading] = useState(false);
+
+    // 
+    const [delLogin,setDelLogin] = useState(false);
+
+
+    const [orderField,setOrderField] = useState("update_time");
+    const [orderDirection,setOrderDirection] = useState("desc");
 
     // 应用标签
     const items: MenuProps['items'] = [
         {
           key: '1',
           label: (
-            <div onClick={()=>{
-                setIsLoading(true)
-                selectTagsSort(prop.language,"update_time","desc").then(res=>{
-                    console.log(res);
-                    if(res.code == 0){
-                        let temp = Array.from(res.data,(item:any)=>{
-                            return item.tag
-                        })
-                        setTagList(temp)
-                        setSearchTags(temp.filter((v:any)=>searchTags.includes(v)))
-                    }
-                })
-                setIsLoading(false)
+            <a onClick={()=>{
+                setOrderField("update_time");
+                setOrderDirection("desc");
             }}>
             更新时间(从近到远)
-            </div>
+            </a>
           ),
         },
         {
           key: '2',
           label: (
-            <div onClick={()=>{
-                selectTagsSort(prop.language,"use_cnt","desc").then(res=>{
-                    console.log(res);
-                    if(res.code == 0){
-                        let temp = Array.from(res.data,(item:any)=>{
-                            return item.tag
-                        })
-                        setTagList(temp)
-                        setSearchTags(temp.filter((v:any)=>searchTags.includes(v)))
-                    }
-                })
+            <a onClick={()=>{
+                setOrderField("use_cnt");
+                setOrderDirection("desc");
             }}>
             标签引用(多到少)
-            </div>
+            </a>
           ),
         },
         {
           key: '3',
           label: (
-            <div onClick={()=>{
-                selectTagsSort(prop.language,"tag","asc").then(res=>{
-                    console.log(res);
-                    if(res.code == 0){
-                        let temp = Array.from(res.data,(item:any)=>{
-                            return item.tag
-                        })
-                        setTagList(temp)
-                        setSearchTags(temp.filter((v:any)=>searchTags.includes(v)))
-                    }
-                })
+            <a onClick={()=>{
+                setOrderField("tag");
+                setOrderDirection("asc");
             }}>
              标签名称(A-Z)
-            </div>
+            </a>
           ),
         },
     ];
 
+    const [cleanOrderField,setCleanOrderField] = useState("update_time");
+    const [cleanOrderDirection,setCleanOrderDirection] = useState("desc");
+    const cleanItems: MenuProps['items'] = [
+        {
+          key: '1',
+          label: (
+            <a onClick={()=>{
+                setCleanOrderField("update_time");
+                setCleanOrderDirection("desc");
+            }}>
+            更新时间(从近到远)
+            </a>
+          ),
+        },
+        {
+          key: '2',
+          label: (
+            <a onClick={()=>{
+                setCleanOrderField("use_cnt");
+                setCleanOrderDirection("desc");
+            }}>
+            标签引用(多到少)
+            </a>
+          ),
+        },
+        {
+          key: '3',
+          label: (
+            <a onClick={()=>{
+                setCleanOrderField("tag");
+                setCleanOrderDirection("asc");
+            }}>
+             标签名称(A-Z)
+            </a>
+          ),
+        },
+    ];
+
+
     // 标签 -- 应用标签
-    const [tags, setTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<any[]>([]);
+
     // 所有标签
-    const [tagCount, setTagCount] = useState<string[]>([]);
     const [tagList, setTagList] = useState<string[]>([]);
 
+    // 搜索值
     const [tagContent, setTagContent] = useState("");
-    const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
-    // 操作标签
-    const handleChange = (tag: string, checked: boolean) => {
-        const nextSelectedTags = checked
-        ? [...selectedTags, tag]
-        : selectedTags.filter((t) => t !== tag);
-        // console.log('You are interested in: ', nextSelectedTags);
-        setSelectedTags(nextSelectedTags);
-        if(checked){
-            setTags([...tags,tag])
-        }else{
-            setTags(tags.filter((t)=>t!==tag))
-        }
-    };
 
-    // 重置
-    const handleReset = () => {
-        setTags(prop.tags);
-        setSelectedTags(tagCount.filter((v:any)=>prop.tags.includes(v)));
-        setSearchTags(tagCount);
-    };
-    
-    const handleOnTag = (e:any)=>{
-        if(tags.includes(e.target.value)){
-            message.error("标签已存在")
-        }else{
-            setTagContent("")
-            setTags([...tags,e.target.value])
-        }
-
-        // 
-        if(tagCount.includes(e.target.value)){
-            setSelectedTags([...selectedTags,e.target.value])
-        }
-
-    }
-    const handleTagClose = (removedTag:any)=>{
-        setTags(tags.filter(tag => tag !== removedTag));
-
-        console.log(tags)
-        console.log(removedTag)
-        setSelectedTags(selectedTags.filter((t) => t !== removedTag));
-    }
-
-
-
+    const [cleanTagContent, setCleanTagContent] = useState("");
 
     // 清理标签
     const [cleanTags, setCleanTags] = useState<string[]>([]);
-    const [cleanSelectedTags, setCleanSelectedTags] = React.useState<string[]>([]);
-    const [searchTags, setSearchTags] = useState<string[]>([]);
-    const [cleanInputText, setCleanInputText] = useState('');
-
-
-    const handleCleanReset = () => {
-        setCleanTags([]);
-        setCleanSelectedTags([]);
-        setSearchTags(tagCount);
-    };
-    // 
-    const handleCleanChange = (tag: string, checked: boolean) => {
-        const nextSelectedTags = checked
-        ? [...cleanSelectedTags, tag]
-        : cleanSelectedTags.filter((t) => t !== tag);
-        setCleanSelectedTags(nextSelectedTags);
+    // 清理标签--所有标签
+    const [cleanTagList, setCleanTagList] = useState<any[]>([]);
+    // 操作标签
+    const handleChange = (tag: any, checked: boolean) => {
+        // 选中标签
         if(checked){
-            setCleanTags([...cleanTags,tag])
+            setTags([...tags,{
+                ...tag,
+                checked:checked
+            }])
         }else{
-            setCleanTags(cleanTags.filter((t)=>t!==tag))
+            setTags(tags.filter((t) => t.label !== tag.label))
         }
+        // 所有标签
+        const newTagList = tagList.map((tl:any)=>{
+            if(tl.label == tag.label){
+                return {
+                    ...tl,
+                    checked:checked
+                }
+            }
+            return tl
+        })
+        setTagList(newTagList)
     };
-    const handleCleanTagClose = (removedTag:any)=>{
-        setCleanTags(cleanTags.filter(tag => tag !== removedTag));
-        setCleanSelectedTags(cleanSelectedTags.filter((t) => t !== removedTag));
+
+    // 保存标签
+    const handleOk = () => {
+        setIsTagsOpen(false);
+        setOrderField("update_time");
+        setOrderDirection("desc");
+        setTagContent("");
+        prop.updatetag(tags);
+    };
+
+    // 取消标签
+    const handleTagClose = (removedTag:any)=>{
+        setTags(tags.filter(tag => tag !== removedTag));
+        const newTagList = tagList.map((tl:any)=>{
+            if(tl.label == removedTag.label){
+                return {
+                    ...tl,
+                    checked:false
+                }
+            }
+            return tl
+        })
+        setTagList(newTagList)
     }
 
+    // 取消标签
+    const handleCleanTagClose = (removedTag:any)=>{
+        setTags(tags.filter(tag => tag !== removedTag));
+        const newTagList = cleanTagList.map((tl:any)=>{
+            if(tl.label == removedTag.label){
+                return {
+                    ...tl,
+                    checked:false
+                }
+            }
+            return tl
+        })
+        setCleanTagList(newTagList)
+    }
 
+    // 关闭弹窗
+    const handleCancel = () => {
+        setIsTagsOpen(false);
+        setOrderField("update_time");
+        setOrderDirection("desc");
+        setTagContent("");
+    };
+
+    // 操作标签 清理
+    const handleCleanChange = (tag: any, checked: boolean) => {
+        if(checked){
+            setCleanTags([...cleanTags,{
+                ...tag,
+                checked:checked
+            }])
+        }else{
+            setCleanTags(cleanTags.filter((t:any) => t.label !== tag.label))
+        }
+        // 所有标签
+        const newTagList = cleanTagList.map((tl:any)=>{
+            if(tl.label == tag.label){
+                return {
+                    ...tl,
+                    checked:checked
+                }
+            }
+            return tl
+        })
+        setCleanTagList(newTagList)
+    };
+
+    // 清理标签弹窗
     const openCleanShop = ()=>{
         setIsTagsOpen(false);
         setOpenCleanTags(true);
-        handleReset();
+        setTagContent("");
+        handleCleanSearchTags("",cleanOrderDirection,cleanOrderField);
     }
-    // 二层
+    // 删除标签
     const handleRemoveTags = ()=>{
-        setOpenCleanTags(false);
-        handleCleanReset();
         // 删除标签
-        cleanTags.forEach((tag)=>{
-            removeTags(prop.language,tag)
+        setDelLogin(true);
+        removeTags({
+            languages_id:prop.language,
+            tag:cleanTags.map((item:any)=> item.label).join(",")
+        }).then(res=>{
+            if(res.code == 0){
+                // 删除标签
+                message.success("success");
+                const newCleanTagList = cleanTagList.filter(cTag=> !cleanTags.some((item:any)=> item.label == cTag.label ));
+                setCleanTagList(newCleanTagList)
+                setCleanTags([])
+            }else{
+                message.error(res.msg);
+            }
+        }).finally(()=>{
+            setDelLogin(false);
         })
-        // 只考虑删除成功
-        prop.updatetag(tags);
-        let result = searchTags.filter(item => !cleanTags.includes(item));
-        setTagCount(result)
-        setTagList(result)
     }
     // 返回上一层
     const handleBackTags = ()=>{
         setOpenCleanTags(false);
         setIsTagsOpen(true);
-        handleCleanReset();
+        // 重新
+        handleSearchTags("",orderDirection,orderField);
+        setTags(prop.tags);
+
+        setCleanOrderField("update_time");
+        setCleanOrderDirection("desc");
+        setCleanTagContent("");
+        setCleanTags([]);
     }
     // 搜索标签
-    const handleSearchTags = (e:any)=>{
-        let newTags:string[] = [];
-        tagCount.forEach(res=>{
-            if(res.includes(e.target.value)){
-                newTags.push(res)
+    const handleSearchTags = (name:string,orderDirection?:string,orderField?:string)=>{
+        setIsLoading(true);
+        selectTags({
+            languages_id:prop.language,
+            tagName:name,
+            order_field:orderField,
+            order_direction:orderDirection,
+        }).then(res=>{
+            if(res.code == 0 || res.code == 201){
+                const newTagsList = res.data?.map((element:any) => {
+                    return {
+                        label: element.tag,
+                        value: element.id,
+                        checked: prop.tags.some((item:any)=>item.label == element.tag)
+                    }
+                });
+                setTagList(newTagsList);
             }
+        }).catch((err)=>{
+        }).finally(()=>{
+            setIsLoading(false);
         })
-        setSearchTags(newTags);
-        setCleanInputText(e.target.value)
     }
-    useEffect(()=>{
-        // setTags(prop.tags)
-        // // 获取标签
-        // selectTags(prop.language).then(res=>{
-        //     let tempList:any = [];
-        //     // console.log(res)
-        //     if(res.code == 0){
-        //         res.data.forEach((element:any) => {
-        //             tempList.push(element.tag)
-        //         });
-        //     }
-        //     setTagCount(tempList);
-        //     setSearchTags(tempList);
-        //     setTagList(tempList);
-        //     setSelectedTags(tempList.filter((v:any)=>prop.tags.includes(v)))
-        //     // console.log(tempList.filter((v:any)=>prop.tags.includes(v)))
-        // }).catch((err)=>{
-        // })
-    },[prop.tags])
 
+    // 防抖搜索函数
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const debounceSearch = useMemo(() => {
+        return (name: string, delay: number = 300) => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+            searchTimeoutRef.current = setTimeout(() => {
+                handleSearchTags(name, orderDirection, orderField);
+            }, delay);
+        };
+    }, [handleSearchTags]);
+
+
+    const isInitialRender = useRef(true); // 标记是否为首次渲染
+    // 当排序字段或方向变化时，重新执行搜索
+    useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false; // 标记已完成首次渲染
+            return;
+        }
+        debounceSearch(tagContent);
+    }, [orderField, orderDirection]);
+
+    // 搜索标签 -- 清除
+    const handleCleanSearchTags = (name:string,orderDirection?:string,orderField?:string)=>{
+        setIsLoading(true);
+        selectTags({
+            languages_id:prop.language,
+            tagName:name,
+            order_field:orderField,
+            order_direction:orderDirection,
+        }).then(res=>{
+            if(res.code == 0 || res.code == 201){
+                const newTagsList = res.data.map((element:any) => {
+                    return {
+                        label: element.tag,
+                        value: element.id,
+                        checked: false
+                    }
+                });
+                setCleanTagList(newTagsList);
+            }
+        }).catch((err)=>{
+        }).finally(()=>{
+            setIsLoading(false);
+        })
+    }
+
+    // 防抖搜索函数
+    const cleanSearchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const debounceCleanSearch = useMemo(() => {
+        return (name: string, delay: number = 300) => {
+            if (cleanSearchTimeoutRef.current) {
+                clearTimeout(cleanSearchTimeoutRef.current);
+            }
+            cleanSearchTimeoutRef.current = setTimeout(() => {
+                handleCleanSearchTags(name, cleanOrderDirection, cleanOrderField);
+            }, delay);
+        };
+    }, [handleSearchTags]);
+
+    // 当排序字段或方向变化时，重新执行搜索
+    useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false; // 标记已完成首次渲染
+            return;
+        }
+        debounceCleanSearch(cleanTagContent);
+    }, [cleanOrderField, cleanOrderDirection]);
+
+
+    // 组件卸载时清理定时器
+    useEffect(() => {
+        return () => {
+            if (searchTimeoutRef.current) {
+                clearTimeout(searchTimeoutRef.current);
+            }
+            if (cleanSearchTimeoutRef.current) {
+                clearTimeout(cleanSearchTimeoutRef.current);
+            }
+        };
+    }, []);
     
     return(
             <div>
                 <a onClick={()=>{
+                    handleSearchTags(tagContent,orderDirection,orderField);
+                    setTags([...prop.tags]);
                     setIsTagsOpen(true);
                 }}>查看所有标签</a>
-                <Spin spinning={isLoading}>
-                    <Modal width="620px" title="查看所有标签" centered open={isTagsOpen} onOk={handleOk} onCancel={handleCancel}>
+                <Modal width="620px" title="查看所有标签" centered open={isTagsOpen}
+                    onCancel={handleCancel}
+                    footer={(_, { OkBtn, CancelBtn }) => (
+                        <Flex justify="end">
+                            <Flex gap={12}>
+                                <DefaultButton text={"取消"} onClick={handleCancel} />
+                                <PrimaryButton text={"保存"} onClick={handleOk} />
+                            </Flex>
+                        </Flex>
+                    )}
+                >
+                    <Spin spinning={isLoading} size="large" indicator={<LoadingOutlined spin />}>
                         <Scoped>
                             <div className="column">已应用的标签（{tags.length}/250）</div>
-                            <div>
-                                <Flex gap="4px 0" wrap>
-                                    {tags.map((tag) => (
-                                        <Tag
-                                            color="processing"
-                                            style={{color:"#000",padding:"2px 6px"}}
-                                            key={tag} // 使用唯一标识符作为 key
-                                            bordered={false}
-                                            closable
-                                            onClose={() => handleTagClose(tag)}
-                                            >
-                                            {tag}
-                                        </Tag>
-                                    ))}
-                                </Flex>
-                            </div>
+                            <Flex gap="4px 0" wrap>
+                                {tags.map((tag,index) => (
+                                    <Tag
+                                        color="processing"
+                                        style={{color:"#000",padding:"2px 6px"}}
+                                        key={tag.label+'-'+index} // 使用唯一标识符作为 key
+                                        bordered={false}
+                                        closable
+                                        onClose={() => handleTagClose(tag)}
+                                        >
+                                        {tag.label}
+                                    </Tag>
+                                ))}
+                            </Flex>
                             <div style={{color:"#7A8499"}}>{tags.length == 0?"暂无已选标签":""}</div>
                             <div className="column2" style={{display:'flex',justifyContent:'space-between'}}>
                                 <div>所有标签</div>
@@ -282,103 +418,109 @@ export default function TagsModal(prop:any){
                             </div>
                             <div className="column3">从以下列表中选择标签进行添加，最多可同时添加250个标签</div>
                             <div className="column4">
-                                <Input placeholder="搜索标签名称或添加标签（例如：复古/夏季）" onChange={(e)=>{setTagContent(e.target.value)}} value={tagContent} onPressEnter={handleOnTag} />
+                                <MyInput placeholder="搜索标签名称或添加标签（例如：复古/夏季）" onChange={(e)=>{
+                                    setTagContent(e.target.value);
+                                    debounceSearch(e.target.value);
+                                }} value={tagContent} />
                                 <div style={{marginLeft:"20px"}}>
                                 <Dropdown trigger={['click']} menu={{ items,defaultSelectedKeys: ['1'],selectable: true, }} placement="bottomRight"
-                                dropdownRender={(menu) => (
-                                    <div style={contentStyle}>
-                                        <div style={{ padding:"16px 8px 6px 8px",fontSize:"12px",color:"#7A8499" }}>选择排序方式</div>
-                                        {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}
-                                    </div>
-                                )}
+                                    popupRender={(menu) => (
+                                        <div style={contentStyle}>
+                                            <div style={{ padding:"12px 8px 4px 8px",fontSize:"12px",color:"#7A8499" }}>选择排序方式</div>
+                                            {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}
+                                        </div>
+                                    )}
                                 >
-                                    <Button>排序</Button>
+                                    <DefaultButton text="排序" />
                                 </Dropdown>
                                 </div>
                             </div>
-                            <div>
-                                <Flex gap="4px 0" wrap>
-                                {tagList.map<React.ReactNode>((tag) => (
+                            {tagList.length > 0 ? <Flex gap="4px 0" wrap>
+                                {tagList.map((tag:any,index) => (
                                     <Tag.CheckableTag
-                                    key={tag}
-                                    checked={selectedTags.includes(tag)}
-                                    onChange={(checked) => handleChange(tag, checked)}
+                                        className={tag.checked?"":"color-F7F8FB"}
+                                        key={tag.label+"-"+index}
+                                        checked={tag.checked}
+                                        onChange={(checked) => handleChange(tag, checked)}
                                     >
-                                    {tag}
+                                        {tag.label}
                                     </Tag.CheckableTag>
                                 ))}
-                                </Flex>
-                            </div>
+                            </Flex>:<div className="color-7A8499">未搜索到匹配的标签</div>}
                             <div style={{height:"48px"}}></div>
                         </Scoped>
-                    </Modal>
-                    {/* 清理所有标签 */}
-                    <Modal width="620px" destroyOnClose title="清理店铺标签" centered open={openCleanTags} onOk={()=>{setOpenCleanTags(false)}} onCancel={()=>{
-                        setOpenCleanTags(false);
-                        handleCleanReset();
-                    }}
-                        footer={()=>(
-                            <>
-                                <Button onClick={handleBackTags}>返回上一层</Button>
-                                <Button danger type="primary" disabled={cleanTags.length == 0} onClick={handleRemoveTags}>删除</Button>
-                            </>
-                        )}
-                    >
+                    </Spin>
+                </Modal>
+                {/* 清理所有标签 */}
+                <Modal destroyOnHidden width="620px" title="清理店铺标签" centered open={openCleanTags} onOk={()=>{setOpenCleanTags(false)}} onCancel={()=>{
+                    setOpenCleanTags(false);
+                    setCleanOrderField("update_time");
+                    setCleanOrderDirection("desc");
+                    setCleanTagContent("");
+                    setCleanTags([]);
+                }}
+                    footer={()=>(
+                        <Flex justify="end" gap={12}>
+                            <DefaultButton onClick={handleBackTags} text="返回上一层" />
+                            <MyButton loading={delLogin} danger type="primary" style={{height:"36px"}} disabled={cleanTags.length == 0} onClick={handleRemoveTags} text="删除" />
+                        </Flex>
+                    )}
+                >
+                    <Spin spinning={isLoading} size="large" indicator={<LoadingOutlined spin />}>
                         <Scoped>
                             <div className="column">已选择的标签（{cleanTags.length}/100）</div>
-                            <div>
-                                <Flex gap="4px 0" wrap>
-                                    {cleanTags.map((tag, index) => (
-                                        <Tag
-                                            color="processing"
-                                            style={{color:"#000",padding:"2px 6px"}}
-                                            key={tag}
-                                            bordered={false}
-                                            closable
-                                            onClose={() => handleCleanTagClose(tag)}
-                                            >
-                                            {tag}
-                                        </Tag>
-                                    ))}
-                                </Flex>
-                            </div>
+                            <Flex gap="4px 0" wrap>
+                                {cleanTags.map((tag:any, index) => (
+                                    <Tag
+                                        color="processing"
+                                        style={{color:"#000",padding:"2px 6px"}}
+                                        key={tag.label+"-"+index}
+                                        bordered={false}
+                                        closable
+                                        onClose={() => handleCleanTagClose(tag)}
+                                        >
+                                        {tag.label}
+                                    </Tag>
+                                ))}
+                            </Flex>
                             <div style={{color:"#7A8499"}}>{cleanTags.length == 0?"暂无已选标签":""}</div>
                             <div className="column2" style={{display:'flex',justifyContent:'space-between'}}>
                                 <div>店铺全部标签</div>
                             </div>
                             <div className="column3">你可以删除不常用标签，届时相关商品将自动剔除该标签（单次操作只能删除最多100个标签）</div>
                             <div className="column4">
-                                <Input placeholder="搜索标签名称" onChange={handleSearchTags} />
-                                <div style={{marginLeft:"20px"}}>
-                                <Dropdown trigger={['click']} menu={{ items,defaultSelectedKeys: ['1'],selectable: true, }} placement="bottomRight"
-                                dropdownRender={(menu) => (
+                                <MyInput placeholder="搜索标签名称" onChange={(e)=>{
+                                    setCleanTagContent(e.target.value);
+                                    debounceCleanSearch(e.target.value);
+                                }} value={cleanTagContent}  />
+                                <div style={{marginLeft:"20px"}} >
+                                <Dropdown trigger={['click']} menu={{ items:cleanItems,defaultSelectedKeys: ['1'],selectable: true, }} placement="bottomRight"
+                                popupRender={(menu) => (
                                     <div style={contentStyle}>
                                         <div style={{ padding:"16px 8px 6px 8px",fontSize:"12px",color:"#7A8499" }}>选择排序方式</div>
                                         {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}
                                     </div>
                                 )}
                                 >
-                                    <Button>排序</Button>
+                                    <DefaultButton text="排序" />
                                 </Dropdown>
                                 </div>
                             </div>
-                            <div>
-                                {searchTags.length === 0?<div style={{fontSize:"12px",color:"#7A8499"}}>未搜索到匹配的标签</div>:<Flex gap="4px 0" wrap>
-                                    {searchTags.map<React.ReactNode>((tag) => (
-                                        <Tag.CheckableTag
-                                            key={tag}
-                                            checked={cleanSelectedTags.includes(tag)}
-                                            onChange={(checked) => handleCleanChange(tag, checked)}
-                                            >
-                                        {tag}
-                                        </Tag.CheckableTag>
-                                    ))}
-                                </Flex> }
-                            </div>
+                            {cleanTagList.length === 0?<div style={{fontSize:"12px",color:"#7A8499"}}>未搜索到匹配的标签</div>:<Flex gap="4px 0" wrap>
+                                {cleanTagList.map((tag:any,index:number) => (
+                                    <Tag.CheckableTag
+                                        key={tag.label+"-"+index}
+                                        checked={tag.checked}
+                                        onChange={(checked) => handleCleanChange(tag, checked)}
+                                    >
+                                        {tag.label}
+                                    </Tag.CheckableTag>
+                                ))}
+                            </Flex> }
                             <div style={{height:"48px"}}></div>
                         </Scoped>
-                    </Modal>
-                </Spin>
+                    </Spin>
+                </Modal>
             </div>
     )
 }

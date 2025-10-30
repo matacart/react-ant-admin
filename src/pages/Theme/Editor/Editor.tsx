@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Header from './Header';
 import Left from './Left/Left';
 import { Flex, Spin } from 'antd';
@@ -8,14 +8,12 @@ import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { useSearchParams } from 'react-router-dom';
-import { installedSections, languageSchema, settingsSections, templateInfo } from '@/services/y2/api';
+import { getTemplatePage, installedSections, languageSchema, settingsSections, templateInfo } from '@/services/y2/api';
 import GlobalSettingsRight from './Right/GlobalSettingsRight/GlobalSettingsRight';
 import ApplicationRight from './Right/ApplicationRight';
 import ComponentRight from './Right/ComponentRight/ComponentRight';
-
-// 全局设置
-import zhCN from 'antd/es/locale/zh_CN';
-import { addLocale } from '@umijs/max';
+import { addLocale, useIntl } from '@umijs/max';
+import { useAbortController } from '@/hooks/customHooks';
 
 function Editor() {
 
@@ -25,6 +23,14 @@ function Editor() {
     const languagesId = searchParams.get("languagesId");
     const templateName = searchParams.get("templateName");
     const preview = searchParams.get("preview");
+
+    const intl = useIntl();
+
+    const { createAbortController } = useAbortController();
+
+    const [navigationData,setNavigationData] = useState<any[]>([]);
+
+    const [isLoading,setIsLoading] = useState(false);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
@@ -50,55 +56,65 @@ function Editor() {
       return flattened;
     }
 
-    // 初始化
-    async function installed(){
-      document.body.style.height = "100vh !important";
-      // 页面设置
+    // 页面
+    const getInstalledSections = async ()=>{
       try {
+        const signal = createAbortController();
         const installData = await installedSections({
-          mode: "auto",
           oseid: "",
           themeId: templateId??"",
-          pageName: templateName??'templates/index.json'
-        });
+          pageName: templateName??'templates/index.json',
+          mode: editor.mode,
+          languages_id:editor.languagesId,
+        },signal);
         if(installData.code == "SUCCESS"){
           editor.setTemplateData(installData.data.sections)
         }
       } catch (error) {
         console.error('Failed to add page:', error);
       }
+    }
 
-      // 全局设置
+    // 全局设置
+    const getSettingsSections = async ()=>{
       try{
+        const signal = createAbortController();
         const settingsData = await settingsSections({
-          mode: "auto",
+          mode: editor.mode,
           themeId: templateId??"",
-          action:"get"
-        })
+          action:"get",
+          languages_id:editor.languagesId,
+        },signal)
         if(settingsData.code == "SUCCESS"){
           editor.setSettings(settingsData.data);
         }
       }catch (error) {
         console.error('Failed to add settings:', error);
       }
+    }
 
-      // 语言
+    // 语言 
+    const getLanguageSchema = async ()=>{
+      setIsLoading(true)
+      // 动态加载语言包
+      const loadAntdLocale = await import(`antd/es/locale/${intl.locale.replace('-','_')}`);
       try {
+        const signal = createAbortController();
         const languageSchemaData = await languageSchema({
-          mode: "auto",
+          mode: editor.mode,
           themeId: templateId??"",
-          language: "zh-hans-cn"
-        })
+          language: (intl as any)?.momentLocale == "zh-cn"?"zh-hans-cn":(intl as any)?.momentLocale == "zh-tw"?"zh-hant-tw":(intl as any)?.momentLocale
+        },signal)
         if(languageSchemaData.code == "SUCCESS"){
           // 将嵌套对象扁平化后再添加到语言包中
           const flattenedSections = flattenObject(languageSchemaData.data.schema);
           // 添加多语言 使用setTimeout确保在组件完全挂载后执行
           setTimeout(() => {
             try {
-              addLocale("zh-CN",flattenedSections,
+              addLocale(intl.locale,flattenedSections,
               {
-                momentLocale: 'zh-cn',
-                antd: zhCN,
+                momentLocale: (intl as any)?.momentLocale,
+                antd: loadAntdLocale,
               });
             } catch (error) {
               console.error('Failed to add locale:', error);
@@ -107,33 +123,112 @@ function Editor() {
         }
       } catch (error) {
         console.error('Failed to add locale:', error);
+      }finally{
+        setIsLoading(false)
       }
+    }
 
-      // 模板信息
+    // 模板信息
+    const getTemplateInfo = async ()=>{
       try{
+        const signal = createAbortController();
         const templateInfoData = await templateInfo({
           template_id: templateId??"",
-        })
+          languages_id:editor.languagesId,
+        },signal)
         if(templateInfoData.code == "SUCCESS"){
-          console.log("主题信息",templateInfoData);
+          editor.setTemplateInfo({
+            themeName: templateName,
+            ...templateInfoData.data
+          })
         }
       }catch (error) {
         console.error('Failed to add templateInfo:', error);
       }
-
-      // 重置
-      editor.reset();
-      editor.setTemplateInfo({
-        templateId:templateId??"",
-        templateName:templateName??""
-      })
-
-      setIsSkeleton(false);
     }
 
+    // 导航信息
+    const getNavigationData = async ()=>{
+      try{
+        const signal = createAbortController();
+        const pages = await getTemplatePage({
+          themeId: templateId || "",
+          languages_id: editor.languagesId,            
+        },signal);
+        if(pages.code == 0){
+          const newNavigationData = pages.data.list;
+          setNavigationData(newNavigationData);
+        }
+      }catch (error) {
+        console.error('Failed to add templateInfo:', error);
+      }
+    }
+
+    // 初始化
+    const init = async ()=>{
+      document.body.style.height = "100vh !important";
+      try {
+        // 等待所有初始化函数执行完毕
+        await Promise.all([
+          getInstalledSections(),
+          getSettingsSections(),
+          getLanguageSchema(),
+          getTemplateInfo(),
+          getNavigationData(),
+        ]);
+      } catch (error) {
+        console.error('Initialization failed:', error);
+      } finally {
+        // 重置
+        editor.reset();
+        setIsSkeleton(false);
+      }
+    }
+
+    // 店铺相关
+    const ShopInfo = async ()=>{
+      try {
+        setIsLoading(true)
+        // 等待所有初始化函数执行完毕
+        await Promise.all([
+          getInstalledSections(),
+          getSettingsSections(),
+          getTemplateInfo(),
+          getNavigationData(),
+        ]);
+      } catch (error) {
+        console.error('Initialization failed:', error);
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    
+    // 监听模板
     useEffect(() => {
-      installed();
-    }, [])
+      init();
+    }, [templateName])
+
+    // 国际语言切换
+    const isFirstLoad = useRef(true);
+    useMemo(() => {
+      // 首次加载不执行语言切换逻辑
+      if (isFirstLoad.current) {
+        isFirstLoad.current = false;
+        return;
+      }
+      getLanguageSchema();
+    }, [intl.locale]);
+
+    const isFirstLanguages = useRef(true);
+    // 当店铺语言切换
+    useMemo(() => {
+      // 首次加载不执行语言切换逻辑
+      if (isFirstLanguages.current) {
+        isFirstLanguages.current = false;
+        return;
+      }
+      ShopInfo();
+    }, [editor.languagesId])
 
     const [iframeReady, setIframeReady] = useState(false);
 
@@ -162,11 +257,12 @@ function Editor() {
       }
     }, [editor.templateData,iframeReady])
 
+
     return <Scoped>
       <GlobalStyle />
       {/* header */}
-      {isSkeleton?<SkeletonCard />:<>
-        <Header templateId={templateId??""} templateName={templateName??"templates/index.json"} />
+      {isSkeleton?<SkeletonCard />:<Spin spinning={isLoading}>
+        <Header templateId={templateId??""} templateName={templateName??"templates/index.json"} nvData={navigationData} />
         <Flex>
           {/* left */}
           <div className="left">
@@ -174,7 +270,7 @@ function Editor() {
           </div>
           <div className="center">
             <div className="viewBox">
-              {/* <iframe ref={iframeRef} src={`/theme/preview?templateId=${templateId}&page=index`} width="100%" height="100%" style={{border:"0"}} /> */}
+              <iframe ref={iframeRef} src={`https://store.matacart.com/?templateId=${templateId}&page=index`} width="100%" height="100%" style={{border:"0"}} />
             </div>
           </div>
           {/* right */}
@@ -190,7 +286,7 @@ function Editor() {
             </div>
           </div>
         </Flex>
-      </>}
+      </Spin>}
     </Scoped>
 }
 

@@ -7,8 +7,10 @@ interface componentType {
 }
 
 interface templateInfoType {
-  templateId: string;
-  templateName:string;
+  isUsing?:boolean,
+  themeName:string;
+  themeInfo:any,
+  themeInstanceInfo:any
 }
 
 interface settingsType{
@@ -42,17 +44,24 @@ class editor {
       this.oseId = value;
     }
 
-    // 文件语言
-    languages = "2";
-    setLanguages(value:string){
-      this.languages = value;
+    // 店铺语言
+    languagesId = "2";
+    setLanguagesId(value:string){
+      this.languagesId = value;
     }
 
+    // 编辑模式
+    mode:string = 'auto';
+
+    setMode(value:string){
+      this.mode = value;
+    }
 
     // 模板信息
     templateInfo:templateInfoType = {
-      templateId: "",
-      templateName: ""
+      themeName:"",
+      themeInfo:{},
+      themeInstanceInfo:{}
     };
 
     setTemplateInfo(data:templateInfoType) {
@@ -317,6 +326,8 @@ class editor {
       this.oseId = "";
       this.operationHistory = [];
       this.redoHistory = [];
+
+      this.mode = "auto";
     }
 
 }

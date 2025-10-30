@@ -17,9 +17,9 @@ type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>
 // 表单项商品数据类型
 interface DataType {
   id: string;
-  storeName:string;
+  store_name:string;
+  second_domain:string;
   status:string;
-  secondDomain:string;
 }
 interface TableParams {
   pagination?: TablePaginationConfig;
@@ -88,16 +88,16 @@ function StoresTable() {
         render: (_, record) => (
           <div>
             <img style={{width:"38px",marginLeft:"8px"}} src='/img/storeLogo.png' className="storeLogo" />
-            <span style={{marginLeft:"8px"}}>{record.storeName}</span>
+            <span style={{marginLeft:"8px"}}>{record.store_name}</span>
           </div>
         ),
 
-        dataIndex: 'storeName',
+        dataIndex: 'store_name',
         width: 160,
     },
     {
       title: 'handle',
-      dataIndex: 'secondDomain',
+      dataIndex: 'second_domain',
       width: 120,
     },
     {
@@ -148,7 +148,7 @@ function StoresTable() {
     },
     {
       title: '店铺套餐',
-      dataIndex: 'package_id',
+      dataIndex: 'package_name',
       width: 120,
     },
     {

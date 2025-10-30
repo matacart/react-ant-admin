@@ -181,7 +181,7 @@ export default function AddFreightModal({type}:{type:string}){
                                 <div className="font-w-600">计费方式：</div>
                                 <Flex gap={8}>
                                     <Form.Item label={false}>
-                                        <DefaultSelect value={billingMethod} onChange={(e)=>{
+                                        <DefaultSelect style={{width:"120px"}} value={billingMethod} onChange={(e)=>{
                                             setBillingMethod(e)
                                             console.log(e)
                                         }} options={[

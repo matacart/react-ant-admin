@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { Checkbox, Col, Flex, Form, Input, message, Modal, Select, Tooltip } from "antd";
+import { Checkbox, Flex, Form, Modal, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MySelect from "@/components/Select/MySelect";

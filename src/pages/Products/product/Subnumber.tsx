@@ -1,9 +1,8 @@
 
-import { Card, Form, Select, Switch, Tooltip } from "antd"
+import { Card, Flex, Form, Select, Switch } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { useEffect } from 'react';
 import product from "@/store/product/product";
 
 
@@ -14,8 +13,8 @@ import product from "@/store/product/product";
 
     useEffect(()=>{
         form.setFieldsValue({
-            partsWarehouse:parseInt(product.productInfo.is_sys),
-            isShare:true
+            partsWarehouse:product.productInfo.is_sys,
+            isShare:product.productInfo.is_share == '1' ? true : false
         })
     },[])
 
@@ -30,7 +29,7 @@ import product from "@/store/product/product";
                             </span>
                         </Tooltip> */}
                     </span>
-                    <Link to='#'>编辑</Link>
+                    {/* <Link to='#'>编辑</Link> */}
                 </div>
                 <Form layout="vertical" form={form}>
                     <Form.Item
@@ -45,8 +44,8 @@ import product from "@/store/product/product";
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
                             options={[
-                                { value: 0, label: '商户自建' },
-                                { value: 1, label: '平台自建' },
+                                { value: '0', label: '商户自建' },
+                                { value: '1', label: '平台自建' },
                             ]}
                             onChange={(e)=>{
                                 product.setProductInfo({
@@ -56,17 +55,17 @@ import product from "@/store/product/product";
                             }}
                         />
                     </Form.Item>
-                    <Form.Item name="isShare">
-                        <div className="item between">
-                            <span>子号共享</span>
-                            <Switch checked={product.productInfo.is_share == 1?true:false} onChange={(e)=>{
+                    <Flex align="center" justify="space-between" style={{ marginTop: "20px" }}>
+                        <span>子号共享</span>
+                        <Form.Item name="isShare" valuePropName="checked">
+                            <Switch onChange={(e)=>{
                                 product.setProductInfo({
                                     ...product.productInfo,
-                                    is_share:e?1:0
+                                    is_share:e?'1':'0'
                                 })
                             }} />
-                        </div>
-                    </Form.Item>
+                        </Form.Item>
+                    </Flex>
                 </Form>
             </Card>
         </Scoped>
@@ -75,34 +74,27 @@ import product from "@/store/product/product";
 export default observer(Subnumber)
 
 const Scoped = styled.div`
-.gap{
-    display: flex;
-    flex-direction: column;
-}
-.header{
-    display:flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    .title{
-        color: #000;
-        font-size: 16px;
-        font-weight:600;
+    .gap{
+        display: flex;
+        flex-direction: column;
     }
-}
-.item{
-        /* margin-bottom: 10px; */
-        margin-top: 16px;
-}
-.between{
-    display: flex;
-    justify-content: space-between;
-}
-a{
-    font-weight: 400;
-}
+    .header{
+        display:flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        .title{
+            color: #000;
+            font-size: 16px;
+            font-weight:600;
+        }
+    }
+   
+    a{
+        font-weight: 400;
+    }
 
-:where(.css-dev-only-do-not-override-no4izc).ant-form-item {
-    margin-bottom: 0;
-}
+    .ant-form-item {
+        margin-bottom: 0;
+    }
 
 `

@@ -80,16 +80,13 @@ function ProductSettingsCard() {
     const [name, setName] = useState('');
     const inputRef = useRef<InputRef>(null);
     
-    const [tags, setTags] = useState<string[]>([]);
-    
     const [editInputIndex, setEditInputIndex] = useState(-1);
     const [editInputValue, setEditInputValue] = useState('');
     // const inputTagRef = useRef<InputRef>(null);
     const editInputRef = useRef<InputRef>(null);
-   
-    const [options, setOptions] = useState([
-        '标签一','标签二'
-    ]);
+
+    // 标签
+    const [tags, setTags] = useState<any[]>([]);
     
     // 商品类型 -- 平台
     const [productTypeOptions,setProductTypeOptions] = useState<any>();
@@ -124,10 +121,11 @@ function ProductSettingsCard() {
     // 标签
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
+        console.log(newTags)
         setTags(newTags);
         product.setProductInfo({
             ...product.productInfo,
-            tag:newTags.join(",")
+            tag:newTags.map(item=>item.label).join(",")
         })
     };
 
@@ -142,14 +140,14 @@ function ProductSettingsCard() {
     const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEditInputValue(e.target.value);
     };
-    const handleEditInputConfirm = () => {
-        const newTags = [...tags];
-        newTags[editInputIndex] = editInputValue;
-        setTags(newTags);
-        console.log(newTags)
-        setEditInputIndex(-1);
-        setEditInputValue('');
-    };
+    // const handleEditInputConfirm = () => {
+    //     const newTags = [...tags];
+    //     newTags[editInputIndex] = editInputValue;
+    //     setTags(newTags);
+    //     console.log(newTags)
+    //     setEditInputIndex(-1);
+    //     setEditInputValue('');
+    // };
 
     const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
@@ -175,19 +173,6 @@ function ProductSettingsCard() {
         setIsModalOpen(true);
     };
 
-    const getTagsList = (langId:string)=>{
-        selectTags({
-            languages_id:langId
-        }).then(res=>{
-            // console.log(res)
-        }).catch((err)=>{
-
-        }
-        ).finally(()=>{
-
-        })
-    }
-
     // 店铺商品类型
     // const getCategoryList = async ()=>{
     //     const temp = await getCategorySelect(1,10).then(res=>{
@@ -208,8 +193,6 @@ function ProductSettingsCard() {
 
     useEffect(() => {
 
-        // getTagsList(product.productInfo.languages_id)
-
         // getCategoryList().then(res=>{
         //     let temp:any = [];
         //     res.forEach((item:any)=>{
@@ -223,15 +206,21 @@ function ProductSettingsCard() {
         //     setCategoryTags(temp)
         // })
 
-        // form.setFieldsValue({
-        //     SPU: product.productInfo.spu,
-        //     weight:product.productInfo.weight,
-        //     manufactuer:product.productInfo.manufactuer,
-        //     tags:product.productInfo.tag,
-        //     platformCategory:product.productInfo.platform_category_id == "" ? undefined : product.productInfo.platform_category_id
-        // });
+        form.setFieldsValue({
+            SPU: product.productInfo.spu,
+            weight:product.productInfo.weight,
+            manufactuer:product.productInfo.manufactuer,
+            platformCategory:product.productInfo.platform_category_id == "" ? undefined : product.productInfo.platform_category_id
+        });
 
-        console.log(product.productInfo.tag.split(","))
+        const newTags = product.productInfo.tag.split(",").filter(item=>item).map((item:string)=>{
+            return {
+              label:item,
+              value:item,
+              checked:true
+            }
+        })
+        setTags(newTags);
 
     }, []);
 
@@ -370,76 +359,42 @@ function ProductSettingsCard() {
                         label={
                             <div className="label-content between">
                                 <span>标签</span>
-                                <TagsModal tags={tags} language={product.productInfo.languages_id} updatetag={(value)=>{
+                                <TagsModal language={product.productInfo.languages_id} tags={tags} updatetag={(value:any)=>{
+                                    setTags([...value])
                                     product.setProductInfo({
                                         ...product.productInfo,
-                                        tag:value.join(",")
+                                        tag:value.map((item:any)=>item.label).join(",")
                                     })
                                 }}/>
                             </div>
                         }
                     >
-                        {/* <Select
-                            mode="tags"
-                            placeholder="添加标签（例如：复古/夏季）"
-                            options={options.map((item) => ({ label: item, value: item }))}
-                            showSearch={false}
-                            tagRender={(props) => <></>}
-                            onChange={(value)=>{
-                                product.setProductInfo({
-                                    ...product.productInfo,
-                                    tag:value.join(",")
-                                })
-                            }}
-                        /> */}
-                        <SearchRemote placeholder="添加标签（例如：复古/夏季）" style={{height:"36px"}}  />
+                        <SearchRemote tags={tags} setTags={setTags} placeholder="添加标签（例如：复古/夏季）" style={{height:"36px"}}  />
                         <div style={{height:"10px"}}></div>
                         <Flex gap="4px 0" wrap>
-                            {product.productInfo.tag.split(",").filter(item=>item).map<React.ReactNode>((tag, index) => {
-                                if (editInputIndex === index) {
-                                    return (
-                                        <Input
-                                            ref={editInputRef}
-                                            key={tag}
-                                            size="small"
-                                            style={tagInputStyle}
-                                            value={editInputValue}
-                                            onChange={handleEditInputChange}
-                                            onBlur={handleEditInputConfirm}
-                                            onPressEnter={handleEditInputConfirm}
-                                        />
-                                    );
-                                }
-                                const isLongTag = tag.length > 20;
-                                const tagElem = (
-                                <Tag
-                                    key={tag}
-                                    closable
-                                    color= "processing"
-                                    bordered={false}
-                                    style={{ userSelect: 'none',color: '#000',padding: '2px 6px'}}
-                                    onClose={() => handleClose(tag)}
-                                >
-                                    <span
-                                    onDoubleClick={(e) => {
-                                        if (index !== 0) {
-                                        setEditInputIndex(index);
-                                        setEditInputValue(tag);
-                                        e.preventDefault();
-                                        }
-                                    }}
+                            {tags.map((tag, index) => {
+                                return (
+                                    <Tag
+                                        key={tag.value}
+                                        closable
+                                        color= "processing"
+                                        bordered={false}
+                                        style={{ userSelect: 'none',color: '#000',padding: '2px 6px'}}
+                                        onClose={() => handleClose(tag)}
                                     >
-                                    {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-                                    </span>
-                                </Tag>
-                                );
-                                return isLongTag ? (
-                                <Tooltip title={tag} key={tag}>
-                                    {tagElem}
-                                </Tooltip>
-                                ) : (
-                                    tagElem
-                                );
+                                        <span
+                                        onDoubleClick={(e) => {
+                                            if (index !== 0) {
+                                                setEditInputIndex(index);
+                                                setEditInputValue(tag);
+                                                e.preventDefault();
+                                            }
+                                        }}
+                                        >
+                                            {tag.label}
+                                        </span>
+                                    </Tag>
+                                )
                             })}
                         </Flex>
                     </Form.Item>

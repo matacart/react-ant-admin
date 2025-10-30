@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useParams } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import ThemeTemplateCard from '../../ProductAdd/ThemeTemplateCard';
 import CategoriesInfo from './CategoriesInfo';
 import CategoriesCover from './CategoriesCover';
 import CategoriesBanner from './CategoriesBanner';
@@ -80,7 +79,6 @@ function EditProductCategories(){
                             <CategoriesSubnumber />
                             <EditSeo />
                             {/* <ThirdPartyInfoCard/> */}
-                            <ThemeTemplateCard/>
                         </div>
                     </div>
                     <Divider/>

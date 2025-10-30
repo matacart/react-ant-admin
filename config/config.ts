@@ -14,8 +14,8 @@ const timestamp = dayjs().format('YYYYMMDDHHmm');
 
 export default defineConfig({
 
-  publicPath: process.env.NODE_ENV === 'production' ? `https://admin-cdn.handingcdn.com/us01/${timestamp}/` : '/',
-  // publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? `/us01/${timestamp}/` : '/',
+  // publicPath: '/',
 
   /**
    * @name 开启 hash 模式

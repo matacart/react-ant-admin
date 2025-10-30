@@ -9,6 +9,7 @@ import shopSetting from '@/store/channel/shopSetting/shopSetting';
 import LangSelect from '@/components/Select/LangSelect';
 import cookie from 'react-cookies';
 import { observer } from 'mobx-react-lite';
+import { useAbortController } from '@/hooks/customHooks';
 
 
 function ShopSetting(){
@@ -16,6 +17,8 @@ function ShopSetting(){
   const [isSkeleton,setIsSkeleton] = useState(true);
 
   const [activeTab, setActiveTab] = useState('1'); // 添加状态控制当前激活的标签页
+
+  const { createAbortController } = useAbortController();
 
   const items: TabsProps['items'] = [
       {
@@ -35,15 +38,19 @@ function ShopSetting(){
   useEffect(()=>{
     // 默认语言
     shopSetting.setLanguagesId(cookie.load("shop_lang") || '2');
+    // 创建 AbortController 信号
+    const signal = createAbortController();
     getTemplateMallList({
       page: 1,
-      limit:10
-    }).then((res:any)=>{
+      limit:10,
+    },signal).then((res:any)=>{
       if(res.code == 0){
         shopSetting.setTemplateMallList(res.data)
       }
     }).catch(err=>{
-      console.log("获取数据失败",err)
+      if (err.name !== 'CanceledError') {
+        console.log(err)
+      }
     }).finally(()=>{
       setIsSkeleton(false)
     })

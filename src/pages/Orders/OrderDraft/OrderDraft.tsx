@@ -7,25 +7,32 @@ import orderDraftList from '@/store/order/orderDraftList';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import BlankPage from './BlankPage';
 import { getOrderDraftList } from '@/services/y2/api';
+import { useAbortController } from '@/hooks/customHooks';
   
 export default function OrderDraft() {
 
-  const [isSkeleton,setIsSkeleton] = useState(true)
+  const [isSkeleton,setIsSkeleton] = useState(true);
 
-  const [isBlank,setIsBlank] = useState(true)
+  const [isBlank,setIsBlank] = useState(true);
+
+  const { createAbortController } = useAbortController();
 
   useEffect(()=>{
+
+    const signal = createAbortController();
     getOrderDraftList({
       page:1,
       limit:10
-    }).then(res=>{
+    },signal).then(res=>{
       orderDraftList.setOrderDraftList({
         data:res.data,
-        total:res.count
+        total:Number(res.count || 0)
       });
       (res.data.length && res.data.length) > 0 ? setIsBlank(false) : setIsBlank(true);
     }).catch(err=>{
-      console.error('Error fetching data:', err);
+      if(err.name === 'AbortError'){
+        console.log(err);
+      }
     }).finally(()=>{
       setIsSkeleton(false)
     })

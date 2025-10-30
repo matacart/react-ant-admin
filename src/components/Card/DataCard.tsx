@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import salesRevenue from '@/../public/icons/commons/salesRevenue.svg';
 import orderNumber from '@/../public/icons/commons/orderNumber.svg';
 import visitorCount from '@/../public/icons/commons/visitorCount.svg';
+import { useAbortController } from '@/hooks/customHooks';
 
 interface todayDataType{
     customerCount:number;
@@ -22,6 +23,8 @@ export default function DataCard({
 
 }) {
 
+    const { createAbortController } = useAbortController();
+
     const [todayData,setTodayData] = useState<todayDataType | null>({
         currencySymbol: "$",
         customerCount: 0,
@@ -34,12 +37,19 @@ export default function DataCard({
     useEffect(()=>{
         const startTimer = dayjs().startOf('day').valueOf();
         const endTimer = dayjs().endOf('day').valueOf();
-        getTodayData(startTimer/1000,endTimer/1000).then((res:any)=>{
+
+        // 创建 AbortController 信号
+        const signal = createAbortController();
+
+        getTodayData(startTimer/1000,endTimer/1000,{ signal }).then((res:any)=>{
             if(res.code !== 201){
                 setTodayData(res.data)
             }
         }).catch(err=>{
-            console.log(err)
+            // 检查是否是取消请求导致的错误
+            if (err.name !== 'CanceledError') {
+                console.log(err)
+            }
         })
     },[])
 

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Button, Card, Col, ConfigProvider, Divider, Flex, MenuProps, Pagination, Progress, Row } from 'antd';
+import { Button, Card, Col, ConfigProvider, Divider, Flex, MenuProps, Pagination, Progress, Row, Spin } from 'antd';
 import { RocketIcon, StarsIcon } from "@/components/Icons/Icons";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import RenameModal from "./RenameModal";
 import UploadTemplateModal from "./UploadTemplateModal";
 import DownloadModal from "./DownloadModal";
+import { useAbortController } from "@/hooks/customHooks";
+import { LoadingOutlined } from "@ant-design/icons";
 
 
 interface MyStylesCardProps {
@@ -22,6 +24,10 @@ interface MyStylesCardProps {
 function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
 
   const navgate = useNavigate();
+
+  const [instanceUsingLoading,setInstanceUsingLoading] = useState(false);
+
+  const [instanceListLoading,setInstanceListLoading] = useState(false);
 
   const themeItems: MenuProps['items'] = [
     {
@@ -45,8 +51,10 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     total: 5,
   });
 
+  const { createAbortController } = useAbortController();
+
   useEffect(()=>{
-    // 用户添加模板
+    // 用户模板
     getTemplateInstanceList({
       page: pagination.current,
       limit: pagination.pageSize,
@@ -61,15 +69,19 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
       }
     }).catch(err=>{
       console.log(err)
+    }).finally(()=>{
     })
   },[pagination.current,shopSetting.languagesId]) // 依赖项添加分页参数
 
   // 获取当前模板
   useEffect(()=>{
+    setInstanceUsingLoading(true);
     getTemplateInstanceUsing(shopSetting.languagesId).then((res:any)=>{
       shopSetting.setTemplateInstanceUsing(res.data)
     }).catch(err=>{
       console.log(err)
+    }).finally(()=>{
+      setInstanceUsingLoading(false);
     })
   },[shopSetting.languagesId])
 
@@ -122,76 +134,78 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
               <p className="des">这是当前你向客户展示的店面样式</p>
             </div>
             <div className="current-topic-right">
-              <Flex justify="space-between" align="center">
-                <div>
-                  <h3>{shopSetting.templateInstanceUsing?.template_name}</h3>
-                  <p className="font-12 color-7A8499">
-                    <span>
-                      当前版本：{shopSetting.templateInstanceUsing?.template_version}
-                      <Divider type="vertical" />
-                      语言：
-                      {
-                        JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===shopSetting.templateInstanceUsing?.languages_id)?.name
-                      }
-                      <Divider type="vertical" />
-                      上次修改时间：{dayjs(JSON.parse(shopSetting.templateInstanceUsing?.update_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
-                    </span>
-                  </p>
-                </div>
-                <div>
-                  <Flex gap={12}>
-                    <DefaultButton text="预览" />
-                    <ButtonDropdownSecondary menu={{items:[
-                      {
-                        label: <a onClick={()=>navgate(`/theme/preview?preview=1&templateId=${shopSetting.templateInstanceUsing?.id}`)}>查看店铺</a>,
-                        key: '1',
-                      },
-                      {
-                        label: <div>复制</div>,
-                        key: '2',
-                      },
-                      {
-                        label: <RenameModal template={shopSetting.templateInstanceUsing} />,
-                        key: '3',
-                      },
-                      {
-                        label: <div>编辑语言</div>,
-                        key: '4',
-                      },
-                      {
-                        label: <a onClick={()=>navgate(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
-                        key: '5',
-                      },
-                      {
-                        label: <DownloadModal template={shopSetting.templateInstanceUsing} />,
-                        key: '6',
-                      }
-                    ]}} trigger={['click']} text="操作" />
-                    <PrimaryButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json`)} />
+              <Spin spinning={instanceUsingLoading} indicator={<LoadingOutlined spin />} >
+                  <Flex justify="space-between" align="center">
+                    <div>
+                      <h3>{shopSetting.templateInstanceUsing?.template_name}</h3>
+                      <p className="font-12 color-7A8499">
+                        <span>
+                          当前版本：{shopSetting.templateInstanceUsing?.template_version}
+                          <Divider type="vertical" />
+                          语言：
+                          {
+                            JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===shopSetting.templateInstanceUsing?.languages_id)?.name
+                          }
+                          <Divider type="vertical" />
+                          上次修改时间：{dayjs(JSON.parse(shopSetting.templateInstanceUsing?.update_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <Flex gap={12}>
+                        <DefaultButton text="预览" />
+                        <ButtonDropdownSecondary menu={{items:[
+                          {
+                            label: <a onClick={()=>navgate(`/theme/preview?preview=1&templateId=${shopSetting.templateInstanceUsing?.id}`)}>查看店铺</a>,
+                            key: '1',
+                          },
+                          {
+                            label: <div>复制</div>,
+                            key: '2',
+                          },
+                          {
+                            label: <RenameModal template={shopSetting.templateInstanceUsing} />,
+                            key: '3',
+                          },
+                          {
+                            label: <div>编辑语言</div>,
+                            key: '4',
+                          },
+                          {
+                            label: <a onClick={()=>navgate(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
+                            key: '5',
+                          },
+                          {
+                            label: <DownloadModal template={shopSetting.templateInstanceUsing} />,
+                            key: '6',
+                          }
+                        ]}} trigger={['click']} text="操作" />
+                        <PrimaryButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json`)} />
+                      </Flex>
+                    </div>
                   </Flex>
-                </div>
-              </Flex>
-              {/*  */}
-              <Flex className="middle" justify="center">
-                <div className="item-wrap">
-                  <div className="pc">
-                    <nav>
-                      <div className="circle"></div>
-                      <div className="circle"></div>
-                      <div className="circle"></div>
-                      <div className="input"></div>
-                    </nav>
-                    <div className="img-wrap">
-                      <img src="https://img.myshopline.com/image/official/71ac683822e14c8c81dab2146ae96ca8.png" alt="https://img.myshopline.com/image/official/71ac683822e14c8c81dab2146ae96ca8.png" draggable="false" />
+                  {/*  */}
+                  <Flex className="middle" justify="center">
+                    <div className="item-wrap">
+                      <div className="pc">
+                        <nav>
+                          <div className="circle"></div>
+                          <div className="circle"></div>
+                          <div className="circle"></div>
+                          <div className="input"></div>
+                        </nav>
+                        <div className="img-wrap">
+                          <img src="https://img.myshopline.com/image/official/71ac683822e14c8c81dab2146ae96ca8.png" alt="https://img.myshopline.com/image/official/71ac683822e14c8c81dab2146ae96ca8.png" draggable="false" />
+                        </div>
+                      </div>
+                      <div className="mobile">
+                        <div className="img-wrap">
+                          <img src="https://img.myshopline.com/image/official/bf86b9750c4c496dbb813cf16cc4fe98.png" alt="https://img.myshopline.com/image/official/bf86b9750c4c496dbb813cf16cc4fe98.png" draggable="false" />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mobile">
-                    <div className="img-wrap">
-                      <img src="https://img.myshopline.com/image/official/bf86b9750c4c496dbb813cf16cc4fe98.png" alt="https://img.myshopline.com/image/official/bf86b9750c4c496dbb813cf16cc4fe98.png" draggable="false" />
-                    </div>
-                  </div>
-                </div>
-              </Flex>
+                  </Flex>
+              </Spin>
             </div>
           </Flex>
           {/* 在线商店速度 */}
@@ -239,95 +253,97 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
               <ButtonDropdownSecondary menu={{items:themeItems}} trigger={['click']} text="添加模板" />
             </div>
             <div className="right">
-              {shopSetting.templateInstanceList?.map((template:TemplateInstance)=>{
-                return (
-                  <Flex key={template.id} justify="space-between" className="themeList-item">
-                    <Flex vertical gap={8} justify="center">
-                      <div>{template.template_name}</div>
-                      <div className="font-12 color-7A8499">
-                        当前版本：{template.template_version}
-                        <Divider type="vertical" />
-                        语言：{JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===template?.languages_id)?.name}
-                        <Divider type="vertical" />
-                        保存时间：{dayjs(JSON.parse(template?.create_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
-                      </div>
-                    </Flex>
-                    <Flex gap={12}>
-                      <a href={`/theme/preview?preview=1&templateId=${template.id}`} target="_blank" >
-                        <DefaultButton text="预览" />
-                      </a>
-                      <ButtonDropdownSecondary 
-                        menu={{
-                          items:[
-                            {
-                              label: <a onClick={()=>{
-                                setInstanceStatus(template.id,"1").then(async res=>{
-                                  const { data } = await getTemplateInstanceUsing(shopSetting.languagesId) as any;
-                                  shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
+              <Spin spinning={instanceUsingLoading} indicator={<LoadingOutlined spin />} >
+                  {shopSetting.templateInstanceList?.map((template:TemplateInstance)=>{
+                    return (
+                      <Flex key={template.id} justify="space-between" className="themeList-item">
+                        <Flex vertical gap={8} justify="center">
+                          <div>{template.template_name}</div>
+                          <div className="font-12 color-7A8499">
+                            当前版本：{template.template_version}
+                            <Divider type="vertical" />
+                            语言：{JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===template?.languages_id)?.name}
+                            <Divider type="vertical" />
+                            保存时间：{dayjs(JSON.parse(template?.create_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
+                          </div>
+                        </Flex>
+                        <Flex gap={12}>
+                          <a href={`/theme/preview?preview=1&templateId=${template.id}`} target="_blank" >
+                            <DefaultButton text="预览" />
+                          </a>
+                          <ButtonDropdownSecondary 
+                            menu={{
+                              items:[
+                                {
+                                  label: <a onClick={()=>{
+                                    setInstanceStatus(template.id,"1").then(async res=>{
+                                      const { data } = await getTemplateInstanceUsing(shopSetting.languagesId) as any;
+                                      shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
 
-                                  getTemplateInstanceList({
-                                    page: pagination.current,
-                                    limit: pagination.pageSize
-                                  }).then((res:any)=>{
-                                    if(res.data.length !== 0){
-                                      shopSetting.setTemplateInstanceList(res.data);
-                                      setPagination({
-                                        ...pagination,
-                                        total:res.count
+                                      getTemplateInstanceList({
+                                        page: pagination.current,
+                                        limit: pagination.pageSize
+                                      }).then((res:any)=>{
+                                        if(res.data.length !== 0){
+                                          shopSetting.setTemplateInstanceList(res.data);
+                                          setPagination({
+                                            ...pagination,
+                                            total:res.count
+                                          })
+                                        }
+                                      }).catch(err=>{
+                                        console.log(err)
                                       })
-                                    }
-                                  }).catch(err=>{
-                                    console.log(err)
-                                  })
-                                })
-                              }}>发布</a>,
-                              key: '1',
-                            },
-                            {
-                              label: <div>复制</div>,
-                              key: '2',
-                            },
-                            {
-                              label: <RenameModal template={template} />,
-                              key: '3',
-                            },
-                            {
-                              label: <div>编辑语言</div>,
-                              key: '4',
-                            },
-                            {
-                              label: <a onClick={()=>navgate(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
-                              key: '5',
-                            },
-                            {
-                              label: <DownloadModal template={template} />,
-                              key: '6',
-                            },
-                            {
-                              label: <div className="color-F86140">删除</div>,
-                              key: '7',
-                            },
-                          ]
-                        }} 
-                        trigger={['click']} 
-                        text="操作"
-                      />
-                      <DefaultButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${template.id}`)} />
-                    </Flex>
+                                    })
+                                  }}>发布</a>,
+                                  key: '1',
+                                },
+                                {
+                                  label: <div>复制</div>,
+                                  key: '2',
+                                },
+                                {
+                                  label: <RenameModal template={template} />,
+                                  key: '3',
+                                },
+                                {
+                                  label: <div>编辑语言</div>,
+                                  key: '4',
+                                },
+                                {
+                                  label: <a onClick={()=>navgate(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
+                                  key: '5',
+                                },
+                                {
+                                  label: <DownloadModal template={template} />,
+                                  key: '6',
+                                },
+                                {
+                                  label: <div className="color-F86140">删除</div>,
+                                  key: '7',
+                                },
+                              ]
+                            }} 
+                            trigger={['click']} 
+                            text="操作"
+                          />
+                          <DefaultButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${template.id}`)} />
+                        </Flex>
+                      </Flex>
+                    )
+                  })}
+                  {/*  */}
+                  <Flex style={{marginTop:"24px"}} align="center" justify="space-between">
+                    <span className="ant-pagination-total-text">
+                      共 {pagination.total} 条记录
+                    </span>
+                    <Pagination 
+                      {...pagination}
+                      onChange={handlePageChange}
+                      showSizeChanger={false}
+                    />
                   </Flex>
-                )
-              })}
-              {/*  */}
-              <Flex style={{marginTop:"24px"}} align="center" justify="space-between">
-                <span className="ant-pagination-total-text">
-                  共 {pagination.total} 条记录
-                </span>
-                <Pagination 
-                  {...pagination}
-                  onChange={handlePageChange}
-                  showSizeChanger={false}
-                />
-              </Flex>
+              </Spin>
             </div>
           </Flex>
         </Card>

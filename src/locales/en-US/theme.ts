@@ -1,4 +1,50 @@
 export default {
     't':'公告栏',
+    'theme.header.live': 'Live',
+    'theme.header.draft': 'Draft',
+    'theme.header.preview': 'Preview',
+    'theme.header.save': 'Save',
+    'theme.header.undo': 'Undo',
+    'theme.header.redo': 'Redo',
+    'theme.header.backToAdmin': 'Back to admin panel',
+
+    'theme.header.mode': 'Mode',
+    'theme.header.mode.auto': 'Auto',
+    'theme.header.mode.original': 'Original',
+    'theme.header.mode.mapping': 'Mapping',
+
+
+    'theme.header.navigation.Home': 'Home',
+    'theme.header.navigation.AllCollections': 'AllCollections',
+    'theme.header.navigation.Products': 'Products',
+    'theme.header.navigation.ProductsDetail': 'ProductsDetail',
+    'theme.header.navigation.Cart': 'Cart',
+    'theme.header.navigation.BlogsList': 'BlogsList',
+    'theme.header.navigation.BlogsDetail': 'BlogsDetail',
+    'theme.header.navigation.Checkout': 'Checkout',
+    'theme.header.navigation.404': '404',
+    'theme.header.navigation.ProductsSearch': 'ProductsSearch',
+    'theme.header.navigation.SignIn': 'SignIn',
+    'theme.header.navigation.SignUp': 'SignUp',
+    'theme.header.navigation.Company': 'Company',
+    'theme.header.navigation.ActivateAccount':'ActivateAccount',
+    'theme.header.navigation.Center':'Center',
+    'theme.header.navigation.Password': 'Password',
+    'theme.header.navigation.AddressNew': 'AddressNew',
+    'theme.header.navigation.AddressEdit': 'AddressEdit',
+    'theme.header.navigation.OrderList': 'OrderList',
+    'theme.header.navigation.OrderDetail': 'OrderDetail',
+    'theme.header.navigation.PasswordNew': 'PasswordNew',
+    'theme.header.navigation.Page': 'Page',
+    'theme.header.navigation.Policy': 'Policy',
+    'theme.header.navigation.Customers': 'Customers',
+    'theme.header.navigation.Features': 'Features',
+
+    'theme.left.home': 'Home',
+    'theme.left.expand': 'Expand',
+    'theme.left.collapse': 'Collapse',
+    'theme.left.template': 'Template',
+
+    
 };
   

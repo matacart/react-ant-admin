@@ -90,9 +90,9 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                                 const operationData = {
                                     mode: 'auto',
                                     oseid: editor?.oseId??"",
-                                    themeId: editor.templateInfo.templateId,
+                                    themeId: editor.templateInfo.themeInfo?.id,
                                     pageName: "",
-                                    languagesId: editor.languages,
+                                    languagesId: editor.languagesId,
                                     settings: JSON.stringify(newSettings)
                                 };
 

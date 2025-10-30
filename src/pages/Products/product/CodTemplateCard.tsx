@@ -1,11 +1,11 @@
 import product from "@/store/product/product";
 import { Card, Flex, Select } from "antd";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import styled from "styled-components";
 import ThemeTemplateManagement from "./ThemeTemplateManagement";
 
-const ThemeTemplateEdit = () =>{
+const ThemeTemplateCard = () =>{
+
     const handleChange = (value: string) => {
         product.setProductInfo({
             ...product.productInfo,
@@ -18,13 +18,13 @@ const ThemeTemplateEdit = () =>{
             <Card>
                 <div className="title">
                     <Flex justify="space-between">
-                        <div>主题模板</div>
+                        <div>单页模板</div>
                         <ThemeTemplateManagement />
                     </Flex>
                 </div>
                 <Select
-                    value={product.productInfo.template_id}
                     style={{ width: "100%" }}
+                    value={product.productInfo.template_id}
                     onChange={handleChange}
                     options={[
                         { value: '0', label: '默认模板' },
@@ -38,7 +38,7 @@ const ThemeTemplateEdit = () =>{
     )
 }
 
-export default observer(ThemeTemplateEdit)
+export default observer(ThemeTemplateCard)
 
 const Scoped = styled.div`
 .title{

@@ -134,7 +134,7 @@ function Left(){
                 </div>
                 <div className="design-designContainer">
                     <Flex className="design-sidebarHeader" justify="space-between">
-                        <div className="design-sidebarTitle font-16 font-w-600">首页</div>
+                        <div className="design-sidebarTitle font-16 font-w-600">{intl.formatMessage({id:'theme.left.home'})}</div>
                         {isFold ? 
                             <div className="Design-sidebarBtn color-356DFF cursor-pointer" onClick={()=>{
                                 setIsFold(false)
@@ -146,7 +146,7 @@ function Left(){
                                     });
                                     return newCollapsedSections;
                                 });
-                            }}>展开</div>:
+                            }}>{intl.formatMessage({id:'theme.left.expand'})}</div>:
                             <div className="Design-sidebarBtn color-356DFF cursor-pointer" onClick={()=>{
                                 setIsFold(true)
                                 // 将所有区块为折叠状态
@@ -157,7 +157,7 @@ function Left(){
                                     });
                                     return newCollapsedSections;
                                 });
-                            }}>折叠</div>
+                            }}>{intl.formatMessage({id:'theme.left.collapse'})}</div>
                         }
                         
                         
@@ -169,7 +169,6 @@ function Left(){
                                 const popoverId = `popover-${sectionId}`; // 为每个Popover创建唯一ID
                                 const maxBlock = res.config.schema.max_blocks;
                                 const current = res.config.settingsData.block_order.length;
-                                console.log('current:', sectionId);
                                 return(
                                     <div key={sectionId} className="fixedCompItem-sectionWrapper" id={res.config.sectionId}>
                                         <Flex id="section-announcement-bar" className={sectionId == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 

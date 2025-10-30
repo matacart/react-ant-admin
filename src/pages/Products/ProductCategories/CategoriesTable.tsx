@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import modal from 'antd/es/modal';
 import cookie from 'react-cookies';
 import categoriesList from '@/store/product/categoriesList';
+import { useAbortController } from '@/hooks/customHooks';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -32,12 +33,14 @@ function CategoriesTable() {
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [modalOpen, setModalOpen] = useState(false);
 
+  const { createAbortController } = useAbortController();
+
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
-      pageSize: 50,
-      pageSizeOptions:[50,200,400,600]
+      pageSize: 10,
+      pageSizeOptions:[10,20,50,100]
     },
   });
 
@@ -214,7 +217,9 @@ function CategoriesTable() {
       page:page,
       limit:limit,
     }
-    getCategoryList(res).then((res)=>{
+
+    const signal = createAbortController();
+    getCategoryList(res,signal).then((res)=>{
       setData(res.data);
       setTableParams({
         ...tableParams,
@@ -224,7 +229,9 @@ function CategoriesTable() {
         }
       });
     }).catch((error) => {
-      console.log(error)
+      if (error.name !== 'CanceledError') {
+        console.log(error)
+      }
     }).finally(()=>{
       setLoading(false);
     })

@@ -1,13 +1,11 @@
-import { ArrowLeftOutlined, ExclamationCircleOutlined, FacebookFilled, LeftOutlined, RightOutlined, YahooFilled } from '@ant-design/icons';
-import { Divider,Flex,Form,MenuProps,message, Modal, Popconfirm, Select,SelectProps, Spin, UploadFile } from 'antd';
+import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Divider,Flex,Form,MenuProps,message, Modal } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import ProductDataEdit from './ProductDataEdit';
 import ProductImgEdit from './ProductImgEdit';
-import ProductSettingsEdit from './ProductSettingsEdit';
 import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
-import ThemeTemplateEdit from './ThemeTemplateEdit';
 import TradingRecords from './TradingRecords';
-import { addTags, deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
+import { deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
 import StockEdit from './StockEdit';
 import MultipleStylesEdit from './MultipleStylesEdit';
@@ -18,7 +16,6 @@ import ProductSeoEdit from './ProductSeoEdit';
 import { observer } from 'mobx-react-lite';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
-import Subnumber from './Subnumber';
 import cookie from 'react-cookies';
 import { history,useParams,useNavigate } from '@umijs/max';
 import ProtectionInformationEdit from './ProtectionInformationEdit';
@@ -36,6 +33,10 @@ import { LeftIcon, RightIcon } from '@/components/Icons/Icons';
 import ButtonDropdownSecondary from '@/components/Dropdown/ButtonDropdownSecondary';
 import Overlay from '@/components/Overlay/Overlay';
 import LangSelect from '@/components/Select/LangSelect';
+import ProductSettingsCard from '../Product/ProductSettingsCard';
+import Subnumber from '../Product/Subnumber';
+import CodTemplateCard from '../Product/CodTemplateCard';
+import ThemeTemplateCard from '../Product/ThemeTemplateCard';
 
 
 // 信息
@@ -294,8 +295,6 @@ function ProductDetail() {
         if(await formValidation()){
             setLoading(true)
             try {
-                product.productInfo.tag !== "" && addTags(product.productInfo.languages_id,product.productInfo.tag).then(res=>{
-                })
                 await upDateProduct({
                     ...product.productInfo,
                     product_image:product.productInfo.additional_image[0] || "",
@@ -377,7 +376,7 @@ function ProductDetail() {
                                 </div>
                                 <div className='mc-layout-extra'>
                                     <RelevanceEdit />
-                                    <ProductSettingsEdit/>
+                                    <ProductSettingsCard />
                                     <TradingRecords/>
                                     <RecommendationEdit />
                                     <ProductSeoEdit/>
@@ -386,7 +385,8 @@ function ProductDetail() {
                                     <Subnumber />
                                     <ProtectionInformationEdit />
                                     <ThirdPartyInfoEdit/>
-                                    <ThemeTemplateEdit/>
+                                    <CodTemplateCard />
+                                    <ThemeTemplateCard />
                                 </div>
                             </div>
                             <Divider />

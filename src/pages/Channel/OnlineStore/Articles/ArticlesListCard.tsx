@@ -206,15 +206,15 @@ function ArticlesListCard() {
                 <Flex className="inquire" justify="space-between">
                   <Flex gap={16}>
                     <SearchInput placeholder="输入文章标题/内容/url进行搜索" style={{width:"320px"}}  />
-                    <DefaultSelect value="发布状态" options={[
+                    <DefaultSelect style={{width:"120px"}} value="发布状态" options={[
                       { value: '0', label: '已发布' },
                       { value: '1', label: '隐藏' },
-                    ]} onChange={()=>{}} />
-                    <DefaultSelect value="作者" options={[
+                    ]} />
+                    <DefaultSelect style={{width:"120px"}} value="作者" options={[
                       { value: '0', label: 'Admin' },
                       { value: '1', label: 'test1' },
                     ]} onChange={()=>{}} />
-                    <DefaultSelect value="博客集合" options={[
+                    <DefaultSelect style={{width:"120px"}} value="博客集合" options={[
                       { value: 'jack', label: 'Jack' },
                       { value: 'lucy', label: 'Lucy' },
                       { value: 'Yiminghe', label: 'yiminghe' },

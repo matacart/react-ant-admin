@@ -17,6 +17,7 @@ class codeEditor {
       this.mode = value;
     }
 
+    // 语言
     languageId = '2';
     setLanguageId(value:string){
       this.languageId = value;

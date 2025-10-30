@@ -8,6 +8,7 @@ import SelectedActions from './SelectedActions';
 import { observer } from 'mobx-react-lite';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderList } from '@/services/y2/api';
+import { useAbortController } from '@/hooks/customHooks';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;
@@ -43,8 +44,13 @@ const getRandomuserParams = (params: TableParams) => ({
 });
 
 function OrdersListAjax({ id,languagesId }: FilterCondition) {
+
   const intl = useIntl();
+
   const [loading, setLoading] = useState(false);
+
+  const { createAbortController } = useAbortController();
+
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
@@ -131,15 +137,14 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     const limit = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
   
-    console.log('Fetching data with:', { page, limit });
+    // console.log('Fetching data with:', { page, limit });
   
     // 构造查询字符串
     const searchParams = new URLSearchParams();
     if (page) searchParams.set('page', page.toString());
     if (limit) searchParams.set('limit', limit.toString());
 
-
-   
+    const signal = createAbortController();
     getOrderList({
       page:page,
       limit:limit,
@@ -149,25 +154,11 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
       condition:JSON.stringify(orderList.condition),
       shipping_status_id:"150",
       bizOrderStatuses:JSON.stringify(orderList.bizOrderStatuses),
-    }).then((res) => {
+    },signal).then((res) => {
         console.log('Response from getOrderList:', res);
         const newData: DataType[] = res.data?.map((item: any) => ({
           ...item,
-          // orderid: item.id,
-          // orderdata: item.date_purchased,
-          // orderstate: translateStatus('order.status.name_' + item.orders_status_id, intl),
-          // paymentmethod: item.payment_method,
-          // payment_status_id: item.payment_status_id, // 确保这里使用的是最新的 payment_status_id
-          // paymentstate: translateStatus('order.status.name_' + item.payment_status_id, intl),
-          // deliverystate: translateStatus('order.status.name_' + item.delivery_status_id, intl),
-          // deliveryname: item.delivery_name,
-          // tel: item.tel,
-          // shippingmethod: item.shipping_method,
-          // paymentchannel: item.payment_method,
-          // price: item.order_total,
         }));
-  
-        console.log('New data after processing:', newData);
         setData(newData); // 使用过滤后的数据
         setLoading(false);
         setTableParams({

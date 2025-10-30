@@ -1,3 +1,4 @@
+import { useAbortController } from '@/hooks/customHooks';
 import { getCategorySelect } from '@/services/y2/api';
 import productList from '@/store/product/productList';
 import { Button, ConfigProvider, Divider, Dropdown, Flex, Popover, Select } from 'antd';
@@ -12,8 +13,15 @@ export default function CommodityClassificationSelector() {
 
     const [isFocus,setIsFocus] = useState(false);
 
+    const { createAbortController } = useAbortController();
+
     useEffect(()=>{
-        getCategorySelect(1,10).then(res=>{
+        // 创建 AbortController 信号
+        const signal = createAbortController();
+        getCategorySelect({
+            page:1,
+            limit:10
+        },signal).then(res=>{
             const newOption = res.data.map((item:any)=>{
                 return {
                     value: item.id,
@@ -21,6 +29,10 @@ export default function CommodityClassificationSelector() {
                 }
             })
             newOption && setOptions(newOption)
+        }).catch(error=>{
+            if (error.name !== 'CanceledError') {
+                console.log(error)
+            }
         })
     },[])
 

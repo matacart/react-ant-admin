@@ -1,9 +1,12 @@
+import { useIntl } from "@umijs/max";
 import { ConfigProvider, Select, Tooltip } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 
 // 多语言选择框
 export default function LangSelect({lang,setLang}:{lang:string,setLang:any}){
+
+    const intl = useIntl();
 
     const [languageData, setLanguageData] = useState([]);
 
@@ -36,7 +39,7 @@ export default function LangSelect({lang,setLang}:{lang:string,setLang:any}){
                         },
                     }}
                 >
-                    <span className="title">店铺语言：</span>
+                    <span className="title">{intl.formatMessage({id: 'component.select.langSelect.shoplang'})}：</span>
                     <Select
                         className="langSelect"
                         value={lang}

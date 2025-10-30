@@ -108,6 +108,40 @@ declare namespace ApiStore {
     data:any,
     msg:string,
   }
+  type addTags = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+  type removeTags = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+
+  type Category = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+
+  type Order = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+
+  type OrderList = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+  
 }
 
 
@@ -126,6 +160,14 @@ declare namespace ApiAppstore {
     msg:string,
     success?:boolean,
   }
+
+  type jsonTemplates = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+
   type domainList = {
     code:number,
     count:string,

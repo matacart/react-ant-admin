@@ -1,5 +1,5 @@
 import { Breadcrumb, ColorPicker, Flex, Form, Switch } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import editor from '@/store/theme/editor';
 import { observer } from "mobx-react-lite";
@@ -166,9 +166,9 @@ function ComponentRight(){
                                             const operationData = {
                                                 mode: 'auto',
                                                 oseid: editor.oseId,
-                                                themeId: editor.templateInfo.templateId,
-                                                pageName: editor.component?.type == "template" ? editor.templateInfo.templateName : "",
-                                                languagesId:editor.languages,
+                                                themeId: editor.templateInfo.themeInfo.id,
+                                                pageName: editor.component?.type == "template" ? editor.templateInfo.themeName : "",
+                                                languagesId:editor.languagesId,
                                                 sections: JSON.stringify(newSections)
                                             };
 

@@ -27,5 +27,35 @@ export default {
             "data": [
             ]
         })
+    },
+    'POST  /api/ApiAppstore/currencies_list': (req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "ok",
+            "count": "0",
+            "data": [
+            ]
+        })
+    },
+
+    'POST  /api/ApiAppstore/role_list': (req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "ok",
+            "count": "0",
+            "data": [
+            ]
+        })
+    },
+    'POST  /api/ApiAppstore/domain_list': (req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "ok",
+            "count": "0",
+            "data": [
+            ]
+        })
     }
+    
+    
 }

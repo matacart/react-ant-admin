@@ -8,6 +8,7 @@ import settings from './en-US/settings';
 import login from './en-US/login';
 import orders from './en-US/orders';
 import header from './en-US/header';
+import theme from './en-US/theme';
 
 export default {
   'navBar.lang': 'Languages',
@@ -27,4 +28,5 @@ export default {
   ...component,
   ...pages,
   ...login,
+  ...theme,
 };

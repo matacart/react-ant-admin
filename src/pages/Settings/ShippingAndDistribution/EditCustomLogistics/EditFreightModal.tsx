@@ -243,7 +243,7 @@ export default function EditFreightModal({record}:{record:any}){
                                 <div className="font-w-600">计费方式：</div>
                                 <Flex gap={8}>
                                     <Form.Item label={false}>
-                                        <DefaultSelect value={billingMethod || 1} onChange={(e)=>{
+                                        <DefaultSelect style={{width:"120px"}} value={billingMethod || 1} onChange={(e)=>{
                                             setBillingMethod(e)
                                         }} options={[
                                             {

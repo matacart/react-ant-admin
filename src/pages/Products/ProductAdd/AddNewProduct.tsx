@@ -9,24 +9,25 @@ import MultipleStylesCard from './MultipleStylesCard';
 import ProductStyleList from './ProductStyleList';
 import SEOCard from './SEOCard';
 import StockCard from './StockCard';
-import ThemeTemplateCard from './ThemeTemplateCard';
 import Winnow from './Winnow';
 import PlatformHosting from './PlatformHosting';
-import Subnumber from './Subnumber';
 import Recommendation from './Recommendation';
 import Relevance from './Relevance';
 import product from '@/store/product/product';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import ProtectionInformation from './ProtectionInformation';
 import ThirdPartyInfoCard from './ThirdPartyInfoCard';
-import { addTags, upDateProduct } from '@/services/y2/api';
+import { upDateProduct } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
-import ProductData from '../product/ProductData';
-import ProductImg from '../product/ProductImg';
-import PriceOrTransaction from '../product/PriceOrTransaction';
+import ProductData from '../Product/ProductData';
+import ProductImg from '../Product/ProductImg';
+import PriceOrTransaction from '../Product/PriceOrTransaction';
+import ProductSettingsCard from '../Product/ProductSettingsCard';
+import Subnumber from '../Product/Subnumber';
 import LangSelect from '@/components/Select/LangSelect';
-import ProductSettingsCard from '../product/ProductSettingsCard';
+import CodTemplateCard from '../Product/CodTemplateCard';
+import ThemeTemplateCard from '../Product/ThemeTemplateCard';
 
 // 表单项商品数据类型
 interface DataType {
@@ -128,8 +129,6 @@ function AddNewProduct(){
         if(await formValidation()){
             setLoading(true)
             try {
-                product.productInfo.tag !== "" && addTags(product.productInfo.languages_id,product.productInfo.tag).then(res=>{
-                })
                 await upDateProduct({
                     ...product.productInfo,
                     product_image:product.productInfo.additional_image[0] || "",
@@ -158,8 +157,6 @@ function AddNewProduct(){
                 ...product.productInfo,
                 model:randomModal
             })
-
-            // 预加载Tinymce
             setIsSkeleton(false)
         };
         init();
@@ -221,7 +218,8 @@ function AddNewProduct(){
                             <Subnumber />
                             <ProtectionInformation />
                             <ThirdPartyInfoCard/>
-                            <ThemeTemplateCard/>
+                            <CodTemplateCard />
+                            <ThemeTemplateCard />
                         </div>
                     </div>
                     <Divider/>

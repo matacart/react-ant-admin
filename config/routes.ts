@@ -1,13 +1,8 @@
-import { layout } from "@/app.bak";
 import component from "@/locales/bn-BD/component";
 import menu from "@/locales/bn-BD/menu";
 import route from "mock/route";
 import { Children } from "react";
 import { Link, Outlet } from '@umijs/max';
-import React from "react";
-import { Icon } from '@umijs/max';
-import { head, times } from "lodash";
-import { redirect } from "react-router-dom";
 // import CangKukuCun from '../public/icons/caigoucaigoudan.svg';
 // import CaiGouDan from '/icons/caigoucaigoudan.svg';
 

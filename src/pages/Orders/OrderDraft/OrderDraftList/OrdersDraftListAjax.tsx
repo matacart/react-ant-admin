@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { GetProp, Select, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import styled from 'styled-components';
-import { getOrderList} from '@/services/y2/order';
 import { observer } from 'mobx-react-lite';
 import orderDraftList from '@/store/order/orderDraftList';
 import dayjs from 'dayjs';
@@ -9,10 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderDraftList } from '@/services/y2/api';
+import { useAbortController } from '@/hooks/customHooks';
 
 // 表单项订单数据类型
 interface DataType {
   id:string;
+  orderid:string,
   status:string;
   create_time:string;
   order_total:string;
@@ -36,6 +37,8 @@ const getRandomuserParams = (params: TableParams) => ({
 function OrdersDraftListAjax() {
 
   const navigate = useNavigate();
+
+  const { createAbortController } = useAbortController();
 
   const [loading, setLoading] = useState(false);
 
@@ -101,17 +104,20 @@ function OrdersDraftListAjax() {
       filters,
       ...sorter,
     });
-    
     setLoading(true);
+    const signal = createAbortController();
     getOrderDraftList({
       page:pagination.current,
       limit:pagination.pageSize
-    }).then(res=>{
+    },signal).then(res=>{
       orderDraftList.setOrderDraftList({
         data:res.data,
-        total:res.count
+        total:Number(res.count || 0)
       });
     }).catch(err=>{
+      if(err.name === 'AbortError'){
+        console.log(err);
+      }
     }).finally(()=>{
       setLoading(false);
     })
@@ -136,15 +142,6 @@ function OrdersDraftListAjax() {
           navigate(`/orders/draftOrders/edit/${record.id}`);
         },
       })}
-      // rowSelection={{
-      //   type: 'checkbox',
-      //   selectedRowKeys:orderList.orderIds, // 使用状态来记录选中的行
-      //   onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      //     orderList.setOrderIds(selectedRowKeys);
-      //   },
-      // }}
-      // 隐藏表头
-      // showHeader={orderList.orderIds.length === 0}
     />
   </Scoped>
   );

@@ -25,8 +25,8 @@ interface ProductType {
   cod_tk_pix_id:string;
 
   diversion: any[];
-  is_share: number;
-  is_sys: number;
+  is_share: string;
+  is_sys: string;
   hosted_status: number;
   alliance_status: number;
   is_new: number;
@@ -119,8 +119,8 @@ class Product{
         cod_tk_pix_id:"",
 
         diversion: [],
-        is_share: 0,
-        is_sys: 0,
+        is_share: "0",
+        is_sys: "0",
         hosted_status: 0,
         alliance_status: 0,
         is_new: 0,

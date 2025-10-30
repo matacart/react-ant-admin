@@ -137,7 +137,7 @@ export default function CustomPageListCard({list,count}) {
                 <Flex className="inquire" justify="space-between">
                   <Flex gap={16}>
                     <SearchInput placeholder="输入页面标题/内容/url进行搜索" style={{width:"320px"}}  />
-                    <DefaultSelect value="发布状态" options={[
+                    <DefaultSelect style={{width:"120px"}} value="发布状态" options={[
                       { value: '0', label: '已发布' },
                       { value: '1', label: '隐藏' },
                     ]} onChange={()=>{}} />

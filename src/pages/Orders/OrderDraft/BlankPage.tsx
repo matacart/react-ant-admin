@@ -15,7 +15,7 @@ function BlankPage() {
                     </div>
                     <div className='create-content'>
                         <div className='create-content-flex'>
-                            <img src="https://cdn.myshopline.cn/sl/admin/ec2-admin-order/20250408110311221/imgs/empty.ede02.png"></img>
+                            <img src="/img/blank/empty.order.png"></img>
                             <h3>管理你创建的草稿订单</h3>
                             <div>可将草稿订单发送给客户，当客户完成结账或你完成收款后将成为正式订单。</div>
                             <div>

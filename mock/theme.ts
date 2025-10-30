@@ -3438,32 +3438,317 @@ export default {
         res.json({
             "code": 0,
             "msg": "success",
+            "data": []
+        })
+    },
+
+    'POST /api/ApiTemplate/templatemall_list':(req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "success",
+            "data":[]
+        })
+    },
+    'POST /api/ApiTemplate/instance_using':(req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "success",
+            "data":{
+                id:"123456",
+                template_id:"123456789",
+                template_name:"test template",
+                template_version:"2.1",
+                os_version:"2.1",
+                status:"1",
+                update_time:"1759802280",
+                create_time:"1759802280",
+                languages_id:"2",
+            }
+        })
+    },
+
+    'POST /api/ApiEditor/installed_sections':(req: Request, res: Response) => {
+        res.json({
+            "code": "SUCCESS",
+            "msg": "success",
+            "data":{
+                sections:[]
+            }
+        })
+    },
+    'POST /api/ApiEditor/settings':(req: Request, res: Response) => {
+        res.json({
+            "code": "SUCCESS",
+            "msg": "success",
+            "data":{
+                schema: [],
+                settingsData:{},
+                presets:{}
+            }
+        })
+    },
+    
+    'POST /api/ApiEditor/languageSchema':(req: Request, res: Response) => {
+        res.json({
+            "code": "SUCCESS",
+            "msg": "success",
+            "data":{
+                schema: {},
+            }
+        })
+    },
+
+    'POST /api/ApiEditor/template_info':(req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "success",
+            "data":{
+                
+            }
+        })
+    },
+    
+    // 
+    'POST /api/ApiEditor/page': (req: Request, res: Response) => {
+        res.json({
+            "code": 0,
+            "msg": "ok",
+            "success": true,
             "data": {
-                "pageNum": 1,
-                "pageSize": "414",
-                "total": "414",
-                "lastPage": true,
                 "list": [
                     {
-                        "id": "7275145",
-                        "template_name": "Jewel",
-                        "template_code": "Jewel",
-                        "template_cover_img": null,
-                        "template_home_pc_preview_img": null,
-                        "template_home_mobile_preview_img": null,
-                        "template_pdp_pc_preview_img": null,
-                        "template_pdp_mobile_preview_img": null,
-                        "template_version": "1.0.0",
-                        "template_author": null,
-                        "os_version": "OS_2.1",
-                        "create_time": "1754919477",
-                        "update_time": "0",
-                        "status": "1",
-                        "merchant_id": "55",
-                        "employee_id": "1"
+                        "id": "Home",
+                        "name": "templates\/index.json",
+                        "title": "Home",
+                        "template": {
+                            "directory": null,
+                            "name": "Home",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "AllCollections",
+                        "name": "templates\/collections_all.json",
+                        "title": "Collections list",
+                        "template": {
+                            "directory": null,
+                            "name": "AllCollections",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Products",
+                        "name": "templates\/collection.json",
+                        "title": "Products",
+                        "template": {
+                            "directory": null,
+                            "name": "Products",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "ProductsDetail",
+                        "name": "templates\/products\/detail.json",
+                        "title": "ProductsDetail",
+                        "template": {
+                            "directory": "products",
+                            "name": "ProductsDetail",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Cart",
+                        "name": "templates\/cart.json",
+                        "title": "Cart",
+                        "template": {
+                            "directory": null,
+                            "name": "Cart",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "BlogsList",
+                        "name": "templates\/blogs\/list.json",
+                        "title": "Blogs",
+                        "template": {
+                            "directory": "blogs",
+                            "name": "BlogsList",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "BlogsDetail",
+                        "name": "templates\/blogs\/detail.json",
+                        "title": "Blog",
+                        "template": {
+                            "directory": "blogs",
+                            "name": "BlogsDetail",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Checkout",
+                        "name": "templates\/trade\/checkout.html",
+                        "title": "Checkout",
+                        "template": {
+                            "directory": "trade",
+                            "name": "Checkout",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "404",
+                        "name": "templates\/404.json",
+                        "title": "404 page",
+                        "template": {
+                            "directory": null,
+                            "name": "404",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "ProductsSearch",
+                        "name": "templates\/products\/search.json",
+                        "title": "ProductsSearch",
+                        "template": {
+                            "directory": "products",
+                            "name": "ProductsSearch",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "SignIn",
+                        "name": "templates\/customers\/login.html",
+                        "title": "Login",
+                        "template": {
+                            "directory": "customers",
+                            "name": "SignIn",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "SignUp",
+                        "name": "templates\/customers\/register.html",
+                        "title": "Register",
+                        "template": {
+                            "directory": "customers",
+                            "name": "SignUp",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Company",
+                        "name": "templates\/customers\/company.html",
+                        "title": "Company account register",
+                        "template": {
+                            "directory": "customers",
+                            "name": "Company",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "ActivateAccount",
+                        "name": "templates\/customers\/activate_account.html",
+                        "title": "ActivateAccount",
+                        "template": {
+                            "directory": "customers",
+                            "name": "ActivateAccount",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Password",
+                        "name": "templates\/password.json",
+                        "title": "Password",
+                        "template": {
+                            "directory": null,
+                            "name": "Password",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Center",
+                        "name": "templates\/customers\/account.html",
+                        "title": "Center",
+                        "template": {
+                            "directory": "customers",
+                            "name": "Center",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "AddressNew",
+                        "name": "templates\/customers\/addresses.html",
+                        "title": "Address",
+                        "template": {
+                            "directory": "customers",
+                            "name": "AddressNew",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "AddressEdit",
+                        "name": "templates\/customers\/addresses.html",
+                        "title": "Address",
+                        "template": {
+                            "directory": "customers",
+                            "name": "AddressEdit",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "OrderList",
+                        "name": "templates\/customers\/order\/list.html",
+                        "title": "customers\/orders",
+                        "template": {
+                            "directory": "customers\/order",
+                            "name": "OrderList",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "OrderDetail",
+                        "name": "templates\/customers\/order\/detail.html",
+                        "title": "customers\/orders",
+                        "template": {
+                            "directory": "customers\/order",
+                            "name": "OrderDetail",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "PasswordNew",
+                        "name": "templates\/customers\/forgot_password.html",
+                        "title": "customers\/forgot_password",
+                        "template": {
+                            "directory": "customers",
+                            "name": "PasswordNew",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Page",
+                        "name": "templates\/page.json",
+                        "title": "custom",
+                        "template": {
+                            "directory": null,
+                            "name": "Page",
+                            "suffix": null
+                        }
+                    },
+                    {
+                        "id": "Policy",
+                        "name": "templates\/policy.html",
+                        "title": "Policy",
+                        "template": {
+                            "directory": null,
+                            "name": "Policy",
+                            "suffix": null
+                        }
                     }
                 ]
             }
         })
     }
+    
 }
