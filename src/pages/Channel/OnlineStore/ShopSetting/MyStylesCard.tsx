@@ -180,7 +180,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '6',
                           }
                         ]}} trigger={['click']} text="操作" />
-                        <PrimaryButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json`)} />
+                        <PrimaryButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json&title=Home`)} />
                       </Flex>
                     </div>
                   </Flex>
@@ -327,7 +327,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             trigger={['click']} 
                             text="操作"
                           />
-                          <DefaultButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${template.id}`)} />
+                          <DefaultButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${template?.template_id}&languagesId=${shopSetting?.languagesId}&templateName=templates/index.json&title=Home`)} />
                         </Flex>
                       </Flex>
                     )

@@ -15,6 +15,10 @@ export default {
     'theme.header.mode.original': '开发模式',
     'theme.header.mode.mapping': '用户模式',
 
+    'theme.header.navigation.back': '返回',
+    'theme.header.navigation.createTemplate': '创建模板',
+    'theme.header.navigation.renameTemplate': '重命名模板',
+    'theme.header.navigation.default': '默认模板',
     'theme.header.navigation.Home': '首页',
     'theme.header.navigation.AllCollections': '分类页',
     'theme.header.navigation.Products': '商品列表页',
@@ -41,11 +45,28 @@ export default {
 
     'theme.header.navigation.Customers': '客户账户',
     'theme.header.navigation.Features': '功能页面',
+    'theme.header.navigation.tip.delete': '删除',
+    'theme.header.navigation.tip.rename': '重命名',
+
+    'theme.header.modal.templateName': '模板名称',
+    'theme.header.modal.templateName.placeholder': '请输入模版名称',
+    'theme.header.modal.basedOnTemplate': '基于模板',
+
+    'theme.header.deleteModal.title': '确认要删除此模板吗？',
+    'theme.header.deleteModal.content': '当前有商品正在使用此模版时，删除后将改为使用默认模版。',
+    'theme.header.deleteModal.delete': '删除',
+
+    'theme.header.renameTemplateModal.warningText': '改动模板名称可能导致商品分类丢失模板关联，影响在线商店，请谨慎操作。',
+    
 
     'theme.left.home': '首页',
     'theme.left.expand': '展开',
     'theme.left.collapse': '折叠',
     'theme.left.template': '模板',
+
+    'theme.left.toolBar.component': '组件',
+    'theme.left.toolBar.globalSettings': '全局设置',
+    'theme.left.toolBar.appEmbeds': '应用嵌入',
     
 
 

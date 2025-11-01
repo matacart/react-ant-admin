@@ -13,7 +13,7 @@ interface CollapsedState {
     [key: string]: boolean;
 }
 
-function Left(){
+function Left({title}:{title:string}){
 
     const intl = useIntl();
 
@@ -92,6 +92,19 @@ function Left(){
         )
     }
 
+    // 获取标题，如果有多语言翻译则使用翻译，否则直接显示title
+    const getPageTitle = () => {
+        try {
+            const messageId = `theme.header.navigation.${title}`;
+            const translatedTitle = intl.formatMessage({id: messageId});
+            // 如果翻译后的标题与消息ID相同，说明没有找到对应的翻译，直接返回title
+            return translatedTitle === messageId ? title : translatedTitle;
+        } catch (error) {
+            return title;
+        }
+    }
+    
+
     useEffect(() => {
         // console.log('editor.templateData:', editor.templateData);
         if (editor.templateData && editor.templateData.length > 0) {
@@ -115,17 +128,17 @@ function Left(){
             {isSkeleton?<></>:<>
                 <div className="toolBar-toolMenu">
                     <div className="toolBar-buttonGroup">
-                        <Tooltip title="组件" placement="right">
+                        <Tooltip title={intl.formatMessage({id:'theme.left.toolBar.component'})} placement="right">
                             <div onClick={() => editor.setToobar(0)} className={editor.toolBar == 0?"toolBar-themeIcon toolBar-activeIcon":"toolBar-themeIcon"}>
                                 <EditorComponentIcon />
                             </div>
                         </Tooltip>
-                        <Tooltip title="全局设置" placement="right">
+                        <Tooltip title={intl.formatMessage({id:'theme.left.toolBar.globalSettings'})} placement="right">
                             <div onClick={() => editor.setToobar(1)} className={editor.toolBar == 1?"toolBar-themeIcon toolBar-activeIcon":"toolBar-themeIcon"}>
                                 <EditorConfigurationIcon />
                             </div>
                         </Tooltip>
-                        <Tooltip title="应用嵌入" placement="right">
+                        <Tooltip title={intl.formatMessage({id:'theme.left.toolBar.appEmbeds'})} placement="right">
                             <div onClick={() => editor.setToobar(2)} className={editor.toolBar == 2?"toolBar-themeIcon toolBar-activeIcon":"toolBar-themeIcon"}>
                                 <EditorApplyIcon />
                             </div>
@@ -134,7 +147,9 @@ function Left(){
                 </div>
                 <div className="design-designContainer">
                     <Flex className="design-sidebarHeader" justify="space-between">
-                        <div className="design-sidebarTitle font-16 font-w-600">{intl.formatMessage({id:'theme.left.home'})}</div>
+                        <div className="design-sidebarTitle font-16 font-w-600">
+                            {getPageTitle()}
+                        </div>
                         {isFold ? 
                             <div className="Design-sidebarBtn color-356DFF cursor-pointer" onClick={()=>{
                                 setIsFold(false)
@@ -159,8 +174,6 @@ function Left(){
                                 });
                             }}>{intl.formatMessage({id:'theme.left.collapse'})}</div>
                         }
-                        
-                        
                     </Flex>
                     <div className="design-sidebarContent">
                         {editor.templateData.map((res:any,index:number)=>{
@@ -430,7 +443,7 @@ function Left(){
 
                                 return (
                                     <div style={{borderTop: "1px solid #eaedf1"}}>
-                                        <div className="template-title font-w-500">模板</div>
+                                        <div className="template-title font-w-500">{intl.formatMessage({id:'theme.left.template'})}</div>
                                         {template}
                                         <ComponentAdd />
                                     </div>

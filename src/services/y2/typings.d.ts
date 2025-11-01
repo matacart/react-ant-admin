@@ -154,25 +154,17 @@ declare namespace ApiAppstore {
     msg:string,
     success?:boolean,
   }
-  type roleList = {
-    code:number, 
-    data:any,
-    msg:string,
-    success?:boolean,
-  }
-
-  type jsonTemplates = {
-    code:number, 
-    data:any,
-    msg:string,
-    success?:boolean,
-  }
-
   type domainList = {
     code:number,
     count:string,
     data:any,
     msg:string,
+  }
+  type roleList = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
   }
 }
 
@@ -224,6 +216,19 @@ declare namespace ApiEditor{
   }
   type settingsSections = {
     code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  type jsonTemplates = {
+    code:number, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+
+  type page = {
+    code:number, 
     data:any,
     msg:string,
     success?:boolean,

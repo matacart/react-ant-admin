@@ -1,8 +1,9 @@
-import { DeleteOutlined, ExclamationCircleFilled } from "@ant-design/icons";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import { Flex, Modal } from "antd";
 import styled from "styled-components";
 import DefaultButton from "../Button/DefaultButton";
 import DangerButton from "../Button/DangerButton";
+import { useIntl } from "@umijs/max";
 
 
 interface ModalProps {
@@ -10,12 +11,15 @@ interface ModalProps {
   title: string;
   content: any;
   okText?: string;
+  cancelText?:string;
   tElement: any;
   loading?: boolean;
 }
 
 // 删除 弹窗提示
 export default function DeleteModal({removeFunc,title,content,okText,tElement,loading}:ModalProps){
+
+    const intl = useIntl();
 
     const [modal, contextHolder] = Modal.useModal();
     const confirm = () => {
@@ -25,11 +29,10 @@ export default function DeleteModal({removeFunc,title,content,okText,tElement,lo
             content: content,
             centered: true,
             okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
-            okText: okText,
             footer:()=>(
                 <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
-                    <DefaultButton text="取消" autoInsertSpace={false} onClick={()=>newModal.destroy()} />
-                    <DangerButton text="删除" loading={loading} autoInsertSpace={false} onClick={async ()=>{
+                    <DefaultButton text={intl.formatMessage({id:'component.modal.deleteModal.cancelText'})} autoInsertSpace={false} onClick={()=>newModal.destroy()} />
+                    <DangerButton text={intl.formatMessage({id:'component.modal.deleteModal.okText'})} loading={loading} autoInsertSpace={false} onClick={async ()=>{
                         removeFunc();
                         newModal.destroy();
                     }} />

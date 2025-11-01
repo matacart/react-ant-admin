@@ -3078,7 +3078,7 @@ export async function templateUpdate(res:{
   mode:string,
   oseid:string,
   themeId:string,
-  pageName:string,
+  pageName:string,  //模板名---识别模板，全局传""
   languagesId:string,
   sections?:any,
   settings?:string,
@@ -3125,7 +3125,7 @@ export async function settingsSections(res:{
   action:string,
   languages_id:string,
   oseid?:string,
-},signal:AbortSignal){
+},signal?:AbortSignal){
   return request<ApiEditor.settingsSections>(`/ApiEditor/settings`, {
     method: 'POST',
     headers: {
@@ -3181,7 +3181,7 @@ export async function getTemplatePage(res:{
   themeId:string,
   languages_id:string
 },signal?:AbortSignal){
-  return request<ApiAppstore.roleList>(`/ApiEditor/page`, {
+  return request<ApiEditor.page>(`/ApiEditor/page`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3202,7 +3202,7 @@ export async function getJsonTemplates(res:{
   version:string,
   mode:string,
 }){
-  return request<ApiAppstore.jsonTemplates>(`/ApiEditor/json_templates`, {
+  return request<ApiEditor.jsonTemplates>(`/ApiEditor/json_templates`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3226,7 +3226,7 @@ export async function createTemplateFile(res:{
   languages_id:string
 
 }){
-  return request<ApiAppstore.jsonTemplates>(`/ApiEditor/file_create`, {
+  return request<ApiEditor.jsonTemplates>(`/ApiEditor/file_create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3238,6 +3238,44 @@ export async function createTemplateFile(res:{
   })
 }
 
+// 删除模板文件
+export async function delTemplateFile(res:{
+  template_id:string,
+  template_name:string,
+  mode:string,
+  languages_id:string,
+}){
+  return request<ApiEditor.jsonTemplates>(`/ApiEditor/delete_template`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 重命名模板文件
+export async function renameTemplateFile(res:{
+  templateId:string, 
+  mode:string, 
+  languagesId:string,
+  oldFileName:string, 
+  newFileName:string, 
+}){
+  return request<ApiEditor.jsonTemplates>(`/ApiEditor/file_rename`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
 
 // 子账号
 export async function employeeSelect(){

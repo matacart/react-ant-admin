@@ -57,6 +57,12 @@ class editor {
       this.mode = value;
     }
 
+    // 模板页标题
+    title:string = "";
+    setTitle(value:string){
+      this.title = value;
+    }
+
     // 模板信息
     templateInfo:templateInfoType = {
       themeName:"",
@@ -328,6 +334,7 @@ class editor {
       this.redoHistory = [];
 
       this.mode = "auto";
+      this.title = "";
     }
 
 }

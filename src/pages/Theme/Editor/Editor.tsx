@@ -23,6 +23,7 @@ function Editor() {
     const languagesId = searchParams.get("languagesId");
     const templateName = searchParams.get("templateName");
     const preview = searchParams.get("preview");
+    const title = searchParams.get("title");
 
     const intl = useIntl();
 
@@ -266,7 +267,7 @@ function Editor() {
         <Flex>
           {/* left */}
           <div className="left">
-            <Left />
+            <Left title={title??"Title"} />
           </div>
           <div className="center">
             <div className="viewBox">

@@ -1,18 +1,15 @@
-import { CheckCircleOutlined, ExclamationCircleFilled } from "@ant-design/icons"
-import { Flex, Tabs, TabsProps, Tag } from "antd"
+import { ExclamationCircleFilled } from "@ant-design/icons"
+import { Flex, Tag } from "antd"
 import styled from "styled-components"
 
 export default function WarningTagText({content}:{content:React.ReactNode}){
     return(
         <Scoped>
             <Tag className="tag" color="warning">
-                {/* <div style={{display:"flex",alignItems:"center",gap:"5px"}}> */}
-                    {/* {content} */}
-                    <Flex gap={8}>
-                        <ExclamationCircleFilled className="font-14 tag-icon" />
-                        <div>{content}</div>
-                    </Flex>
-                {/* </div> */}
+                <Flex gap={8}>
+                    <ExclamationCircleFilled className="font-14 tag-icon" />
+                    <div>{content}</div>
+                </Flex>
             </Tag>
         </Scoped>
     )

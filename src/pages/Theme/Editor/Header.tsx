@@ -1,9 +1,9 @@
 
-import { AddIcon, BackIcon, DownIcon, EditorCategoryIcon, EditorHomeIcon, EditorRedoIcon, EditorRevokeIcon, RightIcon } from '@/components/Icons/Icons';
+import { AddIcon, BackIcon, DeleteIcon, DownIcon, EditIcon, EditorCategoryIcon, EditorHomeIcon, EditorRedoIcon, EditorRevokeIcon, RightIcon } from '@/components/Icons/Icons';
 import SuccessTag from '@/components/Tag/SuccessTag';
-import { getJsonTemplates, settingsSections, templateUpdate } from '@/services/y2/api';
+import { delTemplateFile, getJsonTemplates, settingsSections, templateUpdate } from '@/services/y2/api';
 import editor from '@/store/theme/editor';
-import { Button, Dropdown, Flex, Space, Tooltip } from 'antd';
+import { Button, Dropdown, Flex, message, Space, Tooltip } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,10 +12,10 @@ import LangSelect from '@/components/Select/LangSelect';
 import DefaultTag from '@/components/Tag/DefaultTag';
 import { SelectLang } from '@/components';
 import { history, useIntl } from '@umijs/max';
-import { useAbortController } from '@/hooks/customHooks';
 import NewTemplateModal from './NewTemplateModal';
 import MySelect from '@/components/Select/MySelect';
-
+import DeleteModal from '@/components/Modal/DeleteModal';
+import RenameTemplateModal from './RenameTemplateModal';
 
 interface pageType{
     id:string,
@@ -31,6 +31,7 @@ interface pageType{
 export interface jsonTemplate{
     templateName:string;
     pageName:string;
+    isDefaultTemplate:boolean;
 }
 
 const style: React.CSSProperties = {
@@ -39,7 +40,7 @@ const style: React.CSSProperties = {
     maxHeight:"350px",
 };
 
-// 从模板路径中提取模板名称
+// 匹配模板
 const extractTemplateName = (templatePath: string) => {
     // 使用正则表达式匹配 templates/ 和 最后一个. 之间的内容
     const match = templatePath.match(/templates\/(.+)\./);
@@ -47,6 +48,11 @@ const extractTemplateName = (templatePath: string) => {
       return match[1];
     }
     return "";
+}
+
+// 验证模板名称
+function escapeRegExp(string:string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function Header({templateId,templateName,nvData}:{templateId:string,templateName:string,nvData:any[]}) {
@@ -57,11 +63,13 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
 
     const isNavigating = useRef(false);
 
-    const { createAbortController } = useAbortController();
+    const dropdownContainerRef = useRef<HTMLDivElement>(null);
 
     const [loading,setLoading] = useState(false);
 
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [delLoading,setDelLoading] = useState(false);
+
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const [actionItem,setActionItem] = useState<any>();
 
@@ -85,7 +93,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
         const backItem = {
             key: 'back',
             label: (
-                <a onClick={(e) => {
+                <div className='item' onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     // 返回主菜单
@@ -93,9 +101,9 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                 }}>
                     <Flex align='center' gap={8} style={{padding:"4px 0"}}>
                         <RightIcon className='font-16' style={{transform: 'rotate(180deg)'}} />
-                        返回
+                        {intl.formatMessage({id:'theme.header.navigation.back'})}
                     </Flex>
-                </a>
+                </div>
             )
         };
         
@@ -150,7 +158,14 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
             'Customers':[],
             'Features':[],
         });
-        setActionItem(data.filter((item:any)=>item.name == templateName)[0])
+        // 
+        setActionItem(data.filter((item:any)=>{
+            const templateNameStart = item.name.substring(0,item.name.lastIndexOf("."));
+            const templateNameEnd = item.name.substring(item.name.lastIndexOf(".")+1);
+            const pattern = new RegExp(`^${escapeRegExp(templateNameStart)}\\.[^.]*\\.${escapeRegExp(templateNameEnd)}$`);
+            return (item.name == templateName) || pattern.test(templateName);
+        })[0] || {})
+
         // 调整键的顺序，使 Customers 和 Features 在最后
         const orderedKeys = Object.keys(pageList).filter(key => key !== 'Customers' && key !== 'Features');
         if (pageList['Customers']) orderedKeys.push('Customers');
@@ -158,57 +173,99 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
         const newItems = orderedKeys.map((groupKey,index)=>{
             if (pageList[groupKey].length == 1) {
                 const item = pageList[groupKey][0];
-                // 获取名称
-                const templateItemName = extractTemplateName(item.name);
+                // 判断字符串是否以 templateNameStarts 开头并且以 templateNameEnds 结尾
+                const templateNameStart = item.name.substring(0,item.name.lastIndexOf("."));
+                const templateNameEnd = item.name.substring(item.name.lastIndexOf(".")+1);
+                const pattern = new RegExp(`^${escapeRegExp(templateNameStart)}\\.[^.]*\\.${escapeRegExp(templateNameEnd)}$`);
                 return {
                     key: `${index}`,
                     label: (
-                        templateItemName == "collection" || templateItemName == "products/detail"
+                        item.id == "Products" || item.id == "ProductsDetail" || item.id == "BlogsList" || item.id == "BlogsDetail" || item.id == "Page"
                         ?(
-                            <a onClick={async (e)=>{
-                                e.preventDefault();
-                                // 阻止下拉菜单关闭
-                                e.stopPropagation();
-                                const templateList = await getTemplates(item.id);
-                                const newSubmenuData = templateList.data.list.map((submenu:jsonTemplate,index:number)=>{
-                                    return {
-                                        key: `submenu-${index}`,
-                                        label: (
-                                            <div onClick={()=>{
-                                                isNavigating.current = false;
-                                                history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${submenu.templateName}`)
-                                            }}>
-                                                <Flex style={{height:"30px"}} align='center' justify='space-between'>
-                                                    <Flex gap={8} align='center'>
-                                                        <EditorCategoryIcon className='font-24' />
-                                                        {submenu.pageName}
+                            <div className='item'
+                                onClick={async (e)=>{
+                                    e.preventDefault();
+                                    // 阻止下拉菜单关闭
+                                    e.stopPropagation();
+                                    const templateList = await getTemplates(item.id);
+                                    // 是否存在默认模板
+                                    const isDefault = templateList.data.list.some((item:jsonTemplate)=>item.isDefaultTemplate);
+                                    const newSubmenuData = templateList.data.list.map((submenu:jsonTemplate,index:number)=>{
+                                        return {
+                                            key: `submenu-${index}`,
+                                            label: (
+                                                <div className='item submenu' onClick={()=>{
+                                                    isNavigating.current = false;
+                                                    history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${submenu.templateName}&title=${submenu.pageName}`)
+                                                }}>
+                                                    <Flex style={{height:"30px"}} align='center' justify='space-between'>
+                                                        <Flex gap={8} align='center'>
+                                                            <EditorCategoryIcon className='font-24' />
+                                                            {(submenu.isDefaultTemplate || (!isDefault && submenu.templateName == item.name)) ? intl.formatMessage({id:'theme.header.navigation.default'}):submenu.pageName}
+                                                        </Flex>
+                                                        {/* 非默认模板时显示重命名和删除按钮 */}
+                                                        {!(submenu.isDefaultTemplate || (!isDefault && submenu.templateName == item.name)) && <Flex className='icon'>
+                                                            <RenameTemplateModal templateInfo={{templateId:templateId,templateName:submenu.templateName,pageName:submenu.pageName}} templateList={templateList.data.list} isDefault={isDefault} backMainItems={backMainItems} />
+                                                            <DeleteModal
+                                                                loading={delLoading}
+                                                                tElement={
+                                                                    <Tooltip title={intl.formatMessage({id:'theme.header.navigation.tip.delete'})}>
+                                                                        <DeleteIcon className='color-F86140'
+                                                                            onClick={(e) => backMainItems()}
+                                                                        />
+                                                                    </Tooltip>
+                                                                }
+                                                                removeFunc={()=>{
+                                                                    // 删除逻辑
+                                                                    setDelLoading(delLoading)
+                                                                    delTemplateFile({
+                                                                        template_id: templateId,
+                                                                        template_name: submenu.templateName,
+                                                                        mode: editor.mode,
+                                                                        languages_id: editor.languagesId,
+                                                                    }).then(()=>{
+                                                                        if(res.code == 0){
+                                                                            message.success("success");
+                                                                        }
+                                                                    }).catch((err)=>{
+                                                                        // 删除失败
+                                                                        console.log(err);
+                                                                    }).finally(()=>{
+                                                                        setDelLoading(false)
+                                                                    })
+                                                                }} 
+                                                                title={intl.formatMessage({id:'theme.header.deleteModal.title'})}
+                                                                content={intl.formatMessage({id:'theme.header.deleteModal.content'})}
+                                                            />
+                                                        </Flex>}
                                                     </Flex>
-                                                </Flex>
-                                            </div>
-                                        )
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                    // 添加项
+                                    const newItem = {
+                                        key: 'new',
+                                        label: <NewTemplateModal templateInfo={{templateId:templateId,templateName:item.name}} templateList={templateList.data.list} isDefault={isDefault} />
                                     }
-                                })
-
-                                // 添加项
-                                const newItem = {
-                                    key: 'new',
-                                    label: <NewTemplateModal templateInfo={{templateId:templateId,templateName:templateName}} templateList={templateList.data.list} />
-                                }
-                                setSubmenuData([...newSubmenuData,newItem]);
-                                setCurrentMenu(templateItemName);
-                            }}>
+                                    setSubmenuData([...newSubmenuData,newItem]);
+                                    setCurrentMenu(item.name);
+                                }}
+                                
+                            >
                                 <Flex style={{height:"30px"}} align='center' justify='space-between'>
                                     <Flex gap={8} align='center'>
                                         <EditorCategoryIcon className='font-24' />
-                                        <span className={item.name == templateName ? 'color-356DFF':''}>{intl.formatMessage({id:`theme.header.navigation.${item.id}`})}</span>
+                                        <span className={(item.name == templateName || pattern.test(templateName)) ? 'color-356DFF':''}>{intl.formatMessage({id:`theme.header.navigation.${item.id}`})}</span>
                                     </Flex>
                                     <RightIcon className='font-16 color-474F5E' />
                                 </Flex>
-                            </a>
+                            </div>
                         ):(
-                            <div onClick={()=>{
+                            <div className='item' onClick={()=>{
                                 isNavigating.current = false;
-                                history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${item.name}`)
+                                console.log(item)
+                                history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${item.name}&title=${item.id}`)
                             }}>
                                 <Flex style={{height:"30px"}} align='center' gap={8}>
                                     <EditorCategoryIcon className='font-24' />
@@ -224,7 +281,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                 return {
                     key: `${index}`,
                     label: (
-                        <a onClick={(e)=>{
+                        <div className='item' onClick={(e)=>{
                             e.preventDefault();
                             // 阻止下拉菜单关闭
                             e.stopPropagation();
@@ -234,7 +291,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                                     label: (
                                         <div onClick={()=>{
                                             isNavigating.current = false;
-                                            history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${submenu.name}`)
+                                            history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${submenu.name}&title=${submenu.id}`)
                                         }}>
                                             <Flex style={{height:"30px"}} align='center' justify='space-between'>
                                                 <Flex gap={8} align='center'>
@@ -256,7 +313,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                                 </Flex>
                                 <RightIcon className='font-16 color-474F5E' />
                             </Flex>
-                        </a>
+                        </div>
                     )
                 }
             }
@@ -266,7 +323,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                 return {
                     key: `${index}`,
                     label: (
-                        <a onClick={(e)=>{
+                        <div className='item' onClick={(e)=>{
                             e.preventDefault();
                             // 阻止下拉菜单关闭
                             e.stopPropagation();
@@ -276,7 +333,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                                     label: (
                                         <div onClick={()=>{
                                             isNavigating.current = false;
-                                            history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${submenu.name}`);
+                                            history.push(`/theme/editor?templateId=${templateId}&languagesId=${"2"}&templateName=${submenu.name}&title=${submenu.id}`);
                                         }}>
                                             <Flex style={{height:"30px"}} align='center' justify='space-between'>
                                                 <Flex gap={8} align='center'>
@@ -298,13 +355,19 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                                 </Flex>
                                 <RightIcon className='font-16 color-474F5E' />
                             </Flex>
-                        </a>
+                        </div>
                     )
                 }
             }
         });
 
         return newItems;
+    }
+
+    // 关闭弹窗返回主菜单项
+    const backMainItems = ()=>{
+        setCurrentMenu('main');
+        setMenuOpen(false);
     }
 
     // 店铺语言切换
@@ -335,7 +398,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
     },[intl.locale,templateName])
 
     return(
-        <Scoped className='font-14'>
+        <Scoped ref={dropdownContainerRef} className='font-14'>
             {/* left */}
             <Tooltip title={intl.formatMessage({id:'theme.header.backToAdmin'})} placement="right">
                 <div className='header-left cursor-pointer' onClick={()=>navigate(`/website/shopSetting`)}>
@@ -348,22 +411,8 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                     <div className='font-w-600' style={{marginLeft:"16px"}}>{editor.templateInfo.themeInfo?.name}<span style={{marginLeft:"6px"}}>{editor.templateInfo.themeInfo?.theme_version}</span></div>
                     {editor.templateInfo.themeInstanceInfo?.status == "1" ? <SuccessTag text={intl.formatMessage({id:'theme.header.live'})} />:<DefaultTag text={intl.formatMessage({id:'theme.header.draft'})} />}
                 </Flex>
-                <Flex align='center' gap={20}>
-                    <Flex align='center'>
-                        <div>{intl.formatMessage({id:'theme.header.mode'})}：</div>
-                        <MySelect
-                            defaultValue={editor.mode}
-                            options={[
-                                { value: 'auto', label: intl.formatMessage({id:'theme.header.mode.auto'}) },
-                                { value: 'original', label: intl.formatMessage({id:'theme.header.mode.original'}) },
-                                { value: 'mapping', label: intl.formatMessage({id:'theme.header.mode.mapping'}) },
-                            ]} style={{height:"36px",width:"100px"}} 
-                            onChange={(value)=>{
-                                editor.setMode(value)
-                            }} 
-                        />
-                    </Flex>
-                    <Dropdown open={menuOpen} menu={{ items,style }} trigger={["click"]} onOpenChange={(open) => {
+                <Flex align='center' gap={12}>
+                    <Dropdown getPopupContainer={()=>dropdownContainerRef.current!} open={menuOpen} menu={{ items,style }} trigger={["click"]} onOpenChange={(open) => {
                         if(!open){
                             // 只有当不是在子菜单中点击项目时才重置到主菜单
                             if (currentMenu !== 'main') {
@@ -385,6 +434,20 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                         </Space>
                     </Dropdown>
                     <LangSelect lang={editor.languagesId} setLang={setLang} />
+                    <Flex align='center'>
+                        <div>{intl.formatMessage({id:'theme.header.mode'})}：</div>
+                        <MySelect
+                            defaultValue={editor.mode}
+                            options={[
+                                { value: 'auto', label: intl.formatMessage({id:'theme.header.mode.auto'}) },
+                                { value: 'original', label: intl.formatMessage({id:'theme.header.mode.original'}) },
+                                { value: 'mapping', label: intl.formatMessage({id:'theme.header.mode.mapping'}) },
+                            ]} style={{height:"36px",width:"100px"}} 
+                            onChange={(value)=>{
+                                editor.setMode(value)
+                            }} 
+                        />
+                    </Flex>
                 </Flex>
                 {/* 语言 */}
                 <Flex className='header-main-right' align='center'>
@@ -445,6 +508,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                         console.log(editor.templateData)
                         const result = await settingsSections({
                             mode: "auto",
+                            languages_id: "2",
                             themeId: templateId??"",
                             action:"save",
                             oseid: editor.oseId??"",
@@ -505,6 +569,24 @@ const Scoped = styled.div`
                 height: 100%;
                 padding-left: 20px;
                 padding-right: 20px;
+            }
+        }
+    }
+
+    .ant-dropdown-menu-item{
+        padding: 0 !important;
+    }
+    .item{
+        padding: 5px 12px;
+    }
+
+    .submenu{
+        .icon{
+            display: none;
+        }
+        &:hover{
+            .icon{
+                display: flex;
             }
         }
     }

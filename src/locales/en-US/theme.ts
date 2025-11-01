@@ -13,7 +13,10 @@ export default {
     'theme.header.mode.original': 'Original',
     'theme.header.mode.mapping': 'Mapping',
 
-
+    'theme.header.navigation.back': 'Back',
+    'theme.header.navigation.createTemplate': 'Create a template',
+    'theme.header.navigation.renameTemplate': 'Rename the template',
+    'theme.header.navigation.default': 'Default',
     'theme.header.navigation.Home': 'Home',
     'theme.header.navigation.AllCollections': 'AllCollections',
     'theme.header.navigation.Products': 'Products',
@@ -39,11 +42,28 @@ export default {
     'theme.header.navigation.Policy': 'Policy',
     'theme.header.navigation.Customers': 'Customers',
     'theme.header.navigation.Features': 'Features',
+    'theme.header.navigation.tip.delete': 'Delete',
+    'theme.header.navigation.tip.rename': 'Rename',
+
+    'theme.header.modal.templateName': 'Template Name',
+    'theme.header.modal.templateName.placeholder': 'Please enter a template name',
+    'theme.header.modal.basedOnTemplate': 'Based on template',
+
+    'theme.header.deleteModal.title': 'Are you sure to delete this template?',
+    'theme.header.deleteModal.content': 'If a product is currently using this template, the default template will be used instead。',
+    'theme.header.deleteModal.delete': 'Delete',
+
+    'theme.header.renameTemplateModal.warningText': 'Changing the template name may cause it to become unlinked from Product, which will impact your online store.',
 
     'theme.left.home': 'Home',
     'theme.left.expand': 'Expand',
     'theme.left.collapse': 'Collapse',
     'theme.left.template': 'Template',
+    
+
+    'theme.left.toolBar.component': 'Component',
+    'theme.left.toolBar.globalSettings': 'Global Settings',
+    'theme.left.toolBar.appEmbeds': 'App embeds',
 
     
 };
