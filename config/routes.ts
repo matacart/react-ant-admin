@@ -826,6 +826,13 @@ export default  [
       }
     ]
   },
+  // 主题语言编辑
+  {
+    path: 'theme/langFieldEdit/:templateId',
+    name: 'theme/langFieldEdit/:templateId',
+    hideInMenu: true,
+    component: './Theme/LangEditor/LangEditor',
+  },
   {
     path: 'theme/styles/:templateId/:styleId',
     name: 'theme/styles/:templateId/:styleId',

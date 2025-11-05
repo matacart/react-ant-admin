@@ -75,10 +75,9 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                                 </Form.Item>
                             )
                         case "switch":
-                            // let data = editor.settings.settingsData[item.id];
                             let data = settingsData[item.id];
                             const setData = async (value:boolean)=>{
-                                
+
                                 const newSettings = {
                                     ...editor.settings,
                                     settingsData:{
@@ -86,14 +85,14 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                                         [item.id]:value
                                     }
                                 };
-                                
+
                                 const operationData = {
                                     mode: 'auto',
                                     oseid: editor?.oseId??"",
                                     themeId: editor.templateInfo.themeInfo?.id,
                                     pageName: "",
                                     languagesId: editor.languagesId,
-                                    settings: JSON.stringify(newSettings)
+                                    settings: JSON.stringify(newSettings.settingsData)
                                 };
 
                                 // 执行操作

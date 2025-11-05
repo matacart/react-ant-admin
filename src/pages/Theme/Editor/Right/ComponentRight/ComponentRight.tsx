@@ -116,6 +116,7 @@ function ComponentRight(){
             console.log("no component")
             setComponents(null) 
         }
+        console.log("componentsData",componentsData)
         // 监听组件
     },[editor.component])
   
@@ -148,6 +149,7 @@ function ComponentRight(){
                                         let data = componentsData[item.id] ?? false
                                         const setData = async (value:boolean) => {
                                             
+                                            // 
                                             editor.component && editor.updateComponentSettings(editor.component.id,{
                                                 ...componentsData,
                                                 [item.id]:{ value:value }
@@ -162,6 +164,8 @@ function ComponentRight(){
                                             if(editor.component?.type == "template"){
                                                 newSections = editor.templateData.filter(res=>res.type == "TEMPLATE")
                                             }
+
+                                            console.log(newSections)
 
                                             const operationData = {
                                                 mode: 'auto',

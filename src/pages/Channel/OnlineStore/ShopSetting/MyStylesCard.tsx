@@ -15,6 +15,7 @@ import UploadTemplateModal from "./UploadTemplateModal";
 import DownloadModal from "./DownloadModal";
 import { useAbortController } from "@/hooks/customHooks";
 import { LoadingOutlined } from "@ant-design/icons";
+import { history } from "@umijs/max";
 
 
 interface MyStylesCardProps {
@@ -168,7 +169,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '3',
                           },
                           {
-                            label: <div>编辑语言</div>,
+                            label: <div onClick={()=>history.push(`/theme/langFieldEdit/${shopSetting.templateInstanceUsing?.template_id}`)}>编辑语言</div>,
                             key: '4',
                           },
                           {

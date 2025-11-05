@@ -92,6 +92,7 @@ class editor {
     }
 
     // 更新组件模板数据
+    // newSettings:修改的settings对象
     updateComponentSettings(componentId:string, newSettings:any) {
       const updatedTemplateData = this.templateData.map((res:any) => {
         if (res.type == "SECTION" && res.config?.sectionId === componentId) {
@@ -121,13 +122,17 @@ class editor {
                 ...res.config,
                 settingsData: {
                   ...res.config.settingsData,
-                  settings: newSettings
+                  settings: {
+                    ...res.config.settingsData.settings,
+                    ...newSettings
+                  }
                 }
               }
             };
           }
         }
         if(res.type == "TEMPLATE" && res.sections[componentId]){
+          console.log("componentId",componentId);
           if(this.component?.itemId){
             // 子项
             return {
@@ -166,8 +171,10 @@ class editor {
             }
           }
         }
+
         return res;
       });
+      console.log("updateComponentSettings",updatedTemplateData);
       this.templateData = updatedTemplateData; // 替换整个数组以触发响应式更新
     }
 

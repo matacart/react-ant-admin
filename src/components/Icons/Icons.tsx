@@ -418,8 +418,6 @@ const CompressedFileSvg = () => (
 )
 
 
-
-
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
 );
@@ -682,7 +680,6 @@ export const StartIcon = (props: Partial<CustomIconComponentProps>) => (
 export const CompressedFileIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={CompressedFileSvg} {...props} />
 );
-
 
 
 // -----------编辑组件图标-----------------

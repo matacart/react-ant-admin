@@ -10,7 +10,8 @@ function MyTextArea({...props}) {
         theme={{
             token: {
                 /* 这里是你的全局 token */
-                borderRadius:4
+                borderRadius:4,
+                controlHeight:36,
             },
         }}
         >

@@ -3277,6 +3277,45 @@ export async function renameTemplateFile(res:{
   })
 }
 
+// 模板文件语言
+export async function getJsonTemplatesLocale(res:{
+  themeId:string
+  mode:string,
+  locale:string,
+},signal?:AbortSignal){
+  return request<ApiEditor.Locale>(`/ApiEditor/locale`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    },
+    signal:signal
+  })
+}
+
+// 修改模板文件语言
+export async function updateLocale(res:{
+  themeId:string
+  mode:string,
+  locale:string,
+  locale_data:string,
+}){
+  return request<ApiEditor.Locale>(`/ApiEditor/locale_update`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+
 // 子账号
 export async function employeeSelect(){
   return request<ApiAppstore.employeeSelect>(`/ApiAppstore/employee_select`, {

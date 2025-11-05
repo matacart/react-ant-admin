@@ -233,5 +233,13 @@ declare namespace ApiEditor{
     msg:string,
     success?:boolean,
   }
+
+  type Locale = {
+    code:number | string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
+  
 }
 

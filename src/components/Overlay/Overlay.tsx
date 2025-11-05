@@ -2,7 +2,6 @@ import { ExclamationCircleOutlined, InfoCircleOutlined } from "@ant-design/icons
 import { Button, Flex, message, Modal } from "antd"
 import { Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import styled from "styled-components"
-import { history } from '@umijs/max';
 import React from "react";
 function ProductOverlay({status,okText,onExit,onSubmit}:{status:boolean,okText:string,onExit:()=>void,onSubmit:()=>void}) {
 
