@@ -17,6 +17,7 @@ interface DataType {
   id: string;
   title:string;
   category_image:string;
+  delimiter:string;
   languages_id:string
 }
 

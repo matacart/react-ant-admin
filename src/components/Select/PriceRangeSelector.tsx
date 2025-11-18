@@ -2,7 +2,7 @@ import { Button, ConfigProvider, Divider, Dropdown, Flex, Popover, Select } from
 import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import cookie from 'react-cookies';
-import NumberInput from '../Input/NumberInput';
+import DefaultInputNumber from '../Input/DefaultInputNumber';
 import PrimaryButton from '../Button/PrimaryButton';
 import MyButton from '../Button/MyButton';
 import productList from '@/store/product/productList';
@@ -32,7 +32,7 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
     const content = (
         <PopoverContent>
             <Flex className='top' align='center'>
-                <NumberInput 
+                <DefaultInputNumber 
                     className="input" 
                     placeholder='最小值'
                     min={0}
@@ -46,7 +46,7 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
                     }}
                 />
                 <div className='divider-warp'><Divider className='divider'></Divider></div>
-                <NumberInput 
+                <DefaultInputNumber 
                     className="input"
                     placeholder='最大值'
                     prefix={cookie.load("symbolLeft")}

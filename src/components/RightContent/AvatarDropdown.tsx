@@ -43,14 +43,18 @@ const useStyles = createStyles(({ token }) => {
   };
 });
 
+
+
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, children }) => {
   /**
    * 退出登录，并且将当前的 url 保存
    * 清除token
+   * 清除cookie
    */
   const loginOut = async () => {
     await logout();
-    cookie.remove("token",{path:"/"})
+    // cookie.remove("token",{path:"/"})
+    // clearAllCookies();
     const { search, pathname } = window.location;
     const urlParams = new URL(window.location.href).searchParams;
     /** 此方法会跳转到 redirect 参数所在的位置 */

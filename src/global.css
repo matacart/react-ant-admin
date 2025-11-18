@@ -48,8 +48,8 @@ body,
   position: absolute;
   left: 0;
   bottom: 0;
-} */
-/* .mc-menu-item>li:last-child{
+}
+.mc-menu-item>li:last-child{
   position: absolute !important;
   bottom: 0;
 }
@@ -92,7 +92,7 @@ ol {
 }
 
 
-/* 样式 */
+ /* 样式 */
 .color-FF0000{
   color: #FF0000;
 }
@@ -233,4 +233,4 @@ ol {
 }
 .cursor-not-allowed{
   cursor:not-allowed;
-}
+} 

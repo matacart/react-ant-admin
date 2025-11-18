@@ -124,41 +124,42 @@ export const requestConfig: RequestConfig = {
     responseInterceptors: [
         // access_token 过期
         (res:any) =>{
-
-        if(!res.data){
-            const error = new Error('Empty response data');
-            return error
-        }
-
-        endProgress();
-        // 过滤
-        if(res.config.url == "/Oauth2/gettoken"){
-            return res
-        }
-        let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
-        // access_token过期
-        if(res.data.code==40013){
-            getAccessToken().then(res => {
-            if(window.location.hostname.startsWith("localhost")){
-                cookie.save("access_token",res.access_token,{path:"/"})
-            }else{
-                cookie.save('access_token', res.access_token, { domain:test,path: '/' });
+            endProgress();
+            // 确保res存在
+            if (!res) {
+                return Promise.reject(new Error('Response is undefined'));
             }
-            }).catch((err) => { 
-            console.log(err)
-            });
-        }else if(res.data.code==1001){
-            // token过期
-            sessionStorage.removeItem("domain")
-            cookie.remove("token",{ domain:test,path: '/' })
-            cookie.remove("token",{ path: '/' })
-            history.push(loginPath);
-        }else if(res.data.code>2000){
-            message.error(res.data.msg);
-            // console.log(res)
-        }else{
-            return res;
-        }
+            // 如果res存在但是没有data属性，直接返回res
+            if(!res.data){
+                return res;
+            }
+            // 过滤
+            if(res.config.url == "/Oauth2/gettoken"){
+                return res
+            }
+            let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
+            // access_token过期
+            if(res.data.code==40013){
+                getAccessToken().then(res => {
+                    if(window.location.hostname.startsWith("localhost")){
+                        cookie.save("access_token",res.access_token,{path:"/"})
+                    }else{
+                        cookie.save('access_token', res.access_token, { domain:test,path: '/' });
+                    }
+                }).catch((err) => { 
+                    console.log(err)
+                });
+            }else if(res.data.code==1001){
+                // token过期
+                sessionStorage.removeItem("domain")
+                cookie.remove("token",{ domain:test,path: '/' })
+                cookie.remove("token",{ path: '/' })
+                history.push(loginPath);
+            }else if(res.data.code>2000){
+                message.error(res.data.msg);
+            }else{
+                return res;
+            }
         },
     ],
 }

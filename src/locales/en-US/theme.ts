@@ -65,6 +65,8 @@ export default {
     'theme.left.toolBar.globalSettings': 'Global Settings',
     'theme.left.toolBar.appEmbeds': 'App embeds',
 
+    'theme.left.ItemText.placeholder': 'Enter text',
+
     
 };
   

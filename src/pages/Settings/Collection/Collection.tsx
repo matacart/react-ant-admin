@@ -1,4 +1,4 @@
-import { getAddonsConfigArray, getAddonsConfigs, getAddWarehouseList, getFileList, getStoreInfo, setAddonsConfig } from "@/services/y2/api"
+import { getAddonsConfigArray, getAddonsConfigs, getStoreInfo, setAddonsConfig } from "@/services/y2/api"
 import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"

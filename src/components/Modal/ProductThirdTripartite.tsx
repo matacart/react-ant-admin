@@ -7,6 +7,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } 
 import { CSS } from "@dnd-kit/utilities";
 import DefaultButton from "../Button/DefaultButton";
 import PrimaryButton from "../Button/PrimaryButton";
+import DefaultInput from "../Input/DefaultInput";
 
 export default function ProductThirdTripartite(props:any) {
 
@@ -249,8 +250,8 @@ const SortableItem = ({ id, item, form, setItems, items }: any) => {
                                 { pattern: /^(http|https):\/\/[^\s]+$/, message: '请输入正确的链接格式'}
                             ]}
                         >
-                            <Input 
-                                onChange={(e) => {
+                            <DefaultInput
+                                onChange={(e:any) => {
                                     const newItems = items.map((res: any) => {
                                         if (res.id === item.id) {
                                             return { ...res, url: e.target.value };

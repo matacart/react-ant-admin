@@ -309,7 +309,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
     
 
     useEffect(() => {
-        let tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+        let tempList = JSON.parse(sessionStorage["languages"] || '[]').map((item:any)=>{
             return {
                 value: item.id,
                 label: item.name

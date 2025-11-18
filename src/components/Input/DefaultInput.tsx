@@ -1,5 +1,4 @@
-import { SearchOutlined } from "@ant-design/icons"
-import { ConfigProvider, Input, InputNumber } from "antd"
+import { ConfigProvider, Input } from "antd"
 
 function DefaultInput({...props}) {
   return (

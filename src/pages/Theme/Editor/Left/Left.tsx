@@ -1,4 +1,4 @@
-import { DeleteIcon, DownIcon, EditorAddBtnIcon, EditorAddIcon, EditorAnnouncementIcon, EditorApplyIcon, EditorComponentIcon, EditorConfigurationIcon, EditorMoreIcon, EditorRightIcon } from "@/components/Icons/Icons"
+import { DeleteIcon, DownIcon, EditorAddIcon, EditorAnnouncementIcon, EditorApplyIcon, EditorComponentIcon, EditorConfigurationIcon, EditorMoreIcon, EditorRightIcon } from "@/components/Icons/Icons"
 import { Flex, Popover, Tooltip } from "antd"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
@@ -106,7 +106,7 @@ function Left({title}:{title:string}){
     
 
     useEffect(() => {
-        // console.log('editor.templateData:', editor.templateData);
+        console.log('editor.templateData:', editor.templateData);
         if (editor.templateData && editor.templateData.length > 0) {
             const initialCollapsedState = editor.templateData.reduce((acc, cur) => {
                 if (cur.config) {
@@ -176,12 +176,12 @@ function Left({title}:{title:string}){
                         }
                     </Flex>
                     <div className="design-sidebarContent">
-                        {editor.templateData.map((res:any,index:number)=>{
+                        {editor.templateData?.map((res:any,index:number)=>{
                             if(res.type == "SECTION"){
                                 const sectionId = res.config.sectionId!;
                                 const popoverId = `popover-${sectionId}`; // 为每个Popover创建唯一ID
                                 const maxBlock = res.config.schema.max_blocks;
-                                const current = res.config.settingsData.block_order.length;
+                                const current = res.config.settingsData.block_order?.length;
                                 return(
                                     <div key={sectionId} className="fixedCompItem-sectionWrapper" id={res.config.sectionId}>
                                         <Flex id="section-announcement-bar" className={sectionId == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 

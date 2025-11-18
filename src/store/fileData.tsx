@@ -5,6 +5,12 @@ class fileManage {
       makeAutoObservable(this)
     }
 
+    // 刷新
+    refresh:boolean = false;
+    setRefresh(refresh:boolean){
+        this.refresh = refresh;
+    }
+
     itemsList:any = [];
 
     setItemsList(itemsList:any){

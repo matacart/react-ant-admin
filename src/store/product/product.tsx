@@ -17,8 +17,8 @@ interface ProductType {
 
   cod_languages_id: string;
   cod_currency: string;
-  cod_is_711_enabled: string;
-  cod_is_family_enabled: string;
+  cod_is_711_enabled: number;
+  cod_is_family_enabled: number;
 
   cod_fb_pix_id:string;
   cod_gg_pix_id:string;

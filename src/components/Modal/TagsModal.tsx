@@ -313,6 +313,7 @@ export default function TagsModal(prop:any){
             isInitialRender.current = false; // 标记已完成首次渲染
             return;
         }
+        console.log("搜索标签111");
         debounceSearch(tagContent);
     }, [orderField, orderDirection]);
 
@@ -355,9 +356,10 @@ export default function TagsModal(prop:any){
     }, [handleSearchTags]);
 
     // 当排序字段或方向变化时，重新执行搜索
+    const isInitialCleanRender = useRef(true); // 标记是否为首次渲染
     useEffect(() => {
-        if (isInitialRender.current) {
-            isInitialRender.current = false; // 标记已完成首次渲染
+        if (isInitialCleanRender.current) {
+            isInitialCleanRender.current = false; // 标记已完成首次渲染
             return;
         }
         debounceCleanSearch(cleanTagContent);

@@ -1314,30 +1314,36 @@ export async function delLanguages(languagesId:string) {
   return result.code == 0 ? result.data : null
 }
 
-// 文件库 ---
-export async function getFileList(groupId?:string,extType?:number,pageNumber?:number,pageSize?:number,title?:string){
-  return request("/ApiResource/file_list", {
+// 文件库 文件列表---
+// groupId?:string,extType?:number,pageNumber?:number,pageSize?:number,title?:string,
+// groupId： 分组id 0 所有 extType：类型 0 所有 1 图片 2 视频 3 其他
+export async function getFileList(res:{
+  groupId:string,
+  extType:number,
+  pageNum:number,
+  pageSize:number,
+  title?:string,
+},signal?:AbortSignal){
+  return request<ApiResource.FileList>("/ApiResource/file_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      "groupId": groupId,
-      "extType":extType,
-      "pageNum":pageNumber,
-      "pageSize":pageSize,
-      "title":title
-    }
+      ...res,
+    },
+    signal:signal
   });
 }
 
-// 分组 ---
-export async function getGroupList() {
-  return request("/ApiResource/group_list", {
+// 分组
+export async function getGroupList(signal?:AbortSignal) {
+  return request<ApiResource.GroupList>("/ApiResource/group_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
-    }
+    },
+    signal:signal
   });
 }
 // 新增分组
@@ -1363,34 +1369,35 @@ export async function deleteGroup(groupId: string) {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      "groupId": groupId,
+      groupId: groupId,
       // access_token: localStorage.getItem('access_token')
     }
   });
 }
 // 删除文件
 export async function deleteFile(id: string) {
-  return request('/ApiResource/file_del', {
+  return request<ApiResource.File>('/ApiResource/file_del', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data: {
-      "id":id
+      id:id
     },
   })
 }
 
 // 域名
-export async function getDomainNameList() {
-  return request("/ApiAppstore/domain", {
+export async function getDomainNameList(signal?:AbortSignal) {
+  return request<ApiAppstore.Default>("/ApiAppstore/domain", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      "id": cookie.load("domain")?.id,
-    }
+      id: cookie.load("domain")?.id,
+    },
+    signal:signal
   });
 }
 
@@ -3317,7 +3324,7 @@ export async function updateLocale(res:{
 
 
 // 子账号
-export async function employeeSelect(){
+export async function employeeSelect(signal?:AbortSignal){
   return request<ApiAppstore.employeeSelect>(`/ApiAppstore/employee_select`, {
     method: 'POST',
     headers: {
@@ -3325,18 +3332,18 @@ export async function employeeSelect(){
     },
     data:{
       app_id:19,
-    }
+    },
+    signal:signal
   })
 }
 
 // 角色
-export async function getRoleList(){
+export async function getRoleList(signal?:AbortSignal){
   return request<ApiAppstore.roleList>(`/ApiAppstore/role_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    data:{
-    }
+    signal:signal
   })
 }

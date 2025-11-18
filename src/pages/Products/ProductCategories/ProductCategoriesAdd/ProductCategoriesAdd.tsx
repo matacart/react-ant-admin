@@ -8,7 +8,6 @@ import CategoriesInfo from './CategoriesInfo';
 import CategoriesCover from './CategoriesCover';
 import CategoriesBanner from './CategoriesBanner';
 import { setCategory } from '@/services/y2/api';
-import NewSeo from './NewSeo';
 import Relevance from './Relevance';
 import CategoriesSettings from './CategoriesSettiings';
 import Recommendation from './Recommendation';
@@ -21,6 +20,7 @@ import RelatedProduct from './RelatedProduct';
 import { observer } from 'mobx-react-lite';
 import ProductScreeningConditions from './ProductScreeningConditions';
 import LangSelect from '@/components/Select/LangSelect';
+import SEOCard from '../ProductCategories/SEOCard';
 
 
 function NewProductCategories(){
@@ -108,8 +108,7 @@ function NewProductCategories(){
                             <CategoriesBanner />
                             <Recommendation />
                             <CategoriesSubnumber />
-                            <NewSeo />
-                            <ThemeTemplateCard/>
+                            <SEOCard />
                         </div>
                     </div>
                     <Divider/>

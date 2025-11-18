@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, message, Modal, Popover, Switch, Table, Tooltip } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Modal, Popover, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -9,7 +9,8 @@ import SuccessTag from '@/components/Tag/SuccessTag';
 import DefaultTag from '@/components/Tag/DefaultTag';
 import ErrorTag from '@/components/Tag/ErrorTag';
 import WarningTag from '@/components/Tag/WarningTag';
-import { useNavigate } from 'react-router-dom';
+import MyButton from '@/components/Button/MyButton';
+import { useAbortController } from '@/hooks/customHooks';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -63,9 +64,10 @@ function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
 }
 
 function StoresTable() {
-  const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false);
+
+  const { createAbortController } = useAbortController();
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -105,15 +107,6 @@ function StoresTable() {
       dataIndex: 'domain_name',
       width: 200,
     },
-  //   <Tag className="tag tag-success" style={{
-  //     display: 'flex',
-  //     alignContent: 'center'
-  // }}>
-  //     <span className="tag-right">
-  //         <span className={"tag-dot " + ((item?.status == 1) ? 'tag-dot-success ' : 'tag-dot-error')} />
-  //     </span>
-  //     {(item?.status == 1) ?intl.formatMessage({id:"menu.stores.running"}): intl.formatMessage({id:"menu.stores.stop"})}
-  // </Tag>
     {
       title: <div>店铺状态
         <Tooltip title={
@@ -129,7 +122,7 @@ function StoresTable() {
           </span>
         </Tooltip>
       </div>,
-      // dataIndex: 'status',
+      dataIndex: 'status',
       render: (_, record) => {
         switch(record?.status) {
           case "0":
@@ -218,19 +211,7 @@ function StoresTable() {
             display: 'flex',
 
           }} >
-            <Button onClick={()=>{
-            }}>进入后台</Button>
-            {/* <ButtonIcon>
-              <Tooltip title="复制">
-                <div className='wrap' onClick={(e) => {
-                  e.stopPropagation()
-                //   setCopyProduct(record)
-                //   setModalOpen(true);
-                }}>
-                  
-                </div>
-              </Tooltip>
-            </ButtonIcon> */}
+            <MyButton text={'进入后台'} />
           </div>
         )
       }
@@ -248,11 +229,13 @@ function StoresTable() {
 
   useEffect(()=>{
     setLoading(true);
+    const signal = createAbortController();
     getDomainList({
       data:{
         page:tableParams?.pagination?.current,
         limit:tableParams?.pagination?.pageSize
-      }
+      },
+      signal:signal
     }).then((res)=>{
       shopsManagement.setEnalbeCount(res.count)
       setData(res.data);
@@ -260,11 +243,13 @@ function StoresTable() {
         ...tableParams,
         pagination: {
           ...tableParams?.pagination,
-          total: res.count
+          total: Number(res.count)
         }
       });
     }).catch(err=>{
+      if(err.name !== "AbortError"){
         console.log(err)
+      }
     }).finally(()=>{
       setLoading(false)
     })
@@ -275,7 +260,6 @@ function StoresTable() {
     {/* 商品列表 */}
       <Table
         columns={columns}
-        // rowKey={(record) => record.key}
         dataSource={data}
         pagination={tableParams?.pagination}
         loading={loading}
@@ -286,8 +270,8 @@ function StoresTable() {
           onClick: () => {
             // 跳转店铺
             if(!window.location.hostname.startsWith("localhost")){
-              const newUrl = replaceSubdomain(window.location.href,record.secondDomain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
-              window.open(newUrl)
+              const newUrl = replaceSubdomain(window.location.href,record.second_domain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
+              newUrl && window.open(newUrl)
             }
           },
         })}

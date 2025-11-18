@@ -1,7 +1,6 @@
-import { getAddWarehouseList, getDomainNameList, getFileList, getStoreInfo } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
+import { getDomainNameList } from "@/services/y2/api"
+import { ArrowLeftOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import domain from "@/store/settings/domain"
@@ -9,18 +8,24 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import PrimaryDomain from "./PrimaryDomain"
 import ErrorPage from "./ErrorPage"
 import RedirectPage from './RedirectPage';
+import { useAbortController } from "@/hooks/customHooks"
 
 
 
 function Domain() {
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
-    const [isRenewal,setIsRenewal] = useState(false)
-
+    const { createAbortController } = useAbortController();
+    
+    const [isRenewal,setIsRenewal] = useState(false);
     useEffect(()=>{
-        getDomainNameList().then(res=>{
-            domain.setDomain(res.data)
+        const signal = createAbortController();
+        getDomainNameList(signal).then(res=>{
+            domain.setDomain(JSON.stringify(res.data) === '[]' ? {} : res.data )
+        }).catch(e=>{
+            console.log(e)
+        }).finally(()=>{
             setIsSkeleton(false)
         })
     },[])

@@ -8,7 +8,6 @@ import CategoriesInfo from './CategoriesInfo';
 import CategoriesCover from './CategoriesCover';
 import CategoriesBanner from './CategoriesBanner';
 import cookie from 'react-cookies';
-import EditSeo from './EditSeo';
 import RelevanceEdit from './RelevanceEdit';
 import RecommendationEdit from './RecommendationEdit';
 import CategoriesSettingsEdit from './CategoriesSettingsEdit';
@@ -19,6 +18,7 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import categories from '@/store/product/categories';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LangSelect from '@/components/Select/LangSelect';
+import SEOCard from '../ProductCategories/SEOCard';
 // 表单项商品数据类型
 
 function EditProductCategories(){
@@ -29,7 +29,7 @@ function EditProductCategories(){
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
-    const [languagesId,setLanguagesId] = useState<string>(languageId??"2");
+    const [languagesId,setLanguagesId] = useState<string>(languageId && languageId!=='undefined' ? languageId : "2");
 
     const [form] = Form.useForm();
 
@@ -77,7 +77,7 @@ function EditProductCategories(){
                             <CategoriesBanner />
                             <RecommendationEdit />
                             <CategoriesSubnumber />
-                            <EditSeo />
+                            <SEOCard />
                             {/* <ThirdPartyInfoCard/> */}
                         </div>
                     </div>

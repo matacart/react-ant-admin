@@ -7,6 +7,9 @@ import styled from 'styled-components';
 import axios from "axios";
 import { observer } from "mobx-react-lite";
 import product from "@/store/product/product";
+import DefaultInput from "@/components/Input/DefaultInput";
+import DefaultButton from "@/components/Button/DefaultButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -198,6 +201,28 @@ function ProductImg() {
     },
   };
 
+  const videoSubmit = ()=>{
+    // 手动效验
+    form.validateFields(["youTubeUrl"]).then((values) => {
+      if(values.youTubeUrl){
+        product.setProductInfo({
+          ...product.productInfo,
+          product_video:values.youTubeUrl
+        })
+        setAddUrlModalOpen(false)
+        return true
+      }else{
+        return false
+      }
+    })
+  }
+
+  const videoCancel = ()=>{
+    form.resetFields()
+    // form.setFieldValue("youTubeUrl", oldStore.productVideo)
+    setAddUrlModalOpen(false)
+  }
+
   return (
     <Scoped>
       <Card title="商品图片/视频" className="product-img-card"
@@ -206,7 +231,7 @@ function ProductImg() {
             setAddUrlModalOpen(true);
             // 表单
             form.setFieldValue("youTubeUrl",product.productInfo.product_video);
-          }}>添加URL</a>
+          }}>添加视频URL</a>
           {/* <a style={{
             marginLeft: 20
           }}
@@ -214,7 +239,7 @@ function ProductImg() {
               setAddImgModalOpen(true);
               getImgList();
             }}
-          >添加多媒体图片</a> */}
+          >添加多媒体文件</a> */}
         </>}
       >
         <div className="content" style={{
@@ -262,72 +287,57 @@ function ProductImg() {
           // destroyOnClose
           width="90vw"
           open={addUrlModalOpen}
-          onOk={async () => {
-            // 手动效验
-            form.validateFields(["youTubeUrl"]).then((values) => {
-              if(values.youTubeUrl){
-                product.setProductInfo({
-                  ...product.productInfo,
-                  product_video:values.youTubeUrl
-                })
-                setAddUrlModalOpen(false)
-                return true
-              }else{
-                return false
-              }
-            })
-          }}
-          onCancel={() =>{
-            form.resetFields()
-            // form.setFieldValue("youTubeUrl", oldStore.productVideo)
-            setAddUrlModalOpen(false)
-          }}
-          styles={{
-            body: {
-              // height: "120px",
-            }
-          }}
+          onCancel={videoCancel}
           style={{
             maxWidth: "860px"
           }}
+          footer={
+            <Flex justify="end">
+              <Flex gap={12}>
+                <DefaultButton text={"取消"} onClick={videoCancel} />
+                <PrimaryButton text={"保存"} onClick={videoSubmit} />
+              </Flex>
+            </Flex>
+          }
+          
         >
           <Spin spinning={videoLoading}>
-          <Form layout="vertical"
-            form={form}
-            clearOnDestroy
-            // onFinish={onFinish}
-          >
-            <Form.Item
-              label={<div style={{ fontWeight: 500, fontSize: "14px" }}>复制 YouTube 视频URL到下面输入框</div>}
-              name='youTubeUrl'
-              rules={[{
-                validator:async (rule, value,callback) => {
-                  // 校验逻辑保持不变
-                  const regexYouTube = /^(?:https?:\/\/)?(?:www\.)?((youtube\.com\/watch\?v=)|(youtu\.be\/))([a-zA-Z0-9_-]{11})$/;
-                  // 本地视频
-                  if("//oss.handingcdn.com" == value.slice(0,20)){
-                    return Promise.resolve();
-                  }
-                  if(!regexYouTube.test(value)) {
-                    // callback('请输入正确的YouTube视频链接！')
-                    return Promise.reject(new Error('请输入正确的视频链接！'));
-                  }else{
-                    return Promise.resolve();
-                  }
-                }
-              }]}
+            <Form layout="vertical"
+              form={form}
+              clearOnDestroy
+              // onFinish={onFinish}
             >
-              <Input defaultValue={product.productInfo.product_video}/>
-            </Form.Item>
-            <div style={{
-              color: "rgb(122, 132, 153)"
-            }}>目前仅支持YouTube视频和本地上传视频</div>
-            <div style={{margin:"20px 0"}}>
-              <Upload {...videoProps}>
-                <Button icon={<UploadOutlined />}>上传本地视频</Button>
-              </Upload>
-            </div>
-          </Form>
+              <Form.Item
+                label={<div style={{ fontWeight: 500, fontSize: "14px" }}>复制 YouTube 视频URL到下面输入框</div>}
+                name='youTubeUrl'
+                rules={[{
+                  validator:async (rule, value,callback) => {
+                    // 校验逻辑保持不变
+                    const regexYouTube = /^(?:https?:\/\/)?(?:www\.)?((youtube\.com\/watch\?v=)|(youtu\.be\/))([a-zA-Z0-9_-]{11})$/;
+                    // 本地视频
+                    if("//oss.handingcdn.com" == value.slice(0,20) || "//img1.s.handingcdn.com" == value.slice(0,23)){
+                      return Promise.resolve();
+                    }
+                    if(!regexYouTube.test(value)) {
+                      // callback('请输入正确的YouTube视频链接！')
+                      return Promise.reject(new Error('请输入正确的视频链接！'));
+                    }else{
+                      return Promise.resolve();
+                    }
+                  }
+                }]}
+              >
+                <DefaultInput defaultValue={product.productInfo.product_video}/>
+              </Form.Item>
+              <div style={{
+                color: "rgb(122, 132, 153)"
+              }}>目前仅支持YouTube视频和本地上传视频</div>
+              <div style={{margin:"20px 0"}}>
+                <Upload {...videoProps}>
+                  <Button icon={<UploadOutlined />}>上传本地视频</Button>
+                </Upload>
+              </div>
+            </Form>
           </Spin>
         </Modal>
         {/* 添加多媒体图片 Modal */}

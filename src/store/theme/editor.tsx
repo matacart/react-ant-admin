@@ -32,6 +32,12 @@ class editor {
       makeAutoObservable(this)
     }
 
+    // 保存
+    isSaveData = false;
+    setIsSaveData(value:boolean) {
+      this.isSaveData = value;
+    }
+
     // 工具栏 0: 组件 1: 全局设置 2: 应用嵌入
     toolBar = 0;
     setToobar(value:number){
@@ -92,8 +98,8 @@ class editor {
     }
 
     // 更新组件模板数据
-    // newSettings:修改的settings对象
-    updateComponentSettings(componentId:string, newSettings:any) {
+    // settings:发生改变settings
+    updateComponentSettings(componentId:string, settings:any) {
       const updatedTemplateData = this.templateData.map((res:any) => {
         if (res.type == "SECTION" && res.config?.sectionId === componentId) {
           if(this.component?.itemId){
@@ -108,7 +114,10 @@ class editor {
                     ...res.config.settingsData.blocks,
                     [this.component?.itemId]: {
                       ...res.config.settingsData.blocks[this.component?.itemId],
-                      settings: newSettings
+                      settings: {
+                        ...res.config.settingsData.blocks[this.component?.itemId].settings,
+                        ...settings
+                      }
                     }
                   }
                 }
@@ -124,7 +133,7 @@ class editor {
                   ...res.config.settingsData,
                   settings: {
                     ...res.config.settingsData.settings,
-                    ...newSettings
+                    ...settings
                   }
                 }
               }
@@ -132,7 +141,6 @@ class editor {
           }
         }
         if(res.type == "TEMPLATE" && res.sections[componentId]){
-          console.log("componentId",componentId);
           if(this.component?.itemId){
             // 子项
             return {
@@ -147,7 +155,10 @@ class editor {
                       ...res.sections[componentId].settingsData.blocks,
                       [this.component?.itemId]:{
                         ...res.sections[componentId].settingsData.blocks[this.component?.itemId],
-                        settings: newSettings
+                        settings: {
+                          ...res.sections[componentId].settingsData.blocks[this.component?.itemId].settings,
+                          ...settings
+                        }
                       }
                     }
                   }
@@ -164,17 +175,18 @@ class editor {
                   ...res.sections[componentId],
                   settingsData: {
                     ...res.sections[componentId].settingsData,
-                    settings: newSettings
+                    settings: {
+                      ...res.sections[componentId].settingsData.settings,
+                      ...settings
+                    }
                   }
                 }
               }
             }
           }
         }
-
         return res;
       });
-      console.log("updateComponentSettings",updatedTemplateData);
       this.templateData = updatedTemplateData; // 替换整个数组以触发响应式更新
     }
 
@@ -339,9 +351,14 @@ class editor {
       this.oseId = "";
       this.operationHistory = [];
       this.redoHistory = [];
+      this.isSaveData = false;
+      this.component = null;
+      this.toolBar = 0;
 
       this.mode = "auto";
       this.title = "";
+      
+
     }
 
 }

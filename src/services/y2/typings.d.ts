@@ -2,6 +2,12 @@
 /* eslint-disable */
 
 declare namespace API {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
   type CurrentUser = {
     name?: string;
     avatar?: string;
@@ -146,6 +152,14 @@ declare namespace ApiStore {
 
 
 declare namespace ApiAppstore {
+
+  type Default = {
+    code:number|string, 
+    count:string,
+    data:any,
+    msg:string,
+  }
+
   type addressAdd = {
   }
   type employeeSelect = {
@@ -243,3 +257,24 @@ declare namespace ApiEditor{
   
 }
 
+declare namespace ApiResource{
+  type File = {
+    code:number,
+    count:string,
+    data:any,
+    msg:string,
+  }
+
+  type GroupList = {
+    code:number,
+    count:string,
+    data:any,
+    msg:string,
+  }
+  type FileList = {
+    code:number,
+    count:string,
+    data:any,
+    msg:string,
+  }
+}

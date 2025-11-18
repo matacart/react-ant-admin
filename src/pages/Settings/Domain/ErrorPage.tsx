@@ -1,5 +1,5 @@
-import SuccessTag from "@/components/Tag/SuccessTag";
-import { Button, Card, Divider, Flex, Select } from "antd";
+import DefaultSelect from "@/components/Select/DefaultSelect";
+import { Card } from "antd";
 import styled from "styled-components";
 
 export default function ErrorPage() {
@@ -7,7 +7,7 @@ export default function ErrorPage() {
     <Scoped>
         <Card>
             <div className="title color-242833"><span className="font-w-600">404</span>错误页面转址选项</div>
-            <Select
+            <DefaultSelect
                 defaultValue="1"
                 style={{ width: 256 }}
                 onChange={()=>{}}

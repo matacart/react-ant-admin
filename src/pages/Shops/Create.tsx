@@ -5,6 +5,9 @@ import { createStore, currentUserStatus } from '@/services/y2/api'
 import styled from 'styled-components'
 import userInfo from '@/store/userInfo'
 import { useNavigate } from 'react-router-dom'
+import MyInput from '@/components/Input/MyInput'
+import DefaultSelect from '@/components/Select/DefaultSelect'
+import PrimaryButton from '@/components/Button/PrimaryButton'
 
 
 interface SelectListType {
@@ -25,7 +28,6 @@ export default function Create() {
     const [currencieList,setCurrencieList] = useState<SelectListType[]>();
 
     useEffect(()=>{
-        // console.log(JSON.parse(sessionStorage["country"]))
         const countrys = JSON.parse(sessionStorage["country"]).map(
             (item:any)=>{
                 return {
@@ -55,7 +57,6 @@ export default function Create() {
                 currentUserStatus().then(res=>{
                     userInfo.setUserSession(res)
                 }).catch(err=>{
-                    // console.log(err)
                     message.error("请求异常，请刷新")
                 }).finally(()=>{
                     navigate("/stores/list")
@@ -88,7 +89,7 @@ export default function Create() {
                             </div>
                             <div className='form-item-box'>
                                 <Form.Item required name="name" rules={[{ required: true, message: '请输入店铺名称' }]}>
-                                    <Input
+                                    <MyInput
                                         className='input'
                                         placeholder="请输入店铺名称"
                                     />
@@ -111,7 +112,7 @@ export default function Create() {
                                     { required: true, message: '请输入网址' },
                                     { min: 4, max: 15 ,message:"URL长度需在4-15个字符之间"}
                                 ]}>
-                                    <Input className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>.v.hdyshop.cn</div>} />
+                                    <MyInput className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>.v.hdyshop.cn</div>} />
                                 </Form.Item>
                             </div>
                         </div>
@@ -129,7 +130,7 @@ export default function Create() {
                             {/* 选择国家 */}
                             <div className='form-item-box'>
                                 <Form.Item name="country" rules={[{ required: true, message: '请选择国家' }]}>
-                                    <Select className="input" placeholder={"国家"} options={countryList} onChange={(value)=>{
+                                    <DefaultSelect style={{width:"480px",height:"36px"}} placeholder={"国家"} options={countryList} onChange={(value)=>{
                                         form.setFieldValue("country",value)
                                     }} />
                                 </Form.Item>
@@ -151,7 +152,7 @@ export default function Create() {
                             <div className='form-item-box'>
                                 <Form.Item name="currencie" rules={[{ required: true, message: '请选择货币' }]}>
                                 {/* 选择币种 */}
-                                <Select className="input" placeholder={"结算货币"} options={currencieList} onChange={(value)=>{
+                                <DefaultSelect style={{width:"480px",height:"36px"}} placeholder={"结算货币"} options={currencieList} onChange={(value)=>{
                                     form.setFieldValue("currencie",value)
                                 }} />
                                 </Form.Item>
@@ -174,7 +175,7 @@ export default function Create() {
                                     { required: true, message: '请输入邮箱' },
                                     { type: 'email',message:"请输入正确的邮箱格式"}
                                 ]}>
-                                    <Input  
+                                    <MyInput
                                         className='input'
                                         placeholder="请输入邮箱"
                                         required
@@ -227,15 +228,12 @@ export default function Create() {
                         </Form.Item> */}
                     </Form>
                 </div>
-                <div className='create-footer' style={{ display:"flex",flexDirection:"row-reverse" }}>
-                    <Button onClick={()=>form.submit()} loading={loading} type="primary" style={{marginTop: "10px",height: "36px"}}>
-                        创建店铺
-                    </Button>
+                <div className='create-footer' style={{ display:"flex",flexDirection:"row-reverse",marginTop: "20px" }}>
+                    <PrimaryButton onClick={()=>form.submit()} loading={loading}  text="创建店铺" />
                 </div>
             </div>
         </div>
         </Scoped>
-        
     )
 }
 

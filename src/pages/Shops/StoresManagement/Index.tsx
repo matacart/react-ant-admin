@@ -9,6 +9,7 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { useNavigate } from "react-router-dom";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { employeeSelect, getRoleList } from "@/services/y2/api";
+import { useAbortController } from "@/hooks/customHooks";
 
 const onChange = (key: string) => {
     console.log(key);
@@ -40,6 +41,8 @@ function Index(){
 
     const navigate = useNavigate();
 
+    const { createAbortController } = useAbortController();
+
     const [employeeList,setEmployeeList] = useState([]);
 
     const [rolesList,setRolesList] = useState([]);
@@ -68,39 +71,38 @@ function Index(){
         }
     ];
 
-    const fetch = async ()=>{
-        // 子账号
-        try {
-            const employee = await employeeSelect();
-            if(employee.code == 0){
-                setEmployeeList(employee.data.map((item:any)=>{
-                    return {
-                        label:item.id,
-                        value:item.id
-                    }
-                }))
-            }
-        } catch (error) {
-        }
-
-        try {
-            const roleList = await getRoleList();
-            if(roleList.code == 0){
-                setRolesList(roleList.data.map((item:any)=>{
-                    return {
-                        label:item.title,
-                        value:item.id
-                    }
-                }))
-            }
-        } catch (error) {
-        }
-        
-        setIsSkeleton(false)
-    }
-
     // 获取店铺列表
     useEffect(()=>{
+        const fetch = async ()=>{
+            // 子账号
+            try {
+                const employee = await employeeSelect();
+                if(employee.code == 0){
+                    setEmployeeList(employee.data.map((item:any)=>{
+                        return {
+                            label:item.id,
+                            value:item.id
+                        }
+                    }))
+                }
+            } catch (error) {
+            }
+
+            try {
+                const roleList = await getRoleList();
+                if(roleList.code == 0){
+                    setRolesList(roleList.data.map((item:any)=>{
+                        return {
+                            label:item.title,
+                            value:item.id
+                        }
+                    }))
+                }
+            } catch (error) {
+            }
+            setIsSkeleton(false)
+
+        }
         fetch();
         shopsManagement.reset();
     },[])

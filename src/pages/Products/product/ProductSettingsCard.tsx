@@ -1,16 +1,18 @@
 import { ClockCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, InputNumber, InputRef, message, Modal, Select, SelectProps, Space, Switch, Tag, theme, Tooltip } from "antd";
+import { Card, Checkbox, Flex, Form, InputRef, message, Modal, Select, SelectProps, Switch, Tag, Tooltip } from "antd";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { getCategorySelect, getPlatformCategorySelect, selectTags, upDateProductStatus } from "@/services/y2/api";
+import { upDateProductStatus } from "@/services/y2/api";
 import TagsModal from "@/components/Modal/TagsModal";
-import ProductCategoryModal from "@/components/Modal/ProductCategoryModal";
 import { observer } from "mobx-react-lite";
 import { useForm } from "antd/es/form/Form";
 import product from "@/store/product/product";
-import MyInput from "@/components/Input/MyInput";
 import SearchRemote from "@/components/Search/SearchRemote";
+import DefaultInput from "@/components/Input/DefaultInput";
+import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
+import DefaultSelect from "@/components/Select/DefaultSelect";
+import ProductCategoryModal from "./ProductCategoryModal";
 
 type WebChannel = {
     name: string;
@@ -64,25 +66,22 @@ for (let i = 10; i < 36; i++) {
     });
 }
 let index = 0;
-const tagInputStyle: React.CSSProperties = {
-    width: 64,
-    height: 22,
-    marginInlineEnd: 8,
-    verticalAlign: 'top',
-};
 
+// 创建一个带修复高度的 InputNumber 组件
+const FixedHeightInputNumber = styled(DefaultInputNumber)`
+   .ant-input-number-wrapper {
+        .ant-input-number-input{
+            height: 34px;
+        }
+    }
+`;
 
 function ProductSettingsCard() {
 
     const [form] = useForm();
-
-    const [items, setItems] = useState(['jack', 'lucy']);
-    const [name, setName] = useState('');
-    const inputRef = useRef<InputRef>(null);
     
     const [editInputIndex, setEditInputIndex] = useState(-1);
     const [editInputValue, setEditInputValue] = useState('');
-    // const inputTagRef = useRef<InputRef>(null);
     const editInputRef = useRef<InputRef>(null);
 
     // 标签
@@ -109,15 +108,7 @@ function ProductSettingsCard() {
             <Option value="6">盎司</Option>
         </Select>
     );
-
-    // 店铺分类
-    const upDateCategoryTags = (tag:any[]) =>{
-        setCategoryTags(tag)
-        product.setProductInfo({
-            ...product.productInfo,
-            categoryIds:Array.from(tag,(e)=>{return e.id}).join(",")
-        })
-    }
+    
     // 标签
     const handleClose = (removedTag: string) => {
         const newTags = tags.filter((tag) => tag !== removedTag);
@@ -128,68 +119,21 @@ function ProductSettingsCard() {
             tag:newTags.map(item=>item.label).join(",")
         })
     };
-
+    // 商品分类标签
     const handleTypeClose = (removedTag: any) => {
-        const newTags = categoryTags.filter((tag) => tag.id !== removedTag.id);
+        const newTags = categoryTags.filter((tag) => tag !== removedTag);
         setCategoryTags(newTags);
         product.setProductInfo({
             ...product.productInfo,
-            categoryIds:Array.from(newTags,(e)=>{return e.id}).join(",")
+            categoryIds:newTags.join(",")
         })
     };
-    const handleEditInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditInputValue(e.target.value);
-    };
-    // const handleEditInputConfirm = () => {
-    //     const newTags = [...tags];
-    //     newTags[editInputIndex] = editInputValue;
-    //     setTags(newTags);
-    //     console.log(newTags)
-    //     setEditInputIndex(-1);
-    //     setEditInputValue('');
-    // };
-
-    const addItem = (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-        e.preventDefault();
-        setItems([...items, name || `New item ${index++}`]);
-        setName('');
-        setTimeout(() => {
-            inputRef.current?.focus();
-        }, 0);
-    };
-
-    const onTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-        console.log(name)
-    };
-    // 更新标签
-    const updatetags = (tag:string[]) =>{
-    } 
-    
 
     // 取消弹窗
     const [isModalOpen, setIsModalOpen] = useState(false);
     const showModal = () => {
         setIsModalOpen(true);
     };
-
-    // 店铺商品类型
-    // const getCategoryList = async ()=>{
-    //     const temp = await getCategorySelect(1,10).then(res=>{
-    //         return Array.from(res.data,(obj:any)=>{
-    //             return {
-    //                 value: obj.id,
-    //                 label: obj.category_name
-    //             }
-    //         })
-    //     })
-    //     return temp
-    // }
-    // // 分类
-    // useEffect(() => {
-    //     // editInputRef.current?.focus();
-    // }, [editInputValue]);
-
 
     useEffect(() => {
 
@@ -213,18 +157,22 @@ function ProductSettingsCard() {
             platformCategory:product.productInfo.platform_category_id == "" ? undefined : product.productInfo.platform_category_id
         });
 
-        const newTags = product.productInfo.tag.split(",").filter(item=>item).map((item:string)=>{
+        // 标签
+        const newTags = (product.productInfo.tag || "").split(",").filter(item=>item).map((item:string)=>{
             return {
               label:item,
               value:item,
               checked:true
             }
         })
-        setTags(newTags);
 
+        setTags(newTags);
     }, []);
 
-
+    useEffect(() => {
+        // 商品类型
+        setCategoryTags(product.productInfo.categoryIds.split(",").filter(item=>(item && item!=='0')))
+    }, [product.productInfo.categoryIds])
 
     return (
         <Scoped>
@@ -314,10 +262,9 @@ function ProductSettingsCard() {
                                 </Tooltip>
                             </>
                         } >
-                        <Input
-                            className="ant-input"
+                        <DefaultInput
                             placeholder="SPU"
-                            onChange={(e)=>{
+                            onChange={(e:any)=>{
                                 product.setProductInfo({
                                     ...product.productInfo,
                                     spu:e.target.value
@@ -326,10 +273,8 @@ function ProductSettingsCard() {
                         />
                     </Form.Item>
                     <Form.Item name="weight" label={<>重量</>} >
-                        <InputNumber<number>
-                            className="ant-input"
-                            style={{padding: "4px 0"}}
-                            onChange={(value)=>{
+                        <FixedHeightInputNumber
+                            onChange={(value:number)=>{
                                 product.setProductInfo({
                                     ...product.productInfo,
                                     weight:value || 0
@@ -340,17 +285,16 @@ function ProductSettingsCard() {
                     </Form.Item>
                     <Form.Item label={<>商品厂商</>
                     } >
-                        <Input
-                            className="ant-input"
+                        <DefaultInput
                             name="manufactuer"
                             placeholder="例如：Zara"
-                            onChange={(e)=>{
+                            onChange={(e:any)=>{
                                 product.setProductInfo({
                                     ...product.productInfo,
                                     manufactuer:e.target.value
                                 })
                             }}
-                        ></Input>
+                        />
                     </Form.Item>
                     {/* 标签问题 */}
                     <Form.Item
@@ -383,13 +327,13 @@ function ProductSettingsCard() {
                                         onClose={() => handleClose(tag)}
                                     >
                                         <span
-                                        onDoubleClick={(e) => {
-                                            if (index !== 0) {
-                                                setEditInputIndex(index);
-                                                setEditInputValue(tag);
-                                                e.preventDefault();
-                                            }
-                                        }}
+                                            onDoubleClick={(e) => {
+                                                if (index !== 0) {
+                                                    setEditInputIndex(index);
+                                                    setEditInputValue(tag);
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                         >
                                             {tag.label}
                                         </span>
@@ -406,8 +350,8 @@ function ProductSettingsCard() {
                                 <span>商品大类</span>
                             </div>
                         } >
-                        <Select
-                            style={{ width: "100%", height: "36px" }}
+                        <DefaultSelect
+                            style={{ width: "100%" }}
                             placeholder="类型"
                             options={productTypeOptions}
                             onChange={(e)=>{
@@ -425,7 +369,7 @@ function ProductSettingsCard() {
                         }}
                         label={<div className="label-content between">
                             <span>商品分类</span>
-                            <ProductCategoryModal tags={categoryTags} language={product.productInfo.languages_id} upDateCategoryTags={upDateCategoryTags} />
+                            <ProductCategoryModal />
                         </div>}
                     >
                         <div className="desc">
@@ -433,16 +377,16 @@ function ProductSettingsCard() {
                         </div>
                         <div style={{height:"10px"}}></div>
                         <Flex gap="4px 0" wrap>
-                            {categoryTags.map((tag) => (
+                            {categoryTags.map((tag,index) => (
                                 <Tag
                                     color="processing"
                                     style={{color:"#000",padding:"2px 6px"}}
-                                    key={tag.id}
+                                    key={tag+'-'+index}
                                     bordered={false}
                                     closable
                                     onClose={() => handleTypeClose(tag)}
                                     >
-                                    {tag.name}
+                                    {tag}
                                 </Tag>
                             ))}
                         </Flex>
@@ -478,10 +422,6 @@ const Scoped = styled.div`
         display: flex;
         flex-direction: column;
         gap: 8px;
-    }
-    .ant-input{
-        height: 36px;
-        /* padding: 4px 0px; */
     }
     .moreLink{
         label{

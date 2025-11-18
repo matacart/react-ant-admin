@@ -3,7 +3,8 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import product from "@/store/product/product";
 import PTinymce from "@/components/MCE/PTinymce";
-import { Editor } from "@tinymce/tinymce-react";
+import DefaultInput from "@/components/Input/DefaultInput";
+import MyTextArea from "@/components/Input/MyTextArea";
 
 const {TextArea} = Input
 function ProductData({form}:{form:any}) {
@@ -31,8 +32,8 @@ function ProductData({form}:{form:any}) {
                     required
                     label="商品标题"
                 >
-                    <Input
-                        onChange={(e) => {
+                    <DefaultInput
+                        onChange={(e:any) => {
                             product.setProductInfo({...product.productInfo,title:e.target.value})
                         }}
                         placeholder="例如：冬季，毛衣" />
@@ -41,11 +42,11 @@ function ProductData({form}:{form:any}) {
                 <Form.Item 
                     name="content1"
                     label='商品摘要'>
-                    <TextArea
+                    <MyTextArea
                         showCount
                         autoSize={{ minRows: 1, maxRows: 6 }}
                         maxLength={400}
-                        onChange={(e)=>{
+                        onChange={(e:any)=>{
                             product.setProductInfo({...product.productInfo,content1:e.target.value})
                         }}
                         style={{

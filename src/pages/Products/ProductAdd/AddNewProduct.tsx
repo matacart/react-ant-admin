@@ -7,16 +7,8 @@ import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 import MultipleStylesCard from './MultipleStylesCard';
 import ProductStyleList from './ProductStyleList';
-import SEOCard from './SEOCard';
-import StockCard from './StockCard';
-import Winnow from './Winnow';
-import PlatformHosting from './PlatformHosting';
-import Recommendation from './Recommendation';
-import Relevance from './Relevance';
 import product from '@/store/product/product';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import ProtectionInformation from './ProtectionInformation';
-import ThirdPartyInfoCard from './ThirdPartyInfoCard';
 import { upDateProduct } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
@@ -28,6 +20,14 @@ import Subnumber from '../Product/Subnumber';
 import LangSelect from '@/components/Select/LangSelect';
 import CodTemplateCard from '../Product/CodTemplateCard';
 import ThemeTemplateCard from '../Product/ThemeTemplateCard';
+import Relevance from '../Product/Relevance';
+import Recommendation from '../Product/Recommendation';
+import Winnow from '../Product/Winnow';
+import PlatformHosting from '../Product/PlatformHosting';
+import ProtectionInformation from '../Product/ProtectionInformation';
+import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
+import StockCard from '../Product/StockCard';
+import SEOCard from '../Product/SEOCard';
 
 // 表单项商品数据类型
 interface DataType {
@@ -212,12 +212,12 @@ function AddNewProduct(){
                             <Relevance />
                             <ProductSettingsCard/>
                             <Recommendation />
-                            <SEOCard/>
+                            <SEOCard />
                             <Winnow />
                             <PlatformHosting />
                             <Subnumber />
                             <ProtectionInformation />
-                            <ThirdPartyInfoCard/>
+                            <ThirdPartyInfoCard />
                             <CodTemplateCard />
                             <ThemeTemplateCard />
                         </div>

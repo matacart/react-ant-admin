@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Flex, Tag } from "antd";
 import shopsManagementStore from "@/store/shops/shopsManagementStore";
 import { observer } from "mobx-react-lite";
+import styled from "styled-components";
 
 interface StoresCardType{
     rolesList:any,
@@ -15,7 +16,7 @@ interface StoresCardType{
 function StoresCard({rolesList,employeeList}:StoresCardType){
 
     return (
-        <> 
+        <Scoped> 
             <div className="products-select" >
                 <div className="products-select-items-wrap" style={{
                     display: 'flex',
@@ -111,8 +112,8 @@ function StoresCard({rolesList,employeeList}:StoresCardType){
                 </div>
             </div>
             {/* 标签 */}
-            <Flex style={{marginBottom:"10px"}} wrap>
-                {shopsManagementStore.role.label && <Tag style={{marginTop:"10px",padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
+            <Flex wrap>
+                {shopsManagementStore.role.label && <Tag style={{marginBottom:"10px",padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
                     shopsManagementStore.setRole({
                         label: "",
                         value: ""
@@ -122,7 +123,7 @@ function StoresCard({rolesList,employeeList}:StoresCardType){
                         角色：{shopsManagementStore.role.label}
                     </span>
                 </Tag>}
-                {shopsManagementStore.employee && <Tag style={{marginTop:"10px",padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
+                {shopsManagementStore.employee && <Tag style={{marginBottom:"10px",padding:"4px 10px"}} color="processing" bordered={false} closable onClose={()=>{
                     shopsManagementStore.setEmployee("");
                 }}>
                     <span className="color-474F5E font-14">
@@ -130,12 +131,17 @@ function StoresCard({rolesList,employeeList}:StoresCardType){
                     </span>
                 </Tag>}
             </Flex>
-
             {/* 表格 */}
             <StoresTable/>
-        </>
+        </Scoped>
     );
 }
+
+const Scoped = styled.div`
+    .products-select{
+        margin-bottom: 10px;
+    }
+`;
 
 export default observer(StoresCard);
 

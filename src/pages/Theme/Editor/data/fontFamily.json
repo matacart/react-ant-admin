@@ -1,0 +1,655 @@
+[
+    {
+        "family": "ABeeZee",
+        "version": "v22",
+        "lastModified": "2022-09-22",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "ABeeZee",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/ABeeZee_regular_v22.woff",
+                "woff2": "/cdn/shop/fonts/ABeeZee_regular_v22.woff2"
+            },
+            {
+                "variant": "italic",
+                "family": "ABeeZee",
+                "style": "italic",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/ABeeZee_italic_v22.woff",
+                "woff2": "/cdn/shop/fonts/ABeeZee_italic_v22.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "ABeeZee",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/ABeeZee_regular_v22.woff",
+            "woff2": "/cdn/shop/fonts/ABeeZee_regular_v22.woff2"
+        }
+    },
+    {
+        "family": "ADLaM Display",
+        "version": "v1",
+        "lastModified": "2023-08-17",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "ADLaM Display",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/ADLaM Display_regular_v1.woff",
+                "woff2": "/cdn/shop/fonts/ADLaM Display_regular_v1.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "ADLaM Display",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/ADLaM Display_regular_v1.woff",
+            "woff2": "/cdn/shop/fonts/ADLaM Display_regular_v1.woff2"
+        }
+    },
+    {
+        "family": "AR One Sans",
+        "version": "v4",
+        "lastModified": "2023-11-28",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "AR One Sans",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/AR One Sans_regular_v4.woff",
+                "woff2": "/cdn/shop/fonts/AR One Sans_regular_v4.woff2"
+            },
+            {
+                "variant": "500",
+                "family": "AR One Sans",
+                "style": "normal",
+                "weight": "500",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/AR One Sans_500_v4.woff",
+                "woff2": "/cdn/shop/fonts/AR One Sans_500_v4.woff2"
+            },
+            {
+                "variant": "600",
+                "family": "AR One Sans",
+                "style": "normal",
+                "weight": "600",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/AR One Sans_600_v4.woff",
+                "woff2": "/cdn/shop/fonts/AR One Sans_600_v4.woff2"
+            },
+            {
+                "variant": "700",
+                "family": "AR One Sans",
+                "style": "normal",
+                "weight": "700",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/AR One Sans_700_v4.woff",
+                "woff2": "/cdn/shop/fonts/AR One Sans_700_v4.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "AR One Sans",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/AR One Sans_regular_v4.woff",
+            "woff2": "/cdn/shop/fonts/AR One Sans_regular_v4.woff2"
+        }
+    },
+    {
+        "family": "Abel",
+        "version": "v18",
+        "lastModified": "2022-09-22",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "Abel",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abel_regular_v18.woff",
+                "woff2": "/cdn/shop/fonts/Abel_regular_v18.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Abel",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Abel_regular_v18.woff",
+            "woff2": "/cdn/shop/fonts/Abel_regular_v18.woff2"
+        }
+    },
+    {
+        "family": "Abhaya Libre",
+        "version": "v17",
+        "lastModified": "2024-02-02",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "Abhaya Libre",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abhaya Libre_regular_v17.woff",
+                "woff2": "/cdn/shop/fonts/Abhaya Libre_regular_v17.woff2"
+            },
+            {
+                "variant": "500",
+                "family": "Abhaya Libre",
+                "style": "normal",
+                "weight": "500",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abhaya Libre_500_v17.woff",
+                "woff2": "/cdn/shop/fonts/Abhaya Libre_500_v17.woff2"
+            },
+            {
+                "variant": "600",
+                "family": "Abhaya Libre",
+                "style": "normal",
+                "weight": "600",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abhaya Libre_600_v17.woff",
+                "woff2": "/cdn/shop/fonts/Abhaya Libre_600_v17.woff2"
+            },
+            {
+                "variant": "700",
+                "family": "Abhaya Libre",
+                "style": "normal",
+                "weight": "700",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abhaya Libre_700_v17.woff",
+                "woff2": "/cdn/shop/fonts/Abhaya Libre_700_v17.woff2"
+            },
+            {
+                "variant": "800",
+                "family": "Abhaya Libre",
+                "style": "normal",
+                "weight": "800",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abhaya Libre_800_v17.woff",
+                "woff2": "/cdn/shop/fonts/Abhaya Libre_800_v17.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Abhaya Libre",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Abhaya Libre_regular_v17.woff",
+            "woff2": "/cdn/shop/fonts/Abhaya Libre_regular_v17.woff2"
+        }
+    },
+    {
+        "family": "Aboreto",
+        "version": "v2",
+        "lastModified": "2022-09-22",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "Aboreto",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Aboreto_regular_v2.woff",
+                "woff2": "/cdn/shop/fonts/Aboreto_regular_v2.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Aboreto",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Aboreto_regular_v2.woff",
+            "woff2": "/cdn/shop/fonts/Aboreto_regular_v2.woff2"
+        }
+    },
+    {
+        "family": "Abril Fatface",
+        "version": "v23",
+        "lastModified": "2023-08-25",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "Abril Fatface",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abril Fatface_regular_v23.woff",
+                "woff2": "/cdn/shop/fonts/Abril Fatface_regular_v23.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Abril Fatface",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Abril Fatface_regular_v23.woff",
+            "woff2": "/cdn/shop/fonts/Abril Fatface_regular_v23.woff2"
+        }
+    },
+    {
+        "family": "Abyssinica SIL",
+        "version": "v5",
+        "lastModified": "2022-12-08",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "Abyssinica SIL",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Abyssinica SIL_regular_v5.woff",
+                "woff2": "/cdn/shop/fonts/Abyssinica SIL_regular_v5.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Abyssinica SIL",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Abyssinica SIL_regular_v5.woff",
+            "woff2": "/cdn/shop/fonts/Abyssinica SIL_regular_v5.woff2"
+        }
+    },
+    {
+        "family": "Aclonica",
+        "version": "v22",
+        "lastModified": "2023-08-25",
+        "variants": [
+            {
+                "variant": "regular",
+                "family": "Aclonica",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Aclonica_regular_v22.woff",
+                "woff2": "/cdn/shop/fonts/Aclonica_regular_v22.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Aclonica",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Aclonica_regular_v22.woff",
+            "woff2": "/cdn/shop/fonts/Aclonica_regular_v22.woff2"
+        }
+    },
+    {
+        "family": "Jost",
+        "version": "v15",
+        "lastModified": "2023-09-14",
+        "variants": [
+            {
+                "variant": "100",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "100",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_100_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_100_v15.woff2"
+            },
+            {
+                "variant": "200",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "200",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_200_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_200_v15.woff2"
+            },
+            {
+                "variant": "300",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "300",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_300_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_300_v15.woff2"
+            },
+            {
+                "variant": "regular",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_regular_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_regular_v15.woff2"
+            },
+            {
+                "variant": "500",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "500",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_500_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_500_v15.woff2"
+            },
+            {
+                "variant": "600",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "600",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_600_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_600_v15.woff2"
+            },
+            {
+                "variant": "700",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "700",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_700_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_700_v15.woff2"
+            },
+            {
+                "variant": "800",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "800",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_800_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_800_v15.woff2"
+            },
+            {
+                "variant": "900",
+                "family": "Jost",
+                "style": "normal",
+                "weight": "900",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_900_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_900_v15.woff2"
+            },
+            {
+                "variant": "100italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "100",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_100italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_100italic_v15.woff2"
+            },
+            {
+                "variant": "200italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "200",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_200italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_200italic_v15.woff2"
+            },
+            {
+                "variant": "300italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "300",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_300italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_300italic_v15.woff2"
+            },
+            {
+                "variant": "italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_italic_v15.woff2"
+            },
+            {
+                "variant": "500italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "500",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_500italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_500italic_v15.woff2"
+            },
+            {
+                "variant": "600italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "600",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_600italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_600italic_v15.woff2"
+            },
+            {
+                "variant": "700italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "700",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_700italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_700italic_v15.woff2"
+            },
+            {
+                "variant": "800italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "800",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_800italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_800italic_v15.woff2"
+            },
+            {
+                "variant": "900italic",
+                "family": "Jost",
+                "style": "italic",
+                "weight": "900",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Jost_900italic_v15.woff",
+                "woff2": "/cdn/shop/fonts/Jost_900italic_v15.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Jost",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Jost_regular_v15.woff",
+            "woff2": "/cdn/shop/fonts/Jost_regular_v15.woff2"
+        }
+    },
+    {
+        "family": "Poppins",
+        "version": "v21",
+        "lastModified": "2024-03-25",
+        "variants": [
+            {
+                "variant": "100",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "100",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_100_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_100_v21.woff2"
+            },
+            {
+                "variant": "100italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "100",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_100italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_100italic_v21.woff2"
+            },
+            {
+                "variant": "200",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "200",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_200_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_200_v21.woff2"
+            },
+            {
+                "variant": "200italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "200",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_200italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_200italic_v21.woff2"
+            },
+            {
+                "variant": "300",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "300",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_300_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_300_v21.woff2"
+            },
+            {
+                "variant": "300italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "300",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_300italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_300italic_v21.woff2"
+            },
+            {
+                "variant": "regular",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_regular_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_regular_v21.woff2"
+            },
+            {
+                "variant": "italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "400",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_italic_v21.woff2"
+            },
+            {
+                "variant": "500",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "500",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_500_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_500_v21.woff2"
+            },
+            {
+                "variant": "500italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "500",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_500italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_500italic_v21.woff2"
+            },
+            {
+                "variant": "600",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "600",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_600_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_600_v21.woff2"
+            },
+            {
+                "variant": "600italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "600",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_600italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_600italic_v21.woff2"
+            },
+            {
+                "variant": "700",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "700",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_700_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_700_v21.woff2"
+            },
+            {
+                "variant": "700italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "700",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_700italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_700italic_v21.woff2"
+            },
+            {
+                "variant": "800",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "800",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_800_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_800_v21.woff2"
+            },
+            {
+                "variant": "800italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "800",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_800italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_800italic_v21.woff2"
+            },
+            {
+                "variant": "900",
+                "family": "Poppins",
+                "style": "normal",
+                "weight": "900",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_900_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_900_v21.woff2"
+            },
+            {
+                "variant": "900italic",
+                "family": "Poppins",
+                "style": "italic",
+                "weight": "900",
+                "display": "swap",
+                "woff": "/cdn/shop/fonts/Poppins_900italic_v21.woff",
+                "woff2": "/cdn/shop/fonts/Poppins_900italic_v21.woff2"
+            }
+        ],
+        "defaultVariant": {
+            "variant": "regular",
+            "family": "Poppins",
+            "style": "normal",
+            "weight": "400",
+            "display": "swap",
+            "woff": "/cdn/shop/fonts/Poppins_regular_v21.woff",
+            "woff2": "/cdn/shop/fonts/Poppins_regular_v21.woff2"
+        }
+    }
+]

@@ -7,6 +7,18 @@ import styled from "styled-components";
 import { useEffect } from "react";
 import cookie from 'react-cookies'
 
+
+// 清除所有cookie
+function clearAllCookies() {
+    const cookies = document.cookie.split(";");
+    for (const cookie of cookies) {
+      const name = cookie.split("=")[0].trim();
+      if(name !== "access_token"){
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      }
+    }
+}
+
 export default function UserCard(props:any) {
     /**
      * 退出登录，并且将当前的 url 保存
@@ -16,7 +28,8 @@ export default function UserCard(props:any) {
         sessionStorage.removeItem("domain");
         await logout();
         let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
-        cookie.remove("token",{domain:test,path:"/"})
+        clearAllCookies();
+        // cookie.remove("token",{domain:test,path:"/"})
         const { search, pathname } = window.location;
         const urlParams = new URL(window.location.href).searchParams;
         /** 此方法会跳转到 redirect 参数所在的位置 */
@@ -24,10 +37,10 @@ export default function UserCard(props:any) {
         // Note: There may be security issues, please note
         if (window.location.pathname !== '/user/signIn' && !redirect) {
             history.replace({
-                pathname: '/user/signIn',
-                search: stringify({
-                redirect: pathname + search,
-                }),
+                pathname: '/user/signIn'
+                // search: stringify({
+                //     redirect: pathname + search,
+                // }),
             });
         }
     };

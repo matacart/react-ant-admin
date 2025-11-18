@@ -1,14 +1,13 @@
-import { deleteFile, getFileList } from "@/services/y2/api"
+import { deleteFile } from "@/services/y2/api"
 import { DeleteOutlined, FolderOutlined, PaperClipOutlined } from "@ant-design/icons";
 import copy from 'copy-to-clipboard';
 import { Dropdown, Flex, MenuProps, message, Modal, Pagination, Popover, Space, Table, TableProps, theme, Tooltip } from "antd"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import React from "react";
 import fileData from "@/store/fileData";
 import { observer } from "mobx-react-lite";
 import { ProColumns, ProTable } from "@ant-design/pro-components";
-import { type } from './../../../../types/index.d';
 import { TableRowSelection } from "antd/es/table/interface";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { title } from 'process';
@@ -16,36 +15,21 @@ import { title } from 'process';
 const { useToken } = theme;
 
 interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-    url:string;
+  id:string;
+  name: string;
+  createTime:string;
+  size:string;
+  url:string;
+  nameSuffix?:string;
 }
 
-function GroupCardTable({dataSource}) {
+function GroupCardTable({dataSource,paginationConfig,loading}:{dataSource:DataType[],paginationConfig:any,loading:boolean}) {
 
     useEffect(()=>{
         if(dataSource!==undefined){
           setData(dataSource)
         }
     },[dataSource])
-
-    useEffect(()=>{
-      console.log(fileData.data)
-      if(fileData.data!==null){
-        setData([...data,{
-          id:fileData.data.id,
-          name:fileData.data.basename,
-          size:fileData.data.size,
-          createTime:fileData.data.create_time,
-          url:fileData.data.savepath
-        }])
-      }
-      fileData.setData(null)
-    },[fileData.data])
-
 
     const items: MenuProps['items'] = [
         {
@@ -55,23 +39,7 @@ function GroupCardTable({dataSource}) {
               哈哈哈
             </a>
           ),
-        },
-        {
-          key: '2',
-          label: (
-            <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-              2nd menu item
-            </a>
-          ),
-        },
-        {
-          key: '3',
-          label: (
-            <a target="_blank" rel="noopener noreferrer" href="https://www.luohanacademy.com">
-              3rd menu item
-            </a>
-          ),
-        },
+        }
     ];
 
     const { token } = useToken();
@@ -130,12 +98,12 @@ function GroupCardTable({dataSource}) {
 
             let imgTypeUrl:string = "";
 
-            if(type == "MP4"){
+            if(type == "MP4" || type == "GIF" || type == "PJP" || type == "SVG"){
               imgTypeUrl = record.url
-            }else if(type == "JPEG" || type == "JPG" || type == "PNG" || type == "GIF" || type == "PJP" || type == "SVG"){
-              imgTypeUrl = record.url
+            }else if(type == "JPEG" || type == "JPG" || type == "PNG"){
+              imgTypeUrl = record.url+"?x-oss-process=image/resize,w_300"
             }else if(type == "XLSX"){
-
+              imgTypeUrl = "/img/settings/file-type-xlsx.svg"
             }else if(type == "DOCX"){
               imgTypeUrl = "/img/settings/file-type-docx.svg"
             }
@@ -143,7 +111,7 @@ function GroupCardTable({dataSource}) {
             return (
               <Flex align="center">
                 <div style={{marginRight:12,width:60,height:60}}>
-                  {type == "MP4"?<video style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={record.url} />:<img style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={imgTypeUrl+"?x-oss-process=image/resize,w_300"} />}
+                  { type == "MP4" ? <video style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={record.url} />:<img style={{width:"100%",height:"100%",objectFit:"contain",background:"#f7f8fb",borderRadius:"4px"}} src={imgTypeUrl} /> }
                 </div>
                 <div>
                   <div className="color-242833">{name}</div>
@@ -165,7 +133,17 @@ function GroupCardTable({dataSource}) {
           dataIndex: 'size',
           key: 'size',
           width:160,
-          render: (text) => <span>{(text/1000)+"M"}</span>,
+          render: (text) => {
+            const bytes = Number(text);
+            if (isNaN(bytes)) return <span>0 KB</span>;
+            const kb = bytes / 1024;
+            if (kb < 1024) {
+              return <span>{kb.toFixed(2)} KB</span>;
+            } else {
+              const mb = kb / 1024;
+              return <span>{mb.toFixed(2)} MB</span>;
+            }
+          },
         },
         {
           title: '操作',
@@ -225,13 +203,6 @@ function GroupCardTable({dataSource}) {
         }
       })
     }
-    
-    // 分页
-    const paginationConfig: TableProps<DataType>['pagination'] = {
-      onChange: () => {},
-      showTotal:(total)=><div className="color-7A8499">共{total}个文件</div>
-    };
-
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
       console.log('selectedRowKeys changed: ', newSelectedRowKeys);
@@ -245,11 +216,17 @@ function GroupCardTable({dataSource}) {
     
     return (
       <Scoped>
-        <Table<DataType> columns={columns} scroll={{ x: 'max-content'}} onRow={(record)=>({
-          onClick: () => {
-            window.open(record.url);
-          }
-        })} rowSelection={rowSelection} dataSource={data} pagination={paginationConfig} />
+        <Table<DataType> loading={loading} columns={columns} scroll={{ x: 'max-content'}} 
+          onRow={(record)=>({
+            onClick: () => {
+              window.open(record.url);
+            }
+          })}
+          rowKey={(record) => record.id}
+          rowSelection={rowSelection}
+          dataSource={data}
+          pagination={paginationConfig}
+        />
       </Scoped>
     )
 }

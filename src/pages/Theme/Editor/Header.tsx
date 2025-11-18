@@ -3,7 +3,7 @@ import { AddIcon, BackIcon, DeleteIcon, DownIcon, EditIcon, EditorCategoryIcon, 
 import SuccessTag from '@/components/Tag/SuccessTag';
 import { delTemplateFile, getJsonTemplates, settingsSections, templateUpdate } from '@/services/y2/api';
 import editor from '@/store/theme/editor';
-import { Button, Dropdown, Flex, message, Space, Tooltip } from 'antd';
+import { Button, Dropdown, Flex, message, Modal, Space, Tooltip } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +16,11 @@ import NewTemplateModal from './NewTemplateModal';
 import MySelect from '@/components/Select/MySelect';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import RenameTemplateModal from './RenameTemplateModal';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import DefaultButton from '@/components/Button/DefaultButton';
+import DangerButton from '@/components/Button/DangerButton';
+
+const { confirm } = Modal;
 
 interface pageType{
     id:string,
@@ -401,7 +406,22 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
         <Scoped ref={dropdownContainerRef} className='font-14'>
             {/* left */}
             <Tooltip title={intl.formatMessage({id:'theme.header.backToAdmin'})} placement="right">
-                <div className='header-left cursor-pointer' onClick={()=>navigate(`/website/shopSetting`)}>
+                <div className='header-left cursor-pointer' onClick={()=>{
+                    const newModal = confirm({
+                        title: '未保存的内容将丢失，确认退出页面？',
+                        icon: <ExclamationCircleFilled style={{color:'#F86140'}} />,
+                        centered: true,
+                        footer: (
+                            <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
+                                <DefaultButton text={"取消"} onClick={()=>newModal.destroy()} />
+                                <DangerButton text={"退出页面"} onClick={async ()=>{
+                                    newModal.destroy();
+                                    navigate(`/website/shopSetting`);
+                                }} />
+                            </Flex>
+                        )
+                    });
+                }}>
                     <BackIcon className='font-20' />
                 </div>
             </Tooltip>
@@ -461,12 +481,27 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                                 if(lastOperation){
                                     // 执行操作
                                     const newData = await templateUpdate(lastOperation.undoData);
-                                    if(newData){
-                                        if(lastOperation.undoData.sections && lastOperation.undoData.pageName == ""){
+                                    if(true){
+                                        // 模板设置
+                                        if(lastOperation.undoData.sections){
+                                            if(lastOperation.undoData.pageName == ""){
+                                                // SECTION
+                                                const newSections = editor.templateData.filter((res:any)=>res.type == "TEMPLATE")
+                                                editor.setTemplateData([
+                                                    ...JSON.parse(lastOperation.undoData.sections || "[]"),
+                                                    ...newSections
+                                                ])
+                                            }else{
+                                                // TEMPLATE
+                                                const newSections = editor.templateData.filter((res:any)=>res.type !== "TEMPLATE")
+                                                editor.setTemplateData([
+                                                    ...newSections,
+                                                    ...JSON.parse(lastOperation.undoData.sections || "[]"),
+                                                ])
+                                            }
                                         }
-                                        // 设置
+                                        // 全局设置
                                         if(lastOperation.undoData.settings){
-                                            console.log(JSON.parse(lastOperation.undoData.settings))
                                             editor.setSettings({
                                                 ...editor.settings,
                                                 settingsData:JSON.parse(lastOperation.undoData.settings)
@@ -484,11 +519,26 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                                 // 获取最近一次重做操作
                                 const lastRedoOperation = editor.getLastRedoOperation();
                                 if(lastRedoOperation){
-                                    console.log(JSON.parse(lastRedoOperation.redoData.settings))
                                     // 执行操作
                                     const newData = await templateUpdate(lastRedoOperation.redoData);
-                                    if(newData){
-                                        if(lastRedoOperation.redoData.sections && lastRedoOperation.redoData.pageName == ""){
+                                    if(true){
+                                        // 模板设置
+                                        if(lastRedoOperation.redoData.sections){
+                                            if(lastRedoOperation.redoData.pageName == ""){
+                                                // SECTION
+                                                const newSections = editor.templateData.filter((res:any)=>res.type == "TEMPLATE")
+                                                editor.setTemplateData([
+                                                    ...JSON.parse(lastRedoOperation.redoData.sections || "[]"),
+                                                    ...newSections
+                                                ])
+                                            }else{
+                                                // TEMPLATE
+                                                const newSections = editor.templateData.filter((res:any)=>res.type !== "TEMPLATE")
+                                                editor.setTemplateData([
+                                                    ...newSections,
+                                                    ...JSON.parse(lastRedoOperation.redoData.sections || "[]"),
+                                                ])
+                                            }
                                         }
                                         // 设置
                                         if(lastRedoOperation.redoData.settings){
@@ -504,15 +554,22 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                         </Tooltip>
                     </Flex>
                     <div className='prev-btn'>{intl.formatMessage({id:'theme.header.preview'})}</div>
-                    <Button type="primary" className='font-14 save-btn' loading={loading} onClick={async ()=>{
-                        console.log(editor.templateData)
-                        const result = await settingsSections({
-                            mode: "auto",
-                            languages_id: "2",
-                            themeId: templateId??"",
-                            action:"save",
-                            oseid: editor.oseId??"",
-                        })
+                    <Button type="primary" className={`font-14 save-btn ${editor.isSaveData?'':'custom-disabled'}`} loading={loading} onClick={(e)=>{
+                        if(editor.isSaveData){
+                            // console.log(editor.templateData)
+                            setLoading(true);
+                            const result = settingsSections({
+                                mode: "auto",
+                                languages_id: "2",
+                                themeId: templateId??"",
+                                action:"save",
+                                oseid: editor.oseId??"",
+                            }).catch(()=>{
+                            }).finally(()=>{
+                                setLoading(false);
+                                editor.setIsSaveData(false);
+                            });
+                        }
                     }}>{intl.formatMessage({id:'theme.header.save'})}</Button>
                 </Flex>
             </Flex>
@@ -569,6 +626,10 @@ const Scoped = styled.div`
                 height: 100%;
                 padding-left: 20px;
                 padding-right: 20px;
+            }
+            .custom-disabled{
+                cursor: not-allowed;
+                opacity: 0.4;
             }
         }
     }

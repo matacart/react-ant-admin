@@ -1,18 +1,21 @@
 import { Switch } from "antd"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 
-function ItemSwitch({item,data,setData}:{item:any,data:boolean,setData:(value:boolean)=>void}){
+function ItemSwitch({item,data,setData}:{item:any,data:boolean,setData:(item:any,value:boolean)=>void}){
 
-    const [checked,setChecked] = useState<boolean>();
+    // 默认数据
+    const defaultData = item.default??false;
 
-    useEffect(()=>{
-        setChecked(data)
+    const [value,setValue] = useState(data??defaultData);
+
+    useMemo(()=>{
+        setValue(data??defaultData)
     },[data])
 
     return (
-        <Switch value={checked} onChange={(check:boolean)=>{
-            setData(check)
-            setChecked(check)
+        <Switch value={value} onChange={(check:boolean)=>{
+            setData(item,check)
+            setValue(check)
         }} />
     )
 }

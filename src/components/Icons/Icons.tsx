@@ -233,6 +233,7 @@ const SuccessSecondSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" strokeWidth="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
 )
 
+
 const PauseSecondSvg = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
 )
@@ -415,6 +416,10 @@ const StartSvg = () => (
 )
 const CompressedFileSvg = () => (
   <svg width="1em" height="1em" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4h4.8A1.2 1.2 0 0124 5.2v17.6a1.2 1.2 0 01-1.2 1.2H18V4z" fill="#FE9E0F"></path><path d="M0 1.2A1.2 1.2 0 011.2 0h15.6A1.2 1.2 0 0118 1.2V24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFC164"></path><path d="M0 1.2A1.2 1.2 0 011.2 0H6v24H1.2A1.2 1.2 0 010 22.8V1.2z" fill="#FFCE85"></path><path fill="#FFC774" d="M6 0h6v24H6z"></path><path fill="#FFF4E3" d="M4 0h2v1.5H4zM4 3h2v1.5H4zM4 6h2v1.5H4zM4 9h2v1.5H4zM6 1.5h2V3H6zM6 4.5h2V6H6zM6 7.5h2V9H6z"></path><path fillRule="evenodd" clipRule="evenodd" d="M4.5 12a.5.5 0 00-.5.5V16a1 1 0 001 1h2a1 1 0 001-1v-3.5a.5.5 0 00-.5-.5h-3zM7 15H5v1h2v-1z" fill="#FFF4E3"></path><path fill="#FFCE85" d="M5 15h1v1H5z"></path><path fill="#FFC774" d="M6 15h1v1H6z"></path></svg>
+)
+
+const TickSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 1.81502L4.26327 7.61312C4.13264 7.74516 3.95545 7.81934 3.7707 7.81934C3.58595 7.81934 3.40877 7.74516 3.27813 7.61312L0 4.29992L0.985145 3.30424L3.7707 6.1196L9.01486 0.819336L10 1.81502Z" fill="currentColor"></path></svg>
 )
 
 
@@ -680,6 +685,11 @@ export const StartIcon = (props: Partial<CustomIconComponentProps>) => (
 export const CompressedFileIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={CompressedFileSvg} {...props} />
 );
+
+export const TickIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={TickSvg} {...props} />
+);
+
 
 
 // -----------编辑组件图标-----------------

@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
 import orderReturnGoods from "@/store/order/orderReturnGoods";
-import NumberInput from "@/components/Input/NumberInput";
+import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
 import { toJS } from "mobx";
 import MySelect from "@/components/Select/MySelect";
 import styled from "styled-components";
@@ -125,7 +125,7 @@ function ReturnGoods({groupIndex}:{groupIndex:number}) {
                       <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.product_price} X {item.quantity_shipped}</span>
                     </div>
                     <div style={{marginTop:"12px"}}>
-                      <NumberInput style={{width:"120px"}} value={item.num} min={0} max={item.quantity_shipped} onChange={(value:number)=>{
+                      <DefaultInputNumber style={{width:"120px"}} value={item.num} min={0} max={item.quantity_shipped} onChange={(value:number)=>{
                           const newShippedProductGroup = toJS(orderReturnGoods.shippedProductGroup)
                           newShippedProductGroup[groupIndex].product.forEach((product,index)=>{
                             if(product.id===item.id){

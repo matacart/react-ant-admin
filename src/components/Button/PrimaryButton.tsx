@@ -9,8 +9,6 @@ interface MyButtonProps extends ButtonProps {
 
 export default function PrimaryButton({text,icon,...props}:MyButtonProps){
 
-
-    
     return (
         <Scoped>
             {/* 回退 */}

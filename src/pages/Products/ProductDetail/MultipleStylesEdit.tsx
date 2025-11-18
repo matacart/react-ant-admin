@@ -1,5 +1,6 @@
 import AttributesModal from "@/components/Modal/AttributesModal";
 import ProductStyleModal from "@/components/Modal/ProductStyleModal";
+import MySelect from "@/components/Select/MySelect";
 import {addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
 import product from "@/store/product/product";
 import productStore from "@/store/productStore";
@@ -429,7 +430,7 @@ function MultipleStylesEdit(props:any) {
                 placeholder="请输入属性"
                 value={spec.attributes}
                 defaultValue={spec.attributes}
-                style={{ width: "180px", height: "44px"}}
+                style={{ width: "180px", height: "42px"}}
                 // options={optionValueList.map(opt => ({ value: opt.label, label:opt.label  }))}
                 options={optionList.map(opt => ({ value: opt.label, label:opt.label  }))}
                 onChange={(value,option)=>{
@@ -567,15 +568,14 @@ function MultipleStylesEdit(props:any) {
                   {errors[index]}
                 </div>
               )}
-              <div className="custom-input">
-                <Select
+                <MySelect
                   loading={true}
                   mode="tags"
                   // disabled={!spec.flag}
                   // open={false}
                   className="input-text-area"
                   // allowClear={false}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{ margin:"0 12px",width:"100%",height:"42px"}}
                   placeholder={tags[index]?.length > 0 ? "" : "请输入款式值,可输入多个"}
                   value={tags[index]}
                   tagRender={(props)=>tagRender(props,index,spec)}
@@ -600,8 +600,7 @@ function MultipleStylesEdit(props:any) {
                       {option.option_values_name}
                     </Option>
                   ))}
-                </Select>
-              </div>
+                </MySelect>
             {/* {index === 0 && ( // 只在第一个规格组中显示复选框
               <div className="hide-option-checkbox">
                 <Checkbox onChange={(e) => handleHideOptionCheckboxChange(e)}>购买时隐藏此选项</Checkbox>
@@ -658,6 +657,10 @@ export default observer(MultipleStylesEdit);
 
 // 定义样式
 const Scoped = styled.div`
+  .ant-select-selection-wrap{
+    height: 100%;
+  }
+
   .customCheckbox{
     display: flex;
     flex-direction: column-reverse;
@@ -680,12 +683,12 @@ const Scoped = styled.div`
   .select-input:first-child{
     margin-top: 10px;
   }
-.error-message {
-  position: absolute;
-  bottom: -24px; /* 调整距离 */
-  left: 0;
-  color: red;
-}
+  .error-message {
+    position: absolute;
+    bottom: -24px; /* 调整距离 */
+    left: 0;
+    color: red;
+  }
 
   .input-text-area {
     display: inline-block;
@@ -715,9 +718,7 @@ const Scoped = styled.div`
   }
 
   .custom-input {
-    width: calc(100% - 88px); 
-    height: 44px;
-    
+    width: calc(100% - 88px);
   }
   .ant-tag-close-icon{
       color: #000 !important;
@@ -746,4 +747,5 @@ const Scoped = styled.div`
   .edit-icon {
     margin-right: 10px;
     background-color: #fff;
-  }`
+  }
+`

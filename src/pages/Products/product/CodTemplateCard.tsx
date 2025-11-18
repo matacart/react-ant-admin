@@ -1,11 +1,11 @@
 import product from "@/store/product/product";
-import { Card, Flex, Select } from "antd";
+import { Card, Flex } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import ThemeTemplateManagement from "./ThemeTemplateManagement";
+import DefaultSelect from "@/components/Select/DefaultSelect";
 
-const ThemeTemplateCard = () =>{
-
+const CodTemplateCard = () =>{
     const handleChange = (value: string) => {
         product.setProductInfo({
             ...product.productInfo,
@@ -22,7 +22,7 @@ const ThemeTemplateCard = () =>{
                         <ThemeTemplateManagement />
                     </Flex>
                 </div>
-                <Select
+                <DefaultSelect
                     style={{ width: "100%" }}
                     value={product.productInfo.template_id}
                     onChange={handleChange}
@@ -38,7 +38,7 @@ const ThemeTemplateCard = () =>{
     )
 }
 
-export default observer(ThemeTemplateCard)
+export default observer(CodTemplateCard)
 
 const Scoped = styled.div`
 .title{

@@ -258,6 +258,20 @@ function Editor() {
       }
     }, [editor.templateData,iframeReady])
 
+    // 离开提示
+    useEffect(() => {
+      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        if (editor.isSaveData) {
+          event.preventDefault();
+          return;
+        }
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }, []);
+
 
     return <Scoped>
       <GlobalStyle />

@@ -1,26 +1,15 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Divider,Flex,Form,MenuProps,message, Modal } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import ProductDataEdit from './ProductDataEdit';
-import ProductImgEdit from './ProductImgEdit';
-import ThirdPartyInfoEdit from './ThirdPartyInfoEdit';
 import TradingRecords from './TradingRecords';
 import { deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
-import StockEdit from './StockEdit';
 import MultipleStylesEdit from './MultipleStylesEdit';
 import ProductStyleListEdit from './ProductStyleListEdit';
 import { styled } from 'styled-components';
-import PriceOrTransactionCardEdit from './PriceOrTransactionCardEdit';
-import ProductSeoEdit from './ProductSeoEdit';
 import { observer } from 'mobx-react-lite';
-import Winnow from './Winnow';
-import PlatformHosting from './PlatformHosting';
 import cookie from 'react-cookies';
 import { history,useParams,useNavigate } from '@umijs/max';
-import ProtectionInformationEdit from './ProtectionInformationEdit';
-import RecommendationEdit from './RecommendationEdit';
-import RelevanceEdit from './RelevanceEdit';
 import copy from 'copy-to-clipboard';
 import dayjs from "dayjs";
 import product from '@/store/product/product';
@@ -37,6 +26,17 @@ import ProductSettingsCard from '../Product/ProductSettingsCard';
 import Subnumber from '../Product/Subnumber';
 import CodTemplateCard from '../Product/CodTemplateCard';
 import ThemeTemplateCard from '../Product/ThemeTemplateCard';
+import ProductData from '../Product/ProductData';
+import ProductImg from '../Product/ProductImg';
+import PriceOrTransaction from '../Product/PriceOrTransaction';
+import Relevance from '../Product/Relevance';
+import Recommendation from '../Product/Recommendation';
+import Winnow from '../Product/Winnow';
+import PlatformHosting from '../Product/PlatformHosting';
+import ProtectionInformation from '../Product/ProtectionInformation';
+import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
+import StockCard from '../Product/StockCard';
+import SEOCard from '../Product/SEOCard';
 
 
 // 信息
@@ -286,6 +286,7 @@ function ProductDetail() {
             if (e.errorFields.length > 0) {
                 form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
             }
+            console.log(e)
             return false
         })
     }
@@ -367,24 +368,24 @@ function ProductDetail() {
                         </div>
                             <div className='mc-layout-main'>
                                 <div className='mc-layout-content'>
-                                    <ProductDataEdit form={form} />
-                                    <ProductImgEdit/>
-                                    <PriceOrTransactionCardEdit />
-                                    <StockEdit form={form} />
+                                    <ProductData form={form} />
+                                    <ProductImg />
+                                    <PriceOrTransaction />
+                                    <StockCard form={form} />
                                     <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style={style} setStyle={setStyle} />
                                     {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}
                                 </div>
                                 <div className='mc-layout-extra'>
-                                    <RelevanceEdit />
+                                    <Relevance />
                                     <ProductSettingsCard />
-                                    <TradingRecords/>
-                                    <RecommendationEdit />
-                                    <ProductSeoEdit/>
+                                    <TradingRecords />
+                                    <Recommendation />
+                                    <SEOCard />
                                     <Winnow />
                                     <PlatformHosting />
                                     <Subnumber />
-                                    <ProtectionInformationEdit />
-                                    <ThirdPartyInfoEdit/>
+                                    <ProtectionInformation />
+                                    <ThirdPartyInfoCard />
                                     <CodTemplateCard />
                                     <ThemeTemplateCard />
                                 </div>

@@ -150,7 +150,7 @@ function GlobalSettingsRight(){
                     </Flex>
                 </>,
             })
-            console.log(editor.settings.presets)
+            // console.log(editor.settings.presets)
         }
         setItems(newItems)
     }, [editor.settings]);

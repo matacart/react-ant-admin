@@ -13,7 +13,7 @@ function MyRangePicker({...props}) {
                         borderRadius:4,
                         paddingXXS:0,
                         // paddingSM:12
-                    },
+                    }
                 }}
             >
                 <RangePicker {...props} />

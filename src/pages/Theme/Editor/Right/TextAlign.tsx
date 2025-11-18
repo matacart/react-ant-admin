@@ -1,11 +1,14 @@
 import { EditorTextCenterAIcon, EditorTextCenterIcon, EditorTextLeftAIcon, EditorTextLeftIcon, EditorTextRightAIcon, EditorTextRightIcon } from "@/components/Icons/Icons";
-import editor from "@/store/theme/editor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function TextAlign(){
+// 对齐方式
+function TextAlign({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
 
-    const [value, setValue] = useState("left");
+    // 默认数据
+    const defaultData = item.default || undefined;
+
+    const [value,setValue] = useState(data || defaultData);
 
     const options = [
         {
@@ -18,7 +21,7 @@ function TextAlign(){
             id:2,
             icon: <EditorTextCenterIcon style={{fontSize:32}} />,
             aIcon: <EditorTextCenterAIcon style={{fontSize:32}} className="color-356DFF" />,
-            value: 'content'
+            value: 'center'
         },
         {
             id:3,
@@ -28,11 +31,15 @@ function TextAlign(){
         }
     ]
 
-    return (
+    useEffect(()=>{
+        setValue(data || defaultData);
+    },[data])
 
+    return (
         <Scoped>
             {options.map(align=><div key={align.id} onClick={()=>{
-                setValue(align.value)
+                setData(item,align.value);
+                setValue(align.value);
             }} className="item">
                 {align.value == value ? align.aIcon : align.icon}
             </div> )}

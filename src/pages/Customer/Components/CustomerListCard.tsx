@@ -80,8 +80,9 @@ export default function CustmoerListAjax() {
       dataIndex: 'price',
       width: 100,
       render: (value: number, record: any, index: any) => {
-        let num = Number(value);
-        return <>{`US$ ${num.toFixed(2)}`}</>;
+        // let num = Number(value);
+        // return <>{`US$ ${num.toFixed(2)}`}</>;
+        return <></>;
       },
     },
   ];

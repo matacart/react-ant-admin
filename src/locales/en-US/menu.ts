@@ -109,6 +109,9 @@ export default {
   'menu.website.customPage':'Custom Page',
   'menu.website.navList':'Navigation',
   'menu.website.preferences':'Preferences',
+
+  'menu.theme':"Theme",
+
   // 设置
   'menu.settings': 'Settings',
 }

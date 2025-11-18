@@ -6,7 +6,7 @@ export default {
   'menu.admin': '管理页',
   'menu.admin.sub-page': '二级管理页',
   'menu.login': '登录',
-  'menu.register': '开始免费试用',//注册
+  'menu.register': '用户注册',//注册
   'menu.register-result': '注册结果',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
@@ -122,6 +122,9 @@ export default {
   'menu.website.navList':'菜单导航',
   'menu.website.preferences':'偏好设置',
   'menu.channel':"渠道",
+
+
+  'menu.theme':"主题",
   // 
   'menu.settings':"设置",
   'menu.settings.index':"设置",

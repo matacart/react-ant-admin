@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import { useEffect } from 'react';
 import product from "@/store/product/product";
+import DefaultSelect from "@/components/Select/DefaultSelect";
 
 
  function Subnumber(){
@@ -40,7 +41,7 @@ import product from "@/store/product/product";
                                 <span>数据归属</span>
                             </div>
                         } >
-                        <Select
+                        <DefaultSelect
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
                             options={[

@@ -1,4 +1,4 @@
-import { getFileList, getGroupAdd, getGroupList } from "@/services/y2/api"
+import { getGroupAdd, getGroupList } from "@/services/y2/api"
 import { Button, Card, Flex, Input, Modal, Popover, Select, Spin, Tabs, TabsProps } from "antd"
 import { createContext, useEffect, useRef, useState } from "react"
 import styled from "styled-components"

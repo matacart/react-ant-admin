@@ -1,6 +1,10 @@
 import { Col, Flex, Form, Input, Modal, Radio, Select, Switch } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import DefaultSelect from "../Select/DefaultSelect";
+import DefaultInput from "../Input/DefaultInput";
+import DefaultButton from "../Button/DefaultButton";
+import PrimaryButton from "../Button/PrimaryButton";
 
 
 // 产品防护信息弹窗
@@ -20,6 +24,17 @@ export default function ProductDefenseModal(props:any) {
         setIsOpen(false);
     }
 
+    const cancel = ()=>{
+        setIsOpen(false);
+        // 初始化
+        form.setFieldsValue({
+            defenseSort:props.data.productInfo.group_id,
+            defenseStatus:props.data.productInfo.ad_waf_status,
+            productId:props.data.productInfo.ad_product_id,
+            productUrl:props.data.productInfo.ad_product_url
+        });
+    }
+
     useEffect(()=>{
         form.setFieldsValue({
             defenseSort:props.data.productInfo.group_id,
@@ -32,16 +47,17 @@ export default function ProductDefenseModal(props:any) {
     return(
         <>
             <a onClick={()=>{setIsOpen(true)}}>编辑</a>
-            <Modal destroyOnClose width="650px" title="防护信息" centered open={isOpen} onOk={submit} okText="确认" onCancel={()=>{
-                setIsOpen(false);
-                // 初始化
-                form.setFieldsValue({
-                    defenseSort:props.data.productInfo.group_id,
-                    defenseStatus:props.data.productInfo.ad_waf_status,
-                    productId:props.data.productInfo.ad_product_id,
-                    productUrl:props.data.productInfo.ad_product_url
-                });
-            }}>
+            <Modal destroyOnClose width="650px" title="防护信息" centered open={isOpen}
+                footer={(_, { OkBtn, CancelBtn }) => (
+                    <Flex justify="end">
+                        <Flex gap={12}>
+                            <DefaultButton text={"取消"} onClick={cancel} />
+                            <PrimaryButton text={"保存"} onClick={submit} />
+                        </Flex>
+                    </Flex>
+                )}
+                onCancel={cancel}
+            >
                 <Scoped>
                     <Form
                         form={form}
@@ -52,7 +68,7 @@ export default function ProductDefenseModal(props:any) {
                             <Flex justify='space-between'>
                                 <Col span={11}>
                                     <Form.Item name="defenseSort" label={<span className="label">商品分组</span>}>
-                                        <Select
+                                        <DefaultSelect
                                             defaultValue={'0'}
                                             options={[
                                                 { value: '0', label: '默认' },
@@ -66,7 +82,7 @@ export default function ProductDefenseModal(props:any) {
                                 </Col>
                                 <Col span={11}>
                                     <Form.Item name="defenseStatus" label={<span className="label">防护开关</span>}>
-                                        <Select
+                                        <DefaultSelect
                                             defaultValue={'1'}
                                             options={[
                                                 { value: '1', label: '启用' },
@@ -76,16 +92,11 @@ export default function ProductDefenseModal(props:any) {
                                     </Form.Item>
                                 </Col>
                             </Flex>
-                            <Form.Item name="productId" label={<span className="label">投防ID</span>} 
-                            >
-                                <Input onChange={(e)=>{
-                                   
-                                }} placeholder="投放的产品id" />
+                            <Form.Item name="productId" label={<span className="label">投防ID</span>} >
+                                <DefaultInput placeholder="投放的产品id" />
                             </Form.Item>
-                            <Form.Item name="productUrl" label={<span className="label">投防URL</span>} 
-                            >
-                                <Input onChange={(e)=>{
-                                }} placeholder="投放的产品url" />
+                            <Form.Item name="productUrl" label={<span className="label">投防URL</span>} >
+                                <DefaultInput placeholder="投放的产品url" />
                             </Form.Item>
                         </div>
                         <div style={{height:"10px"}}></div>

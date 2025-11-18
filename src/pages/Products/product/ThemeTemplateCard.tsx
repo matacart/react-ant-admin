@@ -1,3 +1,4 @@
+import DefaultSelect from "@/components/Select/DefaultSelect";
 import product from "@/store/product/product";
 import { Card, Flex, Select } from "antd";
 import { observer } from "mobx-react-lite";
@@ -20,7 +21,7 @@ const ThemeTemplateCard = () =>{
                         <div>主题模板</div>
                     </Flex>
                 </div>
-                <Select
+                <DefaultSelect
                     style={{ width: "100%" }}
                     value={'0'}
                     onChange={handleChange}

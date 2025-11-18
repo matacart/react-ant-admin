@@ -1,22 +1,27 @@
-import { getFileList, getGroupAdd, getGroupList } from "@/services/y2/api"
+import PrimaryButton from "@/components/Button/PrimaryButton"
+import DefaultSelect from "@/components/Select/DefaultSelect"
 import fileData from "@/store/fileData"
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, InboxOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, Card, Input, message, Modal, Popover, Select, Spin, Tabs, TabsProps, Tag, Upload, UploadProps } from "antd"
+import { ExclamationCircleFilled, ExclamationCircleOutlined, InboxOutlined, PlusOutlined } from "@ant-design/icons"
+import { message, Modal, Popover, Select, Spin, Tabs, TabsProps, Tag, Upload, UploadProps } from "antd"
 import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 
+interface optionType{
+    value:string,
+    label:string
+}
+
 const { Dragger } = Upload;
 
 function FileModal({groupId,groupList}:{groupId:string,groupList:any}) {
-
 
     const [loading, setLoading] = useState(false);
 
     const [isFileModalOpen, setIsFileModalOpen] = useState(false);
 
-    const [optionList,setOptionList] = useState([]);
+    const [optionList,setOptionList] = useState<optionType[]>();
 
     const [optionId,setOptionId] = useState("0");
 
@@ -25,7 +30,7 @@ function FileModal({groupId,groupList}:{groupId:string,groupList:any}) {
             value:"0",
             label:"所有文件"
         }];
-        groupList.forEach(element => {
+        groupList.forEach((element:any) => {
             options.push(
                 {
                     value:element.groupId,
@@ -40,16 +45,41 @@ function FileModal({groupId,groupList}:{groupId:string,groupList:any}) {
         setOptionId(groupId)
     },[groupId])
 
-    const handleChange = (info)=>{
+    const handleChange = (info:any)=>{
+
+        // 检测文件格式
+        const fileExtension = info.name.split('.').pop()?.toLowerCase() || '';
+        // 文件格式
+        const allowedExtensions = {
+            video: ['mp4'],
+            images: ['gif', 'pjp', 'jpg', 'pipeg', 'jpeg', 'jfif', 'png', 'bmp', 'webp', 'svg', 'ico'],
+            documents: ['pdf', 'xlsx', 'csv', 'docx']
+        };
+        // 文件大小
+        const maxSize = {
+            video: 20 * 1024 * 1024, // 20MB
+            images: 10 * 1024 * 1024, // 10MB
+            documents: 20 * 1024 * 1024 // 20MB
+        };
+
+        let maxFileSize = maxSize.documents;
+        if (allowedExtensions.video.includes(fileExtension)){
+            maxFileSize = maxSize.video;
+        }else if(allowedExtensions.images.includes(fileExtension)){
+            maxFileSize = maxSize.images;
+        }
+
+        if (info.size > maxFileSize) {
+            message.error(`文件大小超过限制。${fileExtension} 格式最大支持 ${maxFileSize/(1024*1024)}MB`);
+            return;
+        }
+
         setLoading(true);
         let formData = new FormData()
         formData.append("file", info)
         formData.append("groupId",optionId)
-        // 上传
         axios.post('/api/ApiResource/uploadFile',formData).then((res: any) => {
-            // console.log(res);
             if(res.data.code === 0){
-                // fileData.setData({a:1})
                 fileData.setData(res.data.data)
                 setLoading(false);
             }else{
@@ -59,38 +89,20 @@ function FileModal({groupId,groupList}:{groupId:string,groupList:any}) {
             }
             setIsFileModalOpen(false)
         })
-        // }
-
-        
     }
 
     const props: UploadProps = {
-        // onChange(info) {
-        //   const { status } = info.file;
-        //   if (status !== 'uploading') {
-        //     // console.log(info.file, info.fileList);
-        //   }
-        //   if (status === 'done') {
-        //     message.success(`${info.file.name} file uploaded successfully.`);
-        //   } else if (status === 'error') {
-        //     message.error(`${info.file.name} file upload failed.`);
-        //   }
-        // },
-        // listType:"picture-card",
         showUploadList:false,
         beforeUpload(info) {
             // 手动上传
             handleChange(info);
             return false;
         },
-        // onDrop(e) {
-        //   console.log('Dropped files', e.dataTransfer.files);
-        // },
     };
 
     return (
         <Scoped>
-            <Button onClick={()=>{setIsFileModalOpen(true)}} style={{height:"36px"}} type="primary">上传文件</Button>
+            <PrimaryButton onClick={()=>{setIsFileModalOpen(true)}} style={{height:"36px"}} text="上传文件" />
             {/* 上传文件 */}
             <Modal width={800} open={isFileModalOpen} centered footer={null} title="上传文件" onOk={()=>{}} onCancel={()=>{
                 setOptionId(groupId)
@@ -100,20 +112,20 @@ function FileModal({groupId,groupList}:{groupId:string,groupList:any}) {
                 <Scoped>
                     <div className="item_select_box">
                         <div className="item_select_box_title">选择文件分组位置</div>
-                        <Select style={{width:"75%"}} value={optionId} options={optionList} onChange={(value)=>{setOptionId(value)}}></Select>
+                        <DefaultSelect style={{width:"75%"}} value={optionId} options={optionList} onChange={(value)=>{setOptionId(value)}} />
                     </div>
                     {/*  */}
                     <div className="item_upload_box">
-                            <Dragger {...props}>
-                                <p className="ant-upload-drag-icon">
-                                    <InboxOutlined />
-                                </p>
-                                <p className="ant-upload-text" style={{fontSize:"14px"}}>添加文件（或把文件拖到框内）</p>
-                                {/* <p className="ant-upload-hint">
-                                    Support for a single or bulk upload. Strictly prohibited from uploading company data or other
-                                    banned files.
-                                </p> */}
-                            </Dragger>
+                        <Dragger {...props}>
+                            <p className="ant-upload-drag-icon">
+                                <InboxOutlined />
+                            </p>
+                            <p className="ant-upload-text" style={{fontSize:"14px"}}>添加文件（或把文件拖到框内）</p>
+                            {/* <p className="ant-upload-hint">
+                                Support for a single or bulk upload. Strictly prohibited from uploading company data or other
+                                banned files.
+                            </p> */}
+                        </Dragger>
                     </div>
                     {/*  */}
                     <div className="item_format_box">

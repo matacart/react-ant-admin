@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import cookie from 'react-cookies';
 import { useForm } from "antd/es/form/Form";
 import product from "@/store/product/product";
+import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
+import MyRangePicker from "@/components/DatePicker/MyRangePicker";
 
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
@@ -15,11 +17,7 @@ dayjs.extend(timezone)
 
 const { Text } = Typography;
 
-const { RangePicker } = DatePicker;
-
 function PriceOrTransaction() {
-
-    const [Time,setTime] = useState<any>([])
 
     const [form] = useForm();
 
@@ -57,13 +55,13 @@ function PriceOrTransaction() {
                                     </>
                                 } 
                                 className="price-item">
-                                <InputNumber<number>
+                                <DefaultInputNumber
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
-                                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    formatter={(value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    parser={(value:number) => value.toString()?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                                     className="ant-input"
-                                    onChange={(value)=>{
+                                    onChange={(value:number)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
                                             specialprice:value?.toString() || ""
@@ -83,34 +81,34 @@ function PriceOrTransaction() {
                                     </Tooltip>
                                 </>
                             } className="price-item">
-                                <RangePicker showTime 
-                                    onChange={(value)=>{
-                                    let timeZone = "Asia/Shanghai"
-                                    if(!cookie.load("timeZone") && cookie.load("timeZone")!=="undefined"){
-                                        timeZone = cookie.load("timeZone").time_zone_name.replace(/^"|"$/g, '')
-                                    }
-
-                                    // 处理清空操作
-                                    if (!value || value.length < 2) {
+                                <MyRangePicker
+                                    style={{
+                                        height:"36px"
+                                    }}
+                                    showTime 
+                                    onChange={(value:any)=>{
+                                        let timeZone = "Asia/Shanghai"
+                                        if(!cookie.load("timeZone") && cookie.load("timeZone")!=="undefined"){
+                                            timeZone = cookie.load("timeZone").time_zone_name.replace(/^"|"$/g, '')
+                                        }
+                                        // 处理清空操作
+                                        if (!value || value.length < 2) {
+                                            product.setProductInfo({
+                                                ...product.productInfo,
+                                                start_time: "",
+                                                end_time: ""
+                                            });
+                                            return;
+                                        }
+                                        const startTime = value[0]?.tz(timeZone,true).unix()
+                                        const endTime = value[1]?.tz(timeZone,true).unix()
                                         product.setProductInfo({
                                             ...product.productInfo,
-                                            start_time: "",
-                                            end_time: ""
-                                        });
-                                        return;
-                                    }
-
-                                    const startTime = value[0]?.tz(timeZone,true).unix()
-                                    const endTime = value[1]?.tz(timeZone,true).unix()
-
-                                    console.log(startTime,endTime)
-
-                                    product.setProductInfo({
-                                        ...product.productInfo,
-                                        start_time: dayjs.unix(startTime).format("YYYY-MM-DD HH:mm:ss"),
-                                        end_time: dayjs.unix(endTime).format("YYYY-MM-DD HH:mm:ss")
-                                    })
-                                }} />
+                                            start_time: dayjs.unix(startTime).format("YYYY-MM-DD HH:mm:ss"),
+                                            end_time: dayjs.unix(endTime).format("YYYY-MM-DD HH:mm:ss")
+                                        })
+                                    }} 
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -129,13 +127,13 @@ function PriceOrTransaction() {
                                     </Tooltip>
                                 </>
                             } className="price-item">
-                                <InputNumber<number>
+                                <DefaultInputNumber
                                     className="ant-input"
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
-                                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={(value)=>{
+                                    formatter={(value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    parser={(value:number) => value.toString()?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    onChange={(value:number)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
                                             price:value?.toString() || ""
@@ -155,13 +153,13 @@ function PriceOrTransaction() {
                                     </Tooltip>
                                 </>
                             } className="price-item">
-                                <InputNumber<number>
+                                <DefaultInputNumber
                                     className="ant-input"
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
-                                    formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                                    onChange={(value)=>{
+                                    formatter={(value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                    parser={(value:number) => value.toString()?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    onChange={(value:number)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
                                             cost_price:value?.toString() || ""
@@ -176,16 +174,17 @@ function PriceOrTransaction() {
                             <Form.Item label={
                                 <>
                                     利润
-                                    <Tooltip title="利润=售价 - 成本价">
+                                    <Tooltip title="利润=特价 - 成本价">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
                                     </Tooltip>
                                 </>
                             } className="price-item">
-                                <InputNumber
+                                <DefaultInputNumber
                                     prefix={cookie.load("symbolLeft")}
                                     defaultValue={'--'}
+                                    value={Number(product.productInfo.specialprice) - Number(product.productInfo.cost_price)}
                                     className="ant-input"
                                     disabled
                                 />
@@ -196,16 +195,17 @@ function PriceOrTransaction() {
                             <Form.Item label={
                                 <>
                                     利润率
-                                    <Tooltip title="利润率=利润 / 售价">
+                                    <Tooltip title="利润率=利润 / 特价">
                                         <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                                             <QuestionCircleOutlined />
                                         </span>
                                     </Tooltip>
                                 </>
                             } className="price-item">
-                                <InputNumber
+                                <DefaultInputNumber
                                     suffix="%"
                                     defaultValue={'--'}
+                                    value={((Number(product.productInfo.specialprice) - Number(product.productInfo.cost_price)) / Number(product.productInfo.specialprice) * 100).toFixed(2)}
                                     className="ant-input"
                                     disabled
                                 />
@@ -219,7 +219,7 @@ function PriceOrTransaction() {
                             marginBottom: 0
                         }}
                     >
-                        <Checkbox  onChange={(e)=>{
+                        <Checkbox onChange={(e)=>{
                             product.setProductInfo({
                                 ...product.productInfo,
                                 needTax:e.target.checked?1:0

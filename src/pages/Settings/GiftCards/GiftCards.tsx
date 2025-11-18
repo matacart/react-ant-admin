@@ -1,4 +1,4 @@
-import { getAddWarehouseList, getFileList, getStoreInfo } from "@/services/y2/api"
+import { getAddWarehouseList, getStoreInfo } from "@/services/y2/api"
 import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
 import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"

@@ -34,7 +34,6 @@ export default  [
     path: '/icons',
     component: './Test/IconsPreview', 
   },
-
   {
     path: '/',
     redirect: '/home'
@@ -829,7 +828,7 @@ export default  [
   // 主题语言编辑
   {
     path: 'theme/langFieldEdit/:templateId',
-    name: 'theme/langFieldEdit/:templateId',
+    name: 'theme',
     hideInMenu: true,
     component: './Theme/LangEditor/LangEditor',
   },

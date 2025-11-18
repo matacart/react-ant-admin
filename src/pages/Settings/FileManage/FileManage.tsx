@@ -1,7 +1,7 @@
-import { getFileList, getGroupAdd, getGroupList } from "@/services/y2/api"
+import { getGroupAdd, getGroupList } from "@/services/y2/api"
 import { ArrowLeftOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, Card, Flex, Input, Modal, Popover, Select, Spin, Tabs, TabsProps } from "antd"
-import { createContext, useEffect, useRef, useState } from "react"
+import { Button, Card, ConfigProvider, Flex, Popover, Tabs, TabsProps } from "antd"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import GroupCard from "./GroupCard"
@@ -9,6 +9,11 @@ import FileModal from "./FileModal"
 import fileData from '@/store/fileData';
 import { observer } from "mobx-react-lite"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
+import DefaultButton from "@/components/Button/DefaultButton"
+import MyButton from "@/components/Button/MyButton"
+import MyInput from "@/components/Input/MyInput"
+import { useAbortController } from "@/hooks/customHooks"
+import { debounce } from 'lodash';
 
 
 interface GroupItem {
@@ -19,74 +24,9 @@ interface GroupItem {
 
 function FileManage() {
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
-    // 删除分组
-    const removeGroup = (groupId:string) => {
-        console.log(items)
-        let newItems = fileData.itemsList.filter(item=>item.key !== groupId)
-        setActiveKey("0")
-        setItems(newItems)
-        setIsOpen(false)
-        fileData.setItemsList(newItems)
-    };
-    const item: TabsProps['items'] = [
-        {
-            key: '0',
-            label: '所有文件',
-            destroyInactiveTabPane: true,
-            children: <GroupCard groupItem={{groupId:"0",groupName:"所有文件"}} removeItem={removeGroup} />,
-        }
-    ];
-    const [items, setItems] = useState(item);
-
-    useEffect(()=>{
-        getGroupList().then(res=>{
-            if(res.code == 0){
-                setGroupList(res.data.list??=[])
-                let newItems:TabsProps['items'] = [...item]
-                res.data.list.forEach((item:any,index:number)=>{
-                    console.log(item)
-                    newItems.push({
-                        label: item.groupName,
-                        children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
-                        destroyInactiveTabPane: true,
-                        key:item.groupId,
-                    })
-                })
-                setItems(newItems)
-                fileData.setItemsList([...newItems])
-                setIsSkeleton(!res)
-            }
-        }).catch(error=>{
-            // setIsSkeleton(!res)
-        }).finally(()=>{
-            setIsSkeleton(false)
-        })
-    },[])
-
-
-    useEffect(()=>{
-        setItems(fileData.itemsList)
-        getGroupList().then(res=>{
-            console.log(res)
-            if(res.code == 0){
-                // res.data.list 可能不存在
-                setGroupList(res.data.list??=[])
-                let newItems:TabsProps['items'] = [...item]
-                res.data.list.forEach((item:any,index:number)=>{
-                    console.log(item)
-                    newItems.push({
-                        label: item.groupName,
-                        children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
-                        destroyInactiveTabPane: true,
-                        key:item.groupId,
-                    })
-                })
-                setItems(newItems)
-            }
-        })
-    },[fileData.itemsList])
+    const { createAbortController } = useAbortController();
 
     const [isOpen, setIsOpen] = useState(false);
     
@@ -94,12 +34,12 @@ function FileManage() {
 
     const [groupList,setGroupList] = useState<any>([]);
 
+    const [activeKey, setActiveKey] = useState('0');
+    const [activeGroupId, setActiveGroupId] = useState("0");
+
     const onChange = (key: string) => {
         console.log(key);
     };
-
-    const [activeKey, setActiveKey] = useState('0');
-    const [activeGroupId, setActiveGroupId] = useState("0");
 
     // 新增分组--保存
     const newGroup = () => {
@@ -126,21 +66,41 @@ function FileManage() {
     const content = (
         <div>
             <div style={{marginBottom:"10px"}}>分组名称</div>
-            <Input style={{width:"320px"}} value={groupName} onChange={(e)=>{setGroupName(e.target.value)}} placeholder="请输入分组名称，最多20个字符" maxLength={20} />
+            <MyInput style={{width:"320px"}} value={groupName} onChange={(e)=>{setGroupName(e.target.value)}} placeholder="请输入分组名称，最多20个字符" maxLength={20} />
             <div style={{textAlign:"right",marginTop:"10px"}}>
-                <Button onClick={()=>{
+                <MyButton onClick={()=>{
                     setIsOpen(false)
                     setGroupName("")
-                }}>取消</Button>
-                <Button disabled={groupName==""?true:false} onClick={newGroup} type="primary" style={{marginLeft:"10px"}}>保存</Button>
+                }} text="取消" />
+                <MyButton disabled={groupName==""?true:false} onClick={newGroup} type="primary" style={{marginLeft:"10px"}} text="保存" />
             </div>
         </div>
     );
 
+    // 删除分组
+    const removeGroup = (groupId:string) => {
+        let newItems = fileData.itemsList.filter(item=>item.key !== groupId)
+        setActiveKey("0")
+        setItems(newItems)
+        setIsOpen(false)
+        fileData.setItemsList(newItems)
+    };
+
+    const item: TabsProps['items'] = [
+        {
+            key: '0',
+            label: '所有文件',
+            destroyInactiveTabPane: true,
+            children: <GroupCard groupItem={{groupId:"0",groupName:"所有文件"}} removeItem={removeGroup} />,
+        }
+    ];
+
+    const [items, setItems] = useState(item);
+
     const handleOpenChange = (newOpen: boolean) => {
         setIsOpen(newOpen);
     };
-    const TabBar = (props) => {
+    const TabBar = (props:any) => {
         return(
             <div className="tabBarBox">
                 {props.panes.map(item => (<div className={item.props.tabKey == activeKey ? "activeTabBarBoxItem":"tabBarBoxItem"} onClick={()=>{
@@ -149,12 +109,88 @@ function FileManage() {
                 }}>{item.props.tab}</div>))}
                 <div style={{textAlign:"center",padding:"10px 0"}}>
                     <Popover open={isOpen} onOpenChange={handleOpenChange} placement="bottomLeft" content={content} trigger="click" style={{textAlign:"right"}}>
-                        <Button onClick={()=>{setIsOpen(true)}} style={{width:"160px",height:"38px"}}><PlusOutlined style={{fontSize:"12px"}} />新建分组</Button>
+                        <ConfigProvider
+                            theme={{
+                                components: {
+                                    Button: {
+                                        defaultActiveBorderColor:"#d7dbe7",
+                                        defaultBorderColor:"#d7dbe7",
+                                        defaultHoverBorderColor:"#d7dbe7",
+                                        defaultHoverColor:"#474F5E",
+                                        defaultActiveColor:"#474F5E",
+                                        defaultHoverBg:"#f7f8fb",
+                                        defaultActiveBg:"#f7f8fb",
+                                        borderRadius:4
+                                    },
+                                },
+                            }}
+                            >
+                            <Button onClick={()=>{setIsOpen(true)}} style={{width:"160px",height:"38px"}}>
+                                <PlusOutlined style={{fontSize:"12px"}} />新建分组
+                            </Button>
+                        </ConfigProvider>
                     </Popover>
                 </div>
             </div>
         )
     }
+
+    // 防抖实现
+    const handleRefresh = useCallback(
+        debounce(() => {
+            fileData.setRefresh(!fileData.refresh);
+        }, 600),
+        []
+    );
+
+    // 初始化加载
+    useEffect(()=>{
+        const signal = createAbortController();
+        getGroupList(signal).then(res=>{
+            if(res.code == 0){
+                setGroupList(res.data.list??=[])
+                let newItems:TabsProps['items'] = [...item]
+                res.data.list.forEach((item:any,index:number)=>{
+                    newItems.push({
+                        label: item.groupName,
+                        children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
+                        destroyInactiveTabPane: true,
+                        key:item.groupId,
+                    })
+                })
+                setItems(newItems)
+                fileData.setItemsList([...newItems])
+            }
+        }).catch(error=>{
+            // setIsSkeleton(!res)
+        }).finally(()=>{
+            setIsSkeleton(false)
+        })
+    },[])
+
+    useEffect(()=>{
+        // 首次加载不执行
+        if(isSkeleton){
+            return
+        }
+        setItems(fileData.itemsList)
+        const signal = createAbortController();
+        getGroupList(signal).then(res=>{
+            if(res.code == 0){
+                setGroupList(res.data.list??=[])
+                let newItems:TabsProps['items'] = [...item]
+                res.data.list.forEach((item:any,index:number)=>{
+                    newItems.push({
+                        label: item.groupName,
+                        children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
+                        destroyInactiveTabPane: true,
+                        key:item.groupId,
+                    })
+                })
+                setItems(newItems)
+            }
+        })
+    },[fileData.itemsList])
 
     return (
         <Scoped>
@@ -169,17 +205,14 @@ function FileManage() {
                             </div>
                             <div className="mc-header-left-content">文件库</div>
                         </div>
-                        <div className='mc-header-right'>
+                        <Flex className='mc-header-right' align="center">
                             <div className="mc-header-right-content">
                                 <Flex>
-                                    <div>
-                                        <Button style={{height:"36px",marginRight:"10px"}}>刷新</Button>
-                                        {/* <Button type="primary" style={{height:"36px"}}>上传文件</Button> */}
-                                    </div>
+                                    <DefaultButton style={{height:"36px",marginRight:"10px"}} text='刷新' onClick={handleRefresh} />
                                     {groupList.length>0 && <FileModal groupId={activeGroupId} groupList={groupList}></FileModal>}
                                 </Flex>
                             </div>
-                        </div>
+                        </Flex>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>

@@ -1,6 +1,6 @@
 function ApplicationRight(){
     return (
-        <div>12321321</div>
+        <div>应用嵌入</div>
     )
 }
 

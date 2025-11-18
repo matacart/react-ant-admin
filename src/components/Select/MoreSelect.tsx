@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { ConfigProvider, Divider } from 'antd';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
-// import  Collapse  from './Collapse';
 import Drawer from '../Drawer/Drawer';
 import { useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import DefaultButton from '../Button/DefaultButton';
-import NumberInput from '../Input/NumberInput';
+import DefaultInputNumber from '../Input/DefaultInputNumber';
 import cookie from 'react-cookies';
 
 export default function MoreSelect(){
@@ -24,7 +23,7 @@ export default function MoreSelect(){
       label: '价格区间',
       children: (
         <div>
-          <NumberInput 
+          <DefaultInputNumber 
                 className="input" 
                 placeholder='最小值'
                 min={0}
@@ -35,7 +34,7 @@ export default function MoreSelect(){
                 }}
             />
             <div className='divider-warp'><Divider className='divider'></Divider></div>
-            <NumberInput 
+            <DefaultInputNumber 
                 className="input"
                 placeholder='最大值'
                 prefix={cookie.load("symbolLeft") || ""}

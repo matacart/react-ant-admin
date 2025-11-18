@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';  
+import React, { useEffect, useId, useRef, useState } from 'react';  
 import { Editor } from '@tinymce/tinymce-react';  
 import axios from 'axios';
 // 假设这是TinyMCE实例的正确类型，您可能需要从@tinymce/tinymce-react包中导入它  
@@ -12,18 +12,20 @@ export default function App({content,setContent}:{content:string,setContent:any}
     editorRef.current?.setContent(content)
   };
 
+  // 生成唯一的编辑器ID
+  const id = useId();
+  const editorId = `tinymce-${id}`;
+
   return (  
     <>  
-      <Editor  
+      <Editor
+        id={editorId}
         tinymceScriptSrc='/tinymce/tinymce.min.js'  
         licenseKey='gpl'
-        onChange={(e)=>{
-          setContent(e.target.getContent())
-        }}
+        value={content}
         onInit={(_evt, editor) => (editorRef.current = editor)}
-        initialValue={content}
-        onEditorChange={(newValue, editor) => {
-          // prop.refundPolicyText = editor
+        onEditorChange={(newValue) => {
+          setContent(newValue);
         }}
         init={{
             language_url: '/langs/zh_CN.js',
@@ -34,6 +36,8 @@ export default function App({content,setContent}:{content:string,setContent:any}
             toolbar_mode: 'wrap',
             icons: 'thin', // 使用更小的图标
             branding: false,
+            // 禁用调整大小
+            resize: false,
             // 插件
             plugins: [
                 'advlist',

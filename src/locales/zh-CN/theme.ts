@@ -67,9 +67,8 @@ export default {
     'theme.left.toolBar.component': '组件',
     'theme.left.toolBar.globalSettings': '全局设置',
     'theme.left.toolBar.appEmbeds': '应用嵌入',
-    
 
-
+    'theme.left.ItemText.placeholder': '输入文本',
 
 };
   

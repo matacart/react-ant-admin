@@ -181,72 +181,72 @@ export default function Login() {
                 onFinish={onFinish}
                 size="large"
               >
-                  <div className='user-box' ref={Ref}></div>
-                  <Form.Item
-                    name="username"
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.formatMessage({ id: 'pages.login.username.required' }),
-                      },
-                    ]}
-                  >
-                      <Input
-                        style={{
-                          height: '52px',
-                        }}
-                        prefix={<UserOutlined className="site-form-item-icon" />}
-                        placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
-                        suffix={
-                          <ConfigProvider
-                            theme={{
-                              token: {
-                                /* 这里是你的全局 token */
-                                // colorError:"#d9d9d9",
+                <div className='user-box' ref={Ref}></div>
+                <Form.Item
+                  name="username"
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.formatMessage({ id: 'pages.login.username.required' }),
+                    },
+                  ]}
+                >
+                    <Input
+                      style={{
+                        height: '52px',
+                      }}
+                      prefix={<UserOutlined className="site-form-item-icon" />}
+                      placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
+                      suffix={
+                        <ConfigProvider
+                          theme={{
+                            token: {
+                              /* 这里是你的全局 token */
+                              // colorError:"#d9d9d9",
+                            },
+                            components: {
+                              Dropdown: {
+                                /* 这里是你的组件 token */
+                                paddingXXS:0,
                               },
-                              components: {
-                                Dropdown: {
-                                  /* 这里是你的组件 token */
-                                  paddingXXS:0,
-                                },
-                                Input:{
-                                  // hoverBorderColor:"#d9d9d9"
-                                }
-                              },
-                            }}
-                          >
-                            <Dropdown data-form-ignore="true" getPopupContainer={()=>Ref.current!} onOpenChange={(open)=>{
-                              !open && setSearchKey("")
-                            }} menu={{style:style,items:[
-                              {
-                                key: 'search',
-                                label: (
-                                  <div style={{ padding:0,width:"100%"}} onClick={(e) => e.stopPropagation()}>
-                                    <Form.Item style={{margin:0}}>
-                                      <Input
-                                        name="undefined"
-                                        value={searchKey}
-                                        style={{height:"36px",fontSize:"14px",borderRadius:"4px"}}
-                                        placeholder="搜索国家"
-                                        onChange={(e) => setSearchKey(e.target.value)}
-                                        // onClick={(e) => e.stopPropagation()}
-                                        suffix={<SearchOutlined />}
-                                      />
-                                    </Form.Item>
-                                  </div>
-                                ),
-                              },
-                              ...items,
-                            ]}} placement="bottomRight" trigger={["click"]}>
-                              <Flex gap={6} className='color-7A8499 cursor-pointer'>
-                                +{phoneCode}
-                                <UnfoldIcon />
-                              </Flex>
-                            </Dropdown>
-                          </ConfigProvider>
-                        }
-                      />
-                  </Form.Item>
+                              Input:{
+                                // hoverBorderColor:"#d9d9d9"
+                              }
+                            },
+                          }}
+                        >
+                          <Dropdown data-form-ignore="true" getPopupContainer={()=>Ref.current!} onOpenChange={(open)=>{
+                            !open && setSearchKey("")
+                          }} menu={{style:style,items:[
+                            {
+                              key: 'search',
+                              label: (
+                                <div style={{ padding:0,width:"100%"}} onClick={(e) => e.stopPropagation()}>
+                                  <Form.Item style={{margin:0}}>
+                                    <Input
+                                      name="undefined"
+                                      value={searchKey}
+                                      style={{height:"36px",fontSize:"14px",borderRadius:"4px"}}
+                                      placeholder="搜索国家"
+                                      onChange={(e) => setSearchKey(e.target.value)}
+                                      // onClick={(e) => e.stopPropagation()}
+                                      suffix={<SearchOutlined />}
+                                    />
+                                  </Form.Item>
+                                </div>
+                              ),
+                            },
+                            ...items,
+                          ]}} placement="bottomRight" trigger={["click"]}>
+                            <Flex gap={6} className='color-7A8499 cursor-pointer'>
+                              +{phoneCode}
+                              <UnfoldIcon />
+                            </Flex>
+                          </Dropdown>
+                        </ConfigProvider>
+                      }
+                    />
+                </Form.Item>
                 <Form.Item
                   name="password"
                   rules={[
@@ -288,13 +288,12 @@ export default function Login() {
                 >
                   <FormattedMessage id="menu.login" defaultMessage="登录" />
                 </Button>
-                
               </Form>
             </div>
             {/* 忘记密码 */}
             <div className="link-button-container">
               <Link to='/user/signUp'>
-                <FormattedMessage id="menu.register" defaultMessage="开始免费试用"  />
+                <FormattedMessage id="menu.register" defaultMessage="用户注册" />
               </Link>
               <Link to='/user/forget' >
                 <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />

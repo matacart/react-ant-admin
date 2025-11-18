@@ -33,8 +33,6 @@ async function getFilterResultArray(term: string) {
         })
 }
 
-
-
 // 店铺下拉组件 开发者：@qiuliw 2024-6-16
 /*
     已完
@@ -138,19 +136,24 @@ export default function SelectDomain() {
     const setTimeZone = (store:storeType | null)=>{
         const timeZones = JSON.parse(localStorage.getItem('MC_DATA_TIME_ZONEZ') || '[]');
         let timeZone = null;
+        const defaultTimeZone = {
+            country_id: "12",
+            dst_offset: null,
+            id: "90",
+            is_dst: "0",
+            status: "1",
+            time_zone_label: "UTC+08:00",
+            time_zone_name: "Asia/Shanghai",
+            utc_offset: "8",
+        };
         if(store?.timezone && timeZones.length > 0 ){
-            timeZone = timeZones.filter((item:any)=>item.time_zone_name == store.timezone)[0]
-        }else{
-            timeZone = {
-                country_id: "12",
-                dst_offset: null,
-                id: "90",
-                is_dst: "0",
-                status: "1",
-                time_zone_label: "UTC+08:00",
-                time_zone_name: "Asia/Shanghai",
-                utc_offset: "8",
+            timeZone = timeZones.filter((item:any)=>item.time_zone_name == store.timezone)[0];
+            // 检测时区是否有效
+            if(!timeZone){
+                timeZone = defaultTimeZone
             }
+        }else{
+            timeZone = defaultTimeZone
         }
         cookie.save('timeZone', JSON.stringify(timeZone), { path: '/' });
     }

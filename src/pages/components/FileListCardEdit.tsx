@@ -50,7 +50,13 @@ function FileListCard({groupId}:{groupId:string}) {
         setCurrentPage(page);
         setPageSize(pageSize);
         setLoading(true)
-        getFileList(groupId,1,page,pageSize,searchText).then(res=>{
+        getFileList({
+            groupId:groupId,
+            extType:1,
+            pageNum:page,
+            pageSize:pageSize,
+            title:searchText,
+        }).then(res=>{
             console.log(res)
             if(res.code == 0){
                 setFileImgList(res.data.list??=[])
@@ -70,7 +76,13 @@ function FileListCard({groupId}:{groupId:string}) {
     const handleSearch = (value: string) => {
         setSearchText(value);
         setLoading(true)
-        getFileList(groupId,1,currentPage,pageSize,value).then(res=>{
+        getFileList({
+            groupId:groupId,
+            extType:1,
+            pageNum:currentPage,
+            pageSize:pageSize,
+            title:value,
+        }).then(res=>{
             if(res.code == 0){
                 setLoading(false)
                 setCurrentPage(res.data.pageNum);
@@ -84,7 +96,12 @@ function FileListCard({groupId}:{groupId:string}) {
 
     useEffect(()=>{
         setLoading(true)
-        getFileList(groupId,1,currentPage,pageSize).then(res=>{
+        getFileList({
+            groupId:groupId,
+            extType:1,
+            pageNum:currentPage,
+            pageSize:pageSize,
+        }).then(res=>{
             if(res.code == 0){
                 setFileImgList(res.data.list??=[])
                 setCount(res.data.total)
