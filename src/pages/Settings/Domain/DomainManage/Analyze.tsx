@@ -47,13 +47,13 @@ export default function Analyze() {
           key: '1',
           recordType: 'CNAME',
           hostRecord: '@',
-          recordedValue:"slb3.handingdns.com",
+          recordedValue:"slb2.handingdns.com",
         },
         {
           key: '2',
           recordType: 'CNAME',
           hostRecord: 'www',
-          recordedValue:"slb3.handingdns.com",
+          recordedValue:"slb2.handingdns.com",
         },
     ];
 

@@ -145,7 +145,6 @@ export function generateId() {
   return timestamp + random;
 }
 
-
 // codeEditor
 // 在 treeData 中查找或创建目录结构
 export function insertFileInTree(treeData: any[], fileName: string, fileType: string, fullPath: string,filePath:string){

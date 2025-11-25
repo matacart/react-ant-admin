@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, ExportOutlined, GlobalOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, Input, List, message, Modal, Table, TableProps, TabsProps } from "antd"
+import { Card, Flex, List, message, Modal, Table, TableProps, TabsProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import SuccessTag from "@/components/Tag/SuccessTag";
@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 import domain from "@/store/settings/domain"
 import { addDomainName, getDomainNameList } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import e from "express";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import DefaultButton from "@/components/Button/DefaultButton";
+import MyInput from "@/components/Input/MyInput";
+import DeleteModal from "@/components/Modal/DeleteModal";
 
 
 interface DataType {
@@ -69,29 +72,51 @@ function DomainManage() {
             key: 'address',
             render: (text,record,index) => <div>
                 {record.primaryName !== "" && <div>
-                    <DeleteOutlined className="font-20 color-FF0000 cursor-pointer" onClick={()=>{
-                        modal.confirm({
-                            title: '确认要删除该子域名吗？',
-                            centered: true,
-                            icon: <ExclamationCircleFilled style={{color:"#F86140"}} />,
-                            content: '删除后，该子域名将无法定向至主域名。',
-                            okText:"确认",
-                            okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
-                            onOk() {
-                                addDomainName(record.primaryName,otherDomain?.split(",").filter(item => item !== record.name).join(",")).then(res=>{
-                                    let newData = [...data]
-                                    newData.splice(index,1)
-                                    setData(newData)
-                                    message.success("删除成功")
-                                })
-                            },
-                        });
-                    }} />
+                    <DeleteModal 
+                        tElement={
+                            <DeleteOutlined className="font-20 color-FF0000 cursor-pointer" />
+                        }
+                        removeFunc={()=>{
+                            addDomainName(record.primaryName,otherDomain?.split(",").filter(item => item !== record.name).join(",")).then(res=>{
+                                let newData = [...data]
+                                newData.splice(index,1)
+                                setData(newData)
+                                message.success("删除成功")
+                            })
+                        }} 
+                        title="确认要删除该子域名吗？" 
+                        content={"删除后，该子域名将无法定向至主域名。"}
+                        okText="确认"
+                    />
                 </div>}
             </div>,
         },
           
     ];
+
+    // 添加域名
+    const handleOk = ()=>{
+        addDomainName(primaryName,otherDomain).then(res=>{
+            let newData = [...data]
+            newData.forEach(element => {
+                if(element.primaryName == ""){
+                    element.name = primaryName
+                }else{
+                    element.primaryName = primaryName
+                }
+            });
+            // newData[0].name = primaryName
+            setData(newData)
+            setPrimaryName("")
+            setIsModalOpen(false)
+        })
+    }
+
+    // 取消
+    const handleCancel = () => {
+        setIsModalOpen(false)
+        setPrimaryName("")
+    };
 
     
     useEffect(()=>{
@@ -137,7 +162,7 @@ function DomainManage() {
                             <div className="mc-header-left-content">域名管理</div>
                         </div>
                         <div className='create-title-right'>
-                            <Button type="primary" onClick={() => {history.push("/settings/domain/add-domain")}} style={{ marginTop: "10px", height: "36px", fontSize: "14px" }}>添加域名</Button>
+                            <PrimaryButton text="添加域名" onClick={() => { history.push("/settings/domain/add-domain") }} style={{ marginTop: "10px", fontSize: "14px" }} />
                         </div>
                     </div>
                     <div className='mc-layout-main'>
@@ -153,27 +178,18 @@ function DomainManage() {
                     </div>
                 </div>
                 {/* 更改主域名 */}
-                <Modal title="更改为新域名" centered open={isModalOpen} onOk={()=>{
-                    addDomainName(primaryName,otherDomain).then(res=>{
-                        let newData = [...data]
-                        newData.forEach(element => {
-                            if(element.primaryName == ""){
-                                element.name = primaryName
-                            }else{
-                                element.primaryName = primaryName
-                            }
-                        });
-                        // newData[0].name = primaryName
-                        setData(newData)
-                        setPrimaryName("")
-                        setIsModalOpen(false)
-                    })
-                }} onCancel={()=>{
-                    setIsModalOpen(false)
-                    setPrimaryName("")
-                }}>
+                <Modal title="更改为新域名" centered open={isModalOpen} onCancel={handleCancel}
+                    footer={(_, { OkBtn, CancelBtn }) => (
+                        <Flex justify="end">
+                            <Flex gap={12}>
+                                <DefaultButton text={"取消"} onClick={handleCancel} />
+                                <PrimaryButton text={"保存"} onClick={handleOk} />
+                            </Flex>
+                        </Flex>
+                    )}
+                >
                     <div>执行此更改无需任何费用。</div>
-                    <Input style={{margin:"12px 0"}} placeholder="www.example.com" value={primaryName} onChange={(e)=>{setPrimaryName(e.target.value)}} />
+                    <MyInput style={{margin:"12px 0",height:"36px"}} placeholder="www.example.com" value={primaryName} onChange={(e)=>{setPrimaryName(e.target.value)}} />
                 </Modal>
                 {/* 删除 */}
                 {contextHolder}

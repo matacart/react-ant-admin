@@ -258,7 +258,6 @@ export default function SelectDomain() {
                 })
             }
         }
-
         setTimeZone(store);
         setCurrencys(store);
         setLanguage(store);

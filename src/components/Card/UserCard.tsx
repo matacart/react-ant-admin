@@ -2,22 +2,13 @@ import { logout } from "@/services/y2/api";
 import { RightOutlined, SafetyCertificateOutlined, TrademarkOutlined, WalletOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { history } from '@umijs/max';
-import { stringify } from 'querystring';
 import styled from "styled-components";
 import { useEffect } from "react";
 import cookie from 'react-cookies'
-
+import { clearAllCookies } from "@/utils/common";
 
 // 清除所有cookie
-function clearAllCookies() {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-      const name = cookie.split("=")[0].trim();
-      if(name !== "access_token"){
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      }
-    }
-}
+
 
 export default function UserCard(props:any) {
     /**
@@ -29,7 +20,8 @@ export default function UserCard(props:any) {
         await logout();
         let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
         clearAllCookies();
-        // cookie.remove("token",{domain:test,path:"/"})
+        // 清除主域名的公共token
+        cookie.remove("token",{domain:test,path:"/"});
         const { search, pathname } = window.location;
         const urlParams = new URL(window.location.href).searchParams;
         /** 此方法会跳转到 redirect 参数所在的位置 */

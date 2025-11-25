@@ -1,4 +1,4 @@
-import MyInput from "@/components/Input/MyInput";
+import DefaultInput from "@/components/Input/DefaultInput";
 import { templateRename } from "@/services/y2/api";
 import shopSetting, { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import { Form, Modal } from "antd";
@@ -52,9 +52,9 @@ function RenameModal({template}:{template:TemplateInstance | null}){
                 onCancel={()=>setOpen(false)}
                 onOk={submit}
             >
-                <Form form={form} style={{margin:"20px 0 40px 0"}}>
-                    <Form.Item name="name" label="模板名称" required={false} rules={[{ required: true }]}>
-                        <MyInput placeholder="请输入模板名称" />
+                <Form layout="vertical" form={form} style={{margin:"20px 0 40px 0"}}>
+                    <Form.Item name="name" label="模板名称：" required={false} rules={[{ required: true }]}>
+                        <DefaultInput placeholder="请输入模板名称" />
                     </Form.Item>
                 </Form>
             </Modal>

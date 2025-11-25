@@ -33,15 +33,12 @@ function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
   try {
     // 创建一个新的URL对象
     const urlObj = new URL(url);
-    
     // 获取主机名（包括子域名）
     const hostname = urlObj.hostname;
-    
     // 使用replace方法替换子域名
     // 注意：这里使用正则表达式来确保只替换完整的子域名部分
     // 假设子域名和主域名之间只有一个点分隔
     const newHostname = hostname.replace(new RegExp(`^${oldSubdomain}\\.`), `${newSubdomain}.`);
-    
     // 如果替换成功（即新的主机名与旧的不同），则更新URL对象的主机名
     if (newHostname !== hostname) {
       // 由于URL对象的hostname属性是只读的，我们需要创建一个新的URL对象
@@ -53,7 +50,6 @@ function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
       // 返回新的URL字符串
       return newUrlObj.toString();
     }
-    
     // 如果替换失败（即没有找到要替换的子域名），则返回原始URL
     return url;
   } catch (error) {

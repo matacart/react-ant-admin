@@ -318,7 +318,7 @@ export async function getAccessToken() {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    data: {
+    data:{
       grant_type: Oauth2.grant_type,
       accessKeyId: Oauth2.accessKeyId,
       accessKeySecret: Oauth2.accessKeySecret

@@ -4,7 +4,6 @@ import { RocketIcon, StarsIcon } from "@/components/Icons/Icons";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import DefaultButton from "@/components/Button/DefaultButton";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getTemplateInstanceList, getTemplateInstanceUsing, setInstanceStatus } from "@/services/y2/api";
 import { observer } from "mobx-react-lite";
@@ -16,6 +15,7 @@ import DownloadModal from "./DownloadModal";
 import { useAbortController } from "@/hooks/customHooks";
 import { LoadingOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
+import cookie from 'react-cookies';
 
 
 interface MyStylesCardProps {
@@ -24,11 +24,12 @@ interface MyStylesCardProps {
 
 function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
 
-  const navgate = useNavigate();
+  const { createAbortController } = useAbortController();
 
   const [instanceUsingLoading,setInstanceUsingLoading] = useState(false);
 
   const [instanceListLoading,setInstanceListLoading] = useState(false);
+
 
   const themeItems: MenuProps['items'] = [
     {
@@ -52,7 +53,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     total: 5,
   });
 
-  const { createAbortController } = useAbortController();
+  
 
   useEffect(()=>{
     // 用户模板
@@ -154,10 +155,10 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                     </div>
                     <div>
                       <Flex gap={12}>
-                        <DefaultButton text="预览" />
+                        <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com?preview=1&themeId=${shopSetting.templateInstanceUsing.template_id}`,'_blank')} />
                         <ButtonDropdownSecondary menu={{items:[
                           {
-                            label: <a onClick={()=>navgate(`/theme/preview?preview=1&templateId=${shopSetting.templateInstanceUsing?.id}`)}>查看店铺</a>,
+                            label: <a onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com`,'_blank')}>查看店铺</a>,
                             key: '1',
                           },
                           {
@@ -173,7 +174,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '4',
                           },
                           {
-                            label: <a onClick={()=>navgate(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
+                            label: <a onClick={()=>history.push(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
                             key: '5',
                           },
                           {
@@ -181,7 +182,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '6',
                           }
                         ]}} trigger={['click']} text="操作" />
-                        <PrimaryButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json&title=Home`)} />
+                        <PrimaryButton text="设计" onClick={()=>history.push(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json&title=Home`)} />
                       </Flex>
                     </div>
                   </Flex>
@@ -226,7 +227,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                   <p className="color-474F5E">商店速度受已安装的应用、已编辑的模板代码以及图像和视频的大小影响。</p>
                 </Flex>
                 <Flex align="center">
-                  <DefaultButton text="查看报告" onClick={()=>navgate(`/analyse/reports/behavior/speed`)} />
+                  <DefaultButton text="查看报告" onClick={()=>history.push(`/analyse/reports/behavior/speed`)} />
                 </Flex>
               </Flex>
             </div>
@@ -269,9 +270,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                           </div>
                         </Flex>
                         <Flex gap={12}>
-                          <a href={`/theme/preview?preview=1&templateId=${template.id}`} target="_blank" >
-                            <DefaultButton text="预览" />
-                          </a>
+                          <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com?preview=1&themeId=${template.template_id}`,'_blank')} />
                           <ButtonDropdownSecondary 
                             menu={{
                               items:[
@@ -280,7 +279,6 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                     setInstanceStatus(template.id,"1").then(async res=>{
                                       const { data } = await getTemplateInstanceUsing(shopSetting.languagesId) as any;
                                       shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
-
                                       getTemplateInstanceList({
                                         page: pagination.current,
                                         limit: pagination.pageSize
@@ -312,7 +310,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                   key: '4',
                                 },
                                 {
-                                  label: <a onClick={()=>navgate(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
+                                  label: <a onClick={()=>history.push(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
                                   key: '5',
                                 },
                                 {
@@ -328,7 +326,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             trigger={['click']} 
                             text="操作"
                           />
-                          <DefaultButton text="设计" onClick={()=>navgate(`/theme/editor?templateId=${template?.template_id}&languagesId=${shopSetting?.languagesId}&templateName=templates/index.json&title=Home`)} />
+                          <DefaultButton text="设计" onClick={()=>history.push(`/theme/editor?templateId=${template?.template_id}&languagesId=${shopSetting?.languagesId}&templateName=templates/index.json&title=Home`)} />
                         </Flex>
                       </Flex>
                     )

@@ -1,13 +1,15 @@
-import { ArrowLeftOutlined, CheckCircleFilled, CheckCircleOutlined, ExportOutlined, GlobalOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, Form, Input, List, message, Steps, Table, TableProps, TabsProps, theme } from "antd"
+import { ArrowLeftOutlined, CheckCircleFilled} from "@ant-design/icons"
+import { Card, Flex, Form, message, Steps, theme } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
-import SuccessTag from "@/components/Tag/SuccessTag";
 import { useEffect, useState } from "react";
 import SuccessfulTable from "./SuccessfulTable";
 import Analyze from "./Analyze";
 import { addDomainName, getDomainNameList } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
+import DefaultInput from "@/components/Input/DefaultInput";
+import DefaultButton from "@/components/Button/DefaultButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 
 
 interface DataType {
@@ -17,7 +19,6 @@ interface DataType {
     address: string;
     tags: string[];
 }
-
 
 
 function AddDomain() {
@@ -42,13 +43,13 @@ function AddDomain() {
                     <div className="card-desc">你可以在Godaddy、阿里云等域名服务商处购买第三方域名，并输入到此处。</div>
                     <Form form={form} layout="vertical">
                         <Form.Item label={"主域名："} rules={[{ required: true }]}>
-                            <Input value={domainName} onChange={(e)=>{
+                            <DefaultInput value={domainName} onChange={(e)=>{
                                 setDomainName(e.target.value)
                             }} placeholder="如：www.example.com" />
                         </Form.Item>
                         
                         <Form.Item label={"子域名："}>
-                            <Input value={otherDomain} placeholder="example.com 多个子域名用英文逗号隔开" onChange={(e)=>{
+                            <DefaultInput value={otherDomain} placeholder="example.com 多个子域名用英文逗号隔开" onChange={(e)=>{
                                 setOtherDomain(e.target.value)
                             }} />
                         </Form.Item>
@@ -135,23 +136,20 @@ function AddDomain() {
                             </div>
                             <div className="submit-btn">
                                 {current > 0 && (
-                                    <Button style={{height: "36px",marginRight:12}}  onClick={() => prev()}>上一步</Button>
+                                    <DefaultButton text="上一步" style={{marginRight:12}}  onClick={() => prev()} />
                                 )}
                                 
                                 {current < steps.length - 1 && (
-                                    <Button disabled={domainName == "" || otherDomain == ""} type="primary" style={{height: "36px"}}  onClick={() => next()}>下一步</Button>
+                                    <PrimaryButton text="下一步" disabled={domainName == "" || otherDomain == ""} onClick={() => next()} />
                                 )}
 
                                 {current === steps.length - 1 && (
-                                    <Button type="primary" style={{height: "36px"}} onClick={() => {
+                                    <PrimaryButton text="完成" onClick={() => {
                                         addDomainName(domainName,otherDomain)
                                         message.success('Processing complete!')
                                         history.push("/settings/domain/manage")
-                                    }}>
-                                        完成
-                                    </Button>
+                                    }} />
                                 )}
-                                
                             </div>
                         </div>
                     </div>

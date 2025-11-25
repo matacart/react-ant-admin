@@ -5,6 +5,7 @@ import { getAccessToken } from '@/services/y2/api';
 import { message } from "antd";
 // 进度条提示
 import NProgress from "nprogress";
+import { clearAllCookies } from "./common";
 // 配置NProgress
 NProgress.configure({ showSpinner: false }) // 是否显示右上角螺旋加载提示
 
@@ -55,7 +56,7 @@ export const requestConfig: RequestConfig = {
     errorConfig: {
         // 抛出错误
         errorThrower: (res: any) => {
-        if (!res) throw new Error('空响应');
+            if (!res) throw new Error('空响应');
         },
         // 错误接收及处理
         errorHandler(error: any, opts: any) {
@@ -92,29 +93,29 @@ export const requestConfig: RequestConfig = {
         }else{
             config.timeout = 60000;
         }
+
+        // 随机生成8位字符串 追踪ID
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const length = 8;
         let result = '';
-        
         for (let i = 0; i < length; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length);
             result += characters.charAt(randomIndex);
         }
 
+        // 在POST请求中添加追踪ID
         if(config.method == "post"){
             config.url = config.url+"?__trackId__="+result
-            // config.url = config.url
         }
 
+        // 启动进度条
         if (!config.skipAuthRefresh) {
-            startProgress(); // 启动进度条
+            startProgress(); 
         }
-        // 在请求拦截器中带token（除登录接口）
+        // 在请求拦截器中追加token和授权信息（除登录接口）
         const token = cookie.load("token")
-        // console.log(config)
         if (token && config.url != loginPath){
             config.headers['token'] = token;
-            // 携带access_token
             config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
         }
         return config;
@@ -133,14 +134,14 @@ export const requestConfig: RequestConfig = {
             if(!res.data){
                 return res;
             }
-            // 过滤
+            // 过滤获取授权信息接口 getAccessToken
             if(res.config.url == "/Oauth2/gettoken"){
                 return res
             }
             let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
             // access_token过期
             if(res.data.code==40013){
-                getAccessToken().then(res => {
+                getAccessToken().then((res:any) => {
                     if(window.location.hostname.startsWith("localhost")){
                         cookie.save("access_token",res.access_token,{path:"/"})
                     }else{
@@ -151,11 +152,14 @@ export const requestConfig: RequestConfig = {
                 });
             }else if(res.data.code==1001){
                 // token过期
-                sessionStorage.removeItem("domain")
+                // 清除token
                 cookie.remove("token",{ domain:test,path: '/' })
-                cookie.remove("token",{ path: '/' })
+                // sessionStorage.removeItem("domain")
+                // 清除cookie
+                clearAllCookies();
                 history.push(loginPath);
             }else if(res.data.code>2000){
+                // 数据异常
                 message.error(res.data.msg);
             }else{
                 return res;
