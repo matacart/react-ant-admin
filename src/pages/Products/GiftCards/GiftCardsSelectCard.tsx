@@ -23,8 +23,8 @@ export default function GiftCardsSelectCard(){
         let tempList = [];
         if(languageData.length==0){
             tempList = JSON.parse(sessionStorage["languages"] || "[]").map((item:any)=>{
-                console.log(item.code)
-                console.log(item.code == cookie.load("default_lang"))
+                // console.log(item.code)
+                // console.log(item.code == cookie.load("default_lang"))
                 item.code == cookie.load("default_lang") && setLanguage(item.id)
                 return {
                     value: item.id,

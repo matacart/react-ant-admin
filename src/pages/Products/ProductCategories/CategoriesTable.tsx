@@ -1,9 +1,9 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
-import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import { CopyOutlined, DeleteOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { deleteCategory, deleteProduct, getCategoryList, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
-import { history, Link, useIntl } from '@umijs/max';
+import React, { useEffect, useState } from 'react';
+import { Avatar, Checkbox, Input, message, Modal, Table, Tooltip } from 'antd';
+import type { GetProp, TableColumnsType, TableProps } from 'antd';
+import { CopyOutlined, DeleteOutlined, ExclamationCircleOutlined, EyeOutlined, QuestionCircleOutlined} from '@ant-design/icons';
+import { deleteCategory, getCategoryList } from '@/services/y2/api';
+import { history } from '@umijs/max';
 import styled from 'styled-components';
 import modal from 'antd/es/modal';
 import cookie from 'react-cookies';
@@ -19,6 +19,7 @@ interface DataType {
   category_image:string;
   delimiter:string;
   languages_id:string
+  handle:string;
 }
 
 
@@ -30,6 +31,10 @@ interface TableParams {
 }
 
 function CategoriesTable() {
+
+  // 预览域名
+  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [modalOpen, setModalOpen] = useState(false);
@@ -146,16 +151,10 @@ function CategoriesTable() {
 
           }} >
             <ButtonIcon>
-              {/* <Link to={`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`} target='_blank'> */}
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    // if(globalStore.shop.domainName && globalStore.shop.domainName!==""){
-                    //   window.open(`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`)
-                    // }else{
-                    //   message.error("请先设置店铺")
-                    // }
-                    if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
-                      window.open(`https://`+cookie.load("domain").domainName+`/`+record.title.replace(new RegExp(" ","gm"),"-")+`-c`+record.id+`.html`)
+                    if(cookie.load("domain").second_domain && cookie.load("domain").second_domain!==""){
+                      window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/collections/${record.handle}`)
                     }else{
                       message.error("请先设置店铺")
                     }

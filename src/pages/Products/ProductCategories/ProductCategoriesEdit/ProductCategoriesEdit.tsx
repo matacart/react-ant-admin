@@ -1,17 +1,10 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Flex, Form, message, Select, Spin } from 'antd'
+import { Flex, Form, message, Spin } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useParams } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import CategoriesInfo from './CategoriesInfo';
-import CategoriesCover from './CategoriesCover';
-import CategoriesBanner from './CategoriesBanner';
 import cookie from 'react-cookies';
-import RelevanceEdit from './RelevanceEdit';
-import RecommendationEdit from './RecommendationEdit';
-import CategoriesSettingsEdit from './CategoriesSettingsEdit';
-import CategoriesSubnumber from './CategoriesSubnumber';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { getCategory, setCategory } from '@/services/y2/api';
 import DefaultButton from '@/components/Button/DefaultButton';
@@ -19,9 +12,23 @@ import categories from '@/store/product/categories';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LangSelect from '@/components/Select/LangSelect';
 import SEOCard from '../ProductCategories/SEOCard';
+import CategroiesMethod from '../ProductCategories/CategroiesMethod';
+import RelatedProduct from '../ProductCategories/RelatedProduct';
+import CategoriesInfo from '../ProductCategories/CategoriesInfo';
+import ProductScreeningConditions from '../ProductCategories/ProductScreeningConditions';
+import CategoriesCover from '../ProductCategories/CategoriesCover';
+import CategoriesSubnumber from '../ProductCategories/CategoriesSubnumber';
+import Relevance from '../ProductCategories/Relevance';
+import CategoriesSettings from '../ProductCategories/CategoriesSettings';
+import CategoriesBanner from '../ProductCategories/CategoriesBanner';
+import ThemeTemplateCard from '../ProductCategories/ThemeTemplateCard';
+import Recommendation from '../ProductCategories/Recommendation';
 // 表单项商品数据类型
 
 function EditProductCategories(){
+
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
     const {id,languageId} = useParams();
 
@@ -58,8 +65,8 @@ function EditProductCategories(){
                         <Flex className='mc-header-right' gap={8}>
                             <LangSelect lang={languagesId} setLang={(value:string)=>setLanguagesId(value)} />
                             <DefaultButton text="预览" onClick={()=>{
-                                if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
-                                    window.open(`https://`+cookie.load("domain").domainName+`/`+categories.categoriesInfo.title.replace(new RegExp(" ","gm"),"-")+`-c`+categories.categoriesInfo.id+`.html`)
+                                if(cookie.load("domain").second_domain && cookie.load("domain").second_domain!==""){
+                                    window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/collections/${categories.categoriesInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
                                 }else{
                                 message.error("找不到店铺名称，请刷新")
                                 }
@@ -69,16 +76,20 @@ function EditProductCategories(){
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
                             <CategoriesInfo form={form} />
+                            <CategroiesMethod />
+                            {/*  */}
+                            {categories.method == 0 && <RelatedProduct />}
+                            {categories.method == 1 && <ProductScreeningConditions />}
                         </div>
                         <div className='mc-layout-extra'>
-                            <RelevanceEdit />
-                            <CategoriesSettingsEdit />
+                            <Relevance />
+                            <CategoriesSettings />
                             <CategoriesCover />
                             <CategoriesBanner />
-                            <RecommendationEdit />
+                            <Recommendation />
                             <CategoriesSubnumber />
                             <SEOCard />
-                            {/* <ThirdPartyInfoCard/> */}
+                            <ThemeTemplateCard/>
                         </div>
                     </div>
                     <Divider/>

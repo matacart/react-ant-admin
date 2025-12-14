@@ -1,26 +1,27 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Form, message, Select } from 'antd'
+import { Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import CategoriesInfo from './CategoriesInfo';
-import CategoriesCover from './CategoriesCover';
-import CategoriesBanner from './CategoriesBanner';
 import { setCategory } from '@/services/y2/api';
-import Relevance from './Relevance';
-import CategoriesSettings from './CategoriesSettiings';
-import Recommendation from './Recommendation';
-import CategoriesSubnumber from './CategoriesSubnumber';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import categories from '@/store/product/categories';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import CategroiesMethod from './CategroiesMethod';
-import RelatedProduct from './RelatedProduct';
 import { observer } from 'mobx-react-lite';
-import ProductScreeningConditions from './ProductScreeningConditions';
 import LangSelect from '@/components/Select/LangSelect';
 import SEOCard from '../ProductCategories/SEOCard';
+import CategoriesInfo from '../ProductCategories/CategoriesInfo';
+import CategroiesMethod from '../ProductCategories/CategroiesMethod';
+import RelatedProduct from '../ProductCategories/RelatedProduct';
+import ProductScreeningConditions from '../ProductCategories/ProductScreeningConditions';
+import Relevance from '../ProductCategories/Relevance';
+import CategoriesCover from '../ProductCategories/CategoriesCover';
+import CategoriesBanner from '../ProductCategories/CategoriesBanner';
+import Recommendation from '../ProductCategories/Recommendation';
+import CategoriesSubnumber from '../ProductCategories/CategoriesSubnumber';
+import CategoriesSettings from '../ProductCategories/CategoriesSettings';
+import ThemeTemplateCard from '../ProductCategories/ThemeTemplateCard';
 
 
 function NewProductCategories(){
@@ -109,6 +110,7 @@ function NewProductCategories(){
                             <Recommendation />
                             <CategoriesSubnumber />
                             <SEOCard />
+                            <ThemeTemplateCard/>
                         </div>
                     </div>
                     <Divider/>

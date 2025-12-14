@@ -16,22 +16,23 @@ type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>
 
 // 表单项商品数据类型
 interface DataType {
-  key: React.Key;
-  model?: string;
-  imgUrl?: string;
-  product_image?: string;
-  title?: string;
+  id: string;
+  model: string;
+  product_image: string;
+  title: string;
   content?: string;
+  specialprice:number;
   price?: number;
   costPrice?: number;
-  specialprice?:number;
+  quantity: number;
+  status: string;
+  handle:string;
+  product_id:string;
+  languages_id:string;
+
   ISBN?: string;
-  inventory?: number;
   HSCode?:string;
   notion?: string;
-  state?: string;
-  productid:string;
-  languages_id:string
 }
 
 // ToolTip内容
@@ -66,6 +67,9 @@ function ProductListAjax(selectProps:any) {
 
   const { createAbortController } = useAbortController();
 
+  // 预览域名
+  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [onLoadingList, setOnLoadingList] = useState<any>([]);
@@ -91,11 +95,11 @@ function ProductListAjax(selectProps:any) {
   // 是否复制商品库存
   const [copyProductInventory, setCopyProductInventory] = useState(false);
   // 商品状态弹窗
-  const productStatusConfirm = (productData:any,index:number,checked:boolean) => {
+  const productStatusConfirm = (product:DataType,index:number,checked:boolean) => {
     const tempModal = productStatusModal.info({
-      title: productData.state == "1"?"确认下架此商品？":"确认上架此商品？",
+      title: product.status == "1"?"确认下架此商品？":"确认上架此商品？",
       icon: <InfoCircleFilled />,
-      content: productData.state == "1"?"已下架的商品将在网店中隐藏，无法被客户看到":"已上架的商品会在网店中展示，可供你的客户浏览及购买",
+      content: product.status == "1"?"已下架的商品将在网店中隐藏，无法被客户看到":"已上架的商品会在网店中展示，可供你的客户浏览及购买",
       centered:true,
       footer:<div style={{textAlign:"right"}}>
         <Button onClick={()=>{
@@ -107,7 +111,7 @@ function ProductListAjax(selectProps:any) {
         <Button type="primary" style={{marginLeft:"10px",marginTop:"10px"}} onClick={()=>{
           tempModal.destroy();
           // 修改商品状态
-          upDateProductStatus(productData.productid,checked?"1":"0").then(res=>{
+          upDateProductStatus(product.product_id,checked?"1":"0").then(res=>{
             if(res.code == 0){
               onChangeSwich(index,checked)
             }else{
@@ -133,7 +137,7 @@ function ProductListAjax(selectProps:any) {
   const onChangeSwich = (index: number,checked:boolean) => {
     // 改变商品的状态
     let newData = [...data];
-    newData[index].state = checked?"1":"0"
+    newData[index].status = checked?"1":"0"
     setData(newData);
   };
   // 表头
@@ -147,7 +151,7 @@ function ProductListAjax(selectProps:any) {
         flexWrap: 'nowrap',
         alignContent: 'center',
       }}>
-        <Avatar shape="square" size="large" src={(record.imgUrl && record.imgUrl!=="")?record.imgUrl+"?x-oss-process=image/resize,w_100":"/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_100"} />
+        <Avatar shape="square" size="large" src={(record.product_image && record.product_image!=="")?record.product_image+"?x-oss-process=image/resize,w_100":"/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_100"} />
         <span style={{
           marginLeft: 10,
           alignContent: 'center',
@@ -176,25 +180,25 @@ function ProductListAjax(selectProps:any) {
     },
     {
       title: '库存数',
-      dataIndex: 'inventory',
+      dataIndex: 'quantity',
       width: 120,
     },
     {
       title: '状态',
-      dataIndex: 'state',
+      dataIndex: 'status',
       width: 120,
-      render: (text, record, index) =>
+      render: (value, record, index) =>
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
           gap: 9,
           alignContent: 'center',
         }}>
-          {data[index].state !=="2"?<>
+          {value !=="2"?<>
             <Switch loading={onLoadingList[index]} style={{
               position: 'relative',
               top: "3px",
-            }} size='small' checked={data[index].state == "1"?true:false} onChange={(checked,event) => { 
+            }} size='small' checked={value == "1"?true:false} onChange={(checked,event) => { 
               event.stopPropagation();
               let tempList = [...onLoadingList];
               tempList[index] = true;
@@ -204,7 +208,7 @@ function ProductListAjax(selectProps:any) {
             <Popover content={content} title="销售渠道" style={{
               width: '20px'
             }} trigger="click">
-              {data[index].state == "1" ? '上架' : '下架'}
+              {value == "1" ? '上架' : '下架'}
             </Popover>
           </>:<div>已存档</div>}
         </div>,
@@ -222,11 +226,10 @@ function ProductListAjax(selectProps:any) {
 
           }} >
             <ButtonIcon>
-              {/* <Link to={`https://`+globalStore.shop.domainName+`/h-product-detail-p`+record.productid+`.html`} target='_blank'> */}
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
                     if(cookie.load("domain").domain_name && cookie.load("domain").domain_name!==""){
-                      window.open(`https://`+cookie.load("domain").domain_name+`/h-product-detail-p`+record.productid+`.html`)
+                      window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/products/${record.handle}`)
                     }else{
                       message.error("请先设置店铺")
                     }
@@ -255,12 +258,9 @@ function ProductListAjax(selectProps:any) {
   ];
 
   const fetchData = async () => {
-
-
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-
     const res = {
       page:page,
       limit:limit,
@@ -281,33 +281,13 @@ function ProductListAjax(selectProps:any) {
       setLoading(false);
       // 201 空
       if(result.code == 0 || result.code == 201){
-        let newData:DataType[] = [];
         let switchList:boolean[] = [];
         result.data?.forEach((item:any)=>{
-          newData.push({
-            key:item.id,
-            model: item.model,
-            imgUrl: item.product_image,  //封面
-            product_image: item.additional_image,
-            price: item.price,
-            specialprice:item.specialprice,
-            costPrice:item.cost_price,
-            title: item.title,
-            content:item.content,
-            state: item.status,
-            inventory: item.quantity,
-            ISBN:item.barcode,
-            HSCode:item.hs_code,
-            notion:item.shipping_country_id,
-            productid:item.id,  //产品id
-            languages_id:item.languages_id,
-            // 获取所有数据
-          })
-        switchList.push(false)
+          switchList.push(false)
         })
         // 初始化开关数组
         setOnLoadingList(switchList);
-        setData(newData);
+        setData(result.data);
         setLoading(false)
         setTableParams({
           ...tableParams,
@@ -319,7 +299,7 @@ function ProductListAjax(selectProps:any) {
         productList.setCount(result.count)
         return
       }
-      throw new Error(result);
+      throw new Error(result.msg);
     }catch(error){
       if (error.name !== 'CanceledError') {
         message.error('获取数据失败');
@@ -350,7 +330,6 @@ function ProductListAjax(selectProps:any) {
         <div className='table-box'>
           <Table
             columns={columns}
-            // rowKey={(record) => record.key}
             components={
               productList.productList.length !== 0 ?{
                 header: {
@@ -377,11 +356,10 @@ function ProductListAjax(selectProps:any) {
               y: 'calc(100vh - 410px)', // 垂直滚动
               x: 1300
             }}
-            rowKey={(record) => record.productid}
+            rowKey={(record) => record.product_id}
             onRow={(record) => ({
               onClick: () => {
-                console.log('Row clicked:', record);
-                handleOrderClick(record.productid,record.languages_id); // 点击行时调用handleOrderClick
+                handleOrderClick(record.product_id,record.languages_id); // 点击行时调用handleOrderClick
               },
             })}
             rowSelection={{

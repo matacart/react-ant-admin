@@ -1,30 +1,37 @@
 import categories from "@/store/product/categories"
-import { Card, Switch } from "antd"
+import { QuestionCircleOutlined } from "@ant-design/icons"
+import { Card, Switch, Tooltip } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 
- function CategoriesSettingsEdit(){
-    
+
+ function Relevance(){
     return (
         <Scoped>
             <Card className="gap">
                 <div className="header">
-                    <span className="title">分类设置</span>
+                    <span className="title">店铺关联
+                        <Tooltip title="分类在店铺中展示">
+                            <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                                <QuestionCircleOutlined />
+                            </span>
+                        </Tooltip>
+                    </span>
                 </div>
                 <div className="item between">
-                    <span>启用</span>
+                    <span>数据关联</span>
                     <Switch onChange={(e) => {
                         categories.setCategoriesInfo({
                             ...categories.categoriesInfo,
-                            status: e ? 1 : 0
+                            is_bind: e ? 1 : 0
                         })
-                    }} checked={categories.categoriesInfo.status == 1?true:false}  />
+                    }} checked={categories.categoriesInfo.is_bind == 1?true:false}  />
                 </div>
             </Card>
         </Scoped>
     )
 }
-export default observer(CategoriesSettingsEdit)
+export default observer(Relevance)
 
 const Scoped = styled.div`
 .gap{

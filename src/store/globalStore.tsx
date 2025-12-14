@@ -1,4 +1,3 @@
-import { getCategoryList, getCategorySelect, getPlatformCategorySelect } from "@/services/y2/api";
 import { action, makeAutoObservable, observable } from "mobx";
 import cookie from 'react-cookies';
 

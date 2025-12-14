@@ -1,9 +1,9 @@
 
-import { Card, Form, Select, Switch } from "antd"
+import { Card, Flex, Form, Switch } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import { Link } from "react-router-dom"
-import categories from "@/store/product/categories";
+import categories from "@/store/product/categories"
+import DefaultSelect from "@/components/Select/DefaultSelect"
 
  function CategoriesSubnumber(){
 
@@ -12,7 +12,7 @@ import categories from "@/store/product/categories";
             <Card className="gap">
                 <div className="header">
                     <span className="title">共享信息</span>
-                    <Link to='#'>编辑</Link>
+                    {/* <Link to='#'>编辑</Link> */}
                 </div>
                 <Form layout="vertical">
                     <Form.Item
@@ -21,7 +21,7 @@ import categories from "@/store/product/categories";
                                 <span>数据归属</span>
                             </div>
                         } >
-                        <Select
+                        <DefaultSelect
                             style={{ width: "100%", height: "36px" }}
                             placeholder="数据归属"
                             value={categories.categoriesInfo.is_sys.toString()}
@@ -38,7 +38,7 @@ import categories from "@/store/product/categories";
                         />
                     </Form.Item>
                     <Form.Item>
-                        <div className="item between">
+                        <Flex justify="space-between">
                             <span>子号共享</span>
                             <Switch checked={categories.categoriesInfo.is_share == 1?true:false} onChange={(e)=>{
                                 categories.setCategoriesInfo({
@@ -46,7 +46,7 @@ import categories from "@/store/product/categories";
                                     is_share: e ? 1 : 0
                                 })
                             }} />
-                        </div>
+                        </Flex>
                     </Form.Item>
                 </Form>
             </Card>
@@ -70,16 +70,12 @@ const Scoped = styled.div`
         font-weight:600;
     }
 }
-.item{
-        /* margin-bottom: 10px; */
-        margin-top: 16px;
-}
-.between{
-    display: flex;
-    justify-content: space-between;
-}
-a{
-    font-weight: 400;
+
+.ant-form-item{
+    margin-bottom: 20px;
+    &:last-child{
+        margin-bottom: 0;
+    }
 }
 
 :where(.css-dev-only-do-not-override-no4izc).ant-form-item {

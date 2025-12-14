@@ -79,7 +79,7 @@ export default function App({content,setContent}:{content:string,setContent:any}
           // 
           init_instance_callback:initData
         }}  
-      />  
+      />
     </>  
   );  
 }

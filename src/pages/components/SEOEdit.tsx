@@ -17,7 +17,7 @@ const extractTextFromHTML = (html: string): string => {
     return tempDiv.textContent?.trim() || '';
 }
 
-function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:string,keyword:string,url:string)=>void,type:string}){
+function SEOEdit({seo,setSEO,previewPrefix}:{seo:any,setSEO?:(title:string,description:string,keyword:string,handle:string,url:string)=>void,previewPrefix:string}){
     
     const [open, setOpen] = useState(false);
 
@@ -26,33 +26,13 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
     const [title,setTitle] = useState("");
     const [description,setDescription] = useState("");
     const [keyword,setKeyword] = useState("");
-    const [url,setUrl] = useState("");
-
-    const suffix = (
-        type === "a" ? "a" : 
-        type === "p" ? `-p${seo.id}.html` : 
-        type === "c" ? `-c${seo.id}.html` :
-        type === "a" ? "a" :
-        type === "b" ? "b" :
-        type === "d" ? "d" :
-        type === "e" ? "e" :
-        type === "f" ? "f" :
-        type === "g" ? "g" :
-        type === "h" ? "h" : ""
-    );
+    const [handle,setHandle] = useState("");
 
     useEffect(()=>{
         setTitle(seo.meta_title || seo.title ||"");
         setDescription(seo.meta_description || extractTextFromHTML(seo.content));
-        setKeyword(seo.meta_keyword || "") 
-        if(seo?.product_url){
-            const urlObject = new URL(seo.product_url);
-            let newURL = urlObject.pathname.replace(suffix, '');
-            newURL = newURL.replace(/^\//, ''); // 移除开头的斜杠
-            setUrl(newURL.trim().replace(new RegExp(" ","gm"),"-"));
-        }else{
-            setUrl(seo.title.trim().replace(new RegExp(" ","gm"),"-"));
-        }
+        setKeyword(seo.meta_keyword || "");
+        setHandle(seo.handle || seo.title || "");
     },[seo.title,seo.product_url])
 
     // 取消
@@ -61,21 +41,15 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
         // 数据还原
         setTitle(seo.meta_title || seo.title || "");
         setDescription(seo.meta_description || extractTextFromHTML(seo.content));
-        setKeyword(seo.meta_keyword || "")
-        if(seo.product_url){
-            const urlObject = new URL(seo.product_url);
-            let newURL = urlObject.pathname.replace(suffix, '');
-            newURL = newURL.replace(/^\//, ''); // 移除开头的斜杠
-            setUrl(newURL.trim().replace(new RegExp(" ","gm"),"-"));
-        }else{
-            setUrl(seo.title.trim().replace(new RegExp(" ","gm"),"-"));
-        }
+        setKeyword(seo.meta_keyword || "");
+        setHandle(seo.handle || "");
     }
 
     // 完成
     const seoConfirm = () => {
-        let newURL = `https://${cookie.load("domain")?.domain_name}/${url}${suffix}`;
-        setSEO?.(title,description,keyword,newURL)
+        const newHandle = handle.replace(new RegExp(" ","gm"),"-");
+        const url = `${previewPrefix}${handle}`;
+        setSEO && setSEO(title,description,keyword,newHandle,url);
         setOpen(false)
     }
     
@@ -87,7 +61,7 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
                     <div className="contentCard">
                         <div className="preview">
                             <div>预览</div>
-                            <div>{cookie.load("domain")?.domain_name}</div>
+                            <div>{`${previewPrefix}${handle}`}</div>
                             <div>{title==""?"未填写标题":title}</div>
                             <div>{description==""?"未填写描述":description}</div>
                         </div>
@@ -106,9 +80,9 @@ function SEOEdit({seo,setSEO,type}:{seo:any,setSEO?:(title:string,description:st
                                 }} placeholder={"添加描述使页面在搜索引擎中获得更高的排名"} />
                             </Form.Item>
                             <Form.Item label="链接" tooltip="描述性URL，例：product-item">
-                                <DefaultInput value={url} placeholder="链接" onChange={(e:any)=>{
-                                    setUrl(e.target.value)
-                                }} suffix={suffix} />
+                                <DefaultInput value={handle} placeholder="链接" onChange={(e:any)=>{
+                                    setHandle(e.target.value.trim())
+                                }} prefix={previewPrefix} />
                             </Form.Item>
                             <Form.Item label="搜索引擎关键词" tooltip="关键词可以提高搜索结果排名，建议1-2个关键词即可，堆砌关键词可能会降低排名！">
                                 <DefaultInput placeholder="输入关键词后，按enter键完成输入" value={keyword} defaultValue={seo.meta_keyword} onChange={(e)=>{

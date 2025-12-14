@@ -1,18 +1,24 @@
-import { Card } from "antd"
+import { Card, Flex } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import cookie from 'react-cookies';
-import SEOEditSecond from "@/pages/components/SEOEditSecond";
 import categories from "@/store/product/categories";
 import SEOEdit from "@/pages/components/SEOEdit";
 
  function SEOCard(){
-    const setSEO = (title:string,description:string,keyword:string,url:string)=>{
+
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+
+    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/collections/`;
+
+    const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         categories.setCategoriesInfo({
             ...categories.categoriesInfo,
             meta_title:title,
             meta_description:description,
-            meta_keyword:keyword
+            meta_keyword:keyword,
+            handle:handle,
         })
     }
 
@@ -22,10 +28,10 @@ import SEOEdit from "@/pages/components/SEOEdit";
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit seo={categories.categoriesInfo} setSEO={setSEO} type="c" />
+                        <SEOEdit seo={categories.categoriesInfo} setSEO={setSEO} previewPrefix={previewPrefix} />
                     </span>
                 </div>
-                <div className="webUrl">{cookie.load("domain")?.domain_name}</div>
+                <Flex className="webUrl">{`${previewPrefix}${categories.categoriesInfo.handle?categories.categoriesInfo.handle.replace(new RegExp(" ","gm"),"-"):categories.categoriesInfo.title.replace(new RegExp(" ","gm"),"-")}`}</Flex>
                 <div className="webTitle">{categories.categoriesInfo.meta_title==""?(categories.categoriesInfo.title==""?"未填写标题":categories.categoriesInfo.title):categories.categoriesInfo.meta_title}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{categories.categoriesInfo.meta_description==""?(categories.categoriesInfo.content==""?"未填写描述":categories.categoriesInfo.content.replace(/<[^>]*>/g,"")):categories.categoriesInfo.meta_description}</div>
@@ -54,6 +60,7 @@ a{
     font-weight: 400;
 }
 .webUrl{
+    word-break: break-all;
     font-size: 12px;
 }
 .webTitle{

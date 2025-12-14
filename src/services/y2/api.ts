@@ -498,7 +498,7 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
 // title: 
 // tags
 export async function getProductList(res:any,signal?: AbortSignal) {
-  return await request(`/ApiStore/product_list`, {
+  return await request<ApiStore.ProductList>(`/ApiStore/product_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -793,8 +793,8 @@ export async function getPlatformCategorySelect(language:string){
 // ------------商品分类
 // 查询
 export async function getCategorySelect(res:{
-  page:number,
-  limit:number
+  page?:number,
+  limit?:number
 },signal?:AbortSignal){
   return await request<ApiStore.Category>('/ApiStore/category_select',{
     method: 'POST',
@@ -807,7 +807,7 @@ export async function getCategorySelect(res:{
     signal: signal
   })
 }
-// 分类查询
+// 分类列表
 export async function getCategoryList(res:any,signal?:AbortSignal){
   return await request<ApiStore.Category>('/ApiStore/category_list',{
     method: 'POST',

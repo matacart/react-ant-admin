@@ -30,6 +30,8 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
 
   const [instanceListLoading,setInstanceListLoading] = useState(false);
 
+  // 预览域名
+  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
   const themeItems: MenuProps['items'] = [
     {
@@ -56,6 +58,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
   
 
   useEffect(()=>{
+    
     // 用户模板
     getTemplateInstanceList({
       page: pagination.current,
@@ -155,7 +158,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                     </div>
                     <div>
                       <Flex gap={12}>
-                        <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com?preview=1&themeId=${shopSetting.templateInstanceUsing.template_id}`,'_blank')} />
+                        <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}${previewDomain}?preview=1&themeId=${shopSetting?.templateInstanceUsing?.template_id}`,'_blank')} />
                         <ButtonDropdownSecondary menu={{items:[
                           {
                             label: <a onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com`,'_blank')}>查看店铺</a>,
@@ -270,7 +273,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                           </div>
                         </Flex>
                         <Flex gap={12}>
-                          <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com?preview=1&themeId=${template.template_id}`,'_blank')} />
+                          <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}${previewDomain}?preview=1&themeId=${template.template_id}`,'_blank')} />
                           <ButtonDropdownSecondary 
                             menu={{
                               items:[

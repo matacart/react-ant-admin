@@ -1,10 +1,15 @@
-import { Card, Form, Input, TreeSelect } from "antd";
+import { Card, ConfigProvider, Form, TreeSelect } from "antd";
 import { useEffect, useState } from "react";
 import CategoriesMCE from "@/components/MCE/CategoriesMCE";
-import globalStore from "@/store/globalStore";
 import categories from "@/store/product/categories";
+import DefaultInput from "@/components/Input/DefaultInput";
+import { getCategorySelect } from "@/services/y2/api";
+import { useAbortController } from "@/hooks/customHooks";
+import globalStore from "@/store/globalStore";
 
 function CategoriesInfo({form}:{form:any}) {
+
+    const { createAbortController } = useAbortController();
 
     const [treeData,setTreeData] = useState([]);
 
@@ -14,9 +19,19 @@ function CategoriesInfo({form}:{form:any}) {
     }
 
     useEffect(()=>{
-        // globalStore.getCategory().then(res=>{
-        //     setTreeData(res)
-        // })
+        const signal = createAbortController();
+        getCategorySelect({
+            // page:1,
+            // limit:10
+        },signal).then(res=>{
+            const newTreeData = globalStore.buildTree(res.data)
+            setTreeData(newTreeData)
+        }).catch(error=>{
+            if (error.name !== 'CanceledError') {
+                console.log(error)
+            }
+        })
+
         form.setFieldsValue({
             title: categories.categoriesInfo.title,
             parentId: categories.categoriesInfo.pid == "0" ? undefined : categories.categoriesInfo.pid,
@@ -34,8 +49,8 @@ function CategoriesInfo({form}:{form:any}) {
                         { required: true, message: '请输入分类名称' }
                     ]}
                 >
-                    <Input
-                        onChange={(e) => {
+                    <DefaultInput
+                        onChange={(e:any) => {
                             categories.setCategoriesInfo({
                                 ...categories.categoriesInfo,
                                 title: e.target.value
@@ -48,21 +63,32 @@ function CategoriesInfo({form}:{form:any}) {
                     name="parentId"
                     label="父分类"
                 >
-                    <TreeSelect
-                        showSearch
-                        style={{ width: '100%' }}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        placeholder="父分类"
-                        allowClear
-                        treeDefaultExpandAll
-                        onChange={(e)=>{
-                            categories.setCategoriesInfo({
-                                ...categories.categoriesInfo,
-                                pid: e
-                            })
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                            /* 这里是你的全局 token */
+                                borderRadius:4,
+                                paddingXXS:0,
+                                // paddingSM:12
+                            },
                         }}
-                        treeData={treeData}
-                    />
+                        >
+                        <TreeSelect
+                            showSearch
+                            style={{ width: '100%',height:"36px" }}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder="父分类"
+                            allowClear
+                            treeDefaultExpandAll
+                            onChange={(e)=>{
+                                categories.setCategoriesInfo({
+                                    ...categories.categoriesInfo,
+                                    pid: e
+                                })
+                            }}
+                            treeData={treeData}
+                        />
+                    </ConfigProvider>
                 </Form.Item>
                 <Form.Item label='分类描述'>
                     {/* 富文本编辑器 */}

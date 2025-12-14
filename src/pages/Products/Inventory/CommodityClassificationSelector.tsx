@@ -1,4 +1,3 @@
-import { getCategorySelect } from '@/services/y2/api';
 import productList from '@/store/product/productList';
 import { Button, ConfigProvider, Divider, Dropdown, Flex, Popover, Select } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
@@ -13,15 +12,7 @@ export default function CommodityClassificationSelector() {
     const [isFocus,setIsFocus] = useState(false);
 
     useEffect(()=>{
-        getCategorySelect().then(res=>{
-            const newOption = res.data.map((item:any)=>{
-                return {
-                    value: item.id,
-                    label: item.category_name,
-                }
-            })
-            newOption && setOptions(newOption)
-        })
+       
     },[])
 
     return (

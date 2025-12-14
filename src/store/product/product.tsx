@@ -64,6 +64,7 @@ interface ProductType {
   additional_image: string[];
   content: string;
   content1: string;
+  handle:string;
 }
 
 class Product{
@@ -135,7 +136,8 @@ class Product{
         product_url: "",
         nextProductId: "",
         prevProductId: "",
-        product_video: ""
+        product_video: "",
+        handle:"",
       };
     }
 

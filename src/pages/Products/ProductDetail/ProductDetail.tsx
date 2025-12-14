@@ -64,7 +64,11 @@ function ProductDetail() {
     const navigate = useNavigate(); // 使用 useNavigate 钩子
     const {productId,languageId} = useParams();
 
+    // 域名信息
     const domainCookie = cookie.load("domain");
+
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
     const [languagesId,setLanguagesId] = useState<string>(languageId??"2");
 
@@ -357,11 +361,11 @@ function ProductDetail() {
                                 }} />
                                 <div style={{borderRight:"1px solid #d7dbe7",height:"36px"}}></div>
                                 <DefaultButton text={"复制"} onClick={()=>{
-                                    copy(`https://`+domainCookie?.domain_name+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
+                                    copy(`https://${cookie.load("domain").second_domain}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
                                     message.success('复制成功')
                                 }} />
                                 <DefaultButton text={"预览"} onClick={()=>{
-                                    window.open(`https://`+domainCookie?.domain_name+`/`+productTitle.replace(new RegExp(" ","gm"),"-")+`-p`+productId+`.html`)
+                                    window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
                                 }} />
                                 <ButtonDropdownSecondary text='分享' menu={{items:items}} trigger={['click']} />
                             </Flex>

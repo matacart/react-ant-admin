@@ -147,6 +147,13 @@ declare namespace ApiStore {
     data:any,
     msg:string,
   }
+
+  type ProductList = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
   
 }
 

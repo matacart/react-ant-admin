@@ -1,20 +1,25 @@
-import { Card } from "antd"
+import { Card, Flex } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import cookie from 'react-cookies';
 import SEOEdit from "@/pages/components/SEOEdit";
 import product from "@/store/product/product";
 
-
  function SEOCard(){
 
-    const setSEO = (title:string,description:string,keyword:string,url:string)=>{
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+
+    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/products/`;
+
+    const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
 
         product.setProductInfo({
             ...product.productInfo,
             meta_title:title,
             meta_description:description,
             meta_keyword:keyword,
+            handle:handle,
             product_url:url
         })
     }
@@ -25,10 +30,10 @@ import product from "@/store/product/product";
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit seo={product.productInfo} setSEO={setSEO} type="p" />
+                        <SEOEdit seo={product.productInfo} setSEO={setSEO} previewPrefix={previewPrefix} />
                     </span>
                 </div>
-                <div className="webUrl">{cookie.load("domain").domain_name}</div>
+                <Flex className="webUrl">{`${previewPrefix}${product.productInfo.handle?product.productInfo.handle.replace(new RegExp(" ","gm"),"-"):product.productInfo.title.replace(new RegExp(" ","gm"),"-")}`}</Flex>
                 <div className="webTitle">{product.productInfo.meta_title==""?(product.productInfo.title==""?"未填写标题":product.productInfo.title):product.productInfo.meta_title}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{product.productInfo.meta_description==""?"未填写描述":product.productInfo.meta_description}</div>
@@ -58,6 +63,7 @@ a{
 }
 .webUrl{
     font-size: 12px;
+    word-break: break-all;
 }
 .webTitle{
     margin-top: 4px;

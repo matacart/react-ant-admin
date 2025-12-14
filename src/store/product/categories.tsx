@@ -4,6 +4,7 @@ interface CategoriesType {
   meta_keyword: string;
   meta_title: string;
   meta_description: string;
+  handle:string;
   is_share: number;
   is_sys: string;
   is_new: number;
@@ -49,11 +50,12 @@ class Categories{
         sort: 1,
         meta_title:"",
         meta_keyword:"",
-        meta_description:""
+        meta_description:"",
+        handle:""
       } as CategoriesType;
     }
 
-    // 产品
+    // 分类
     categoriesInfo:CategoriesType = this.getInit();
 
     setCategoriesInfo(res:CategoriesType){
