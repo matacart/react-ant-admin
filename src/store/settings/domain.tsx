@@ -1,7 +1,8 @@
 import { makeAutoObservable } from "mobx";
 
 interface Domain{
-  domain_name:string;
+  domain_primary:string;
+  handle:string;
 }
 
 class domain {
@@ -10,7 +11,8 @@ class domain {
     }
 
     domain:Domain = {
-      domain_name: ""
+      domain_primary: "",
+      handle:"",
     }
 
     setDomain(res:any){

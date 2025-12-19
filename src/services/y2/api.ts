@@ -45,7 +45,7 @@ export async function getDomainList( options?: { [key: string]: any }) {
 
 /** 获取当前的用户 GET /currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
-  return request('/ApiAppstore/currentUser', {
+  return request<ApiAppstore.CurrentUser>('/ApiAppstore/currentUser', {
     method: 'POST',
     retryOnError: true,
     ...(options || {}),
@@ -94,8 +94,8 @@ export async function getTimeZoneList(){
 }
 
 // 所有币种
-export async function getCurrenciesList() {
-  const result = await request(`/ApiAppstore/currencies_list`, {
+export async function getCurrenciesList(page?: number, limit?: number) {
+  return await request<ApiAppstore.Default>(`/ApiAppstore/currencies_list`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -103,11 +103,10 @@ export async function getCurrenciesList() {
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      page:"1",
-      limit:"100"
+      page:page,
+      limit:limit
     }
   })
-  return result.code == 0 ? result.data : null
 }
 
 // 获取语言列表
@@ -127,7 +126,7 @@ export async function getLanguagesList() {
   return result.code == 0 ? result.data : null
 }
 
-// 物流服务商
+// 物流服务商---商户数据
 export async function getShippingcourier() {
   return request(`/ApiAppstore/shippingcourier_select`, {
     method: 'POST',
@@ -141,10 +140,7 @@ export async function getShippingcourier() {
   })
 }
 
-
-
-
-// 获取用户状态
+// 获取用户状态---商户数据
 export async function currentUserStatus(options?: { [key: string]: any }) {
   return request<{
     data: API.CurrentUser;
@@ -329,25 +325,25 @@ export async function getAccessToken() {
 
 
 // 账号认证
-export async function accountAuthentication(res:any) {
-  return request("/ApiAppstore/apply_add", {
+export async function accountAuthentication(res:{
+  name:string,
+  phone:string,
+  qq:string,
+  email:string,
+  mid:string,
+  apply_type:string,
+  apply_remark:string,
+}) {
+  return request<ApiAppstore.Default>("/ApiAppstore/apply_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    data: {
-      name: res.name,
-      phone: res.phone,
-      qq:res.qq,
-      email: res.email,
-      mid:res.userType == "2"?res.merchantId:"",
-      apply_type:res.userType,
-      apply_remark:res.remark,
-    },
+    data:res,
   });
 }
 
-// 基础设置 ---
+// 基础设置 --- 
 export async function getTodayData(startDate:number,endDate:number,options?: { signal?: AbortSignal }) {
   return request('/ApiStore/today_statistics', {
     method: 'POST',
@@ -1243,30 +1239,25 @@ export async function setStoreInfo(res:any){
   })
 }
 
-// 
-export async function createStore(res:any){
-  return await request('/ApiAppstore/store_add',{
+// 创建店铺
+export async function createStore(res:{
+  languages_id:string,
+  country_name:string,
+  store_name:string,
+  handle:string,
+  domain_primary:string,
+  default_lang:string,
+  default_currency:string,
+  merchant_email:string,
+}){
+  return await request<ApiAppstore.Default>('/ApiAppstore/store_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
-    data:{
-      languages_id:2,
-      country_name:res.country,
-      store_name:res.name,
-      domain_name:res.url?(res.url+".demo.hdyshop.cn"):"",
-      default_lang:'en-us',
-      default_currency:res.currencie,
-      merchant_email:res.email,
-    }
+    data:res
   })
 }
-
-
-
-
-
-
 
 // 更新币种
 export async function setCurrenciesList(currenciesList:any) {
@@ -1402,17 +1393,16 @@ export async function getDomainNameList(signal?:AbortSignal) {
 }
 
 // 添加域名
-
-export async function addDomainName(domainName:string,otherDomain:string) {
-  return request("/ApiAppstore/domain_set", {
+export async function addDomainName(primaryName:string,otherDomain:string) {
+  return request<ApiAppstore.Default>("/ApiAppstore/domain_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       id: cookie.load("domain")?.id,
-      domain_name:domainName,
-      other_domain:otherDomain
+      domain_primary:primaryName,
+      other_domain:otherDomain || "",
     }
   });
 }
@@ -1539,7 +1529,7 @@ export async function getAddonsList(lang:string,type:string,group_id?:string) {
 }
 
 // 支付服务  -- 配置
-export async function getAddonsConfigCreditCard(id:string,addonsId?:string,languagesId:string) {
+export async function getAddonsConfigCreditCard(id:string,addonsId?:string,languagesId?:string) {
   return request("/ApiAppstore/addons_config_array", {
     method: 'POST',
     headers: {

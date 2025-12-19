@@ -162,13 +162,19 @@ declare namespace ApiAppstore {
 
   type Default = {
     code:number|string, 
-    count:string,
     data:any,
     msg:string,
+    count?:string,
   }
 
   type addressAdd = {
   }
+  type CurrentUser = {
+    code:number,
+    data:any,
+    msg:string,
+  }
+  
   type employeeSelect = {
     code:number, 
     data:any,

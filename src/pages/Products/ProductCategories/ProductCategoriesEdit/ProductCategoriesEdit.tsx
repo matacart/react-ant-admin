@@ -65,10 +65,12 @@ function EditProductCategories(){
                         <Flex className='mc-header-right' gap={8}>
                             <LangSelect lang={languagesId} setLang={(value:string)=>setLanguagesId(value)} />
                             <DefaultButton text="预览" onClick={()=>{
-                                if(cookie.load("domain").second_domain && cookie.load("domain").second_domain!==""){
-                                    window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/collections/${categories.categoriesInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+                                    window.open(`https://${cookie.load("domain").domain_primary}/collections/${categories.categoriesInfo.handle}`)
+                                }else if(cookie.load("domain").handle){
+                                    window.open(`https://${cookie.load("domain").handle}${previewDomain}/collections/${categories.categoriesInfo.handle}`)
                                 }else{
-                                message.error("找不到店铺名称，请刷新")
+                                    message.error("店铺缺少handle")
                                 }
                             }} />
                         </Flex>
@@ -97,7 +99,6 @@ function EditProductCategories(){
                         <PrimaryButton loading={loading} text="更新" onClick={()=>{
                             setLoading(true)
                             setCategory({...categories.categoriesInfo}).then(res=>{
-                                console.log(res)
                                 message.success("修改内容已更新")
                             }).catch(err=>{
                                 console.log(err)

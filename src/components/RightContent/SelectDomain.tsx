@@ -1,6 +1,6 @@
 import { domainSelect } from "@/services/y2/api";
-import { DownOutlined, EllipsisOutlined, LoadingOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
-import { Button, Flex, Input, message, Popover, Select, Spin, Tag, Tooltip } from "antd";
+import { DownOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Flex, message, Popover, Select, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useIntl } from '@umijs/max';
@@ -8,16 +8,10 @@ import cookie from 'react-cookies';
 import SuccessTag from "../Tag/SuccessTag";
 import DefaultTag from "../Tag/DefaultTag";
 import { useNavigate } from "react-router-dom";
-// 定义一个函数来高亮搜索词  
-function highlightSearchTerm(text: string, term: string) {
-    // 使用正则表达式来匹配搜索词，并替换为带有<mark>标签的文本
-    // console.log(term)
-    return text.replace(term,()=> `<span class="mark">'${term}'</span>`);
-}
+import DefaultInput from "../Input/DefaultInput";
+import PrimaryButton from "../Button/PrimaryButton";
 
 let domainList: any[] = [];
-
-
 // 店铺搜索 
 async function getFilterResultArray(term: string) {
     return domainList.filter(item => (
@@ -49,8 +43,9 @@ async function getFilterResultArray(term: string) {
 interface storeType{
     id:string;
     store_name:string;
-    domain_name:string;
     second_domain:string;
+    handle:string;
+    domain_primary:string;
     timezone:string;
     default_currency:string;
     default_lang:string;
@@ -209,7 +204,6 @@ export default function SelectDomain() {
      const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         // 如果应该忽略滚动事件，则直接返回
         if (ignoreScrollEvents) return;
-
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
         // 当滚动到底部时加载更多
         if (scrollHeight - scrollTop <= clientHeight + 10) {
@@ -221,8 +215,8 @@ export default function SelectDomain() {
     // 选择店铺
     const changeDomain = (item:storeType) => {
         if(!window.location.hostname.startsWith("localhost")){
-            const newUrl = replaceSubdomain(window.location.href,item.second_domain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
-            window.open(newUrl)
+            const newUrl = replaceSubdomain(window.location.href,item.handle || item.id,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
+            newUrl && window.open(newUrl);
         }
         setIsActive(false);
     }
@@ -234,8 +228,8 @@ export default function SelectDomain() {
         if(cookie.load("domain") && cookie.load("domain") !== 'undefined'){
             store = cookie.load("domain")
         }else{
-            // 获取当前域名
-            const domain = window.location.hostname.slice(0,window.location.hostname.indexOf("."))
+            // 获取当前店铺的handle || id
+            const domain = window.location.hostname.slice(0,window.location.hostname.indexOf("."));
             if(window.location.hostname.startsWith("localhost") || domain == 'admin'){
                 // 域名location
                 await domainSelect().then((res:any)=>{
@@ -252,8 +246,8 @@ export default function SelectDomain() {
                     }
                 }).then((res:any)=>{
                     if(res?.data?.length > 0){
-                        store = res.data.filter((item:any)=>item.second_domain == domain)[0];
-                        cookie.save('domain', res.data.filter((item:any)=>item.second_domain == domain)[0], { path: '/' });
+                        store = res.data.filter((item:any)=>(item.handle == domain || item.id == domain))[0];
+                        cookie.save('domain', res.data.filter((item:any)=>(item.handle == domain || item.id == domain))[0], { path: '/' });
                     }
                 })
             }
@@ -263,6 +257,79 @@ export default function SelectDomain() {
         setLanguage(store);
         setStore(store);
     }
+
+    // 店铺搜索
+    const searchDomain = (keyword: string) => {
+        setLoading(true);
+        domainSelect({
+            data:{
+                keyword:keyword,
+                page:1,
+                limit:10,
+            }
+        }).then((res:any)=>{
+            if(res.code == 0){
+                // 重置无限滚动相关状态
+                setPage(1);
+                setHasMore(true);
+                setLoadingMore(false);
+                // 设置忽略滚动事件标志
+                setIgnoreScrollEvents(true);
+                // 重置滚动条位置
+                if (scrollRef.current) {
+                    scrollRef.current.scrollTop = 0;
+                }
+                // 延迟重置忽略滚动事件标志
+                setTimeout(() => {
+                    setIgnoreScrollEvents(false);
+                }, 100);
+                // 
+                setStoreList(res.data);
+            }
+        }).catch(() => {
+            message.error('失败')
+        }).finally(() => {
+            setLoading(false)
+        });
+    }
+
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // 防抖搜索
+    const debouncedSearch = (searchKeyword: string) => {
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+        searchTimeoutRef.current = setTimeout(() => {
+            if (searchKeyword !== '') {
+                searchDomain(searchKeyword);
+            } else {
+                // 当keyword为空时，重新加载默认列表
+                domainSelect({
+                    data: {
+                        page: 1,
+                        limit: 10
+                    }
+                }).then((res: any) => {
+                    if (res.code == 0) {
+                        setPage(1);
+                        setStoreList(res.data);
+                        setHasMore(res.data.length >= 10);
+                    }
+                });
+            }
+        }, 500); // 500ms防抖延迟
+    };
+
+    // 修改keyword变化的处理
+    const isFirstRender = useRef(true);
+    useEffect(() => {
+        // 首次渲染不执行搜索
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+        debouncedSearch(keyword);
+    }, [keyword]);
     
     useEffect(() => {
         initStore();
@@ -278,43 +345,10 @@ export default function SelectDomain() {
         <ContentWrap>
             <div className="popover_header">
                 <div className="popover_input">
-                    <Input value={keyword} size="large" suffix={<SearchOutlined />}
+                    <DefaultInput value={keyword} size="large" suffix={<SearchOutlined />}
                         // 店铺搜索
-                        onChange={(e) => {
+                        onChange={(e:any) => {
                             setKeyword(e.target.value)
-                        }}
-                        onBlur={(e) => {
-                            setLoading(true);
-                            domainSelect({
-                                data:{
-                                    keyword:e.target.value,
-                                    page:1,
-                                    limit:10,
-                                }
-                            }).then((res:any)=>{
-                                if(res.code == 0){
-                                    // 重置无限滚动相关状态
-                                    setPage(1);
-                                    setHasMore(true);
-                                    setLoadingMore(false);
-                                    // 设置忽略滚动事件标志
-                                    setIgnoreScrollEvents(true);
-                                    // 重置滚动条位置
-                                    if (scrollRef.current) {
-                                        scrollRef.current.scrollTop = 0;
-                                    }
-                                    // 延迟重置忽略滚动事件标志
-                                    setTimeout(() => {
-                                        setIgnoreScrollEvents(false);
-                                    }, 100);
-                                    // 
-                                    setStoreList(res.data);
-                                }
-                            }).catch(() => {
-                                message.error('失败')
-                            }).finally(() => {
-                                setLoading(false)
-                            })
                         }}
                         placeholder={intl.formatMessage({
                             id: 'menu.search.stores'
@@ -340,10 +374,10 @@ export default function SelectDomain() {
                                         {item?.status == 0 && <DefaultTag text={intl.formatMessage({id:"menu.stores.default"})} />}
                                     </div>
                                     <div className="shopInfo">
-                                        {item?.id}
+                                        {item?.handle || item?.id}
                                     </div>
                                     <div className="email">
-                                        {item?.domain_name}
+                                        {item?.domain_primary || (item?.handle && `${item?.handle}${JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || ''}`)}
                                     </div>
                                 </div>
                             </div>
@@ -364,13 +398,11 @@ export default function SelectDomain() {
                 )}
             </Spin>
             <div className="popover_footer">
-                <Button onClick={()=>{
-                    navigate('/stores/list')
-                }} type="primary" size='large' block>
-                {intl.formatMessage({
+                <PrimaryButton text={intl.formatMessage({
                     id:'menu.stores.manage'
-                })} 
-                </Button>
+                })} onClick={()=>{
+                    navigate('/stores/list')
+                }} size='large' block />
             </div>
         </ContentWrap>
     )

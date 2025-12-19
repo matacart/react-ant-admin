@@ -38,10 +38,17 @@ body,
   }
 }
 
-.css-dev-only-do-not-override-1kn8nr7{
-  /* max-height: 500px; */
+/* 侧栏滚动条 */
+/* .my-custom-menu:hover{
+  scrollbar-width:auto;
+  padding-right: 0;
+} */
+.my-custom-menu{
+  /* 右侧留出一些空间防止内容紧贴边缘 */
+  /* padding-right: 16px; */
+  scrollbar-width: auto;
+  scrollbar-color:#c1c1c1 transparent;
 }
-
 
 /* 设置 */
 /* .ant-menu-item:has(.ant-menu-title-content):has(.menu-item-settings){
@@ -90,7 +97,6 @@ ol {
     display: block;
   }
 }
-
 
  /* 样式 */
 .color-FF0000{

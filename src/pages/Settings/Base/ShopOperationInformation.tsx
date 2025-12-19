@@ -10,6 +10,7 @@ import { parse } from 'url';
 import { set } from 'lodash';
 import { select } from "react-cookies";
 import { useForm } from "antd/es/form/Form";
+import DefaultSelect from "@/components/Select/DefaultSelect";
 
 function ShopOperationInformation() {
 
@@ -114,7 +115,7 @@ function ShopOperationInformation() {
                     <Form.Item
                         label="商品种类"
                         >
-                        <Select
+                        <DefaultSelect
                             defaultValue={baseInfoStore.productType}
                             style={{ width: 256 }}
                             options={[
@@ -138,7 +139,7 @@ function ShopOperationInformation() {
                     <Form.Item
                         label="经营所在地时区"
                         >
-                        <Select
+                        <DefaultSelect
                             defaultValue={baseInfoStore.timezone}
                             style={{ width: 256 }}
                             options={timeZone}

@@ -45,17 +45,17 @@ export default function MyApps() {
 
 const Scoped = styled.div`
   .create-warp-flex {
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: center;
     color: #474f5e;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
-  
     .create-warp {
-      width: 80%;
+      width: 100%;
       min-width: 500px;
+      max-width: 1200px;
       .create-title {
         padding-bottom: 0px;
         color: #474f5e;

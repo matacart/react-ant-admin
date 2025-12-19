@@ -228,10 +228,12 @@ function ProductListAjax(selectProps:any) {
             <ButtonIcon>
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    if(cookie.load("domain").domain_name && cookie.load("domain").domain_name!==""){
-                      window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/products/${record.handle}`)
+                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+                      window.open(`https://${cookie.load("domain").domain_primary}/products/${record.handle}`)
+                    }else if(cookie.load("domain").handle){
+                      window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${record.handle}`)
                     }else{
-                      message.error("请先设置店铺")
+                      message.error("店铺缺少handle")
                     }
                   }}>
                   <Tooltip title="预览">

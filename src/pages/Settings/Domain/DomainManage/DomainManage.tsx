@@ -11,6 +11,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import MyInput from "@/components/Input/MyInput";
 import DeleteModal from "@/components/Modal/DeleteModal";
+import cookie from "react-cookies";
 
 
 interface DataType {
@@ -30,7 +31,8 @@ function DomainManage() {
     const [modal, contextHolder] = Modal.useModal();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
     const [data,setData] = useState<DataType[]>([]);
 
@@ -50,8 +52,8 @@ function DomainManage() {
                     </div>
                     <div>
                         <div className="font-14 font-w-600">{text}</div>
-                        {record.primaryName == "" ?<div className="font-12 color-7A8499">主域名 ·店铺内的所有流量已重定向至主域名<span style={{marginLeft:12}} className="color-356DFF">禁用重定向</span></div>:<></>}
-                        {record.primaryName == "" ?<div onClick={()=>setIsModalOpen(true)} className="font-12 color-356DFF cursor-pointer">更改为新域名</div>:<div className="font-12 color-7A8499">重定向到 {record.primaryName} <span className="color-356DFF cursor-pointer">更改</span></div>}
+                        {record.primaryName == "" ?<div className="font-12 color-7A8499">主域名 ·店铺内的所有流量已重定向至主域名<span style={{marginLeft:12}} className="color-356DFF cursor-pointer" onClick={disableRedirection}>禁用重定向</span></div>:<></>}
+                        {record.primaryName == "" ?<div onClick={()=>setIsModalOpen(true)} className="font-12 color-356DFF cursor-pointer">更改为新域名</div>:<div className="font-12 color-7A8499">重定向到 {record.primaryName}</div>}
                     </div>
                 </Flex>
             </div>,
@@ -94,22 +96,44 @@ function DomainManage() {
           
     ];
 
-    // 添加域名
+    // 更新域名
     const handleOk = ()=>{
         addDomainName(primaryName,otherDomain).then(res=>{
-            let newData = [...data]
-            newData.forEach(element => {
-                if(element.primaryName == ""){
-                    element.name = primaryName
-                }else{
-                    element.primaryName = primaryName
-                }
-            });
-            // newData[0].name = primaryName
-            setData(newData)
-            setPrimaryName("")
+            console.log(res)
+            if(res.code == 0){
+                let newData = [...data]
+                newData.forEach(element => {
+                    if(element.primaryName == ""){
+                        element.name = primaryName
+                    }else{
+                        element.primaryName = primaryName
+                    }
+                });
+                setData(newData);
+                cookie.save("domain",{...cookie.load("domain"),domain_primary:primaryName},{path:'/'})
+                setPrimaryName("")
+            }
             setIsModalOpen(false)
         })
+    }
+
+    // 禁用重定向
+    const disableRedirection = () => {
+        // 实现禁用重定向的逻辑
+        const confirmModal = modal.confirm({
+            title: '禁用重定向',
+            centered: true,
+            icon: <ExclamationCircleFilled />,
+            content: '禁用重定向后，访问非主域名的用户将无法自动跳转到主域名，可能会影响用户访问体验。是否确认禁用？',
+            footer:()=>(
+                <Flex justify="flex-end" gap={12}>
+                    <DefaultButton text="取消" key="cancel" onClick={()=>confirmModal.destroy()} />
+                    <PrimaryButton text="确认" key="confirm" onClick={()=>{
+                        confirmModal.destroy()
+                    }}/>
+                </Flex>
+            )
+        });
     }
 
     // 取消
@@ -125,27 +149,25 @@ function DomainManage() {
             domain.setDomain(res.data)
             setIsSkeleton(false)
             setOtherDomain(res.data.other_domain)
-            const DomainList = res.data.other_domain?.split(",")
+            const DomainList = res.data.other_domain ? res.data.other_domain?.split(",") : [];
             newData.unshift({
                 key: '1',
-                name: res.data.domain_name,
+                name: res.data.domain_primary || `${res.data.handle}${previewDomain}`,
                 isPrimary:true,
                 primaryName:"",
                 age: 32
             })
-            DomainList?.forEach(element => {
+            DomainList?.forEach((element:any) => {
                 newData.push({
                     key: '2',
                     name: element,
                     isPrimary:false,
-                    primaryName: res.data.domain_name,
+                    primaryName: res.data.domain_primary || `${res.data.handle}${previewDomain}`,
                     age: 32,
                 })
             });
             setData(newData)
         })
-
-        // 
     },[])
 
     return (

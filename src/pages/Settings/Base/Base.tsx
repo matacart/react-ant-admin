@@ -12,6 +12,7 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
 import cookie from 'react-cookies';
 import { useNavigate } from "react-router-dom"
+import PrimaryButton from "@/components/Button/PrimaryButton"
 
 function Base() {
 
@@ -115,18 +116,18 @@ function Base() {
                     >
                     </Divider>
                     <div className="submit-btn">
-                        <Button type="primary" style={{height: "36px"}} loading={isRenewal} onClick={()=>{
+                        <PrimaryButton loading={isRenewal} onClick={()=>{
                             setIsRenewal(true)
                             baseInfoStore.setStore().then((res:any)=>{
                                 if(res.code==0){
-                                    cookie.save('timeZone', JSON.stringify(JSON.parse(sessionStorage["timezones"]).filter(item=>item.time_zone_name == baseInfoStore.timezone)[0]), { path: '/' });
+                                    cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.timezone)[0]), { path: '/' });
                                     message.success('更新成功')
                                 }else{
                                     message.error('更新失败')
                                 }
                                 setIsRenewal(false)
                             })
-                        }}>更新</Button>
+                        }} text="更新" />
                     </div>
                 </div>
             </div>}

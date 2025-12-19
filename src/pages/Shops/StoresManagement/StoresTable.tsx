@@ -20,6 +20,8 @@ interface DataType {
   id: string;
   store_name:string;
   second_domain:string;
+  handle:string;
+  domain_primary:string;
   status:string;
 }
 interface TableParams {
@@ -95,12 +97,22 @@ function StoresTable() {
     },
     {
       title: 'handle',
-      dataIndex: 'second_domain',
+      dataIndex: 'handle',
+      render: (_, record) => (
+        <div>
+          {record?.handle || record?.id}
+        </div>
+      ),
       width: 120,
     },
     {
       title: '域名',
-      dataIndex: 'domain_name',
+      dataIndex: 'domain_primary',
+      render: (_, record) => (
+        <div>
+          {record.domain_primary || (record?.handle && `${record.handle}${JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || ''}`)}
+        </div>
+      ),
       width: 200,
     },
     {
@@ -266,7 +278,7 @@ function StoresTable() {
           onClick: () => {
             // 跳转店铺
             if(!window.location.hostname.startsWith("localhost")){
-              const newUrl = replaceSubdomain(window.location.href,record.second_domain,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
+              const newUrl = replaceSubdomain(window.location.href,record.handle || record.id,window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
               newUrl && window.open(newUrl)
             }
           },
@@ -281,7 +293,6 @@ function StoresTable() {
     </Scoped>
   );
 };
-
 
 export default StoresTable;
 
@@ -345,7 +356,6 @@ const TagStyle = styled.div`
     border: 1px solid rgba(248,97,64,.2);
   }
 `
-
 const Content = styled.div`
   display:flex;
   flex-direction: column;

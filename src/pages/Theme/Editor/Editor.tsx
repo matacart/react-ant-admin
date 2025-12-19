@@ -14,8 +14,12 @@ import ApplicationRight from './Right/ApplicationRight';
 import ComponentRight from './Right/ComponentRight/ComponentRight';
 import { addLocale, useIntl } from '@umijs/max';
 import { useAbortController } from '@/hooks/customHooks';
+import cookie from 'react-cookies';
 
 function Editor() {
+
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -285,7 +289,7 @@ function Editor() {
           </div>
           <div className="center">
             <div className="viewBox">
-              <iframe ref={iframeRef} src={`https://store.matacart.com/?templateId=${templateId}&page=index`} width="100%" height="100%" style={{border:"0"}} />
+              <iframe ref={iframeRef} src={`https://${cookie.load("domain")?.handle}${previewDomain}?preview=1&themeId=${templateId}`} width="100%" height="100%" style={{border:"0"}} />
             </div>
           </div>
           {/* right */}

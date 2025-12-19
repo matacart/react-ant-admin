@@ -10,20 +10,15 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import DefaultInput from "@/components/Input/DefaultInput";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-
-
-interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-}
-
+import { useSleep } from "@/hooks/customHooks";
 
 function AddDomain() {
 
     const { token } = theme.useToken();
+
+    const sleep = useSleep();
+
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -104,7 +99,7 @@ function AddDomain() {
 
     useEffect(()=>{
         getDomainNameList().then(res=>{
-            setDomainName(res.data.domain_name)
+            setDomainName(res.data.domain_primary || `${res.data.handle}${previewDomain}` )
             setOtherDomain(res.data.other_domain)
             setIsSkeleton(false)
         })
@@ -145,9 +140,17 @@ function AddDomain() {
 
                                 {current === steps.length - 1 && (
                                     <PrimaryButton text="完成" onClick={() => {
-                                        addDomainName(domainName,otherDomain)
-                                        message.success('Processing complete!')
-                                        history.push("/settings/domain/manage")
+                                        addDomainName(domainName,otherDomain).then(async res=>{
+                                            if(res.code == 0){
+                                                await sleep(2000);
+                                                message.success('Processing complete!')
+                                                history.push("/settings/domain/manage")
+                                            }else{
+                                                message.error(res.msg)
+                                            }
+                                        }).catch(err=>{
+                                            console.log(err);
+                                        });
                                     }} />
                                 )}
                             </div>

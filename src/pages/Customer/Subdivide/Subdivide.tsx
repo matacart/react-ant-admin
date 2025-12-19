@@ -102,7 +102,7 @@ export default function Subdivide() {
 
 const Scoped = styled.div`
   .create-warp-flex {
-    width: 80%;
+    width: 100%;
     display: flex;
     justify-content: center;
     color: #474f5e;
@@ -110,7 +110,7 @@ const Scoped = styled.div`
     font-weight: 500;
     line-height: 20px;
     .create-warp {
-      width: 80%;
+      width: 100%;
       min-width: 500px;
       .create-title {
         margin-bottom: 20px;

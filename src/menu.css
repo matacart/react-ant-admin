@@ -1,0 +1,21 @@
+.my-custom-menu .ant-layout-sider-children {
+  /* 默认隐藏滚动条 */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.my-custom-menu .ant-layout-sider-children::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+/* 悬停时显示滚动条 */
+.my-custom-menu .ant-layout-sider-children:hover {
+  scrollbar-width: thin !important;
+  scrollbar-color: #c1c1c1 transparent !important;
+}
+
+.my-custom-menu .ant-layout-sider-children:hover::-webkit-scrollbar {
+  display: block !important;
+  width: 6px !important;
+}

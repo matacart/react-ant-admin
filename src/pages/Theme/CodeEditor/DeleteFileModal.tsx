@@ -4,9 +4,9 @@ import { DeleteIcon } from "@/components/Icons/Icons";
 import { deleteTemplateFile } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { Flex, message, Modal, Tooltip } from "antd";
+import { Flex, message, Tooltip } from "antd";
 import modal from "antd/es/modal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface DelModalType{
     treeData:any[],
@@ -19,7 +19,6 @@ interface DelModalType{
 function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType){
 
     const [loading, setLoading] = useState(false);
-
     // 递归函数：从树中删除指定节点
     const removeNodeFromTree = (nodes: any[], targetKey: string): any[] => {
         return nodes.map(node => {
@@ -27,7 +26,6 @@ function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType)
             if (node.key === targetKey && !node.children) {
                 return null;
             }
-            
             // 如果有子节点，则递归处理子节点
             if (node.children) {
                 const newChildren = removeNodeFromTree(node.children, targetKey);
@@ -48,11 +46,12 @@ function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType)
         <>
             <Tooltip title="重命名">
                 <DeleteIcon className="font-16" onClick={()=>{
+                     const fileName = (item.level == 0 ? name : filePath+"/"+name);
                     const myModal = modal.confirm({
                         title: '删除文件',
                         centered: true,
                         icon: <ExclamationCircleOutlined />,
-                        content: <div style={{marginBottom:"20px"}}>您是否确定要删除 layout/password.html ？此操作无法撤销！</div>,
+                        content: <div style={{marginBottom:"20px"}}>您是否确定要删除 {fileName} ？此操作无法撤销！</div>,
                         footer: [
                             <Flex gap={12} justify="flex-end">
                                 <DefaultButton key="cancel" onClick={() => { myModal.destroy(); } } text={"取消"} />
@@ -62,7 +61,7 @@ function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType)
                                         templateId: codeEditor.templateInfo?.id??"",
                                         languagesId: codeEditor.languageId??"",
                                         mode: codeEditor.mode,
-                                        fileName: filePath+"/"+name,
+                                        fileName: fileName,
                                         forceDelete:false,
                                     }).then(res=>{
                                         if(res.code == 0){

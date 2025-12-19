@@ -203,7 +203,7 @@ function ArticlesListCard() {
         <Scoped>
             <Card>
                 {/*  */}
-                <Flex className="inquire" justify="space-between">
+                <Flex wrap="wrap" gap={16} className="inquire" justify="space-between">
                   <Flex gap={16}>
                     <SearchInput placeholder="输入文章标题/内容/url进行搜索" style={{width:"320px"}}  />
                     <DefaultSelect style={{width:"120px"}} value="发布状态" options={[

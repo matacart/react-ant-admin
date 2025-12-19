@@ -61,7 +61,7 @@ function Index(){
     const items: TabsProps['items'] = [
         {
           key: '1',
-          label: '已启用店铺（'+shopsManagement.enableCount+'）',
+          label: `已启用店铺（${shopsManagement.enableCount??0}）`,
           children: <StoresCard rolesList={rolesList} employeeList={employeeList} />,
         },
         {

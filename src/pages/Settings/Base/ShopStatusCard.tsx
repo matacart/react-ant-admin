@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import baseInfoStore from "@/store/setUp/baseInfoStore"
 import { observer } from "mobx-react-lite";
+import DefaultSelect from "@/components/Select/DefaultSelect";
 
 
 function shopStatusCard() {
@@ -19,7 +20,7 @@ function shopStatusCard() {
                     <Form.Item
                         label="商店状态"
                         >
-                        <Select
+                        <DefaultSelect
                             defaultValue={baseInfoStore.storeStauts}
                             style={{ width: 256 }}
                             onChange={(value)=>baseInfoStore.setStoreStauts(value)}

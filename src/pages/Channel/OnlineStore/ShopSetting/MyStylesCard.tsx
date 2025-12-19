@@ -158,10 +158,10 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                     </div>
                     <div>
                       <Flex gap={12}>
-                        <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}${previewDomain}?preview=1&themeId=${shopSetting?.templateInstanceUsing?.template_id}`,'_blank')} />
+                        <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.handle && `https://${cookie.load("domain").handle}${previewDomain}?preview=1&themeId=${shopSetting?.templateInstanceUsing?.template_id}`,'_blank')} />
                         <ButtonDropdownSecondary menu={{items:[
                           {
-                            label: <a onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}.v.matacart.com`,'_blank')}>查看店铺</a>,
+                            label: <a onClick={()=>window.open(cookie.load("domain")?.handle && `https://${cookie.load("domain").handle}${previewDomain}`,'_blank')}>查看店铺</a>,
                             key: '1',
                           },
                           {
@@ -273,7 +273,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                           </div>
                         </Flex>
                         <Flex gap={12}>
-                          <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.second_domain && `https://${cookie.load("domain").second_domain}${previewDomain}?preview=1&themeId=${template.template_id}`,'_blank')} />
+                          <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.handle && `https://${cookie.load("domain").handle}${previewDomain}?preview=1&themeId=${template.template_id}`,'_blank')} />
                           <ButtonDropdownSecondary 
                             menu={{
                               items:[

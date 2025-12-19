@@ -14,13 +14,11 @@ import defaultSettings from '../config/defaultSettings';
 
 const loginPath = '/user/signIn';
 // 在 app.tsx 文件顶部添加导入语句
-
 import "nprogress/nprogress.css";
 import globalStore from './store/globalStore';
 import SalesChannel from './components/Menu/SalesChannel';
 import Header from './components/Header/Header';
 import MCPaymentHead from './components/Header/MCPaymentHead';
-
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
 // let currentVersion = '';
 
@@ -148,8 +146,9 @@ export async function getInitialState(): Promise<{
         localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res??[]));
       })
       // 获取币种列表
-      getCurrenciesList().then(res=>{
-        localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res??[]));
+      getCurrenciesList(1,100).then(res=>{
+        res.code == 0 && localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res.data??[]));
+        
       })
       return msg.data // 返回用户信息
     } catch (error) {
@@ -178,7 +177,7 @@ export async function getInitialState(): Promise<{
   let access_token = cookie.load('access_token')
   if (!access_token) {
     let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
-    getAccessToken().then((res) => {
+    getAccessToken().then((res:any) => {
       if(window.location.hostname.startsWith("localhost")){
         cookie.save("access_token",res.access_token,{path:"/"})
       }else{
@@ -295,20 +294,25 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         {dom}
       </Link>
       }
-      return <Link to={item.path}>
+      return <Link to={item.path as string}>
         {dom}
       </Link>
     },
     // 修改菜单数据
     menuDataRender: (menuData) => {
       if(stores.slice(0,8) == "/stores/"){
-        return menuData.filter(item => item.path.slice(0,8) == "/stores/" )
+        return menuData.filter((item:any) => item.path.slice(0,8) == "/stores/" )
       }else{
-        return menuData.filter(item => item.path.slice(0,8) !== "/stores/" )
+        return menuData.filter((item:any) => item.path.slice(0,8) !== "/stores/" )
       }
     },
+    // 
     menuProps: {
-      // className:stores.slice(0,8) == "/stores/"?"":"mc-menu-item"
+      className: 'my-custom-menu', // 为菜单容器添加自定义类名
+      style: { 
+        height: '100%', 
+        overflowY: 'auto',
+      }
     },
     headerRender: () => {
       if(stores.slice(19,28) == "mcpayment"){
@@ -342,7 +346,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
 };
 
 // 运行时路由配置
-export function patchRoutes({ routes, routeComponents }) {
+export function patchRoutes({ routes, routeComponents }:any) {
   console.log('patchRoutes', routes, routeComponents);
   Object.keys(routes).forEach(key => {
     const icon = routes[key];

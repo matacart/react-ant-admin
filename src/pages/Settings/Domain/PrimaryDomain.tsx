@@ -9,25 +9,23 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 
 function PrimaryDomain() {
 
-    useEffect(()=>{
-    },[])
-    
-  return(
-    <Scoped>
-        <Card>
-            <Flex justify="space-between">
-                <div>
-                    <div className="color-242833">主域名</div>
-                    <Flex align="center" className="font-12 color-474F5E"><span style={{marginRight:"4px"}}>{"https://"+domain.domain?.domain_name}</span><SuccessTag text="已连接" /></Flex>
-                </div>
-                <PrimaryButton type="primary" text="管理域名" onClick={()=>history.push("/settings/domain/manage")} />
-            </Flex>
-            <Divider className="divider" />
-            <div>多域名管理  (0/20)</div>
-        </Card>
-    </Scoped>
-    
-  );
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+
+    return(
+        <Scoped>
+            <Card>
+                <Flex justify="space-between">
+                    <div>
+                        <div className="color-242833">主域名</div>
+                        <Flex align="center" className="font-12 color-474F5E"><span style={{marginRight:"4px"}}>{"https://" + (domain.domain?.domain_primary ? domain.domain?.domain_primary : `${domain.domain.handle}${previewDomain}`)}</span><SuccessTag text="已连接" /></Flex>
+                    </div>
+                    <PrimaryButton type="primary" text="管理域名" onClick={()=>history.push("/settings/domain/manage")} />
+                </Flex>
+                <Divider className="divider" />
+                <div>多域名管理  (0/20)</div>
+            </Card>
+        </Scoped>
+    );
 }
 
 export default observer(PrimaryDomain);

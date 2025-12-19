@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import cookie from 'react-cookies';
 import categories from "@/store/product/categories";
-import SEOEdit from "@/pages/components/SEOEdit";
+import SEOEdit from "@/pages/Components/SEOEdit";
 
  function SEOCard(){
 

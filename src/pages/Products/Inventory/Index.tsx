@@ -37,7 +37,7 @@ function Index(){
         <div className='create-warp-flex' style={{ width: "100%" }}>
           <div className="create-warp">
             <div className='create-title'>
-              <Flex className='create-title-left'>
+              <Flex align='center' className='create-title-left'>
                 <h3>库存</h3>
                 <Flex className='cursor-pointer'>
                   <div style={{marginRight:"6px"}}><ImportOutlined /></div>
@@ -95,7 +95,9 @@ const Scoped = styled.div`
               font-size: 24px;
               font-weight: 600;
               margin:0;
+              line-height: 32px;
               margin-right: 16px;
+              -webkit-box-flex: 1;
             }
           }
           .create-title-right{

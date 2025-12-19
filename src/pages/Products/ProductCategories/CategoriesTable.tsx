@@ -32,7 +32,7 @@ interface TableParams {
 
 function CategoriesTable() {
 
-  // 预览域名
+  // 预览域名默认
   const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
   const [loading, setLoading] = useState(false);
@@ -153,10 +153,12 @@ function CategoriesTable() {
             <ButtonIcon>
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    if(cookie.load("domain").second_domain && cookie.load("domain").second_domain!==""){
-                      window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/collections/${record.handle}`)
+                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+                      window.open(`https://${cookie.load("domain").domain_primary}/collections/${record.handle}`)
+                    }else if(cookie.load("domain").handle){
+                      window.open(`https://${cookie.load("domain").handle}${previewDomain}/collections/${record.handle}`)
                     }else{
-                      message.error("请先设置店铺")
+                      message.error("店铺缺少handle")
                     }
                   }}>
                   <Tooltip title="预览">

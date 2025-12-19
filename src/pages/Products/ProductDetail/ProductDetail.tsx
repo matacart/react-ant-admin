@@ -133,7 +133,7 @@ function ProductDetail() {
         {
             key: '8',
             label: (
-              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+domainCookie?.domain_name+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
+              <a target="_blank" rel="noopener noreferrer" href={"https://www.linkedin.com/shareArticle?url=https%3A%2F%2F"+domainCookie?.primaryDomain+"%2F"+product.productInfo.title.replace(new RegExp(" ","gm"),"-")+`-p`+product.productInfo.id+`.html`+"%3Futm_source%3DLinkedin%26utm_medium%3Dproduct-links%26utm_content%3Dweb"}>
                 <div style={{display:"flex",alignItems:"center"}}><img src="/icons/ShareLinkedin.4a174.svg"/><span style={{marginLeft:"8px"}}>Linkedin</span></div>
               </a>
             ),
@@ -159,9 +159,13 @@ function ProductDetail() {
     // 删除
     function productDel(id:any){
         return deleteProduct(id).then(res=>{
-            if(res.code==0)message.success('删除成功');
-            else message.error('noooo');
-            navigate('/products/index')
+            if(res.code==0){
+                message.success('删除成功');
+                navigate('/products/index');
+            }else{
+                message.error('noooo');
+            }
+            
         })
     }
     // 设置产品状态
@@ -361,11 +365,24 @@ function ProductDetail() {
                                 }} />
                                 <div style={{borderRight:"1px solid #d7dbe7",height:"36px"}}></div>
                                 <DefaultButton text={"复制"} onClick={()=>{
-                                    copy(`https://${cookie.load("domain").second_domain}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                    message.success('复制成功')
+                                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+                                        window.open(`https://${cookie.load("domain").domain_primary}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                        message.success('复制成功')
+                                    }else if(cookie.load("domain").handle){
+                                        window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                        message.success('复制成功')
+                                    }else{
+                                        message.error("店铺缺少handle")
+                                    }
                                 }} />
                                 <DefaultButton text={"预览"} onClick={()=>{
-                                    window.open(`https://${cookie.load("domain").second_domain}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+                                        window.open(`https://${cookie.load("domain").domain_primary}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                    }else if(cookie.load("domain").handle){
+                                        window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                    }else{
+                                        message.error("店铺缺少handle")
+                                    }
                                 }} />
                                 <ButtonDropdownSecondary text='分享' menu={{items:items}} trigger={['click']} />
                             </Flex>

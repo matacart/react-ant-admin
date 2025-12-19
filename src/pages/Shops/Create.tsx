@@ -1,13 +1,14 @@
-import { Divider, Form, Cascader, Input, Select, Space,Button, message } from 'antd'
-import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone } from '@ant-design/icons'
+import { Divider, Form, message } from 'antd'
+import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
-import { createStore, currentUserStatus } from '@/services/y2/api'
 import styled from 'styled-components'
-import userInfo from '@/store/userInfo'
-import { useNavigate } from 'react-router-dom'
 import MyInput from '@/components/Input/MyInput'
 import DefaultSelect from '@/components/Select/DefaultSelect'
 import PrimaryButton from '@/components/Button/PrimaryButton'
+import { createStore } from '@/services/y2/api'
+import { history } from '@umijs/max'
+import globalStore from '@/store/globalStore'
+import { useSleep } from '@/hooks/customHooks'
 
 
 interface SelectListType {
@@ -17,7 +18,10 @@ interface SelectListType {
 
 export default function Create() {
 
-    const navigate = useNavigate();
+    // 平台信息
+    const previewDomain = JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || "{}")?.preview_domain;
+
+    const sleep = useSleep();
 
     const [form] = Form.useForm();
 
@@ -50,19 +54,28 @@ export default function Create() {
     },[])
 
     const createStoreFinish = ()=>{
-        setLoading(true)
-        createStore(form.getFieldsValue()).then(res=>{
-            if(res.code == 0){
-                message.success("创建成功")
-                currentUserStatus().then(res=>{
-                    userInfo.setUserSession(res)
-                }).catch(err=>{
-                    message.error("请求异常，请刷新")
-                }).finally(()=>{
-                    navigate("/stores/list")
-                })
+        setLoading(true);
+        createStore({
+            languages_id:"2",
+            default_lang:"en-us",
+            country_name:form.getFieldsValue().country,
+            store_name:form.getFieldsValue().name,
+            handle:form.getFieldsValue().handle,
+            domain_primary:`${form.getFieldsValue().handle}.${previewDomain}`,
+            default_currency:form.getFieldsValue().currencie,
+            merchant_email:form.getFieldsValue().email,
+        }).then(async res=>{
+            switch(res.code){
+                case 0:
+                    await sleep(2000);
+                    message.success("创建成功");
+                    history.push(`/stores/list`);
+                    globalStore.setHeadRefresh(!globalStore.headRefresh);
+                    break;
+                case 201:
+                    message.error(res.msg);
+                    break;
             }
-            res.code == 201 && message.error(res.msg)
             setLoading(false)
         })
     }
@@ -108,11 +121,11 @@ export default function Create() {
                                 <div className='desc'>设定一个店铺URL，开启您的MATACART商店</div>
                             </div>
                             <div className='form-item-box'>
-                                <Form.Item name="url" rules={[
+                                <Form.Item name="handle" rules={[
                                     { required: true, message: '请输入网址' },
                                     { min: 4, max: 15 ,message:"URL长度需在4-15个字符之间"}
                                 ]}>
-                                    <MyInput className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>.v.hdyshop.cn</div>} />
+                                    <MyInput className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>{previewDomain}</div>} />
                                 </Form.Item>
                             </div>
                         </div>

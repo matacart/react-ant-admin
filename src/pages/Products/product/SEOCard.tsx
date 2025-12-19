@@ -2,7 +2,7 @@ import { Card, Flex } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import cookie from 'react-cookies';
-import SEOEdit from "@/pages/components/SEOEdit";
+import SEOEdit from "@/pages/Components/SEOEdit";
 import product from "@/store/product/product";
 
  function SEOCard(){

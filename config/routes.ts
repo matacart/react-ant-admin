@@ -532,12 +532,12 @@ export default  [
   {
     path: '/stores/merchantApplication',
     menuRender: false,
-    component: './Shops/merchant-application/MerchantApplication',
+    component: './Shops/MerchantApplication/MerchantApplication',
   },
   {
     path: '/stores/merchantCertification',
     menuRender: false,
-    component: './Shops/merchant-application/MerchantCertification',
+    component: './Shops/MerchantApplication/MerchantCertification',
   },
   {
     path: '/stores/create',

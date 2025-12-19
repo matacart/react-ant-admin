@@ -34,6 +34,8 @@ export default function Register(props: Props) {
 
     const navigate = useNavigate();
 
+    const [countdown, setCountdown] = useState(0); // 倒计时状态
+
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
     const [captchaIsLoding, setCaptchaIsLoading] = useState(false);
@@ -77,9 +79,18 @@ export default function Register(props: Props) {
             }] : []
         );
 
+    // 倒计时效果
     useEffect(() => {
-        
-    }, []);
+        let timer: NodeJS.Timeout;
+        if (countdown > 0) {
+            timer = setTimeout(() => {
+                setCountdown(countdown - 1);
+            }, 1000);
+        }
+        return () => {
+            if (timer) clearTimeout(timer);
+        };
+    }, [countdown]);
 
     return (
         <Scoped>
@@ -106,9 +117,9 @@ export default function Register(props: Props) {
                                 navigate('/user/signIn');
                                 return;
                             }else if(msg.status == -1){
-                                message.error('手机号已被注册');
+                                message.error(msg.msg);
+                                return;
                             }
-                            message.error(intl.formatMessage({id: 'pages.captcha.wrong', defaultMessage: '验证码错误'}));
                         } catch (error) {
                             const defaultLoginFailureMessage = intl.formatMessage({
                                 id: 'pages.register.failure',
@@ -221,31 +232,27 @@ export default function Register(props: Props) {
                         />
                         <Button
                             loading={captchaIsLoding}
+                            disabled={countdown > 0} // 倒计时期间禁用按钮
                             style={{
                                 height: '51px',
                                 flex: 1
                             }}
                             onClick={async () => {
                                 // InternationalAreaCode
+                                setCaptchaIsLoading(true);
                                 const result = await getFakeCaptcha(phone,phoneCode,"reg");
-                                // console.log(phone,InternationalAreaCode);
-                                // const result = await axios({
-                                //     headers: {
-                                //         'Content-Type': 'application/json;charset=utf-8'
-                                //     },
-                                //     url:`/h-module-sendSmsCode.html?base_name=${phone}&queue_type=reg&area_code=${InternationalAreaCode}&service=xht&from=matacart`
-                                // })
-                                // console.log(result);
                                 if (!result) {
                                     message.error(intl.formatMessage({
                                         id: 'pages.getcaptcha.failure'
                                     })); return;
                                 } else {
-
+                                    // 
                                     if(result.status){
-                                        message.success(intl.formatMessage({
-                                            id: 'pages.getcaptcha.success'
-                                        }));
+                                        // 获取验证码成功
+                                        setCountdown(60); // 启动60秒倒计时
+                                        // message.success(intl.formatMessage({
+                                        //     id: 'pages.getcaptcha.success'
+                                        // }));
                                     }else if(result.status == 0){
                                         message.error("手机号已被注册")
                                     }
@@ -253,7 +260,7 @@ export default function Register(props: Props) {
                                 setCaptchaIsLoading(false);
                             }}
                         >
-                            <FormattedMessage id={'pages.getCaptcha'} />
+                            {countdown > 0 ? `${countdown}s` : <FormattedMessage id={'pages.getCaptcha'} />}
                         </Button>
                     </div>
                 </Form.Item>

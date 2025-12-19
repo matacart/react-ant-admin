@@ -1,12 +1,18 @@
 import { action, makeAutoObservable, observable } from "mobx";
 import cookie from 'react-cookies';
 
-
+// 全局状态
 
 class globalStore {
 
     constructor() {
         makeAutoObservable(this)
+    }
+    
+    // 刷新头部
+    headRefresh = false;
+    setHeadRefresh(value:boolean){
+        this.headRefresh = value;
     }
 
     platformCategory = []

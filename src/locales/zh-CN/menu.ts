@@ -63,7 +63,7 @@ export default {
 
   'menu.stores.create': '创建店铺',
   //
-  'menu.search.stores': "搜索店铺名称/子域名/主域名",
+  'menu.search.stores': "搜索店铺名称/主域名/handle/id",
   'menu.stores.running': "营业中",
   'menu.stores.default': "已打烊",
   "menu.stores.stop": "已停用",

@@ -1,7 +1,7 @@
 import { Card } from "antd"
 import styled from "styled-components"
 import cookie from 'react-cookies';
-import SEOEdit2 from "@/pages/components/SEOEdit2";
+import SEOEdit2 from "@/pages/Components/SEOEdit2";
 import articles from "@/store/channel/articles/articles";
 
 

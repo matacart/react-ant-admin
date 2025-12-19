@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import CheckUpdates from "../RightContent/CheckUpdates";
 import cookie from 'react-cookies';
 import { useIntl } from "@umijs/max";
+import globalStore from "@/store/globalStore";
 
 
 function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialState:any}){
@@ -60,21 +61,11 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                     store_name: "YIKEC",
                     timezone: "Pacific/Honolulu"
                 }), { path: '/' });
-
             }
         }).catch(()=>{
             setHeight(60)
         })
-        // 获取商品属性类型
-        // getOptionType().then((res:any)=>{
-        //     if(res.code == 0){
-        //       sessionStorage["productOptionType"] = JSON.stringify(res.data)
-        //     }else{
-        //     }
-        // }).catch(err=>{
-        //     console.log("获取商品类型失败")
-        // })
-    },[])
+    },[globalStore.headRefresh])
 
 
     return(

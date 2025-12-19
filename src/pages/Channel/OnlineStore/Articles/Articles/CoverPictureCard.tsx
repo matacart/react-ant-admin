@@ -1,5 +1,5 @@
 import { AddIcon } from "@/components/Icons/Icons";
-import DocumentLibrary from "@/pages/components/DocumentLibrary";
+import DocumentLibrary from "@/pages/Components/DocumentLibrary";
 import documentLibrary from "@/store/components/documentLibrary";
 import { Card, Flex, Modal, Upload } from "antd"
 import { useState } from "react";

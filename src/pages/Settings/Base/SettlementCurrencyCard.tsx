@@ -1,7 +1,9 @@
+import DefaultButton from "@/components/Button/DefaultButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 import InputSearch from "@/components/Search/InputSearch";
 import { getCurrenciesList, setCurrenciesList } from "@/services/y2/api";
 import { CheckOutlined, CloseOutlined, ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, InputNumber, message, Modal, Switch, Table, TableProps } from "antd";
+import { Button, Card, Flex, Form, Input, InputNumber, message, Modal, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import cookie from 'react-cookies';
@@ -102,14 +104,12 @@ function SettlementCurrencyCard() {
         }
     ];
     useEffect(()=>{
-        console.log()
         setCurrency(cookie.load("domain").default_currency)
-        // console.log()
     },[])
-    // 获取
+    // 获取币种
     const getCurrencies = ()=>{
         setLoading(true)
-        getCurrenciesList().then(res=>{
+        getCurrenciesList(1,100).then(res=>{
             if(res.code == 0){
                 setData(res.data)
             }
@@ -130,19 +130,14 @@ function SettlementCurrencyCard() {
                 checked:item.checked
             }
         })
-        // console.log(currenciesList)
         setCurrenciesList(currenciesList).then(res=>{
-            // console.log(data)
             cookie.save('symbolLeft', data.filter(item=>item.is_default == "1")[0].symbol_left, { path: '/' });
-            console.log(data)
             let newDomain = cookie.load("domain")
             if(cookie.load("domain")){
                 const current = data.filter(item=>item.is_default == "1")[0]
-                // console.log(current)
                 newDomain = {
                     ...newDomain,
                     default_currency:current.code,
-                    // defaultLang:current.defaultLang
                 }
                 cookie.save('domain', newDomain, { path: '/' });
                 setCurrency(newDomain.default_currency)
@@ -150,41 +145,41 @@ function SettlementCurrencyCard() {
         })
     }
 
+    // 取消
+    const onCancel = ()=>{
+        setIsOpen(false)
+    }
+
     return (
         <>
             <Card style={{marginBottom:"20px"}}>
                 <Form form={form} layout={"vertical"}>
                     <Form.Item
-                        label="结算货币"
+                        label="默认币种"
                         name="logo"
                         >
                         <div style={{marginBottom:"12px"}}>货币 ({currency ?? "US"})</div>
-                        <Button onClick={()=>{
+                        <DefaultButton text="修改货币" onClick={()=>{
                             setIsOpen(true)
                             getCurrencies()
-                        }}>修改货币</Button>
+                        }} />
                         <div style={{marginTop:"15px"}}>设置系统默认货币格式，<a>详细了解<ExportOutlined style={{position:"relative",top:"1px",left:"4px"}} /></a></div>
                     </Form.Item>
-                    {/* <Form.Item
-                        label="自定义货币格式"
-                        name="name"
-                        >
-                        <div style={{marginBottom:"8px"}}>未启用则使用系统默认货币格式，详细了解自定义货币格式</div>
-                        <Button onClick={()=>{
-                            setIsOpen(true)
-                            getCurrencies()
-                        }}>编辑格式</Button>
-                    </Form.Item> */}
                 </Form>
             </Card>
-            <Modal open={isOpen} title="自定义货币格式" destroyOnClose width={860} centered onOk={onSubmit} onCancel={()=>{
-                setIsOpen(false)
-                setData([])
-            }}>
+            <Modal open={isOpen} title="自定义货币格式" destroyOnClose width={860} centered
+                onCancel={onCancel}
+                footer={()=>(
+                    <Flex justify="flex-end" gap={12}>
+                        <DefaultButton text="取消" onClick={onCancel} />
+                        <PrimaryButton text="保存" onClick={onSubmit} />
+                    </Flex>
+                )}
+            >
                 <Scoped>
                     <InputSearch placeholder="搜索币种名称" />
-                    <div className="table_box">
-                        <Table<DataType> columns={columns} loading={loading} dataSource={data} pagination={false} />
+                    <div className="table_box" >
+                        <Table<DataType> style={{maxHeight:"calc(100vh - 280px)"}} columns={columns} loading={loading} dataSource={data} pagination={false} />
                     </div>
                 </Scoped>
             </Modal>
@@ -200,7 +195,6 @@ const Scoped = styled.div`
         margin-top: 12px;
         border: 1px solid #eef1f7;
         border-radius: 4px;
-        max-height: 680px;
         overflow-y: auto;
     }
 `
