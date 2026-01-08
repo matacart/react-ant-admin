@@ -7,26 +7,11 @@ import styled from "styled-components"
 
 import documentLibrary from "@/store/components/documentLibrary"
 
-
-// 在组件顶部定义接口
-interface GroupItem{
-    groupId:string,
-    groupName:string
-}
 interface FileListStatus {
     [key: string]: boolean;
 }
 
-
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-const getBase64 = (file: FileType): Promise<string> =>
-    new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-});
 
 function DocumentLibraryCard({groupId}:{groupId:string}) {
 
@@ -45,7 +30,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
     // 搜索框
     const inputRef = useRef<InputRef>(null);
     const [searchText,setSearchText] = useState('');
-
     const onChange: PaginationProps['onChange'] = (page,pageSize) => {
         setCurrentPage(page);
         setPageSize(pageSize);
@@ -72,7 +56,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
             }
         })
     };
-
     // 搜索
     const handleSearch = (value: string) => {
         setSearchText(value);
@@ -94,7 +77,7 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
         })
     };
 
-
+    // 分组文件
     useEffect(()=>{
         setLoading(true)
         getFileList({
@@ -123,7 +106,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
     const [previewImage, setPreviewImage] = useState('');
 
     const props: UploadProps = {
-
         // 手动上传
         beforeUpload(file) {
             console.log(file);
@@ -136,7 +118,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
                     // uid --- src  
                     message.success("上传成功", 1)
                     console.log(res.data.data)
-
                     let newFileImgList = [...fileImgList]
                     // 由于格式不一样
                     newFileImgList.unshift({
@@ -148,9 +129,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
                         url:res.data.data.savepath,
                     })
                     setFileImgList(newFileImgList)
-
-                    console.log(fileImgList)
-
                     let newFileListStatus = {...fileListStatus}
                     newFileListStatus[res.data.data.id]=false
                     setFileListStatus(newFileListStatus)
@@ -164,7 +142,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
         }
     };
 
-
     // 选择图片 --- 增减
     const handSelectImg = (imgObj,index:number)=>{
         let newFileListStatus = {...fileListStatus}
@@ -176,7 +153,8 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
             }
         }
         setFileListStatus(newFileListStatus)
-        documentLibrary.setSelectFileList([imgObj])
+        // 存选择图片
+        newFileListStatus[imgObj.id] ? documentLibrary.setSelectFileList([imgObj]) : documentLibrary.setSelectFileList([])
     }
 
     
@@ -242,7 +220,6 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
                                                 setPreviewImage(item.url)
                                                 setPreviewOpen(true)
                                                 e.stopPropagation()
-
                                             }} style={{pointerEvents:"auto",zIndex:"99",alignItems:"center",width:"40px",height:"40px",borderRadius:"50%",background:"rgba(0, 0, 0, 0.5)",cursor:"pointer"}}>
                                                 <img style={{width:"20px",marginTop:"9px"}} src="/icons/Preview.svg"></img>
                                             </div>
@@ -289,7 +266,7 @@ const Scoped = styled.div`
     .cardContent{
         overflow-y: auto;
         overflow-x:hidden;
-        height: 620px;
+        height: 520px;
         .item_card_box_upload{
             height: 160px;
             border: 2px dashed rgba(0, 0, 0, 0.2);
@@ -312,9 +289,6 @@ const Scoped = styled.div`
         .item_card_box_upload:hover{
             border: 2px dashed #356dff;
         }
-
-        
-
         .item_card_box{
             height: 160px;
             text-align: center;

@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Flex, Form, FormInstance, Input, message, Select } from 'antd'
+import { Flex, Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -7,7 +7,7 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import { observer } from 'mobx-react-lite';
 import { createArticles } from '@/services/y2/api';
 import { useSleep } from '@/hooks/customHooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LangSelect from '@/components/Select/LangSelect';
 import articles from '@/store/channel/articles/articles';
@@ -23,10 +23,10 @@ import ThemeTemplate from '../Articles/ThemeTemplate';
 
 function NewArticles(){
 
-    const [loading,setLoading] = useState(false)
-    const sleep = useSleep()
-    // 表单1
-    const titleCardRef = useRef<FormInstance>(null);
+    const [loading,setLoading] = useState(false);
+    const sleep = useSleep();
+
+    const [form] = Form.useForm();
     const setLang = (lang:string)=>{
         articles.setArticles({
             ...articles.articles,
@@ -34,16 +34,9 @@ function NewArticles(){
         })
     }
 
-    // 统一校验方法
-    const validateAll = async () => {
-        try {
-            // 校验标题卡
-            await titleCardRef.current?.validateFields();
-            // 可添加其他表单组件的校验
-            // await otherFormRef.current?.validateFields();
-            console.log(articles)
-            // 全部校验通过后提交
-            setLoading(true)
+    const submit = ()=>{
+        form.validateFields().then(async values => {
+            setLoading(true);
             createArticles(articles.articles).then(async res=>{
                 await sleep(2000)
                 message.success('创建成功')
@@ -52,17 +45,13 @@ function NewArticles(){
                 message.error('创建失败')
             }).finally(()=>{
                 setLoading(false)
-            })
-        } catch (error) {
-            // console.error('Validation failed:', "表单验证未通过");
-        }
-    };
+            }) 
+        })
+    }
 
     useEffect(()=>{
         articles.reset()
     },[])
-    
-
 
     return (
         <Scoped>
@@ -85,7 +74,7 @@ function NewArticles(){
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <TitleCard ref={titleCardRef} />
+                            <TitleCard form={form} />
                             <ContentCard />
                         </div>
                         <div className='mc-layout-extra'>
@@ -100,7 +89,7 @@ function NewArticles(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <PrimaryButton loading={loading} onClick={()=>{validateAll()}} text='创建' />
+                        <PrimaryButton loading={loading} onClick={submit} text='创建' />
                     </div>
                 </div>
             </div>

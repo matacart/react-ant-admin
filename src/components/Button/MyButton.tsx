@@ -1,6 +1,4 @@
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, ButtonProps, ConfigProvider } from "antd";
-import styled from "styled-components";
 
 interface MyButtonProps extends ButtonProps {
     text: string;

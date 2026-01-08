@@ -1,11 +1,7 @@
-import { Button, Drawer, Form, Input, Tag } from "antd";
+import { Drawer, Form } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import globalStore from "@/store/globalStore";
 import { observer } from "mobx-react-lite"
-import { lastIndexOf, set } from "lodash";
-// 
-import cookie from 'react-cookies';
 import DefaultInput from "@/components/Input/DefaultInput";
 import MyTextArea from "@/components/Input/MyTextArea";
 import PrimaryButton from "@/components/Button/PrimaryButton";

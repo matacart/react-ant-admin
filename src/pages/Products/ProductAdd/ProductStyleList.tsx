@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space, Tooltip, Typography } from 'antd';
-import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
 import { ExclamationCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
@@ -40,17 +39,17 @@ function ProductStyleList (props:any){
   const [copyStyles, setCopyStyles] = useState<StyleItem[]>([]);
 
   const [modal, contextHolder] = Modal.useModal();
-  function generateSku(attrValue){
+  function generateSku(attrValue:any){
     // 开始构建sku 
     // let attrValue: any[] = []
     // skuAttribute.map((item) => attrValue.push(item.option_values_name)) // 获取所有属性名称 => [['S','M'], ['白','黑']]
     let skus: any[] = []
     // 笛卡尔积算法（注意，我们的reduce没有指定第二个参数，则第一次循环中，col是数组第一位，set是数组第二位）
-    skus = attrValue.reduce((col: any[], set) => {
+    skus = attrValue.reduce((col: any[], set:any) => {
       let res: any[] = []
       // 对于每个属性值集合，依次与当前已有的结果集做笛卡尔积
       col.forEach((c) => {
-        set.forEach((s) => {
+        set.forEach((s:any) => {
           // 将两个属性值合并为一个字符串，并存入结果集中
           let t = c.option_values_name + ',' + s.option_values_name
           let ids = c.option_values_id + ',' + s.option_values_id
@@ -66,8 +65,8 @@ function ProductStyleList (props:any){
       return res
     })
     if(attrValue.length == 1){
-      let t = [];
-      attrValue[0].forEach(element => {
+      let t:any = [];
+      attrValue[0].forEach((element:any) => {
         t.push({
           option_values_name:element.option_values_name,
           option_values_id:element.option_values_id,
@@ -80,11 +79,10 @@ function ProductStyleList (props:any){
   }
 
   useEffect(() => {
-    console.log('props',props.style)
+    // console.log('props',props.style)
     const generateStyles = async (sku:any) => {
       setIsLoading(true);
-      // 
-      const newStyles = sku.map((item, index) => ({
+      const newStyles = sku.map((item:any, index:number) => ({
           image: '',
           option_values_ids:item.option_values_id,
           option_values_names:item.option_values_name,
@@ -111,29 +109,29 @@ function ProductStyleList (props:any){
       if(product.variants.length<newStyles.length){
         // 增加
         temp.forEach((res,index) => {
-          product.variants.forEach(element => {
+          product.variants.forEach((element:any) => {
             if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
               temp[index] = element
             }
           })
         })
       }else{
-        const commonElements = product.variants.filter(item1 => 
+        const commonElements = product.variants.filter((item1:any) => 
           temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
         )
-        const commonElementsRemove = product.variants.filter(item1 => 
+        const commonElementsRemove = product.variants.filter((item1:any) => 
           !temp.some(item2 => JSON.stringify(item1.option_values_names.split(',').sort()) == JSON.stringify(item2.option_values_names.split(',').sort()))
         )
         console.log('commonElements',commonElements)
         console.log('commonElementsRemove',commonElementsRemove)
         temp.forEach((res,index) => {
-          commonElements.forEach(element => {
+          commonElements.forEach((element:any) => {
             if(JSON.stringify(element.option_values_names.split(',').sort()) == JSON.stringify(res.option_values_names.split(',').sort())){
               temp[index] = element
             }
           })
         })
-        commonElementsRemove.forEach(res=>{
+        commonElementsRemove.forEach((res:any)=>{
           if(res.id!==undefined){
             product.tempVariants.push({...res,status:"9"})
           }
@@ -605,54 +603,55 @@ const handleRemove = (item:any,index:number) => {
   }
 };
 
-const handleHsCodeChange = (recordId: number, value: string) => {
-  // 处理输入框变化的回调，根据id更新styles中的hsCode
-  setStyles(styles.map(style => 
-    style.id === recordId ? { ...style, hsCode: value } : style
-  ));
-};
+// const handleHsCodeChange = (recordId: number, value: string) => {
+//   // 处理输入框变化的回调，根据id更新styles中的hsCode
+//   setStyles(styles.map(style => 
+//     style?.id === recordId ? { ...style, hsCode: value } : style
+//   ));
+// };
 
 // 添加处理国家变化的函数
-const handleCountryChange = (value: string) => {
-  const updatedStyles = styles.map((style) => {
-    if (style.id === selectedRowKeys[0]) {
-      return { ...style, country: value };
-    }
-    return style;
-  });
-  setStyles(updatedStyles);
-};
+// const handleCountryChange = (value: string) => {
+//   const updatedStyles = styles.map((style) => {
+//     if (style.id === selectedRowKeys[0]) {
+//       return { ...style, country: value };
+//     }
+//     return style;
+//   });
+//   setStyles(updatedStyles);
+// };
 // 添加处理税收状态改变的函数
-const handleTaxChange = (id: number, checked: boolean) => {
-  const updatedStyles = styles.map((style) => {
-    if (style.id === id) {
-      return { ...style, tax: checked };
-    }
-    return style;
-  });
-  setStyles(updatedStyles);
-};
+// const handleTaxChange = (id: number, checked: boolean) => {
+//   const updatedStyles = styles.map((style) => {
+//     if (style.id === id) {
+//       return { ...style, tax: checked };
+//     }
+//     return style;
+//   });
+//   setStyles(updatedStyles);
+// };
 // 添加处理重量变化的函数
-const handleWeightChange = (id: number, newValue: number) => {
-  const updatedStyles = styles.map((style) => {
-    if (style.id === id) {
-      return { ...style, weight: Math.max(0, newValue) }; // 确保值不小于0
-    }
-    return style;
-  });
-  setStyles(updatedStyles);
-};
+// const handleWeightChange = (id: number, newValue: number) => {
+//   const updatedStyles = styles.map((style) => {
+//     if (style.id === id) {
+//       return { ...style, weight: Math.max(0, newValue) }; // 确保值不小于0
+//     }
+//     return style;
+//   });
+//   setStyles(updatedStyles);
+// };
 
 // 添加处理重量单位变化的函数
-const handleWeightUnitChange = (id: number, unit: string) => {
-  const updatedStyles = styles.map((style) => {
-    if (style.id === id) {
-      return { ...style, weightUnit: unit };
-    }
-    return style;
-  });
-  setStyles(updatedStyles);
-};
+// const handleWeightUnitChange = (id: number, unit: string) => {
+//   const updatedStyles = styles.map((style) => {
+//     if (style.id === id) {
+//       return { ...style, weightUnit: unit };
+//     }
+//     return style;
+//   });
+//   setStyles(updatedStyles);
+// };
+
   const onSelectChange = (newSelectedRowKeys: number[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
@@ -674,21 +673,19 @@ const handleWeightUnitChange = (id: number, unit: string) => {
     setPreviewOpen(true);
   };
 
-  const handleChange = ({ fileList }: { fileList: any[]; }, id?: number) => {
+  // const handleChange = ({ fileList }: { fileList: any[]; }, id?: number) => {
 
-    console.log(fileList);
+  //   console.log(fileList);
     
-    setFileList(fileList);
+  //   setFileList(fileList);
 
-  };
+  // };
   const handleModifyPrice = () => {
     // 实现更改价格的逻辑
-   
   };
 
   const handleMoreActions = () => {
     // 实现更多操作的逻辑
-   
   };
 
   const handleDelete = () => {
@@ -728,6 +725,7 @@ const handleWeightUnitChange = (id: number, unit: string) => {
   const handleCheckboxChange = (checkedValues: string[]) => {
     setCheckedList(checkedValues);
   };
+
   return (
     <Card
       title={
@@ -768,7 +766,7 @@ const handleWeightUnitChange = (id: number, unit: string) => {
               </Button>
               <Modal
                 title="修改库存"
-                visible={isModalVisible}
+                open={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
               >
@@ -794,20 +792,18 @@ const handleWeightUnitChange = (id: number, unit: string) => {
               <p style={{ margin: 0 }}>基于原库存调整</p>
               </span>
                 <Input
-                
                   width={400}
                 />
               </Modal>
-                    <Select
+                <Select
                   placeholder="更改价格"
                   onClick={handleModifyPrice} style={{marginRight:'10px'}}
                   dropdownMatchSelectWidth={false}
                   dropdownStyle={{ width: 120 }}
                 >
-                  <Option >修改售价</Option>
-                  <Option >修改原价</Option>
-                  <Option >修改成本价</Option>
-                
+                  <Option>修改售价</Option>
+                  <Option>修改原价</Option>
+                  <Option>修改成本价</Option>
                 </Select>
                 <Select
                   placeholder="更多操作"

@@ -1,18 +1,16 @@
 import DefaultAutoComplete from "@/components/AutoComplete/DefaultAutoComplete";
 import AttributesModal from "@/components/Modal/AttributesModal";
 import ProductStyleModal from "@/components/Modal/ProductStyleModal";
-import DefaultSelect from "@/components/Select/DefaultSelect";
 import MySelect from "@/components/Select/MySelect";
-import { addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
+import { addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleValueList } from "@/services/y2/api";
 import product from "@/store/product/product";
-import productStore from "@/store/productStore";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
-import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message, Tooltip, SelectProps, Table, TableProps, Space, Divider, AutoCompleteProps } from "antd";
+import { Card, Checkbox, Button, Tag, Select, Modal, message, Tooltip, SelectProps, AutoCompleteProps } from "antd";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-type TagRender = SelectProps['tagRender'];
+// type TagRender = SelectProps['tagRender'];
 
 const { Option } = Select;
 
@@ -169,7 +167,7 @@ function MultipleStylesCard(props:any) {
     const fetchData = async () => {
     const optionMap = {};
       // 遍历数组
-      product.attributes.forEach(item => {
+      product.attributes.forEach((item:any) => {
         // 获取当前的 option_name
         const optionName = item.option_name;
         // 如果 optionIdMap 中还没有这个 option_name，则创建一个空数组

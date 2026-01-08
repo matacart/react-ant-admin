@@ -101,21 +101,21 @@ export default function Orders() {
           <div className="create-title">
             <Flex className="create-title-left" align='center' gap={12}>
               <h3>
-                {intl.formatMessage({ id: 'orderlist.header' })}
+                {intl.formatMessage({ id: 'orders.orderlist.header' })}
               </h3>
               <div style={{paddingTop:"4px"}}>
                 <Dropdown menu={{ items: aItems }} trigger={["click"]}>
                   <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
                     <ExportOutlined style={{marginRight:"6px"}} />
-                    <Space>{intl.formatMessage({ id: 'orderlist.import.orders' })}</Space>
+                    <Space>{intl.formatMessage({ id: 'orders.orderlist.importOrders' })}</Space>
                   </a>
                 </Dropdown>
               </div>
             </Flex>
             <Flex gap={12}>
-              <DefaultButton onClick={showModal} text={intl.formatMessage({ id: 'order.button.bulkshipping' })} />
-              <DefaultButton onClick={showUpdateTrackingModal} text={intl.formatMessage({ id: 'order.button.updatetrackingnumber' })} />
-              <PrimaryButton text={intl.formatMessage({ id: 'order.button.createorder' })} onClick={() => { history.push('/orders/draftOrders/add') }} />
+              <DefaultButton onClick={showModal} text={intl.formatMessage({ id: 'orders.orderlist.bulkshipping' })} />
+              <DefaultButton onClick={showUpdateTrackingModal} text={intl.formatMessage({ id: 'orders.orderlist.updatetrackingnumber' })} />
+              <PrimaryButton text={intl.formatMessage({ id: 'orders.orderlist.createorder' })} onClick={() => { history.push('/orders/draftOrders/add') }} />
             </Flex>
           </div>
 
@@ -128,7 +128,7 @@ export default function Orders() {
         {/* 模态框：批量发货 */}
         <Modal
           title="批量发货"
-          visible={isModalVisible}
+          open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
           okText="上传并导入"
@@ -172,7 +172,7 @@ export default function Orders() {
         {/* 模态框：更新订单追踪编号 */}
         <Modal
           title="更新订单追踪编号"
-          visible={updateTrackingModalVisible}
+          open={updateTrackingModalVisible}
           onOk={handleUpdateTrackingOk}
           onCancel={handleUpdateTrackingCancel}
           okText="上传并导入"

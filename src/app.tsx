@@ -123,32 +123,20 @@ export async function getInitialState(): Promise<{
       const language = globalStore.language.filter(item => item.id === msg?.data?.languages_id)[0]?.code
       setLocale(language,false);
       // 获取平台信息
-      getPlatformInfo().then((res:any)=>{
-        if (res.data) {
-          localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data));
-          // 动态设置 favicon
-          // updateFavicon(res.data?.faviconUrl);
-        } else {
-          // 使用默认 favicon
-          // updateFavicon('/img/logo.png');
-        }
-      }).catch(error => {
-          // 使用默认 配置
-          // updateFavicon('/img/logo.png');
+      getPlatformInfo().then(res=>{
+        res.code == 0 && localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data));
       });
       // 获取物流服务
-      getShippingcourier().then((res:any)=>{
-        localStorage["MC_DATA_SHIPPING_COURIER"] = JSON.stringify(res.data)
-      }).catch(err=>{
+      getShippingcourier().then(res=>{
+        res.code == 0 && localStorage.setItem("MC_DATA_SHIPPING_COURIER",JSON.stringify(res.data??[]));
       })
       // 获取时区列表
       getTimeZoneList().then(res=>{
-        localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res??[]));
+        res.code == 0 && localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res?.data??[]));
       })
       // 获取币种列表
       getCurrenciesList(1,100).then(res=>{
         res.code == 0 && localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res.data??[]));
-        
       })
       return msg.data // 返回用户信息
     } catch (error) {

@@ -1,3 +1,5 @@
+import DefaultSelect from "@/components/Select/DefaultSelect";
+import MySelect from "@/components/Select/MySelect";
 import { Card, Select } from "antd";
 import styled from "styled-components";
 
@@ -11,14 +13,14 @@ const handleChange = (value: string) => {
 };
 
 
-  export default function ThemeTemplate() {
+export default function ThemeTemplate() {
     return (
         <Scoped>
             <Card>
                 <div className="title">
                     主题模板
                 </div>
-                <Select
+                <DefaultSelect
                     value={'0'}
                     style={{ width: "100%" }}
                     onChange={handleChange}

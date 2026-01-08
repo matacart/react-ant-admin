@@ -198,7 +198,7 @@ export default function MoreSelect(){
 
   return (
     <Scoped ref={Ref}>
-      <DefaultButton text={intl.formatMessage({ id:'order.button.moreselect'})} onClick={()=>setOpen(true)} />
+      <DefaultButton text={"更多筛选"} onClick={()=>setOpen(true)} />
       <Drawer getContainer={()=>Ref.current!} title={<div className="font-20">筛选</div>} styles={{body:{padding:"8px"}}} footer={<Footed/>} closeIcon={false} onClose={onClose} open={open}>
         <ConfigProvider 
           theme={{

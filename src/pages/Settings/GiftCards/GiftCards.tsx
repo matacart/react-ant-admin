@@ -1,6 +1,5 @@
-import { getAddWarehouseList, getStoreInfo } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined, ExportOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
+import { ArrowLeftOutlined } from "@ant-design/icons"
+import { Button, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import baseInfoStore from "@/store/setUp/baseInfoStore"

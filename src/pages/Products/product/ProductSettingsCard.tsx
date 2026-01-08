@@ -1,5 +1,5 @@
 import { ClockCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Checkbox, Flex, Form, InputRef, message, Modal, Select, SelectProps, Switch, Tag, Tooltip } from "antd";
+import { Card, Checkbox, Flex, Form, InputRef, message, Modal, Select, SelectProps, Switch, Tag, Tooltip, Space } from "antd";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -96,7 +96,7 @@ function ProductSettingsCard() {
     // 重量 单位
     const { Option } = Select;
     const selectAfter = (
-        <Select value={product.productInfo.weight_class_id.toString()} onSelect={(value)=>{
+        <Select style={{height:"36px",width:"120px"}} value={product.productInfo.weight_class_id.toString()} onSelect={(value)=>{
             product.setProductInfo({
                 ...product.productInfo,
                 weight_class_id:parseInt(value)
@@ -273,15 +273,18 @@ function ProductSettingsCard() {
                         />
                     </Form.Item>
                     <Form.Item name="weight" label={<>重量</>} >
-                        <FixedHeightInputNumber
-                            onChange={(value:number)=>{
-                                product.setProductInfo({
-                                    ...product.productInfo,
-                                    weight:value || 0
-                                })
-                            }}
-                            addonAfter={selectAfter}
-                        />
+                        <Space.Compact>
+                            <DefaultInputNumber
+                                style={{width:"100%"}}
+                                onChange={(value:number)=>{
+                                    product.setProductInfo({
+                                        ...product.productInfo,
+                                        weight:value || 0
+                                    })
+                                }}
+                            />
+                            {selectAfter}
+                        </Space.Compact>
                     </Form.Item>
                     <Form.Item label={<>商品厂商</>
                     } >

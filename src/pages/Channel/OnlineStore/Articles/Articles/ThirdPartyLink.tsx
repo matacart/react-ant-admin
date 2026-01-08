@@ -4,10 +4,10 @@ import styled from "styled-components"
 import { QuestionCircleOutlined } from "@ant-design/icons"
 import { useState } from "react"
 import articles from "@/store/channel/articles/articles"
+import DefaultInput from "@/components/Input/DefaultInput"
 
 
  function ThirdPartyLink(){
-
 
     const [inputStatus, setInputStatus] = useState<{
         error?: boolean;
@@ -50,17 +50,22 @@ import articles from "@/store/channel/articles/articles"
                     </span>
                 </div>
                 <div className="item between">
-                    <Input status={inputStatus.error ? 'error' : ''} value={articles.articles.jump_button_link??""} onChange={(e) => {
-                         const value = e.target.value.trim();
-                         const { valid, message } = validateUrl(value);
-                         setInputStatus(valid ? {} : { error: true, message });
-                         if (valid) {
-                           articles.setArticles({
-                             ...articles.articles,
-                             jump_button_link: value
-                           });
-                         }
-                    }} />
+                    <DefaultInput 
+                        status={inputStatus.error ? 'error' : ''} 
+                        value={articles.articles.jump_button_link??""}
+                        placeholder="请输入第三方跳转链接"
+                        onChange={(e:any) => {
+                            const value = e.target.value.trim();
+                            const { valid, message } = validateUrl(value);
+                            setInputStatus(valid ? {} : { error: true, message });
+                            if (valid) {
+                                articles.setArticles({
+                                    ...articles.articles,
+                                    jump_button_link: value
+                                });
+                            }
+                        }} 
+                    />
                 </div>
                 {inputStatus.error && (
                     <div style={{ color: '#ff4d4f', marginTop: 8 }}>

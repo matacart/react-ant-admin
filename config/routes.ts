@@ -1,5 +1,3 @@
-import component from "@/locales/bn-BD/component";
-import menu from "@/locales/bn-BD/menu";
 import route from "mock/route";
 import { Children } from "react";
 import { Link, Outlet } from '@umijs/max';
@@ -38,12 +36,11 @@ export default  [
     path: '/',
     redirect: '/home'
   },
-  
   {
     path: '/user',
     name: 'login',
     layout: false,
-    component: './User/index',
+    component: './User/Index',
     routes: [
       {
         path:'signIn',
@@ -65,7 +62,6 @@ export default  [
     path: '/home',
     name: 'home',
     icon: 'HomeOutlined',
-    // access: 'canAdmin',//权限
     component: './Admin/index',
   },
   // 订单
@@ -76,7 +72,7 @@ export default  [
     routes: [  
       {  
         path: 'manages',  
-        name: 'manages',  
+        name: 'ordersManages',  
         component: './Orders/OrderList/index',
       },
       {
@@ -86,37 +82,37 @@ export default  [
       },
       {  
         path: ':orderId',  
-        name: 'orderId',
+        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/OrderDetail', 
       },
       {  
         path: ':orderId/delivery', 
-        name: 'orderId',
+        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/ManualDelivery/ManualDelivery', 
       },
       {  
         path: 'afterSales/launch/:orderId', 
-        name: 'orderId',
+        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/AfterSales/AfterSales', 
       },
       {  
         path: ':orderId/refund', 
-        name: 'orderId',
+        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/Refund/Refund', 
       },
       {  
         path: ':orderId/returns/:returnsId/refund', 
-        name: 'orderId',
+        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/Refund/Refund', 
       },
       {  
         path: ':orderId/productsEdit', 
-        name: 'orderId',
+        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/EditProduct/EditProduct', 
       },
@@ -127,12 +123,14 @@ export default  [
       },
       {
         path: 'draftOrders/add',
-        name: '',
+        name: 'draftOrders',
+        hideInMenu: true,
         component: './Orders/OrderDraft/OrderDraftAdd/OrderDraftAdd',
       },
       {
         path: 'draftOrders/edit/:draftOrderId',
-        name: '',
+        name: 'draftOrders',
+        hideInMenu: true,
         component: './Orders/OrderDraft/OrderDraftEdit/OrderDraftEdit',
       },
     ]    
@@ -149,7 +147,7 @@ export default  [
         },
         {
           path: 'index',
-          name: 'index',
+          name: 'productsList',
           component: './Products/ProductList/index', 
         },
         {
@@ -182,29 +180,29 @@ export default  [
         // 分类
         {
           path: 'categories',
-          name: 'categories',
+          name: 'Collections',
           component: './Products/ProductCategories/Index',
         },
         {
           path: 'categories/new',
-          name: 'categories/new',
+          name: 'categories',
           menu: false,
           component: './Products/ProductCategories/ProductCategoriesAdd/ProductCategoriesAdd',
         },
         {
           path: 'categories/edit/:id/:languageId',
-          name: 'categories/edit',
+          name: 'categories',
           menu: false,
           component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
         },
         {
           path: 'gift-cards',
-          name: 'gift-cards',
+          name: 'giftCards',
           component: './Products/GiftCards/GiftCards',
         },
         {
           path: 'gift-cards/new',
-          name: 'giftCardsNew',
+          name: 'giftCards',
           hideInMenu: true,
           parentKeys: ['/products/gift-cards'],
           component: './Products/GiftCards/GiftCardsAdd/GiftCardsAdd',
@@ -219,7 +217,7 @@ export default  [
   },
   // 客户
   {
-    name: 'customer',
+    name: 'customers',
     path: '/customer',
     icon: 'UserOutlined',
     routes: [
@@ -231,35 +229,35 @@ export default  [
       },
       {
         path: 'management',
-        name: 'management',
+        name: 'customerManages',
         component: './Customer/CustomerManagement/CustomerManagement',
       },
       {
         path: 'management/subdivision/create/:id',
-        name: 'management/subdivision/create/:id',
+        name: 'customerManages',
         hideInMenu: true,
         component: './Customer/CustomerManagement/SubdivisionCreate/SubdivisionCreate',
       },
       {
         path: 'management/:customerId',
-        name: 'management/:customerId',
+        name: 'customerManages',
         menu: false,
         component: './Customer/CustomerManagement/CustomerDetail/CustomerDetail',
       },
       {
         path: 'management/operate/add',
-        name: 'management/operate/add',
+        name: 'customerManages',
         menu: false,
         component: './Customer/CustomerManagement/CustomerAdd/CustomerAdd',
       },
       {
         path: 'persona/list',
-        name: 'persona/list',
+        name: 'segments',
         component: './Customer/Subdivide/Subdivide',
       },
       {
         path: 'persona/detail',
-        name: 'personaDetail',
+        name: 'segments',
         hideInMenu: true,
         parentKeys: ['/customer/persona/list'],
         component: './Customer/Subdivide/SubdivideAdd/SubdivideAdd',
@@ -267,7 +265,7 @@ export default  [
 
       {
         path: 'persona/all',
-        name: 'persona/all',
+        name: 'segments',
         hideInMenu: true,
         parentKeys: ['/customer/persona/list'],
         component: './Customer/Subdivide/ClientPortrait/ClientPortrait',
@@ -280,8 +278,9 @@ export default  [
   // 折扣
   {
     path: '/discount' ,
-    name: 'discount',
-    icon: 'TagOutlined'
+    name: 'discounts',
+    icon: 'TagOutlined',
+    component: './Discount/Discount'
   },
   // 营销
   {
@@ -291,27 +290,30 @@ export default  [
     routes:[
       {
         path: 'overview',
-        name: 'overview',
+        name: 'shopMarketing',
+        component: './Discount/Discount'
       },
       {
         path: 'campaigns',
         name: 'campaigns',
+        component: './Discount/Discount'
       },
       {
         path: 'automation',
         name: 'automation',
+        component: './Discount/Discount'
       }
     ]
   },
   //分析
   {
     path: 'analyse',
-    name: 'analyse',
+    name: 'analytics',
     icon: 'PieChartOutlined',
     routes: [
       {
         path: 'center',
-        name: 'center',
+        name: 'dataAnalyse',
         component: './Analyse/Center/Center'
       },
       {
@@ -326,7 +328,7 @@ export default  [
       },
       {
         path: 'realtime',
-        name: 'realtime',
+        name: 'realtimeAnalyse',
         component:'./Analyse/Report/Report'
       },
       {
@@ -339,19 +341,19 @@ export default  [
   // 采购
   {
     path: 'purchase_orders',
-    name: 'purchase_orders',
+    name: 'purchase',
     icon:"/icons/menu/cg.svg",
     component: './Products/PurchaseOrder/Index',
   },
   {
     path: 'purchase_orders/:id',
-    name: 'purchase_orders/:id',
+    name: 'purchase',
     component: './Products/PurchaseOrder/old/OldPurchaseOrder',
     menu: false,
   },
   {
     path: 'purchase_orders/new',
-    name: 'purchase_orders/new',
+    name: 'purchase',
     component: './Products/PurchaseOrder/new/NewPurchaseOrder',
     menu: false,
   },
@@ -372,12 +374,10 @@ export default  [
         component: './Products/Transfers/BlankPage',
       },
     ]
-    // component: './Products/Inventory/BlankPage',
   },
-
   {
     path: 'app-store',
-    name: 'app-store',
+    name: 'appStore',
     component: './AppStore/AppStore/AppStore',
     // component: './Products/Inventory/BlankPage',
   },
@@ -403,63 +403,63 @@ export default  [
     hideInMenu: true,
     component: './AppStore/AppStore/CustomAppConfigSetting/CustomAppConfigSetting',
   },
-  {
-    path: 'order_invoice_customization',
-    name: 'orderInvoiceCustomization',
-    icon: 'PieChartOutlined',
-    component: './AppStore/OrderInvoiceCustomization/OrderInvoiceCustomization',
-    routes:[
-      {
-        path: '',
-        redirect: 'orderList',
-      },
-      {
-        path: 'orderList',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/OrderList/OrderList',
-      },
-      {
-        path: 'orderPdfPreview/:id',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoice/PrintOrderInvoice',
-      },
-      {
-        path: 'orderPdfPreview/picking/:id',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoicePicking/PrintOrderInvoicePicking',
-      },
-      {
-        path: 'draftOrderList',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/DraftOrderList/DraftOrderList',
-      },
-      {
-        path: 'orderPdfPreview/draft/:id',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/DraftOrderList/PrintOrderInvoiceDraft/PrintOrderInvoiceDraft',
-      },
-      {
-        path: 'templateManage',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/TemplateManage/TemplateManage',
-      },
-      {
-        path: 'basicConfig',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/BasicConfig/BasicConfig',
-      },
-      {
-        path: 'orderPdfDownload',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/OrderPdfDownload/OrderPdfDownload',
-      },
-      {
-        path: 'email',
-        hideInMenu: true,
-        component: './IFrame/OrderTicketAssistant/Email/Email',
-      }
-    ]
-  },
+  // {
+  //   path: 'order_invoice_customization',
+  //   name: 'orderInvoiceCustomization',
+  //   icon: 'PieChartOutlined',
+  //   component: './AppStore/OrderInvoiceCustomization/OrderInvoiceCustomization',
+  //   routes:[
+  //     {
+  //       path: '',
+  //       redirect: 'orderList',
+  //     },
+  //     {
+  //       path: 'orderList',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/OrderList/OrderList',
+  //     },
+  //     {
+  //       path: 'orderPdfPreview/:id',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoice/PrintOrderInvoice',
+  //     },
+  //     {
+  //       path: 'orderPdfPreview/picking/:id',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoicePicking/PrintOrderInvoicePicking',
+  //     },
+  //     {
+  //       path: 'draftOrderList',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/DraftOrderList/DraftOrderList',
+  //     },
+  //     {
+  //       path: 'orderPdfPreview/draft/:id',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/DraftOrderList/PrintOrderInvoiceDraft/PrintOrderInvoiceDraft',
+  //     },
+  //     {
+  //       path: 'templateManage',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/TemplateManage/TemplateManage',
+  //     },
+  //     {
+  //       path: 'basicConfig',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/BasicConfig/BasicConfig',
+  //     },
+  //     {
+  //       path: 'orderPdfDownload',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/OrderPdfDownload/OrderPdfDownload',
+  //     },
+  //     {
+  //       path: 'email',
+  //       hideInMenu: true,
+  //       component: './IFrame/OrderTicketAssistant/Email/Email',
+  //     }
+  //   ]
+  // },
   
   {
     path: 'channel',
@@ -494,8 +494,29 @@ export default  [
         component: './Channel/OnlineStore/Articles/Edit/EditArticles',
       },
       {
+        path: 'blogs',
+        name: 'articles',
+        parentKeys: ['/website/articles'],
+        hideInMenu: true,
+        component: './Channel/OnlineStore/Blogs/Index/Blogs',
+      },
+      {
+        path: 'blogs/new',
+        name: 'articles',
+        parentKeys: ['/website/articles'],
+        hideInMenu: true,
+        component: './Channel/OnlineStore/Blogs/New/CreateBlogs',
+      },
+      {
+        path: 'blogs/:id/:languagesId',
+        name: 'articles',
+        parentKeys: ['/website/articles'],
+        hideInMenu: true,
+        component: './Channel/OnlineStore/Blogs/Edit/EditBlogs',
+      },
+      {
         path: 'page',
-        name: 'page',
+        name: 'customPage',
         component: './Channel/OnlineStore/CustomPage/CustomPage',
       },
       {
@@ -516,7 +537,12 @@ export default  [
       {
         path: 'navList/add',
         hideInMenu: true,
-        component: './Channel/OnlineStore/NavList/New/NewNavList',
+        component: './Channel/OnlineStore/NavList/New/NewNavgate',
+      },
+      {
+        path: 'navList/:id/:languagesId',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/NavList/NavgateDetail/NavgateDetail',
       },
       {
         path: 'preferences',
@@ -526,7 +552,6 @@ export default  [
     ]
     // component: './Products/Inventory/BlankPage',
   },
-
   // 店铺
   // 商户申请
   {
@@ -546,19 +571,19 @@ export default  [
   },
   {
     path: '/stores/list',
-    name: 'stores/list',
+    name: 'storesManages',
     icon: 'ShopOutlined',
     component: './Shops/StoresManagement/Index',
   },
   {
     path: '/stores/bills',
-    name: 'stores/bills',
+    name: 'billsManages',
     icon: 'ProfileOutlined',
     component: './Shops/Bills',
   },
   {
     path: '/stores/data',
-    name: 'stores/data',
+    name: 'dataManages',
     icon: 'DashboardOutlined',
     component: './Shops/Data',
   },
@@ -570,41 +595,10 @@ export default  [
     menuRender: false,
     hideInMenu: true,
   },
-
-
-  
-  // stores
-  // {
-  //   path: '/stores',
-  //   icon: 'crown',
-  //   name: 'stores',
-  //   // component: './Stores/Index',
-  //   routes:[
-      
-  //     {
-  //       path: 'list',
-  //       name: 'list',
-  //       component: './Stores/List',
-  //     },
-      
-  //     {
-  //       path: 'subscriptions/order/paid/pre',
-  //       name: 'subscriptions/order/paid/pre',
-  //       component: './Stores/List',
-  //     },
-  //   ]
-  // },
   {
     path: '/stores-subscriptions/list/paid',
     menuRender: false,
     component: './stores-subscriptions/list/Paid',
-    // icon: 'crown',
-    // routes:[
-    //   {
-    //     path: 'list/paid',
-    //     component: './stores-subscriptions/list/Paid' ,
-    //   }
-    // ]
   },
   // 设置
   {
@@ -622,9 +616,8 @@ export default  [
         path: 'index',
         parentKeys: ['/settings'],
         hideInMenu: true,
-        component: './Settings/index',
+        component: './Settings/Index/Index',
       },
-      
       {
         path: 'bill',
         component: './Settings/Bill'
@@ -811,7 +804,7 @@ export default  [
       {
         path: 'editor',
         name: 'editor',
-        component: './Theme/Editor/Editor',
+        component: './Theme/Design/Index/Editor',
       },
       {
         path: 'preview',

@@ -159,7 +159,7 @@ function OrdersSelectCard() {
                   marginBottom: '10px',
                 }}
               >
-              <div style={{flex:1}}><SearchInput placeholder={intl.formatMessage({ id: 'order.select.text' })} /></div>
+              <div style={{flex:1}}><SearchInput placeholder={intl.formatMessage({ id: 'orders.orderlist.ordersSelectCard.search' })} /></div>
               <CheckSelectClear options={paymentstatusOptions} setStatusOptions={setPaymentStatusOptions} text="付款状态" style={{width:"180px",height:"36px"}}/>
               <CheckSelectClear options={shippingStatusOptions} setStatusOptions={setShippingStatusOptions} text="发货状态" style={{width:"180px",height:"36px"}}/>
               <LangSelect lang={orderList.languages} setLang={setLang} />

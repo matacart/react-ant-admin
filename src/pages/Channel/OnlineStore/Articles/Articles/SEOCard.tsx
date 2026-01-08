@@ -1,18 +1,23 @@
-import { Card } from "antd"
+import { Card, Flex } from "antd"
 import styled from "styled-components"
 import cookie from 'react-cookies';
-import SEOEdit2 from "@/pages/Components/SEOEdit2";
 import articles from "@/store/channel/articles/articles";
+import SEOEdit from "./SEOEdit";
 
+function SEOCard(){
 
- function SEOCard(){
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    
+    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/blogs/`;
 
-    const setSEO = (title:string,description:string,keyword:string,url:string)=>{
+    const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         articles.setArticles({
             ...articles.articles,
             meta_title:title,
             meta_description:description,
             meta_keywords:keyword,
+            handle:handle,
         })
     }
 
@@ -22,16 +27,10 @@ import articles from "@/store/channel/articles/articles";
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit2 seo={{
-                            id:articles.articles.id,
-                            title:articles.articles.title,
-                            metaTitle:articles.articles.meta_title,
-                            metaDescription:articles.articles.meta_description,
-                            metaKeyword:articles.articles.meta_keywords,
-                            productUrl:""
-                        }} setSEO={setSEO} type="-a" />
+                        <SEOEdit seo={articles.articles} setSEO={setSEO} previewPrefix={previewPrefix} />
                     </span>
                 </div>
+                <Flex className="webUrl">{`${previewPrefix}${articles.articles.handle?articles.articles.handle.replace(new RegExp(" ","gm"),"-"):articles.articles.title.replace(new RegExp(" ","gm"),"-")}`}</Flex>
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{articles.articles.meta_title==""?(articles.articles.title==""?"未填写标题":articles.articles.title):articles.articles.meta_title}</div>
                 <div className="webDesc">{articles.articles.meta_description==""?"未填写描述":articles.articles.meta_description}</div>
@@ -61,6 +60,7 @@ a{
 }
 .webUrl{
     font-size: 12px;
+    word-break: break-all;
 }
 .webTitle{
     margin-top: 4px;

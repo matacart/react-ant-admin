@@ -20,14 +20,13 @@ function AddDomain() {
 
     const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(true);
+
+    const [loading,setLoading] = useState(false);
 
     const [form] = Form.useForm();
 
     const [current, setCurrent] = useState(0);
-
-    const [domainName,setDomainName] = useState("");
-    const [otherDomain,setOtherDomain] = useState("");
 
     const steps = [
         {
@@ -37,16 +36,33 @@ function AddDomain() {
                     <div>输入需要添加的域名</div>
                     <div className="card-desc">你可以在Godaddy、阿里云等域名服务商处购买第三方域名，并输入到此处。</div>
                     <Form form={form} layout="vertical">
-                        <Form.Item label={"主域名："} rules={[{ required: true }]}>
-                            <DefaultInput value={domainName} onChange={(e)=>{
-                                setDomainName(e.target.value)
-                            }} placeholder="如：www.example.com" />
+                        <Form.Item name="primaryDomain" label={"主域名："} rules={[
+                            { required: true, message: '主域名必须填写' },
+                            { max: 32, message: '域名长度不能超过32个字符' },
+                            { pattern: /^(?=^.{1,32}$)(?!.*\.\..*)(?!.*\.$)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/,message: '请输入有效的域名格式，例如: www.example.com' }
+                        ]}>
+                            <DefaultInput placeholder="如：www.example.com" />
                         </Form.Item>
-                        
-                        <Form.Item label={"子域名："}>
-                            <DefaultInput value={otherDomain} placeholder="example.com 多个子域名用英文逗号隔开" onChange={(e)=>{
-                                setOtherDomain(e.target.value)
-                            }} />
+
+                        <Form.Item name="otherDomain" label={"子域名："} rules={[
+                            {
+                                validator: (_, value) => {
+                                    if (!value) return Promise.resolve(); // 如果为空，直接通过
+                                    // 分割多个子域名
+                                    const domains = value.split(',').map((item:string) => item.trim()).filter((item:string) => item);
+                                    // 子域名格式正则表达式
+                                    const subdomainRegex = /^(?=^.{1,32}$)(?!.*\.\..*)(?!.*\.$)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+                                    // 验证每个子域名
+                                    for (const domain of domains) {
+                                        if (!subdomainRegex.test(domain)) {
+                                            return Promise.reject(new Error('请输入有效的子域名格式，多个子域名请用英文逗号分隔'));
+                                        }
+                                    }
+                                    return Promise.resolve();
+                                }
+                            }
+                        ]}>
+                            <DefaultInput placeholder="example.com 多个子域名用英文逗号隔开" />
                         </Form.Item>
                     </Form>
                     <div className="card-input">
@@ -75,7 +91,7 @@ function AddDomain() {
                     <Flex align="center"><CheckCircleFilled className="font-20" style={{color: '#52C41A',marginRight:8}} /><span className="font-w-600 font-16">绑定成功</span></Flex>
                     <div className="card-desc">管理员正在为你的域名激活SSL安全证书，根据域名服务商不同，最快加密时间10分钟，最晚24小时后自动生效。</div>
                     <div className="card-input">
-                        <SuccessfulTable domainName={domainName} otherDomain={otherDomain} />
+                        <SuccessfulTable domainName={form.getFieldValue("primaryDomain")} otherDomain={form.getFieldValue("otherDomain")} />
                     </div>
                     <div className="">绑定遇到问题？请查看<a>帮助文档</a></div>
                 </Card>
@@ -90,8 +106,10 @@ function AddDomain() {
     };
 
     const next = () => {
-        setCurrent(current + 1);
-      };
+        form.validateFields().then(res=>{
+            setCurrent(current + 1);
+        })
+    };
     
     const prev = () => {
         setCurrent(current - 1);
@@ -99,8 +117,10 @@ function AddDomain() {
 
     useEffect(()=>{
         getDomainNameList().then(res=>{
-            setDomainName(res.data.domain_primary || `${res.data.handle}${previewDomain}` )
-            setOtherDomain(res.data.other_domain)
+            form.setFieldsValue({
+                primaryDomain:res.data.domain_primary || `${res.data.handle}${previewDomain}`,
+                otherDomain:res.data.other_domain
+            })
             setIsSkeleton(false)
         })
     },[])
@@ -135,12 +155,13 @@ function AddDomain() {
                                 )}
                                 
                                 {current < steps.length - 1 && (
-                                    <PrimaryButton text="下一步" disabled={domainName == "" || otherDomain == ""} onClick={() => next()} />
+                                    <PrimaryButton text="下一步" onClick={() => next()} />
                                 )}
 
                                 {current === steps.length - 1 && (
-                                    <PrimaryButton text="完成" onClick={() => {
-                                        addDomainName(domainName,otherDomain).then(async res=>{
+                                    <PrimaryButton loading={loading} text="完成" onClick={() => {
+                                        setLoading(true);
+                                        addDomainName(form.getFieldValue("primaryDomain"),form.getFieldValue("otherDomain")).then(async res=>{
                                             if(res.code == 0){
                                                 await sleep(2000);
                                                 message.success('Processing complete!')
@@ -150,7 +171,9 @@ function AddDomain() {
                                             }
                                         }).catch(err=>{
                                             console.log(err);
-                                        });
+                                        }).finally(()=>{
+                                            setLoading(false);
+                                        })
                                     }} />
                                 )}
                             </div>

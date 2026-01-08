@@ -1,6 +1,5 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { createStyles } from 'antd-style';
-import { FormattedMessage, history, useIntl, useModel, SelectLang } from '@umijs/max';
+import { useIntl, SelectLang } from '@umijs/max';
 import langShow from '@/locales/langShow';
 
 

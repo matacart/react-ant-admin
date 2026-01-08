@@ -138,7 +138,8 @@ function StockCard({form}:{form:any}){
                         style={{
                             marginBottom: 0
                         }}
-                        >
+                        valuePropName="checked"
+                    >
                         <Checkbox onChange={(e)=>{
                             product.setProductInfo({
                                 ...product.productInfo,
@@ -146,7 +147,7 @@ function StockCard({form}:{form:any}){
                             })
                         }}>开启库存追踪</Checkbox>
                     </Form.Item>
-                    <Form.Item name="continueSell">
+                    <Form.Item name="continueSell" valuePropName="checked">
                         <Checkbox
                             onChange={(e)=>{
                                 product.setProductInfo({

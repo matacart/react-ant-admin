@@ -1,5 +1,5 @@
 import { useIntl } from "@umijs/max";
-import { ConfigProvider, Select, Tooltip } from "antd"
+import { ConfigProvider, Select } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 
@@ -39,7 +39,7 @@ export default function LangSelect({lang,setLang}:{lang:string,setLang:any}){
                         },
                     }}
                 >
-                    <span className="title">{intl.formatMessage({id: 'component.select.langSelect.shoplang'})}：</span>
+                    <span className="title">{intl.formatMessage({id: 'components.select.langSelect.shoplang'})}：</span>
                     <Select
                         className="langSelect"
                         value={lang}

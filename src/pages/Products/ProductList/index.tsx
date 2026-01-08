@@ -4,7 +4,6 @@ import { ExportOutlined, ImportOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
-import productStore from '@/store/productStore';
 import { UnfoldIcon } from '@/components/Icons/Icons';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import productList from '@/store/product/productList';
@@ -216,15 +215,13 @@ const App: React.FC = () => {
               activeKey={activeKey}
               onEdit={onEdit}
               items={items}
-              // !默认不销毁
-              destroyInactiveTabPane
               // tabBarExtraContent={operations}
             />
           </div>
         </div>
         <Modal
           title="创建选项卡"
-          visible={isModalVisible}
+          open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
         >

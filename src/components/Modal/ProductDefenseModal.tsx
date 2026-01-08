@@ -47,8 +47,8 @@ export default function ProductDefenseModal(props:any) {
     return(
         <>
             <a onClick={()=>{setIsOpen(true)}}>编辑</a>
-            <Modal destroyOnClose width="650px" title="防护信息" centered open={isOpen}
-                footer={(_, { OkBtn, CancelBtn }) => (
+            <Modal destroyOnHidden width="650px" title="防护信息" centered open={isOpen}
+                footer={() => (
                     <Flex justify="end">
                         <Flex gap={12}>
                             <DefaultButton text={"取消"} onClick={cancel} />

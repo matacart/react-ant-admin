@@ -26,7 +26,7 @@ export default function CancelButton({...props}:ButtonProps){
                 }}
                 >
                 <Button {...props} className="default-btn">
-                    {intl.formatMessage({id:'component.button.cancelButton'})}
+                    {intl.formatMessage({id:'components.button.cancelButton.cancelText'})}
                 </Button>
             </ConfigProvider>
         </Scoped>

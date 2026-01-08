@@ -1,12 +1,12 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Drawer, Flex, FormInstance, Input, message, Select } from 'antd'
+import { Flex, Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
 import { addCustomerPage } from '@/services/y2/api';
 import { useSleep } from '@/hooks/customHooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import customPage from '@/store/channel/customPage/customPage';
 import LangSelect from '@/components/Select/LangSelect';
 import PublishPageCard from '../Custompage/PublishPageCard';
@@ -18,13 +18,11 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 
 function NewPage(){
 
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(false);
 
-    const sleep = useSleep()
+    const [form] = Form.useForm();
 
-    // 表单1
-    const titleCardRef = useRef<FormInstance>(null);
-
+    const sleep = useSleep();
     const setLang = (lang:string)=>{
         customPage.setCustomPage({
             ...customPage.customPage,
@@ -32,29 +30,23 @@ function NewPage(){
         })
     }
 
-    // 统一校验方法
-    const validateAll = async () => {
-        try {
-            // 校验标题卡
-            await titleCardRef.current?.validateFields();
-            // 可添加其他表单组件的校验
-            // await otherFormRef.current?.validateFields();
-            // 全部校验通过后提交
-            // console.log(customPage.newCustomPage);
-            setLoading(true)
+    const submit = ()=>{
+        form.validateFields().then(values => {
+            setLoading(true);
             addCustomerPage(customPage.customPage).then(async res=>{
-                await sleep(2000)
-                message.success('创建成功')
-                history.push('/website/page')
+                if(res.code == 0){
+                    await sleep(2000);
+                    message.success('成功');
+                    history.push(`/website/page`);
+                }
             }).catch(err=>{
-                message.error('创建失败')
+                message.error(err?.msg)
             }).finally(()=>{
                 setLoading(false)
             })
-        } catch (error) {
-            // console.error('Validation failed:', "表单验证未通过");
-        }
-    };
+        }).catch((errorInfo) => {
+        });
+    }
 
     useEffect(()=>{
         customPage.resetNewCustomPage()
@@ -80,7 +72,7 @@ function NewPage(){
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <TitleCard ref={titleCardRef} />
+                            <TitleCard form={form} />
                             <ContentCard />
                         </div>
                         <div className='mc-layout-extra'>
@@ -91,7 +83,7 @@ function NewPage(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <PrimaryButton loading={loading} onClick={()=>{validateAll()}} text='创建' />
+                        <PrimaryButton loading={loading} onClick={submit} text='创建' />
                     </div>
                 </div>
             </div>

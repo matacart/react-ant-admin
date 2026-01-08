@@ -7,14 +7,11 @@ type customPageType = {
     meta_title:string;
     meta_description:string;
     meta_keywords:string;
+    handle:string;
     status:string;
-    url:string;
     alt_url:string;
-    
-    publish_time: string,
+    auto_publish_time: string,
 }
-
-
 
 
 class customPage {
@@ -31,8 +28,8 @@ class customPage {
         meta_description: '',
         meta_keywords: '',
         status:'0',
-        url: '',
         alt_url:'',
+        handle:"",
         
         app_id:"19", //商店ID
         is_sys:'0',
@@ -48,7 +45,7 @@ class customPage {
         pid:'0',
         template_id:'0',
         // 
-        publish_time: "",
+        auto_publish_time: "",
     }
 
     customPage:customPageType = this.default;

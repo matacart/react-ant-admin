@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { GetProp, Select, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
+import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { history, useIntl } from '@umijs/max';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
@@ -61,14 +61,14 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: intl.formatMessage({ id: 'order.tableheader.orderid' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.orderid' }),
       dataIndex: 'order_sn',
       render: (text: string) => (
         <span style={{ color: '#242833' }}>{text}</span>
       ),
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.orderdata' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.orderdata' }),
       dataIndex: 'date_purchased',
       render: (text: string) => (
         <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -77,39 +77,39 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
       ),
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.orderstate' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.orderstate' }),
       dataIndex: 'orderstate',
       render: (text: string) => <OrderWarningTag text="处理中" />,
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.paymenstate' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.paymenstate' }),
       dataIndex: 'payment_status_id',
       render: (value: number) => <>
         {value == 8?<OrderDefaultTag text="已付款"/>:<OrderWarningTag text="未付款" />}
       </>
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.deliverystate' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.deliverystate' }),
       dataIndex: 'delivery_status_id',
       render: (value: number) => <>
         {value == 1?<OrderWarningTag text="待发货" />:value == 150?<OrderWarningTag text="部分发货"/>:<OrderDefaultTag text="已发货"/>}
       </>
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.paymentmethod' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.paymentmethod' }),
       dataIndex: 'payment_method',
       render: (text: string) => <span>{text}</span>,
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.paymentchannel' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.paymentchannel' }),
       dataIndex: 'paymentchannel',
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.deliveryname' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.deliveryname' }),
       dataIndex: 'delivery_name',
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.tel' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.tel' }),
       dataIndex: 'tel',
       render: (tel: string) => {
         // 显示手机号的前两位和后两位，中间用星号(*)代替
@@ -118,11 +118,11 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
       },
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.shippingmethod' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.shippingmethod' }),
       dataIndex: 'shippingmethod',
     },
     {
-      title: intl.formatMessage({ id: 'order.tableheader.pricetotal' }),
+      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.pricetotal' }),
       dataIndex: 'order_total',
       render: (value: any, record: any, index: any) => {
         let num = Number(value);

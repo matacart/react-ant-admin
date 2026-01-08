@@ -8,16 +8,10 @@ interface MyAutoCompleteProps extends Omit<AutoCompleteProps, 'dropdownRender'> 
     onClick?: () => void; // 可选的 onClick 属性
 }
 export default function MyAutoComplete({onClick,placeholder,...props}:MyAutoCompleteProps){
-    
-    const Ref = useRef(null)
-
-    // 在MyAutoComplete组件中添加以下逻辑
-    const [inputValue, setInputValue] = useState('');
 
     return (
         <Scoped>
             {/* 回退 */}
-            {/* <div ref={Ref}></div> */}
             <ConfigProvider
                 theme={{
                     token: {

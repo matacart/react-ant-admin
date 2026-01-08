@@ -1,6 +1,6 @@
-import { Button, Card, DatePicker, Flex, Form, Radio } from "antd";
+import { Card, DatePicker, Form, Radio } from "antd";
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import articles from "@/store/channel/articles/articles";
 import dayjs from 'dayjs';
 
@@ -30,7 +30,7 @@ export default function PublishBlogCard() {
                                     setPublishTimeCheck(false)
                                     articles.setArticles({
                                         ...articles.articles,
-                                        publish_time:"",
+                                        auto_publish_time:"",
                                         status:e.target.value
                                     })
                                 }else{
@@ -46,7 +46,7 @@ export default function PublishBlogCard() {
                                 { value: "1", label: '发布' },
                                 { value: "0", label: <div>
                                     <span>隐藏</span>
-                                    {articles.articles.publish_time && <span style={{marginLeft:"6px"}}>(将于{dayjs(Number(articles.articles.publish_time)*1000).format("YYYY-MM-DD HH:mm:ss")}开始发布)</span>}
+                                    {articles.articles.auto_publish_time && <span style={{marginLeft:"6px"}}>(将于{dayjs(Number(articles.articles.auto_publish_time)*1000).format("YYYY-MM-DD HH:mm:ss")}开始发布)</span>}
                                 </div>
                                 }
                             ]}
@@ -64,7 +64,7 @@ export default function PublishBlogCard() {
                                     const timeString = value?.format("YYYY-MM-DD HH:mm:ss") || '';
                                     articles.setArticles({
                                         ...articles.articles,
-                                        publish_time:timeString==""?"":(new Date(timeString).getTime()/1000).toString()
+                                        auto_publish_time:timeString==""?"":(new Date(timeString).getTime()/1000).toString()
                                     })
                                 }}
                                 onOk={()=>{
@@ -77,7 +77,7 @@ export default function PublishBlogCard() {
                             // 删除发布时间
                             articles.setArticles({
                                 ...articles.articles,
-                                publish_time:''
+                                auto_publish_time:''
                             })
                         }}>取消设置</div>
                     </div>:<div className="color-356DFF cursor-pointer" onClick={()=>setPublishTimeCheck(true)}>设置发布时间</div>}

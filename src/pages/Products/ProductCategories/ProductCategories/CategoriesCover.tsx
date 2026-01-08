@@ -1,4 +1,5 @@
 
+import { uploadPic } from "@/services/y2/api";
 import categories from "@/store/product/categories";
 import { PlusOutlined } from "@ant-design/icons";
 import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin, message } from "antd"
@@ -17,15 +18,15 @@ import styled from "styled-components"
         
     ]);
 
-      const getBase64 = (file: FileType): Promise<string> =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-      });
+    const getBase64 = (file: FileType): Promise<string> =>
+    new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+    });
 
-      const handleChange: UploadProps['onChange'] = (info) => {
+    const handleChange: UploadProps['onChange'] = (info) => {
         // 删除
         if(info.file.status == "removed"){
             setFileList(info.fileList);
@@ -36,19 +37,22 @@ import styled from "styled-components"
             return
         }
         // 上传图片
-        setIsUpload(true)
-        let formData = new FormData()
-        formData.append("1", info.file as FileType)
-        axios.post('/api/ApiAppstore/doUploadPic',formData).then(res=>{
-            if(res.data.code == 0){
+        setIsUpload(true);
+        let formData = new FormData();
+        formData.append("file", info.file as FileType)
+        uploadPic(formData).then((res:any)=>{
+            if(res.code == 0){
                 categories.setCategoriesInfo({
                     ...categories.categoriesInfo,
-                    category_image: res.data.data.src
+                    category_image: res.data.src
                 })
+                setFileList(info.fileList);
             }
+        }).catch((err)=>{
+            message.error('err')
+        }).finally(()=>{
             setIsUpload(false)
         })
-        setFileList(info.fileList);
     }
 
     const handlePreview = async (file: UploadFile) => {
@@ -57,7 +61,7 @@ import styled from "styled-components"
         }
         setPreviewImage(file.url || (file.preview as string));
         setPreviewOpen(true);
-      };
+    };
     
     const uploadButton= (
         <button style={{ border: 0, background: 'none' }} type="button">

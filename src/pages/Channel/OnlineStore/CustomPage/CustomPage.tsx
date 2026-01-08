@@ -1,33 +1,28 @@
-import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Divider, Form, Cascader, Input, Select, Space, Button, Dropdown, Tabs, Modal, Flex } from 'antd';
-import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone, DownOutlined } from '@ant-design/icons';
-import { ImportOutlined, PlusOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Flex, message } from 'antd';
 import { history } from '@umijs/max';
-import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import styled from 'styled-components';
-import newStore from '@/store/newStore';
-import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import BlankPage from './BlankPage';
-import { getArticleList, getCustomerPageList } from '@/services/y2/api';
+import { getCustomerPageList } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import CustomPageListCard from './CustomPageListCard';
 
 function CustomPage(){
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
-    const [customerPageList,setCustomerPageList] = useState([])
+    const [customerPageList,setCustomerPageList] = useState([]);
 
-    const [count,setCount] = useState(0)
+    const [count,setCount] = useState(0);
 
     useEffect(()=>{
-        getCustomerPageList("1","10").then(res=>{
-            setCustomerPageList(res.data)
-            setCount(res.count)
+        getCustomerPageList("1","10","2").then(res=>{
+            if(res.code == 0){
+                setCustomerPageList(res.data)
+                setCount(Number(res?.count))
+            }
         }).catch((err)=>{
-
         }).finally(()=>{
             setIsSkeleton(false)
         })
@@ -48,9 +43,7 @@ function CustomPage(){
                     </div>
                 </div>
                 <div className='create-content'>
-                    {/*  */}
                     {customerPageList.length == 0?<BlankPage />:<CustomPageListCard list={customerPageList} count={count} />}
-                    
                 </div>
             </div>
         </div>}

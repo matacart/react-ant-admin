@@ -1,12 +1,11 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, FormInstance, message } from 'antd'
+import { Flex, Form, FormInstance, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useSearchParams } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
 import { addCustomerPage, getCustomerPage } from '@/services/y2/api';
-import { useSleep } from '@/hooks/customHooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import customPage from '@/store/channel/customPage/customPage';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import LangSelect from '@/components/Select/LangSelect';
@@ -19,32 +18,25 @@ import ThemeTemplate from '../Custompage/ThemeTemplate';
 
 function EditPage(){
 
-    const [loading,setLoading] = useState(false)
-
-    const [isSkeleton,setIsSkeleton] = useState(true)
-
     const [searchParams, setSearchParams] = useSearchParams();
-
-    const sleep = useSleep();
-
-    const [languagesId,setLanguagesId] = useState("2");
 
     const id = searchParams.get('id') ?? ""
     const langId = searchParams.get('langId') ?? "2"
 
-    // 表单1
-    const titleCardRef = useRef<FormInstance>(null);
+    const [loading,setLoading] = useState(false);
 
+    const [isSkeleton,setIsSkeleton] = useState(true);
+
+    const [form] = Form.useForm();
+
+    // 语言切换
     const setLang = (lang:string)=>{
-        setLanguagesId(lang);
+        setSearchParams({ id, langId: lang });
     }
 
     useEffect(()=>{
         getCustomerPage(id,langId).then(res=>{
-            if(JSON.stringify(res.data) == "[]"){
-                message.error('无权限')
-                history.push('/website/page')
-            }else{
+            if(res.code == 0){
                 customPage.setCustomPage(res.data)
             }
         }).catch(err=>{
@@ -52,33 +44,22 @@ function EditPage(){
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[])
+    },[langId])
 
-    // 统一校验方法
-    const validateAll = async () => {
-        try {
-            // 校验标题卡
-            await titleCardRef.current?.validateFields();
-            // 可添加其他表单组件的校验
-            // await otherFormRef.current?.validateFields();
-            // 全部校验通过后提交
-            // console.log(customPage.oldCustomPage);
-            setLoading(true)
-            addCustomerPage(customPage.customPage).then(async res=>{
-                // await sleep(2000)
-                message.success('修改内容已更新')
-                // history.push('/website/page')
+
+    const submit = ()=>{
+        form.validateFields().then(values => {
+            setLoading(true);
+            addCustomerPage(customPage.customPage).then(res=>{
+                res.code == 0 && message.success('修改内容已更新')
             }).catch(err=>{
                 message.error('更新失败')
             }).finally(()=>{
                 setLoading(false)
             })
-        } catch (error) {
-            // console.error('Validation failed:', "表单验证未通过");
-        }
-    };
-    
-
+        }).catch((errorInfo) => {
+        });
+    }
 
     return (
         <Scoped>
@@ -95,12 +76,12 @@ function EditPage(){
                         </div>
                         <Flex className='mc-header-right' gap={12}>
                             {/* 语言 */}
-                            <LangSelect lang={languagesId} setLang={setLang} />
+                            <LangSelect lang={langId} setLang={setLang} />
                         </Flex>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <TitleCard ref={titleCardRef} />
+                            <TitleCard form={form} />
                             <ContentCard />
                         </div>
                         <div className='mc-layout-extra'>
@@ -111,7 +92,7 @@ function EditPage(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <PrimaryButton loading={loading} onClick={()=>{validateAll()}} text="保存" />
+                        <PrimaryButton loading={loading} onClick={submit} text="保存" />
                     </div>
                 </div>
             </div>}

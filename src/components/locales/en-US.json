@@ -1,0 +1,20 @@
+{
+    "components":{
+        "header":{
+            "search": "Search",
+            "update":{
+                "tip":"Update"
+            },
+            "question":{
+                "tip":"Help"
+            },
+            "selectDomain":{
+                "search":"Search",
+                "runningStores":"Open",
+                "defaultStores":"Closed",
+                "none":"No matching stores found",
+                "storesManage":"Manage Stores"
+            }
+        }
+    }
+}

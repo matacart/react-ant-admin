@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Flex, message, Select } from 'antd'
+import { Flex, Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useParams } from '@umijs/max';
@@ -22,6 +22,8 @@ import SEOCard from '../Articles/SEOCard';
 import ThemeTemplate from '../Articles/ThemeTemplate';
 import articles from '@/store/channel/articles/articles';
 import LangSelect from '@/components/Select/LangSelect';
+import PrimaryButton from '@/components/Button/PrimaryButton';
+import MyButton from '@/components/Button/MyButton';
 
 function EditArticles(){
 
@@ -29,19 +31,36 @@ function EditArticles(){
 
     const {id,languagesId} = useParams();
 
+    const [loading,setLoading] = useState(false);
+
+    const [form] = Form.useForm();
+
     const [language,setLanguage] = useState<string>(languagesId??"2");
 
-    const sleep = useSleep()
+    const sleep = useSleep();
 
     const setLang = (value:string)=>{
         setLanguage(value)
+    }
+
+    const submit = ()=>{
+        form.validateFields().then(async values => {
+            setLoading(true);
+            upDateArticles(articles.articles).then(res=>{
+                message.success('已更新')
+            }).catch(err=>{
+                console.log(err)
+            }).finally(()=>{
+                setLoading(false)
+            })
+        })
+        
     }
 
     useEffect(()=>{
         getArticle(id,language).then((res:any)=>{
             if(res.code == 0){
                 articles.setArticles(res.data)
-                console.log(res)
             }
         }).catch(err=>{
             console.log(err)
@@ -78,7 +97,7 @@ function EditArticles(){
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <TitleCard />
+                            <TitleCard form={form} />
                             <ContentCard />
                         </div>
                         <div className='mc-layout-extra'>
@@ -93,29 +112,22 @@ function EditArticles(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <Button type='primary' onClick={async ()=>{
-                            // console.log(articles.oldArticles.releaseTime)
-                            upDateArticles(articles.articles).then(res=>{
-                                message.success('已更新')
-                            }).catch(err=>{
-                                console.log(err)
-                            })
-                        }}>更新</Button>
+                        <PrimaryButton loading={loading} onClick={submit} text={'更新'} />
                         <DeleteModal tElement={
-                            <Button color="danger" variant="solid">删除</Button>
+                            <MyButton loading={loading} color="danger" variant="solid" text="删除" />
                         }
-                        removeFunc={()=>{
-                            delArticles(articles.articles.id).then(async res=>{
-                                message.success('已删除')
-                                await sleep(2000)
-                                history.push('/website/articles')
-                            }).catch(err=>{
-                                console.log(err)
-                            })
-                        }}
-                        title="确定删除吗？"
-                        content="删除后将不能找回，请慎重操作！"
-                        okText="完成"
+                            removeFunc={()=>{
+                                delArticles(articles.articles.id).then(async res=>{
+                                    message.success('已删除')
+                                    await sleep(2000)
+                                    history.push('/website/articles')
+                                }).catch(err=>{
+                                    console.log(err)
+                                })
+                            }}
+                            title="确定删除吗？"
+                            content="删除后将不能找回，请慎重操作！"
+                            okText="完成"
                         />
                     </div>
                 </div>

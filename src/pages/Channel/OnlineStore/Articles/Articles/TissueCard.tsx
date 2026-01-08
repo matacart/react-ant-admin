@@ -1,12 +1,14 @@
-import { Link } from "@umijs/max";
 import { Button, Card, Divider, Flex, Form, Input, message, Modal, Radio, Select, SelectProps, Space, TreeSelect } from "antd";
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { addArticleCollection, getArticleCollection } from "@/services/y2/api";
 import { PlusOutlined } from "@ant-design/icons";
 import { convertToTree } from "@/utils/dataStructure";
 import articles from "@/store/channel/articles/articles";
 import LangSelect from "@/components/Select/LangSelect";
+import DefaultInput from "@/components/Input/DefaultInput";
+import MySelect from "@/components/Select/MySelect";
+import DefaultSelect from "@/components/Select/DefaultSelect";
 
 const style: React.CSSProperties = {
     display: 'flex',
@@ -28,7 +30,6 @@ export default function TissueCard() {
 
     // 提交表单
     const onFinish = ()=>{
-        // console.log(form.getFieldsValue())
         addArticleCollection({...form.getFieldsValue(),lang:lang}).then(res=>{
             message.success("添加成功")
             form.resetFields()
@@ -63,25 +64,25 @@ export default function TissueCard() {
                 <Form form={form} layout="vertical">
                     <Form.Item
                         label={<div className="font-w-600">作者</div>} >
-                        <Input placeholder="请输入" value={articles.articles.author_name} onChange={(e) =>articles.setArticles({
+                        <DefaultInput placeholder="请输入" value={articles.articles.author_name} onChange={(e:any) =>articles.setArticles({
                             ...articles.articles,
                             author_name: e.target.value
                         })} />
                     </Form.Item>
                     <Form.Item
                         label={<div className="font-w-600">所属博客集合</div>} >
-                        <Select
-                            value={articles.articles.category_id}
+                        <DefaultSelect
+                            value={articles.articles.category_id || undefined}
                             placeholder="请选择"
-                            dropdownRender={(menu) => (
+                            popupRender={(menu) => (
                                 <>
-                                {menu}
-                                <Divider style={{ margin: '8px 0' }} />
-                                <Space style={{ padding: '0 8px 4px' }}>
-                                    <Button type="text" icon={<PlusOutlined />} onClick={()=>setIsModalOpen(true)}>
-                                        创建新的博客集合
-                                    </Button>
-                                </Space>
+                                    {menu}
+                                    <Divider style={{ margin: '8px 0' }} />
+                                    <Space style={{ padding: '0 8px 4px' }}>
+                                        <Button type="text" icon={<PlusOutlined />} onClick={()=>setIsModalOpen(true)}>
+                                            创建新的博客集合
+                                        </Button>
+                                    </Space>
                                 </>
                             )}
                             options={groupList.map((item) => ({ label: item.name, value: item.id }))}
@@ -99,7 +100,7 @@ export default function TissueCard() {
                     </Form.Item>
                 </Form>
                 {/*  */}
-                <Modal destroyOnClose title={<Flex justify="space-between">
+                <Modal destroyOnHidden title={<Flex justify="space-between">
                     <div>创建博客集合</div>
                     <div style={{marginRight: '20px'}}>
                         <LangSelect lang={lang} setLang={setLang} />

@@ -17,9 +17,7 @@ function MySelect({Ref,...props}:MySelectProps) {
                 },
             }}
             >
-            <Select getPopupContainer={()=>Ref?.current!} {...props} dropdownStyle={{
-                padding: '8px 0',
-            }} />
+            <Select getPopupContainer={()=>Ref?.current!} {...props} />
         </ConfigProvider>
     )
 }

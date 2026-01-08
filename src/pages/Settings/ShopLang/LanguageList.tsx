@@ -145,14 +145,16 @@ export default function LanguageList() {
     // 删除语言
     const deleteLanguages = (record:any)=>{
         delLanguages(record.language.id).then(res=>{
-            let newDataSource = [...dataSource]
-            newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
-            setDataSource(newDataSource)
+            if(res.code == 0){
+                let newDataSource = [...dataSource]
+                newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
+                setDataSource(newDataSource)
+            }
         })
     }
     // 设置默认语言
     const setDefaultLanguage = (record:any)=>{
-        console.log(record)
+        // console.log(record)
         addLanguages([{
             domain_id:cookie.load("domain")?.id,
             languages_id:record.language.id,
@@ -160,8 +162,10 @@ export default function LanguageList() {
             sort:"0",
             checked:"1"
         }]).then(res=>{
-            getLanguages();
-            cookie.save('default_lang', record.language.code, { path: '/' });
+            if(res.code == 0){
+                getLanguages();
+                cookie.save('default_lang', record.language.code, { path: '/' });
+            }
         })
     }
     const onDragEnd = ({ active, over }: DragEndEvent) => {
@@ -182,9 +186,7 @@ export default function LanguageList() {
                     sort:index+1
                 }
             })).then(res=>{
-                // return res
-                // console.log(res)
-                if(res == null){
+                if(res.code == 0){
                     message.success("更新失败")
                     setDataSource(befortDataSource)
                 }else{
@@ -242,18 +244,10 @@ export default function LanguageList() {
                 }
             }
         }).filter(item=>item!==undefined)
-        console.log(langs)
+        // console.log(langs)
         addLanguages(langs).then(async res=>{
             setIsCheckedAll(false)
             setIsLangModalOpen(false)
-
-            // 更新表格
-            // let newDataSource = [...dataSource]
-            // languages.forEach((item,index)=>{
-            //     newDataSource.push({key:(dataSource.length+index).toString(),language:item})
-            // })
-            // console.log(newDataSource)
-            // setDataSource(newDataSource)
             await globalStore.sleep(2000)
             getLanguages()
         })
@@ -265,17 +259,22 @@ export default function LanguageList() {
         setIsCheckedAll(false)
     };
     // 获取语言列表
-    const getLanguages = async ()=>{
+    const getLanguages = ()=>{
         setIsLoading(true)
-        await getLanguagesList().then((res)=>{
-            setLanguages(res.filter((item:any)=>item.checked!=="1"))
-            // 已有语言不可添加
-            setHasLanguages(res.filter((item:any)=>item.checked=="1"))
-            // 将数据根据sort排序
-            const languages = res.filter((item:any)=>item.checked=="1").sort((a:any,b:any)=>a.sort-b.sort)
-            setDataSource(languages.map((item:any)=>({key:item.id.toString(),language:item})))
+        getLanguagesList().then(res=>{
+            if(res.code == 0){
+                setLanguages(res.data.filter((item:any)=>item.checked!=="1"))
+                // 已有语言不可添加
+                setHasLanguages(res.data.filter((item:any)=>item.checked=="1"))
+                // 将数据根据sort排序
+                const languages = res.data.filter((item:any)=>item.checked=="1").sort((a:any,b:any)=>a.sort-b.sort)
+                setDataSource(languages.map((item:any)=>({key:item.id.toString(),language:item})))
+            }
+        }).catch(err=>{
+            console.log(err)
+        }).finally(()=>{
+            setIsLoading(false)
         })
-        setIsLoading(false)
     }
 
     useEffect(() => {

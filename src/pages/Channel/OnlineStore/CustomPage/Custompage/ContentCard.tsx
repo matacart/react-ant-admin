@@ -15,7 +15,6 @@ const ContentCard = ()=>{
             <Card>
                 <Form layout='vertical' className='product-form'>
                     <Form.Item
-                        name="title"
                         label={<div className="font-w-600 font-16">页面内容</div>}
                     >
                         {/*  */}

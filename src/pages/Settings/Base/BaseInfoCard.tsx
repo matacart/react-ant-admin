@@ -1,9 +1,11 @@
+import DangerButton from "@/components/Button/DangerButton";
+import DefaultButton from "@/components/Button/DefaultButton";
 import DefaultInput from "@/components/Input/DefaultInput";
+import { uploadPic } from "@/services/y2/api";
 import baseInfoStore from "@/store/setUp/baseInfoStore";
-import { DeleteOutlined, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Card, Form, GetProp, Input, message, Spin, Upload, UploadProps } from "antd";
+import { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { Card, Flex, Form, GetProp, message, Upload, UploadProps } from "antd";
 import modal from "antd/es/modal";
-import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import styled from "styled-components";
@@ -13,7 +15,6 @@ type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 function BaseInfoCard() {
 
     const [loading, setLoading] = useState(false);
-    // const [imageUrl, setImageUrl] = useState<string>();
 
     const [isMaskVisible, setIsMaskVisible] = useState(false);
 
@@ -30,19 +31,17 @@ function BaseInfoCard() {
           message.error('You can only upload JPG/PNG file!');
           return false;
         }
-        let formData = new FormData()
-        formData.append("1", file)
-
-        setLoading(true)
-        axios.post('/api/ApiAppstore/doUploadPic',formData).then((req: any) => {
-          if(req.data.code == 0){
-            // setImageUrl(req.data.data.src)
-            baseInfoStore.setStoreLogo(req.data.data.src)
-            setLoading(false)
-          }else{
-            message.error("上传失败", 1)
-            setLoading(false)
-          }
+        let formData = new FormData();
+        formData.append("file", file);
+        setLoading(true);
+        uploadPic(formData).then((res: any) => {
+            if(res.code == 0){
+              baseInfoStore.setStoreLogo(res.data.src)
+              setLoading(false)
+            }else{
+              message.error("上传失败", 1)
+              setLoading(false)
+            }
         })
         // 图片大小无限制
         // const isLt2M = file.size / 1024 / 1024 < 2;
@@ -76,17 +75,21 @@ function BaseInfoCard() {
                                 {isMaskVisible && (
                                     <div className="mask">
                                         <div className="delete-icon" onClick={(e)=>{
-                                            e.stopPropagation()
-                                            modal.confirm({
+                                            e.stopPropagation();
+                                            const newModal = modal.confirm({
                                                 title: '确定删除商店Logo吗？',
-                                                icon: <ExclamationCircleOutlined />,
-                                                // content: '删除后，客户将无法浏览该语言版本店铺。',
-                                                centered:true,
-                                                okText: '确认',
-                                                cancelText: '取消',
-                                                onOk:()=>{
-                                                    baseInfoStore.setStoreLogo("")
-                                                }
+                                                icon: <ExclamationCircleFilled style={{color:"#F86140"}}/>,
+                                                centered: true,
+                                                okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
+                                                footer:()=>(
+                                                    <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
+                                                        <DefaultButton text={`取消`} autoInsertSpace={false} onClick={()=>newModal.destroy()} />
+                                                        <DangerButton text={`确认`} loading={loading} autoInsertSpace={false} onClick={async ()=>{
+                                                            baseInfoStore.setStoreLogo("")
+                                                            newModal.destroy();
+                                                        }} />
+                                                    </Flex>
+                                                )
                                             });
                                         }}>
                                             <DeleteOutlined className="font-16" style={{opacity:0.6}} />
@@ -180,5 +183,4 @@ const Scoped = styled.div`
         align-items:center;
         cursor: pointer;
     }
-
 `

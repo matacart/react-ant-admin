@@ -1,11 +1,9 @@
-import { getAddonsConfigArray, getAddonsConfigs, getStoreInfo, setAddonsConfig } from "@/services/y2/api"
-import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
+import { getAddonsConfigs } from "@/services/y2/api"
+import { ArrowLeftOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
-import { Button, Card, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
-import cookie from 'react-cookies';
 import CollectionAccountCard from "./CollectionAccountCard"
 import CreditCardCollection from "./CreditCardCollection"
 import OtherCollection from "./OtherCollection"
@@ -13,7 +11,6 @@ import ManualCollection from "./ManualCollection"
 import ReceivablesEntrySettings from "./ReceivablesEntrySettings"
 import CustomizedSettings from "./CustomizedSettings"
 import collection from "@/store/settings/collection"
-import AccountReview from "./AccountReview"
 
 function Collection() {
 

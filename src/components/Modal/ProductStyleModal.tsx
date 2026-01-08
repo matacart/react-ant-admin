@@ -120,7 +120,7 @@ export default function ProductStyleModal({inputRef,optionList,setOptionList,spe
               </Tooltip>
             </span>
             {/* justifyContent:"space-between" */}
-            <Modal width="600px" destroyOnClose closable={true} title={<div><div>属性编辑</div><div style={{fontWeight:500,fontSize:"14px",marginTop:"20px",marginBottom:"24px"}}>语言翻译：<Select
+            <Modal width="600px" destroyOnHidden closable={true} title={<div><div>属性编辑</div><div style={{fontWeight:500,fontSize:"14px",marginTop:"20px",marginBottom:"24px"}}>语言翻译：<Select
                 defaultValue={language}
                 onChange={(value)=>{
                     setLanguage(value)

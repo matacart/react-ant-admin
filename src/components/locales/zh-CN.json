@@ -1,0 +1,42 @@
+{
+    "components":{
+        "header":{
+            "search": "搜索",
+            "update":{
+                "tip":"更新"
+            },
+            "question":{
+                "tip":"帮助"
+            },
+            "selectDomain":{
+                "search":"搜索",
+                "runningStores":"营业中",
+                "defaultStores":"已打烊",
+                "none":"暂无符合条件的店铺",
+                "storesManage":"管理店铺"
+            }
+        },
+        "select":{
+            "langSelect":{
+                "shoplang":"店铺语言"
+            }
+        },
+        "modal":{
+            "deleteModal":{
+                "cancelText":"取消",
+                "okText":"确定"
+            }
+        },
+        "button":{
+            "cancelButton":{
+                "cancelText":"取消"
+            },
+            "createButton":{
+                "createText":"创建"
+            }
+        },
+        "message":{
+            "error":"请求失败,请重试"
+        }
+    }
+}

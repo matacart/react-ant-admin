@@ -12,7 +12,6 @@ class baseInfoStore{
     // 
     statusEdit = false;
 
-
     // info
 
     id:string = "";
@@ -65,7 +64,6 @@ class baseInfoStore{
         this.storeStauts = storeStauts;
     }
 
-
     // 获取
     async getStore(){
         console.log(cookie.load("domain"))
@@ -74,23 +72,20 @@ class baseInfoStore{
             history.back();
             return false;
         }
-
-        await getStoreInfo(cookie.load("domain")?.id).then(obj=>{
-            console.log(obj)
-            if( obj.code !== 201){
-                this.id = obj.id;
-                this.storeStauts = obj.status;
-                this.storeLogo = obj.store_logo;
-                this.storeName = obj.store_name;
-                this.merchantEmail = obj.merchant_email;
-                this.serviceEmail = obj.service_email;
-                this.productType = obj.product_type;
-                this.timezone = obj.timezone;
-                this.ordersPrefix = obj.orders_prefix;
+        await getStoreInfo(cookie.load("domain")?.id).then(res=>{
+            if(res.code == 0){
+                this.id = res.data.id;
+                this.storeStauts = res.data.status;
+                this.storeLogo = res.data.store_logo;
+                this.storeName = res.data.store_name;
+                this.merchantEmail = res.data.merchant_email;
+                this.serviceEmail = res.data.service_email;
+                this.productType = res.data.product_type;
+                this.timezone = res.data.timezone;
+                this.ordersPrefix = res.data.orders_prefix;
             }
         })
         return true;
-        
     }
     // 更新
     async setStore(){

@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Divider, Flex } from 'antd';
-import { history } from '@umijs/max';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { getNavList } from '@/services/y2/api';
 import SEOSetupCard from './SEOSetupCard';
 import { ExportOutlined } from '@ant-design/icons';
 import CustomerPrivacyCard from './CustomerPrivacyCard';

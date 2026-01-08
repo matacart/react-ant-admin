@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Button, Modal, Tag, Input, Flex, Dropdown, Radio, Popover, TabsProps } from 'antd';
+import { Tabs, Modal, Tag, Input, Flex, Dropdown, Radio, Popover, TabsProps } from 'antd';
 import OrdersListAjax from '@/pages/Orders/OrderList/OrdersListAjax';
 import OrdersSelectCard from './OrdersSelectCard';
 import orderList from '@/store/order/orderList';
@@ -7,26 +7,6 @@ import { observer } from 'mobx-react-lite';
 import { useIntl } from '@umijs/max';
 import { DownIcon } from '@/components/Icons/Icons';
 
-interface FilterCondition {
-  id: string;
-  languagesId:string;
-}
-
-// 获取今天的开始和结束时间
-// const getTodayStart = () => {
-//   const now = new Date();
-//   const year = now.getFullYear();
-//   const month = String(now.getMonth() + 1).padStart(2, '0');
-//   const day = String(now.getDate()).padStart(2, '0');
-//   return `${year}-${month}-${day}`;
-// };
-// const getTodayEnd = () => {
-//   const now = new Date();
-//   const year = now.getFullYear();
-//   const month = String(now.getMonth() + 1).padStart(2, '0');
-//   const day = String(now.getDate()).padStart(2, '0');
-//   return `${year}-${month}-${day} 23:59:59`;
-// };
 
 const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activeKey: string }) => {
   const [filterCondition,setFilterCondition] = useState(
@@ -127,31 +107,31 @@ function OrderTabs() {
   const [items,setItems] = useState<TabsProps['items']>([
     { 
       key:'',
-      label: intl.formatMessage({ id: 'order.tabs.all' }), 
+      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.all' }), 
       children: <FilteredOrdersComponent id={''} activeKey={''} />,
       closable:false
     },
     { 
       key:'4',
-      label: intl.formatMessage({ id: 'order.tabs.readytoship' }), 
+      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.readytoship' }), 
       children: <FilteredOrdersComponent id={'4'} activeKey={'4'} />,
       closable:false
     },
     { 
       key:'3',
-      label: intl.formatMessage({ id: 'order.tabs.cancelled' }), 
+      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.cancelled' }), 
       children: <FilteredOrdersComponent id={'3'} activeKey={'3'} />,
       closable:false
     },
     { 
       key:'2',
-      label: intl.formatMessage({ id: 'order.tabs.process' }), 
+      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.process' }), 
       children: <FilteredOrdersComponent id={'2'} activeKey={'2'} />,
       closable:false
     },
     { 
       key:'5',
-      label: intl.formatMessage({ id: 'order.tabs.neworders' }), 
+      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.neworders' }), 
       children: <FilteredOrdersComponent id={'5'} activeKey={'5'} />,
       closable:false
     },

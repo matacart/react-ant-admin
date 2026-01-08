@@ -1,92 +1,124 @@
 import { history } from "@umijs/max"
-import { Button, Card, Flex, MenuProps, message, Space, Table, TableProps, Tooltip } from "antd"
-import { useEffect, useState } from "react";
+import { Card, Flex, Table, TableProps } from "antd"
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
-import dayjs from "dayjs"
-import SearchInput from "@/components/Input/SearchInput";
-import DeleteModal from "@/components/Modal/DeleteModal";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { delArticles, getArticleList } from "@/services/y2/api";
-import cookie from 'react-cookies';
-import { status } from 'nprogress';
-import DefaultTag from "@/components/Tag/DefaultTag";
-import SuccessTag from "@/components/Tag/SuccessTag";
+import { getNavList } from "@/services/y2/api";
+import LangSelect from "@/components/Select/LangSelect";
+import MyInput from "@/components/Input/MyInput";
+import { SearchSecondIcon } from "@/components/Icons/Icons";
+import { useAbortController } from "@/hooks/customHooks";
+import navgate, { TreeItem } from "@/store/channel/navList/navgate";
 
 
 interface DataType {
     title:string;
     key: string;
+    id:string;
+    name:any;
+    nodeTree:any;
 }
 
-export default function TableCard({list,count}:{list:any,count:number}) {
+export default function TableCard({navData}:{navData:any}) {
 
-    const [data,setData] = useState([])
+    const [languagesId,setLanguagesId] = useState("2");
 
-    const [loading,setLoading] = useState(false)
+    const { createAbortController } = useAbortController();
+
+    const [data, setData] = useState(navData.list.map((item: any) => ({
+        ...item,
+        key: item.id // 使用数据中的 id 作为 key，或者用其他唯一标识符
+    })));
+
+    const [loading,setLoading] = useState(false);
 
     const columns: TableProps<DataType>['columns'] = [
         {
           title: '菜单标题',
-          dataIndex: 'title',
-          key: 'title',
+          dataIndex: 'name',
+          key: 'name',
           width: 300,
           render: (value,record) => (
-                <div>{value}</div>
+            <div>{record?.name[languagesId] || record?.name?.default}</div>
           ),
         },
         {
           title: '菜单一级目录',
-          dataIndex: 'nav',
-          key: 'nav',
-          render: (value,record) => (
-            <div>123</div>
-          )
+          dataIndex: 'id',
+          key: 'id',
+          render: (value,record) => {
+            const validItems = record?.nodeTree?.filter((item: any) => item.name.default?.trim());
+            const content = validItems?.length > 0 ? validItems.map((item: any) => item.name.default).join(' | ') : <span className="font-12 color-8F96AE font-w-400">尚未添加菜单项</span>;
+            return <Flex>{content}</Flex>;
+          }
         },
     ];
   
     const [pagination,setPagination] = useState({
         current: 1,
         pageSize: 10,
-        total: 20,
-    })
-
-    useEffect(()=>{
-      setData(list)
-    },[])
-
-    // 获取文章列表
-    const fetchArticleList = (page:number,limit:number)=>{
-    //   setLoading(true)
-    //   getArticleList(page.toString(),limit.toString()).then(res=>{
-    //     setData(res.data)
-    //     setPagination({
-    //       ...pagination,
-    //       current: page,
-    //       pageSize: limit,
-    //     })
-    //   }).catch(err=>{
-  
-    //   }).finally(()=>{
-    //     setLoading(false)
-    //   })
+        total: navData.count,
+    });
+    
+    // 获取分页数据
+    const fetchData = (page:number,pageSize:number,languagesId:string)=>{
+      setLoading(true);
+      const signal = createAbortController();
+      getNavList({
+        page: page.toString(),
+        limit: pageSize.toString(),
+        languagesId: languagesId,
+        pid: "0",
+      },signal).then((res) => {
+        const newData: DataType[] = res.data?.list?.map((item: any) => ({
+          ...item,
+          key: item.id
+        }));
+        setData(newData); // 使用过滤后的数据
+        setPagination({
+          current:page,
+          pageSize: pageSize,
+          total: res.data.total,
+        });
+      }).catch(error => {
+        // console.error('Error fetching data:', error);
+      }).finally(() => {
+        setLoading(false);
+      });
     }
+
+    // 一级导航
+    // 添加一个 ref 来跟踪是否是首次渲染
+    const isFirstRender = useRef(true);
+    useEffect(()=>{
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
+      fetchData(pagination.current!,pagination.pageSize!,languagesId)
+    },[languagesId])
 
     return (
         <Scoped>
             <Card>
+                {/* 自定义语言 */}
+                <Flex justify="space-between" align="center" style={{ marginBottom: "12px" }}>
+                  <MyInput prefix={<SearchSecondIcon />} placeholder="请输入菜单标题" style={{ height: "36px",maxWidth:"420px" }} />
+                  <LangSelect lang={languagesId} setLang={setLanguagesId} />
+                </Flex>
                 {/*  */}
-                <Table<DataType> columns={columns} dataSource={data} 
+                <Table<DataType>
+                  columns={columns}
+                  dataSource={data} 
                   onRow={(record) => ({
                     onClick: () => {
-                      console.log('Row clicked:', record);
-                    //   history.push(`/website/articles/edit?id=${record.id}&langId=${record.languages_id}`);
+                      history.push(`/website/navList/${record.id}/${languagesId}`)
                     },
                   })}
                   pagination={{
                     ...pagination,
                     showSizeChanger: true,
                     onChange: (page, pageSize) => {
-                      fetchArticleList(page,pageSize)
+                      fetchData(page,pageSize,languagesId);
                     },
                   }}
                   loading={loading}

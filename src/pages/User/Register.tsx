@@ -1,6 +1,6 @@
-import { Button, Form, Input, Divider, Checkbox, message, Select, ConfigProvider, Dropdown, Flex } from 'antd';
+import { Button, Form, Input, Divider, Checkbox, message, ConfigProvider, Dropdown, Flex } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { FormattedMessage, useIntl, useModel } from '@umijs/max';
+import { FormattedMessage, useIntl } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
 import { getFakeCaptcha, register } from '@/services/y2/api';
 import {state} from '../../../config/myConfig'
@@ -36,11 +36,9 @@ export default function Register(props: Props) {
 
     const [countdown, setCountdown] = useState(0); // 倒计时状态
 
-    const [type, setType] = useState<string>('account');
-    const { initialState, setInitialState } = useModel('@@initialState');
     const [captchaIsLoding, setCaptchaIsLoading] = useState(false);
-    const [formIsLoading, setFormIsLoading] = useState(false);
     const [phone, setPhone] = useState('');
+
     const intl = useIntl();
 
     const [phoneCode,setPhoneCode] = useState("86");
@@ -94,9 +92,7 @@ export default function Register(props: Props) {
 
     return (
         <Scoped>
-            <h3>
-                <FormattedMessage id="register.title" defaultMessage="开始您的免费试用" />
-            </h3>
+            <h3>{intl.formatMessage({id: 'user.register.title'})}</h3>
             <div className="register-form-content">
             <div className='user-box' ref={Ref}></div>
             <Form
@@ -107,13 +103,8 @@ export default function Register(props: Props) {
                     async (values: API.LoginParams) => {
                         try {
                             const msg = await register({ ...values,phoneCode });
-                            console.log(msg);
                             if (msg.status == 1) {
-                                const defaultLoginSuccessMessage = intl.formatMessage({
-                                    id: 'pages.register.success',
-                                    defaultMessage: '注册成功！',
-                                });
-                                message.success(defaultLoginSuccessMessage);
+                                message.success(intl.formatMessage({id: 'user.register.success'}));
                                 navigate('/user/signIn');
                                 return;
                             }else if(msg.status == -1){
@@ -121,12 +112,7 @@ export default function Register(props: Props) {
                                 return;
                             }
                         } catch (error) {
-                            const defaultLoginFailureMessage = intl.formatMessage({
-                                id: 'pages.register.failure',
-                                defaultMessage: '注册失败，请重试！',
-                            });
-                            // console.log(error);
-                            message.error(defaultLoginFailureMessage);
+                            message.error(intl.formatMessage({id: 'user.register.failure'}));
                         }
                     }
                 }
@@ -137,15 +123,12 @@ export default function Register(props: Props) {
                     rules={[
                         {
                             required: true,
-                            message: intl.formatMessage({ id: 'pages.login.phone.required', defaultMessage: '手机号是必填项' }),
+                            message: intl.formatMessage({ id: 'user.register.phoneRequired' }),
                         },
                         {
                             pattern: /^1\d{10}$/,
                             message: (
-                                <FormattedMessage
-                                    id="pages.login.phoneNumber.invalid"
-                                    defaultMessage="手机号格式错误！"
-                                />
+                                intl.formatMessage({ id: 'user.register.phoneNumberInvalid' })
                             ),
                         },
                     ]}
@@ -157,7 +140,7 @@ export default function Register(props: Props) {
                         style={{
                             height: '52px',
                         }}
-                        placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
+                        placeholder={intl.formatMessage({ id: 'user.register.usernameLabel' })}
                         prefix={<UserOutlined className="site-form-item-icon" />}
                         suffix={
                             <ConfigProvider
@@ -207,7 +190,7 @@ export default function Register(props: Props) {
                     rules={[
                         {
                             required: true,
-                            message: intl.formatMessage({ id: 'pages.captcha.required', defaultMessage: '请输入验证码' }),
+                            message: intl.formatMessage({ id: 'user.register.captchaRequired' }),
                         },
                     ]}
 
@@ -228,7 +211,7 @@ export default function Register(props: Props) {
                             }}
                             
                             type="text"
-                            placeholder={intl.formatMessage({ id: 'pages.captcha', defaultMessage: '验证码' })}
+                            placeholder={intl.formatMessage({ id: 'user.register.captcha' })}
                         />
                         <Button
                             loading={captchaIsLoding}
@@ -242,17 +225,15 @@ export default function Register(props: Props) {
                                 setCaptchaIsLoading(true);
                                 const result = await getFakeCaptcha(phone,phoneCode,"reg");
                                 if (!result) {
-                                    message.error(intl.formatMessage({
-                                        id: 'pages.getcaptcha.failure'
-                                    })); return;
+                                    message.error(intl.formatMessage({id: 'user.register.captchaFailure'}));
+                                    return;
                                 } else {
-                                    // 
                                     if(result.status){
                                         // 获取验证码成功
                                         setCountdown(60); // 启动60秒倒计时
-                                        // message.success(intl.formatMessage({
-                                        //     id: 'pages.getcaptcha.success'
-                                        // }));
+                                        message.success(intl.formatMessage({
+                                            id: 'user.register.getcaptchaSuccess'
+                                        }));
                                     }else if(result.status == 0){
                                         message.error("手机号已被注册")
                                     }
@@ -260,7 +241,7 @@ export default function Register(props: Props) {
                                 setCaptchaIsLoading(false);
                             }}
                         >
-                            {countdown > 0 ? `${countdown}s` : <FormattedMessage id={'pages.getCaptcha'} />}
+                            {countdown > 0 ? `${countdown}s` : <FormattedMessage id={'user.register.getCaptcha'} />}
                         </Button>
                     </div>
                 </Form.Item>
@@ -269,7 +250,7 @@ export default function Register(props: Props) {
                     rules={[
                         {
                             required: true,
-                            message: intl.formatMessage({ id: 'pages.login.password.required' }),
+                            message: intl.formatMessage({ id: 'user.register.passwordRequired' }),
                         },
                     ]}
                 >
@@ -280,7 +261,7 @@ export default function Register(props: Props) {
                         visibilityToggle={true}
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        placeholder={intl.formatMessage({ id: 'pages.login.password.label' })}
+                        placeholder={intl.formatMessage({ id: 'user.register.passwordLabel' })}
                     />
                 </Form.Item>
                 <Form.Item
@@ -289,14 +270,14 @@ export default function Register(props: Props) {
                     rules={[
                         {
                             required: true,
-                            message: intl.formatMessage({ id: 'pages.login.password.required' }),
+                            message: intl.formatMessage({ id: 'user.register.passwordRequired' }),
                         },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
                                 if (!value || getFieldValue('password') === value) {
                                     return Promise.resolve();
                                 }
-                                return Promise.reject(<FormattedMessage id="pages.register.password.not.match" defaultMessage='输入的密码不匹配' />);
+                                return Promise.reject(<FormattedMessage id="user.register.passwordNotMatch" defaultMessage='输入的密码不匹配' />);
                             },
                         })
                     ]}
@@ -308,7 +289,7 @@ export default function Register(props: Props) {
                         visibilityToggle={true}
                         prefix={<LockOutlined className="site-form-item-icon" />}
                         type="password"
-                        placeholder={intl.formatMessage({ id: 'pages.register.password.again' })}
+                        placeholder={intl.formatMessage({ id: 'user.register.confirmPasswordLabel' })}
                     />
                 </Form.Item>
                 <Form.Item
@@ -319,22 +300,22 @@ export default function Register(props: Props) {
                             validator: (_, value) =>
                                 value
                                     ? Promise.resolve()
-                                    : Promise.reject(new Error(intl.formatMessage({ id: 'pages.shouldGreetment' }))),
+                                    : Promise.reject(new Error(intl.formatMessage({ id: 'user.register.shouldGreetment' }))),
                         },
                     ]}
                 >
                     <Checkbox style={{
                         color: '#7a8499',
                         fontSize: '12px'
-                    }}><FormattedMessage id={'pages.registerAgreed'} defaultMessage='注册表示您已同意' />{state.title}&nbsp;
+                    }}>{intl.formatMessage({ id: 'user.register.registerAgreed' })}{state.title}&nbsp;
                         <a style={{
                             fontSize: '12px',
                             fontWeight: '400'
-                        }} href='https://www.matacart.com/xieyi.html'><FormattedMessage id="pages.userAgreement" defaultMessage="用户协议" />,</a>
+                        }} href='https://www.matacart.com/xieyi.html'>{intl.formatMessage({ id: 'user.register.userAgreement' })},</a>
                         <a style={{
                             fontSize: '12px',
                             fontWeight: '400'
-                        }} href='https://www.matacart.com/privacy.html'><FormattedMessage id='pages.privacyPolicy' defaultMessage='隐私政策' /></a>
+                        }} href='https://www.matacart.com/privacy.html'>{intl.formatMessage({ id: 'user.register.privacyPolicy' })}</a>
                     </Checkbox>
                 </Form.Item>
                 <Button
@@ -345,7 +326,7 @@ export default function Register(props: Props) {
                     htmlType="submit"
                     className="register-form-button"
                 >
-                    <FormattedMessage id="menu.register" defaultMessage="注册" />
+                    {intl.formatMessage({ id: 'user.register.register' })}
                 </Button>
             </Form>
             </div>
@@ -360,7 +341,7 @@ export default function Register(props: Props) {
                 }}
                 orientationMargin="3em"
             >
-                <FormattedMessage id="pages.register.otherWays" defaultMessage='通过其他方式注册' />
+                {intl.formatMessage({ id: 'user.register.otherWays' })}
             </Divider>
             <div
                 className="external-register-button-container"
@@ -379,23 +360,24 @@ export default function Register(props: Props) {
                             height: '62%',
                         }}
                     />
-                    {intl.formatMessage({ id: 'pages.register.link.google' })}
+                    {intl.formatMessage({ id: 'user.register.linkGoogle' })}
                 </Button>
                 <Button className="external-register-button" block>
                     <img src={facebookIcon} />
-                    {intl.formatMessage({ id: 'pages.register.link.facebook' })}
+                    {intl.formatMessage({ id: 'user.register.linkFacebook' })}
                 </Button>
                 <Button className="external-register-button" block>
                     <img src={appleIcon} />
-                    {intl.formatMessage({ id: 'pages.register.link.apple' })}
+                    {intl.formatMessage({ id: 'user.register.linkApple' })}
                 </Button>
                 <Button className="external-register-button" block>
                     <img src={linkieIcon} style={{ height: '100%', objectFit: 'contain' }} />
-                    {intl.formatMessage({ id: 'pages.register.link.linkie' })}
+                    {intl.formatMessage({ id: 'user.register.linkLinkie' })}
                 </Button>
                 <div>
-                    <FormattedMessage id={'pages.alreadyHavaAccount'} />,
-                    <Link to="/user/signIn"><FormattedMessage id={'pages.goToLogin'} /></Link>
+                    {intl.formatMessage({ id: 'user.register.alreadyHavaAccount' })},
+                    <Link to="/user/signIn">
+                    {intl.formatMessage({ id: 'user.register.goToLogin' })}</Link>
                 </div>
             </div>
         </Scoped>

@@ -1,16 +1,17 @@
 import { history } from "@umijs/max"
-import { Button, Card, Flex, MenuProps, message, Space, Table, TableProps, Tooltip } from "antd"
-import { useEffect, useState } from "react";
+import { Card, Flex, message, Space, Table, TableProps, Tooltip } from "antd"
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs"
 import SearchInput from "@/components/Input/SearchInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { delArticles, delCustomerPage, getArticleList, getCustomerPageList } from "@/services/y2/api";
+import { delCustomerPage, getCustomerPageList } from "@/services/y2/api";
 import cookie from 'react-cookies';
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
+import LangSelect from "@/components/Select/LangSelect";
 
 
 interface DataType {
@@ -25,9 +26,11 @@ interface DataType {
 
 export default function CustomPageListCard({list,count}) {
 
-    const [data,setData] = useState(list)
+    const [data,setData] = useState(list);
 
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(false);
+
+    const [languagesId,setLanguagesId] = useState("2");
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -116,7 +119,7 @@ export default function CustomPageListCard({list,count}) {
     // 获取自定义页面列表
     const fetchArticleList = (page:number,limit:number)=>{
       setLoading(true)
-      getCustomerPageList(page.toString(),limit.toString()).then(res=>{
+      getCustomerPageList(page.toString(),limit.toString(),languagesId).then(res=>{
         setData(res.data)
         setPagination({
           ...pagination,
@@ -130,6 +133,16 @@ export default function CustomPageListCard({list,count}) {
       })
     }
 
+    // 
+    const isFirstRender = useRef(true);
+    useEffect(()=>{
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        return;
+      }
+      fetchArticleList(pagination.current,pagination.pageSize)
+    },[languagesId])
+
     return (
         <Scoped>
             <Card>
@@ -142,12 +155,12 @@ export default function CustomPageListCard({list,count}) {
                       { value: '1', label: '隐藏' },
                     ]} onChange={()=>{}} />
                   </Flex>
+                  <LangSelect lang={languagesId} setLang={setLanguagesId} />
                 </Flex>
                 {/*  */}
                 <Table<DataType> columns={columns} dataSource={data} 
                   onRow={(record) => ({
                     onClick: () => {
-                    //   console.log('Row clicked:', record);
                       history.push(`/website/page/edit?id=${record.id}&langId=${record.languages_id}`);
                     },
                   })}

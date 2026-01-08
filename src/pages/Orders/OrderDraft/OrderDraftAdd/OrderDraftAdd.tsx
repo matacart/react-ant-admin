@@ -11,7 +11,7 @@ import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useNavigate } from 'react-router-dom';
 import orderDraft from '@/store/order/orderDraft';
-import { addDraftOrder, editDraftOrder } from '@/services/y2/api';
+import { addDraftOrder } from '@/services/y2/api';
 import AddProductCard from '../AddProductCard';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
@@ -47,9 +47,15 @@ function OrderDraftAdd() {
 
     // 保存
     const submit = ()=>{
+        
         // 将扁平化数据转为原数据结构
         const productInfo = convertFlatToNested(orderDraft.productInfo);
+
+        console.log(productInfo)
+        console.log(orderDraft.customerInfo)
+
         if(orderDraft.customerInfo && orderDraft.productInfo?.length>0){
+            console.log(productInfo)
             setIsAlert(null)
             setLoading(true)
             addDraftOrder({

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Checkbox, ConfigProvider, Drawer, Flex, Radio } from 'antd';
+import { Checkbox, ConfigProvider, Drawer, Flex, Radio } from 'antd';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
 import { useIntl } from '@umijs/max';
@@ -8,11 +8,6 @@ import styled from 'styled-components';
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import orderList from '@/store/order/orderList';
-
-// 新增类型定义
-interface ConditionType {
-  saleStoreHandles?: number;
-}
 
 export default function MoreSelect(){
 
@@ -381,7 +376,7 @@ export default function MoreSelect(){
 
   return (
     <Scoped ref={Ref}>
-      <DefaultButton text={intl.formatMessage({ id: 'order.button.moreselect' })} onClick={showDrawer} />
+      <DefaultButton text={"更多筛选"} onClick={showDrawer} />
       <Drawer
         title="筛选"
         open={open}

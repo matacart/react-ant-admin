@@ -1,10 +1,10 @@
 import { getAccessToken, login } from '@/services/y2/api';
-import { Alert, message, Button, Form, Input, Divider,Checkbox, Flex, Dropdown, ConfigProvider } from 'antd';
+import { message, Button, Form, Input, Divider,Checkbox, Flex, Dropdown, ConfigProvider } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import cookie, { load } from 'react-cookies'
+import cookie from 'react-cookies'
 import { UnfoldIcon } from '@/components/Icons/Icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -28,7 +28,6 @@ const style = {
 export default function Login() {
     //国际化
     const intl = useIntl();
-    const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
     const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
 
@@ -80,29 +79,29 @@ export default function Login() {
     };
 
     // 已记住登录
-    const goHome = async () => {
-      if(cookie.load("token")){
-        // console.log(cookie.load("access_token"));
-        let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
-        await getAccessToken().then(res => {
-          if(window.location.hostname.startsWith("localhost")){
-            cookie.save("access_token",res.access_token,{path:"/"})
-          }else{
-            cookie.save('access_token', res.access_token, { domain:test,path: '/' });
-          }
-        }).catch((err) => { console.log(err) });
+    // const goHome = async () => {
+    //   if(cookie.load("token")){
+    //     // console.log(cookie.load("access_token"));
+    //     let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
+    //     await getAccessToken().then(res => {
+    //       if(window.location.hostname.startsWith("localhost")){
+    //         cookie.save("access_token",res.access_token,{path:"/"})
+    //       }else{
+    //         cookie.save('access_token', res.access_token, { domain:test,path: '/' });
+    //       }
+    //     }).catch((err) => { console.log(err) });
 
-        // console.log(cookie.load("access_token"));
-        await fetchUserInfo();
-        const urlParams = new URL(window.location.href).searchParams;
-        // 是否是商户
-        // history.push("/stores/merchantApplication")
-        // 是否有店铺
-        history.push(urlParams.get('redirect') || '/');
-        // setUserLoginState(msg);
-        return;
-      }
-    }
+    //     // console.log(cookie.load("access_token"));
+    //     await fetchUserInfo();
+    //     const urlParams = new URL(window.location.href).searchParams;
+    //     // 是否是商户
+    //     // history.push("/stores/merchantApplication")
+    //     // 是否有店铺
+    //     history.push(urlParams.get('redirect') || '/');
+    //     // setUserLoginState(msg);
+    //     return;
+    //   }
+    // }
 
     const onFinish = async (values: API.LoginParams) => {
       console.log(new Date().getTime());
@@ -128,7 +127,7 @@ export default function Login() {
           // localStorage.setItem('token', token);
           
           const defaultLoginSuccessMessage = intl.formatMessage({
-            id: 'pages.login.success',
+            id: 'user.login.success',
             defaultMessage: '登录成功！',
           });
           message.success(defaultLoginSuccessMessage);
@@ -141,7 +140,7 @@ export default function Login() {
           // history.push("/stores/merchantApplication")
           // 是否有店铺
           history.push(urlParams.get('redirect') || '/');
-          setUserLoginState(msg);
+          // setUserLoginState(msg);
           return;
         }
         throw new Error(msg.msg);
@@ -166,10 +165,7 @@ export default function Login() {
     return (
         <Scoped>
             {/* 表头 */}
-            <h3>
-              <FormattedMessage id="login.title" defaultMessage="登录商店" />
-            </h3>
-            
+            <h3>{intl.formatMessage({id: 'user.login.title'})}</h3>
             {/* 输入项 */}
             <div className="login-form-content">
               {/* 登录组件 */}
@@ -187,7 +183,7 @@ export default function Login() {
                   rules={[
                     {
                       required: true,
-                      message: intl.formatMessage({ id: 'pages.login.username.required' }),
+                      message: intl.formatMessage({ id: 'user.login.usernameRequired' }),
                     },
                   ]}
                 >
@@ -196,7 +192,7 @@ export default function Login() {
                         height: '52px',
                       }}
                       prefix={<UserOutlined className="site-form-item-icon" />}
-                      placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
+                      placeholder={intl.formatMessage({ id: 'user.login.usernameLabel' })}
                       suffix={
                         <ConfigProvider
                           theme={{
@@ -229,7 +225,6 @@ export default function Login() {
                                       style={{height:"36px",fontSize:"14px",borderRadius:"4px"}}
                                       placeholder="搜索国家"
                                       onChange={(e) => setSearchKey(e.target.value)}
-                                      // onClick={(e) => e.stopPropagation()}
                                       suffix={<SearchOutlined />}
                                     />
                                   </Form.Item>
@@ -252,7 +247,7 @@ export default function Login() {
                   rules={[
                     {
                       required: true,
-                      message: intl.formatMessage({ id: 'pages.login.password.required' }),
+                      message: intl.formatMessage({ id: 'user.login.passwordRequired' }),
                     },
                   ]}
                 >
@@ -262,7 +257,7 @@ export default function Login() {
                     }}
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
-                    placeholder={intl.formatMessage({ id: 'pages.login.password.label' })}
+                    placeholder={intl.formatMessage({ id: 'user.login.passwordLabel' })}
                   />
                 </Form.Item>
                 <Form.Item
@@ -274,9 +269,7 @@ export default function Login() {
                     margin:0
                   }}
                 >
-                  <Checkbox>
-                    <FormattedMessage id="pages.login.rememberMe" defaultMessage="记住我" />
-                  </Checkbox>
+                  <Checkbox>{intl.formatMessage({ id: 'user.login.rememberMe' })}</Checkbox>
                 </Form.Item>
                 <Button
                   style={{
@@ -286,17 +279,17 @@ export default function Login() {
                   htmlType="submit"
                   className="login-form-button"
                 >
-                  <FormattedMessage id="menu.login" defaultMessage="登录" />
+                  {intl.formatMessage({ id: 'user.login.login' })}
                 </Button>
               </Form>
             </div>
             {/* 忘记密码 */}
             <div className="link-button-container">
               <Link to='/user/signUp'>
-                <FormattedMessage id="menu.register" defaultMessage="用户注册" />
+                {intl.formatMessage({ id: 'user.login.register' })}
               </Link>
               <Link to='/user/forget' >
-                <FormattedMessage id="pages.login.forgotPassword" defaultMessage="忘记密码" />
+                {intl.formatMessage({ id: 'user.login.forgotPassword' })}
               </Link>
             </div>
             {/* 分割线 */}
@@ -311,7 +304,7 @@ export default function Login() {
               }}
               orientationMargin="3em"
             >
-              <FormattedMessage id='pages.or'/>
+              {intl.formatMessage({ id: 'user.login.or' })}
             </Divider>
             {/* 其他登录方式 */}
             <div
@@ -331,19 +324,19 @@ export default function Login() {
                     height: '62%',
                   }}
                 />
-                {intl.formatMessage({ id: 'pages.login.link.google' })}
+                {intl.formatMessage({ id: 'user.login.linkGoogle' })}
               </Button>
               <Button className="external-login-button" block>
                 <img src={facebookIcon} />
-                {intl.formatMessage({ id: 'pages.login.link.facebook' })}
+                {intl.formatMessage({ id: 'user.login.linkFacebook' })}
               </Button>
               <Button className="external-login-button" block>
                 <img src={appleIcon} />
-                {intl.formatMessage({ id: 'pages.login.link.apple' })}
+                {intl.formatMessage({ id: 'user.login.linkApple' })}
               </Button>
               <Button className="external-login-button" block>
                 <img src={linkieIcon} style={{ height: '100%',objectFit: 'contain' }} />
-                {intl.formatMessage({ id: 'pages.login.link.linkie' })}
+                {intl.formatMessage({ id: 'user.login.linkLinkie' })}
               </Button>
             </div>
         </Scoped>

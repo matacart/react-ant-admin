@@ -13,13 +13,11 @@ class documentLibrary{
     setSelectFileIndex(value:any) {
         this.selectFileIndex = value;
     }
-    
     // 选中文件
     selectFileList: any = [];
     setSelectFileList(value: any) {
         this.selectFileList = value;
     }
-
     // 清空数据
     clear(){
         this.selectFileIndex = {};

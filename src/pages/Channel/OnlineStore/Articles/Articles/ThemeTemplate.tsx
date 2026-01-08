@@ -1,5 +1,6 @@
+import DefaultSelect from "@/components/Select/DefaultSelect";
 import articles from "@/store/channel/articles/articles";
-import { Card, Select } from "antd";
+import { Card } from "antd";
 import styled from "styled-components";
 
 
@@ -18,7 +19,7 @@ const handleChange = (value: string) => {
                 <div className="title">
                     主题模板
                 </div>
-                <Select
+                <DefaultSelect
                     value={articles.articles.template_id}
                     style={{ width: "100%" }}
                     onChange={handleChange}

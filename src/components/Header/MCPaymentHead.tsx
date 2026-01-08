@@ -1,8 +1,6 @@
 import { Avatar, Button, Flex, Input, theme } from "antd";
 import styled from "styled-components";
-import { Ping, Question, SelectLang } from "../RightContent";
 import { useEffect, useState } from 'react';
-import { ArrowLeftOutlined, BulbOutlined } from "@ant-design/icons";
 import { QuitIcon } from "../Icons/Icons";
 
 

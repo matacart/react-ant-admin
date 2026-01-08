@@ -1,5 +1,5 @@
-import { Button, Form, Input, Divider, message, Space, Select, ConfigProvider, Dropdown, Flex } from 'antd';
-import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, message, ConfigProvider, Dropdown, Flex } from 'antd';
+import { LockOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl, Link ,history,useModel} from '@umijs/max';
 import React,{ useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -24,18 +24,15 @@ export default function LoginForm() {
     const [phone, setPhone] = useState('');
     const [captchaIsLoding, setCaptchaIsLoading] = useState(false);
     const [formIsLoading, setFormIsLoading] = useState(false);
-    const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
-    const [type, setType] = useState<string>('account');
     const { initialState, setInitialState } = useModel('@@initialState');
 
     // 国际号码区号
-    // const [InternationalAreaCode,setInternationalAreaCode] = useState("86");
     const [phoneCode,setPhoneCode] = useState("86");
     // 搜索
     const [searchKey, setSearchKey] = useState('');
 
     const Ref = useRef(null);
-    // const items = JSON.parse(sessionStorage.getItem("country") || "[]").filter(item=>item.country_name.includes(searchKey))
+
     const filteredItems  = JSON.parse(sessionStorage.getItem("country") || "[]").filter((item: any) => item.country_name.includes(searchKey));
 
     const items = filteredItems
@@ -66,27 +63,13 @@ export default function LoginForm() {
         }] : []
     );
 
-    const fetchUserInfo = async () => {
-        const userInfo = await initialState?.fetchUserInfo?.();
-        if (userInfo) {
-          flushSync(() => {
-            setInitialState((s) => ({
-              ...s,
-              currentUser: userInfo,
-            }));
-          });
-        }
-    };
-
     useEffect(() => {
     }, []);
 
     return (
         <Scoped>
-            <h3>
-                <FormattedMessage id="forget.title" defaultMessage="忘记密码" />
-            </h3>
-            <p className='login-tip'>请验证你的登录账号，以进行重设密码</p>
+            <h3>{intl.formatMessage({id: 'user.forget.title'})}</h3>
+            <p className='login-tip'>{intl.formatMessage({id: 'user.forget.tip'})}</p>
             <div className="login-form-content">
                 <div className='user-box' ref={Ref}></div>
                 <Form
@@ -97,27 +80,17 @@ export default function LoginForm() {
                     onFinish={async (values: API.LoginParams) => {                            
                         try {
                             const msg = await resetPassword({ ...values,phoneCode });
-                            console.log(msg);
                             if (msg.status) {
-                            // localStorage.setItem('token', token);
-                                const defaultLoginSuccessMessage = intl.formatMessage({
-                                    id: 'pages.reset.success',
-                                    defaultMessage: '重设密码成功！',
-                                });
-                                message.success(defaultLoginSuccessMessage);
+                                message.success(intl.formatMessage({id: 'user.forget.success'}));
                                 // await fetchUserInfo();
                                 // const urlParams = new URL(window.location.href).searchParams;
                                 // history.push(urlParams.get('redirect') || '/');
                                 history.push('/user/signIn');
                             }else{
-                                message.error(intl.formatMessage({id: 'pages.captcha.wrong', defaultMessage: '验证码错误'}));
+                                message.error(intl.formatMessage({id: 'user.forget.captchaWrong'}));
                             }
                         } catch (error) {
-                            const defaultLoginFailureMessage = intl.formatMessage({
-                            id: 'pages.reset.failure',
-                            defaultMessage: '重设密码失败，请重试！',
-                            });
-                            message.error(defaultLoginFailureMessage);
+                            message.error(intl.formatMessage({id: 'user.forget.resetFailure'}));
                         }
                     }
                     }
@@ -128,15 +101,12 @@ export default function LoginForm() {
                         rules={[
                             {
                                 required: true,
-                                message: intl.formatMessage({ id: 'pages.login.phone.required', defaultMessage:'手机号是必填项' }),
+                                message: intl.formatMessage({ id: 'user.forget.phoneRequired' })
                             },
                             {
                                 pattern: /^1\d{10}$/,
                                 message: (
-                                    <FormattedMessage
-                                        id="pages.login.phoneNumber.invalid"
-                                        defaultMessage="手机号格式错误！"
-                                    />
+                                    intl.formatMessage({ id: 'user.forget.phoneNumberInvalid' })
                                 ),
                             },
                         ]}
@@ -148,7 +118,7 @@ export default function LoginForm() {
                             onChange={(e) => {
                                 setPhone(e.target.value);
                             }}
-                            placeholder={intl.formatMessage({ id: 'pages.login.username.label' })}
+                            placeholder={intl.formatMessage({ id: 'user.forget.usernameLabel' })}
                             suffix={
                                 <ConfigProvider
                                   theme={{
@@ -174,7 +144,6 @@ export default function LoginForm() {
                                               style={{height:"36px",fontSize:"14px",borderRadius:"4px"}}
                                               placeholder="搜索国家"
                                               onChange={(e) => setSearchKey(e.target.value)}
-                                              // onClick={(e) => e.stopPropagation()}
                                               suffix={<SearchOutlined />}
                                             />
                                           </Form.Item>
@@ -198,7 +167,7 @@ export default function LoginForm() {
                         rules={[
                             {
                                 required: true,
-                                message: intl.formatMessage({ id: 'pages.captcha.required', defaultMessage: '请输入验证码' }),
+                                message: intl.formatMessage({ id: 'user.forget.captchaRequired' }),
                             },
                         ]}
 
@@ -218,7 +187,7 @@ export default function LoginForm() {
                                     marginRight: '10px',
                                 }}
                                 type="text"
-                                placeholder={intl.formatMessage({ id: 'pages.captcha', defaultMessage: '验证码' })}
+                                placeholder={intl.formatMessage({ id: 'user.forget.captcha' })}
                             />
                             <Button 
                             loading={captchaIsLoding}
@@ -240,9 +209,9 @@ export default function LoginForm() {
                                 }
                                 setCaptchaIsLoading(false);
                               }}
-
-
-                            ><FormattedMessage id={'pages.getCaptcha'} defaultMessage={'获取验证码'}/></Button>
+                            >
+                                {intl.formatMessage({ id: 'user.forget.getCaptcha' })}
+                            </Button>
                         </div>
 
                     </Form.Item>
@@ -251,7 +220,7 @@ export default function LoginForm() {
                         rules={[
                             {
                                 required: true,
-                                message: intl.formatMessage({ id: 'pages.login.password.required' }),
+                                message: intl.formatMessage({ id: 'user.forget.passwordRequired' }),
                             },
                         ]}
                     >
@@ -261,7 +230,7 @@ export default function LoginForm() {
                             }}
                             name='password'
                             prefix={<LockOutlined className="site-form-item-icon" />}
-                            placeholder={intl.formatMessage({ id: 'pages.login.password.label' })}
+                            placeholder={intl.formatMessage({ id: 'user.forget.passwordLabel' })}
                         />
                     </Form.Item>
                     <Button
@@ -273,12 +242,13 @@ export default function LoginForm() {
                         className="login-form-button"
                         loading={formIsLoading}
                     >
-                        <FormattedMessage id="menu.captcha" defaultMessage="验证" />
+                        {intl.formatMessage({ id: 'user.forget.reset' })}
                     </Button>
 
                 </Form>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50px' }}>
-                    <Link to='/user/signIn'><FormattedMessage id='pages.goToLogin'/></Link>
+                    <Link to='/user/signIn'>
+                    {intl.formatMessage({ id: 'user.forget.goToLogin' })}</Link>
                 </div>
             </div>
         </Scoped>

@@ -325,7 +325,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             <Modal
                 title="规格编辑"
                 centered
-                destroyOnClose
+                destroyOnHidden
                 width={800}
                 open={attributesModal}
                 onOk={submit}
@@ -358,7 +358,7 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             <Modal
             open={imgModal}
             width={800}
-            destroyOnClose
+            destroyOnHidden
             centered
             okText="选择"
             cancelText="取消"

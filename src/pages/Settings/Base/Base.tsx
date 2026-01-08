@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
-// import { history } from "@umijs/max"
-import { Button, Divider, message } from "antd"
+import { history } from "@umijs/max"
+import { Divider, message } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import SettlementCurrencyCard from "./SettlementCurrencyCard"
@@ -10,13 +10,11 @@ import ShopStatusCard from './ShopStatusCard';
 import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
-import cookie from 'react-cookies';
-import { useNavigate } from "react-router-dom"
+import cookie from 'react-cookies'
 import PrimaryButton from "@/components/Button/PrimaryButton"
 
 function Base() {
 
-    const navigate = useNavigate();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
@@ -34,7 +32,7 @@ function Base() {
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">基础设置</div>

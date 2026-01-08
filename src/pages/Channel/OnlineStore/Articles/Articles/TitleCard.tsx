@@ -1,13 +1,18 @@
+import DefaultInput from "@/components/Input/DefaultInput";
 import articles from "@/store/channel/articles/articles";
-import { Card, Form, FormInstance, Input } from "antd"
-import { forwardRef, useImperativeHandle } from "react";
+import { Card, Form, FormInstance } from "antd"
+import { useEffect } from "react";
 import styled from "styled-components"
 
-const TitleCard = forwardRef<FormInstance>((props, ref) => {
+const TitleCard = (props: { form: FormInstance }) => {
 
-    const [form] = Form.useForm()
+    const form = props.form;
 
-    useImperativeHandle(ref, () => form);
+    useEffect(() => {
+        form.setFieldsValue({
+            title: articles.articles.title
+        })
+    }, [articles.articles.title])
 
     return (
         <Scoped>
@@ -21,20 +26,21 @@ const TitleCard = forwardRef<FormInstance>((props, ref) => {
                             { max:280, message: '字符数不能超过280个字符' },
                         ]}
                     >
-                        <Input
-                            onChange={(e) => {
+                        <DefaultInput
+                            onChange={(e:any) => {
                                 articles.setArticles({
                                     ...articles.articles,
                                     title: e.target.value
                                 })
                             }}
-                            placeholder="例如：可发部关于新产品的博客" />
+                            placeholder="例如：可发部关于新产品的博客"
+                        />
                     </Form.Item>
                 </Form>
             </Card>
         </Scoped>
     )
-})
+}
 
 export default TitleCard
 

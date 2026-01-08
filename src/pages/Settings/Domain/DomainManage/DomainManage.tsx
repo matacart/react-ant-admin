@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, ExportOutlined, GlobalOutlined } from "@ant-design/icons"
-import { Card, Flex, List, message, Modal, Table, TableProps, TabsProps } from "antd"
+import { Card, Flex, Form, List, message, Modal, Table, TableProps, TabsProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import SuccessTag from "@/components/Tag/SuccessTag";
@@ -37,8 +37,6 @@ function DomainManage() {
     const [data,setData] = useState<DataType[]>([]);
 
     const [otherDomain,setOtherDomain] = useState("");
-
-    const [primaryName,setPrimaryName] = useState("");
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -96,24 +94,27 @@ function DomainManage() {
           
     ];
 
+    const [form] = Form.useForm();
+
     // 更新域名
     const handleOk = ()=>{
-        addDomainName(primaryName,otherDomain).then(res=>{
-            console.log(res)
-            if(res.code == 0){
-                let newData = [...data]
-                newData.forEach(element => {
-                    if(element.primaryName == ""){
-                        element.name = primaryName
-                    }else{
-                        element.primaryName = primaryName
-                    }
-                });
-                setData(newData);
-                cookie.save("domain",{...cookie.load("domain"),domain_primary:primaryName},{path:'/'})
-                setPrimaryName("")
-            }
-            setIsModalOpen(false)
+        form.validateFields().then(values=>{
+            addDomainName(values.primaryDoamin,otherDomain).then(res=>{
+                if(res.code == 0){
+                    let newData = [...data]
+                    newData.forEach(element => {
+                        if(element.primaryName == ""){
+                            element.name = values.primaryDoamin
+                        }else{
+                            element.primaryName = values.primaryDoamin
+                        }
+                    });
+                    setData(newData);
+                    cookie.save("domain",{...cookie.load("domain"),domain_primary:values.primaryDoamin},{path:'/'})
+                };
+                form.resetFields();
+                setIsModalOpen(false);
+            })
         })
     }
 
@@ -139,7 +140,7 @@ function DomainManage() {
     // 取消
     const handleCancel = () => {
         setIsModalOpen(false)
-        setPrimaryName("")
+        form.resetFields();
     };
 
     
@@ -211,7 +212,15 @@ function DomainManage() {
                     )}
                 >
                     <div>执行此更改无需任何费用。</div>
-                    <MyInput style={{margin:"12px 0",height:"36px"}} placeholder="www.example.com" value={primaryName} onChange={(e)=>{setPrimaryName(e.target.value)}} />
+                    <Form form={form}>
+                        <Form.Item name="primaryDoamin" rules={[
+                            { required: true, message: '请输入网址' },
+                            { max: 32, message: '域名长度不能超过32个字符' },
+                            { pattern: /^(?=^.{1,32}$)(?!.*\.\..*)(?!.*\.$)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/,message: '请输入有效的域名格式，例如: www.example.com' }
+                        ]}>
+                            <MyInput style={{margin:"12px 0",height:"36px"}} placeholder="www.example.com" />
+                        </Form.Item>
+                    </Form>
                 </Modal>
                 {/* 删除 */}
                 {contextHolder}

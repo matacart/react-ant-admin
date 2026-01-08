@@ -1,6 +1,6 @@
-import { Badge, Button, Card, Flex, Form, Input, Modal, Select, Spin } from "antd";
+import { Button, Card, Flex, Form, Modal, Spin } from "antd";
 import React, { useEffect, useMemo, useState } from 'react';
-import { PlusOutlined, SearchOutlined, ShopOutlined, UploadOutlined } from '@ant-design/icons';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
 import { message, Upload, Image } from 'antd';
 import styled from 'styled-components';
@@ -10,6 +10,8 @@ import product from "@/store/product/product";
 import DefaultInput from "@/components/Input/DefaultInput";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
+import { doUploadVideo, uploadPic } from "@/services/y2/api";
+
 const { Dragger } = Upload;
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -27,10 +29,8 @@ function ProductImg() {
   // 视频弹窗加载
   const [videoLoading, setVideoLoading] = useState(false);
 
-  const [addUrlModalOpen, setAddUrlModalOpen] = useState(false)
-  const [addImgModalOpen, setAddImgModalOpen] = useState(false)
+  const [addUrlModalOpen, setAddUrlModalOpen] = useState(false);
   const [form] = Form.useForm();
-
 
 // ##################### 添加多媒体文件 ###############################
 
@@ -94,7 +94,6 @@ function ProductImg() {
     setFileList(newImgList as any)
   }, [])
   
-  // 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -102,31 +101,28 @@ function ProductImg() {
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
-  // 上传
+  // 上传图片
   const beforeUploadImg = async (info: any) => {
     setLoading(true);
     let formData = new FormData()
     formData.append("file", info)
-    axios.post('/api/ApiAppstore/doUploadPic',formData).then((res: any) => {
-      console.log(res)
-      if(res.data.code == 0){
+    uploadPic(formData).then((res: any) => {
+      if(res.code == 0){
         setFileList([...fileList,{
           uid:(fileList.length).toString(),
-          name: res.data.data.src.toString(),
+          name: res.data.src.toString(),
           status: 'done',
-          url:res.data.data.src.toString(),
+          url:res.data.src.toString(),
         }]);
         product.setProductInfo(
           {
             ...product.productInfo,
-            additional_image:[...product.productInfo.additional_image,res.data.data.src.toString()]
+            additional_image:[...product.productInfo.additional_image,res.data.src.toString()]
           }
         )
-      }else{
-        message.error("上传失败", 1)
       }
     }).catch((err: any) => {
-      
+      message.error("上传失败", err.msg);
     }).finally(() => {
       setLoading(false);
     })
@@ -169,10 +165,9 @@ function ProductImg() {
   //   setFileList(newFileList);
   // }
 
-
+  // 上传视频
   const videoProps: UploadProps = {
     name: 'file',
-    // action: '/api/ApiAppstore/doUploadPic',
     showUploadList:false,
     maxCount:1,
     headers: {
@@ -180,24 +175,38 @@ function ProductImg() {
     },
     // 手动上传
     beforeUpload:(file)=>{
-      setVideoLoading(true)
-      if(file.type.slice(0,5)=="video"){
-        // 上传
-        let formData = new FormData()
-        formData.append("1", file)
-        axios.post('/api/ApiAppstore/doUploadVideo',formData).then((req: any) => {
-          if(req.data.code == 0){
-            form.setFieldValue('youTubeUrl', req.data.data.src)
-            setVideoLoading(false);
-          }else{
-            setVideoLoading(false);
-            message.error("上传失败", 1)
-          }
-        })
-      }else{
-        message.error("文件格式错误")
+      // 检查文件是否为视频格式
+      const validVideoTypes = [
+        'video/mp4',
+        'video/quicktime', // MOV
+        'video/x-msvideo', // AVI
+        'video/x-ms-wmv',
+        'video/x-flv',
+        'video/webm',
+        'video/x-m4v',
+        'video/x-matroska' // MKV
+      ];
+      if (!validVideoTypes.includes(file.type)) {
+        message.error("请上传有效的视频文件（MP4, MOV, AVI, WMV, FLV, WEBM, M4V, MKV 等）");
+        return false;
       }
-      return false
+      if(file.size > 1024*1024*5){
+        message.error("请上传小于5M的视频文件");
+        return false
+      }
+      setVideoLoading(true);
+      let formData = new FormData();
+      formData.append("file", file);
+      doUploadVideo(formData).then((res: any) => {
+        if(res.code == 0){
+          form.setFieldValue('youTubeUrl', res.data.src)
+        }
+      }).catch((err: any) => {
+        message.error("上传失败", err.msg);
+      }).finally(() => {
+        setVideoLoading(false);
+      })
+      return false;
     },
   };
 
@@ -277,7 +286,6 @@ function ProductImg() {
                 />
               </>
             )}
-            
           </Spin>
         </div>
         {/* 添加url Modal */}

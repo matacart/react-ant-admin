@@ -86,7 +86,7 @@ export default function MoreSelect(){
   };
   return (
     <Scoped>
-      <DefaultButton text={intl.formatMessage({ id: 'order.button.moreselect' })} onClick={showDrawer} />
+      <DefaultButton text={"更多筛选"} onClick={showDrawer} />
       <Drawer
         title="筛选"
         open={open}

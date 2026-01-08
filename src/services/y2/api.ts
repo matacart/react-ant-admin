@@ -8,7 +8,7 @@ import cookie from 'react-cookies';
 // --重试--
 // 平台信息
 export async function getPlatformInfo(){
-  return await request('/ApiAppstore/platform_info',{
+  return await request<ApiAppstore.Default>('/ApiAppstore/platform_info',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -17,7 +17,18 @@ export async function getPlatformInfo(){
   })
 }
 
-
+// 全局搜索
+export async function globalSearch(keyword:string) {
+  return await request<ApiSearch.Default>('/ApiSearch/globalSearch',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      keyword: keyword,
+    }
+  })
+}
 
 // 店铺查询
 export async function domainSelect( options?: { [key: string]: any }) {
@@ -83,14 +94,13 @@ export async function getCountryList(){
 
 // 时区
 export async function getTimeZoneList(){
-  const result = await request('/ApiAppstore/timezones_select',{
+  return await request<ApiAppstore.Default>('/ApiAppstore/timezones_select',{
     method: 'POST',
     retryOnError: true,
     headers: {
       'Content-Type': 'multipart/form-data',
     }
   })
-  return result.code == 0 ? result.data : null
 }
 
 // 所有币种
@@ -111,7 +121,7 @@ export async function getCurrenciesList(page?: number, limit?: number) {
 
 // 获取语言列表
 export async function getLanguagesList() {
-  const result = await request(`/ApiAppstore/languages_list`, {
+  return await request<ApiAppstore.Default>(`/ApiAppstore/languages_list`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -119,26 +129,24 @@ export async function getLanguagesList() {
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      page:"1",
-      limit:""
     }
   })
-  return result.code == 0 ? result.data : null
 }
 
 // 物流服务商---商户数据
 export async function getShippingcourier() {
-  return request(`/ApiAppstore/shippingcourier_select`, {
+  return request<ApiAppstore.Default>(`/ApiAppstore/shippingcourier_select`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
       'Content-Type': 'application/json',
-    },
-    data: {
-      // domain_id:cookie.load("domain")?.id,
     }
   })
 }
+
+
+// -----------
+
 
 // 获取用户状态---商户数据
 export async function currentUserStatus(options?: { [key: string]: any }) {
@@ -359,6 +367,28 @@ export async function getTodayData(startDate:number,endDate:number,options?: { s
   })
 }
 
+// 图片上传
+export async function uploadPic(formData:FormData){
+  return request('/ApiAppstore/doUploadPic', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:formData
+  })
+}
+
+// 视频上传
+export async function doUploadVideo(formData:FormData){
+  return request('/ApiAppstore/doUploadVideo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:formData
+  })
+}
+
 // 删除产品 ----- 产品
 export async function deleteProduct(id: string) {
   return request('/ApiStore/product_del', {
@@ -392,10 +422,9 @@ export async function getProductDetail(id: string,languagesId: string) {
       'Content-Type': 'multipart/form-data',
     },
     data: {
-      // params
-      "id": id,
-      "domain_id": cookie.load("domain").id,
-      "languages_id": languagesId
+      domain_id: cookie.load("domain").id,
+      id: id,
+      languages_id: languagesId
     },
   })
 }
@@ -468,16 +497,6 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
 // 文件库
 // export async function getFileList(page: any, limit: any) {
 //   return request(`/ApiStore/file_list?page=${page}&limit=${limit}`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   })
-// }
-
-// 语言
-// export async function getLanguages() {
-//   return await request(`/ApiAppstore/languages_select`, {
 //     method: 'POST',
 //     headers: {
 //       'Content-Type': 'application/json',
@@ -1189,7 +1208,7 @@ export async function getAddWarehouse(id:string){
 // --基本设置
 // 店铺信息
 export async function getStoreInfo(id:string){
-  const result = await request('/ApiAppstore/store',{
+  return await request<ApiAppstore.Default>('/ApiAppstore/store',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1199,21 +1218,20 @@ export async function getStoreInfo(id:string){
       languages_id:""
     }
   })
-  return result.data
 }
 
-export async function getDomain(id:string){
-  const result = await request('/ApiAppstore/domain',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id
-    }
-  })
-  return result.code == 0 ? result.data : null
-}
+// export async function getDomain(id:string){
+//   const result = await request('/ApiAppstore/domain',{
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//     data:{
+//       id:id
+//     }
+//   })
+//   return result.code == 0 ? result.data : null
+// }
 
 // 更新店铺信息
 export async function setStoreInfo(res:any){
@@ -1274,11 +1292,9 @@ export async function setCurrenciesList(currenciesList:any) {
 }
 
 // 语言
-
-
 // 添加语言
 export async function addLanguages(languages:any) {
-  const result = await request(`/ApiAppstore/domain_languages_batchadd`, {
+  return await request<ApiAppstore.Default>(`/ApiAppstore/domain_languages_batchadd`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1287,12 +1303,11 @@ export async function addLanguages(languages:any) {
       languages:JSON.stringify(languages)
     }
   })
-  return result.code == 0 ? result.data : null
 }
 
 // 删除语言
 export async function delLanguages(languagesId:string) {
-  const result = await request(`/ApiAppstore/domain_languages_del`, {
+  return await request<ApiAppstore.Default>(`/ApiAppstore/domain_languages_del`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1302,7 +1317,6 @@ export async function delLanguages(languagesId:string) {
       languages_id:languagesId
     }
   })
-  return result.code == 0 ? result.data : null
 }
 
 // 文件库 文件列表---
@@ -1677,6 +1691,7 @@ export async function delLoginRecord(id:string) {
     }
   });
 }
+
 // 更新共享数据状态
 export async function setUserSharing(res:string) {
   return request("/ApiAppstore/data_sharing_set", {
@@ -1689,6 +1704,7 @@ export async function setUserSharing(res:string) {
     }
   });
 }
+
 // 获取用户账号语言
 export async function getUserLanguages() {
   return request("/ApiAppstore/user_languages_get", {
@@ -1698,6 +1714,7 @@ export async function getUserLanguages() {
     }
   });
 }
+
 // 设置用户账号语言
 export async function setUserLanguages(languagesId:string) {
   return request("/ApiAppstore/user_languages_set", {
@@ -1745,7 +1762,6 @@ export async function creatAppStore(res:any) {
 }
 
 // 获取应用列表--开发
-
 export async function getDevAppStores() {
   return request("/ApiAppstore/app_list", {
     method: 'POST',
@@ -1853,7 +1869,6 @@ export async function upDatePermissionsList(appId:string,permissions:any) {
   });
 }
 
-
 // 上线应用状态设置 1安装  0卸载 -1删除
 export async function setAppStatus(appId:string,status:string) {
   return request("/ApiAppstore/domain_app_add", {
@@ -1897,7 +1912,7 @@ export async function unInstallDevApp(appId:string) {
 
 // 创建博客
 export async function createArticles(res:any) {
-  return request("/ApiAppstore/article_add", {
+  return request("/ApiArticle/article_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1909,30 +1924,20 @@ export async function createArticles(res:any) {
 }
 // 更新博客
 export async function upDateArticles(res:any) {
-  return request("/ApiAppstore/article_add", {
+  return request("/ApiArticle/article_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       ...res,
-      languages_id:res.lang,
-      image:res.imgUrl,
-      title:res.title,
-      content:res.content,
-      excerpt:res.abstract,
-      meta_title: res.metaTitle,
-      meta_keywords: res.metaKeywords,
-      meta_description: res.metaDescription,
-      publish_time: res.releaseTime,
-      status:res.status
     }
   });
 }
 
 // 删除博客 -- 将状态更改为0
 export async function delArticles(id:string) {
-  return request("/ApiAppstore/article_del", {
+  return request("/ApiArticle/article_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1945,21 +1950,23 @@ export async function delArticles(id:string) {
 
 // 博客列表
 export async function getArticleList(page:string,limit:string,languages:string) {
-  return request("/ApiAppstore/article_list", {
+  return request("/ApiArticle/article_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
+      domain_id:cookie.load("domain")?.id,
       page:page,
       limit:limit,
       languages_id:languages,
     }
   });
 }
+
 // 博客详情
 export async function getArticle(id?:string,languagesId?:string) {
-  return request("/ApiAppstore/article_info", {
+  return request("/ApiArticle/article_info", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1971,9 +1978,28 @@ export async function getArticle(id?:string,languagesId?:string) {
   });
 }
 
+// 博客集合列表
+export async function getArticleCategorys(res:{
+  page:string,
+  limit:string,
+  languages_id:string
+},signal?:AbortSignal) {
+  return request<ApiAppstore.Default>("/ApiArticle/article_category_list", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    },
+    signal:signal
+  });
+}
+
 // 博客集合
 export async function getArticleCollection() {
-  return request("/ApiAppstore/article_category_select", {
+  return request("/ApiArticle/article_category_select", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1983,7 +2009,7 @@ export async function getArticleCollection() {
 
 // 添加博客集合
 export async function addArticleCollection(res:any) {
-  return request("/ApiAppstore/article_category_add", {
+  return request("/ApiArticle/article_category_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2006,13 +2032,14 @@ export async function addArticleCollection(res:any) {
 
 // 创建自定义页面
 export async function addCustomerPage(res:any) {
-  return request("/ApiAppstore/ezpage_add", {
+  return request<ApiAppstore.Default>("/ApiAppstore/ezpage_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      ...res
+      ...res,
+      page_type:"custom_page"
     }
   });
 }
@@ -2032,7 +2059,7 @@ export async function delCustomerPage(id:string) {
 
 // 获取自定义页面详情
 export async function getCustomerPage(id:string,languages_id:string) {
-  return request("/ApiAppstore/ezpage", {
+  return request<ApiAppstore.Default>("/ApiAppstore/ezpage", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2045,9 +2072,9 @@ export async function getCustomerPage(id:string,languages_id:string) {
 }
 
 
-// 自定义页面列表 is_url:0
-export async function getCustomerPageList(page:string,limit:string) {
-  return request("/ApiAppstore/ezpage_list", {
+// 自定义页面列表 is_url:0 page_type:custom_page
+export async function getCustomerPageList(page:string,limit:string,languagesId:string) {
+  return request<ApiAppstore.Default>("/ApiAppstore/ezpage_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2055,28 +2082,76 @@ export async function getCustomerPageList(page:string,limit:string) {
     data:{
       page:page,
       limit:limit,
-      is_url:0
+      languages_id:languagesId,
+      is_url:0,
+      page_type:'custom_page'
     }
   });
 }
 
-// 菜单导航一级列表 is_url:1
-export async function getNavList(page:string,limit:string) {
-  return request("/ApiAppstore/nav_list", {
+// 菜单导航 pid:0 一级 is_sys:0 自定义 1 系统
+export async function getNavList(res:{
+  languagesId:string,
+  id?:string,
+  page?:string,
+  limit?:string,
+  pid?:string,
+  group_by_sys?:string,
+},signal?:AbortSignal) {
+  return request<ApiAppstore.Default>("/ApiNav/ezpage_tree_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      page:page,
-      limit:limit,
-      languages_id:"2",
-      // is_url:1,
-      // pid:"0",
-      // app_id:19
-    }
+      ...res
+    },
+    signal:signal
   });
+}
+
+// 批量添加导航
+export async function batchAddNavgate(res:any){
+  return request<ApiAppstore.roleList>(`/ApiNav/ezpage_batch_operate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:res
+  })
+}
+
+// 跳转链接
+export async function getLinkList(res:any){
+  return request<ApiNav.Default>(`/ApiNav/getLinkList`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 搜索链接节点
+export async function getSearchLink(res:{
+  node_types:string,
+  ids:string,
+  languages_id:string,
+}){
+  return request<ApiNav.Default>(`/ApiNav/getLinkInfo`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
 }
 
 // 批量导入上传
@@ -2126,7 +2201,6 @@ export async function getTaskStatus(id :any) {
   });
 }
 
-
 // 导出产品
 export async function exportProductTask(res:any) {
   return request("/ApiTask/exportProductTask", {
@@ -2162,7 +2236,6 @@ export async function exportOrderTask(res:any) {
   });
 }
 
-
 // 客户列表
 export async function getCustomerList(page: any, limit: any) {
   return request(`/ApiAppstore/customers_list`, {
@@ -2191,7 +2264,6 @@ export async function createCustomer(res:any) {
     }
   })
 }
-
 
 export async function getCustomer(id:string) {
   return request(`/ApiAppstore/customer_detail`, {
@@ -2233,10 +2305,6 @@ export async function setOrderShippingAddress(res:any) {
     }
   })
 }
-
-
-
-
 
 // 设置物流单号
 export async function setOrderNumber(res:any) {
@@ -2335,6 +2403,7 @@ export async function setOrderContact(res:any) {
     }
   })
 }
+
 // 标记付款
 export async function setOrderPaid(res:any) {
   return request(`/ApiStore/setOrderPaid`, {
@@ -2390,6 +2459,7 @@ export async function delOrderPaymentTerm(res:{orderId:string}) {
     }
   })
 }
+
 // 订单退货
 export async function setOrderReturned(res:any) {
   return request(`/ApiStore/setOrderReturned`, {
@@ -2403,6 +2473,7 @@ export async function setOrderReturned(res:any) {
     }
   })
 }
+
 // 标记已退货
 export async function setMarkProductAsRefunded(res:any) {
   return request(`/ApiStore/markProductAsRefunded`, {
@@ -3337,3 +3408,6 @@ export async function getRoleList(signal?:AbortSignal){
     signal:signal
   })
 }
+
+
+

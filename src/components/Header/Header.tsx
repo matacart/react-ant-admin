@@ -1,24 +1,20 @@
-import { Avatar, Button, Flex, Input, theme } from "antd";
+import { Avatar, Button, Flex } from "antd";
 import styled from "styled-components";
-import { Ping, Question, SelectLang } from "../RightContent";
-import SelectDomain from "../RightContent/SelectDomain";
-import { AvatarDropdown, AvatarName } from "../RightContent/AvatarDropdown";
 import { GithubOutlined, GlobalOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import { useEffect, useState } from 'react';
 import { observer } from "mobx-react-lite";
 import { currentUserStatus } from "@/services/y2/api";
-import { useNavigate } from "react-router-dom";
-import CheckUpdates from "../RightContent/CheckUpdates";
 import cookie from 'react-cookies';
-import { useIntl } from "@umijs/max";
+import { history } from "@umijs/max";
 import globalStore from "@/store/globalStore";
+import { AvatarDropdown, AvatarName } from "./AvatarDropdown";
+import CheckUpdates from "./CheckUpdates";
+import SelectDomain from "./SelectDomain";
+import { Ping, Question, SelectLang } from ".";
+import SearchAll from "./SearchAll";
 
 
 function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialState:any}){
-
-    const intl = useIntl();
-
-    const navigate = useNavigate();
 
     // 剩余天数
     const [timer,setTimer] = useState(999);
@@ -26,10 +22,10 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
     const [userStatus,setUserStatus] = useState<any>({})
 
     const goMerchantApplication = ()=>{
-        navigate("/stores/merchantApplication")
+        history.push("/stores/merchantApplication")
     }
     const goCreateStores = ()=>{
-        navigate("/stores/create")
+        history.push("/stores/create")
     }
 
     // 站点配置
@@ -80,17 +76,17 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">未开通套餐！请先开通套餐</div>
                     {/* 开通套餐 */}
-                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>开通套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>开通套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 3 ?
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">店铺已到期！购买套餐后恢复使用</div>
-                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 4 ? 
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">店铺已停用！</div>
-                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:<></>}
                 { userStatus.code == 5 ? 
                     <Flex className="tips-box" justify="center" align="center">
@@ -100,15 +96,15 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                 { userStatus.code == 0 && timer<=15 ? 
                     <Flex className="tips-box" justify="center" align="center">
                     <div className="color-FFFFFF">{timer == 0?"你的套餐剩余时间不足1天":"你的套餐剩余"+timer+"天"}</div>
-                    <Button className="tips-box-btn" onClick={()=>navigate(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
+                    <Button className="tips-box-btn" onClick={()=>history.push(`/stores-subscriptions/list/paid`)}>选择套餐</Button>
                 </Flex>:""}
                 <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
                     <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>
                         <div><GlobalOutlined className="font-24" /></div>
-                        <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>navigate("/")}>{PLATFORM_INFO.brand_name}</h1>
+                        <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>history.push("/")}>{PLATFORM_INFO.brand_name}</h1>
                     </div>
-                    <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-60px"}}>
-                        {url == "/stores/"?<></>:<Input prefix={<SearchOutlined />} style={{maxWidth:"600px",minWidth:"100px"}} placeholder={intl.formatMessage({id: 'header.search'})} />}
+                    <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-10px",}}>
+                        {url == "/stores/"?<></>:<SearchAll />}
                     </div>
                     <Flex className="mc-header-left-content" align='center'>
                         {userStatus.code == 0 && url == "/stores/"?<></>:<SelectDomain/>}
@@ -133,8 +129,6 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
 export default observer(Header)
 
 const Scoped = styled.div`
-
-    /* position: absolute; */
 
     .tips-box{
         line-height: 40px;

@@ -26,7 +26,7 @@ export default function CreateButton({...props}:ButtonProps){
                 }}
                 >
                 <Button {...props} type="primary" className="default-btn">
-                    {intl.formatMessage({id:'component.button.createButton'})}
+                    {intl.formatMessage({id:'components.button.createButton.createText'})}
                 </Button>
             </ConfigProvider>
         </Scoped>

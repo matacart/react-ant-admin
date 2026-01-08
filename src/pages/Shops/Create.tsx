@@ -123,9 +123,10 @@ export default function Create() {
                             <div className='form-item-box'>
                                 <Form.Item name="handle" rules={[
                                     { required: true, message: '请输入网址' },
-                                    { min: 4, max: 15 ,message:"URL长度需在4-15个字符之间"}
+                                    { min: 4, max: 15 ,message:"URL长度需在4-15个字符之间"},
+                                    { pattern: /^[a-z0-9]+$/, message: '只能包含小写字母和数字' }
                                 ]}>
-                                    <MyInput className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>{previewDomain}</div>} />
+                                    <MyInput className='input' placeholder="网址" suffix={<div className='color-7A8499 font-w-400'>{previewDomain}</div>}/>
                                 </Form.Item>
                             </div>
                         </div>

@@ -1,19 +1,24 @@
-import { Card } from "antd"
+import { Card, Flex } from "antd"
 import styled from "styled-components"
 import cookie from 'react-cookies';
-import SEOEdit from "../SEOEdit";
 import customPage from "@/store/channel/customPage/customPage";
+import SEOEdit from "./SEOEdit";
 
 
  function SEOCard(){
 
-    const setSEO = (title:string,description:string,keyword:string,url:string)=>{
+    // 预览域名
+    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    
+    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/pages/`;
+
+    const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         customPage.setCustomPage({
             ...customPage.customPage,
             meta_title:title,
             meta_description:description,
             meta_keywords:keyword,
-            url:url
+            handle:handle,
         })
     }
 
@@ -23,9 +28,10 @@ import customPage from "@/store/channel/customPage/customPage";
                 <div className="header">
                     <span className="title">搜索引擎优化</span>
                     <span className="more">
-                        <SEOEdit seo={customPage.customPage} setSEO={setSEO} type="-a" />
+                        <SEOEdit seo={customPage.customPage} setSEO={setSEO} previewPrefix={previewPrefix} />
                     </span>
                 </div>
+                <Flex className="webUrl">{`${previewPrefix}${customPage.customPage.handle?customPage.customPage.handle.replace(new RegExp(" ","gm"),"-"):customPage.customPage.title.replace(new RegExp(" ","gm"),"-")}`}</Flex>
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
                 <div className="webTitle">{customPage.customPage.meta_title==""?(customPage.customPage.title==""?"未填写标题":customPage.customPage.title):customPage.customPage.meta_title}</div>
                 <div className="webDesc">{customPage.customPage.meta_description==""?"未填写描述":customPage.customPage.meta_description}</div>
@@ -55,6 +61,7 @@ a{
 }
 .webUrl{
     font-size: 12px;
+    word-break: break-all;
 }
 .webTitle{
     margin-top: 4px;

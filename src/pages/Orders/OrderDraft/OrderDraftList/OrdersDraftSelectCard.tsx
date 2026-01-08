@@ -16,10 +16,6 @@ function OrdersDraftSelectCard() {
       },
     ];
 
-    const setLang = (lang:string)=>{
-      orderList.setLanguages(lang)
-    }
-
     return (
         <>
           <div className="Orders-select">

@@ -107,6 +107,16 @@ declare namespace API {
   };
 }
 
+
+declare namespace ApiSearch {
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+}
+
 declare namespace ApiStore {
   type selectTags = {
     code:number,
@@ -157,6 +167,15 @@ declare namespace ApiStore {
   
 }
 
+declare namespace ApiNav {
+
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+}
 
 declare namespace ApiAppstore {
 

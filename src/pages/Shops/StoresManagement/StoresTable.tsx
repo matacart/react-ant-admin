@@ -110,7 +110,7 @@ function StoresTable() {
       dataIndex: 'domain_primary',
       render: (_, record) => (
         <div>
-          {record.domain_primary || (record?.handle && `${record.handle}${JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || ''}`)}
+          {record.domain_primary || (record?.handle && `${record.handle}.${JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || ''}`)}
         </div>
       ),
       width: 200,

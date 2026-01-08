@@ -28,7 +28,7 @@ export default function DefaultSelect({...props}:DefaultSelectProps){
                         },
                     },
                 }}
-                >
+            >
                     <Select
                         {...props}
                         open={open}

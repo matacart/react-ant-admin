@@ -1,7 +1,7 @@
 
 
 import { useEffect, useState } from "react";
-import sections from "../Editor/data/sections.json";
+import sections from "../Design/data/sections.json";
 import styled from "styled-components";
 import { Carousel, Col, Flex, Row } from "antd";
 import MyButton from "@/components/Button/MyButton";

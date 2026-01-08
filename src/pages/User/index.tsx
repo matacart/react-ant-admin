@@ -1,14 +1,11 @@
 import { useIntl, Outlet } from '@umijs/max';
-import langShow from '@/locales/langShow';
 import ILang from '@/components/Lang/lang';
 import styled from 'styled-components';
 import bgImage from '@/../public/img/logo-bak-02.jpg';
-
-
+// 入口
 const Login: React.FC = () => {
 
   const intl = useIntl();
-  const lang = langShow[intl.locale as keyof typeof langShow];
   
   return (
     <Scoped>
@@ -30,7 +27,7 @@ const Login: React.FC = () => {
           }}
         >
           <div className="logo-container">
-            <p>{intl.formatMessage({ id: 'pages.login.welcome' })}</p>
+            <p>{intl.formatMessage({ id: 'user.login.welcome' })}</p>
             <img
               src="/icons/login-text.svg"
               style={{
@@ -76,7 +73,6 @@ const Login: React.FC = () => {
         </div>
       </div>
     </Scoped>
-    
   );
 };
 

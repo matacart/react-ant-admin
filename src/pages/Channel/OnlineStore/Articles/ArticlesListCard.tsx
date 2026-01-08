@@ -74,12 +74,12 @@ function ArticlesListCard() {
           )
         },
         {
-            title: '最后更新时间',
-            dataIndex: 'update_time',
-            key: 'update_time',
-            render: (value,record) => (
-                <div>{dayjs(value*1000).format("YYYY-MM-DD HH:mm:ss")}</div>
-            )
+          title: '最后更新时间',
+          dataIndex: 'update_time',
+          key: 'update_time',
+          render: (value,record) => (
+              <div>{dayjs(value*1000).format("YYYY-MM-DD HH:mm:ss")}</div>
+          )
         },
         {
           title: '评论',

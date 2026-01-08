@@ -140,17 +140,9 @@ export default function GiftCardsSelectCard(){
                             gap: '12px 12px',
                         }}>
                         {/* 语言 */}
-                        <Select 
-                            // defaultValue={language}
-                            value={language}
-                            className="font-14"
-                            style={{ width: 100,height:36 }}
-                            listHeight={230}
-                            onChange={languageChange}
-                            options={languageData}
-                            />
+                        
                         {/* 5 */}
-                        <MoreSelect />
+                        {/* <MoreSelect /> */}
                         {/* 7 */}
                         <DropdownSort items={
                             [

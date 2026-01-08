@@ -1,11 +1,8 @@
-import { getCategorySelect } from "@/services/y2/api";
-import { SearchOutlined } from "@ant-design/icons";
 import { Button, Flex, Input, MenuProps, Modal, Tag, TreeSelect } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import "./index.scss"
-import { set } from "lodash";
 
 
 

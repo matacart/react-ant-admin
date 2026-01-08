@@ -1,0 +1,30 @@
+{
+    "header":"订单列表",
+    "importOrders":"导出订单",
+    "bulkshipping":"批量发货",
+    "updatetrackingnumber":"更新跟踪号",
+    "createorder":"创建订单",
+    "orderTabs":{
+        "all":"全部",
+        "readytoship":"待发货",
+        "cancelled":"已取消",
+        "process":"处理中",
+        "neworders":"今日新订单"
+    },
+    "ordersSelectCard":{
+        "search":"支持商品名称、SKU、用户邮箱、标签等快捷搜索"
+    },
+    "ordersListAjax":{
+        "orderid":"订单编号",
+        "orderdata":"订单日期",
+        "orderstate":"订单状态",
+        "paymenstate":"付款状态",
+        "deliverystate":"发货状态",
+        "paymentmethod":"支付方式",
+        "paymentchannel":"支付渠道",
+        "deliveryname":"收件人",
+        "tel":"收件人号码",
+        "shippingmethod":"运费方案",
+        "pricetotal":"合计"
+    }
+}
