@@ -173,7 +173,7 @@ function LocationsCard() {
                                     optionFilterProp="label"
                                     options={supplierOptions}
                                     onChange={handleSupplierChange}
-                                    dropdownRender={(menu)=>(
+                                    popupRender={(menu)=>(
                                         <>
                                             {menu}
                                             <AddSupplierModal selectRef={selectRef} getSupplierList={getSupplierList} />

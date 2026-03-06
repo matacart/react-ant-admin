@@ -54,9 +54,15 @@ function ApplicableGoods() {
                                 fontSize:14
                             }}
                             value={"商品分类"}
-                            dropdownStyle={{padding:"6px 0px"}}
+                            styles={{
+                                popup: { 
+                                    root: {
+                                        padding:"6px 0px"
+                                    } 
+                                }
+                            }}
                             options={options}
-                            onDropdownVisibleChange={(open)=>{
+                            onOpenChange={(open)=>{
                                 open?setIsFocus(true):setIsFocus(false)
                             }}
                             onSelect={()=>{

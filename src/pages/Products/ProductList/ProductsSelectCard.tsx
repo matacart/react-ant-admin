@@ -1,4 +1,4 @@
-import { Space, Select, Input, Tag, Button, ConfigProvider, Flex } from "antd";
+import { Space, Tag, Button, ConfigProvider, Flex } from "antd";
 import { useEffect, useRef, useState } from "react"
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
 import styled from "styled-components";

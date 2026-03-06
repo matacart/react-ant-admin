@@ -2,7 +2,6 @@ import MyAlert from "@/components/Alert/MyAlert";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
-import MySelect from "@/components/Select/MySelect";
 import { setOrderContact } from "@/services/y2/api";
 import order from "@/store/order/order";
 import { Flex, Form, Modal, Space } from "antd";

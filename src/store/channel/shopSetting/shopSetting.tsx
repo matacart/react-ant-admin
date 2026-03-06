@@ -9,8 +9,9 @@ export interface TemplateInstance{
     os_version:string;
     status:string;
     update_time:string;
-    create_time:string;
     languages_id:string;
+    template_version_id:string;
+    install_time:string;
 
 }
 

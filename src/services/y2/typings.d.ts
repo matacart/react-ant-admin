@@ -110,7 +110,7 @@ declare namespace API {
 
 declare namespace ApiSearch {
   type Default = {
-    code:number,
+    code:number | string,
     count?:string,
     data:any,
     msg:string,
@@ -164,7 +164,12 @@ declare namespace ApiStore {
     data:any,
     msg:string,
   }
-  
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
 }
 
 declare namespace ApiNav {
@@ -184,6 +189,12 @@ declare namespace ApiAppstore {
     data:any,
     msg:string,
     count?:string,
+  }
+
+  type MerchantRechargeAdd = {
+    code:number, 
+    redirect_url:string,
+    msg:string,
   }
 
   type addressAdd = {
@@ -214,7 +225,62 @@ declare namespace ApiAppstore {
   }
 }
 
+declare namespace ApiArticle {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    count?:string,
+  }
+}
+
+declare namespace ApiAccess {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiRobot {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiChannel {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiSite {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiSitemap {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+
 declare namespace ApiTemplate {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
   type addTemplateFile = {
     code:string | number, 
     data:any,

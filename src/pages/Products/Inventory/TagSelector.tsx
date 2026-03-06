@@ -43,8 +43,14 @@ export default function TagSelector() {
                     fontSize:14
                 }}
                 value={"商品标签"}
-                dropdownStyle={{padding:"6px 0px"}}
-                dropdownRender={(menu) => (
+                styles={{
+                    popup: { 
+                        root: {
+                            padding:"6px 0px"
+                        } 
+                    }
+                }}
+                popupRender={(menu) => (
                     <Scoped>
                         <div className='color-7A8499 font-12' style={{padding:"4px 8px"}}>具有</div>
                         <div className='inner-select-box'>
@@ -89,7 +95,7 @@ export default function TagSelector() {
                     </Scoped>
                 )}
                 // 展开下拉菜单的回调 -- 可以控制下拉菜单的展示与隐藏
-                onDropdownVisibleChange={(open)=>{
+                onOpenChange={(open)=>{
                     open?setIsFocus(true):setIsFocus(false)
                 }}
                 onSelect={()=>{
@@ -109,49 +115,6 @@ const Scoped = styled.div`
         padding: 8px 0;
     }
 `
-
-{/* <ConfigProvider
-theme={{
-    // 2. 组合使用暗色算法与紧凑算法
-    // algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
-    components: {
-        Select: {
-            // optionPadding: '0px 0px',
-            // showArrowPaddingInlineEnd: '0px',
-        }
-    },
-}}>
-<Select
-    size="large"
-    placeholder='标签'
-    mode="multiple"
-    style={{
-        minWidth: 140,
-        height:36
-    }}
-    open={openTagsList}
-    dropdownStyle={{padding:"0px"}}
-    dropdownRender={(menu) => (
-        <>
-        {menu}
-            <div style={{width:"100%",height:"1px",backgroundColor:"#d7dbe7"}}></div>
-            <div style={{textAlign:"right",padding:"10px"}}>
-                <Button onMouseDown={()=>{
-                    setOpenTagsList(false)
-                    setTags(str.slice(1))
-                }} type="primary">
-                确认
-                </Button>
-            </div>
-            
-        </>
-    )}
-    options={options}
-    onChange={handleTagChange}
-    onFocus={()=>{setOpenTagsList(true)}}
-    onBlur={()=>{setOpenTagsList(false)}}
-></Select>
-</ConfigProvider> */}
 
 const PopoverContent = styled.div`
     .top{

@@ -1,5 +1,5 @@
 
-import { BackIcon, DeleteIcon, DownIcon, EditorCategoryIcon, EditorHomeIcon, EditorRedoIcon, EditorRevokeIcon, RightIcon } from '@/components/Icons/Icons';
+import { BackIcon, DeleteIcon, DesktopIcon, DownIcon, EditorCategoryIcon, EditorHomeIcon, EditorRedoIcon, EditorRevokeIcon, MobileIcon, RightIcon } from '@/components/Icons/Icons';
 import SuccessTag from '@/components/Tag/SuccessTag';
 import { delTemplateFile, getJsonTemplates, settingsSections, templateUpdate } from '@/services/y2/api';
 import editor from '@/store/theme/editor';
@@ -19,6 +19,8 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import DangerButton from '@/components/Button/DangerButton';
 import RenameTemplateModal from '../Index/RenameTemplateModal';
 import NewTemplateModal from '../Index/NewTemplateModal';
+import cookie from 'react-cookies';
+import VersionSelect from './VersionSelect';
 
 const { confirm } = Modal;
 
@@ -50,7 +52,7 @@ function escapeRegExp(string:string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function Header({templateId,templateName,nvData}:{templateId:string,templateName:string,nvData:any[]}) {
+function Header({templateId,previewDomain,templateName,nvData}:{templateId:string,previewDomain:string,templateName:string,nvData:any[]}) {
 
     const intl = useIntl();
 
@@ -420,6 +422,7 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                 <Flex gap={8} align='center'>
                     <div className='font-w-600' style={{marginLeft:"16px"}}>{editor.templateInfo.themeInfo?.name}<span style={{marginLeft:"6px"}}>{editor.templateInfo.themeInfo?.theme_version}</span></div>
                     {editor.templateInfo.themeInstanceInfo?.status == "1" ? <SuccessTag text={intl.formatMessage({id:'theme.design.header.live'})} />:<DefaultTag text={intl.formatMessage({id:'theme.design.header.draft'})} />}
+                    <VersionSelect />
                 </Flex>
                 <Flex align='center' gap={12}>
                     <Dropdown getPopupContainer={()=>dropdownContainerRef.current!} open={menuOpen} menu={{ items,style }} trigger={["click"]} onOpenChange={(open) => {
@@ -443,23 +446,32 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                             </Flex>
                         </Space>
                     </Dropdown>
+                    {/* 设备 */}
+                    <Flex className="header_preview_select">
+                        <div className={editor.isMobile ? 'icon' : 'icon active'} onClick={()=>{editor.setIsMobile(false)}}>
+                            <DesktopIcon />
+                        </div>
+                        <div className={editor.isMobile ? 'icon active' : 'icon'} onClick={()=>{editor.setIsMobile(true)}}>
+                            <MobileIcon />
+                        </div>
+                    </Flex>
                     <LangSelect lang={editor.languagesId} setLang={setLang} />
                     <Flex align='center'>
                         <div>{intl.formatMessage({id:'theme.design.header.mode'})}：</div>
                         <MySelect
-                            defaultValue={editor.mode}
+                            value={editor.mode}
                             options={[
-                                { value: 'auto', label: intl.formatMessage({id:'theme.design.header.modeAuto'}) },
+                                { value: 'auto', label: intl.formatMessage({id:'theme.design.header.modeAuto'}),disabled:true },
                                 { value: 'original', label: intl.formatMessage({id:'theme.design.header.modeOriginal'}) },
                                 { value: 'mapping', label: intl.formatMessage({id:'theme.design.header.modeMapping'}) },
-                            ]} style={{height:"36px",width:"100px"}} 
+                            ]} 
+                            style={{height:"36px",width:"100px"}} 
                             onChange={(value)=>{
                                 editor.setMode(value)
                             }} 
                         />
                     </Flex>
                 </Flex>
-                {/* 语言 */}
                 <Flex className='header-main-right' align='center'>
                     {/*  */}
                     <Flex style={{marginRight:"20px"}}><SelectLang key="SelectLang" /></Flex>
@@ -543,17 +555,18 @@ function Header({templateId,templateName,nvData}:{templateId:string,templateName
                             }} />
                         </Tooltip>
                     </Flex>
-                    <div className='prev-btn'>{intl.formatMessage({id:'theme.design.header.preview'})}</div>
+                    <div className='prev-btn' onClick={()=>previewDomain && window.open(`${previewDomain}/?preview=1&themeId=${templateId}&versionId=${editor.versionId}&oseid=${editor.oseId}`)}>{intl.formatMessage({id:'theme.design.header.preview'})}</div>
                     <Button type="primary" className={`font-14 save-btn ${editor.isSaveData?'':'custom-disabled'}`} loading={loading} onClick={(e)=>{
                         if(editor.isSaveData){
-                            // console.log(editor.templateData)
+                            console.log(editor.templateData)
                             setLoading(true);
                             const result = settingsSections({
-                                mode: "auto",
+                                mode: editor.mode,
                                 languages_id: "2",
                                 themeId: templateId??"",
                                 action:"save",
                                 oseid: editor.oseId??"",
+                                versionId: editor.versionId,
                             }).catch(()=>{
                             }).finally(()=>{
                                 setLoading(false);
@@ -572,6 +585,7 @@ export default observer(Header);
 const Scoped = styled.div`
     display: flex;
     height: 52px;
+    overflow: hidden;
     border-bottom: 1px solid rgba(5, 5, 5, 0.06);
     .header-left{
         display: flex;
@@ -589,6 +603,25 @@ const Scoped = styled.div`
         .rotated-down{
             transform: rotate(0deg);
             transition: transform 0.3s ease;
+        }
+
+        .header_preview_select{
+            .icon{
+                align-items: center;
+                border-radius: 4px;
+                cursor: pointer;
+                display: flex;
+                flex: 1 1;
+                height: 38px;
+                justify-content: center;
+                outline: none;
+                position: relative;
+                transition: .5s;
+                width: 38px;
+            }
+            .active{
+                background-color: #f0f7ff;
+            }
         }
 
         .header-main-right{

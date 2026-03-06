@@ -419,7 +419,27 @@ const CompressedFileSvg = () => (
 )
 
 const TickSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 1.81502L4.26327 7.61312C4.13264 7.74516 3.95545 7.81934 3.7707 7.81934C3.58595 7.81934 3.40877 7.74516 3.27813 7.61312L0 4.29992L0.985145 3.30424L3.7707 6.1196L9.01486 0.819336L10 1.81502Z" fill="currentColor"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M10 1.81502L4.26327 7.61312C4.13264 7.74516 3.95545 7.81934 3.7707 7.81934C3.58595 7.81934 3.40877 7.74516 3.27813 7.61312L0 4.29992L0.985145 3.30424L3.7707 6.1196L9.01486 0.819336L10 1.81502Z" fill="currentColor"></path></svg>
+)
+
+const DesktopSvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="IconDesktopFilled" fontSize="20"><path d="M1.5 3.25A1.5 1.5 0 0 1 3 1.75h14a1.5 1.5 0 0 1 1.5 1.5V13.5A1.5 1.5 0 0 1 17 15h-5.298l.49 1.962c.006.012.01.025.015.038h3.043a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H4.75a.5.5 0 0 1-.5-.5v-.5a.5.5 0 0 1 .5-.5h3.043a.78.78 0 0 1 .015-.038L8.298 15H3a1.5 1.5 0 0 1-1.5-1.5V3.25Zm15.5 0H3v9h14v-9Z" fill="#474F5E"></path></svg>
+)
+
+const MobileSvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="IconMobileFilled" fontSize="20"><path d="M5.5 1.5C4.7 1.5 4 2.2 4 3v14c0 .8.7 1.5 1.5 1.5h9c.8 0 1.5-.7 1.5-1.5V3c0-.8-.7-1.5-1.5-1.5h-9Zm9 1.5v12h-9V3h9ZM8.75 15.998h2.5a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5h-2.5a.5.5 0 0 1-.5-.5v-.5a.5.5 0 0 1 .5-.5Z" fill="#474F5E"></path></svg>
+)
+
+const BigScreenSvg = ()=>(
+  <svg width="160" height="96" viewBox="0 0 160 96" fill="none" xmlns="http://www.w3.org/2000/svg"><g filter="url(#filter0_d_10973_7678)"><path d="M41.3809 25.8333C41.3809 25.3731 41.754 25 42.2142 25H109.119C109.579 25 109.952 25.3731 109.952 25.8333V69.1667C109.952 69.6269 109.579 70 109.119 70H42.2142C41.754 70 41.3809 69.6269 41.3809 69.1667V25.8333Z" fill="white" stroke="#356DFF" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="1.67 4.17"></path></g><g filter="url(#filter1_d_10973_7678)"><path fillRule="evenodd" clipRule="evenodd" d="M91.6601 53.8963C91.2454 53.62 90.7587 53.4714 90.2604 53.469C89.7621 53.4667 89.274 53.6106 88.8567 53.883C88.4394 54.1554 88.1113 54.5443 87.9129 55.0014C87.7145 55.4585 87.6547 55.9638 87.7408 56.4547L92.473 83.4619C92.5578 83.9453 92.7807 84.3938 93.1146 84.7535C93.4485 85.1132 93.8793 85.3688 94.3551 85.4893C94.8309 85.6099 95.3314 85.5904 95.7963 85.4331C96.2612 85.2758 96.6708 84.9875 96.9756 84.6029L101.858 78.4515L107.796 87.555C108.166 88.1203 108.745 88.5158 109.406 88.6544C110.067 88.793 110.756 88.6634 111.321 88.2941C111.886 87.9247 112.282 87.3459 112.42 86.685C112.559 86.0241 112.429 85.3352 112.06 84.7698L106.119 75.6658L113.717 73.6747C114.191 73.5497 114.619 73.2905 114.949 72.9282C115.28 72.5658 115.498 72.1158 115.579 71.6322C115.66 71.1486 115.599 70.652 115.404 70.202C115.21 69.7521 114.889 69.3679 114.481 69.0957L91.6601 53.8963Z" fill="#356DFF"></path><path d="M97.6832 85.1637L101.786 79.9942L107.04 88.0483L107.041 88.0488C107.541 88.8147 108.325 89.3504 109.22 89.5381C110.116 89.7259 111.049 89.5503 111.815 89.05C112.581 88.5497 113.116 87.7656 113.304 86.8703C113.492 85.9752 113.316 85.0421 112.816 84.2763C112.816 84.2762 112.816 84.2762 112.816 84.2761C112.816 84.276 112.816 84.276 112.816 84.276L107.56 76.2216L113.946 74.5482L113.947 74.5478C114.589 74.3785 115.169 74.0273 115.617 73.5365C116.064 73.0456 116.36 72.436 116.47 71.7809C116.579 71.1257 116.497 70.453 116.233 69.8434C115.969 69.2338 115.535 68.7134 114.983 68.3447L114.982 68.3442L92.1608 53.1449C92.1607 53.1449 92.1607 53.1449 92.1606 53.1448C91.5989 52.7705 90.9397 52.5693 90.2647 52.5661C89.5896 52.5629 88.9285 52.7579 88.3632 53.1269C87.7979 53.4959 87.3533 54.0227 87.0846 54.642C86.8159 55.2612 86.7349 55.9456 86.8515 56.6105C86.8515 56.6106 86.8515 56.6106 86.8515 56.6107L91.5836 83.6177L91.5837 83.618C91.6986 84.2729 92.0005 84.8805 92.4529 85.3678C92.9052 85.8551 93.4888 86.2013 94.1333 86.3646C94.7778 86.5279 95.4558 86.5015 96.0856 86.2884C96.7154 86.0753 97.2702 85.6848 97.6832 85.1638C97.6832 85.1638 97.6832 85.1637 97.6832 85.1637Z" stroke="white" strokeWidth="1.80582"></path></g><defs><filter id="filter0_d_10973_7678" x="24.787" y="9.98172" width="101.759" height="78.1887" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB"><feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix><feOffset dy="1.57609"></feOffset><feGaussianBlur stdDeviation="7.88043"></feGaussianBlur><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"></feColorMatrix><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_10973_7678"></feBlend><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_10973_7678" result="shape"></feBlend></filter><filter id="filter1_d_10973_7678" x="85.8965" y="51.6631" width="35.1351" height="42.4632" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB"><feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood><feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix><feOffset dx="3.61163" dy="3.61163"></feOffset><feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.02 0"></feColorMatrix><feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_10973_7678"></feBlend><feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_10973_7678" result="shape"></feBlend></filter></defs></svg>
+)
+
+const PinFiledSvg = ()=>(
+  <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M11.036 3.48a.85.85 0 0 1 1.367-.23l4.948 4.947a.85.85 0 0 1-.231 1.367l-2.255 1.093-2.394 2.393-.664 3.764a.95.95 0 0 1-1.609.507L3.28 10.4a.95.95 0 0 1 .507-1.608L7.55 8.13l2.394-2.394 1.093-2.255Z"></path><path d="m6.773 12.759 1.06 1.06-2.828 2.829-1.06-1.06 2.828-2.83Z"></path><path d="M11.486 3.698a.35.35 0 0 1 .564-.095l4.947 4.948a.35.35 0 0 1-.095.563l-2.256 1.093-.075.036-.06.06-2.394 2.394-.111.112-.027.155-.664 3.763a.45.45 0 0 1-.763.24l-2.58-2.58.215-.214.353-.354-1.768-1.767-.353.353-.215.214-2.571-2.571a.451.451 0 0 1 .24-.763l3.764-.664.154-.027.112-.112 2.453-2.453.038-.076 1.092-2.255ZM6.558 14.387 5.005 15.94l-.354-.353 1.553-1.554.354.354Z"></path></svg>
+)
+
+const UserNoSvg = ()=>(
+  <svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#user_not_login_svg__clip0_3156_100017)"><path d="M0 24C0 10.745 10.745 0 24 0s24 10.745 24 24-10.745 24-24 24S0 37.255 0 24z" fill="#B8BECC"></path><circle cx="24" cy="53.539" r="24" fill="#fff"></circle><circle cx="24" cy="19.892" r="11.9" fill="#fff" stroke="#B8BECC" stroke-width="3"></circle><circle cx="24" cy="24" r="22.5" stroke="#B8BECC" stroke-width="3"></circle></g><defs><clipPath id="user_not_login_svg__clip0_3156_100017"><path d="M0 24C0 10.745 10.745 0 24 0s24 10.745 24 24-10.745 24-24 24S0 37.255 0 24z" fill="#fff"></path></clipPath></defs></svg>
 )
 
 
@@ -691,6 +711,26 @@ export const TickIcon = (props: Partial<CustomIconComponentProps>) => (
 );
 
 
+export const DesktopIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DesktopSvg} {...props} />
+);
+
+export const MobileIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={MobileSvg} {...props} />
+);
+
+export const BigScreenIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={BigScreenSvg} {...props} />
+);
+
+export const PinFiledIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PinFiledSvg} {...props} />
+);
+
+export const UserNoIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={UserNoSvg} {...props} />
+);
+
 
 // -----------编辑组件图标-----------------
 const EditorHomeSvg = () => (
@@ -834,6 +874,10 @@ const EditorRedoSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.9"><path d="M16 7L16.5303 6.46967L17.0607 7L16.5303 7.53033L16 7ZM8.5 6.25H16V7.75H8.5V6.25ZM15.4697 7.53033L12.4697 4.53033L13.5303 3.46967L16.5303 6.46967L15.4697 7.53033ZM16.5303 7.53033L13.5303 10.5303L12.4697 9.46967L15.4697 6.46967L16.5303 7.53033ZM8.5 15.25H14V16.75H8.5V15.25ZM3.25 11.5C3.25 8.60051 5.6005 6.25 8.5 6.25V7.75C6.42893 7.75 4.75 9.42893 4.75 11.5H3.25ZM4.75 11.5C4.75 13.5711 6.42893 15.25 8.5 15.25V16.75C5.6005 16.75 3.25 14.3995 3.25 11.5H4.75Z" fill="#474F5E"></path></g></svg>
 )
 
+const EditorNavigationSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconThemeEditorNavigation" fontSize="22"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13Z" fill="#474F5E"></path><path d="M15.462 6.775a.5.5 0 0 1 .785.51l-2.32 10.513a.5.5 0 0 1-.907.165l-2.013-3.096a.5.5 0 0 0-.34-.22l-3.647-.58a.5.5 0 0 1-.218-.897l8.66-6.395Z" fill="#fff"></path></svg>
+)
+
 export const EditorHomeIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorHomeSvg} {...props} />
 );
@@ -928,5 +972,9 @@ export const EditorRevokeIcon = (props: Partial<CustomIconComponentProps>) => (
 
 export const EditorRedoIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorRedoSvg} {...props} />
+);
+
+export const EditorNavigationIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={EditorNavigationSvg} {...props} />
 );
 

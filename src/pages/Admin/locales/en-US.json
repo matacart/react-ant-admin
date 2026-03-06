@@ -1,0 +1,80 @@
+{
+    "shopTimeDisplay":{
+        "shopTimeDisplay":"Store timezone time",
+        "afternoon":"Afternoon",
+        "morning":"Morning",
+        "year":"Year"
+    },
+    "dataCard":{
+        "todayData":"Today's Data",
+        "more":"View More",
+        "salesRevenue":"Sales Revenue",
+        "todaySalesRevenue":"Sales revenue so far today",
+        "orderNumber":"Order Count",
+        "todayOrderNumber":"Order count so far today",
+        "visitorCount":"Visitor Count",
+        "todayVisitorCount":"Visitor count so far today"
+    },
+    "textCard":{
+        "package":{
+            "title":"Choose a Package for Your Store",
+            "content":"Pay now to unlock more features, enjoy better service and support. The following payment methods are supported:<br/>√ UnionPay (debit and credit cards, with auto billing)<br/>√ Credit Card (Visa, JCB, MasterCard, American Express, with auto billing)<br/>√ WeChat Pay",
+            "button":"Choose Package"
+        },
+        "domain":{
+            "title":"Choose a Domain for Your Store",
+            "content":"A good domain name helps embed your brand in people's minds. After purchasing a domain from domain service providers such as GoDaddy or Alibaba Cloud, you can resolve the domain and bind it to the MATACART backend.",
+            "button":"Click to Set Up"
+        }
+    },
+    "openStoreGuidance":{
+        "title":"Store Setup Guide",
+        "progress":"Completed {num} tasks",
+        "productTab":{
+            "name":"Add Products",
+            "title":"Add Products",
+            "desc":"You can continue to add more new products",
+            "buttonText":"Go Add",
+            "doneTitle":"You've added new products",
+            "doneDesc":"You can continue to add more new products",
+            "doneButtonText": "Go Add"
+        },
+        "logisticsTab":{
+            "name":"Configure Logistics",
+            "title":"Configure Logistics",
+            "desc":"You can continue to add more logistics methods",
+            "buttonText":"Go Add",
+            "doneTitle":"You've configured logistics",
+            "doneDesc":"MataCart supports setting up logistics templates for different countries/regions based on multiple dimensions such as weight, and can also support multiple schemes simultaneously. Logistics providers can also be added in the backend.",
+            "doneButtonText":"Set Up Shipping Methods"
+        },
+        "paymentMethodTab":{
+            "name":"Configure Payment",
+            "title":"Configure Payment",
+            "desc":"You can continue to add more payment methods",
+            "buttonText":"Go Add",
+            "doneTitle":"You've configured payment methods",
+            "doneDesc":"You can set appropriate payment methods according to the regions where you sell",
+            "doneButtonText":"Set Up Payment Methods"
+        },
+        "customPageTab":{
+            "title":"Create Custom Pages",
+            "name":"Create Custom Pages",
+            "desc":"You can continue to add more custom pages",
+            "buttonText":"Go Add",
+            "doneTitle":"You've added custom pages",
+            "doneDesc":"You've successfully added pages, you can continue to add more pages or improve existing page information.",
+            "doneButtonText": "Go Set Up"
+        },
+        "navigationTab":{
+            "title":"Organize Navigation",
+            "name":"Organize Navigation",
+            "desc":"You can continue to add more navigation items",
+            "buttonText":"Go Add",
+            "doneTitle":"You've added navigation",
+            "doneDesc":"You can continue to add more navigation items",
+            "doneButtonText": "Go Add"
+        }
+    }
+    
+}

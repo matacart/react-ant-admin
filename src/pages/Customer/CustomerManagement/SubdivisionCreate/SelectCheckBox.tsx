@@ -27,8 +27,14 @@ React.memo(function SelectCheckBox({Ref,values,setConditionValue,...props}:any) 
             }}
             getPopupContainer={()=>Ref.current!}
             value={selectedValues}
-            dropdownStyle={{padding:"6px 0"}}
-            dropdownRender={(menu) => {
+            styles={{
+                popup: { 
+                    root: {
+                        padding:"6px 0"
+                    } 
+                }
+            }}
+            popupRender={(menu) => {
                 const list = props.options.map((item,index)=>{
                     return (
                         <Checkbox checked={selectedValues.includes(item.value)} className="item" style={{padding:"8px 12px",width:"100%"}}

@@ -1,7 +1,7 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { CopyOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
@@ -10,8 +10,8 @@ import cookie from 'react-cookies';
 import productList from '@/store/product/productList';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
+import { getPrimaryDomain } from '@/utils/dataStructure';
 
-type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
 // 表单项商品数据类型
@@ -66,9 +66,6 @@ const getRandomuserParams = (params: TableParams) => ({
 function ProductListAjax(selectProps:any) {
 
   const { createAbortController } = useAbortController();
-
-  // 预览域名
-  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
@@ -228,13 +225,8 @@ function ProductListAjax(selectProps:any) {
             <ButtonIcon>
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
-                      window.open(`https://${cookie.load("domain").domain_primary}/products/${record.handle}`)
-                    }else if(cookie.load("domain").handle){
-                      window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${record.handle}`)
-                    }else{
-                      message.error("店铺缺少handle")
-                    }
+                    const primaryDomain = getPrimaryDomain();
+                    primaryDomain && window.open(`${primaryDomain}/products/${record.handle}`)
                   }}>
                   <Tooltip title="预览">
                     <EyeOutlined />
@@ -295,14 +287,14 @@ function ProductListAjax(selectProps:any) {
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
-            total: result.count,
+            total: Number(result.count),
           }
         });
-        productList.setCount(result.count)
+        productList.setCount(Number(result.count))
         return
       }
       throw new Error(result.msg);
-    }catch(error){
+    }catch(error:any){
       if (error.name !== 'CanceledError') {
         message.error('获取数据失败');
       }

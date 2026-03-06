@@ -1,5 +1,5 @@
 import SimpleCard from "@/components/Card/SimpleCard";
-import { Flex, Form, Modal } from "antd"
+import { Col, Flex, Form, Modal, Row } from "antd"
 import { useMemo, useState } from "react";
 import styled from "styled-components"
 import SortableTree from "./Tree/SortableTree";
@@ -15,6 +15,8 @@ import { observer } from "mobx-react-lite";
 import navgate from "@/store/channel/navList/navgate";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import JumpLink, { getPageLink } from "./Tree/JumpLink";
+import LangSelect from "@/components/Select/LangSelect";
+import editor from "@/store/theme/editor";
 
 const MenuItemCard = ()=>{
 
@@ -25,6 +27,9 @@ const MenuItemCard = ()=>{
   const [isMaskVisible, setIsMaskVisible] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 弹窗默认语言
+  const [languagesId, setLanguagesId] = useState(editor.languagesId || "2");
 
   const [form] = Form.useForm();
 
@@ -40,6 +45,7 @@ const MenuItemCard = ()=>{
   // 取消
   const cancel = () => {
     form.resetFields();
+    setLanguagesId(editor.languagesId || "2");
     setIsModalOpen(false);
   }
   // 添加
@@ -48,11 +54,13 @@ const MenuItemCard = ()=>{
       const pageLink = getPageLink(values.nodeType,values.url);
       const newItem = {
         id: `new-item-${Date.now()}`,
+        languagesId: languagesId,
         isNew: true,
         title:values.title,
         img:values.img,
         isSys:values.sys,
         isShare:values.share,
+        isBind:values.bind,
         openMode:values.openMode,
         pageLink:pageLink,
         nodeType:values.nodeType,
@@ -61,6 +69,7 @@ const MenuItemCard = ()=>{
       };
       navgate.setInitialItems([...navgate.initialItems, newItem]);
       form.resetFields();
+      setLanguagesId(editor.languagesId || "2");
       setIsModalOpen(false);
     })
   }
@@ -92,8 +101,11 @@ const MenuItemCard = ()=>{
         setIsModalOpen(true)
       }} className="color-356DFF add-item cursor-pointer"><AddIcon />添加菜单项</span>} />
       {/*  */}
-      <Modal 
-        title={"添加菜单项"}
+      <Modal
+        title={<Flex style={{marginRight:"24px"}} align="center" justify="space-between">
+          添加菜单项
+          <LangSelect lang={languagesId} setLang={setLanguagesId} />
+        </Flex>}
         centered 
         width={620} 
         open={isModalOpen}
@@ -150,24 +162,42 @@ const MenuItemCard = ()=>{
               <div>添加图片</div>
             </Flex>}
           </Form.Item>
-          <Form.Item name="sys" label="数据归属" initialValue={"0"} required={false}>
-            <DefaultSelect options={[
-              {value:"0",label:"商户自建"},
-              {value:"1",label:"平台自建"},
-            ]} />
-          </Form.Item>
-          <Form.Item name="share" label="子号共享" initialValue={"0"} required={false}>
-            <DefaultSelect options={[
-              {value:"0",label:"否"},
-              {value:"1",label:"是"},
-            ]} />
-          </Form.Item>
-          <Form.Item name="openMode" label="开新窗口" initialValue={"0"} required={false}>
-            <DefaultSelect options={[
-              {value:"0",label:"否"},
-              {value:"1",label:"是"},
-            ]} />
-          </Form.Item>
+          <Row gutter={[12,0]}>
+            <Col span={12}>
+                <Form.Item name="bind" label="店铺关联" initialValue={"1"} required={false}>
+                  <DefaultSelect options={[
+                    {value:"0",label:"否"},
+                    {value:"1",label:"是"},
+                  ]} />
+                </Form.Item>
+            </Col>
+            <Col span={12}>
+                <Form.Item name="sys" label="数据归属" initialValue={"0"} required={false}>
+                  <DefaultSelect options={[
+                    {value:"0",label:"商户自建"},
+                    {value:"1",label:"平台自建"},
+                  ]} />
+                </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={[12,0]}>
+            <Col span={12}>
+                <Form.Item name="share" label="子号共享" initialValue={"0"} required={false}>
+                  <DefaultSelect options={[
+                    {value:"0",label:"否"},
+                    {value:"1",label:"是"},
+                  ]} />
+                </Form.Item>
+            </Col>
+            <Col span={12}>
+                <Form.Item name="openMode" label="开新窗口" initialValue={"0"} required={false}>
+                  <DefaultSelect options={[
+                    {value:"0",label:"否"},
+                    {value:"1",label:"是"},
+                  ]} />
+                </Form.Item>
+            </Col>
+          </Row>
           <JumpLink key={isModalOpen ? 'jump-link-open' : 'jump-link-closed'} form={form} />
         </MyForm>
       </Modal>
@@ -217,6 +247,7 @@ const MyForm = styled(Form)`
   margin-top: 20px;
   max-height: 80vh;
   overflow-y: auto;
+  overflow-x: hidden;
   .block_img-add{
     flex-direction: column;
     width: 160px;

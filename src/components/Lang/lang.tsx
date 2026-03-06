@@ -27,10 +27,10 @@ const Lang = () => {
       <div className={styles.lang} data-lang>
         {SelectLang && <SelectLang reload={false} postLocalesData={()=>{return[  
               {  
-                  "lang": "zh-CN",  
-                  "label": "简体中文",  
-                  "icon": "🇨🇳", // 中国国旗  
-                  "title": "语言"  
+                "lang": "zh-CN",  
+                "label": "简体中文",  
+                "icon": "🇨🇳", // 中国国旗  
+                "title": "语言"  
               },  
               {  
                 "lang": "zh-TW",  

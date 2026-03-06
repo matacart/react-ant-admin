@@ -26,6 +26,6 @@
       }
     ]
   },
-  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx"],
+  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx", "src/pages/Channel/FaceBook/Index"],
   "suppressImplicitAnyIndexErrors":true
 }

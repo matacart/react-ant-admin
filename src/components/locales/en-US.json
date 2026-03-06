@@ -2,6 +2,7 @@
     "components":{
         "header":{
             "search": "Search",
+            "workbench":"Workbench",
             "update":{
                 "tip":"Update"
             },
@@ -10,11 +11,43 @@
             },
             "selectDomain":{
                 "search":"Search",
-                "runningStores":"Open",
+                "runningStores":"Running Stores",
                 "defaultStores":"Closed",
                 "none":"No matching stores found",
                 "storesManage":"Manage Stores"
             }
+        },
+        "select":{
+            "langSelect":{
+                "shoplang":"Store Language"
+            },
+            "checkSelectClear":{
+                "clear":"Clear"
+            }
+        },
+        "modal":{
+            "deleteModal":{
+                "cancelText":"Cancel",
+                "okText":"OK"
+            }
+        },
+        "button":{
+            "cancelButton":{
+                "cancelText":"Cancel"
+            },
+            "createButton":{
+                "createText":"Create"
+            }
+        },
+        "dropdown":{
+            "dropdownSort":{
+                "sortText":"Sort",
+                "selectSortText":"Select Sort Way"
+            }
+        },
+        "message":{
+            "success":"Success",
+            "error":"Request failed, please try again"
         }
     }
 }

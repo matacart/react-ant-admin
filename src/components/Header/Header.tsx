@@ -1,23 +1,26 @@
 import { Avatar, Button, Flex } from "antd";
 import styled from "styled-components";
-import { GithubOutlined, GlobalOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
+import { GithubOutlined, GlobalOutlined, HomeOutlined, SearchOutlined, SyncOutlined } from "@ant-design/icons";
 import { useEffect, useState } from 'react';
 import { observer } from "mobx-react-lite";
 import { currentUserStatus } from "@/services/y2/api";
 import cookie from 'react-cookies';
-import { history } from "@umijs/max";
+import { history, useIntl } from "@umijs/max";
 import globalStore from "@/store/globalStore";
 import { AvatarDropdown, AvatarName } from "./AvatarDropdown";
 import CheckUpdates from "./CheckUpdates";
 import SelectDomain from "./SelectDomain";
 import { Ping, Question, SelectLang } from ".";
 import SearchAll from "./SearchAll";
+import MessageCenter from "./MessageCenter";
 
 
 function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialState:any}){
 
     // 剩余天数
     const [timer,setTimer] = useState(999);
+
+    const intl = useIntl();
 
     const [userStatus,setUserStatus] = useState<any>({})
 
@@ -33,34 +36,34 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
 
     useEffect(()=>{
         // 获取用户账号状态信息
-        currentUserStatus().then((res:any)=>{
-            setUserStatus(res)
-            if(res.code == 0){
-                const endtimer = parseInt(res.data.package.end_time || 0)
-                const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
-                res.code == 0 && setTimer(RemainTime)
-                RemainTime<=15 ? setHeight(100) : setHeight(60)
-            }else{
-                setHeight(100)
-                // 默认店铺
-                cookie.save('domain', JSON.stringify({
-                    default_currency: "USD",
-                    default_lang: "en-us",
-                    default_lang_name: "English",
-                    domain_name: "",
-                    id: "0",
-                    package_id: "3",
-                    package_name: "高级版",
-                    second_domain: "htj4yk94",
-                    status: "1",
-                    store_logo: "",
-                    store_name: "YIKEC",
-                    timezone: "Pacific/Honolulu"
-                }), { path: '/' });
-            }
-        }).catch(()=>{
-            setHeight(60)
-        })
+        // currentUserStatus().then((res:any)=>{
+        //     setUserStatus(res)
+        //     if(res.code == 0){
+        //         const endtimer = parseInt(res.data.package.end_time || 0)
+        //         const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
+        //         res.code == 0 && setTimer(RemainTime)
+        //         RemainTime<=15 ? setHeight(100) : setHeight(60)
+        //     }else{
+        //         setHeight(100)
+        //         // 默认店铺
+        //         cookie.save('domain', JSON.stringify({
+        //             default_currency: "USD",
+        //             default_lang: "en-us",
+        //             default_lang_name: "English",
+        //             domain_name: "",
+        //             id: "0",
+        //             package_id: "3",
+        //             package_name: "高级版",
+        //             second_domain: "htj4yk94",
+        //             status: "1",
+        //             store_logo: "",
+        //             store_name: "YIKEC",
+        //             timezone: "Pacific/Honolulu"
+        //         }), { path: '/' });
+        //     }
+        // }).catch(()=>{
+        //     setHeight(60)
+        // })
     },[globalStore.headRefresh])
 
 
@@ -100,14 +103,16 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
                 </Flex>:""}
                 <Flex justify='space-between' style={{padding:"0 16px",height:"60px"}}>
                     <div className="mc-header-left-content" style={{display:"flex",alignItems:"center",width:"240px"}}>
-                        <div><GlobalOutlined className="font-24" /></div>
-                        <h1 style={{fontSize:"18px",marginLeft:"12px"}} className="cursor-pointer" onClick={()=>history.push("/")}>{PLATFORM_INFO.brand_name}</h1>
+                        <GlobalOutlined className="font-24" />
+                        <h1 style={{fontSize:"18px",margin:"0 12px"}} className="cursor-pointer" onClick={()=>window.open(`https://www.matacart.com/`)}>{PLATFORM_INFO.brand_name}</h1>
+                        <Flex gap={6} style={{padding:"8px",borderRadius:"4px"}} className="item" onClick={()=>history.push("/")}><HomeOutlined /><div style={{height:"24px",lineHeight:"24px"}}>{intl.formatMessage({id: 'components.header.workbench'})}</div></Flex>
                     </div>
                     <div className="mc-header-left-content" style={{flex:"1 1 0%",textAlign:"center",position:"relative",left:"-10px",}}>
                         {url == "/stores/"?<></>:<SearchAll />}
                     </div>
                     <Flex className="mc-header-left-content" align='center'>
                         {userStatus.code == 0 && url == "/stores/"?<></>:<SelectDomain/>}
+                        <div className="item"><MessageCenter key="msg" /></div>
                         <div className="item"><Question key="doc" /></div>
                         <div className="item">
                             <div style={{padding:"8px",display:"flex"}} onClick={()=>window.open('https://github.com/matacart/react-ant-admin/tree/master')}>
@@ -149,6 +154,9 @@ const Scoped = styled.div`
         }
         .item:hover{
             background-color: rgba(0, 0, 0, 0.03)
+        }
+        .home{
+            background-color: #f7f9fa;
         }
     }
 

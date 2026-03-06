@@ -772,7 +772,7 @@ const handleWeightUnitChange = (id: number, unit: string) => {
               </Button>
               <Modal
                 title="修改库存"
-                visible={isModalVisible}
+                open={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
               >
@@ -805,8 +805,13 @@ const handleWeightUnitChange = (id: number, unit: string) => {
                     <Select
                   placeholder="更改价格"
                   onClick={handleModifyPrice} style={{marginRight:'10px'}}
-                  dropdownMatchSelectWidth={false}
-                  dropdownStyle={{ width: 120 }}
+                  styles={{ 
+                    popup: { 
+                      root: {
+                        width: 120
+                      } 
+                    }
+                  }}
                 >
                   <Option >修改售价</Option>
                   <Option >修改原价</Option>
@@ -817,7 +822,13 @@ const handleWeightUnitChange = (id: number, unit: string) => {
                   placeholder="更多操作"
                   onClick={handleMoreActions} style={{ marginRight: '10px' }}
                   dropdownMatchSelectWidth={false}
-                  dropdownStyle={{ width: 150 }}
+                  styles={{ 
+                    popup: { 
+                      root: {
+                        width: 150
+                      } 
+                    }
+                  }}
                 >
                   <Option >修改重量</Option>
                   <Option >设置图片</Option>

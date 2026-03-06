@@ -17,6 +17,17 @@ class codeEditor {
       this.mode = value;
     }
 
+    // 版本
+    versionId = '';
+    setVersionId(value:string){
+      this.versionId = value;
+    }
+    // 开发者
+    isAuthor:boolean = false;
+    setIsAuthor(value:boolean){
+      this.isAuthor = value;
+    }
+
     // 语言
     languageId = '2';
     setLanguageId(value:string){
@@ -50,6 +61,17 @@ class codeEditor {
       this.activeFileKey = value;
     }
 
+
+    reset(){
+      this.mode = 'auto';
+      this.languageId = '2';
+      this.versionId = '';
+      this.templateInfo = null;
+      this.fileList = [];
+      this.openFileList = [];
+      this.activeFileKey = "";
+      this.isAuthor = false;
+    }
 }
 
 export default new codeEditor();

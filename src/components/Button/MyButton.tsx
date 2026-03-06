@@ -1,7 +1,7 @@
 import { Button, ButtonProps, ConfigProvider } from "antd";
 
 interface MyButtonProps extends ButtonProps {
-    text: string;
+    text: string | React.ReactNode;
 }
 
 export default function MyButton({text,...props}:MyButtonProps){

@@ -2,6 +2,7 @@
     "components":{
         "header":{
             "search": "搜索",
+            "workbench":"工作台",
             "update":{
                 "tip":"更新"
             },
@@ -19,6 +20,9 @@
         "select":{
             "langSelect":{
                 "shoplang":"店铺语言"
+            },
+            "checkSelectClear":{
+                "clear":"清除"
             }
         },
         "modal":{
@@ -35,7 +39,14 @@
                 "createText":"创建"
             }
         },
+        "dropdown":{
+            "dropdownSort":{
+                "sortText":"排序",
+                "selectSortText":"选择排序方式"
+            }
+        },
         "message":{
+            "success":"成功",
             "error":"请求失败,请重试"
         }
     }

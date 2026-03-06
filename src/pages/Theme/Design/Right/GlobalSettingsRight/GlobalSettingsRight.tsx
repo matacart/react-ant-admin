@@ -132,9 +132,9 @@ function GlobalSettingsRight(){
                 label: '主题风格',
                 children: <>
                     <div className="theme_style">
-                        {basicThemeStyleInfoList.map(item=>{
+                        {basicThemeStyleInfoList.map((item,index)=>{
                             return (
-                                <Flex gap={8} align="center" className="cursor-pointer theme_style_item">
+                                <Flex key={index} gap={8} align="center" className="cursor-pointer theme_style_item">
                                     <div className="collapse_item" style={{backgroundColor:item.styleConfig.color}}></div>
                                     <div>{item.styleConfig.title['zh-hans-cn']}</div>
                                 </Flex>
@@ -150,7 +150,6 @@ function GlobalSettingsRight(){
                     </Flex>
                 </>,
             })
-            // console.log(editor.settings.presets)
         }
         setItems(newItems)
     }, [editor.settings]);
@@ -167,7 +166,7 @@ function GlobalSettingsRight(){
                             bordered={false}
                             accordion
                             expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-                            expandIconPosition="right"
+                            expandIconPosition="end"
                             items={items}
                             style={{ background: "#FFF" }}
                         />

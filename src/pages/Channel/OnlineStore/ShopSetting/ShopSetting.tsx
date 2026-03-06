@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { TabsProps, Tabs } from 'antd';
@@ -10,7 +10,6 @@ import LangSelect from '@/components/Select/LangSelect';
 import cookie from 'react-cookies';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
-
 
 function ShopSetting(){
 

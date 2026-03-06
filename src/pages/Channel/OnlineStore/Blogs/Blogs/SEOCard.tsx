@@ -3,22 +3,21 @@ import styled from "styled-components"
 import cookie from 'react-cookies';
 import SEOEdit from "./SEOEdit";
 import blogs from "@/store/channel/blogs/blogs";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 
  function SEOCard(){
 
-    // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
-    
-    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/pages/`;
-
+    const parmainDomain = getPrimaryDomain();
+        
+    const previewPrefix = parmainDomain ? `${parmainDomain}/pages/`: "";
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         blogs.setBlogs({
             ...blogs.blogs,
-            // meta_title:title,
-            // meta_description:description,
-            // meta_keywords:keyword,
-            // handle:handle,
+            meta_title:title,
+            meta_description:description,
+            meta_keywords:keyword,
+            handle:handle,
         })
     }
 
@@ -31,10 +30,10 @@ import blogs from "@/store/channel/blogs/blogs";
                         <SEOEdit seo={blogs.blogs} setSEO={setSEO} previewPrefix={previewPrefix} />
                     </span>
                 </div>
-                {/* <Flex className="webUrl">{`${previewPrefix}${blogs.blogs.handle?blogs.blogs.handle.replace(new RegExp(" ","gm"),"-"):customPage.customPage.title.replace(new RegExp(" ","gm"),"-")}`}</Flex>
+                <Flex className="webUrl">{`${previewPrefix}${blogs.blogs.handle?blogs.blogs.handle.replace(new RegExp(" ","gm"),"-"):blogs.blogs.category_name.replace(new RegExp(" ","gm"),"-")}`}</Flex>
                 <div className="webUrl">{cookie.load("domain").domainName}</div>
-                <div className="webTitle">{customPage.customPage.meta_title==""?(customPage.customPage.title==""?"未填写标题":customPage.customPage.title):customPage.customPage.meta_title}</div>
-                <div className="webDesc">{customPage.customPage.meta_description==""?"未填写描述":customPage.customPage.meta_description}</div> */}
+                <div className="webTitle">{blogs.blogs.meta_title==""?(blogs.blogs.category_name==""?"未填写标题":blogs.blogs.category_name):blogs.blogs.meta_title}</div>
+                <div className="webDesc">{blogs.blogs.meta_description==""?"未填写描述":blogs.blogs.meta_description}</div>
             </Card>
         </Scoped>
     )

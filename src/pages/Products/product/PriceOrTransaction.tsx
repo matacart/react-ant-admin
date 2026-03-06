@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs";
 import cookie from 'react-cookies';
-import { useForm } from "antd/es/form/Form";
 import product from "@/store/product/product";
 import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
 import MyRangePicker from "@/components/DatePicker/MyRangePicker";
+import { FormInstance } from "antd/lib";
 
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
@@ -17,12 +17,9 @@ dayjs.extend(timezone)
 
 const { Text } = Typography;
 
-function PriceOrTransaction() {
-
-    const [form] = useForm();
+function PriceOrTransaction({form}:{form: FormInstance}) {
 
     useEffect(()=>{
-        product.productInfo.start_time
         form.setFieldsValue({       
             specialprice:parseInt(product.productInfo.specialprice || "0"),
             costPrice:parseInt(product.productInfo.cost_price || "0"),
@@ -54,7 +51,8 @@ function PriceOrTransaction() {
                                         </Tooltip>
                                     </>
                                 } 
-                                className="price-item">
+                                className="price-item"
+                            >
                                 <DefaultInputNumber
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
@@ -112,7 +110,6 @@ function PriceOrTransaction() {
                             </Form.Item>
                         </Col>
                     </Row>
-                                        
                     <Row>
                         <Col span={11}>
                             <Form.Item name="price" label={

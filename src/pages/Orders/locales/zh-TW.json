@@ -1,0 +1,243 @@
+{
+    "orderList":{
+        "header": "訂單",
+        "importOrders": "導入訂單",
+        "bulkshipping": "批量發貨",
+        "updatetrackingnumber": "更新跟蹤號",
+        "createorder": "創建訂單",
+        "customExportFieldsModal":{
+
+        },
+        "editTableHead": {
+            "text": "編輯表頭",
+            "title": "編輯表頭",
+            "restoreDefault": "恢復默認",
+            "cancel": "取消",
+            "save": "保存",
+            "atLeastFive": "請至少保留 5 個表頭項目",
+            "orderNo": "訂單編號",
+            "orderId": "訂單ID",
+            "orderDate": "訂單日期",
+            "orderSource": "訂單來源",
+            "orderStatus": "訂單狀態",
+            "paymentStatus": "付款狀態",
+            "shippingStatus": "發貨狀態",
+            "returnStatus": "退貨狀態",
+            "paymentMethod": "支付方式",
+            "paymentChannel": "支付渠道",
+            "paymentCompleteTime": "付款完成時間",
+            "transferCertificateStatus": "轉賬憑證上傳狀態",
+            "recipient": "收件人",
+            "recipientPhone": "收件人手機號",
+            "paymentTransactionId": "支付流水號",
+            "orderTag": "訂單標籤",
+            "trackingNumber": "追蹤編號"
+        },
+        "exportOrderDetailModal":{
+
+        },
+        "exportOrderPageModal":{
+
+        },
+        "exportPickingModal": {
+            "title": "導出揀貨單",
+            "subtitle": "下載揀貨單模版，根據模版規範填寫訂單相關信息後導入"
+        },
+        "exportShippingModal": {
+            "title": "導出發貨單",
+            "subtitle": "下載發貨單模版，根據模版規範填寫訂單相關信息後導入"
+        },
+        "index":{
+
+        },
+        "ordersListAjax":{
+            "orderNo": "訂單編號",
+            "orderDate": "訂單日期",
+            "orderStatus": "訂單狀態",
+            "paymentStatus": "支付狀態",
+            "shippingStatus": "發貨狀態",
+            "paymentMethod": "支付方式",
+            "paymentChannel": "支付渠道",
+            "consignee": "收貨人",
+            "mobile": "手機號",
+            "shippingMethod": "配送方式",
+            "priceTotal": "價格總計",
+            "processing": "處理中",
+            "paid": "已付款",
+            "unpaid": "未付款",
+            "readyToShip": "待發貨",
+            "partiallyShipped": "部分發貨",
+            "shipped": "已發貨"
+        },
+        "index":{
+            "orderList": "訂單列表",
+            "exportOrder": "導出訂單",
+            "batchDelivery": "批量發貨",
+            "updateTrackingNumber": "更新追蹤編號",
+            "createOrder": "創建訂單",
+            "bulkDelivery": "批量發貨",
+            "uploadAndImport": "上傳並導入",
+            "importRecord": "導入記錄",
+            "cancel": "取消",
+            "downloadTemplate": "請先下載批量導入模板，並按導入模板規範填寫訂單相關信息，再在本頁導入表格，以更新訂單包裹的發貨狀態。",
+            "uploadFile": "上傳文件（或拖放上傳）",
+            "updateTrackingNumberModalTitle": "更新訂單追蹤編號",
+            "exportHistory": "導出歷史記錄",
+            "exportShippedOrders": "請先導出已發貨訂單，在表格中為訂單包裹添加或修改運單號，再在本頁導入表格，以更新訂單包裹物流狀態。",
+            "fileSizeError": "文件大小不能超過10MB!"
+        },
+        "ordersMoreSelect": {
+            "moreselect": "更多篩選",
+            "filterTitle": "篩選",
+            "reset": "重置",
+            "done": "完成",
+            "exactSearch": "精確搜索",
+            "clear": "清除",
+            "orderStatus": "訂單狀態",
+            "processing": "處理中",
+            "cancelled": "已取消",
+            "archived": "已歸檔",
+            "paymentStatus": "付款狀態",
+            "refundOrder": "退款訂單",
+            "shippingStatus": "發貨狀態",
+            "returnStatus": "退貨狀態",
+            "shippingMethod": "運輸方式",
+            "paymentMethod": "支付方式",
+            "tag": "標籤",
+            "productTag": "商品標籤",
+            "landingPageDomain": "落地頁域名（即將下線）",
+            "landingPageParams": "落地頁參數（即將下線）",
+            "referrerDomain": "訪問來源域名（即將下線）",
+            "referrerParams": "訪問來源參數（即將下線）",
+            "orderDate": "訂單日期",
+            "archiveOrder": "歸檔訂單",
+            "chargebackStatus": "拒付與質詢狀態",
+            "orderSource": "訂單來源",
+            "orderProductEditStatus": "訂單商品編輯狀態",
+            "pickingListExportStatus": "揀貨單導出狀態",
+            "orderDetailsExportStatus": "訂單詳情導出狀態",
+            "accountingPaymentStatus": "入賬付款狀態",
+            "transferProofUploadStatus": "轉賬憑證上傳狀態",
+            "discountCode": "折扣碼",
+            "countryRegion": "國家/地區",
+            "orderAmount": "訂單金額",
+            "firstInteractionSource": "首次互動來源",
+            "lastInteractionSource": "末次互動來源",
+            "fraudRisk": "欺詐風險",
+            "shop": "店鋪",
+            "allShops": "所有店鋪",
+            "currentShop": "當前店鋪"
+        },
+        "ordersSelectCard": {
+            "search": "搜索訂單",
+            "paymentstatus": "付款狀態",
+            "shippingstatus": "發貨狀態",
+            "notpaid": "未付款",
+            "paying": "付款中",
+            "partpaid": "部分付款",
+            "paid": "已付款",
+            "refunded": "已退款",
+            "partrefunded": "部分退款",
+            "authorized": "已授權",
+            "duplicatepayment": "重複付款",
+            "notshipped": "未發貨",
+            "shipped": "已發貨",
+            "partshipped": "部分發貨",
+            "sort": {
+                "orderno": {
+                    "asc": "訂單號（升序）",
+                    "desc": "訂單號（降序）"
+                },
+                "createdate": {
+                    "newtoold": "成單時間（最新到最舊）",
+                    "oldtonew": "成單時間（最舊到最新）"
+                },
+                "paydate": {
+                    "newtoold": "支付時間（最新到最舊）",
+                    "oldtonew": "支付時間（最舊到最新）"
+                },
+                "customername": {
+                    "atoz": "客戶名稱（A-Z）",
+                    "ztoa": "客戶名稱（Z-A）"
+                },
+                "paymentstatus": {
+                    "atoz": "付款狀態（A-Z）",
+                    "ztoa": "付款狀態（Z-A）"
+                },
+                "shippingstatus": {
+                    "atoz": "發貨狀態（A-Z）",
+                    "ztoa": "發貨狀態（Z-A）"
+                },
+                "totalprice": {
+                    "hightolow": "總價（高至低）",
+                    "lowtohigh": "總價（低至高）"
+                }
+            }
+        },
+        "orderTabs": {
+            "all": "全部",
+            "readytoship": "待發貨",
+            "cancelled": "已取消",
+            "process": "進行中",
+            "neworders": "新訂單",
+            "archived": "已歸檔",
+            "orderstatus": "訂單狀態",
+            "alllocations": "全部位置",
+            "defaultlocation": "默認位置",
+            "newTabTitle": "新建選項卡",
+            "tabName": "選項卡名稱",
+            "createNewTab": "創建新選項卡",
+            "enterTabName": "請輸入選項卡名稱"
+        },
+        "selectedActions": {
+            "bulkshipping":"批量發貨",
+            "updatetrackingnumber":"更新跟蹤號",
+            "selectedCount": "已選擇 {count} 項",
+            "archiveOrders": "歸檔訂單",
+            "archiveOrders.description": "已成功歸檔{count}條訂單",
+            "unarchiveOrders": "取消歸檔訂單",
+            "unarchiveOrders.description": "已成功取消歸檔{count}條訂單",
+            "addTags": "添加標籤",
+            "removeTags": "刪除標籤",
+            "apply": "應用",
+            "accountPayment": "入賬付款"
+        },
+        "sortableItem":{
+
+        }
+    },
+    "orderDraft":{
+        "orderDraftList":{
+            "index":{
+                "draftOrderList": "草稿單列表",
+                "exportDraftOrder": "導出草稿單",
+                "createOrder": "創建訂單"
+            },
+            "orderDraftList":{
+                "draftOrder": "草稿單",
+                "exportDraftOrder": "導出草稿單",
+                "createOrder": "創建訂單"
+            },
+            "orderDraftListAjax":{
+                "draftOrderNo": "草稿單號",
+                "creationDate": "創建日期",
+                "customer": "客戶",
+                "status": "狀態",
+                "total": "合計",
+                "pending": "未結",
+                "completed": "已結"
+            },
+            "orderDraftTabs":{
+                "all": "全部",
+                "pending": "未結",
+                "completed": "已完成"
+            },
+            "ordersDraftSelectCard":{
+                "searchPlaceholder": "查詢草稿單號或採購訂單編號（僅B2B訂單有）",
+                "status": "狀態",
+                "pending": "未結",
+                "completed": "已完成"
+            }
+        }
+    }
+}

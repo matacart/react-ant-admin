@@ -4,10 +4,9 @@ import { SuccessIcon } from "@/components/Icons/Icons"
 import { Modal, Flex, Checkbox, App, message } from "antd"
 import { useEffect, useRef, useState } from "react"
 import UploadCompressedFile from "./UploadCompressedFile"
-import axios from "axios"
 import { useSleep } from "@/hooks/customHooks"
 import { uploadTemplate } from "@/services/y2/api"
-function UploadTemplateModal() {
+function UploadTemplateModal({pagination,setPagination,getTemplateList}:{pagination:any,setPagination:(pagination:any)=>void,getTemplateList:()=>void}) {
 
     const [file, setFile] = useState(null)
 
@@ -23,15 +22,13 @@ function UploadTemplateModal() {
     const UploadImport = (file:File)=>{
       setLoading(true)
       setStatus("inProgress")
-      // uploadTemplate({
-      //   zip_file:file
-      // }).then(res=>{
-      //   console.log(res)
-      // })
-      // let formData = new FormData()
-      // formData.append("zip_file", file)
       uploadTemplate(file).then((res: any) => {
-        message.success("上传成功", 1)
+        message.success("上传成功", 1);
+        pagination.current == 1 && getTemplateList();
+        setPagination({
+          ...pagination,
+          current: 1,
+        })
       }).catch((err: any) => {
 
       }).finally(() => {
@@ -70,7 +67,7 @@ function UploadTemplateModal() {
     }
     return (<>
         <a onClick={()=>setIsOpen(true)}>上传模板</a>
-        <Modal open={isOpen} width={620} title="上传模板" destroyOnClose={true} centered onCancel={closeModal}
+        <Modal open={isOpen} width={620} title="上传模板" destroyOnHidden={true} centered onCancel={closeModal}
             footer={(_, { OkBtn, CancelBtn }) => (
               <>
                 <Flex justify='flex-end' align='center'>

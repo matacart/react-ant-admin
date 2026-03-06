@@ -1,10 +1,8 @@
-import MyAlert from "@/components/Alert/MyAlert";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { ReductionIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { Button, Checkbox, Col, Flex, Form, Input, Modal, Row, Space } from "antd"
+import { Button, Checkbox, Col, Flex, Form, Modal, Row, Space } from "antd"
 import { useEffect, useRef, useState } from "react";
 import { styled } from 'styled-components';
 

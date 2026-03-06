@@ -219,8 +219,14 @@ function SelectCard(){
                             value={"供应商"}
                             style={{ width: 180,height:"36px" }}
                             showSearch
-                            dropdownStyle={{padding:"6px 0"}}
-                            dropdownRender={(menu) => (
+                            styles={{
+                                popup: { 
+                                    root: {
+                                        padding:"6px 0"
+                                    } 
+                                }
+                            }}
+                            popupRender={(menu) => (
                               <>
                                 {menu}
                               </>
@@ -237,8 +243,14 @@ function SelectCard(){
                             value={"收货地"}
                             style={{ width: 180,height:"36px" }}
                             showSearch
-                            dropdownStyle={{padding:"6px 0"}}
-                            dropdownRender={(menu) => (
+                            styles={{
+                                popup: { 
+                                    root: {
+                                        padding:"6px 0"
+                                    } 
+                                }
+                            }}
+                            popupRender={(menu) => (
                               <>
                                 {menu}
                               </>

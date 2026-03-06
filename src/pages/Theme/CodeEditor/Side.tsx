@@ -1,4 +1,3 @@
-import { DeleteIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
 import codeEditor from "@/store/theme/codeEditor";
 import { FileOutlined, FolderOutlined, SearchOutlined } from "@ant-design/icons";
@@ -40,7 +39,7 @@ interface MyTreeDataNode extends TreeDataNode {
 
 function Side(){
 
-    const { id,templateId }  = useParams();
+    const { id,templateId,versionId }  = useParams();
 
     const navigate = useNavigate();
 
@@ -62,7 +61,7 @@ function Side(){
             if(!codeEditor.openFileList.some((node:any)=>node.key === info.node.key)){
                 codeEditor.setOpenFileList([...codeEditor.openFileList,{...info.node,url:url,languagesId:codeEditor.languageId,mode:codeEditor.mode}])
             }
-            navigate(`/theme/codeEditor/${id}/${templateId}/${codeEditor.languageId}?key=${url}`)
+            navigate(`/theme/codeEditor/${id}/${templateId}/${codeEditor.languageId}/${versionId}?key=${url}`)
         }
     };
     

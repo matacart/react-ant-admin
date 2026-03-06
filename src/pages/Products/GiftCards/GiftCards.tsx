@@ -146,7 +146,7 @@ const App: React.FC = () => {
               activeKey={activeKey}
               items={items}
               // !默认不销毁
-              destroyInactiveTabPane
+              destroyOnHidden
               // tabBarExtraContent={operations}
             />
           </div>

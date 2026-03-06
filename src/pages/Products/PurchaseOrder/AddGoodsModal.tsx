@@ -66,7 +66,13 @@ function AddGoodsModal() {
                                 placeholder="商品分类"
                                 optionFilterProp="children"
                                 dropdownMatchSelectWidth={false}
-                                dropdownStyle={{ width: 190 }}
+                                styles={{
+                                    popup: { 
+                                        root: {
+                                            width: 190
+                                        } 
+                                    }
+                                }}
                                 filterOption={(input, option) => (option?.label ?? '').includes(input)}
                                 filterSort={(optionA, optionB) =>
                                     (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
@@ -100,8 +106,14 @@ function AddGoodsModal() {
                                         minWidth: 200
                                     }}
                                     // open={openTagsList}
-                                    dropdownStyle={{padding:"0px"}}
-                                    dropdownRender={(menu) => (
+                                    styles={{
+                                        popup: { 
+                                            root: {
+                                                padding:"0px"
+                                            } 
+                                        }
+                                    }}
+                                    popupRender={(menu) => (
                                         <>
                                         {menu}
                                         {/* 1px solid #d7dbe7 */}

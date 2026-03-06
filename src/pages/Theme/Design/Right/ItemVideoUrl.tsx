@@ -2,7 +2,7 @@ import MyInput from "@/components/Input/MyInput"
 import { useIntl } from "@umijs/max";
 import { useEffect, useState } from "react";
 
-function ItemVideoUrl({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function ItemVideoUrl({item,data,setData}:{item:any,data:{value:string,resource:any},setData:(item:any,value:{value:string,resource:any})=>void}){
 
     const intl = useIntl();
 
@@ -18,13 +18,19 @@ function ItemVideoUrl({item,data,setData}:{item:any,data:string,setData:(item:an
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
-        setValue(inputValue);
+        setValue({
+            value: inputValue,
+            resource:null
+        });
         // 进行格式校验 (允许空字符串)
         if (inputValue && !urlPattern.test(inputValue)) {
             setError("格式如:https://www.youtube.com/watch?v=dQw4w9WgXcQ http://youtube.com/v/dQw4w9WgXcQ https://youtu.be/dQw4w9WgXcQ");
         } else {
             setError(null);
-            setData(item, inputValue); // 空值或有效URL都更新父组件数据
+            setData(item, {
+                value: inputValue,
+                resource:null
+            }); // 空值或有效URL都更新父组件数据
         }
     };
 
@@ -37,7 +43,7 @@ function ItemVideoUrl({item,data,setData}:{item:any,data:string,setData:(item:an
             <MyInput 
                 style={{ width:"100%",height:"36px" }}
                 placeholder={item?.placeholder}
-                value={value}
+                value={value?.value}
                 onChange={handleChange}
             />
             {error && <span style={{ color: 'red', fontSize: '12px' }}>{error}</span>}

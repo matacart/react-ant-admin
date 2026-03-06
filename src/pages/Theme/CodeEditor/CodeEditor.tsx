@@ -1,4 +1,4 @@
-import { Flex, Spin } from "antd"
+import { Flex, message, Spin } from "antd"
 import Header from "./Header"
 import Side from "./Side"
 import styled from "styled-components"
@@ -12,7 +12,7 @@ import { observer } from "mobx-react-lite"
 
 function CodeEditor(){
 
-    const { id,templateId,languageId }  = useParams();
+    const { id,templateId,languageId,versionId }  = useParams();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
@@ -20,50 +20,44 @@ function CodeEditor(){
 
     const fetch = async ()=>{
         setLoading(true)
-        await Promise.allSettled([
-            getThemeFileList({
-                id:id??"",
-                templateId:templateId??"",
-                mode:codeEditor.mode,
-                languages_id:codeEditor.languageId
-            }),
-            getTemplateInfo(templateId ?? "",codeEditor.languageId)
-        ]).then((res:any)=>{
-             // 处理结果
-            const [fileListResult, templateInfoResult] = res;
+        try {
+            const results = await Promise.allSettled([
+                getThemeFileList({
+                    id:id??"",
+                    templateId:templateId??"",
+                    mode:codeEditor.mode,
+                    languages_id:languageId || "2",
+                    version_id:versionId??"",
+                    versionId:versionId??"",
+                }),
+                getTemplateInfo(templateId ?? "",codeEditor.languageId)
+            ])
+            const [fileListResult, templateInfoResult] = results;
             if(fileListResult.status === "fulfilled"){
                 codeEditor.setFileList(fileListResult.value?.data?.files || [])
+                codeEditor.setLanguageId(languageId || "2")
+                codeEditor.setVersionId(versionId??"")
             }
             if(templateInfoResult.status === "fulfilled"){
                 codeEditor.setTemplateInfo(templateInfoResult.value?.data?.templateInstanceInfo || null)
             }
-        }).catch(()=>{
-            // 错误处理
-            console.log("错误处理");
-        }).finally(()=>{
-            setLoading(false)
-        })
-        setIsSkeleton(false);
+        }catch (error) { 
+        }finally{ 
+            setLoading(false);
+            setIsSkeleton(false);
+        }
     }
-
-    
-    useEffect(()=>{
-        // 默认语言
-        codeEditor.setLanguageId(languageId ?? "2");
-        // 初始化状态
-        codeEditor.setOpenFileList([]);
-        codeEditor.setActiveFileKey("");
-    },[])
 
     useEffect(()=>{
         fetch();
-    },[codeEditor.languageId])
+        return () => {
+            // 组件销毁时重置状态
+            codeEditor.reset();
+        };
+    },[])
 
-    // 首次
-    const isFirstRender = useRef(true);
     useEffect(()=>{
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
+        if (isSkeleton) {
             return;
         }
         setLoading(true)
@@ -71,22 +65,30 @@ function CodeEditor(){
             id:id??"",
             templateId:templateId??"",
             mode:codeEditor.mode,
-            languages_id:codeEditor.languageId
+            languages_id:codeEditor.languageId,
+            version_id:codeEditor.versionId??"",
+            versionId:codeEditor.versionId || ""
         }).then((res:any)=>{
-            codeEditor.setFileList(res.data?.files || [])
+            if(res.code == "SUCCESS"){
+                codeEditor.setFileList(res.data?.files || []);
+                codeEditor.setIsAuthor(res.data.isAuthor);
+            }else{
+                message.error(res.msg)
+            }
         }).catch(()=>{
             // 错误处理
         }).finally(()=>{
             setLoading(false)
         })
-    },[codeEditor.mode])
+        // 状态清除
+    },[codeEditor.mode,codeEditor.languageId,codeEditor.versionId])
 
     return (
         <Scoped>
             {isSkeleton?<SkeletonCard />:<>
                 <Spin spinning={loading}>
                     {/* header */}
-                    <Header templateId={templateId??""} languageId={languageId??"2"} />
+                    <Header templateId={templateId??""} />
                     {/* container */}
                     <Flex>
                         <div className="side">

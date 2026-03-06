@@ -387,7 +387,7 @@ export default function TagsModal(prop:any){
                                 <MyInput placeholder="搜索标签名称或添加标签（例如：复古/夏季）" onChange={(e)=>{setTagContent(e.target.value)}} value={tagContent} />
                                 <div style={{marginLeft:"20px"}}>
                                 <Dropdown trigger={['click']} menu={{ items,defaultSelectedKeys: ['1'],selectable: true, }} placement="bottomRight"
-                                dropdownRender={(menu) => (
+                                popupRender={(menu) => (
                                     <div style={contentStyle}>
                                         <div style={{ padding:"16px 8px 6px 8px",fontSize:"12px",color:"#7A8499" }}>选择排序方式</div>
                                         {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}
@@ -452,7 +452,7 @@ export default function TagsModal(prop:any){
                                 <MyInput placeholder="搜索标签名称" />
                                 <div style={{marginLeft:"20px"}}>
                                 <Dropdown trigger={['click']} menu={{ items,defaultSelectedKeys: ['1'],selectable: true, }} placement="bottomRight"
-                                dropdownRender={(menu) => (
+                                popupRender={(menu) => (
                                     <div style={contentStyle}>
                                         <div style={{ padding:"16px 8px 6px 8px",fontSize:"12px",color:"#7A8499" }}>选择排序方式</div>
                                         {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}

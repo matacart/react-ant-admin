@@ -1,4 +1,7 @@
 
+import { message } from 'antd';
+import cookie from 'react-cookies';
+
 interface TreeNode {
     id: string;
     pid: string;
@@ -209,3 +212,18 @@ export function insertFileInTree(treeData: any[], fileName: string, fileType: st
       level: pathParts.length + 1
   };
 };
+
+// 获取主域名
+export function getPrimaryDomain() {
+  // 预览域名
+  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+  let primaryDomain = "";
+  if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+    primaryDomain = `https://${cookie.load("domain").domain_primary}`
+  }else if(cookie.load("domain").handle){
+    primaryDomain = `https://${cookie.load("domain").handle}${previewDomain}`
+  }else{
+    message.error("店铺缺少handle,请添加主域名")
+  }
+  return primaryDomain;
+}

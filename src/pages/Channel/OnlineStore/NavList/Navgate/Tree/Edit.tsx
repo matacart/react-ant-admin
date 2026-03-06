@@ -1,4 +1,4 @@
-import { Flex, Form, Modal, Spin, Tooltip } from 'antd';
+import { Col, Flex, Form, Modal, Row, Spin, Tooltip } from 'antd';
 import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import navgate, { TreeItem } from '@/store/channel/navList/navgate';
@@ -13,13 +13,15 @@ import DocumentLibrary from '@/pages/Components/DocumentLibrary';
 import DefaultSelect from '@/components/Select/DefaultSelect';
 import JumpLink, { getNavlistSecondData, getPageLink, optionsData } from './JumpLink';
 import { getSearchLink } from '@/services/y2/api';
+import LangSelect from '@/components/Select/LangSelect';
+import { observer } from 'mobx-react-lite';
 
 export interface EditProps extends React.HTMLAttributes<HTMLDivElement> {
   onEdit?: (newItem:TreeItem) => void; // 添加 onClick 属性
   info:any,
 }
 
-export function Edit({onEdit,info,...props }: EditProps) {
+function Edit({onEdit,info,...props }: EditProps) {
 
   const [addImgModalOpen, setAddImgModalOpen] = useState(false);
   
@@ -31,7 +33,17 @@ export function Edit({onEdit,info,...props }: EditProps) {
 
   const [loading,setLoading] = useState(false);
 
+  const [languagesId, setLanguagesId] = useState(navgate.languagesId || "2");
+
   const [form] = Form.useForm();
+
+  const setLang = (value:string) => {
+    setLanguagesId(value);
+    // 存在多语言时
+    info.name && form.setFieldsValue({
+      title: info.name[value] || info.name.default,
+    });
+  }
 
   // 二级节点数据
   const [secondData, setSecondData] = useState<any>(null);
@@ -47,13 +59,16 @@ export function Edit({onEdit,info,...props }: EditProps) {
   // 更新
   const submit = ()=>{
     form.validateFields().then(values=>{
+      console.log(languagesId);
       const pageLink = getPageLink(values.nodeType,values.url);
       const newItem = {
         id: `new-item-${Date.now()}`,
+        languagesId:languagesId,
         title:values.title,
         img:values.img,
         isSys:values.sys,
         isShare:values.share,
+        isBind:values.bind,
         openMode:values.openMode,
         pageLink:pageLink,
         nodeType:values.nodeType,
@@ -139,12 +154,14 @@ export function Edit({onEdit,info,...props }: EditProps) {
           nodeData ? setSecondData([nondeBack,nodeData,...newOptions]):setSecondData([nondeBack,...newOptions]);
         }
         setTimeout(() => {
+          setLanguagesId(info?.languagesId || navgate.languagesId);
           form.setFieldsValue({
             title: info.title,
             img: info?.img || "",
             url: value,
             sys: info.isSys.toString(),
             share: info.isShare.toString(),
+            bind: info.isBind.toString(),
             nodeType:info.nodeType,
             openMode: (info.openMode || "0").toString(),
           });
@@ -154,7 +171,12 @@ export function Edit({onEdit,info,...props }: EditProps) {
           <EditIcon />
         </Tooltip>
       </Scoped>
-      <Modal title={"编辑菜单项"}
+      <Modal title={
+        <Flex style={{marginRight:"24px"}} align="center" justify="space-between">
+          编辑菜单项
+          <LangSelect lang={languagesId} setLang={setLang} />
+        </Flex>
+      }
         centered 
         width={620} 
         open={isModalOpen}
@@ -212,24 +234,42 @@ export function Edit({onEdit,info,...props }: EditProps) {
                 <div>添加图片</div>
               </Flex>}
             </Form.Item>
-            <Form.Item name="sys" label="数据归属" initialValue={"0"} required={false}>
-              <DefaultSelect options={[
-                {value:"0",label:"商户自建"},
-                {value:"1",label:"平台自建"},
-              ]} />
-            </Form.Item>
-            <Form.Item name="share" label="子号共享" initialValue={"0"} required={false}>
-              <DefaultSelect options={[
-                {value:"0",label:"否"},
-                {value:"1",label:"是"},
-              ]} />
-            </Form.Item>
-            <Form.Item name="openMode" label="开新窗口" initialValue={"0"} required={false}>
-              <DefaultSelect options={[
-                {value:"0",label:"否"},
-                {value:"1",label:"是"},
-              ]} />
-            </Form.Item>
+            <Row gutter={[12,0]}>
+              <Col span={12}>
+                  <Form.Item name="bind" label="店铺关联" initialValue={"1"} required={false}>
+                    <DefaultSelect options={[
+                      {value:"0",label:"否"},
+                      {value:"1",label:"是"},
+                    ]} />
+                  </Form.Item>
+              </Col>
+              <Col span={12}>
+                  <Form.Item name="sys" label="数据归属" initialValue={"0"} required={false}>
+                    <DefaultSelect options={[
+                      {value:"0",label:"商户自建"},
+                      {value:"1",label:"平台自建"},
+                    ]} />
+                  </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={[12,0]}>
+              <Col span={12}>
+                  <Form.Item name="share" label="子号共享" initialValue={"0"} required={false}>
+                    <DefaultSelect options={[
+                      {value:"0",label:"否"},
+                      {value:"1",label:"是"},
+                    ]} />
+                  </Form.Item>
+              </Col>
+              <Col span={12}>
+                  <Form.Item name="openMode" label="开新窗口" initialValue={"0"} required={false}>
+                    <DefaultSelect options={[
+                      {value:"0",label:"否"},
+                      {value:"1",label:"是"},
+                    ]} />
+                  </Form.Item>
+              </Col>
+            </Row>
             <JumpLink form={form} secondData={secondData} />
           </MyForm>
         </Spin>
@@ -264,6 +304,8 @@ export function Edit({onEdit,info,...props }: EditProps) {
   );
 }
 
+export default observer(Edit);
+
 const Scoped = styled.div`
   cursor: pointer;
   font-size: 18px;
@@ -273,6 +315,7 @@ const MyForm = styled(Form)`
   margin-top: 20px;
   max-height: 80vh;
   overflow-y: auto;
+  overflow-x: hidden;
   .block_img-add{
     flex-direction: column;
     width: 160px;

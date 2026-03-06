@@ -4,7 +4,7 @@ import {Handle} from './Handle';
 import {Remove} from './Remove';
 import styles from './TreeItem.module.css';
 import { Create } from './Create';
-import { Edit } from './Edit';
+import Edit from './Edit';
 import { Flex } from 'antd';
 
 export interface Props extends Omit<HTMLAttributes<HTMLLIElement>, 'id'> {

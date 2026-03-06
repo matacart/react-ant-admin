@@ -63,12 +63,10 @@ export default function Package() {
                                     <Tooltip title="绑卡过程，会发起一笔小额支付（折合约1美元），完成绑卡信息的验证，支付后，会在7个工作日里退还。"><QuestionCircleOutlined className="mc-symbol-icon" /></Tooltip>
                                 </div>
                             </div>
-
                             <BindCard />
                         </div>
                     </Col>
                 </Row>
-
                 {/* 我的套餐 */}
                 <Row className="myPackage">
                     <Col span={8}>
@@ -126,7 +124,6 @@ export default function Package() {
                         </div>
                     </Col>
                 </Row>
-
 
                 {/* 我的服务权益 */}
                 <Row className="myServiceRights">

@@ -23,12 +23,13 @@ import CategoriesSettings from '../ProductCategories/CategoriesSettings';
 import CategoriesBanner from '../ProductCategories/CategoriesBanner';
 import ThemeTemplateCard from '../ProductCategories/ThemeTemplateCard';
 import Recommendation from '../ProductCategories/Recommendation';
+import { getPrimaryDomain } from '@/utils/dataStructure';
 // 表单项商品数据类型
 
 function EditProductCategories(){
 
     // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    const previewDomain = getPrimaryDomain();
 
     const {id,languageId} = useParams();
 
@@ -65,13 +66,7 @@ function EditProductCategories(){
                         <Flex className='mc-header-right' gap={8}>
                             <LangSelect lang={languagesId} setLang={(value:string)=>setLanguagesId(value)} />
                             <DefaultButton text="预览" onClick={()=>{
-                                if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
-                                    window.open(`https://${cookie.load("domain").domain_primary}/collections/${categories.categoriesInfo.handle}`)
-                                }else if(cookie.load("domain").handle){
-                                    window.open(`https://${cookie.load("domain").handle}${previewDomain}/collections/${categories.categoriesInfo.handle}`)
-                                }else{
-                                    message.error("店铺缺少handle")
-                                }
+                                window.open(previewDomain && `${previewDomain}/collections/${categories.categoriesInfo.handle}`)
                             }} />
                         </Flex>
                     </div>

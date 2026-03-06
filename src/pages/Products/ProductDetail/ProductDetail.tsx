@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { Divider,Flex,Form,MenuProps,message, Modal } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import TradingRecords from './TradingRecords';
 import { deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
@@ -37,6 +37,7 @@ import ProtectionInformation from '../Product/ProtectionInformation';
 import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
 import StockCard from '../Product/StockCard';
 import SEOCard from '../Product/SEOCard';
+import { getPrimaryDomain } from '@/utils/dataStructure';
 
 
 // 信息
@@ -61,14 +62,11 @@ interface ProductDetail {
 
 function ProductDetail() {
 
-    const navigate = useNavigate(); // 使用 useNavigate 钩子
     const {productId,languageId} = useParams();
-
     // 域名信息
     const domainCookie = cookie.load("domain");
-
     // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    const previewDomain = getPrimaryDomain();
 
     const [languagesId,setLanguagesId] = useState<string>(languageId??"2");
 
@@ -142,14 +140,9 @@ function ProductDetail() {
     const [productTitle,setProductTitle] = useState(""); //标题
 
     const [form] = Form.useForm();
-    // 新增一个ref用于标记是否是初始渲染
-    const initialRender = useRef(true);
     // 提示
-    const [isOverlay,setIsOverlay] = useState(false)
     const [isSkeleton,setIsSkeleton] = useState(true)
     const [loading,setLoading] = useState(false)
-    // const [saveLoading,setSaveLoading] = useState(false);
-    const params = new URL(location.href).searchParams
 
     const [modal, contextHolder] = Modal.useModal();
     
@@ -161,7 +154,7 @@ function ProductDetail() {
         return deleteProduct(id).then(res=>{
             if(res.code==0){
                 message.success('删除成功');
-                navigate('/products/index');
+                history.push('/products/index');
             }else{
                 message.error('noooo');
             }
@@ -314,9 +307,9 @@ function ProductDetail() {
                 })
                 message.success('修改成功')
                 setProductTitle(product.productInfo.title)
+                setIsOverlay(false)
             }catch(err){
             }finally{
-                setIsOverlay(false)
                 setLoading(false)
             }
         }
@@ -326,16 +319,10 @@ function ProductDetail() {
         fetchProductDetail(productId || "",languagesId);
     },[productId,languagesId]);
 
-
-    // 监听product.productInfo 变化 --- 
+    // 保存提示
+    const [isOverlay,setIsOverlay] = useState<boolean>();
     useEffect(()=>{
-        if(initialRender.current) {
-            initialRender.current = false;
-            return;
-        }
-        if(!isSkeleton && !initialRender.current){
-            setIsOverlay(true)
-        }
+        setIsOverlay(isSkeleton ? false : true);
     },[product.productInfo])
     
     
@@ -348,7 +335,7 @@ function ProductDetail() {
                         <div className="mc-header">
                             <div className="mc-header-left">
                                 <div className="mc-header-left-secondary" onClick={() => {
-                                    navigate('/products/index')
+                                    history.push('/products/index')
                                 }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
@@ -365,24 +352,18 @@ function ProductDetail() {
                                 }} />
                                 <div style={{borderRight:"1px solid #d7dbe7",height:"36px"}}></div>
                                 <DefaultButton text={"复制"} onClick={()=>{
-                                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
-                                        window.open(`https://${cookie.load("domain").domain_primary}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                        message.success('复制成功')
-                                    }else if(cookie.load("domain").handle){
-                                        window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                        message.success('复制成功')
-                                    }else{
-                                        message.error("店铺缺少handle")
-                                    }
+                                    // if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
+                                    //     window.open(`https://${cookie.load("domain").domain_primary}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                    //     message.success('复制成功')
+                                    // }else if(cookie.load("domain").handle){
+                                    //     window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
+                                    //     message.success('复制成功')
+                                    // }else{
+                                    //     message.error("店铺缺少handle")
+                                    // }
                                 }} />
                                 <DefaultButton text={"预览"} onClick={()=>{
-                                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
-                                        window.open(`https://${cookie.load("domain").domain_primary}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                    }else if(cookie.load("domain").handle){
-                                        window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                    }else{
-                                        message.error("店铺缺少handle")
-                                    }
+                                    previewDomain && window.open(`${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
                                 }} />
                                 <ButtonDropdownSecondary text='分享' menu={{items:items}} trigger={['click']} />
                             </Flex>
@@ -391,7 +372,7 @@ function ProductDetail() {
                                 <div className='mc-layout-content'>
                                     <ProductData form={form} />
                                     <ProductImg />
-                                    <PriceOrTransaction />
+                                    <PriceOrTransaction form={form} />
                                     <StockCard form={form} />
                                     <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style={style} setStyle={setStyle} />
                                     {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}

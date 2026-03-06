@@ -4,13 +4,13 @@ import styled from "styled-components"
 import cookie from 'react-cookies';
 import categories from "@/store/product/categories";
 import SEOEdit from "@/pages/Components/SEOEdit";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
  function SEOCard(){
 
-    // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
-
-    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/collections/`;
+    const parmainDomain = getPrimaryDomain();
+    
+    const previewPrefix = parmainDomain ? `${parmainDomain}/collections/`: "";
 
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         categories.setCategoriesInfo({

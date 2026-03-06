@@ -38,9 +38,6 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
                     min={0}
                     value={min}
                     prefix={cookie.load("symbolLeft")}
-                    // defaultValue={0}
-                    // formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    // parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
                     onChange={(value:number)=>{
                         setMin(value)
                     }}
@@ -55,10 +52,6 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
                     onChange={(value:number)=>{
                         setMax(value)
                     }}
-                    // defaultValue={0}
-                    // formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                    // parser={(value) => value?.replace(/\$\s?|(,*)/g, '') as unknown as number}
-                    // onChange={onChange}
                 />
             </Flex>
             <Flex className='bottom' justify='flex-end'>
@@ -96,7 +89,11 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
                     title={false}
                     trigger="click"
                     // 卡片内容区域样式
-                    overlayInnerStyle={{padding:0,width:436}}
+                    styles={{ 
+                        body: {
+                            padding:0,width:436
+                        } 
+                    }}
                     open={popoverOpen}
                     // 状态同步
                     onOpenChange={(open)=>{

@@ -76,7 +76,14 @@ function CategoriesInfo({form}:{form:any}) {
                         <TreeSelect
                             showSearch
                             style={{ width: '100%',height:"36px" }}
-                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            styles={{
+                                popup: { 
+                                    root: {
+                                        maxHeight: 400, 
+                                        overflow: 'auto'
+                                    } 
+                                }
+                            }}
                             placeholder="父分类"
                             allowClear
                             treeDefaultExpandAll

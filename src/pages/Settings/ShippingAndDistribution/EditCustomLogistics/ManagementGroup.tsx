@@ -8,12 +8,12 @@ import generalFreight from "@/store/settings/ShippingAndDistribution/generalFrei
 import DefaultButton from "@/components/Button/DefaultButton";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { transformConfig } from "@/utils/dataStructure";
-import { delAddonsConfig, setAddonsConfigs } from "@/services/y2/api";
+import { setAddonsConfigs } from "@/services/y2/api";
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import EditFreightModal from "./EditFreightModal";
 import { observer } from "mobx-react-lite";
-import CustomButton from "@/components/Button/CustomButton";
+import MyButton from "@/components/Button/MyButton";
 
 
 interface DataType {
@@ -153,7 +153,7 @@ function ManagementGroup() {
     
 
     const operations = <Dropdown menu={{ items }} trigger={["click"]}>
-        <CustomButton element={<>管理分组<UnfoldIcon className="font-20" /></>} style={{height:"36px"}} />
+        <MyButton text={<Flex align="center">管理分组<UnfoldIcon className="font-20" /></Flex>} style={{height:"36px"}} />
     </Dropdown>
 
     const GroupTemplate = (

@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Button, ConfigProvider, Divider, Drawer, Flex, Tag } from 'antd';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
-// import  Collapse  from './Collapse';
 import { useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import DefaultButton from '@/components/Button/DefaultButton';
 import NumberInput from '@/components/Input/NumberInput';
 import cookie from 'react-cookies';
-import SelectCheckBox from '@/components/Select/SelectCheckBox';
-import CheckSelectClear from '@/components/Select/CheckSelectClear';
 import CheckSelectSubmit from '@/components/Select/CheckSelectSubmit';
-import { getPlatformCategorySelect } from '@/services/y2/api';
 
 // 修改第20行状态声明
 interface OptionType {

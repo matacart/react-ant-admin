@@ -15,6 +15,7 @@ function ItemSwitch({item,data,setData}:{item:any,data:boolean,setData:(item:any
     return (
         <Switch value={value} onChange={(check:boolean)=>{
             setData(item,check)
+            console.log(item)
             setValue(check)
         }} />
     )

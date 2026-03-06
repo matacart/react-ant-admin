@@ -3,15 +3,14 @@ import styled from "styled-components"
 import cookie from 'react-cookies';
 import customPage from "@/store/channel/customPage/customPage";
 import SEOEdit from "./SEOEdit";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 
  function SEOCard(){
 
-    // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    const parmainDomain = getPrimaryDomain();
     
-    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/pages/`;
-
+    const previewPrefix = parmainDomain ? `${parmainDomain}/pages/`: "";
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         customPage.setCustomPage({
             ...customPage.customPage,

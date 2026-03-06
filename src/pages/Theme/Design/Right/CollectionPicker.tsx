@@ -2,13 +2,16 @@ import DefaultButton from "@/components/Button/DefaultButton"
 import MyButton from "@/components/Button/MyButton"
 import { EditorAddBtnIcon, SearchSecondIcon, TickIcon } from "@/components/Icons/Icons"
 import MyInput from "@/components/Input/MyInput"
+import { useAbortController } from "@/hooks/customHooks"
+import { getCategoryList } from "@/services/y2/api"
+import editor from "@/store/theme/editor"
 import { CheckCircleFilled } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Drawer, Flex } from "antd"
 import { useEffect, useMemo, useRef, useState } from "react"
 import styled from "styled-components"
 
-
+// 商品分类
 interface DataType{
     id:string,
     resource:any,
@@ -25,18 +28,8 @@ function CollectionPicker({item,data,setData}:{item:any,data:DataType,setData:(i
 
     const [value,setValue] = useState(typeof data === 'object' ? data : defaultData);
 
-
     // 获取商品分类
-    const [menu,setMenu] = useState([
-        {
-            id: '1',
-            title: '分类1',
-        },
-        {
-            id: '2',
-            title: '分类2',
-        }
-    ])
+    const [menu,setMenu] = useState([])
 
     // 保存
     const submit = () => {
@@ -64,8 +57,15 @@ function CollectionPicker({item,data,setData}:{item:any,data:DataType,setData:(i
     }
 
     // 获取商品分类
-    useEffect(()=>{
-    },[])
+    const init = ()=>{
+        getCategoryList({
+            languages_id: editor.languagesId,
+            page: '1',
+            limit: '10',
+        }).then((res)=>{
+            setMenu(res.data || []);
+        })
+    }
 
     useMemo(()=>{
         setValue(typeof data === 'object' ? data : defaultData);
@@ -86,9 +86,9 @@ function CollectionPicker({item,data,setData}:{item:any,data:DataType,setData:(i
                         </div>
                     </Flex>
                 </div>
-            ):<Flex className="menu_picker cursor_pointer" justify="center" align="center" gap={6} onClick={()=>setOpen(true)}>
+            ):<Flex className="menu_picker cursor-pointer" justify="center" align="center" gap={6} onClick={()=>setOpen(true)}>
                 <EditorAddBtnIcon className="font-24 icon" />
-                <div className="text">选择商品分类</div>
+                <div className="text" onClick={()=>init()}>选择商品分类</div>
             </Flex>}
 
             <Drawer
@@ -115,12 +115,12 @@ function CollectionPicker({item,data,setData}:{item:any,data:DataType,setData:(i
                     <Flex style={{padding: '12px'}}>
                         <MyInput placeholder="请选择商品分类" suffix={<SearchSecondIcon />} style={{height:"36px"}} />
                     </Flex>
-                    {menu.map((item,index)=>(
+                    {menu.map((item:any,index)=>(
                         <Flex key={item.id} className="menu_item" justify="space-between" align="center" onClick={()=>{
                             setValue({
                                 id: item.id.toString(),
                                 resource: {
-                                    title: item.title 
+                                    ...item
                                 }
                             });
                         }}>

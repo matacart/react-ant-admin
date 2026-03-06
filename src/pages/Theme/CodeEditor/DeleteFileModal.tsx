@@ -62,6 +62,7 @@ function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType)
                                         languagesId: codeEditor.languageId??"",
                                         mode: codeEditor.mode,
                                         fileName: fileName,
+                                        versionId: codeEditor.versionId??"",
                                         forceDelete:false,
                                     }).then(res=>{
                                         if(res.code == 0){

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import MultipleStylesCard from './MultipleStylesCard';
 import ProductStyleList from './ProductStyleList';
 import product from '@/store/product/product';
@@ -49,28 +49,18 @@ interface DataType {
     languages_id:string
 }
 
-interface LocationState {
-    copyProduct:DataType;
-    copyProductImage?: boolean;
-    copyProductInventory?: boolean;
-    radioValue?:number;
-    // 可以根据实际需求添加其他字段
-}
-
 function AddNewProduct(){
 
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
     const [style, setStyle] = useState([]);
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
-    const [loading,setLoading] = useState(false) 
-    const [isOverlay,setIsOverlay] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
+    const [loading,setLoading] = useState(false);
+
+    // 表单
     const [form] = Form.useForm();
-
-    // 新增一个ref用于标记是否是初始渲染
-    const initialRender = useRef(true);
 
     // 复制信息
     // let productInfo = history.location.state as LocationState;
@@ -111,7 +101,6 @@ function AddNewProduct(){
             languages_id:lang
         })
     }
-
     // 表单验证
     const formValidation = ()=>{
         return form.validateFields().then(res=>{
@@ -162,15 +151,10 @@ function AddNewProduct(){
         init();
     },[])
 
-    // 监听product.productInfo 变化 --- 
+    // 保存提示
+    const [isOverlay,setIsOverlay] = useState<boolean>();
     useEffect(()=>{
-        if(initialRender.current) {
-            initialRender.current = false;
-            return;
-        }
-        if(!isSkeleton && !initialRender.current){
-            setIsOverlay(true)
-        }
+        setIsOverlay(isSkeleton ? false : true);
     },[product.productInfo])
 
     // 离开提示
@@ -178,8 +162,6 @@ function AddNewProduct(){
         // 弹出提示框
         return '您确定要离开页面吗？'
     }
-
-    // 预加载PTinymce ，让ProductDataCard 子组件使用PTinymce时，没有空白延迟
 
     return (
         <Scoped>
@@ -189,7 +171,6 @@ function AddNewProduct(){
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
                                 history.push('/products/index')
-                                
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
@@ -199,11 +180,11 @@ function AddNewProduct(){
                             <LangSelect lang={product.productInfo.languages_id} setLang={setLang} />
                         </Flex>
                     </div>
-                    <div className='mc-layout-main'>
+                    <Form form={form} className='mc-layout-main'>
                         <div className='mc-layout-content'>
                             <ProductData form={form} />
                             <ProductImg />
-                            <PriceOrTransaction />
+                            <PriceOrTransaction form={form} />
                             <StockCard form={form} />
                             <MultipleStylesCard style = {style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
                             {onVariant && <ProductStyleList style = {style} setStyle={setStyle} />}
@@ -221,7 +202,7 @@ function AddNewProduct(){
                             <CodTemplateCard />
                             <ThemeTemplateCard />
                         </div>
-                    </div>
+                    </Form>
                     <Divider/>
                     <div className='mc-footer'>
                         <PrimaryButton text="创建" loading={loading} onClick={onFinish} />

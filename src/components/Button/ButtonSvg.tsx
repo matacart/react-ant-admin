@@ -5,6 +5,7 @@ interface ButtonIconProps extends ButtonProps {
     icon: any;
 }
 
+// 图标按钮
 export default function ButtonIcon({icon,...props}:ButtonIconProps){
     
     return (

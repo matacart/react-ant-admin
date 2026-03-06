@@ -106,7 +106,7 @@ function NewPage(){
                         </div>
                     </div>
                     <Card>
-                        <Tabs defaultActiveKey="1" destroyInactiveTabPane={true} items={items} onChange={onChange} />
+                        <Tabs defaultActiveKey="1" destroyOnHidden={true} items={items} onChange={onChange} />
                     </Card>
                 </div>
             </div>}

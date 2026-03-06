@@ -2,21 +2,28 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import { HelpIcon, LeftIcon, PreviewIcon, RemitIcon, TiledIcon, UnfoldIcon } from "@/components/Icons/Icons";
 import LangSelect from "@/components/Select/LangSelect";
 import MySelect from "@/components/Select/MySelect";
+import { getGenerateAuthToken } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { history } from "@umijs/max";
-import { Flex, Modal, Tooltip } from "antd";
+import { Flex, message, Modal, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import cookie from 'react-cookies';
+import VersionSelect from "./VersionSelect";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 interface ItemType{
     title: React.ReactNode,
     onClick: () => void
 }
 
-function Header({templateId,languageId}:{templateId:string,languageId:string}){
+function Header({templateId}:{templateId:string}){
 
-    const navigate = useNavigate();
+    // 预览域名
+    const previewDomain = getPrimaryDomain();
+
+    const [autoToken,setAutoToken] = useState();
 
     const itemList = [
         {
@@ -67,7 +74,10 @@ function Header({templateId,languageId}:{templateId:string,languageId:string}){
                     <PreviewIcon className="font-20" />
                 </Tooltip>
             </>,
-            onClick: () => {}
+            onClick: () => {
+                if(!autoToken) return message.error("缺少预览令牌");
+                previewDomain && window.open(`${previewDomain}/?preview=1&themeId=${templateId}&mode=${codeEditor.mode}&versionId=${codeEditor.versionId}&isAuthor=${codeEditor.isAuthor?"1":"0"}&authToken=${autoToken}`)
+            }
         }
     ]
 
@@ -79,14 +89,21 @@ function Header({templateId,languageId}:{templateId:string,languageId:string}){
         codeEditor.setLanguageId(value);
     }
 
+    useEffect(()=>{
+        getGenerateAuthToken().then(res=>{
+            res.code == 0 && setAutoToken(res.data.auth_token)
+        })
+    },[])
+
     return (
         <Scoped className="header">
-            <Flex className='back cursor-pointer' align="center" justify="center" onClick={()=>navigate(`/website/shopSetting`)}>
+            <Flex className='back cursor-pointer' align="center" justify="center" onClick={()=>history.push(`/website/shopSetting`)}>
                 <LeftIcon className='font-20' />
             </Flex>
-            <Flex className='title' align="flex-end" gap={14}>
+            <Flex className='title' align="center" gap={14} >
                 <div className="color-242833 font-20 font-w-600">编辑 {codeEditor.templateInfo?.name} 的模板代码</div>
                 <div className="color-7A8499 font-14 font-w-600">模板ID: {codeEditor.templateInfo?.id}</div>
+                <VersionSelect />
             </Flex>
             <Flex className="title-bar" justify="flex-end" gap={8}>
                 <Flex align="center">
@@ -111,6 +128,8 @@ function Header({templateId,languageId}:{templateId:string,languageId:string}){
         </Scoped>
     );
 }
+
+export default observer(Header);
 
 const Scoped = styled.div`
     display: flex;
@@ -141,5 +160,5 @@ const Scoped = styled.div`
 `;
 
 
-export default observer(Header);
+
 

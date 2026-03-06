@@ -29,7 +29,7 @@ export default function MyDropdown({tiggerEle,...props}:any) {
             >
                 <Dropdown {...props}  
                     trigger={['click']} 
-                    dropdownRender={(menu)=>{
+                    popupRender={(menu)=>{
                         return (
                             <div style={contentStyle}>
                                 <div>

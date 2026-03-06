@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
+import { useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import orderDraftList from '@/store/order/orderDraftList';
@@ -28,14 +29,10 @@ interface TableParams {
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
 
-const getRandomuserParams = (params: TableParams) => ({
-  results: params.pagination?.pageSize,
-  page: params.pagination?.current,
-  ...params,
-});
 
 function OrdersDraftListAjax() {
 
+  const intl = useIntl();
   const navigate = useNavigate();
 
   const { createAbortController } = useAbortController();
@@ -54,35 +51,35 @@ function OrdersDraftListAjax() {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: "草稿单号",
+      title: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.draftOrderNo' }),
       dataIndex: 'id',
       render: (text: string) => (
         <span style={{ color: '#242833' }}>{text}</span>
       ),
     },
     {
-      title: "创建日期",
+      title: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.creationDate' }),
       dataIndex: 'create_time',
       render: (text: string) => (
         <span>{text?dayjs(parseInt(text)*1000).format("YYYY-MM-DD"):""}</span>
       ),
     },
     {
-      title: "客户",
+      title: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.customer' }),
       dataIndex: 'id',
       render: (text: string,record:any) => (
         <div>{(record.customer_firstname??"")+(record.customer_lastname??"")}</div>
       ),
     },
     {
-      title: "状态",
+      title: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.status' }),
       dataIndex: 'status',
       render: (value: string) => <>
-        {value == "0" ? <OrderWarningTag text="未结" /> : <OrderDefaultTag text="已结" />}
+        {value == "0" ? <OrderWarningTag text={intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.pending' })} /> : <OrderDefaultTag text={intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.completed' })} />}
       </>,
     },
     {
-      title: "合计",
+      title: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.total' }),
       dataIndex: 'order_total',
       render: (text: string,record:any) => (
         <div>{record.currency}{text}</div>
@@ -98,7 +95,7 @@ function OrdersDraftListAjax() {
     return intl.formatMessage({ id: statusKey });
   };
 
-  const handleTableChange = (pagination,filters,sorter) => {
+  const handleTableChange = (pagination: TablePaginationConfig, filters: any, sorter: any) => {
     setTableParams({
       pagination,
       filters,

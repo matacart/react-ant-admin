@@ -26,7 +26,7 @@ function Articles(){
                         </div>
                         <div className='create-title-right'>
                             <Flex gap={12}>
-                                <DefaultButton text="管理博客评论" />
+                                <DefaultButton text="管理博客评论" onClick={()=>history.push(`/website/articles-comment`)} />
                                 <DefaultButton text="管理博客集合" onClick={()=>history.push(`/website/blogs`)} />
                                 <PrimaryButton text="创建博客" onClick={()=>history.push("/website/articles/new")} />
                             </Flex>

@@ -1,0 +1,44 @@
+{
+    "innerMsg":{
+        "index":{
+            "title": "Inner Message",
+            "tabs": {
+                "all": "All Messages",
+                "system": "System Messages",
+                "user": "User Messages",
+                "app": "App Messages"
+            }
+        },
+        "innerMsgTable":{
+            "table": {
+                "title": "Title",
+                "time": "Time"
+            }
+        },
+        "selectCard":{
+            "search": {
+                "placeholder": "Search for content"
+            },
+            "filters": {
+                "all": "All Messages",
+                "read": "Read Messages",
+                "unread": "Unread Messages"
+            }
+        },
+        "selectedActions":{
+            "actions": {
+                "delete": "Delete",
+                "markRead": "Mark as Read",
+                "markAllRead": "Mark All as Read",
+                "cancel": "Cancel"
+            },
+            "modals": {
+                "deleteTitle": "Delete Message",
+                "deleteContent": "Are you sure to delete {count} messages?"
+            },
+            "messages": {
+                "success": "Success"
+            }
+        }
+    }
+}

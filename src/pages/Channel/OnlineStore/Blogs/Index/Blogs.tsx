@@ -110,15 +110,15 @@ const Scoped = styled.div`
                     }
                 }
                 &-content {
-                -webkit-box-flex: 1;
-                -ms-flex: 1;
-                flex: 1;
-                margin-bottom: 20px;
-                overflow: hidden;
-                color: #242833;
-                font-size: 24px;
-                font-weight: 600;
-                line-height: 32px;
+                    -webkit-box-flex: 1;
+                    -ms-flex: 1;
+                    flex: 1;
+                    margin-bottom: 20px;
+                    overflow: hidden;
+                    color: #242833;
+                    font-size: 24px;
+                    font-weight: 600;
+                    line-height: 32px;
                 }
             }
           .create-title-right{

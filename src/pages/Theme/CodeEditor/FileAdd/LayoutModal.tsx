@@ -47,6 +47,7 @@ function LayoutModal({filePath,treeData,setTreeData}:LayoutModalType){
                 mode: codeEditor.mode,
                 fileName: filePath+"/"+fileSource+"."+values.name+"."+fileType,
                 fileContent: "",
+                versionId: codeEditor.versionId??"",
                 sourceFileName: filePath+"/"+fileSource+"."+fileType,
             }).then(async res=>{
                 if(res.code == 0){

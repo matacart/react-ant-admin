@@ -1,6 +1,6 @@
 import { DeleteIcon, DownIcon, EditorAddIcon, EditorAnnouncementIcon, EditorApplyIcon, EditorComponentIcon, EditorConfigurationIcon, EditorMoreIcon } from "@/components/Icons/Icons"
 import { Flex, Popover, Tooltip } from "antd"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import styled from "styled-components"
 import editor from "@/store/theme/editor"
 import { observer } from "mobx-react-lite"
@@ -8,10 +8,16 @@ import MyDropdown from "@/components/Dropdown/MyDropdown"
 import { generateId } from "@/utils/dataStructure"
 import ComponentAdd from "./ComponentAdd"
 import { useIntl } from "@umijs/max"
+import BlockAdd from "./BlockAdd"
 
 interface CollapsedState {
     [key: string]: boolean;
 }
+
+const noDownList = [
+    "featured-collection",
+    "video"
+]
 
 function Left({title}:{title:string}){
 
@@ -61,7 +67,6 @@ function Left({title}:{title:string}){
                     {blocks?.map((item,index)=>(
                         <Flex className="item" key={index} gap={8} onClick={(e)=>{
                             e.stopPropagation();
-                            console.log(item);
                             let newSettings:any = {};
                             item.settings.forEach((element:any) => {
                                 if(element.default !== undefined){
@@ -123,6 +128,13 @@ function Left({title}:{title:string}){
         setIsSkeleton(false)
       }, []);
 
+
+    useMemo(()=>{
+        const activeId = editor.component?.itemId || editor.component?.id || undefined;
+        console.log('editor.component:', editor.component);
+        setActiveCollapsed(activeId)
+    },[editor.component]);
+
     return(
         <Scoped ref={mRef}>
             {isSkeleton?<></>:<>
@@ -150,14 +162,14 @@ function Left({title}:{title:string}){
                         <div className="design-sidebarTitle font-16 font-w-600">
                             {getPageTitle()}
                         </div>
-                        {isFold ? 
+                        {/* {isFold ? 
                             <div className="Design-sidebarBtn color-356DFF cursor-pointer" onClick={()=>{
                                 setIsFold(false)
                             }}>{intl.formatMessage({id:'theme.design.left.expand'})}</div>:
                             <div className="Design-sidebarBtn color-356DFF cursor-pointer" onClick={()=>{
                                 setIsFold(true)
                             }}>{intl.formatMessage({id:'theme.design.left.collapse'})}</div>
-                        }
+                        } */}
                     </Flex>
                     <div className="design-sidebarContent">
                         {editor.templateData?.map((res:any,index:number)=>{
@@ -170,26 +182,35 @@ function Left({title}:{title:string}){
                                     <div key={sectionId} className="fixedCompItem-sectionWrapper" id={res.config.sectionId}>
                                         <Flex id="section-announcement-bar" className={sectionId == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 
                                             onClick={() => {
-                                                setCollapsedSections(prev => ({
-                                                    ...prev,
-                                                    [sectionId]: !prev[sectionId]
-                                                }))
-                                                setActiveCollapsed(sectionId)
+                                                // setActiveCollapsed(sectionId)
                                                 editor.setComponent({id:sectionId,type:'section'})
                                                 editor.setToobar(0)
                                             }}
                                         >
                                             <Flex align="center" className="sortItem" gap={8}>
-                                                <DownIcon className={collapsedSections[sectionId]?"font-12 icon":"font-12 actIcon"} />
+                                                {sectionId == "header" ? <div style={{width:"20px"}}></div>:<DownIcon className={collapsedSections[sectionId]?"font-12 icon":"font-12 actIcon"} onClick={(e)=>{
+                                                    e.stopPropagation();
+                                                    setCollapsedSections(prev => ({
+                                                        ...prev,
+                                                        [sectionId]: !prev[sectionId]
+                                                    }))
+                                                }} />}
                                                 <EditorAnnouncementIcon className="font-20" /> 
                                                 <div>{intl.formatMessage({id: res.config.schema.name})}</div>
                                             </Flex>
-                                            <Flex className="addBlockBtn" align="center" gap={2}>
-                                                <Popover
+                                            {/* 添加内容 */}
+                                            {sectionId !== "header" && <Flex className="addBlockBtn" align="center" gap={2}>
+                                                <BlockAdd current={current} maxBlock={maxBlock} />
+                                                {/* <Popover
                                                     open={popoverStates[popoverId] || false}
                                                     onOpenChange={(open) => current == maxBlock ? ()=>{} : handlePopoverOpenChange(popoverId,open)}
-                                                    getPopupContainer={()=>mRef.current!} 
-                                                    overlayInnerStyle={{ padding: 0,marginLeft:"12px" }} 
+                                                    getPopupContainer={()=>mRef.current!}
+                                                    styles={{
+                                                        body: {
+                                                            padding: 0,
+                                                            marginLeft: "12px"
+                                                        }
+                                                    }}
                                                     placement="rightTop" 
                                                     arrow={false} 
                                                     trigger={"click"} 
@@ -200,8 +221,8 @@ function Left({title}:{title:string}){
                                                             <EditorAddIcon />
                                                         </div>
                                                     </Tooltip>
-                                                </Popover>
-                                            </Flex>
+                                                </Popover> */}
+                                            </Flex>}
                                         </Flex>
                                         {/* 折叠面板内容 */}
                                         <div 
@@ -222,7 +243,7 @@ function Left({title}:{title:string}){
 
                                                 return (
                                                     <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
-                                                        setActiveCollapsed(order)
+                                                        // setActiveCollapsed(order)
                                                         editor.setComponent({id:sectionId,type:'section',itemId:order})
                                                         editor.setToobar(0)
                                                     }}>
@@ -283,28 +304,28 @@ function Left({title}:{title:string}){
                             // 模板
                             if(res.type == "TEMPLATE"){
                                 const template = res.order.map((order:string,index:number)=>{
-
                                     const dropdownId = `dropdown-TEMPLATE-${order}`;
-
                                     return (
                                         <div key={order} className="fixedCompItem-sectionWrapper-template" id={order}>
                                             <Flex id="section-announcement-bar" className={order == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" tabIndex={0} 
                                                 onClick={() => {
-                                                    setCollapsedSections(prev => ({
-                                                        ...prev,
-                                                        [order]: !prev[order]
-                                                    }))
-                                                    setActiveCollapsed(order)
                                                     editor.setComponent({id:order,type:'template'})
                                                     editor.setToobar(0)
                                                 }}
                                             >
                                                 <Flex align="center" className="sortItem" gap={8}>
-                                                    {res.sections[order].settingsData.block_order?.length > 0 ? <DownIcon className={collapsedSections[order]?"font-12 icon":"font-12 actIcon"} /> : <div style={{width:"12px"}}></div>}
+                                                    {noDownList.find(item => item == res.sections[order].type) ? <div style={{width:"20px"}}></div> : <DownIcon className={collapsedSections[order]?"font-12 icon":"font-12 actIcon"} onClick={(e)=>{
+                                                        e.stopPropagation();
+                                                        setCollapsedSections(prev => ({
+                                                            ...prev,
+                                                            [order]: !prev[order]
+                                                        }))
+                                                    }} />}
                                                     <EditorAnnouncementIcon className="font-20" /> 
                                                     <div>{intl.formatMessage({id: res.sections[order].schema.name})}</div>
                                                 </Flex>
                                                 <Flex className="addBlockBtn" align="center">
+                                                    {/*  */}
                                                     <MyDropdown
                                                         open={dropdownVisible[dropdownId] || false}
                                                         onOpenChange={(open:boolean) => {
@@ -346,6 +367,8 @@ function Left({title}:{title:string}){
                                                         placement="bottomLeft" 
                                                         trigger={["click"]}>
                                                     </MyDropdown>
+                                                    {/* 添加内容 */}
+
                                                 </Flex>
                                             </Flex>
                                             {/* 折叠面板内容 */}
@@ -361,12 +384,9 @@ function Left({title}:{title:string}){
                                                     const biockType = res.sections[order].settingsData.blocks[blockOrder].type
                                                     const blocks = res.sections[order].schema.blocks.filter(block => block.type == biockType)
                                                     const block = blocks[0] ?? {}
-
                                                     const dropdownId = `dropdown-${order}-${blockOrder}`;
-
                                                     return (
                                                         <Flex id="section-announcement-bar" className={blockOrder == activeCollapsed ? "fixedCompItem-sortItem activeItem":"fixedCompItem-sortItem"} justify="space-between" onClick={()=>{
-                                                            setActiveCollapsed(blockOrder)
                                                             editor.setComponent({id:order,type:'template',itemId:blockOrder})
                                                             editor.setToobar(0)
                                                         }}>
@@ -424,9 +444,8 @@ function Left({title}:{title:string}){
                                         </div>
                                     )
                                 })
-
                                 return (
-                                    <div style={{borderTop: "1px solid #eaedf1"}}>
+                                    <div key={index} style={{borderTop: "1px solid #eaedf1"}}>
                                         <div className="template-title font-w-500">{intl.formatMessage({id:'theme.design.left.template'})}</div>
                                         {template}
                                         <ComponentAdd />
@@ -521,12 +540,20 @@ const Scoped = styled.div`
                         padding: 0 6px;
                         height: 100%;
                         .actIcon{
+                            padding: 4px;
                             transform: rotate(0);
                             transition: transform .3s;
+                            &:hover{
+                                background: #eaedf1;
+                            }
                         }
                         .icon{
+                            padding: 4px;
                             transform: rotate(-90deg);
                             transition: transform .3s;
+                            &:hover{
+                                background: #eaedf1;
+                            }
                         }
                     }
 
@@ -640,12 +667,20 @@ const Scoped = styled.div`
                         padding: 0 6px;
                         height: 100%;
                         .actIcon{
+                            padding: 4px;
                             transform: rotate(0);
                             transition: transform .3s;
+                            &:hover{
+                                background: #eaedf1;
+                            }
                         }
                         .icon{
+                            padding: 4px;
                             transform: rotate(-90deg);
                             transition: transform .3s;
+                            &:hover{
+                                background: #eaedf1;
+                            }
                         }
                     }
 
@@ -729,6 +764,9 @@ const Scoped = styled.div`
                                 background: var(--Grey-bg-1, #eaedf1);
                             }
                         }
+                    }
+                    .activeItem{
+                        background-color: #f0f7ff;
                     }
                 }
             }

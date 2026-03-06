@@ -51,6 +51,7 @@ function SectionModal({treeData,setTreeData,filePath}:LayoutModalType){
                 mode: codeEditor.mode,
                 fileName: filePath+"/"+values.name+"."+fileType,
                 fileContent: fileContent,
+                versionId: codeEditor.versionId??"",
             }).then(async res=>{
                 if(res.code == 0){
                     // 在树中插入文件

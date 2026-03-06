@@ -1,10 +1,14 @@
-import Callapse from '@/components/Card/OpenStoreGuidance';
 import { Space } from 'antd';
-import DataCard from '@/components/Card/DataCard';
-import TextCard from '@/components/Card/TextCard';
-import ShopTimeDisplay from '@/components/Admin/Time';
+import DataCard from './DataCard';
+import ShopTimeDisplay from './ShopTimeDisplay';
+import TextCard from './TextCard';
+import { useIntl } from '@umijs/max';
+import OpenStoreGuidance from './OpenStoreGuidance';
 
 export default () => {
+
+  const init = useIntl();
+
   return (
     <div 
       style={{
@@ -21,37 +25,34 @@ export default () => {
           width: '100%',
         }}
         >
-          <ShopTimeDisplay/>
-          <DataCard/>
-          <Callapse/>
+          <ShopTimeDisplay />
+          <DataCard />
+          <OpenStoreGuidance />
           <TextCard
-            title="为您的店铺选择套餐"
+            title={init.formatMessage({ id: 'textCard.package.title' })}
             contentText={
               <>
-              立即付费解锁更多功能，享受更好的服务和支持。已支持以下付款方式：<br/>
-              √ 银联支付（借记卡及信用卡，支持自动扣费）<br/>
-              √ 信用卡支付（Visa、JCB、MasterCard、American Express，支持自动扣费）<br/>
-              √ 微信支付
+                <span dangerouslySetInnerHTML={{ __html: init.formatMessage({ id: 'textCard.package.content' }) }} />
               </>
             }
             buttonContents={[
               {
-                text: '选择套餐',
+                text: init.formatMessage({ id: 'textCard.package.button' }),
                 url: '/stores-subscriptions/list/paid'
               }
             ]}
           />
           <TextCard
-            title='您的店铺还未绑定域名！'
+            title={init.formatMessage({ id: 'textCard.domain.title' })}
             contentText={
               <>
-                一个好的域名，助您的品牌深入人心。您可以在Godaddy、阿里云等域名服务商购买域名后，解析域名并绑定到MataCart后台。
+                <span dangerouslySetInnerHTML={{ __html: init.formatMessage({ id: 'textCard.domain.content' }) }} />
               </>
             }
             buttonContents={[
               {
-                text: '点击设置',
-                url: '#'
+                text: init.formatMessage({ id: 'textCard.domain.button' }),
+                url: '/settings/domain'
               }
             ]}
           >

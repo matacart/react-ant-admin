@@ -6,7 +6,7 @@
     "orders.draftOrders": "Draft Orders",
     "products":"Products",
     "products.productsList":"Product List",
-    "products.Collections": "Categories",
+    "products.categories": "Categories",
     "products.giftCards":"Gift Cards",
     "customers": "Customers",
     "customers.customerManages": "Customer Management",
@@ -34,6 +34,11 @@
     "channel":"Channel",
     "settings":"Settings",
     "storesManages":"Store Management",
-    "billsManages":"Bill Management",
-    "dataManages":"Data Management"
+    "billingCost":"Expenses and Costs",
+    "billingCost.billsManages":"Bill Management",
+    "billingCost.payment":"Recharge Record",
+    "billingCost.withdrawal":"Withdrawal Record",
+    "dataManages":"Data Management",
+    "innerMsg": "Station Message",
+    "messageManagement": "Message Management"
 }

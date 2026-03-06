@@ -1,11 +1,11 @@
 import styled from "styled-components"
-import { Button, Card, Col, ConfigProvider, Divider, Flex, MenuProps, Pagination, Progress, Row, Spin } from 'antd';
-import { RocketIcon, StarsIcon } from "@/components/Icons/Icons";
+import { Card, Divider, Flex, MenuProps, message, Pagination, Progress, Row, Spin } from 'antd';
+import { RocketIcon } from "@/components/Icons/Icons";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import DefaultButton from "@/components/Button/DefaultButton";
 import { useEffect, useState } from "react";
-import { getTemplateInstanceList, getTemplateInstanceUsing, setInstanceStatus } from "@/services/y2/api";
+import { deleteVersion, getTemplateInstanceList, getTemplateInstanceUsing, setInstanceStatus } from "@/services/y2/api";
 import { observer } from "mobx-react-lite";
 import shopSetting, { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import dayjs from 'dayjs';
@@ -13,9 +13,15 @@ import RenameModal from "./RenameModal";
 import UploadTemplateModal from "./UploadTemplateModal";
 import DownloadModal from "./DownloadModal";
 import { useAbortController } from "@/hooks/customHooks";
-import { LoadingOutlined } from "@ant-design/icons";
+import { ExclamationCircleFilled, LoadingOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
 import cookie from 'react-cookies';
+import VersionSwitchModal from "./VersionSwitchModal";
+import VersionAddModal from "./VersionAddModal";
+import VersionRepairModal from "./VersionRepairModal";
+import modal from "antd/lib/modal";
+import DangerButton from "@/components/Button/DangerButton";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 
 interface MyStylesCardProps {
@@ -24,29 +30,13 @@ interface MyStylesCardProps {
 
 function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
 
+  const [loading,setLoading] = useState(false);
+
   const { createAbortController } = useAbortController();
 
   const [instanceUsingLoading,setInstanceUsingLoading] = useState(false);
 
   const [instanceListLoading,setInstanceListLoading] = useState(false);
-
-  // 预览域名
-  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
-
-  const themeItems: MenuProps['items'] = [
-    {
-      label: <a onClick={onSwitchToStore}>添加模板</a>,
-      key: '1',
-    },
-    {
-      label: <UploadTemplateModal />,
-      key: '2',
-    },
-    {
-      label: <div>从GitHub添加</div>,
-      key: '3',
-    }
-  ];
 
   // 分页数据
   const [pagination,setPagination] = useState({
@@ -55,10 +45,8 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     total: 5,
   });
 
-  
-
-  useEffect(()=>{
-    
+  // 获取安装模板列表
+  const getTemplateList = ()=>{
     // 用户模板
     getTemplateInstanceList({
       page: pagination.current,
@@ -76,6 +64,28 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
       console.log(err)
     }).finally(()=>{
     })
+  }
+
+  // 预览域名
+  const previewDomain = getPrimaryDomain();
+
+  const themeItems: MenuProps['items'] = [
+    {
+      label: <a onClick={onSwitchToStore}>添加模板</a>,
+      key: '1',
+    },
+    {
+      label: <UploadTemplateModal pagination={pagination} setPagination={setPagination} getTemplateList={getTemplateList} />,
+      key: '2',
+    },
+    {
+      label: <div>从GitHub添加</div>,
+      key: '3',
+    }
+  ];
+
+  useEffect(()=>{
+    getTemplateList();
   },[pagination.current,shopSetting.languagesId]) // 依赖项添加分页参数
 
   // 获取当前模板
@@ -101,7 +111,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
 
   return (
     <Scoped>
-        <Flex className="aiTipContainer">
+        {/* <Flex className="aiTipContainer">
             <div>
               <img src="/img/aiIcon.svg" />
             </div>
@@ -130,7 +140,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                 <Button className="aiBtn">查看过往模板</Button>
               </ConfigProvider>
             </Flex>
-        </Flex>
+        </Flex> */}
         {/* 当前模板 */}
         <Card>
           <Flex className="current-topic-box">
@@ -145,7 +155,9 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                       <h3>{shopSetting.templateInstanceUsing?.template_name}</h3>
                       <p className="font-12 color-7A8499">
                         <span>
-                          当前版本：{shopSetting.templateInstanceUsing?.template_version}
+                          版本号：{shopSetting.templateInstanceUsing?.template_version}
+                          <Divider type="vertical" />
+                          版本id：{shopSetting.templateInstanceUsing?.template_version_id}
                           <Divider type="vertical" />
                           语言：
                           {
@@ -158,10 +170,24 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                     </div>
                     <div>
                       <Flex gap={12}>
-                        <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.handle && `https://${cookie.load("domain").handle}${previewDomain}?preview=1&themeId=${shopSetting?.templateInstanceUsing?.template_id}`,'_blank')} />
                         <ButtonDropdownSecondary menu={{items:[
                           {
-                            label: <a onClick={()=>window.open(cookie.load("domain")?.handle && `https://${cookie.load("domain").handle}${previewDomain}`,'_blank')}>查看店铺</a>,
+                            label: <VersionSwitchModal template={shopSetting.templateInstanceUsing || null} type="using" />,
+                            key: '1',
+                          },
+                          {
+                            label: <VersionAddModal template={shopSetting.templateInstanceUsing || null} />,
+                            key: '2',
+                          },
+                          {
+                            label: <VersionRepairModal template={shopSetting.templateInstanceUsing || null} />,
+                            key: '3',
+                          }
+                        ]}} trigger={['click']} text="版本" />
+                        <DefaultButton text="预览" onClick={()=>previewDomain && window.open(`${previewDomain}?preview=1&themeId=${shopSetting?.templateInstanceUsing?.template_id}&versionId=${shopSetting?.templateInstanceUsing?.template_version_id}`,'_blank')} />
+                        <ButtonDropdownSecondary menu={{items:[
+                          {
+                            label: <a onClick={()=>previewDomain && window.open(`${previewDomain}`,'_blank')}>查看店铺</a>,
                             key: '1',
                           },
                           {
@@ -173,11 +199,11 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '3',
                           },
                           {
-                            label: <div onClick={()=>history.push(`/theme/langFieldEdit/${shopSetting.templateInstanceUsing?.template_id}`)}>编辑语言</div>,
+                            label: <div onClick={()=>history.push(`/theme/langFieldEdit/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}/${shopSetting.templateInstanceUsing?.template_version_id}`)}>编辑语言</div>,
                             key: '4',
                           },
                           {
-                            label: <a onClick={()=>history.push(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
+                            label: <a onClick={()=>history.push(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}/${shopSetting.templateInstanceUsing?.template_version_id}`)}>编辑代码</a>,
                             key: '5',
                           },
                           {
@@ -185,7 +211,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '6',
                           }
                         ]}} trigger={['click']} text="操作" />
-                        <PrimaryButton text="设计" onClick={()=>history.push(`/theme/editor?templateId=${shopSetting.templateInstanceUsing?.template_id}&languagesId=${shopSetting.templateInstanceUsing?.languages_id}&templateName=templates/index.json&title=Home`)} />
+                        <PrimaryButton text="设计" onClick={()=>history.push(`/theme/editor/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.templateInstanceUsing?.languages_id}/${shopSetting.templateInstanceUsing?.template_version_id}/?templateName=templates/index.json&title=Home`)} />
                       </Flex>
                     </div>
                   </Flex>
@@ -265,15 +291,31 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                         <Flex vertical gap={8} justify="center">
                           <div>{template.template_name}</div>
                           <div className="font-12 color-7A8499">
-                            当前版本：{template.template_version}
+                            版本号：{template.template_version}
+                            <Divider type="vertical" />
+                            版本id：{template.template_version_id}
                             <Divider type="vertical" />
                             语言：{JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===template?.languages_id)?.name}
                             <Divider type="vertical" />
-                            保存时间：{dayjs(JSON.parse(template?.create_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
+                            创建时间：{dayjs(JSON.parse(template?.install_time || "0") * 1000).format("YYYY/MM/DD hh:mm")}
                           </div>
                         </Flex>
                         <Flex gap={12}>
-                          <DefaultButton text="预览" onClick={()=>window.open(cookie.load("domain")?.handle && `https://${cookie.load("domain").handle}${previewDomain}?preview=1&themeId=${template.template_id}`,'_blank')} />
+                          <ButtonDropdownSecondary menu={{items:[
+                            {
+                              label: <VersionSwitchModal template={template || null} type="instance" />,
+                              key: '1',
+                            },
+                            {
+                              label: <VersionAddModal template={template} />,
+                              key: '2',
+                            },
+                            {
+                              label: <VersionRepairModal template={template} />,
+                              key: '3',
+                            }
+                          ]}} trigger={['click']} text="版本" />
+                          <DefaultButton text="预览" onClick={()=>previewDomain && window.open(`${previewDomain}?preview=1&themeId=${template.template_id}`,'_blank')} />
                           <ButtonDropdownSecondary 
                             menu={{
                               items:[
@@ -313,7 +355,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                   key: '4',
                                 },
                                 {
-                                  label: <a onClick={()=>history.push(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}`)}>编辑代码</a>,
+                                  label: <a onClick={()=>history.push(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}/${template.template_version_id || "0"}`)}>编辑代码</a>,
                                   key: '5',
                                 },
                                 {
@@ -321,7 +363,40 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                   key: '6',
                                 },
                                 {
-                                  label: <div className="color-F86140">删除</div>,
+                                  label: <a style={{color:"#FF0000"}} onClick={()=>{
+                                    const newModal = modal.info({
+                                      title:"删除主题",
+                                      icon:<ExclamationCircleFilled style={{color:"#FF0000"}} />,
+                                      content:"确认要删除这个主题吗？",
+                                      centered:true,
+                                      footer:()=>{
+                                        return (
+                                          <Flex gap={12} justify="end">
+                                            <DefaultButton text="取消" loading={loading} onClick={()=>newModal.destroy()} />
+                                            <DangerButton text="确定" loading={loading} onClick={()=>{
+                                              setLoading(true)
+                                              deleteVersion({
+                                                id:template.id
+                                              }).then(res=>{
+                                                message.success("删除成功")
+                                                // 
+                                                pagination.current == 1 && getTemplateList();
+                                                setPagination({
+                                                  ...pagination,
+                                                  current: 1,
+                                                })
+                                              }).catch(err=>{
+                                                message.error("删除失败")
+                                              }).finally(()=>{
+                                                setLoading(false)
+                                                newModal.destroy()
+                                              })
+                                            }}/>
+                                          </Flex>
+                                        )
+                                      }
+                                    })
+                                  }}>删除</a>,
                                   key: '7',
                                 },
                               ]

@@ -1,102 +1,142 @@
-import { Button, Flex, List, Modal, Tooltip } from "antd"
-import styled from "styled-components"
-import { AddIcon, ExportIcon, NailIcon, RightIcon } from "../Icons/Icons"
-import { ReactNode, useState } from 'react';
-import { includes } from 'lodash';
-import { EllipsisOutlined } from "@ant-design/icons";
+import { Button, Flex, List, message, Modal, Spin, Tooltip } from "antd";
+import styled from "styled-components";
+import { AddIcon, ExportIcon, NailIcon, PinFiledIcon, RightIcon } from "../Icons/Icons";
+import { ReactNode, useState, forwardRef, useEffect } from 'react';
 import MyDropdown from "../Dropdown/MyDropdown";
+import { getSaleChannelList, installSaleChannel, pinSaleChannel, uninstallSaleChannel } from "@/services/y2/api";
+import { history, useIntl, useLocation } from "@umijs/max";
+import { languageMap } from "@/locales/langMap";
+import { EllipsisOutlined, ExclamationCircleFilled, ExclamationCircleOutlined } from "@ant-design/icons";
+import channels from "@/store/menu/channels";
+import DefaultButton from "../Button/DefaultButton";
+import DangerButton from "../Button/DangerButton";
+
+interface salesChannelItem {
+    id:string;
+    appKey:string;
+    isInstalled:boolean;
+    channelName:string;
+    channelHandle:string;
+    menuLogo:string;
+    domainAppId:string;
+    isPinned:boolean;
+    sort:number;
+}
 
 
-function SalesChannel({dom}:{dom:ReactNode}){
+const SalesChannel = forwardRef<any, {dom:ReactNode}>(({dom}, ref) => {
+
+    const intl = useIntl();
+    const lang = languageMap[intl.locale];
+
+    const location = useLocation();
+
+    const [loading,setLoading] = useState(false);
 
     // const [
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [notSalesChannelList,setNotSalesChannelList] = useState([
-        {
-            id:1,
-            title:"Telegram",
-            imgUrl:"/icons/TelegramApp.svg",
-            desc:"MataCart X Telegram使企业能够展现自己的品牌故事并增加产品曝光度 —— 您可以在消息中心挑选商品、透过消息模板发送商品给您的顾客，为顾客提供从浏览商品到完成购物都无须离开MataCart 的原生购物体验。"
-        },
-        {
-            id:2,
-            title:"贴文销售",
-            imgUrl:"/icons/PostSellingApp.svg",
-            desc:"社媒贴文营销助手，支持多平台贴文关键字抓取下单，提升贴文营销的订单转化率！"
-        },
-        {
-            id:3,
-            title:"Facebook",
-            imgUrl:"/icons/FaceBookApp.svg",
-            desc:"MataCart Facebook 应用：与全球 20 亿用户互动，让您的产品被更多人发现。"
-        },
-        {
-            id:4,
-            title:"Buy Button",
-            imgUrl:"/icons/BuyButtonApp.svg",
-            desc:"通过在页面嵌入BuyButton按钮，灵活地将店铺之外任何与客户的触点变成销售页面。"
-        },
-        {
-            id:5,
-            title:"Pinterest",
-            imgUrl:"/icons/PinterestApp.svg",
-            desc:"绑定您的企业账户，实现Pinterest渠道的数据上报以及商品同步，快速开启广告营销。"
-        },
-        {
-            id:6,
-            title:"Microsoft channel",
-            imgUrl:"/icons/MicrosoftChannelApp.svg",
-            desc:"绑定您的企业账户，实现 Microsoft 渠道的域名验证、数据上报以及商品同步，快速开启广告营销。"
-        },
-        {
-            id:7,
-            title:"TikTok",
-            imgUrl:"/icons/TikTokApp.svg",
-            desc:"快捷关联店铺和TikTok，支持店铺与TikTok For Business以及TikTok小店连接，快速开启TikTok广告营销。"
-        },
-        {
-            id:8,
-            title:"Multichannel Connect",
-            imgUrl:"/icons/MultichannelConnectApp.svg",
-            desc:"将多个渠道（Amazon/eBay/Shopee/Lazada等）无缝连接到您的SHOPLINE商店，并在一个应用程序中集中管理商品、订单和库存。"
-        },
-        {
-            id:9,
-            title:"POS-Point of Sale",
-            imgUrl:"/icons/POSPointOfSaleApp.svg",
-            desc:"通过线下门店进行商品销售，支持客户享受和线上同等的权益、折扣。"
-        },
-        {
-            id:10,
-            title:"Google",
-            imgUrl:"/icons/GoogleApp.svg",
-            desc:"绑定Google账户后，实现Google渠道的投放、广告ga数据上报、Google feed的内容。"
-        },
-        {
-            id:11,
-            title:"LINE",
-            imgUrl:"/icons/LineApp.svg",
-            desc:"连接LINE账号，可让客户用LINE账号登录并用LINE与您联系。"
-        }
-    ])
+    const [salesChannelList,setSalesChannelList] = useState<salesChannelItem[]>([]);
 
-    const [salesChannelList,setSalesChannelList] = useState([
-        {
-            id:1,
-            title:"在线商店",
-            imgUrl:"/icons/OnlineStoreApp.svg",
-        },
-        {
-            id:2,
-            title:"消息中心",
-            imgUrl:"/icons/MessageCenterApp.svg",
-        },
-    ])
+    const [notSalesChannelList,setNotSalesChannelList] = useState<salesChannelItem[]>([])
+
+    // 安装渠道应用
+    const installChannel = (sales:salesChannelItem)=>{
+        setLoading(true);
+        installSaleChannel(sales.id).then((res)=>{
+            if(res.code == 0){
+                setIsModalOpen(false);
+                history.push(`/channels/${sales.channelHandle}`);
+            }else{
+                message.error(res.msg);
+            }
+        }).finally(()=>{
+            setLoading(false);
+        })
+    }
+
+    // 卸载渠道应用
+    const uninstallChannelModal = (sales:salesChannelItem)=>{
+        setIsModalOpen(false);
+        const confirm = Modal.confirm({
+            icon: <ExclamationCircleFilled style={{color:"#F86140"}} />,
+            title: `确认卸载${JSON.parse(sales.channelName)[lang]}吗？`,
+            content: "卸载前，请确认您已处理完所有待办内容，如有需要，您可再次安装使用。",
+            centered:true,
+            footer:()=>(
+                <Flex justify="end" gap={12}>
+                    <DefaultButton loading={loading} onClick={()=>confirm.destroy()} text="取消" />
+                    <DangerButton loading={loading} onClick={()=>{
+                        setLoading(true);
+                        uninstallSaleChannel(sales.domainAppId).then((res)=>{
+                            if(res.code == 0){
+                                confirm.destroy();
+                                channels.setChannelList(channels.channelList.filter((item:any)=>item.appId != sales.id));
+                                if(`/channels/${sales.channelHandle}` == location.pathname){
+                                    history.push(`/`);
+                                }
+                            }else{
+                                message.error(res.msg);
+                            }
+                        }).finally(()=>{
+                            setLoading(false);
+                        })
+                    }} text="卸载" />
+                </Flex>
+            )
+        })
+
+        
+    }
+
+    // 订到导航 is_pinned : 1 订到导航 0 取消订到导航
+    const pinChannel = (sales:salesChannelItem)=>{
+        // setLoading(true);
+        pinSaleChannel({
+            domain_app_id:sales.domainAppId,
+            is_pinned:sales.isPinned ? "0" : "1",
+        }).then((res)=>{
+            if(res.code == 0){
+                message.success("成功");
+                setSalesChannelList(salesChannelList.map((item)=>item.id == sales.id ? {...item,isPinned:!item.isPinned} : item));
+                // channels
+                sales.isPinned ? channels.setChannelList(channels.channelList.filter((item:any)=>item.appId != sales.id)) : channels.setChannelList([...channels.channelList,{
+                    ...sales,
+                    appId:sales.id
+                }]);
+            }else{
+                message.error(res.msg);
+            }
+        }).finally(()=>{
+            // setLoading(false);
+        })
+    }
+
+    const init = ()=>{
+        setLoading(true);
+        getSaleChannelList().then((res)=>{
+            if(res?.code == 0){
+                let channelList: salesChannelItem[] = [];
+                let noChannelList: salesChannelItem[] = [];
+                res.data?.channels?.map((item:salesChannelItem)=>{
+                    item.isInstalled ? channelList.push(item) : noChannelList.push(item);
+                })
+                setSalesChannelList(channelList);
+                setNotSalesChannelList(noChannelList);
+            }
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false);
+        })
+    }
 
     return (
         <Scoped>
-            <Flex justify='space-between' align='center' style={{width:"100%"}} onClick={() => setIsModalOpen(true)}>
+            <Flex justify='space-between' align='center' style={{width:"100%"}} onClick={() => {
+                setIsModalOpen(true);
+                init();
+                // test()
+            }}>
                 <Flex className='font-12'>
                     {dom}
                     <RightIcon style={{fontWeight:600,fontSize:"14px"}} />
@@ -107,75 +147,88 @@ function SalesChannel({dom}:{dom:ReactNode}){
             {/* 渠道 */}
             <Modal title="添加销售渠道" styles={{content:{paddingRight:"10px"},body:{height:"calc(100vh - 160px)",overflowY:"auto",paddingRight:"12px"}}} width={480} centered open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)}>
                 <ScopedList>
-                    <List className="sales-channel">
+                    <Spin spinning={loading}>
+                        <List className="sales-channel">
                         {notSalesChannelList.map((item,index)=>{
+                            if(!item?.channelName){
+                                return <></>
+                            }
+                            const name = JSON.parse(item.channelName)[lang];
                             return (
                                 <List.Item key={index}>
                                     <Flex className="list-item-box" align="center">
                                         <div>
-                                            <img width={25} height={25} src={item.imgUrl} />
+                                            <img width={25} height={25} src={item.menuLogo} />
                                         </div>
                                         <div className="list-item-content">
                                             <Flex className="title cursor-pointer color-242833">
-                                                <div style={{marginRight:"6px"}} className="font-w-600">{item.title}</div>
+                                                <div style={{marginRight:"6px"}} className="font-w-600">{name}</div>
                                                 <ExportIcon className="font-18" />
                                             </Flex>
-                                            <div className="font-12">{item.desc}</div>
+                                            {/* <div className="font-12">{item.desc}</div> */}
                                         </div>
                                         <div>
                                         {/* style={{fontSize:"20px"}} */}
-                                            <Button style={{width:"48px"}} type="primary" icon={<AddIcon style={{fontSize:"20px"}} />}></Button>
+                                            <Button style={{width:"48px"}} type="primary" icon={<AddIcon style={{fontSize:"20px"}}/>} onClick={()=>installChannel(item)}></Button>
                                         </div>
                                     </Flex>
                                 </List.Item>
                             )
                         })}
-                    </List>
-                    <div className="line-text color-474F5E">已添加的渠道可进行删除</div>
-                    <List className="sales-channel">
-                        {salesChannelList.map((item,index)=>{
-                            return (
-                                <List.Item key={index}>
-                                    <Flex className="list-item-box" align="center">
-                                        <div>
-                                            <img width={25} height={25} src={item.imgUrl} />
-                                        </div>
-                                        <div className="list-item-content">
-                                            <Flex className="title cursor-pointer color-242833">
-                                                <div style={{marginRight:"6px"}} className="font-w-600">{item.title}</div>
-                                                <ExportIcon className="font-18" />
+                        </List>
+                        <div className="line-text color-474F5E">已添加的渠道可进行删除</div>
+                        <List className="sales-channel">
+                            {salesChannelList.map((item,index)=>{
+                                if(!item?.channelName){
+                                    return <></>
+                                }
+                                const name = JSON.parse(item.channelName)[lang];
+                                return (
+                                    <List.Item key={index}>
+                                        <Flex className="list-item-box" align="center">
+                                            <div>
+                                                <img width={25} height={25} src={item.menuLogo} />
+                                            </div>
+                                            <div className="list-item-content">
+                                                <Flex className="title cursor-pointer color-242833">
+                                                    <div style={{marginRight:"6px"}} className="font-w-600">{name}</div>
+                                                    <ExportIcon className="font-18" />
+                                                </Flex>
+                                            </div>
+                                            <Flex className="list-item-controls" gap={8}>
+                                                <Tooltip title="将应用订到导航上">
+                                                    {/* {isPinned} */}
+                                                    <Flex justify="center" className="icon-box cursor-pointer" onClick={()=>pinChannel(item)}>
+                                                        {item.isPinned ?<PinFiledIcon style={{color:"#E07000"}} />:<NailIcon />}
+                                                    </Flex>
+                                                </Tooltip>
+                                                <MyDropdown
+                                                    tiggerEle={<Flex justify="center" className="icon-box cursor-pointer"><EllipsisOutlined /></Flex>}
+                                                    menu={{
+                                                        items:[
+                                                            {
+                                                                key: "1", label: (
+                                                                    <div onClick={() => uninstallChannelModal(item)} className="color-FF0000">卸载</div>
+                                                                )
+                                                            }
+                                                        ]
+                                                    }}
+                                                />
                                             </Flex>
-                                        </div>
-                                        <Flex className="list-item-controls" gap={8}>
-                                            <Tooltip title="将应用订到导航上">
-                                                <Flex justify="center" className="icon-box cursor-pointer"><NailIcon /></Flex>
-                                            </Tooltip>
-                                            <MyDropdown
-                                                tiggerEle={<Flex justify="center" className="icon-box cursor-pointer"><EllipsisOutlined /></Flex>}
-                                                menu={{
-                                                    items:[
-                                                        {
-                                                            key: "1", label: (
-                                                                <div onClick={() => { } } className="color-FF0000">卸载</div>
-                                                            )
-                                                        }
-                                                    ]
-                                                }}
-                                            />
                                         </Flex>
-                                    </Flex>
-                                </List.Item>
-                            )
-                        })}
-                    </List>
+                                    </List.Item>
+                                )
+                            })}
+                        </List>
+                    </Spin>
                 </ScopedList>
-                
-                
             </Modal>
+
+
+
         </Scoped>
     )
-
-}
+});
 
 export default SalesChannel
 

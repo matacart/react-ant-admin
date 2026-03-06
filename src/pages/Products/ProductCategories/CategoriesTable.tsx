@@ -9,6 +9,7 @@ import modal from 'antd/es/modal';
 import cookie from 'react-cookies';
 import categoriesList from '@/store/product/categoriesList';
 import { useAbortController } from '@/hooks/customHooks';
+import { getPrimaryDomain } from '@/utils/dataStructure';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -33,7 +34,7 @@ interface TableParams {
 function CategoriesTable() {
 
   // 预览域名默认
-  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+  const previewDomain = getPrimaryDomain();
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
@@ -152,14 +153,9 @@ function CategoriesTable() {
           }} >
             <ButtonIcon>
                 <div className='wrap' onClick={(e) => {
-                    e.stopPropagation()
-                    if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
-                      window.open(`https://${cookie.load("domain").domain_primary}/collections/${record.handle}`)
-                    }else if(cookie.load("domain").handle){
-                      window.open(`https://${cookie.load("domain").handle}${previewDomain}/collections/${record.handle}`)
-                    }else{
-                      message.error("店铺缺少handle")
-                    }
+                    e.stopPropagation();
+                    const primaryDomain = getPrimaryDomain();
+                    primaryDomain && window.open(`${primaryDomain}/collections/${record.handle}`)
                   }}>
                   <Tooltip title="预览">
                     <EyeOutlined />
@@ -214,20 +210,18 @@ function CategoriesTable() {
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    const res = {
-      languages_id:categoriesList.languagesId,
-      page:page,
-      limit:limit,
-    }
-
     const signal = createAbortController();
-    getCategoryList(res,signal).then((res)=>{
+    getCategoryList({
+      languages_id:categoriesList.languagesId,
+      page:page?.toString() || "1",
+      limit:limit?.toString() || "10",
+    },signal).then((res)=>{
       setData(res.data);
       setTableParams({
         ...tableParams,
         pagination: {
           ...tableParams.pagination,
-          total: res.count,
+          total: Number(res.count),
         }
       });
     }).catch((error) => {

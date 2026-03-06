@@ -22,7 +22,7 @@ export const customOrder = ['general', 'blog', 'products', 'customer', 'sales', 
 
 function LangEditor() {
 
-    const { templateId }  = useParams();
+    const { templateId,languagesId,versionId }  = useParams();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
@@ -61,6 +61,8 @@ function LangEditor() {
             themeId: templateId??"",
             locale: langEditor.lang,
             mode: langEditor.mode,
+            languages_id:languagesId??"",
+            version_id:versionId??"",
         },signal).then(async (res)=>{
             if(res.code == "SUCCESS"){
                 langEditor.setDefaultJsonEntity(res.data.data);

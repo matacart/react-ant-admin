@@ -2,7 +2,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { Flex, Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import { history } from '@umijs/max';
+import { history, useIntl } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useState } from 'react';
@@ -13,8 +13,11 @@ import SEOCard from '../Blogs/SEOCard';
 import ThemeTemplate from '../Blogs/ThemeTemplate';
 import CommentCard from '../Blogs/CommentCard';
 import blogs from '@/store/channel/blogs/blogs';
+import { setArticleCategorys } from '@/services/y2/api';
 
 function CreateBlogs(){
+
+    const intl = useIntl();
 
     const [loading,setLoading] = useState(false);
 
@@ -30,13 +33,27 @@ function CreateBlogs(){
     }
 
     const submit = ()=>{
-       form.validateFields().then(async (values)=>{
-           console.log(values)
-       }).catch(()=>{})
+        form.validateFields().then((values)=>{
+            setLoading(true);
+            setArticleCategorys(blogs.blogs).then(async res=>{
+                if(res.code == 0){
+                    await sleep(2000);
+                    message.success(intl.formatMessage({ id: 'components.message.success' }));
+                    history.push('/website/blogs')
+                }
+            }).catch(err=>{
+                console.log(err);
+            }).finally(()=>{
+                setLoading(false);
+            })
+        }).catch(()=>{})
     }
 
     useEffect(()=>{
-
+        return () => {
+            // 组件卸载时重置状态，避免内存泄漏
+            blogs.reset();
+        };
     },[])
 
     return (

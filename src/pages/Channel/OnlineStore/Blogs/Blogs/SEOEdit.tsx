@@ -25,18 +25,18 @@ function SEOEdit({seo,setSEO,previewPrefix}:{seo:any,setSEO?:(title:string,descr
     const [handle,setHandle] = useState("");
 
     useEffect(()=>{
-        setTitle(seo.meta_title || seo.title ||"");
-        setDescription(seo.meta_description || extractTextFromHTML(seo.content));
+        setTitle(seo.meta_title || seo.category_name ||"");
+        setDescription(seo.meta_description);
         setKeyword(seo.meta_keyword || "");
-        setHandle(seo.handle || seo.title || "");
-    },[seo.title])
+        setHandle(seo.handle || seo.category_name || "");
+    },[seo.category_name])
 
     // 取消
     const seoClose = ()=>{
         setOpen(false);
         // 数据还原
-        setTitle(seo.meta_title || seo.title || "");
-        setDescription(seo.meta_description || extractTextFromHTML(seo.content));
+        setTitle(seo.meta_title || seo.category_name || "");
+        setDescription(seo.meta_description);
         setKeyword(seo.meta_keywords || "");
         setHandle(seo.handle || "");
     }

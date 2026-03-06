@@ -1,5 +1,5 @@
 import { Drawer } from 'antd';
-import React, { ReactPropTypes, useState } from 'react';
+import React from 'react';
 import './Drawer.scss'
 import { CloseOutlined } from '@ant-design/icons';
 

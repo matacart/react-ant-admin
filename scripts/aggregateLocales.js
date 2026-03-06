@@ -6,7 +6,7 @@ const glob = require('glob'); // 需要安装: npm install glob
 // 1. 配置：要扫描的目录和生成目录
 const SCAN_DIRS = ['src/pages/**', 'src/components/**', 'src/services/**'];
 const OUTPUT_DIR = 'src/locales';
-const LOCALES = ['zh-CN', 'en-US']; // 支持的语言
+const LOCALES = ['zh-CN', 'en-US', 'zh-TW']; // 支持的语言
 
 // 2. 初始化聚合对象，如：{ 'zh-CN': {}, 'en-US': {} }
 const aggregated = {};

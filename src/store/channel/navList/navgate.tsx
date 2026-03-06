@@ -13,6 +13,7 @@ export interface TreeItem {
   is_sys?:string;
   isShare?:string;
   is_share?:string;
+  is_bind?:string;
   pid?:string;
   handle?: string;
   languages_id?: string;
@@ -52,7 +53,7 @@ class navgate {
     setId(value: string) {
       this.id = value;
     }
-
+    // 导航默认语言
     languagesId:string = "2";
 
     setLanguagesId(value: string) {
@@ -65,11 +66,17 @@ class navgate {
     setIsSys(value: string) {
       this.isSys = value;
     }
-
+    // 是否共享
     isShare:string = "0";
 
     setIsShare(value: string) {
       this.isShare = value;
+    }
+
+    // 绑定
+    isBind:string = "1";
+    setIsBind(value: string) {
+      this.isBind = value;
     }
 
     // 全部项 -- 用于删除全部导航
@@ -93,39 +100,13 @@ class navgate {
 
     clear = () => {
       this.id = "";
+      this.languagesId = "2";
       this.isSys = "0";
       this.isShare = "0";
       this.itemList = [];
       this.removeItems = [];
       this.initialItems = [];
     }
-
-// [
-//   {
-//     id: 'Home',
-//     children: [],
-//   },
-//   {
-//     id: 'Collections',
-//     children: [
-//       {id: 'Spring', children: []},
-//       {id: 'Summer', children: []},
-//       {id: 'Fall', children: []},
-//       {id: 'Winter', children: []},
-//     ],
-//   },
-//   {
-//     id: 'About Us',
-//     children: [],
-//   },
-//   {
-//     id: 'My Account',
-//     children: [
-//       {id: 'Addresses', children: []},
-//       {id: 'Order History', children: []},
-//     ],
-//   },
-// ]
 
 }
 

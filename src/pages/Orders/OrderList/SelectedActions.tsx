@@ -4,16 +4,17 @@ import { UnfoldIcon } from "@/components/Icons/Icons";
 import { batchArcOrder, batchUnarcOrder } from "@/services/y2/api";
 import { batchshipOrders, batchdelOrders, updateOrderStatus } from "@/services/y2/order";
 import orderList from "@/store/order/orderList";
-import { history } from "@umijs/max";
+import { history, useIntl } from "@umijs/max";
 import { message, Modal, Checkbox, Button, Select, Flex, theme, notification } from "antd";
 import React, { useRef } from "react";
 import styled from "styled-components";
 
 const { useToken } = theme;
 
-function SelectedActions({fetchData}){
+function SelectedActions({fetchData}:{fetchData: () => void}){
 
     const { token } = useToken();
+    const intl = useIntl();
 
     const contentStyle: React.CSSProperties = {
       backgroundColor: token.colorBgElevated,
@@ -34,136 +35,136 @@ function SelectedActions({fetchData}){
 
     if (selectedCount === 0) return null;
   
-    const handleBatchShipOrders = async () => {
-      if (selectedCount === 0) {
-        message.warning('请选择至少一项进行操作');
-        return;
-      }
+    // const handleBatchShipOrders = async () => {
+    //   if (selectedCount === 0) {
+    //     message.warning('请选择至少一项进行操作');
+    //     return;
+    //   }
     
-      // 使用 Modal.confirm 弹出确认对话框
-      Modal.confirm({
-        title: '标记订单为已发货',
-        content: (
-          <div>
-            <p>这些订单将被标记为“已发货”。</p>
-            <div style={{ marginTop: '16px' }}>
-              <Checkbox>
-                给用户发送通知邮件
-              </Checkbox>
-            </div>
-          </div>
-        ),
-        onOk: async () => {
-          try {
-            await batchshipOrders(selectedRowKeys as string[]);
-            message.success('批量发货成功');
-            // 清除选中状态
-            // setSelectedRowKeys([]);
-            // 重新加载数据
-            // fetchData();
-          } catch (error) {
-            message.error('批量发货失败');
-          }
-        },
-        onCancel: () => {
-          console.log('Cancel');
-        },
-      });
-    };
+    //   // 使用 Modal.confirm 弹出确认对话框
+    //   Modal.confirm({
+    //     title: '标记订单为已发货',
+    //     content: (
+    //       <div>
+    //         <p>这些订单将被标记为“已发货”。</p>
+    //         <div style={{ marginTop: '16px' }}>
+    //           <Checkbox>
+    //             给用户发送通知邮件
+    //           </Checkbox>
+    //         </div>
+    //       </div>
+    //     ),
+    //     onOk: async () => {
+    //       try {
+    //         await batchshipOrders(selectedRowKeys as string[]);
+    //         message.success('批量发货成功');
+    //         // 清除选中状态
+    //         // setSelectedRowKeys([]);
+    //         // 重新加载数据
+    //         // fetchData();
+    //       } catch (error) {
+    //         message.error('批量发货失败');
+    //       }
+    //     },
+    //     onCancel: () => {
+    //       console.log('Cancel');
+    //     },
+    //   });
+    // };
   
   
-    const handleMoreActionsChange = (value: string) => {
-      console.log('Selected more action:', value);
-      // 根据 value 执行相应的操作
-      if (value === 'delete-orders') {
-        handleDeleteOrders();
-      }
-    };
+    // const handleMoreActionsChange = (value: string) => {
+    //   console.log('Selected more action:', value);
+    //   // 根据 value 执行相应的操作
+    //   if (value === 'delete-orders') {
+    //     handleDeleteOrders();
+    //   }
+    // };
     
-    const handleDeleteOrders = async () => {
-      // console.log('Selected Row Keys:', selectedRowKeys);
-      // 确保 selectedRowKeys 不为空
-      // if (selectedRowKeys.length === 0) {
-      //   message.warning('请选择至少一项进行操作');
-      //   return;
-      // }
+    // const handleDeleteOrders = async () => {
+    //   // console.log('Selected Row Keys:', selectedRowKeys);
+    //   // 确保 selectedRowKeys 不为空
+    //   // if (selectedRowKeys.length === 0) {
+    //   //   message.warning('请选择至少一项进行操作');
+    //   //   return;
+    //   // }
     
-      // // 显示确认对话框
-      // Modal.confirm({
-      //   title: '确认删除?',
-      //   content: '您确定要删除这些订单吗?',
-      //   onOk: async () => {
-      //     try {
-      //       // 将数字数组转换为字符串数组
-      //       const stringSelectedRowKeys = selectedRowKeys.map(String);
-      //       const response = await batchdelOrders(stringSelectedRowKeys);
+    //   // // 显示确认对话框
+    //   // Modal.confirm({
+    //   //   title: '确认删除?',
+    //   //   content: '您确定要删除这些订单吗?',
+    //   //   onOk: async () => {
+    //   //     try {
+    //   //       // 将数字数组转换为字符串数组
+    //   //       const stringSelectedRowKeys = selectedRowKeys.map(String);
+    //   //       const response = await batchdelOrders(stringSelectedRowKeys);
     
-      //       if (response && response.code === 0) { // 后端成功状态码应为200
-      //         message.success('订单删除成功');
-      //         // 清除选中状态
-      //         setSelectedRowKeys([]);
-      //         // 重新加载数据
-      //         fetchData();
-      //       } else if (response && response.code === 201) {
-      //         message.error(`订单删除失败，后端返回错误：${response.msg}`);
-      //       } else {
-      //         message.error('订单删除失败，请检查后端响应');
-      //       }
-      //     } catch (error) {
-      //       let errorMessage = '订单删除失败';
-      //       if (error instanceof Error) {
-      //         errorMessage += `：${error.message}`;
-      //       }
-      //       message.error(errorMessage);
-      //     }
-      //   },
-      //   onCancel: () => {
-      //     console.log('Cancel');
-      //   },
-      // });
-    };
+    //   //       if (response && response.code === 0) { // 后端成功状态码应为200
+    //   //         message.success('订单删除成功');
+    //   //         // 清除选中状态
+    //   //         setSelectedRowKeys([]);
+    //   //         // 重新加载数据
+    //   //         fetchData();
+    //   //       } else if (response && response.code === 201) {
+    //   //         message.error(`订单删除失败，后端返回错误：${response.msg}`);
+    //   //       } else {
+    //   //         message.error('订单删除失败，请检查后端响应');
+    //   //       }
+    //   //     } catch (error) {
+    //   //       let errorMessage = '订单删除失败';
+    //   //       if (error instanceof Error) {
+    //   //         errorMessage += `：${error.message}`;
+    //   //       }
+    //   //       message.error(errorMessage);
+    //   //     }
+    //   //   },
+    //   //   onCancel: () => {
+    //   //     console.log('Cancel');
+    //   //   },
+    //   // });
+    // };
   
-    const handleAccountPayment = async () => {
-      if (selectedCount === 0) {
-        message.warning('请选择至少一项进行操作');
-        return;
-      }
+    // const handleAccountPayment = async () => {
+    //   if (selectedCount === 0) {
+    //     message.warning('请选择至少一项进行操作');
+    //     return;
+    //   }
     
-      // 使用 Modal.confirm 弹出确认对话框
-      Modal.confirm({
-        title: '标记订单为已付款',
-        content: (
-          <div>
-            <p>自定义支付的订单，付款状态将被标记为“已付款"</p>
-            <p>已授权未入账的订单，付款状态将标记为“已付款"</p>
-            <div style={{ marginTop: '16px' }}>
-              <Checkbox>
-                给用户发送通知邮件
-              </Checkbox>
-            </div>
-          </div>
-        ),
-        onOk: async () => {
-          try {
-            // 将所有选定项的键合并成一个字符串
-            const combinedKey = selectedRowKeys;
-            const response = await updateOrderStatus(combinedKey);
-            if (response.code === 0) {
-              message.success('订单状态更新成功');
-              // 重新获取数据并更新界面
-              // fetchData(); // 直接调用 fetchData 来刷新数据
-            } else {
-              message.error('订单状态更新失败');
-            }
-          } catch (error) {
-            message.error('订单状态更新失败');
-          }
-        },
-        onCancel: () => {
-          console.log('Cancel');
-        },
-      });
-    };
+    //   // 使用 Modal.confirm 弹出确认对话框
+    //   Modal.confirm({
+    //     title: '标记订单为已付款',
+    //     content: (
+    //       <div>
+    //         <p>自定义支付的订单，付款状态将被标记为“已付款"</p>
+    //         <p>已授权未入账的订单，付款状态将标记为“已付款"</p>
+    //         <div style={{ marginTop: '16px' }}>
+    //           <Checkbox>
+    //             给用户发送通知邮件
+    //           </Checkbox>
+    //         </div>
+    //       </div>
+    //     ),
+    //     onOk: async () => {
+    //       try {
+    //         // 将所有选定项的键合并成一个字符串
+    //         const combinedKey = selectedRowKeys;
+    //         const response = await updateOrderStatus(combinedKey);
+    //         if (response.code === 0) {
+    //           message.success('订单状态更新成功');
+    //           // 重新获取数据并更新界面
+    //           // fetchData(); // 直接调用 fetchData 来刷新数据
+    //         } else {
+    //           message.error('订单状态更新失败');
+    //         }
+    //       } catch (error) {
+    //         message.error('订单状态更新失败');
+    //       }
+    //     },
+    //     onCancel: () => {
+    //       console.log('Cancel');
+    //     },
+    //   });
+    // };
 
     return(
       <Scoped>
@@ -176,10 +177,10 @@ function SelectedActions({fetchData}){
               }}
               style={{ marginLeft: 7 }}
           />
-          <span style={{ marginLeft: 20 }}>已选择 {selectedCount} 项</span>
+          <span style={{ marginLeft: 20 }}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.selectedCount' }, { count: selectedCount })}</span>
           <Flex gap={12} style={{ marginLeft: 20 }}>
-            <DefaultButton text="入账付款" />
-            <DefaultButton text="批量发货" />
+            <DefaultButton text={intl.formatMessage({ id: 'orders.orderList.selectedActions.accountPayment' })} />
+            <DefaultButton text={intl.formatMessage({ id: 'orders.orderList.selectedActions.bulkshipping' })} />
             <MyDropDownSecondary
               getPopupContainer={()=>Ref.current!}
               tiggerEle={
@@ -192,8 +193,8 @@ function SelectedActions({fetchData}){
                       <a onClick={() => {
                         batchArcOrder(JSON.stringify(orderList.orderIds)).then(res=>{
                           notification.success({
-                            message: `对${orderList.orderIds.length}条订单进行归档`,
-                            description: <div>已成功归档{orderList.orderIds.length}条订单</div>,
+                            message: intl.formatMessage({ id: 'orders.orderList.selectedActions.archiveOrders' }),
+                            description: <div>{intl.formatMessage({ id: 'orders.orderList.selectedActions.archiveOrders.description' }, { count: orderList.orderIds.length })}</div>,
                           })
                           orderList.setOrderIds([]);
                           // 重新加载数据
@@ -201,7 +202,7 @@ function SelectedActions({fetchData}){
                         }).catch(err=>{
                           console.log(err);
                         })
-                      }}>归档订单</a>
+                      }}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.archiveOrders' })}</a>
                     )
                   },
                   {
@@ -210,8 +211,8 @@ function SelectedActions({fetchData}){
                         
                         batchUnarcOrder(JSON.stringify(orderList.orderIds)).then(res=>{
                           notification.success({
-                            message: `对${orderList.orderIds.length}条订单进行取消归档`,
-                            description: <div>已成功取消归档{orderList.orderIds.length}条订单</div>,
+                            message: intl.formatMessage({ id: 'orders.orderList.selectedActions.unarchiveOrders' }),
+                            description: <div>{intl.formatMessage({ id: 'orders.orderList.selectedActions.unarchiveOrders.description' }, { count: orderList.orderIds.length })}</div>,
                           })
                           orderList.setOrderIds([]);
                           // 重新加载数据
@@ -219,22 +220,22 @@ function SelectedActions({fetchData}){
                         }).catch(err=>{
                           console.log(err);
                         })
-                      }}>取消归档订单</a>
+                      }}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.unarchiveOrders' })}</a>
                     )
                   },
                   {
                     key: "3", label: (
-                      <div onClick={() => {}}>添加标签</div>
+                      <div onClick={() => {}}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.addTags' })}</div>
                     )
                   },
                   {
                     key: "4", label: (
-                      <div onClick={() => {}}>删除标签</div>
+                      <div onClick={() => {}}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.removeTags' })}</div>
                     )
                   }
                 ]
               }}
-              dropdownRender={(menu:any)=>{
+              popupRender={(menu:any)=>{
                 return (
                     <div style={contentStyle}>
                         <div>

@@ -20,7 +20,8 @@ export default function TissueCard() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [form] = Form.useForm();
+    const [mainForm] = Form.useForm();
+    const [modalForm] = Form.useForm();
 
     const [groupList,setGroupList] = useState([]);
 
@@ -30,9 +31,9 @@ export default function TissueCard() {
 
     // 提交表单
     const onFinish = ()=>{
-        addArticleCollection({...form.getFieldsValue(),lang:lang}).then(res=>{
+        addArticleCollection({...modalForm.getFieldsValue(),lang:lang}).then(res=>{
             message.success("添加成功")
-            form.resetFields()
+            modalForm.resetFields()
             setLang("2")
             setIsModalOpen(false)
             getArticleCollection().then(res=>{
@@ -61,7 +62,7 @@ export default function TissueCard() {
         <Scoped>
             <Card className="card">
                 <div className="title font-w-600 font-16">组织</div>
-                <Form form={form} layout="vertical">
+                <Form form={mainForm} layout="vertical">
                     <Form.Item
                         label={<div className="font-w-600">作者</div>} >
                         <DefaultInput placeholder="请输入" value={articles.articles.author_name} onChange={(e:any) =>articles.setArticles({
@@ -105,12 +106,12 @@ export default function TissueCard() {
                     <div style={{marginRight: '20px'}}>
                         <LangSelect lang={lang} setLang={setLang} />
                     </div>          
-                </Flex>} width={620} centered open={isModalOpen} onOk={()=>form.submit()} onCancel={()=>{
-                    form.resetFields()
+                </Flex>} width={620} centered open={isModalOpen} onOk={()=>modalForm.submit()} onCancel={()=>{
+                    modalForm.resetFields()
                     setLang("2")
                     setIsModalOpen(false)
                 }}>
-                    <Form form={form} onFinish={onFinish} layout="vertical"
+                    <Form form={modalForm} onFinish={onFinish} layout="vertical"
                         initialValues={{
                             name:'',
                             parentId:'',
@@ -137,7 +138,14 @@ export default function TissueCard() {
                             <TreeSelect
                                 style={{ width: '100%' }}
                                 // value={value}
-                                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                styles={{
+                                    popup: { 
+                                        root: {
+                                            maxHeight: 400, 
+                                            overflow: 'auto'
+                                        } 
+                                    }
+                                }}
                                 treeData={treeGroup}
                                 placeholder="请选择"
                                 treeDefaultExpandAll

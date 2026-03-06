@@ -1,13 +1,13 @@
 import MySelect from "@/components/Select/MySelect"
 import { useIntl } from "@umijs/max";
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 
 function ItemSelect({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
 
     const intl = useIntl();
 
     // 默认数据
-    const defaultData = item.default || undefined;
+    const defaultData = item.default ?? undefined;
 
     const [value,setValue] = useState(data || defaultData);
     
@@ -29,7 +29,7 @@ function ItemSelect({item,data,setData}:{item:any,data:string,setData:(item:any,
     })
 
     useMemo(()=>{
-        setValue(data || defaultData)
+        setValue(data ?? defaultData)
     },[data])
 
     return (

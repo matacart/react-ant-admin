@@ -172,7 +172,7 @@ function LocationsCard() {
                                     options={supplierOptions}
                                     value={purchaseOrderEdit.supplierId}
                                     onChange={handleSupplierChange}
-                                    dropdownRender={(menu)=>(
+                                    popupRender={(menu)=>(
                                         <>
                                             {menu}
                                             <AddSupplierModal selectRef={selectRef} getSupplierList={getSupplierList} />

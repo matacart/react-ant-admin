@@ -1,13 +1,16 @@
-import { Button, ConfigProvider, Dropdown, MenuProps, theme } from "antd";
+import { ConfigProvider, Dropdown, MenuProps, theme } from "antd";
 import React from "react";
 import { styled } from 'styled-components';
 import DefaultButton from "../Button/DefaultButton";
+import { useIntl } from "@umijs/max";
 
 const { useToken } = theme;
 // 下拉排序
 export default function DropdownSort(props:any) {
 
     const { token } = useToken();
+
+    const intl = useIntl();
 
     const contentStyle: React.CSSProperties = {
         backgroundColor: token.colorBgElevated,
@@ -20,9 +23,7 @@ export default function DropdownSort(props:any) {
         paddingBottom:"8px",
         boxShadow: 'none',
     };
-
     const items: MenuProps['items'] = props.items
-    // controlItemBgHover:"#f0f7ff"
     return (
         <Scoped>
             <ConfigProvider
@@ -32,10 +33,10 @@ export default function DropdownSort(props:any) {
                     },
                 }}
             >
-                <Dropdown menu={{ items,selectable: true }} dropdownRender={(menu)=>(
+                <Dropdown menu={{ items,selectable: true }} popupRender={(menu)=>(
                     <div style={contentStyle}>
                         <div style={props.styled}>
-                            <div className="font-12 color-B8BECC" style={{padding:"8px 12px"}}>选择排序方式</div>
+                            <div className="font-12 color-B8BECC" style={{padding:"8px 12px"}}>{intl.formatMessage({ id: 'components.dropdown.dropdownSort.selectSortText' })}</div>
                             {React.cloneElement(
                                 menu as React.ReactElement<{
                                     style: React.CSSProperties;
@@ -45,7 +46,7 @@ export default function DropdownSort(props:any) {
                         </div>
                     </div>
                 )} trigger={['click']} placement="bottomRight">
-                    <DefaultButton text="排序" />
+                    <DefaultButton text={intl.formatMessage({ id: 'components.dropdown.dropdownSort.sortText' })} />
                 </Dropdown>
             </ConfigProvider>
         </Scoped>

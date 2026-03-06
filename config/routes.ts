@@ -1,12 +1,3 @@
-import route from "mock/route";
-import { Children } from "react";
-import { Link, Outlet } from '@umijs/max';
-// import CangKukuCun from '../public/icons/caigoucaigoudan.svg';
-// import CaiGouDan from '/icons/caigoucaigoudan.svg';
-
-
-// console.log(CangKukuCun)
-
 /**
  * @name umi 的路由配置
  * @description 只支持 path,component,routes,redirect,wrappers,name,icon 的配置
@@ -20,17 +11,10 @@ import { Link, Outlet } from '@umijs/max';
  * @doc https://umijs.org/docs/guides/routes
  */
 
-// if(!window.location.hostname.startsWith("localhost")){
-//   console.log(window.location.hostname.slice(0,window.location.hostname.indexOf(".")))
-// }else{
-//   console.log("localhost")
-// }
-
 export default  [
-
   {
     path: '/icons',
-    component: './Test/IconsPreview', 
+    component: "@/pages/Test/IconsPreview", 
   },
   {
     path: '/',
@@ -62,7 +46,7 @@ export default  [
     path: '/home',
     name: 'home',
     icon: 'HomeOutlined',
-    component: './Admin/index',
+    component: "@/pages/Admin/index",
   },
   // 订单
   {  
@@ -73,7 +57,7 @@ export default  [
       {  
         path: 'manages',  
         name: 'ordersManages',  
-        component: './Orders/OrderList/index',
+        component: './Orders/OrderList/Index',
       },
       {
         path: 'recallOrders',
@@ -82,44 +66,38 @@ export default  [
       },
       {  
         path: ':orderId',  
-        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/OrderDetail', 
       },
       {  
         path: ':orderId/delivery', 
-        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/ManualDelivery/ManualDelivery', 
       },
       {  
         path: 'afterSales/launch/:orderId', 
-        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/AfterSales/AfterSales', 
       },
       {  
         path: ':orderId/refund', 
-        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/Refund/Refund', 
       },
       {  
         path: ':orderId/returns/:returnsId/refund', 
-        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/Refund/Refund', 
       },
       {  
         path: ':orderId/productsEdit', 
-        name: 'orders',
         hideInMenu: true,
         component: './Orders/OrderDetail/EditProduct/EditProduct', 
       },
       {
         path: 'draftOrders',
         name: 'draftOrders',
-        component: './Orders/OrderDraft/OrderDraft',
+        component: './Orders/OrderDraft/OrderDraftList/Index',
       },
       {
         path: 'draftOrders/add',
@@ -152,21 +130,18 @@ export default  [
         },
         {
           path: 'migrate',
-          name: 'migrate',
           hideInMenu: true,
           component: './Products/Migrate/Migrate', 
         },
         {
           // 创建商品
           path: 'new',
-          name: 'new',
           hideInMenu: true,
           parentKeys: ['/products/index'],
           component: './Products/ProductAdd/AddNewProduct',
         },
         {  
           path: 'edit/:productId/:languageId',
-          name: 'edit',
           hideInMenu: true,
           parentKeys: ['/products/index'],
           component: './Products/ProductDetail/ProductDetail', 
@@ -174,13 +149,12 @@ export default  [
         // 变体
         {  
           path: 'edit/:productId/:languageId/variants/:variantId',
-          name: '',  
           component: './Products/ProductDetail/Variants/Index', 
         },
         // 分类
         {
           path: 'categories',
-          name: 'Collections',
+          name: 'categories',
           component: './Products/ProductCategories/Index',
         },
         {
@@ -403,68 +377,9 @@ export default  [
     hideInMenu: true,
     component: './AppStore/AppStore/CustomAppConfigSetting/CustomAppConfigSetting',
   },
-  // {
-  //   path: 'order_invoice_customization',
-  //   name: 'orderInvoiceCustomization',
-  //   icon: 'PieChartOutlined',
-  //   component: './AppStore/OrderInvoiceCustomization/OrderInvoiceCustomization',
-  //   routes:[
-  //     {
-  //       path: '',
-  //       redirect: 'orderList',
-  //     },
-  //     {
-  //       path: 'orderList',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/OrderList/OrderList',
-  //     },
-  //     {
-  //       path: 'orderPdfPreview/:id',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoice/PrintOrderInvoice',
-  //     },
-  //     {
-  //       path: 'orderPdfPreview/picking/:id',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/OrderList/PrintOrderInvoicePicking/PrintOrderInvoicePicking',
-  //     },
-  //     {
-  //       path: 'draftOrderList',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/DraftOrderList/DraftOrderList',
-  //     },
-  //     {
-  //       path: 'orderPdfPreview/draft/:id',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/DraftOrderList/PrintOrderInvoiceDraft/PrintOrderInvoiceDraft',
-  //     },
-  //     {
-  //       path: 'templateManage',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/TemplateManage/TemplateManage',
-  //     },
-  //     {
-  //       path: 'basicConfig',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/BasicConfig/BasicConfig',
-  //     },
-  //     {
-  //       path: 'orderPdfDownload',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/OrderPdfDownload/OrderPdfDownload',
-  //     },
-  //     {
-  //       path: 'email',
-  //       hideInMenu: true,
-  //       component: './IFrame/OrderTicketAssistant/Email/Email',
-  //     }
-  //   ]
-  // },
-  
   {
     path: 'channel',
     name: 'channel',
-    component: './Products/Inventory/Index',
     // component: './Products/Inventory/BlankPage',
   },
   {
@@ -515,6 +430,13 @@ export default  [
         component: './Channel/OnlineStore/Blogs/Edit/EditBlogs',
       },
       {
+        path: 'articles-comment',
+        name: 'articles',
+        parentKeys: ['/website/articles'],
+        hideInMenu: true,
+        component: './Channel/OnlineStore/ArticlesComment/Index/ArticlesComment',
+      },
+      {
         path: 'page',
         name: 'customPage',
         component: './Channel/OnlineStore/CustomPage/CustomPage',
@@ -547,51 +469,83 @@ export default  [
       {
         path: 'preferences',
         name: 'preferences',
-        component: './Channel/OnlineStore/Preferences/Preferences',
+        component: './Channel/OnlineStore/Preferences/Index/Preferences',
+      },
+      {
+        path: 'preferences/robot',
+        name: 'preferences',
+        hideInMenu: true,
+        component: './Channel/OnlineStore/Preferences/Robot/Index',
       },
     ]
     // component: './Products/Inventory/BlankPage',
   },
-  // 店铺
+  // 店铺------------------------------
   // 商户申请
   {
     path: '/stores/merchantApplication',
     menuRender: false,
-    component: './Shops/MerchantApplication/MerchantApplication',
+    component: './Stores/MerchantApplication/MerchantApplication',
   },
   {
     path: '/stores/merchantCertification',
     menuRender: false,
-    component: './Shops/MerchantApplication/MerchantCertification',
+    component: './Stores/MerchantApplication/MerchantCertification',
   },
   {
     path: '/stores/create',
     menuRender: false,
-    component: './Shops/Create',
+    component: './Stores/Create',
   },
   {
     path: '/stores/list',
     name: 'storesManages',
     icon: 'ShopOutlined',
-    component: './Shops/StoresManagement/Index',
+    component: './Stores/StoresManagement/Index',
   },
   {
-    path: '/stores/bills',
-    name: 'billsManages',
+    path: '/stores/billing-cost',
+    name: 'billingCost',
     icon: 'ProfileOutlined',
-    component: './Shops/Bills',
+    routes: [
+      {
+        path:'',
+        redirect: '/Stores/billing-cost/bills',
+      },
+      {
+        path: 'bills',
+        name: 'billsManages',
+        component: './Stores/BillingCost/BillManagement/BillManagement',
+      },
+      {
+        path: 'payment',
+        name: 'payment',
+        component: './Stores/BillingCost/Payment/Index/Payment',
+      },
+      {
+        path: 'withdrawal',
+        name: 'withdrawal',
+        component: './Stores/BillingCost/Withdrawal/Index/Withdrawal',
+      },
+      {
+        path: 'withdrawal/add',
+        name: 'withdrawal',
+        hideInMenu: true,
+        component: './Stores/BillingCost/Withdrawal/CreateWithdrawal/CreateWithdrawal',
+      },
+    ]
   },
   {
     path: '/stores/data',
     name: 'dataManages',
     icon: 'DashboardOutlined',
-    component: './Shops/Data',
+    component: './Stores/DataManagement/DataManagement',
   },
   // 账户管理
   {
     path: '/stores/account',
     icon: 'UserSwitchOutlined',
-    component: './Shops/AccountManagement/AccountManagement',
+    component: './Stores/AccountManagement/AccountManagement',
     menuRender: false,
     hideInMenu: true,
   },
@@ -599,6 +553,96 @@ export default  [
     path: '/stores-subscriptions/list/paid',
     menuRender: false,
     component: './stores-subscriptions/list/Paid',
+  },
+  // 消息-----------------------------
+  {
+    path: '/inner-msg/index',
+    name: 'innerMsg',
+    icon: 'MessageOutlined',
+    component: './Message/InnerMsg/Index',
+  },
+  {
+    path: '/inner-msg/subscribeMsg',
+    name: 'messageManagement',
+    icon: 'MessageOutlined',
+  },
+  // 渠道板块 --- 自建
+  {
+    path: 'channels/line',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/tiktok',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/whatsapp',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/google',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/telegram',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/pinterest',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/live',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/microsoft',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/marketplace',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/buy_button',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/wechat_official',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/post',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/mc',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/pos',
+    component: './Channel/Mount/Mount',
+  },
+  {
+    path: 'channels/facebook',
+    routes: [
+      {
+        path: '',
+        component: './Channel/FaceBook/Index/Index',
+      },
+      {
+        path: '/channels/facebook/settings/website',
+        component: './Channel/FaceBook/Website/Website',
+      },
+      {
+        path: '/channels/facebook/settings/tracking',
+        component: './Channel/FaceBook/Tracking/Tracking',
+      },
+      {
+        path: '/channels/facebook/settings/social',
+        component: './Channel/FaceBook/Social/Social',
+      }
+    ]
   },
   // 设置
   {
@@ -624,13 +668,11 @@ export default  [
       },
       {
         path:"base",
-        name: "base",
         parentKeys: ['/settings'],
         component:"./Settings/Base/Base"
       },
       {
         path:"payments",
-        name:"payments",
         component:"./Settings/Collection/Collection"
       },
       // matacart账户
@@ -649,7 +691,6 @@ export default  [
       // -------------------
       {
         path:"payments/thirdCreditCard",
-        name:"payments",
         component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollection"
       },
       {
@@ -683,19 +724,16 @@ export default  [
       // 发货与配送
       {
         path:"delivery",
-        name:"delivery",
         component:"./Settings/ShippingAndDistribution/ShippingAndDistribution"
       },
       // 自定义运费
       {
         path:"logistics/add/custom",
-        name:"delivery",
         component:"./Settings/ShippingAndDistribution/AddCustomLogistics/AddCustomLogistics"
       },
       // 通用运费
       {
         path:"logistics/edit/custom/:id",
-        name:"delivery",
         component:"./Settings/ShippingAndDistribution/EditCustomLogistics/EditCustomLogistics"
       },
       // 仓库地址
@@ -724,12 +762,10 @@ export default  [
       // 管理员和权限
       {
         path:"adminpermission",
-        name:"adminpermission",
         component:"./Settings/AdministratorsPermissions/AdministratorsPermissions"
       },
       {
         path:"adminpermission/add",
-        name:"adminpermission",
         component:"./Settings/AdministratorsPermissions/AdministratorsPermissionsAdd/AdministratorsPermissionsAdd"
       },
 
@@ -796,48 +832,33 @@ export default  [
   // 主题
   {
     path: 'theme',
-    name: 'theme',
     icon: 'SettingOutlined',
     hideInMenu: true,
     layout: false,
     routes:[
       {
-        path: 'editor',
-        name: 'editor',
+        path: 'editor/:templateId/:languagesId/:versionId',
         component: './Theme/Design/Index/Editor',
       },
       {
-        path: 'preview',
-        name: 'preview',
-        component: './Theme/View/View',
-      },
-      {
-        path: 'codeEditor/:id/:templateId/:languagesId',
-        name: 'codeEditor/:id/:templateId/:languagesId',
+        path: 'codeEditor/:id/:templateId/:languagesId/:versionId',
         component: './Theme/CodeEditor/CodeEditor',
       }
     ]
   },
   // 主题语言编辑
   {
-    path: 'theme/langFieldEdit/:templateId',
-    name: 'theme',
+    path: 'theme/langFieldEdit/:templateId/:languagesId/:versionId',
     hideInMenu: true,
     component: './Theme/LangEditor/LangEditor',
   },
   {
     path: 'theme/styles/:templateId/:styleId',
-    name: 'theme/styles/:templateId/:styleId',
     hideInMenu: true,
     menuRender: false,
     layout: false,
     component: './Theme/Styles/Styles',
   },
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   component: './Test/index',
-  // },
   // 404
   {
     path: '*',

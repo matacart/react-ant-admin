@@ -17,6 +17,7 @@ interface settingsType{
   schema:any[];
   settingsData:any;
   presets:any;
+  isAuthor?:boolean;
 }
 
 // 定义操作历史记录的接口
@@ -44,6 +45,12 @@ class editor {
       this.toolBar = value;
     }
 
+    // 设备
+    isMobile = false;
+    setIsMobile(value:boolean){
+      this.isMobile = value;
+    }
+
     // 临时存储状态oseid
     oseId = "";
     setOseId(value:string){
@@ -61,6 +68,23 @@ class editor {
 
     setMode(value:string){
       this.mode = value;
+    }
+
+    // 版本id
+    versionId:string = ''
+    setVersionId(value:string){
+      this.versionId = value;
+    }
+
+    // 是否是作者
+    isAuthor:boolean = false;
+    setIsAuthor(value:boolean){
+      this.isAuthor = value;
+    }
+    // 作者令牌
+    authorToken:string = "";
+    setAuthorToken(value:string){
+      this.authorToken = value;
     }
 
     // 模板页标题
@@ -348,17 +372,19 @@ class editor {
 
     // 状态重置
     reset(){
+      this.title = "";
       this.oseId = "";
+      this.versionId = "";
+      this.mode = "auto";
+      this.languagesId = "2";
+      this.isAuthor = false;
+      this.authorToken = "";
       this.operationHistory = [];
       this.redoHistory = [];
       this.isSaveData = false;
       this.component = null;
       this.toolBar = 0;
-
-      this.mode = "auto";
-      this.title = "";
-      
-
+      this.isMobile = false;
     }
 
 }

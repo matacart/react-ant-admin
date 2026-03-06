@@ -90,7 +90,7 @@ function FileManage() {
         {
             key: '0',
             label: '所有文件',
-            destroyInactiveTabPane: true,
+            destroyOnHidden: true,
             children: <GroupCard groupItem={{groupId:"0",groupName:"所有文件"}} removeItem={removeGroup} />,
         }
     ];
@@ -154,7 +154,7 @@ function FileManage() {
                     newItems.push({
                         label: item.groupName,
                         children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
-                        destroyInactiveTabPane: true,
+                        destroyOnHidden: true,
                         key:item.groupId,
                     })
                 })
@@ -183,7 +183,7 @@ function FileManage() {
                     newItems.push({
                         label: item.groupName,
                         children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
-                        destroyInactiveTabPane: true,
+                        destroyOnHidden: true,
                         key:item.groupId,
                     })
                 })

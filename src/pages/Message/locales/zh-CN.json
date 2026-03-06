@@ -1,0 +1,44 @@
+{
+    "innerMsg":{
+        "index":{
+            "title": "站内消息",
+            "tabs": {
+                "all": "全部消息",
+                "system": "系统消息",
+                "user": "用户消息",
+                "app": "应用消息"
+            }
+        },
+        "innerMsgTable":{
+            "table": {
+                "title": "标题内容",
+                "time": "时间"
+            }
+        },
+        "selectCard":{
+            "search": {
+                "placeholder": "输入内容进行搜索"
+            },
+            "filters": {
+                "all": "全部消息",
+                "read": "已读消息",
+                "unread": "未读消息"
+            }
+        },
+        "selectedActions":{
+            "actions": {
+                "delete": "删除",
+                "markRead": "标记已读",
+                "markAllRead": "全部已读",
+                "cancel": "取消"
+            },
+            "modals": {
+                "deleteTitle": "删除消息",
+                "deleteContent": "确定要删除{count}条消息吗？"
+            },
+            "messages": {
+                "success": "成功"
+            }
+        }
+    }
+}

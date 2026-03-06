@@ -1,10 +1,9 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form } from 'antd'
+import { Flex, Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import { history } from '@umijs/max';
+import { history, useIntl, useParams } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useState } from 'react';
 import LangSelect from '@/components/Select/LangSelect';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -13,37 +12,75 @@ import SEOCard from '../Blogs/SEOCard';
 import ThemeTemplate from '../Blogs/ThemeTemplate';
 import CommentCard from '../Blogs/CommentCard';
 import blogs from '@/store/channel/blogs/blogs';
-import MyButton from '@/components/Button/MyButton';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import DangerButton from '@/components/Button/DangerButton';
+import { getArticleCategorysDetail, setArticleCategorys } from '@/services/y2/api';
+import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
 function EditBlogs(){
 
+    const intl = useIntl();
+
+    const {id,languagesId} = useParams();
+
     const [loading,setLoading] = useState(false);
+
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
     const [form] = Form.useForm();
     const setLang = (lang:string)=>{
-        blogs.setBlogs({
-            ...blogs.blogs,
-            languages_id:lang
-        })
+        history.push(`/website/blogs/${id}/${lang}`)
     }
 
     const submit = ()=>{
-       form.validateFields().then(async (values)=>{
-           console.log(values)
+       form.validateFields().then(values=>{
+            setLoading(true);
+            setArticleCategorys(blogs.blogs).then(res=>{
+                res.code == 0 && message.success(intl.formatMessage({ id: 'components.message.success' }))
+            }).catch(err=>{
+                console.log(err);
+            }).finally(()=>{
+                setLoading(false);
+            })
        }).catch(()=>{})
     }
 
     useEffect(()=>{
-        // 获取博客列表
-        
-
-    },[])
+        // 获取博客集合
+        getArticleCategorysDetail({
+            id:id??"",
+            languages_id:languagesId??"2"
+        }).then(res=>{
+            res.code == 0 && blogs.setBlogs({
+                id: res.data.id,
+                languages_id:res.data.languages_id,
+                handle:res.data.handle,
+                category_name:res.data.category_name,
+                category_pid:res.data.pid,
+                sort:res.data.sort,
+                is_share:res.data.is_share,
+                group_id:res.data.group_id,
+                category_description:res.data.category_description,
+                comment_mode:res.data.comment_mode,
+                meta_title:res.data.meta_title,
+                meta_keywords:res.data.meta_keywords,
+                meta_description:res.data.meta_description,
+                status:res.data.status,
+                template_id:"0"
+            })
+        }).catch(err=>{
+        }).finally(()=>{
+            setIsSkeleton(false);
+        });
+        return () => {
+            // 组件卸载时重置状态，避免内存泄漏
+            blogs.reset();
+        };
+    },[languagesId])
 
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -84,7 +121,7 @@ function EditBlogs(){
                         />
                     </div>
                 </div>
-            </div>
+            </div>}
         </Scoped>
     )
 }

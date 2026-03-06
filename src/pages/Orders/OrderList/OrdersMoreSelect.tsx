@@ -17,7 +17,7 @@ export default function MoreSelect(){
   const [open, setOpen] = useState(false);
 
   // 条件
-  const [condition, setCondition] = useState({});
+  const [condition, setCondition] = useState<{[key: string]: any}>({});
 
   // 
   const [bizOrderStatuses,setBizOrderStatuses] = useState<string[]>([]);
@@ -28,299 +28,299 @@ export default function MoreSelect(){
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: '精确搜索',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.exactSearch' }),
       children: (
         <div>
           {/* <PriceRangeInput /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </div>
       ),
     },
     {
       key: '2',
-      label: '订单状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.orderStatus' }),
       children: (
       <>
         <Checkbox.Group value={bizOrderStatuses} style={{ display:"flex",flexDirection:"column",gap:"12px" }} options={[
-          { label: '处理中', value: '1' },
-          { label: '已取消', value: '0' },
-          { label: '已归档', value: '-1' },
+          { label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.processing' }), value: '1' },
+          { label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.cancelled' }), value: '0' },
+          { label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.archived' }), value: '-1' },
         ]} onChange={(e)=>{
           setBizOrderStatuses(e)
         }} />
-        <div className={'cleanText'}>清除</div>
+        <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
       </>),
     },
     {
       key: '3',
-      label: '付款状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.paymentStatus' }),
       children: (
         <>
         <CustomizeProductTypeSelector/>
-        <div className={'cleanText'}>清除</div>
+        <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },{
       key: '4',
-      label: '退款订单',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.refundOrder' }),
       children: (
         <>
         <CustomizeProductTypeSelector/>
-        <div className={'cleanText'}>清除</div>
+        <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },{
       key: '5',
-      label: '发货状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.shippingStatus' }),
       children: (
         <>
         <CustomizeProductTypeSelector/>
-        <div className={'cleanText'}>清除</div>
+        <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },{
       key: '6',
-      label: '退货状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.returnStatus' }),
       children: (
         <>
         <CustomizeProductTypeSelector/>
-        <div className={'cleanText'}>清除</div>
+        <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '7',
-      label: '运输方式',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.shippingMethod' }),
       children: (
         <>
           {/* <TransportMethodSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '8',
-      label: '支付方式',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.paymentMethod' }),
       children: (
         <>
           {/* <PaymentMethodSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '9',
-      label: '标签',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.tag' }),
       children: (
         <>
           {/* <TagSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '10',
-      label: '商品标签',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.productTag' }),
       children: (
         <>
           {/* <ProductTagSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '11',
-      label: '落地页域名（即将下线）',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.landingPageDomain' }),
       children: (
         <>
           {/* <LandingPageDomainSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '12',
-      label: '落地页参数（即将下线）',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.landingPageParams' }),
       children: (
         <>
           {/* <LandingPageParamsSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '13',
-      label: '访问来源域名（即将下线）',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.referrerDomain' }),
       children: (
         <>
           {/* <ReferrerDomainSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '14',
-      label: '访问来源参数（即将下线）',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.referrerParams' }),
       children: (
         <>
           {/* <ReferrerParamsSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '15',
-      label: '订单日期',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.orderDate' }),
       children: (
         <>
           {/* <OrderDateSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '16',
-      label: '归档订单',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.archiveOrder' }),
       children: (
         <>
           {/* <ArchivedOrderSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '17',
-      label: '拒付与质询状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.chargebackStatus' }),
       children: (
         <>
           {/* <ChargebackInquiryStatusSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '18',
-      label: '订单来源',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.orderSource' }),
       children: (
         <>
           {/* <OrderSourceSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '19',
-      label: '订单商品编辑状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.orderProductEditStatus' }),
       children: (
         <>
           {/* <OrderProductEditStatusSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '20',
-      label: '拣货单导出状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.pickingListExportStatus' }),
       children: (
         <>
           {/* <PickingListExportStatusSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '21',
-      label: '订单详情导出状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.orderDetailsExportStatus' }),
       children: (
         <>
           {/* <OrderDetailsExportStatusSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '22',
-      label: '入账付款状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.accountingPaymentStatus' }),
       children: (
         <>
           {/* <AccountingPaymentStatusSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '23',
-      label: '转账凭证上传状态',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.transferProofUploadStatus' }),
       children: (
         <>
           {/* <TransferProofUploadStatusSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '24',
-      label: '折扣码',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.discountCode' }),
       children: (
         <>
           {/* <DiscountCodeSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '25',
-      label: '国家/地区',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.countryRegion' }),
       children: (
         <>
           {/* <CountryRegionSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '26',
-      label: '订单金额',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.orderAmount' }),
       children: (
         <>
           {/* <OrderAmountSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '27',
-      label: '首次互动来源',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.firstInteractionSource' }),
       children: (
         <>
           {/* <FirstInteractionSourceSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '28',
-      label: '末次互动来源',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.lastInteractionSource' }),
       children: (
         <>
           {/* <LastInteractionSourceSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '29',
-      label: '欺诈风险',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.fraudRisk' }),
       children: (
         <>
           {/* <FraudRiskSelector /> */}
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
     {
       key: '30',
-      label: '店铺',
+      label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.shop' }),
       children: (
         <>
           <Radio.Group
@@ -331,8 +331,8 @@ export default function MoreSelect(){
               gap: 12,
             }}
             options={[
-              { value: 0, label: '所有店铺' },
-              { value: 1, label: '当前店铺' },
+              { value: 0, label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.allShops' }) },
+              { value: 1, label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.currentShop' }) },
             ]}
             onChange={(e)=>{
               setCondition({
@@ -350,7 +350,7 @@ export default function MoreSelect(){
               // setTab(newTab)
             }}
           />
-          <div className={'cleanText'}>清除</div>
+          <div className={'cleanText'}>{intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.clear' })}</div>
         </>
       ),
     },
@@ -376,16 +376,16 @@ export default function MoreSelect(){
 
   return (
     <Scoped ref={Ref}>
-      <DefaultButton text={"更多筛选"} onClick={showDrawer} />
+      <DefaultButton text={intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.moreselect' })} onClick={showDrawer} />
       <Drawer
-        title="筛选"
+        title={intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.filterTitle' })}
         open={open}
         onClose={onClose}
         getContainer={() => Ref.current!}
         footer={
           <Flex gap={12} justify='flex-end' style={{padding:"6px 0"}}>
-            <DefaultButton text={'重置'} onClick={onReset} />
-            <PrimaryButton text={'完成'} onClick={()=>{
+            <DefaultButton text={intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.reset' })} onClick={onReset} />
+            <PrimaryButton text={intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.done' })} onClick={()=>{
               setOpen(false);
               orderList.setCondition({...condition})
               orderList.setTagsStatusList([...tab])

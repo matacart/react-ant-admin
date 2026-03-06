@@ -10,9 +10,9 @@ const TitleCard = (props: { form: FormInstance }) => {
 
     useEffect(() => {
         form.setFieldsValue({
-            title: blogs.blogs.title,
+            title: blogs.blogs.category_name,
         })
-    }, [blogs.blogs.title])
+    }, [blogs.blogs.category_name])
 
     return (
         <Card>
@@ -29,7 +29,7 @@ const TitleCard = (props: { form: FormInstance }) => {
                         onChange={(e:any) => {
                             blogs.setBlogs({
                                 ...blogs.blogs,
-                                title: e.target.value
+                                category_name: e.target.value
                             })
                         }}
                         placeholder="请填写页面标题"

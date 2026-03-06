@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Tabs, Button, Modal, Tag, Input, Flex, TabsProps } from 'antd';
+import React, { useState } from 'react';
+import { Tabs, TabsProps } from 'antd';
+import { useIntl } from '@umijs/max';
 import OrdersDraftListAjax from './OrdersDraftListAjax';
 import OrdersDraftSelectCard from './OrdersDraftSelectCard';
 
@@ -20,19 +21,20 @@ function OrderDraftCard() {
 
 function OrderDraftTabs() {
   
+  const intl = useIntl();
   const [items, setItems] = useState<TabsProps['items']>([
     {
-      label: '全部',
+      label: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftTabs.all' }),
       key: '1',
       children: <OrderDraftCard />,
     },
     {
-      label: '未结',
+      label: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftTabs.pending' }),
       key: '2',
       children: <OrderDraftCard />,
     },
     {
-      label: '已完成',
+      label: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftTabs.completed' }),
       key: '3',
       children: <OrderDraftCard />,
     },

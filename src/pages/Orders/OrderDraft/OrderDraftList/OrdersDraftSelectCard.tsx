@@ -1,17 +1,19 @@
 import type { MenuProps } from 'antd';
+import { useIntl } from '@umijs/max';
 import SearchInput from "@/components/Input/SearchInput";
-import orderList from "@/store/order/orderList";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 
 function OrdersDraftSelectCard() {
 
+    const intl = useIntl();
+
     const controlsItems: MenuProps['items'] = [
       {
-        label: <div>未结</div>,
+        label: <div>{intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.ordersDraftSelectCard.pending' })}</div>,
         key: '1',
       },
       {
-        label: <div>已完成</div>,
+        label: <div>{intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.ordersDraftSelectCard.completed' })}</div>,
         key: '2',
       },
     ];
@@ -29,8 +31,8 @@ function OrdersDraftSelectCard() {
                   marginBottom: '10px',
                 }}
               >
-              <div style={{flex:1}}><SearchInput placeholder={"查询草稿单号或采购订单编号（仅B2B订单有）"} /></div>
-              <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="状态" btnStyle={{width:"100px"}} />
+              <div style={{flex:1}}><SearchInput placeholder={intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.ordersDraftSelectCard.searchPlaceholder' })} /></div>
+              <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text={intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.ordersDraftSelectCard.status' })} btnStyle={{width:"100px"}} />
             </div>
           </div>
         </>

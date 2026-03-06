@@ -1,60 +1,39 @@
-import { Footer } from '@/components';
 import { SettingOutlined } from '@ant-design/icons';
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,setLocale,useIntl } from '@umijs/max';
 import { getAccessToken, getCurrenciesList, getPlatformInfo, getShippingcourier, getTimeZoneList, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { App, Flex, message } from 'antd';
-import React, { useState } from 'react';
+import { App, Flex, Menu, message } from 'antd';
+import React, { lazy, useEffect, useState } from 'react';
 import { AddIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
 import { requestConfig } from '@/utils/requestConfig';
 // layout
 import defaultSettings from '../config/defaultSettings';
-
 const loginPath = '/user/signIn';
 // 在 app.tsx 文件顶部添加导入语句
 import "nprogress/nprogress.css";
 import globalStore from './store/globalStore';
-import SalesChannel from './components/Menu/SalesChannel';
-import Header from './components/Header/Header';
-import MCPaymentHead from './components/Header/MCPaymentHead';
+import channels from './store/menu/channels';
+import { reaction } from 'mobx';
+import { languageMap } from './locales/langMap';
+// 懒加载组件
+const LazyHeader = lazy(() => import('./components/Header/Header'));
+const LazyMCPaymentHead = lazy(() => import('./components/Header/MCPaymentHead'));
+const LazySalesChannel = lazy(() => import('./components/Menu/SalesChannel'));
+const LazyFacebookChannel = lazy(() => import('./pages/Channel/FaceBook/Index/Index'));
+// import SalesChannel from './components/Menu/SalesChannel';
+// import Header from './components/Header/Header';
+// import MCPaymentHead from './components/Header/MCPaymentHead';
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
-// let currentVersion = '';
-
-// 版本轮询
-// const checkVersion = async () => {
-//   try {
-//     const res = await fetch('/version.json?t=' + Date.now()); // 跳过缓存
-//     const { version } = await res.json();
-    
-//     if (!currentVersion) {
-//       currentVersion = version; // 初始化当前版本
-//       return;
-//     }
-
-//     if (version !== currentVersion) {
-//       Modal.confirm({
-//         title: '发现新版本',
-//         centered: true,
-//         content: '是否立即刷新以获取最新内容？',
-//         okText: '刷新',
-//         onOk: () => location.reload(),
-//       });
-//     }
-//   } catch (err) {
-//     console.error('版本检测失败:', err);
-//   }
-// };
-
 
 // 配置化请求参数
 const CONFIG_REQUESTS = [
-  { 
-    url: '/api/ApiAppstore/languages_select',
-    storageKey: 'languages',
-    retry: 3
-  },
+  // { 
+  //   url: '/api/ApiAppstore/languages_select',
+  //   storageKey: 'languages',
+  //   retry: 3
+  // },
   {
     url: '/api/ApiAppstore/currencies_select',
     storageKey: 'currencies', 
@@ -111,6 +90,7 @@ export async function getInitialState(): Promise<{
   currentUser?: API.CurrentUser;
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  channelMenu?: any[];
 }> {
   // fetchUserInfo    方法 从接口获取用户信息，没有则跳转登录页
   const fetchUserInfo = async () => {
@@ -145,20 +125,18 @@ export async function getInitialState(): Promise<{
     return undefined;
   };
 
-  // 设置 favicon 的函数
-  const updateFavicon = (href: string) => {
-    // 移除现有的 favicon
-    const existingIcons = document.querySelectorAll("link[rel*='icon']");
-    existingIcons.forEach(icon => icon.remove());
+  // // 设置 favicon 的函数
+  // const updateFavicon = (href: string) => {
+  //   // 移除现有的 favicon
+  //   const existingIcons = document.querySelectorAll("link[rel*='icon']");
+  //   existingIcons.forEach(icon => icon.remove());
     
-    // 创建新的 favicon
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    link.href = href;
-    document.head.appendChild(link);
-  };
-
-  
+  //   // 创建新的 favicon
+  //   const link = document.createElement('link');
+  //   link.rel = 'icon';
+  //   link.href = href;
+  //   document.head.appendChild(link);
+  // };
 
   // access_token 初始化
   // let access_token = localStorage.getItem('access_token')
@@ -186,10 +164,12 @@ export async function getInitialState(): Promise<{
     !currentUser && history.push(loginPath);
     return {
       fetchUserInfo, // 方法
+      channelMenu:[],
       currentUser, // { username: 'lizhi',age:18,avatar:"xxxx" }
       settings: defaultSettings as Partial<LayoutSettings>, // 右抽屉配置
     };
   }
+  
   // 是登录页
   return {
     fetchUserInfo,
@@ -200,31 +180,41 @@ export async function getInitialState(): Promise<{
 // 运行时布局配置
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
 
-  const [height,setHeight] = useState(120)
+  const [height,setHeight] = useState(120);
 
-  const stores = window.location.pathname
+  // 当前路径
+  const stores = window.location.pathname;
+
+  // 监听渠道列表变化 --- 动态渲染菜单
+  useEffect(() => {
+    // 使用 MobX 的 reaction 监听渠道列表变化
+    const dispose = reaction(() => channels.channelList, (newChannelList) => { // 状态变化时的回调
+        console.log('渠道列表发生变化:', newChannelList);
+        // 例如重新获取菜单数据或更新布局配置
+        // 更新菜单
+        setInitialState({
+          ...initialState,
+          channelMenu: newChannelList
+        })
+      }
+    );
+    // 清理函数，组件卸载时停止监听
+    return () => dispose();
+  }, []); // 空依赖数组，只在组件挂载时设置一次监听
   
   return {
-    footerRender: () => <Footer />,
-    onPageChange: () => {
-      const { location } = history;
-    },
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
-
+    // 内容渲染
     childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
       return (
-        <>
-          <App>
-            {children}
-          </App>
-        </>
+        <App>
+          {children}
+        </App>
       );
     },
     // 默认配置应放在最前面防止覆盖
-    
     // 默认布局调整
     waterMarkProps: {
       content: initialState?.currentUser?.name,
@@ -274,9 +264,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             <AddIcon className='font-12 color-7A8499' />
           </Flex>
         </Link>
-        // 
       }else if(item.path == "/channel"){
-        return <SalesChannel dom={dom} />
+        return <LazySalesChannel dom={dom} />
       }else if(item.path == "/settings"){
         return <Link to={item.path} className='menu-item-settings'>
         {dom}
@@ -287,13 +276,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       </Link>
     },
     // 修改菜单数据
-    menuDataRender: (menuData) => {
-      if(stores.slice(0,8) == "/stores/"){
-        return menuData.filter((item:any) => item.path.slice(0,8) == "/stores/" )
-      }else{
-        return menuData.filter((item:any) => item.path.slice(0,8) !== "/stores/" )
-      }
-    },
+    menuDataRender: (menuData) => getNewMenuDataRender(menuData,stores,initialState),
     // 
     menuProps: {
       className: 'my-custom-menu', // 为菜单容器添加自定义类名
@@ -304,10 +287,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     headerRender: () => {
       if(stores.slice(19,28) == "mcpayment"){
-        return <MCPaymentHead />
+        return <LazyMCPaymentHead />
       }
       return (
-        <Header setHeight={setHeight} url={stores.slice(0,8)} initialState={initialState} />
+        <LazyHeader setHeight={setHeight} url={stores.slice(0,8)} initialState={initialState} />
       )
     },
     ...initialState?.settings,
@@ -333,14 +316,83 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
-// 运行时路由配置
-export function patchRoutes({ routes, routeComponents }:any) {
-  console.log('patchRoutes', routes, routeComponents);
-  Object.keys(routes).forEach(key => {
-    const icon = routes[key];
-    icon.path == "order_invoice_customization" && (routes[key].icon = <Flex align='center'><PrintIcon style={{fontSize:"18px"}} /></Flex>)
-  });
-}
-
 // 请求配置
 export const request = requestConfig;
+// 获取 菜单渲染
+function getNewMenuDataRender(menuData:any[],stores:string,initialState:any) {
+  const intl = useIntl();
+  const lang = languageMap[intl.locale];
+
+  let filteredMenuData = [];
+  if(stores.slice(0,8) == "/stores/"){
+    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,8) == "/stores/" )
+  }else if(stores.slice(0,11) == "/inner-msg/"){
+    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,11) == "/inner-msg/" )
+  }else{
+    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,8) !== "/stores/" && item.path.slice(0,11) !== "/inner-msg/" )
+  }
+  initialState?.channelMenu?.forEach((item:any) => {
+    let path = "";
+    const name = JSON.parse(item.channelName)[lang]??"";
+
+    console.log(name)
+    switch(item.channelHandle){
+      case "line":
+        path = "/channels/line";
+        break;
+      case "tiktok":
+        path = "/channels/tiktok";
+        break;
+      case "whatsapp":
+        path = "/channels/whatsapp";
+        break;
+      case "google":
+        path = "/channels/google";
+        break;
+      case "telegram":
+        path = "/channels/telegram";
+        break;
+      case "pinterest":
+        path = "/channels/pinterest";
+        break;
+      case "live":
+        path = "/channels/live";
+        break;
+      case "microsoft":
+        path = "/channels/microsoft";
+        break;
+      case "marketplace":
+        path = "/channels/marketplace";
+        break;
+      case "buy_button":
+        path = "/channels/buy_button";
+        break;
+      case "wechat_official":
+        path = "/channels/wechat_official";
+        break;
+      case "post":
+        path = "/channels/post";
+        break;
+      case "mc":
+        path = "/channels/mc";
+        break;
+      case "pos":
+        path = "/channels/pos";
+        break;
+      case "facebook":
+        path = "/channels/facebook";
+        break;
+    }
+    console.log(path)
+    const newItem = {
+      path: path, // 生成路径
+      name: name, // 渠道名称
+      icon: <img src={item?.menuLogo} style={{width:"16px"}} />, // 渠道图标
+    }
+    filteredMenuData.push(newItem)
+  })
+
+
+  console.log(filteredMenuData)
+  return filteredMenuData;
+}

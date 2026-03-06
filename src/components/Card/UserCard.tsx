@@ -8,8 +8,6 @@ import cookie from 'react-cookies'
 import { clearAllCookies } from "@/utils/common";
 
 // 清除所有cookie
-
-
 export default function UserCard(props:any) {
     /**
      * 退出登录，并且将当前的 url 保存
@@ -61,7 +59,6 @@ export default function UserCard(props:any) {
                             <div>用户 UID：{props.currentUser.userid}</div>
                             <div className="user_info_tag">
                                 {props.currentUser.merchant_id ? <span>商户账号</span>:<span>普通账号</span> }
-                                {props.currentUser.merchant_id ? <span>商户认证</span>:<span>个人认证</span> }
                             </div>
                         </div>
                     </Flex>
@@ -88,7 +85,9 @@ export default function UserCard(props:any) {
                 </div>
                 <div className="account">
                     <Flex>
-                    <div style={{display:"flex",fontSize:"14px",alignItems:"center"}}>
+                        <div className="cursor-pointer billing-cost" style={{display:"flex",fontSize:"14px",alignItems:"center"}}
+                            onClick={()=>history.push("/stores/billing-cost")}
+                        >
                             <WalletOutlined style={{marginRight:"8px"}} />
                             <span style={{fontWeight:600}}>费用与成本</span>
                             <RightOutlined style={{marginLeft:"8px", width:"10px"}} />
@@ -98,9 +97,12 @@ export default function UserCard(props:any) {
                         <div className="balance">
                             <div>可用额度</div>
                             <div>
-                                <span className="span1">¥ 0.00</span>
+                                <span className="span1">
+                                    {props.currentUser?.symbol_left || '¥'}
+                                    <span style={{marginLeft:"4px"}}>{(Number(props.currentUser?.score4 || '0.00')).toFixed(2)}</span>
+                                </span>
                                 <span style={{display:"inline-block",width:"8px"}}></span>
-                                <span className="span2">充值</span>
+                                <span className="span2 cursor-pointer" onClick={()=>history.push("/stores/billing-cost/payment")}>充值</span>
                             </div>
                         </div>
                         <div className="expense">
@@ -231,6 +233,11 @@ const Scoped = styled.div`
         }
         .item-third{
             margin-top: 12px;
+        }
+
+
+        .billing-cost:hover{
+            color: #0084ff;
         }
     }
 `

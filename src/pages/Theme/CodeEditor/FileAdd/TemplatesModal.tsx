@@ -248,6 +248,7 @@ function TemplatesModal({treeData,setTreeData}:LayoutModalType){
                 mode: codeEditor.mode,
                 fileName: fullFileName,
                 fileContent:"",
+                versionId: codeEditor.versionId??"",
                 sourceFileName:fileSource,
                 duplicateFlag: true
             }).then(async res=>{

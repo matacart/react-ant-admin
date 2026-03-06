@@ -137,7 +137,14 @@ export default function ProductCategoryModal(prop:any) {
                         style={{ width: '100%' }}
                         value={value}
                         placeholder="选择分类"
-                        dropdownStyle={{ maxHeight: 500, overflow: 'auto' }}
+                        styles={{
+                            popup: { 
+                                root: {
+                                    maxHeight: 500, 
+                                    overflow: 'auto'
+                                } 
+                            }
+                        }}
                         listHeight={200}
                         allowClear
                         multiple

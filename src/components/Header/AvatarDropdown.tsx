@@ -139,14 +139,6 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
     <UserCard currentUser={{...currentUser}}/>
   );
   return (
-    // <HeaderDropdown
-    //   menu={{
-    //     selectedKeys: [],
-    //     onClick: onMenuClick,
-    //     items: menuItems,
-    //   }}
-    // >
-    // </HeaderDropdown>
     <Popover trigger="hover" styles={{ body: {
       padding:0
     } }} arrow={false} content={content}><div>{children}</div></Popover>

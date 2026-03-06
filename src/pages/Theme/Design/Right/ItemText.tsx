@@ -16,7 +16,7 @@ function ItemText({item,data,setData}:{item:any,data:string,setData:(item:any,va
     },[data])
 
     return (
-        <MyInput style={{ width:"100%",height:"36px" }} value={value} placeholder={item?.placeholder || intl.formatMessage({id: 'theme.left.ItemText.placeholder'})}
+        <MyInput style={{ width:"100%",height:"36px" }} value={value} placeholder={item?.placeholder || intl.formatMessage({id: 'theme.design.right.itemText.placeholder'})}
             onChange={(e:any)=>{
                 setData(item,e.target.value);
                 setValue(e.target.value);

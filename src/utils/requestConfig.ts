@@ -1,4 +1,4 @@
-import { RequestConfig,history } from "@umijs/max";
+import { history, RequestConfig } from "@umijs/max";
 import axios from "axios";
 import cookie from 'react-cookies';
 import { getAccessToken } from '@/services/y2/api';
@@ -51,7 +51,7 @@ if (!isMessageShown) {
 
 // 请求封装
 export const requestConfig: RequestConfig = {
-    timeout: 60000, //默认超时时间 超时处理，请求超过1分钟，取消请求
+    timeout: 30000, //默认超时时间 超时处理，请求超过10秒，取消请求
     // 错误统一处理
     errorConfig: {
         // 抛出错误
@@ -69,13 +69,11 @@ export const requestConfig: RequestConfig = {
                 const retryRequest = () => {
                     if (retryCount >= maxRetries) {
                     showErrorMessage(); // 使用节流提示
-                    return reject(error);
+                        return reject(error);
                     }
                     retryCount++;
                     setTimeout(() => {
-                    axios.request(error.config)
-                        .then(response => resolve(response))
-                        .catch(() => retryRequest());
+                        axios.request(error.config).then(response => resolve(response)).catch(() => retryRequest());
                     }, Math.min(1000 * Math.pow(2, retryCount), 10000));
                 };
                 retryRequest();
@@ -87,13 +85,6 @@ export const requestConfig: RequestConfig = {
     // 请求拦截器
     requestInterceptors: [
         (config: any) => {
-        // 根据接口URL设置不同的超时时间
-        if(config.url === '/api/ApiTemplate/file_list'){
-            config.timeout = 300000;
-        }else{
-            config.timeout = 60000;
-        }
-
         // 随机生成8位字符串 追踪ID
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         const length = 8;
@@ -141,29 +132,34 @@ export const requestConfig: RequestConfig = {
             let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
             // access_token过期
             if(res.data.code==40013){
-                getAccessToken().then((res:any) => {
+                return getAccessToken().then((tokenRes:any) => {
                     if(window.location.hostname.startsWith("localhost")){
-                        cookie.save("access_token",res.access_token,{path:"/"})
+                        cookie.save("access_token",tokenRes.access_token,{path:"/"})
                     }else{
-                        cookie.save('access_token', res.access_token, { domain:test,path: '/' });
+                        cookie.save('access_token', tokenRes.access_token, { domain:test,path: '/' });
                     }
+                    // 重试原始请求
+                    const originalRequest = res.config;
+                    originalRequest.headers['Authorization'] = 'Bearer ' + tokenRes.access_token;
+                    return axios(originalRequest);
                 }).catch((err) => { 
-                    console.log(err)
+                    // 重新获取access_token失败
+                    clearAllCookies();
+                    history.push(loginPath);
                 });
-            }else if(res.data.code==1001){
-                // token过期
-                // 清除token
+            }
+            // token过期 清除token 重新登录
+            if(res.data.code==1001){
                 cookie.remove("token",{ domain:test,path: '/' })
-                // sessionStorage.removeItem("domain")
                 // 清除cookie
                 clearAllCookies();
                 history.push(loginPath);
-            }else if(res.data.code>2000){
+            }
+            if(res.data.code>2000){
                 // 数据异常
                 message.error(res.data.msg);
-            }else{
-                return res;
             }
+            return res;
         },
     ],
 }

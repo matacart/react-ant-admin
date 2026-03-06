@@ -66,7 +66,7 @@ export default function TableCard({navData}:{navData:any}) {
       getNavList({
         page: page.toString(),
         limit: pageSize.toString(),
-        languagesId: languagesId,
+        languages_id: languagesId,
         pid: "0",
       },signal).then((res) => {
         const newData: DataType[] = res.data?.list?.map((item: any) => ({

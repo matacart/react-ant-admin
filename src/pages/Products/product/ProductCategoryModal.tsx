@@ -2,11 +2,10 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MySearch from "@/components/Input/MySearch";
 import LangSelect from "@/components/Select/LangSelect";
-import MySelect from "@/components/Select/MySelect";
 import { useAbortController } from "@/hooks/customHooks";
-import { getCategoryList, getCategorySelect } from "@/services/y2/api";
+import { getCategoryList } from "@/services/y2/api";
 import product from "@/store/product/product";
-import { Avatar, Flex, Input, MenuProps, message, Modal, Space, Table, TableProps, Tag, TreeSelect } from "antd";
+import { Avatar, Flex, message, Modal, Table, TableProps } from "antd";
 import React, { useEffect, useMemo, useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
@@ -91,12 +90,11 @@ export default function ProductCategoryModal() {
     const fetchData = async (page:number,limit:number) => {
         setLoading(true);
         const signal = createAbortController();
-        const res = {
+        getCategoryList({
             languages_id:languagesId,
-            page:page,
-            limit:limit,
-        }
-        getCategoryList(res,signal).then(res=>{
+            page:page?.toString() || "1",
+            limit:limit?.toString() || "10",
+        },signal).then(res=>{
           setPagination({
             current:page,
             pageSize:limit,

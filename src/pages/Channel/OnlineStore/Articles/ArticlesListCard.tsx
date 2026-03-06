@@ -16,6 +16,7 @@ import shop from "@/store/shops/shop";
 import { observer } from "mobx-react-lite";
 import articlesList from "@/store/channel/articles/articlesList";
 import LangSelect from "@/components/Select/LangSelect";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 
 interface DataType {
@@ -96,11 +97,8 @@ function ArticlesListCard() {
             <Space size="middle">
               <div className='wrap' onClick={(e) => {
                   e.stopPropagation()
-                  if(cookie.load("domain").domain_name && cookie.load("domain").domain_name!==""){
-                    window.open(`https://`+cookie.load("domain").domain_name+`/`+record.title.replace(/\s+/g, "-")+`-a`+record.id+`.html`)
-                  }else{
-                    message.error("请先设置店铺")
-                  }
+                  const primaryDomain = getPrimaryDomain();
+                  primaryDomain && window.open(`${primaryDomain}/blogs/${record.id}`)
                 }}>
                 <Tooltip title="预览">
                   <EyeOutlined className="font-16 cursor-pointer" />

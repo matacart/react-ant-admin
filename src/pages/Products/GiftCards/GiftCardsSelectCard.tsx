@@ -1,7 +1,6 @@
 import { Space, Select, Input, Tag, Button, Flex } from "antd";
 import { useEffect, useState } from "react"
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
-import MoreSelect from "@/components/Select/MoreSelect";
 import styled from "styled-components";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import cookie from 'react-cookies';

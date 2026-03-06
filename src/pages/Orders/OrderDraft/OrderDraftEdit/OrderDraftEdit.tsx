@@ -2,8 +2,6 @@ import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
 import { Divider, Flex, message, Spin } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import CustomInformationEdit from '../CustomInformationEdit';
-import DraftPaidCard from '../DraftPaidCard';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,18 +9,20 @@ import { delDraftOrder, editDraftOrder, getDraftDetail } from '@/services/y2/api
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import DangerButton from '@/components/Button/DangerButton';
 import orderDraft from '@/store/order/orderDraft';
-import AddProductCard from '../AddProductCard';
 import DefaultButton from '@/components/Button/DefaultButton';
 import ButtonIcon from '@/components/Button/ButtonSvg';
 import { LeftIcon, RightIcon, WarningIcon } from '@/components/Icons/Icons';
-import MaketCard from '../MaketCard';
-import OrderNotesLable from '../OrderNotesLable';
-import OrderDraftLabel from '../OrderDraftLabel';
 import ConfirmModal from '@/components/Modal/ConfirmModal';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import Overlay from '@/components/Overlay/Overlay';
 import MyAlert from '@/components/Alert/MyAlert';
-import { convertFlatToNested } from '../ProductTableModal';
+import { convertFlatToNested } from '../OrderDraft/ProductTableModal';
+import AddProductCard from '../OrderDraft/AddProductCard';
+import DraftPaidCard from '../OrderDraft/DraftPaidCard';
+import CustomInformationEdit from '../OrderDraft/CustomInformationEdit';
+import MaketCard from '../OrderDraft/MaketCard';
+import OrderNotesLable from '../OrderDraft/OrderNotesLable';
+import OrderDraftLabel from '../OrderDraft/OrderDraftLabel';
 
   
 function OrderDraftEdit() {

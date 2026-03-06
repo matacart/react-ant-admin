@@ -36,7 +36,7 @@ function ItemURL({item,data,setData}:{item:any,data:string,setData:(item:any,val
         <>
             <MyInput 
                 style={{ width:"100%",height:"36px" }}
-                placeholder={item?.placeholder}
+                placeholder={item?.placeholder || '输入链接'}
                 value={value}
                 onChange={handleChange}
             />

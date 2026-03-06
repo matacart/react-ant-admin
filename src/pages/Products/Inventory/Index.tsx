@@ -57,7 +57,7 @@ function Index(){
                 type="editable-card"
                 activeKey={activeKey}
                 items={items}
-                destroyInactiveTabPane
+                destroyOnHidden
               />
             </div>
           </div>

@@ -71,7 +71,6 @@ function CheckUpdates(){
                 <SyncOutlined />
             </div>
         </Tooltip>
-
         {/*  */}
         <ScopedModal
             title="版本更新"
@@ -99,7 +98,6 @@ function CheckUpdates(){
                 </div>
             </Flex>
         </ScopedModal>
-
       </>
     )
 };

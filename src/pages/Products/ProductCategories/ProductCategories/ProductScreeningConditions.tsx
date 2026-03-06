@@ -112,7 +112,7 @@ function ProductScreeningConditions() {
 
                 <Row>
                     <Col span={5}>
-                        <MySelectIcon options={options} value={"1"} style={{height:"36px",width:"100%"}} dropdownRender={(menu)=>{
+                        <MySelectIcon options={options} value={"1"} style={{height:"36px",width:"100%"}} popupRender={(menu)=>{
                             return(
                                 <>
                                     <div className="font-12 color-7A8499" style={{

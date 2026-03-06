@@ -1,16 +1,15 @@
-import { Card, Form, Input } from "antd";
+import { Card, Form } from "antd";
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import product from "@/store/product/product";
 import PTinymce from "@/components/MCE/PTinymce";
 import DefaultInput from "@/components/Input/DefaultInput";
 import MyTextArea from "@/components/Input/MyTextArea";
 
-const {TextArea} = Input
 function ProductData({form}:{form:any}) {
 
     const setContent = (content: string)=>{
-      product.setProductInfo({...product.productInfo,content:content})
+        product.setProductInfo({...product.productInfo,content:content})
     }
 
     useEffect(()=>{

@@ -1,19 +1,16 @@
-import { Card, Flex } from "antd"
+import { Card, Flex, message } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
-import cookie from 'react-cookies';
 import SEOEdit from "@/pages/Components/SEOEdit";
 import product from "@/store/product/product";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
  function SEOCard(){
 
-    // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    const parmainDomain = getPrimaryDomain();
 
-    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/products/`;
-
+    const previewPrefix = parmainDomain ? `${parmainDomain}/products/`: "";
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
-
         product.setProductInfo({
             ...product.productInfo,
             meta_title:title,

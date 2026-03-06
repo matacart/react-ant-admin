@@ -4,7 +4,7 @@ import { AddIcon, SearchIcon, UnfoldIcon } from "../Icons/Icons";
 import { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 
-interface MyAutoCompleteProps extends Omit<AutoCompleteProps, 'dropdownRender'> {
+interface MyAutoCompleteProps extends Omit<AutoCompleteProps, 'popupRender'> {
     onClick?: () => void; // 可选的 onClick 属性
 }
 export default function MyAutoComplete({onClick,placeholder,...props}:MyAutoCompleteProps){
@@ -28,7 +28,7 @@ export default function MyAutoComplete({onClick,placeholder,...props}:MyAutoComp
             >
                 
                 <AutoComplete {...props}
-                    dropdownRender={(menu) => {
+                    popupRender={(menu) => {
                         return (
                             <div style={{overflow: 'auto', maxHeight: 300,margin:"2px 0 8px 0"}}>
                                 <Flex className="color-356DFF cursor-pointer" gap={8} style={{padding:"8px 12px",borderBottom:"1px solid #E6E6E6"}} onClick={onClick}>

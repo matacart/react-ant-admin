@@ -11,8 +11,8 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Checkbox, Col, Empty, Flex, message, Modal, Skeleton, Spin, Table, Tag } from 'antd';
-import type { CheckboxProps, GetProp, TableColumnsType } from 'antd';
+import { Button, Checkbox, Flex, message, Modal, Skeleton, Spin, Table, Tag } from 'antd';
+import type { TableColumnsType } from 'antd';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
 import styled from 'styled-components';
 import { addLanguages, delLanguages, getLanguagesList } from '@/services/y2/api';
@@ -20,6 +20,8 @@ import _ from 'lodash';
 import cookie from 'react-cookies';
 import globalStore from '@/store/globalStore';
 import modal from 'antd/es/modal';
+import DefaultButton from '@/components/Button/DefaultButton';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 interface DataType {
     key: string;
@@ -87,6 +89,8 @@ export default function LanguageList() {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const [loading,setLoading] = useState(false);
+
     const [isLangModalOpen, setIsLangModalOpen] = useState(false);
 
     const [dataSource, setDataSource] = React.useState<DataType[]>([
@@ -116,16 +120,19 @@ export default function LanguageList() {
                                     <div onClick={()=>setDefaultLanguage(record)}>设置为默认语言</div>
                                 )},
                                 {key:"2",label:(<div className='color-F86140' onClick={()=>{
-                                    modal.confirm({
+                                    const delModal = modal.confirm({
                                         title: '确认要删除该语言吗？',
                                         icon: <ExclamationCircleOutlined />,
                                         content: '删除后，客户将无法浏览该语言版本店铺。',
                                         centered:true,
-                                        okText: '确认',
-                                        cancelText: '取消',
-                                        onOk:()=>{
-                                            deleteLanguages(record)
-                                        }
+                                        footer:()=><Flex justify="flex-end" gap={12}>
+                                            <DefaultButton loading={loading} text="取消" onClick={()=>{
+                                                delModal.destroy();
+                                            }}/>
+                                            <PrimaryButton loading={loading} text="确认" onClick={()=>{
+                                                deleteLanguages(delModal,record)
+                                            }}/>
+                                        </Flex>,
                                     });
                                 }}>删除语言</div>)}
                             ]:[
@@ -143,13 +150,29 @@ export default function LanguageList() {
     ];
 
     // 删除语言
-    const deleteLanguages = (record:any)=>{
+    const deleteLanguages = (delModel:any,record:any)=>{
+        setLoading(true)
         delLanguages(record.language.id).then(res=>{
             if(res.code == 0){
                 let newDataSource = [...dataSource]
                 newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
+                const tempData = newDataSource.map((item:any)=>{
+                    return{
+                        id:item.language.id,
+                        name:item.language.name,
+                        code:item.language.code,
+                        language_code:item.language.language_code,
+                    }
+                })
+                sessionStorage.setItem("languages",JSON.stringify(tempData))
                 setDataSource(newDataSource)
+                getLanguages()
             }
+        }).catch(err=>{
+            message.error("err")
+        }).finally(()=>{
+            delModel.destroy();
+            setLoading(false)
         })
     }
     // 设置默认语言
@@ -238,18 +261,40 @@ export default function LanguageList() {
                 return{
                     domain_id:cookie.load("domain")?.id,
                     languages_id:item.id,
+                    name:item.name,
+                    code:item.code,
+                    language_code:item.language_code,
                     is_default:"0",
                     sort:"",
                     checked:"1"
                 }
             }
         }).filter(item=>item!==undefined)
-        // console.log(langs)
+        setLoading(true)
         addLanguages(langs).then(async res=>{
-            setIsCheckedAll(false)
-            setIsLangModalOpen(false)
-            await globalStore.sleep(2000)
-            getLanguages()
+            if(res.code == 0){
+                setIsCheckedAll(false)
+                setIsLangModalOpen(false)
+                const newLangs = langs.map((item:any)=>{
+                    return{
+                        id:item.languages_id,
+                        name:item.name,
+                        code:item.code,
+                        language_code:item.language_code,
+                    }
+                })
+                const newSessionLanguages = [
+                    ...newLangs,
+                    ...JSON.parse(sessionStorage.getItem('languages') || "[]")
+                ]
+                sessionStorage.setItem('languages', JSON.stringify(newSessionLanguages));
+                await globalStore.sleep(2000);
+                getLanguages()
+            } 
+        }).catch(err=>{
+            message.error("err")
+        }).finally(()=>{
+            setLoading(false)
         })
     }
     // 取消弹窗
@@ -297,11 +342,18 @@ export default function LanguageList() {
             </DndContext></div>:<div style={{padding:"20px"}}></div>}
             {/* 添加语言 */}
             <div className='add_language'>
-                <Button onClick={()=>{
-                    setIsLangModalOpen(true)
-                }}>添加语言</Button>
+                <DefaultButton text={'添加语言'} onClick={()=>setIsLangModalOpen(true)} />
             </div>
-            <Modal title="添加语言" centered open={isLangModalOpen} onOk={handleOK} onCancel={handleCancel} okText="保存">
+            <Modal 
+                title="添加语言" 
+                centered 
+                open={isLangModalOpen} 
+                onCancel={handleCancel}
+                footer={()=><Flex justify="flex-end" gap={12}>
+                    <DefaultButton loading={loading} text={'取消'} onClick={handleCancel} />
+                    <PrimaryButton loading={loading} text={'保存'} onClick={handleOK} />
+                </Flex>}
+            >
             {!isLoading?<ScopedModal>
                 {isCheckedAll?<div className='check_all color-356DFF cursor-pointer' onClick={CancelCheckAllChange}>全不选</div>:<div className='check_all color-356DFF cursor-pointer' onClick={onCheckAllChange}>全选</div>}
                 <div className='checkbox_group_list'>
@@ -340,7 +392,3 @@ const ScopedModal = styled.div`
         overflow-y: auto;
     }
 `
-function sleep(arg0: number) {
-    throw new Error('Function not implemented.');
-}
-

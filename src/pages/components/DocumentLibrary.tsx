@@ -17,7 +17,7 @@ function DocumentLibrary() {
         {
             key: '0',
             label: '所有文件',
-            destroyInactiveTabPane: false,
+            destroyOnHidden: false,
             children: <DocumentLibraryCard groupId={"0"} />
         }
     ];
@@ -34,7 +34,7 @@ function DocumentLibrary() {
                     newItems.push({
                         label: item.groupName,
                         children: <DocumentLibraryCard groupId={item.groupId} />,
-                        destroyInactiveTabPane: false,
+                        destroyOnHidden: false,
                         key:item.groupId,
                     })
                 })

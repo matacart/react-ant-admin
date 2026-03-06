@@ -1,4 +1,4 @@
-import { domainSelect } from "@/services/y2/api";
+import { domainSelect, getDomainLanguages, getWebsiteRoutes } from "@/services/y2/api";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { Flex, message, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import DefaultTag from "../Tag/DefaultTag";
 import { useNavigate } from "react-router-dom";
 import DefaultInput from "../Input/DefaultInput";
 import PrimaryButton from "../Button/PrimaryButton";
+import channels from "@/store/menu/channels";
 
 interface storeType{
     id:string;
@@ -127,9 +128,14 @@ export default function SelectDomain() {
     // 店铺语言
     const setLanguage = (store:storeType | null)=>{
         // 根据code 查找对应的id
-        const languages = JSON.parse(sessionStorage['languages'] || '[]');
-        const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
-        cookie.save('shop_lang', languagesId, { path: '/' });
+        getDomainLanguages().then((res:any)=>{
+            if(res.code == 0){
+                const languages = res?.data || [];
+                sessionStorage.setItem('languages', JSON.stringify(languages));
+                const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
+                cookie.save('shop_lang', languagesId, { path: '/' });
+            }
+        })
     }
 
     // 加载更多数据的函数
@@ -227,6 +233,12 @@ export default function SelectDomain() {
         setCurrencys(store);
         setLanguage(store);
         setStore(store);
+
+        // 侧边导航
+        console.log();
+        getWebsiteRoutes().then((res:any) => {
+            res.code == 0 && channels.setChannelList(res.data.list);
+        })
     }
 
     // 店铺搜索

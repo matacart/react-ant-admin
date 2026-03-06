@@ -18,7 +18,7 @@ function FileList() {
         {
             key: '0',
             label: '所有文件',
-            destroyInactiveTabPane: false,
+            destroyOnHidden: false,
             children: <FileListCard groupId={"0"} />
         }
     ];
@@ -34,7 +34,7 @@ function FileList() {
                     newItems.push({
                         label: item.groupName,
                         children: <FileListCard groupId={item.groupId} />,
-                        destroyInactiveTabPane: false,
+                        destroyOnHidden: false,
                         key:item.groupId,
                     })
                 })

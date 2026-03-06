@@ -21,7 +21,6 @@ export default function CustomizeProductTypeSelector(){
             <Select
                 mode="tags"
                 style={{ width: '100%' }}
-                placeholder="搜索自定义商品类型"
                 onChange={handleChange}
                 options={options}
             />

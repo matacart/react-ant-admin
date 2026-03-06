@@ -17,21 +17,21 @@ function OrdersSelectCard() {
 
     // 付款状态
     const [paymentstatusOptions,setPaymentStatusOptions] = useState([
-      { value: '1', label: '未付款',checked:false },
-      { value: '2', label: '付款中',checked:false },
-      { value: '3', label: '部分付款',checked:false },
-      { value: '4', label: '已付款',checked:false },
-      { value: '5', label: '已退款',checked:false },
-      { value: '6', label: '部分退款',checked:false },
-      { value: '7', label: '已授权',checked:false },
-      { value: '8', label: '重复支付',checked:false }
+      { value: '1', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.notpaid' }),checked:false },
+      { value: '2', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paying' }),checked:false },
+      { value: '3', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.partpaid' }),checked:false },
+      { value: '4', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paid' }),checked:false },
+      { value: '5', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.refunded' }),checked:false },
+      { value: '6', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.partrefunded' }),checked:false },
+      { value: '7', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.authorized' }),checked:false },
+      { value: '8', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.duplicatepayment' }),checked:false }
     ])
 
     // 发货状态
     const [shippingStatusOptions,setShippingStatusOptions] = useState([
-      { value: '1', label: '待发货',checked:false },
-      { value: '2', label: '已发货',checked:false },
-      { value: '3', label: '部分发货',checked:false },
+      { value: '1', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.notshipped' }),checked:false },
+      { value: '2', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.shipped' }),checked:false },
+      { value: '3', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.partshipped' }),checked:false },
     ])
 
     // 排序
@@ -39,85 +39,85 @@ function OrdersSelectCard() {
       {
         key: '1',
         label: (
-          <div>订单号（升序）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.orderno.asc' })}</div>
         ),
       },
       {
         key: '2',
         label: (
-          <div>订单号（降序）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.orderno.desc' })}</div>
         ),
       },
       {
         key: '3',
         label: (
-          <div>成单时间（最新到最旧）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.createdate.newtoold' })}</div>
         ),
       },
       {
         key: '4',
         label: (
-          <div>成单时间（最旧到最新）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.createdate.oldtonew' })}</div>
         ),
       },
       {
         key: '5',
         label: (
-          <div>支付时间（最新到最旧）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.paydate.newtoold' })}</div>
         ),
       },
       {
         key: '6',
         label: (
-          <div>支付时间（最旧到最新）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.paydate.oldtonew' })}</div>
         ),
       },
       {
         key: '7',
         label: (
-          <div>客户名称（A-Z）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.customername.atoz' })}</div>
         ),
       },
       {
         key: '8',
         label: (
-          <div>客户名称（Z-A）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.customername.ztoa' })}</div>
         ),
       },
       {
         key: '9',
         label: (
-          <div>付款状态（A-Z）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.paymentstatus.atoz' })}</div>
         ),
       },
       {
         key: '10',
         label: (
-          <div>付款状态（Z-A）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.paymentstatus.ztoa' })}</div>
         ),
       },
       {
         key: '11',
         label: (
-          <div>发货状态（A-Z）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.shippingstatus.atoz' })}</div>
         ),
       },
       {
         key: '12',
         label: (
-          <div>发货状态（Z-A）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.shippingstatus.ztoa' })}</div>
         ),
       },
       {
         key: '13',
         label: (
-          <div>总价（高至低）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.totalprice.hightolow' })}</div>
         ),
       },
       {
         key: '14',
         label: (
-          <div>总价（低至高）</div>
+          <div>{intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.sort.totalprice.lowtohigh' })}</div>
         ),
       },
     ];
@@ -131,37 +131,57 @@ function OrdersSelectCard() {
         [
           {
             id:0,
-            title: "付款状态",
+            title: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paymentstatus' }),
             label: paymentstatusOptions.filter(item=>item.checked).map(item=>item.label).join(","),
             value: paymentstatusOptions.filter(item=>item.checked).map(item=>item.value).join(",")
           },
           {
             id:1,
-            title: "发货状态",
+            title: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.shippingstatus' }),
             label: shippingStatusOptions.filter(item=>item.checked).map(item=>item.label).join(","),
             value: shippingStatusOptions.filter(item=>item.checked).map(item=>item.value).join(",")
           }
         ]
       )
-      
     },[paymentstatusOptions,shippingStatusOptions])
+
+    // 当语言变化时，更新选项
+    useMemo(() => {
+        setPaymentStatusOptions([
+            { value: '1', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.notpaid' }), checked: false },
+            { value: '2', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paying' }), checked: false },
+            { value: '3', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.partpaid' }), checked: false },
+            { value: '4', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paid' }), checked: false },
+            { value: '5', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.refunded' }), checked: false },
+            { value: '6', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.partrefunded' }), checked: false },
+            { value: '7', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.authorized' }), checked: false },
+            { value: '8', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.duplicatepayment' }), checked: false }
+        ]);
+        setShippingStatusOptions([
+            { value: '1', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.notshipped' }), checked: false },
+            { value: '2', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.shipped' }), checked: false },
+            { value: '3', label: intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.partshipped' }), checked: false },
+        ]);
+    }, [intl]);
 
     return (
         <>
           <div className="Orders-select">
-              <div
-                className="Orders-select-items-wrap"
-                style={{
-                  display: 'flex',
-                  flexWrap: 'nowrap', // 不换行
-                  gap: '12px 12px',
-                  justifyContent: 'flex-start', // 从左开始排列
-                  marginBottom: '10px',
-                }}
-              >
-              <div style={{flex:1}}><SearchInput placeholder={intl.formatMessage({ id: 'orders.orderlist.ordersSelectCard.search' })} /></div>
-              <CheckSelectClear options={paymentstatusOptions} setStatusOptions={setPaymentStatusOptions} text="付款状态" style={{width:"180px",height:"36px"}}/>
-              <CheckSelectClear options={shippingStatusOptions} setStatusOptions={setShippingStatusOptions} text="发货状态" style={{width:"180px",height:"36px"}}/>
+            <div
+              className="Orders-select-items-wrap"
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '12px 12px',
+                justifyContent: 'flex-start', // 从左开始排列
+                marginBottom: '10px',
+              }}
+            >
+              <div style={{flex:1}}>
+                <SearchInput placeholder={intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.search' })} />
+              </div>
+              <CheckSelectClear options={paymentstatusOptions} setStatusOptions={setPaymentStatusOptions} text={intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paymentstatus' })} style={{width:"180px",height:"36px"}}/>
+              <CheckSelectClear options={shippingStatusOptions} setStatusOptions={setShippingStatusOptions} text={intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.shippingstatus' })} style={{width:"180px",height:"36px"}}/>
               <LangSelect lang={orderList.languages} setLang={setLang} />
               <OrdersMoreSelect />
               <EditTableHead />

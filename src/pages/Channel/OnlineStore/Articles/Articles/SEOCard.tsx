@@ -3,14 +3,13 @@ import styled from "styled-components"
 import cookie from 'react-cookies';
 import articles from "@/store/channel/articles/articles";
 import SEOEdit from "./SEOEdit";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 function SEOCard(){
 
-    // 预览域名
-    const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+    const parmainDomain = getPrimaryDomain();
     
-    const previewPrefix = `https://${cookie.load("domain").second_domain}${previewDomain}/blogs/`;
-
+    const previewPrefix = parmainDomain ? `${parmainDomain}/blogs/`: "";
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{
         articles.setArticles({
             ...articles.articles,

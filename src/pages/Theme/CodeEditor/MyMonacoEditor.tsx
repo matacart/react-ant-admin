@@ -2,7 +2,7 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import MyDropdownExpansion from '@/components/Dropdown/MyDropdownExpansion';
 import { UnfoldIcon } from '@/components/Icons/Icons';
-import { Flex, message, version } from 'antd';
+import { Flex, message } from 'antd';
 import React, { useState } from 'react';
 // 离线版本
 import { loader } from '@monaco-editor/react';
@@ -25,6 +25,12 @@ import { observer } from 'mobx-react-lite';
 // 使用 @monaco-editor/react 组件
 import MonacoEditor from '@monaco-editor/react';
 
+interface FileVersion {
+    id: string;
+    version_number: string;
+    updateTime?:number;
+}
+
 
 function MyMonacoEditor({file}:{file:any}){
 
@@ -45,7 +51,7 @@ function MyMonacoEditor({file}:{file:any}){
     const editorRef = useRef<any>(null); // 用于保存编辑器实例
 
     const [versionList,setVersionList] = useState<any[]>([]);
-    const [fileVersionList,setFileVersionList] = useState([]);
+    const [fileVersionList,setFileVersionList] = useState<FileVersion[]>([]);
 
     // 当前版本
     const [version,setVersion] = useState("");
@@ -72,6 +78,7 @@ function MyMonacoEditor({file}:{file:any}){
                 languagesId:codeEditor.languageId,
                 fileName:key??"",
                 mode:codeEditor.mode,
+                versionId:codeEditor.versionId,
                 fileContent:content,
             }).then(async (res:any)=>{
                 if(fileInfo){
@@ -83,7 +90,8 @@ function MyMonacoEditor({file}:{file:any}){
                         languagesId:codeEditor.languageId,
                         fileName:key??"",
                         mode:codeEditor.mode,
-                    }).then((res:any)=>{
+                        versionId:codeEditor.versionId,
+                    }).then((res)=>{
                         setFileVersionList(res.data)
                     })
                     setVersion("");
@@ -108,7 +116,7 @@ function MyMonacoEditor({file}:{file:any}){
         }
         // 激活文件重新读取 -- 且文件id或文件languageId需要改变
         if(fileInfo && fileInfo.key == codeEditor.activeFileKey){
-            if(codeEditor.mode == fileInfo.mode && codeEditor.languageId == fileInfo.languagesId){
+            if(codeEditor.mode == fileInfo.mode && codeEditor.languageId == fileInfo.languagesId && codeEditor.versionId == fileInfo.versionId){
                 return;
             }
             getThemeFileDetail({
@@ -116,8 +124,9 @@ function MyMonacoEditor({file}:{file:any}){
                 templateId:templateId??"",
                 languagesId:codeEditor.languageId,
                 fileName:fileInfo.url??"",
-                versionId:"",
+                versionId:codeEditor.versionId,
                 mode:codeEditor.mode,
+                fileVersionId:"",
             }).then((res:any)=>{
                 if(res.code == 0){
                     const fileTypeList = res.data?.fileType.split("/");
@@ -138,7 +147,8 @@ function MyMonacoEditor({file}:{file:any}){
                 templateId:templateId??"",
                 languagesId:codeEditor.languageId,
                 fileName:fileInfo.url??"",
-                mode:codeEditor.mode
+                mode:codeEditor.mode,
+                versionId:codeEditor.versionId,
             }).then((res:any)=>{
                 setFileVersionList(res.data)
             })
@@ -147,9 +157,10 @@ function MyMonacoEditor({file}:{file:any}){
                 ...fileInfo,
                 mode:codeEditor.mode,
                 languagesId:codeEditor.languageId,
+                versionId:codeEditor.versionId,
             })
         }
-    },[codeEditor.mode,codeEditor.languageId,codeEditor.activeFileKey])
+    },[codeEditor.mode,codeEditor.languageId,codeEditor.versionId,codeEditor.activeFileKey])
 
     // 组件卸载时销毁编辑器
     useEffect(()=>{
@@ -159,8 +170,9 @@ function MyMonacoEditor({file}:{file:any}){
                 templateId:templateId??"",
                 languagesId:codeEditor.languageId,
                 fileName:fileInfo.url??"",
-                versionId:"",
+                versionId:codeEditor.versionId,
                 mode:codeEditor.mode,
+                fileVersionId:"",
             }).then((res:any)=>{
                 const fileTypeList = res.data?.fileType.split("/");
                 if(fileTypeList[0] == "image"){
@@ -179,7 +191,8 @@ function MyMonacoEditor({file}:{file:any}){
                 templateId:templateId??"",
                 languagesId:codeEditor.languageId,
                 fileName:fileInfo.url??"",
-                mode:codeEditor.mode
+                mode:codeEditor.mode,
+                versionId:codeEditor.versionId,
             }).then((res:any)=>{
                 setFileVersionList(res.data)
             })
@@ -192,10 +205,10 @@ function MyMonacoEditor({file}:{file:any}){
     },[])
 
 
-    // 切换版本变化或新增版本
+    // 切换文件版本变化或新增版本
     useEffect(()=>{
         if(fileVersionList){
-            const newVersionList = fileVersionList.map((item:any,index:number)=>{
+            const newVersionList = fileVersionList.map((item:FileVersion,index:number)=>{
                 return {
                     key:index,
                     label: <a onClick={() => {
@@ -204,8 +217,9 @@ function MyMonacoEditor({file}:{file:any}){
                             templateId:templateId??"",
                             languagesId:codeEditor.languageId,
                             fileName:fileInfo.url??"",
-                            versionId:item.id??"",
+                            versionId:codeEditor.versionId??"",
                             mode:codeEditor.mode,
+                            fileVersionId:item.id??"",
                         }).then((res:any)=>{
                             if(res.code == 0){
                                 setVersion(item.id);
@@ -220,7 +234,7 @@ function MyMonacoEditor({file}:{file:any}){
                             {item.id == null ?<>
                                 当前版本
                             </>:item.id?<>
-                                {item.version} - {dayjs(item?.updateTime).format("YYYY/MM/DD HH:mm:ss")}
+                                {item.version_number} - {dayjs(item?.updateTime).format("YYYY/MM/DD HH:mm:ss")}
                             </>:<></>}
                         </div>
                     </a>

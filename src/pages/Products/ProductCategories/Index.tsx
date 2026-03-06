@@ -97,7 +97,7 @@ const App: React.FC = () => {
                   onEdit={onEdit}
                   items={items}
                   // !默认不销毁
-                  destroyInactiveTabPane
+                  destroyOnHidden
                   // tabBarExtraContent={operations}
               />
             </div>

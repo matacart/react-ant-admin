@@ -7,10 +7,6 @@ import LanguageList from "./LanguageList"
 export default function Language() {
     return (
         <Scoped>
-            {/* <Card style={{height:"600px"}}>
-                <Skeleton active />
-            </Card> */}
-
             <div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
@@ -33,14 +29,13 @@ export default function Language() {
                             </div>
                             <div className="mc-layout-content-right">
                                 <Card style={{marginBottom:"20px"}}>
-                                    <Flex vertical={true} style={{marginBottom:"12px"}}>
+                                    <Flex vertical={true}>
                                         <div>
                                             <div className="font-16 color-242833 font-w-600">语言列表</div>
                                             <div className="font-14 color-474F5E" style={{marginTop:"4px",marginBottom:"8px"}}>店铺前台将展示对应的语言列表。</div>
                                         </div>
                                         <LanguageList />
                                     </Flex>
-                                   
                                 </Card>
                                 <Card style={{marginBottom:"20px"}}>
                                     <div className="font-16 color-242833 font-w-600">默认地点</div>

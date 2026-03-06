@@ -154,7 +154,7 @@ function GroupCardTable({dataSource,paginationConfig,loading}:{dataSource:DataTy
             <Space size="middle">
                 <Tooltip title="更改分组">
                     <Dropdown trigger={["click"]} arrow={false} placement="bottomRight" menu={{ items }}
-                      dropdownRender={(menu) => (
+                      popupRender={(menu) => (
                       <div style={contentStyle}>
                           <div className="dropdownMenuRemoveItem" onMouseOver={()=>{"this.style.backgroundColor='red'"}} style={{backgroundColor:"#F0F0F0",color:"red",borderBottom:"1px solid #F0F0F0",padding:"6px 12px"}}>取消分组</div>
                           {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}

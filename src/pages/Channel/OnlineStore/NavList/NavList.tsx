@@ -25,7 +25,7 @@ function NavList(){
         getNavList({
             page:"1",
             limit:"10",
-            languagesId:"2",
+            languages_id:"2",
             pid:"0",
         },signal).then(res=>{
             if(res.code == 0){

@@ -1,14 +1,15 @@
 import SearchInput from "@/components/Input/SearchInput";
 import MySelect from "@/components/Select/MySelect";
-import { Flex } from "antd";
+import { Flex, Space } from "antd";
 import type { MenuProps } from 'antd';
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react"
 import CategoriesTable from "./CategoriesTable";
 import categoriesList from "@/store/product/categoriesList";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import { observer } from "mobx-react-lite";
 import LangSelect from "@/components/Select/LangSelect";
+import MySearch from "@/components/Input/MySearch";
 
 const items: MenuProps['items'] = [
     {
@@ -78,14 +79,17 @@ const items: MenuProps['items'] = [
 ];
 
 function CategoriesSelect(){
-    // 语言选择
-    const setLang = (value: string) => {
-      categoriesList.setLanguagesId(value)
-    };
 
-    useEffect(()=>{
-        // 添加语言
-    },[])
+  const [searchType,setSearchType] = useState("SEARCH_NAME");
+  const [searchText,setSearchText] = useState("");
+  // 语言选择
+  const setLang = (value: string) => {
+    categoriesList.setLanguagesId(value)
+  };
+
+  useEffect(()=>{
+      // 添加语言
+  },[])
    
     return (
         <> 
@@ -98,7 +102,22 @@ function CategoriesSelect(){
                     marginBottom: '12px'
                 }}>
                     <Flex gap={12}>
-                        <SearchInput placeholder="搜索分类名称" style={{width:"320px"}} />
+                      <Space.Compact style={{width:"420px"}}>
+                        <MySelect value={searchType} options={[
+                            { value: "SEARCH_NAME", label: '分类名称' },
+                            { value: "SEARCH_ID", label: '分类ID' },
+                     ]} style={{height:"36px",minWidth:"110px"}} onChange={(value:string)=>{
+                            setSearchType(value)
+                        }} />
+                        <MySearch placeholder={searchType == "SEARCH_NAME" ? "搜索分类名称" : "搜索分类ID"} value={searchText}
+                            onChange={(e:any)=>{
+                                setSearchText(e.target.value)
+                            }} 
+                            onSearch={(value:string)=>{
+                              
+                            }} 
+                        />
+                    </Space.Compact>
                         <MySelect placeholder="类型" style={{height:"36px",width:"120px"}} options={[
                           {
                             value: '1',

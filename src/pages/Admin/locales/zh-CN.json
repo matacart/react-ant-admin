@@ -1,0 +1,80 @@
+{
+    "shopTimeDisplay":{
+        "shopTimeDisplay":"店铺所在时区时间",
+        "afternoon":"下午",
+        "morning":"上午",
+        "year":"年"
+    },
+    "dataCard":{
+        "todayData":"今日数据",
+        "more":"查看更多",
+        "salesRevenue":"销售额",
+        "todaySalesRevenue":"今天到目前为止的销售额",
+        "orderNumber":"订单数",
+        "todayOrderNumber":"今天到目前为止的订单数",
+        "visitorCount":"访客数",
+        "todayVisitorCount":"今天到目前为止的访客数"
+    },
+    "textCard":{
+        "package":{
+            "title":"为您的店铺选择套餐",
+            "content":"立即付费解锁更多功能，享受更好的服务和支持。已支持以下付款方式：<br/>√ 银联支付（借记卡及信用卡，支持自动扣费）<br/>√ 信用卡支付（Visa、JCB、MasterCard、American Express，支持自动扣费）<br/>√ 微信支付",
+            "button":"选择套餐"
+        },
+        "domain":{
+            "title":"为您的店铺选择域名",
+            "content":"一个好的域名，助您的品牌深入人心。您可以在Godaddy、阿里云等域名服务商购买域名后，解析域名并绑定到MATACART后台。",
+            "button":"点击设置"
+        }
+    },
+    "openStoreGuidance":{
+        "title":"开店引导",
+        "progress":"已完成{num}个任务",
+        "productTab":{
+            "name":"添加商品",
+            "title":"添加商品",
+            "desc":"您还可以继续添加更多新产品",
+            "buttonText":"去添加",
+            "doneTitle":"您已添加了新产品",
+            "doneDesc":"您还可以继续添加更多新产品",
+            "doneButtonText": "去添加"
+        },
+        "logisticsTab":{
+            "name":"配置物流",
+            "title":"配置物流",
+            "desc":"您还可以继续添加更多新物流",
+            "buttonText":"去添加",
+            "doneTitle":"您已配置了物流",
+            "doneDesc":"MataCart支持按重量等多个维度设置不同国家/地区的物流模版，也可同时支持多个方案。在后台也可以添加物流商。",
+            "doneButtonText":"设置物流方式"
+        },
+        "paymentMethodTab":{
+            "name":"配置收款",
+            "title":"配置收款",
+            "desc":"您还可以继续添加更多新收款方式",
+            "buttonText":"去添加",
+            "doneTitle":"您已配置了收款方式",
+            "doneDesc":"可根据您售卖的地区设置合适的付款方式",
+            "doneButtonText":"设置收款方式"
+        },
+        "customPageTab":{
+            "title":"创建自定义页面",
+            "name":"创建自定义页面",
+            "desc":"您还可以继续添加更多自定义页面",
+            "buttonText":"去添加",
+            "doneTitle":"您已添加了自定义页面",
+            "doneDesc":"您已成功添加页面，您可以继续添加更多页面或者完善已有页面信息。",
+            "doneButtonText": "去设置"
+        },
+        "navigationTab":{
+            "title":"整理导航",
+            "name":"整理导航",
+            "desc":"您还可以继续添加更多导航",
+            "buttonText":"去添加",
+            "doneTitle":"您已添加了导航",
+            "doneDesc":"您还可以继续添加更多导航",
+            "doneButtonText": "去添加"
+        }
+    }
+    
+}

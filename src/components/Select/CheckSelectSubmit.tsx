@@ -25,7 +25,7 @@ function CheckSelectSubmit({options,setOptions,...props}:CheckSelectSubmitProps)
         <Scoped ref={Ref}>
             <Select
                 open={open}
-                onDropdownVisibleChange={(open)=>{
+                onOpenChange={(open)=>{
                     setOpen(open)
                 }}
                 {...props} 
@@ -39,8 +39,14 @@ function CheckSelectSubmit({options,setOptions,...props}:CheckSelectSubmitProps)
                     )
                 }}
                 getPopupContainer={()=>Ref.current!}
-                dropdownStyle={{padding:"6px 0"}}
-                dropdownRender={(menu) => {
+                styles={{
+                    popup: { 
+                        root: {
+                            padding:"6px 0"
+                        } 
+                    }
+                }}
+                popupRender={(menu) => {
                     const list = options.map((item,index)=>{
                         return (
                             <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{

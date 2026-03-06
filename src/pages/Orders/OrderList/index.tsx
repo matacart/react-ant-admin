@@ -20,10 +20,6 @@ interface MenuItem {
   onClick?: () => void; // 可选的点击事件处理函数
 }
 
-interface MenuProps {
-  items: MenuItem[];
-}
-
 export default function Orders() {
   const intl = useIntl();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -39,7 +35,7 @@ export default function Orders() {
 
   const handleOk = () => {
     setIsModalVisible(false);
-    message.success('导入成功');
+    message.success(intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' }));
   };
 
   const showUpdateTrackingModal = () => {
@@ -52,10 +48,10 @@ export default function Orders() {
 
   const handleUpdateTrackingOk = () => {
     setUpdateTrackingModalVisible(false);
-    message.success('导入成功');
+    message.success(intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' }));
   };
 
-  const props: MenuProps['items'] = [
+  const props = [
     {
       key: '1',
       label: <ExportPickingModal />,
@@ -74,12 +70,12 @@ export default function Orders() {
     },
   ];
 
-  const aItems: MenuProps['items'] = props;
+  const aItems = props;
 
   const beforeUpload = (file: any) => {
     const isLt10M = file.size / 1024 / 1024 < 10;
     if (!isLt10M) {
-      message.error('文件大小不能超过10MB!');
+      message.error(intl.formatMessage({ id: 'orders.orderList.index.fileSizeError' }));
     }
     return isLt10M;
   };
@@ -101,21 +97,21 @@ export default function Orders() {
           <div className="create-title">
             <Flex className="create-title-left" align='center' gap={12}>
               <h3>
-                {intl.formatMessage({ id: 'orders.orderlist.header' })}
+                {intl.formatMessage({ id: 'orders.orderList.index.orderList' })}
               </h3>
               <div style={{paddingTop:"4px"}}>
                 <Dropdown menu={{ items: aItems }} trigger={["click"]}>
                   <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
                     <ExportOutlined style={{marginRight:"6px"}} />
-                    <Space>{intl.formatMessage({ id: 'orders.orderlist.importOrders' })}</Space>
+                    <Space>{intl.formatMessage({ id: 'orders.orderList.index.exportOrder' })}</Space>
                   </a>
                 </Dropdown>
               </div>
             </Flex>
             <Flex gap={12}>
-              <DefaultButton onClick={showModal} text={intl.formatMessage({ id: 'orders.orderlist.bulkshipping' })} />
-              <DefaultButton onClick={showUpdateTrackingModal} text={intl.formatMessage({ id: 'orders.orderlist.updatetrackingnumber' })} />
-              <PrimaryButton text={intl.formatMessage({ id: 'orders.orderlist.createorder' })} onClick={() => { history.push('/orders/draftOrders/add') }} />
+              <DefaultButton onClick={showModal} text={intl.formatMessage({ id: 'orders.orderList.index.batchDelivery' })} />
+              <DefaultButton onClick={showUpdateTrackingModal} text={intl.formatMessage({ id: 'orders.orderList.index.updateTrackingNumber' })} />
+              <PrimaryButton text={intl.formatMessage({ id: 'orders.orderList.index.createOrder' })} onClick={() => { history.push('/orders/draftOrders/add') }} />
             </Flex>
           </div>
 
@@ -127,23 +123,23 @@ export default function Orders() {
         </div>
         {/* 模态框：批量发货 */}
         <Modal
-          title="批量发货"
+          title={intl.formatMessage({ id: 'orders.orderList.index.bulkDelivery' })}
           open={isModalVisible}
           onOk={handleOk}
           onCancel={handleCancel}
-          okText="上传并导入"
-          cancelText="取消"
+          okText={intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })}
+          cancelText={intl.formatMessage({ id: 'orders.orderList.index.cancel' })}
           footer={[
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Button key="import-record" onClick={handleCancel}>
-                导入记录
+                {intl.formatMessage({ id: 'orders.orderList.index.importRecord' })}
               </Button>,
               <div style={{ display: 'flex', gap: '8px' }}>
                 <Button key="cancel" onClick={handleCancel}>
-                  取消
+                  {intl.formatMessage({ id: 'orders.orderList.index.cancel' })}
                 </Button>,
                 <Button key="ok" type="primary" onClick={handleOk}>
-                  上传并导入
+                  {intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })}
                 </Button>,
               </div>
             </div>
@@ -151,7 +147,7 @@ export default function Orders() {
           width={600} // 设置 Modal 宽度
         >
           <p>
-            请先下载批量导入模版，并按导入模版规范填写订单相关信息，再在本页导入表格，以更新订单包裹的发货状态。
+            {intl.formatMessage({ id: 'orders.orderList.index.downloadTemplate' })}
           </p>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <Upload
@@ -164,30 +160,30 @@ export default function Orders() {
               style={{ width: '90%' }} // 尝试设置为模态框内容区域的 90%
             >
               <div>
-                上传文件（或拖放上传）                
+                {intl.formatMessage({ id: 'orders.orderList.index.uploadFile' })}                
               </div>
             </Upload>
           </div>
         </Modal>
         {/* 模态框：更新订单追踪编号 */}
         <Modal
-          title="更新订单追踪编号"
+          title={intl.formatMessage({ id: 'orders.orderList.index.updateTrackingNumberModalTitle' })}
           open={updateTrackingModalVisible}
           onOk={handleUpdateTrackingOk}
           onCancel={handleUpdateTrackingCancel}
-          okText="上传并导入"
-          cancelText="取消"
+          okText={intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })}
+          cancelText={intl.formatMessage({ id: 'orders.orderList.index.cancel' })}
           footer={[
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Button key="export-history" onClick={handleUpdateTrackingCancel} >
-              导出历史记录
+              {intl.formatMessage({ id: 'orders.orderList.index.exportHistory' })}
             </Button>,
             <div style={{ display: 'flex', gap: '8px' }}>
           <Button key="cancel" onClick={handleUpdateTrackingCancel} >
-            取消
+            {intl.formatMessage({ id: 'orders.orderList.index.cancel' })}
           </Button>,
           <Button key="ok" type="primary" onClick={handleUpdateTrackingOk}>
-            上传并导入
+            {intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })}
           </Button>,
         </div>
             </div>
@@ -195,7 +191,7 @@ export default function Orders() {
           width={600} // 设置 Modal 宽度
         >
           <p>
-            请先导出已发货订单，在表格中为订单包裹添加或修改运单号，再在本页导入表格，以更新订单包裹物流状态。
+            {intl.formatMessage({ id: 'orders.orderList.index.exportShippedOrders' })}
           </p>
           <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
       <Upload
@@ -208,7 +204,7 @@ export default function Orders() {
         style={{ width: '90%' }} // 尝试设置为模态框内容区域的 90%
       >
         <div>
-          上传文件（或拖放上传）                
+          {intl.formatMessage({ id: 'orders.orderList.index.uploadFile' })}                
         </div>
       </Upload>
           </div>

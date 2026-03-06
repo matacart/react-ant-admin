@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { AddIcon, SearchIcon, UnfoldIcon } from "../Icons/Icons";
 import { useRef, useState } from "react";
 
-interface MyAutoCompleteProps extends Omit<AutoCompleteProps, 'dropdownRender'> {
+interface MyAutoCompleteProps extends Omit<AutoCompleteProps, 'popupRender'> {
     onClick?: (value:any) => void; // 可选的 onClick 属性
 }
 export default function TagAutoComplete({onClick,options,...props}:MyAutoCompleteProps){
@@ -66,7 +66,7 @@ export default function TagAutoComplete({onClick,options,...props}:MyAutoComplet
                     onSelect={handAddSelect}
                     ref={Ref}
                     notFoundContent={!hasMatches && "暂无标签"}
-                    dropdownRender={(menu) => {
+                    popupRender={(menu) => {
                     return (
                         <div style={{overflow: 'auto', maxHeight: 300,margin:"8px 0"}}>
                             {hasMatches?(

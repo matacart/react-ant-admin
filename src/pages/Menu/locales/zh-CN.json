@@ -6,7 +6,7 @@
     "orders.draftOrders": "草稿单",
     "products":"商品",
     "products.productsList":"商品列表",
-    "products.Collections": "分类",
+    "products.categories": "分类",
     "products.giftCards":"礼品卡",
     "customers": "客户",
     "customers.customerManages": "客户管理",
@@ -35,7 +35,11 @@
     "channel":"渠道",
     "settings":"设置",
     "storesManages":"店铺管理",
-    "billsManages":"账单管理",
-    "dataManages":"数据管理"
-
+    "billingCost":"费用与成本",
+    "billingCost.billsManages":"账单管理",
+    "billingCost.payment":"充值记录",
+    "billingCost.withdrawal":"提现记录",
+    "dataManages":"数据管理",
+    "innerMsg": "站内消息",
+    "messageManagement": "消息管理"
 }

@@ -1,0 +1,243 @@
+{
+    "orderList":{
+        "header": "Orders",
+        "importOrders": "Import Orders",
+        "bulkshipping": "Bulk Shipping",
+        "updatetrackingnumber": "Update Tracking Number",
+        "createorder": "Create Order",
+        "customExportFieldsModal":{
+
+        },
+        "editTableHead": {
+            "text": "Edit Table Head",
+            "title": "Edit Table Head",
+            "restoreDefault": "Restore Default",
+            "cancel": "Cancel",
+            "save": "Save",
+            "atLeastFive": "Please retain at least 5 table header items",
+            "orderNo": "Order No.",
+            "orderId": "Order ID",
+            "orderDate": "Order Date",
+            "orderSource": "Order Source",
+            "orderStatus": "Order Status",
+            "paymentStatus": "Payment Status",
+            "shippingStatus": "Shipping Status",
+            "returnStatus": "Return Status",
+            "paymentMethod": "Payment Method",
+            "paymentChannel": "Payment Channel",
+            "paymentCompleteTime": "Payment Complete Time",
+            "transferCertificateStatus": "Transfer Certificate Upload Status",
+            "recipient": "Recipient",
+            "recipientPhone": "Recipient Phone",
+            "paymentTransactionId": "Payment Transaction ID",
+            "orderTag": "Order Tag",
+            "trackingNumber": "Tracking Number"
+        },
+        "exportOrderDetailModal":{
+
+        },
+        "exportOrderPageModal":{
+
+        },
+        "exportPickingModal": {
+            "title": "Export Picking List",
+            "subtitle": "Download the picking list template, fill in the order information according to the template specifications, and then import"
+        },
+        "exportShippingModal": {
+            "title": "Export Shipping List",
+            "subtitle": "Download the shipping list template, fill in the order information according to the template specifications, and then import"
+        },
+        "index":{
+
+        },
+        "ordersListAjax":{
+            "orderNo": "Order No.",
+            "orderDate": "Order Date",
+            "orderStatus": "Order Status",
+            "paymentStatus": "Payment Status",
+            "shippingStatus": "Shipping Status",
+            "paymentMethod": "Payment Method",
+            "paymentChannel": "Payment Channel",
+            "consignee": "Consignee",
+            "mobile": "Mobile",
+            "shippingMethod": "Shipping Method",
+            "priceTotal": "Price Total",
+            "processing": "Processing",
+            "paid": "Paid",
+            "unpaid": "Unpaid",
+            "readyToShip": "Ready to Ship",
+            "partiallyShipped": "Partially Shipped",
+            "shipped": "Shipped"
+        },
+        "index":{
+            "orderList": "Order List",
+            "exportOrder": "Export Order",
+            "batchDelivery": "Batch Delivery",
+            "updateTrackingNumber": "Update Tracking Number",
+            "createOrder": "Create Order",
+            "bulkDelivery": "Bulk Delivery",
+            "uploadAndImport": "Upload and Import",
+            "importRecord": "Import Record",
+            "cancel": "Cancel",
+            "downloadTemplate": "Please download the bulk import template first, fill in the order information according to the template specifications, and then import the table on this page to update the shipment status of the order packages.",
+            "uploadFile": "Upload File (or drag and drop)",
+            "updateTrackingNumberModalTitle": "Update Order Tracking Number",
+            "exportHistory": "Export History",
+            "exportShippedOrders": "Please export shipped orders first, add or modify tracking numbers for order packages in the spreadsheet, and then import the table on this page to update the logistics status of order packages.",
+            "fileSizeError": "File size cannot exceed 10MB!"
+        },
+        "ordersMoreSelect": {
+            "moreselect": "More Filters",
+            "filterTitle": "Filters",
+            "reset": "Reset",
+            "done": "Done",
+            "exactSearch": "Exact Search",
+            "clear": "Clear",
+            "orderStatus": "Order Status",
+            "processing": "Processing",
+            "cancelled": "Cancelled",
+            "archived": "Archived",
+            "paymentStatus": "Payment Status",
+            "refundOrder": "Refund Order",
+            "shippingStatus": "Shipping Status",
+            "returnStatus": "Return Status",
+            "shippingMethod": "Shipping Method",
+            "paymentMethod": "Payment Method",
+            "tag": "Tag",
+            "productTag": "Product Tag",
+            "landingPageDomain": "Landing Page Domain (Coming Soon)",
+            "landingPageParams": "Landing Page Params (Coming Soon)",
+            "referrerDomain": "Referrer Domain (Coming Soon)",
+            "referrerParams": "Referrer Params (Coming Soon)",
+            "orderDate": "Order Date",
+            "archiveOrder": "Archive Order",
+            "chargebackStatus": "Chargeback & Inquiry Status",
+            "orderSource": "Order Source",
+            "orderProductEditStatus": "Order Product Edit Status",
+            "pickingListExportStatus": "Picking List Export Status",
+            "orderDetailsExportStatus": "Order Details Export Status",
+            "accountingPaymentStatus": "Accounting Payment Status",
+            "transferProofUploadStatus": "Transfer Proof Upload Status",
+            "discountCode": "Discount Code",
+            "countryRegion": "Country/Region",
+            "orderAmount": "Order Amount",
+            "firstInteractionSource": "First Interaction Source",
+            "lastInteractionSource": "Last Interaction Source",
+            "fraudRisk": "Fraud Risk",
+            "shop": "Shop",
+            "allShops": "All Shops",
+            "currentShop": "Current Shop"
+        },
+        "ordersSelectCard": {
+            "search": "Search Orders",
+            "paymentstatus": "Payment Status",
+            "shippingstatus": "Shipping Status",
+            "notpaid": "Not Paid",
+            "paying": "Paying",
+            "partpaid": "Partially Paid",
+            "paid": "Paid",
+            "refunded": "Refunded",
+            "partrefunded": "Partially Refunded",
+            "authorized": "Authorized",
+            "duplicatepayment": "Duplicate Payment",
+            "notshipped": "Not Shipped",
+            "shipped": "Shipped",
+            "partshipped": "Partially Shipped",
+            "sort": {
+                "orderno": {
+                    "asc": "Order No. (Ascending)",
+                    "desc": "Order No. (Descending)"
+                },
+                "createdate": {
+                    "newtoold": "Creation Date (Newest to Oldest)",
+                    "oldtonew": "Creation Date (Oldest to Newest)"
+                },
+                "paydate": {
+                    "newtoold": "Payment Date (Newest to Oldest)",
+                    "oldtonew": "Payment Date (Oldest to Newest)"
+                },
+                "customername": {
+                    "atoz": "Customer Name (A-Z)",
+                    "ztoa": "Customer Name (Z-A)"
+                },
+                "paymentstatus": {
+                    "atoz": "Payment Status (A-Z)",
+                    "ztoa": "Payment Status (Z-A)"
+                },
+                "shippingstatus": {
+                    "atoz": "Shipping Status (A-Z)",
+                    "ztoa": "Shipping Status (Z-A)"
+                },
+                "totalprice": {
+                    "hightolow": "Total Price (High to Low)",
+                    "lowtohigh": "Total Price (Low to High)"
+                }
+            }
+        },
+        "orderTabs": {
+            "all": "All",
+            "readytoship": "Ready to Ship",
+            "cancelled": "Cancelled",
+            "process": "Processing",
+            "neworders": "New Orders",
+            "archived": "Archived",
+            "orderstatus": "Order Status",
+            "alllocations": "All Locations",
+            "defaultlocation": "Default Location",
+            "newTabTitle": "New Tab",
+            "tabName": "Tab Name",
+            "createNewTab": "Create New Tab",
+            "enterTabName": "Please enter tab name"
+        },
+        "selectedActions": {
+            "bulkshipping":"Bulk Shipping",
+            "updatetrackingnumber":"Update Tracking Number",
+            "selectedCount": "Selected {count} items",
+            "archiveOrders": "Archive Orders",
+            "archiveOrders.description": "Successfully archived {count} orders",
+            "unarchiveOrders": "Unarchive Orders",
+            "unarchiveOrders.description": "Successfully unarchived {count} orders",
+            "addTags": "Add Tags",
+            "removeTags": "Remove Tags",
+            "apply": "Apply",
+            "accountPayment": "Account Payment"
+        },
+        "sortableItem":{
+
+        }
+    },
+    "orderDraft":{
+        "orderDraftList":{
+            "index":{
+                "draftOrderList": "Draft Order List",
+                "exportDraftOrder": "Export Draft Order",
+                "createOrder": "Create Order"
+            },
+            "orderDraftList":{
+                "draftOrder": "Draft Order",
+                "exportDraftOrder": "Export Draft Order",
+                "createOrder": "Create Order"
+            },
+            "orderDraftListAjax":{
+                "draftOrderNo": "Draft Order No.",
+                "creationDate": "Creation Date",
+                "customer": "Customer",
+                "status": "Status",
+                "total": "Total",
+                "pending": "Pending",
+                "completed": "Completed"
+            },
+            "orderDraftTabs":{
+                "all": "All",
+                "pending": "Pending",
+                "completed": "Completed"
+            },
+            "ordersDraftSelectCard":{
+                "searchPlaceholder": "Search draft order number or purchase order number (B2B orders only)",
+                "status": "Status",
+                "pending": "Pending",
+                "completed": "Completed"
+            }
+        }
+    }
+}

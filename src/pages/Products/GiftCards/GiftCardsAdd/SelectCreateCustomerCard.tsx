@@ -32,7 +32,7 @@ function SelectCreateCustomerCard() {
                         { value: '2', label: 'Lucy' },
                         { value: '3', label: 'Tom' },
                     ]}
-                    dropdownRender={(menu) => (
+                    popupRender={(menu) => (
                         <>
                             <Flex className="add-customer color-356DFF cursor-pointer" style={{padding:"8px 10px 4px 10px"}} onClick={()=>setIsCreateCustomer(true)}>
                                 <AddIcon />

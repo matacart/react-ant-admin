@@ -42,6 +42,7 @@ function SnippetsModal({filePath,treeData,setTreeData}:LayoutModalType){
                 mode: codeEditor.mode,
                 fileName: filePath+"/"+values.name+"."+fileType,
                 fileContent:"",
+                versionId: codeEditor.versionId??"",
             }).then(async res=>{
                 if(res.code == 0){
                     // 在树中插入文件

@@ -1,0 +1,72 @@
+{
+  "design": {
+    "header": {
+      "live": "Live",
+      "draft": "Draft",
+      "preview": "Preview",
+      "save": "Save",
+      "undo": "Undo",
+      "redo": "Redo",
+      "backToAdmin": "Back to Admin Panel",
+      "mode": "Mode",
+      "modeAuto": "Smart Mode",
+      "modeOriginal": "Development Mode",
+      "modeMapping": "User Mode",
+      "navigation": {
+        "back": "Back",
+        "default": "Default Template",
+        "createTemplate": "Create Template",
+        "renameTemplate": "Rename Template",
+        "Home": "Home",
+        "AllCollections": "Collection Page",
+        "Products": "Product List Page",
+        "ProductsDetail": "Product Detail Page",
+        "Cart": "Shopping Cart Page",
+        "BlogsList": "Blog Collection Page",
+        "BlogsDetail": "Blog Page",
+        "Checkout": "Checkout Page",
+        "404": "404 Page",
+        "ProductsSearch": "Search Page",
+        "SignIn": "Login Page",
+        "SignUp": "Registration Page",
+        "Company": "Company Account Registration Page",
+        "ActivateAccount": "Activation Page",
+        "Center": "Customer Account Page",
+        "Password": "Password Page",
+        "AddressNew": "Address Page",
+        "AddressEdit": "Address Page",
+        "OrderList": "Customer Order Page",
+        "OrderDetail": "Order Detail Page",
+        "PasswordNew": "Forgot Password Page",
+        "Page": "Custom Page",
+        "Policy": "Privacy Policy",
+        "Features": "Feature Page",
+        "Customers": "Customer Account",
+        "tipDelete": "Delete",
+        "tipRename": "Rename"
+      },
+      "modalTemplateName": "Template Name",
+      "modalTemplateNamePlaceholder": "Please enter template name",
+      "modalBasedOnTemplate": "Based on Template",
+      "deleteModalTitle": "Are you sure you want to delete this template?",
+      "deleteModalContent": "When products are currently using this template, deletion will change them to use the default template.",
+      "deleteModalDelete": "Delete",
+      "renameTemplateModalWarningText": "Changing the template name may cause products to lose template associations, affecting the online store. Please proceed with caution."
+    },
+    "left": {
+      "home": "Home",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "template": "Template",
+      "toolBarComponent": "Components",
+      "toolBarGlobalSettings": "Global Settings",
+      "toolBarAppEmbeds": "App Embeds",
+      "itemTextPlaceholder": "Enter text"
+    },
+    "right":{
+      "itemText":{
+        "placeholder":"Enter text"
+      }
+    }
+  }
+}

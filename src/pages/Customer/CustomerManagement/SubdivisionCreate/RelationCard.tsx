@@ -404,8 +404,14 @@ function RelationCard({overlayRef}: RelationCardProps){
                                                                                 options={options}
                                                                                 getPopupContainer={()=>clickOutsideRef?.current!}
                                                                                 value={conditionValue}
-                                                                                dropdownStyle={{padding:"6px 0"}}
-                                                                                dropdownRender={(menu) => {
+                                                                                styles={{
+                                                                                    popup: { 
+                                                                                        root: {
+                                                                                            padding:"6px 0"
+                                                                                        } 
+                                                                                    }
+                                                                                }}
+                                                                                popupRender={(menu) => {
                                                                                     const list = options.map((item,index)=>{
                                                                                         return (
                                                                                             <Checkbox checked={conditionValue.includes(item.value)} className="item" style={{padding:"8px 12px",width:"100%"}}

@@ -43,8 +43,14 @@ export default function TagSelector() {
                     fontSize:14
                 }}
                 value={"商品标签"}
-                dropdownStyle={{padding:"6px 0px"}}
-                dropdownRender={(menu) => (
+                styles={{
+                    popup: { 
+                        root: {
+                            padding:"6px 0px"
+                        } 
+                    }
+                }}
+                popupRender={(menu) => (
                     <Scoped>
                         <div className='color-7A8499 font-12' style={{padding:"4px 8px"}}>具有</div>
                         <div className='inner-select-box'>
@@ -89,7 +95,7 @@ export default function TagSelector() {
                     </Scoped>
                 )}
                 // 展开下拉菜单的回调 -- 可以控制下拉菜单的展示与隐藏
-                onDropdownVisibleChange={(open)=>{
+                onOpenChange={(open)=>{
                     open?setIsFocus(true):setIsFocus(false)
                 }}
                 onSelect={()=>{
@@ -130,8 +136,14 @@ theme={{
         height:36
     }}
     open={openTagsList}
-    dropdownStyle={{padding:"0px"}}
-    dropdownRender={(menu) => (
+    styles={{
+        popup: { 
+            root: {
+                padding:"0px"
+            } 
+        }
+    }}
+    popupRender={(menu) => (
         <>
         {menu}
             <div style={{width:"100%",height:"1px",backgroundColor:"#d7dbe7"}}></div>

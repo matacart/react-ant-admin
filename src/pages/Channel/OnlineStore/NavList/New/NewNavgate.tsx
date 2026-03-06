@@ -16,6 +16,7 @@ import { flattenTree } from '../Navgate/Tree/utilities';
 import { batchAddNavgate } from '@/services/y2/api';
 import { useSleep } from '@/hooks/customHooks';
 import Subnumber from '../Navgate/Subnumber';
+import Relevance from '../Navgate/Relevance';
 
 function NewNavgate(){
 
@@ -50,12 +51,13 @@ function NewNavgate(){
                 is_url:"0",
 	            is_sys:navgate.isSys,
                 is_share:navgate.isShare,
+                is_bind:navgate.isBind,
             }];
             try {
                 flattenTree(navgate.initialItems).forEach((item:any)=>{
                     data.push({
                         id:"",
-                        languages_id:languagesId,
+                        languages_id:item.languagesId,
                         title:item?.title,
                         image:item?.img,
                         page_link:item?.pageLink,
@@ -76,6 +78,7 @@ function NewNavgate(){
             // 提交数据
             setLoading(true);
             batchAddNavgate({
+                languages_id:navgate.languagesId,
                 pages:JSON.stringify(data)
             }).then(res=>{
                 if(res.code == 0){
@@ -129,6 +132,7 @@ function NewNavgate(){
                             <MenuItemCard />
                         </div>
                         <div className='mc-layout-extra'>
+                            <Relevance />
                             <HandleCard ref={HandleCardRef} />
                             <Subnumber />
                         </div>

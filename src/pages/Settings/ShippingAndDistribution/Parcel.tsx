@@ -1,7 +1,6 @@
-import { Button, Card, Col, Divider, Flex, Form, Input, Modal, Row, Select } from "antd";
+import { Button, Card, Col, Divider, Flex, Form, Input, Modal, Row, Select, Space } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
-import { layout } from '@/app.bak';
 
 function Parcel() {
 
@@ -46,14 +45,15 @@ function Parcel() {
                         </Col>
                         <Col span={12}>
                             <Form.Item label="重量" name="weight">
-                                <Input addonAfter={
+                                <Space.Compact>
+                                    <Input />
                                     <Select defaultValue={"0"} options={[
                                         {value:"0",label:"克"},
                                         {value:"1",label:"千克"},
                                         {value:"3",label:"磅"},
                                         {value:"4",label:"盎司"}
                                     ]} />
-                                } />
+                                </Space.Compact>
                             </Form.Item>
                         </Col>
                     </Row>

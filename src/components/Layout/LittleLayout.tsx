@@ -8,7 +8,6 @@ export default function LittleLayout({ back, title, children, more }: {
     children: any;
     more?: any;
 }) {
-
     return (
         <Scoped>
             <div className="layout-header">

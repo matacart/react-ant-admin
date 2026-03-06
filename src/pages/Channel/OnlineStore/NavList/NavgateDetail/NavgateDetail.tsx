@@ -18,6 +18,7 @@ import DangerButton from '@/components/Button/DangerButton';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import { useSleep } from '@/hooks/customHooks';
 import Subnumber from '../Navgate/Subnumber';
+import Relevance from '../Navgate/Relevance';
 
 function NavgateDetail(){
 
@@ -44,9 +45,9 @@ function NavgateDetail(){
     async function fetch(){
         // 状态重置
         await navgate.clear();
+        // 0 获取所有语言的导航数据
         getNavList({
-            languagesId:languagesId || "2",
-            // id:id??"0",
+            languages_id:"0",
             pid:id??"0",
             group_by_sys:"0"
         }).then(res=>{
@@ -61,16 +62,20 @@ function NavgateDetail(){
                     childNodes: "children",
                     is_sys:"isSys",
                     is_share:"isShare",
+                    is_bind:"isBind",
+                    languages_id:"languagesId",
                 });
+                navgate.setLanguagesId(languagesId || "2");
                 navgate.setIsSys(res.data.list[0]?.is_sys.toString());
-                navgate.setIsShare(res.data.list[0]?.is_share);
+                navgate.setIsShare(res.data.list[0]?.is_share.toString());
+                navgate.setIsBind(res.data.list[0]?.is_bind.toString());
                 navgate.setInitialItems([...newTree]);
                 navgate.setId(id || "");
                 // 全部项 -- 用于删除
                 navgate.setItemList(res.data.list.map((item:any)=>{
                     return {
                         id:item.id,
-                        languages_id:languagesId || "2",
+                        languages_id:item.languages_id || "2",
                         title:item?.title,
                         image:item?.image?.src,
                         page_link:item?.pageLink,
@@ -83,6 +88,7 @@ function NavgateDetail(){
                         is_url:"1",
                         is_sys:item.is_sys,
                         is_share:item.is_share,
+                        is_bind:item.is_bind,
                         status:"-1",
                     }
                 }));
@@ -122,13 +128,14 @@ function NavgateDetail(){
                 is_url:"0",
                 is_sys:navgate.isSys,
                 is_share:navgate.isShare,
+                is_bind:navgate.isBind,
             }];
             let removeData:any[] = [];
             try {
                 flattenTree(navgate.initialItems).forEach((item:any,index:number)=>{
                     data.push({
                         id:item.isNew?"":item.id,
-                        languages_id:languagesId,
+                        languages_id:item.languagesId,
                         title:item?.title,
                         image:item?.img,
                         page_link:item?.pageLink,
@@ -141,13 +148,14 @@ function NavgateDetail(){
                         is_url:"1",
                         is_sys:item.isSys || "0",
                         is_share:item.isShare || "0",
+                        is_bind:item.isBind,
                         open_mode:item.openMode || "0",
                     })
                 });
                 flattenTree(navgate.removeItems).forEach((item:any)=>{
                     removeData.push({
                         id:item.id,
-                        languages_id:languagesId,
+                        languages_id:item.languagesId,
                         title:item?.title,
                         image:item?.img,
                         page_link:item?.pageLink,
@@ -159,6 +167,7 @@ function NavgateDetail(){
                         is_url:"1",
                         is_sys:item?.isSys,
                         is_share:item.isShare,
+                        is_bind:item.isBind,
                         open_mode:item.openMode,
                         status:"-1",
                     })
@@ -170,6 +179,7 @@ function NavgateDetail(){
             setLoading(true);
             // 提交数据
             batchAddNavgate({
+                languages_id:navgate.languagesId,
                 pages:JSON.stringify([...data,...removeData])
             }).then(res=>{
                 if(res.code == 0){
@@ -232,6 +242,7 @@ function NavgateDetail(){
                             <MenuItemCard />
                         </div>
                         <div className='mc-layout-extra'>
+                            <Relevance />
                             <HandleCard ref={HandleCardRef} />
                             <Subnumber />
                         </div>

@@ -2,7 +2,6 @@ import { Card, Divider, Flex, Form, Input, Tag, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import { styled } from 'styled-components';
 import { useIntl } from "@umijs/max";
-import ContactInformation from "./Modal/ContactInformation";
 import TagAutoComplete from "@/components/AutoComplete/TagAutoComplete";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "@/components/Icons/Icons";

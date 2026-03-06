@@ -1,0 +1,241 @@
+{
+    "orderList":{
+        "header": "订单",
+        "importOrders": "导入订单",
+        "bulkshipping": "批量发货",
+        "updatetrackingnumber": "更新跟踪号",
+        "createorder": "创建订单",
+        "customExportFieldsModal":{
+
+        },
+        "editTableHead": {
+            "text": "编辑表头",
+            "title": "编辑表头",
+            "restoreDefault": "恢复默认",
+            "cancel": "取消",
+            "save": "保存",
+            "atLeastFive": "请至少保留 5 个表头项",
+            "orderNo": "订单编号",
+            "orderId": "订单ID",
+            "orderDate": "订单日期",
+            "orderSource": "订单来源",
+            "orderStatus": "订单状态",
+            "paymentStatus": "付款状态",
+            "shippingStatus": "发货状态",
+            "returnStatus": "退货状态",
+            "paymentMethod": "支付方式",
+            "paymentChannel": "支付渠道",
+            "paymentCompleteTime": "付款完成时间",
+            "transferCertificateStatus": "转账凭证上传状态",
+            "recipient": "收件人",
+            "recipientPhone": "收件人手机号",
+            "paymentTransactionId": "支付流水号",
+            "orderTag": "订单标签",
+            "trackingNumber": "追踪编号"
+        },
+        "exportOrderDetailModal":{
+
+        },
+        "exportOrderPageModal":{
+
+        },
+        "exportPickingModal": {
+            "title": "导出拣货单",
+            "subtitle": "下载拣货单模版，根据模版规范填写订单相关信息后导入"
+        },
+        "exportShippingModal": {
+            "title": "导出发货单",
+            "subtitle": "下载发货单模版，根据模版规范填写订单相关信息后导入"
+        },
+        "ordersListAjax":{
+            "orderNo": "订单编号",
+            "orderDate": "订单日期",
+            "orderStatus": "订单状态",
+            "paymentStatus": "支付状态",
+            "shippingStatus": "发货状态",
+            "paymentMethod": "支付方式",
+            "paymentChannel": "支付渠道",
+            "consignee": "收货人",
+            "mobile": "手机号",
+            "shippingMethod": "配送方式",
+            "priceTotal": "价格总计",
+            "processing": "处理中",
+            "paid": "已付款",
+            "unpaid": "未付款",
+            "readyToShip": "待发货",
+            "partiallyShipped": "部分发货",
+            "shipped": "已发货"
+        },
+        "index":{
+            "orderList": "订单列表",
+            "exportOrder": "导出订单",
+            "batchDelivery": "批量发货",
+            "updateTrackingNumber": "更新追踪编号",
+            "createOrder": "创建订单",
+            "bulkDelivery": "批量发货",
+            "uploadAndImport": "上传并导入",
+            "importRecord": "导入记录",
+            "cancel": "取消",
+            "downloadTemplate": "请先下载批量导入模版，并按导入模版规范填写订单相关信息，再在本页导入表格，以更新订单包裹的发货状态。",
+            "uploadFile": "上传文件（或拖放上传）",
+            "updateTrackingNumberModalTitle": "更新订单追踪编号",
+            "exportHistory": "导出历史记录",
+            "exportShippedOrders": "请先导出已发货订单，在表格中为订单包裹添加或修改运单号，再在本页导入表格，以更新订单包裹物流状态。",
+            "fileSizeError": "文件大小不能超过10MB!"
+        },
+        "ordersMoreSelect": {
+            "moreselect": "更多筛选",
+            "filterTitle": "筛选",
+            "reset": "重置",
+            "done": "完成",
+            "exactSearch": "精确搜索",
+            "clear": "清除",
+            "orderStatus": "订单状态",
+            "processing": "处理中",
+            "cancelled": "已取消",
+            "archived": "已归档",
+            "paymentStatus": "付款状态",
+            "refundOrder": "退款订单",
+            "shippingStatus": "发货状态",
+            "returnStatus": "退货状态",
+            "shippingMethod": "运输方式",
+            "paymentMethod": "支付方式",
+            "tag": "标签",
+            "productTag": "商品标签",
+            "landingPageDomain": "落地页域名（即将下线）",
+            "landingPageParams": "落地页参数（即将下线）",
+            "referrerDomain": "访问来源域名（即将下线）",
+            "referrerParams": "访问来源参数（即将下线）",
+            "orderDate": "订单日期",
+            "archiveOrder": "归档订单",
+            "chargebackStatus": "拒付与质询状态",
+            "orderSource": "订单来源",
+            "orderProductEditStatus": "订单商品编辑状态",
+            "pickingListExportStatus": "拣货单导出状态",
+            "orderDetailsExportStatus": "订单详情导出状态",
+            "accountingPaymentStatus": "入账付款状态",
+            "transferProofUploadStatus": "转账凭证上传状态",
+            "discountCode": "折扣码",
+            "countryRegion": "国家/地区",
+            "orderAmount": "订单金额",
+            "firstInteractionSource": "首次互动来源",
+            "lastInteractionSource": "末次互动来源",
+            "fraudRisk": "欺诈风险",
+            "shop": "店铺",
+            "allShops": "所有店铺",
+            "currentShop": "当前店铺"
+        },
+        "ordersSelectCard": {
+            "search": "搜索订单",
+            "paymentstatus": "付款状态",
+            "shippingstatus": "发货状态",
+            "notpaid": "未付款",
+            "paying": "付款中",
+            "partpaid": "部分付款",
+            "paid": "已付款",
+            "refunded": "已退款",
+            "partrefunded": "部分退款",
+            "authorized": "已授权",
+            "duplicatepayment": "重复付款",
+            "notshipped": "未发货",
+            "shipped": "已发货",
+            "partshipped": "部分发货",
+            "sort": {
+                "orderno": {
+                    "asc": "订单号（升序）",
+                    "desc": "订单号（降序）"
+                },
+                "createdate": {
+                    "newtoold": "成单时间（最新到最旧）",
+                    "oldtonew": "成单时间（最旧到最新）"
+                },
+                "paydate": {
+                    "newtoold": "支付时间（最新到最旧）",
+                    "oldtonew": "支付时间（最旧到最新）"
+                },
+                "customername": {
+                    "atoz": "客户名称（A-Z）",
+                    "ztoa": "客户名称（Z-A）"
+                },
+                "paymentstatus": {
+                    "atoz": "付款状态（A-Z）",
+                    "ztoa": "付款状态（Z-A）"
+                },
+                "shippingstatus": {
+                    "atoz": "发货状态（A-Z）",
+                    "ztoa": "发货状态（Z-A）"
+                },
+                "totalprice": {
+                    "hightolow": "总价（高至低）",
+                    "lowtohigh": "总价（低至高）"
+                }
+            }
+        },
+        "orderTabs": {
+            "all": "全部",
+            "readytoship": "待发货",
+            "cancelled": "已取消",
+            "process": "进行中",
+            "neworders": "新订单",
+            "archived": "已归档",
+            "orderstatus": "订单状态",
+            "alllocations": "全部位置",
+            "defaultlocation": "默认位置",
+            "newTabTitle": "新建选项卡",
+            "tabName": "选项卡名称",
+            "createNewTab": "创建新选项卡",
+            "enterTabName": "请输入选项卡名称"
+        },
+        "selectedActions": {
+            "bulkshipping":"批量发货",
+            "updatetrackingnumber":"更新跟踪号",
+            "selectedCount": "已选择 {count} 项",
+            "archiveOrders": "归档订单",
+            "archiveOrders.description": "已成功归档{count}条订单",
+            "unarchiveOrders": "取消归档订单",
+            "unarchiveOrders.description": "已成功取消归档{count}条订单",
+            "addTags": "添加标签",
+            "removeTags": "删除标签",
+            "apply": "应用",
+            "accountPayment": "入账付款"
+        },
+        "sortableItem":{
+
+        }
+        
+    },
+    "orderDraft":{
+        "orderDraftList":{
+            "index":{
+                "draftOrderList": "草稿单列表",
+                "exportDraftOrder": "导出草稿单",
+                "createOrder": "创建订单"
+            },
+            "orderDraftList":{
+                "draftOrder": "草稿单",
+                "exportDraftOrder": "导出草稿单",
+                "createOrder": "创建订单"
+            },
+            "orderDraftListAjax":{
+                "draftOrderNo": "草稿单号",
+                "creationDate": "创建日期",
+                "customer": "客户",
+                "status": "状态",
+                "total": "合计",
+                "pending": "未结",
+                "completed": "已结"
+            },
+            "orderDraftTabs":{
+                "all": "全部",
+                "pending": "未结",
+                "completed": "已完成"
+            },
+            "ordersDraftSelectCard":{
+                "searchPlaceholder": "查询草稿单号或采购订单编号（仅B2B订单有）",
+                "status": "状态",
+                "pending": "未结",
+                "completed": "已完成"
+            }
+        }
+    }
+}

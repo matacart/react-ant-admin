@@ -86,6 +86,7 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                 themeId: editor.templateInfo.themeInfo?.id,
                 pageName: "",
                 languagesId: editor.languagesId,
+                versionId: editor.versionId,
                 settings: JSON.stringify(newSettings.settingsData)
             };
             // 执行操作
@@ -106,7 +107,6 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                     },
                     timestamp: Date.now()
                 });
-                editor.setOseId(newData.oseid);
                 editor.setSettings(newSettings);
             }
             editor.setIsSaveData(true);
@@ -133,6 +133,13 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                                 <ColorPickerItem key={item.id} item={item} data={data} setData={debouncedSetData} />
                             )
                         }
+                        case 'color_picker':{
+                            let data = settingsData[item.id];
+                            return (
+                                <ColorPickerItem key={item.id} item={item} data={data} setData={debouncedSetData} />
+                            )
+                        }               
+
                         case 'image_picker':{
                             let data = settingsData[item.id];
                             return (

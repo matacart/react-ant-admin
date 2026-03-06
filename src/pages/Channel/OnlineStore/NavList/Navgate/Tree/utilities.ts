@@ -271,7 +271,7 @@ export function transformFields<T>(data: T, fieldMap: Record<string, string>): a
       if (data.hasOwnProperty(key)) {
         const newKey = fieldMap[key] || key; // 获取新字段名，没有映射则保持原样
         // 递归处理子对象或数组
-        if (Array.isArray(data[key]) || (data[key] && typeof data[key] === 'object')) {
+        if ((key !== 'name') && (Array.isArray(data[key]) || (data[key] && typeof data[key] === 'object'))) {
           result[newKey] = transformFields(data[key], fieldMap);
         } else {
           result[newKey] = data[key];
@@ -279,7 +279,7 @@ export function transformFields<T>(data: T, fieldMap: Record<string, string>): a
       }
     }
     // 处理特殊情况：补上title字段 和 img字段
-    result.title = result.name?.default || "";
+    result.title = (result?.languagesId ? result.name[result.languagesId] : result.name?.default) || "";
     result.img = result.image?.src || "";
     return result;
   }

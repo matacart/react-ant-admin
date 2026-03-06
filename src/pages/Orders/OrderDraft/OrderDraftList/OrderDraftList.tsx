@@ -1,22 +1,15 @@
 
-import React, { useEffect, useRef, useState } from 'react'
-import { Flex, Modal, Space, Upload } from 'antd';
+import React from 'react'
+import { Flex, Space } from 'antd';
 import styled from 'styled-components'
-import Icon, { ExportOutlined } from '@ant-design/icons';
+import { ExportOutlined } from '@ant-design/icons';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { history } from '@umijs/max';
+import { history, useIntl } from '@umijs/max';
 import OrderDraftTabs from './OrderDraftTabs';
-interface MenuItem {
-  key: string;
-  label: React.ReactNode;
-  onClick?: () => void; // 可选的点击事件处理函数
-}
 
-interface MenuProps {
-  items: MenuItem[];
-}
 
 export default function OrderDraftList() {
+  const intl = useIntl();
 
   return (
     <Scoped>
@@ -25,17 +18,17 @@ export default function OrderDraftList() {
           <div className="create-title">
             <Flex className="create-title-left" align='center' gap={12}>
               <h3>
-                草稿单
+                {intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftList.draftOrder' })}
               </h3>
               <div style={{paddingTop:"4px"}}>
                 <a style={{ color: '#242833' }}>
                     <ExportOutlined style={{marginRight:"6px"}} />
-                    <Space>导出草稿单</Space>
+                    <Space>{intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftList.exportDraftOrder' })}</Space>
                 </a>
               </div>
             </Flex>
             <Flex gap={12}>
-                <PrimaryButton text="创建订单" onClick={()=>{
+                <PrimaryButton text={intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftList.createOrder' })} onClick={()=>{
                     history.push('/orders/draftOrders/add')
                 }} />
             </Flex>

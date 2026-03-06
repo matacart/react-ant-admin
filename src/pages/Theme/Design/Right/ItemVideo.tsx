@@ -5,7 +5,7 @@ import MyInput from "@/components/Input/MyInput"
 import { getFileList } from "@/services/y2/api"
 import { CheckCircleFilled, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
 import { Col, Drawer, Flex, GetProp, Row, Spin, Upload, UploadProps } from "antd"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import styled from "styled-components"
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -15,31 +15,29 @@ interface DataType{
     resource:any,
 }
 
+interface VideoType{
+    id:string,
+    url:string,
+    type:string
+}
+
 function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any,value:DataType)=>void}){
 
-    const mRef = useRef(null)
+    const mRef = useRef(null);
 
     const [open,setOpen] = useState(false);
 
-    const [menu,setMenu] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    // 检测屏幕宽度并决定Drawer的位置
+    const [isSmallScreen, setIsSmallScreen] = useState("right");
 
     // 默认数据
     const defaultData = item.default ?? undefined;
 
     const [videoData,setVideoData] = useState(typeof data === 'object' ? data : defaultData);
 
-    const [loading, setLoading] = useState(false);
-
-    const [videoList,setVideoList] = useState([
-        {
-            checked:true,
-            url:'//oss.handingcdn.com/Uploads/Editor/Picture/mr/55/app/0/images/2025-11-14/2025-11-14/69168c5c44810.mp4',
-        },
-        {
-            checked:false,
-            url:'//oss.handingcdn.com/Uploads/Editor/Picture/mr/55/app/0/images/2025-11-14/2025-11-14/69168c5c44810.mp4'
-        }
-    ]);
+    const [videoList,setVideoList] = useState<VideoType[]>([]);
 
     const fetchVideo = ()=>{
         setLoading(true);
@@ -53,7 +51,6 @@ function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any
                 const newVideoList = res.data.list.map((item:any)=>{
                     return {
                         id:item.id,
-                        checked:false,
                         url:item.url,
                         type:item.nameSuffix
                     }
@@ -81,15 +78,11 @@ function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any
 
     // 完成
     const submit = () => {
-        const video = videoList.filter(item=>item.checked)[0];
-        setData(item,{
-            value: video.url || "",
-            resource: null
-        });
-        setVideoData({
-            value: video.url || "",
-            resource: null
-        });
+        setData(item,videoData);
+        // setVideoData({
+        //     value: video.url || "",
+        //     resource: null
+        // });
         setOpen(false);
     }
 
@@ -103,8 +96,23 @@ function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any
     };
 
     useMemo(()=>{
+        console.log(data);
         setVideoData(typeof data === 'object' ? data : defaultData);
     },[data])
+
+    useEffect(() => {
+        const updatePlacement = () => {
+            setIsSmallScreen(window.innerWidth < 1600 ? 'left' : 'right');
+        };
+        // 初始化
+        updatePlacement();
+        // 监听窗口大小变化
+        window.addEventListener('resize', updatePlacement);
+        // 清理事件监听器
+        return () => {
+            window.removeEventListener('resize', updatePlacement);
+        };
+    }, []);
 
 
     return (
@@ -130,17 +138,19 @@ function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any
                 <EditorAddBtnIcon className="font-24 icon" />
                 <div className="text">选择视频文件</div>
             </Flex>} 
-            
+            {/* 视频选择抽屉 */}
             <Drawer
-                getContainer={()=>mRef.current!}
-                width={319}
-                closeIcon={null}
+                placement={isSmallScreen as 'left' | 'right'}
                 title={<div>从文件库中选择</div>}
+                getContainer={()=>mRef.current!}
+                width={300}
                 mask={false}
                 open={open}
+                className="menu-picker-drawer"
                 classNames={{
                     body: 'menu-box'
                 }}
+                closeIcon={null}
                 onClose={cancel}
                 footer={
                     <Flex justify="end">
@@ -173,21 +183,11 @@ function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any
                             {videoList.map((video:any)=>{
                                 return (
                                     <Col span={12} key={video.id}>
-                                        <Flex className={video.checked?"video_box checked":"video_box"} align="center" justify="center" onClick={()=>{
-                                            const newVideoList = videoList.map((item:any)=>{
-                                                if(item.id == video.id){
-                                                    return {
-                                                        ...item,
-                                                        checked:true
-                                                    }
-                                                }else{
-                                                    return {
-                                                        ...item,
-                                                        checked:false
-                                                    }
-                                                }
+                                        <Flex className={video.id == videoData?.resource?.id?"video_box checked":"video_box"} align="center" justify="center" onClick={()=>{
+                                            setVideoData({
+                                                value: video.url || "",
+                                                resource: video
                                             })
-                                            setVideoList(newVideoList);
                                         }}>
                                             <video src={video.url} />
                                             <CheckCircleFilled className="icon_checked" />
@@ -235,11 +235,16 @@ const Scoped = styled.div`
         box-shadow:none;
     }
 
+    .menu-picker-drawer{
+        position: relative;
+        left: 52px;
+    }
+
     .menu-box{
         padding: 0;
         .upload_btn{
-            width: 140px;
-            height: 140px;
+            width: 128px;
+            height: 128px;
             background: #FAFAFA;
             border-radius: 6px;
             border: 1px dashed #d7dbe7;
@@ -252,8 +257,8 @@ const Scoped = styled.div`
 
         .video_box{
             position: relative;
-            width: 140px;
-            height: 140px;
+            width: 128px;
+            height: 128px;
             background-color: #eaedf1;
             border-radius: 6px;
             border: 2px solid #eaedf1;
@@ -273,7 +278,14 @@ const Scoped = styled.div`
                 display: none;
             }
             .type_checked{
-                display: none;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                padding: 2px 6px;
+                font-size: 12px;
+                color: #fff;
+                border-radius: 6px 0 4px 0;
+                background-color: #00000080;
             }
         }
         .checked{

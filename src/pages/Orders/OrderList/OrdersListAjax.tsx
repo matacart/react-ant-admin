@@ -61,14 +61,14 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
 
   const columns: TableColumnsType<DataType> = [
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.orderid' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.orderNo' }),
       dataIndex: 'order_sn',
       render: (text: string) => (
         <span style={{ color: '#242833' }}>{text}</span>
       ),
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.orderdata' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.orderDate' }),
       dataIndex: 'date_purchased',
       render: (text: string) => (
         <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -77,39 +77,39 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
       ),
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.orderstate' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.orderStatus' }),
       dataIndex: 'orderstate',
-      render: (text: string) => <OrderWarningTag text="处理中" />,
+      render: (text: string) => <OrderWarningTag text={intl.formatMessage({ id: 'orders.orderList.ordersListAjax.processing' })} />,
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.paymenstate' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.paymentStatus' }),
       dataIndex: 'payment_status_id',
       render: (value: number) => <>
-        {value == 8?<OrderDefaultTag text="已付款"/>:<OrderWarningTag text="未付款" />}
-      </>
+        {value == 8?<OrderDefaultTag text={intl.formatMessage({ id: 'orders.orderList.ordersListAjax.paid' })}/>:<OrderWarningTag text={intl.formatMessage({ id: 'orders.orderList.ordersListAjax.unpaid' })} />}
+      </>,
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.deliverystate' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.shippingStatus' }),
       dataIndex: 'delivery_status_id',
       render: (value: number) => <>
-        {value == 1?<OrderWarningTag text="待发货" />:value == 150?<OrderWarningTag text="部分发货"/>:<OrderDefaultTag text="已发货"/>}
-      </>
+        {value === 1 ? <OrderWarningTag text={intl.formatMessage({ id: 'orders.orderList.ordersListAjax.readyToShip' })} /> : value === 150 ? <OrderWarningTag text={intl.formatMessage({ id: 'orders.orderList.ordersListAjax.partiallyShipped' })} /> : <OrderDefaultTag text={intl.formatMessage({ id: 'orders.orderList.ordersListAjax.shipped' })} />}
+      </>,
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.paymentmethod' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.paymentMethod' }),
       dataIndex: 'payment_method',
       render: (text: string) => <span>{text}</span>,
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.paymentchannel' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.paymentChannel' }),
       dataIndex: 'paymentchannel',
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.deliveryname' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.consignee' }),
       dataIndex: 'delivery_name',
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.tel' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.mobile' }),
       dataIndex: 'tel',
       render: (tel: string) => {
         // 显示手机号的前两位和后两位，中间用星号(*)代替
@@ -118,11 +118,11 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
       },
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.shippingmethod' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.shippingMethod' }),
       dataIndex: 'shippingmethod',
     },
     {
-      title: intl.formatMessage({ id: 'orders.orderlist.ordersListAjax.pricetotal' }),
+      title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.priceTotal' }),
       dataIndex: 'order_total',
       render: (value: any, record: any, index: any) => {
         let num = Number(value);
@@ -193,18 +193,18 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     return intl.formatMessage({ id: statusKey });
   };
 
-  const handleTableChange = (pagination, filters, sorter) => {
+  const handleTableChange: TableProps<DataType>["onChange"] = (pagination, filters, sorter: any) => {
     setTableParams({
       pagination,
       filters,
       ...sorter,
     });
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+    if (pagination?.pageSize !== tableParams.pagination?.pageSize) {
       setData([]);
     }
   };
 
-  const handleOrderClick = (orderId: string) => {
+  const handleOrderClick = (orderId: number | string) => {
     history.push(`/orders/${orderId}`);
   };
 

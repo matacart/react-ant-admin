@@ -9,6 +9,9 @@ import { DownIcon } from '@/components/Icons/Icons';
 
 
 const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activeKey: string }) => {
+
+  const intl = useIntl();
+
   const [filterCondition,setFilterCondition] = useState(
     {
       id:id,
@@ -16,10 +19,10 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
     }
   )
 
-  const handleRemoveCondition = (conditionId: string) => {
-    const updatedConditions = filterCondition.filter(condition => condition.id !== conditionId);
-    setFilterCondition(updatedConditions);
-  };
+  // const handleRemoveCondition = (conditionId: string) => {
+  //   const updatedConditions = filterCondition.filter(condition => condition.id !== conditionId);
+  //   setFilterCondition(updatedConditions);
+  // };
 
 
   // 定义模态框的状态
@@ -64,36 +67,33 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
             orderList.setBizOrderStatuses([])
           }}>
               <span className="color-474F5E font-14">
-                {"订单状态"}：{orderList.bizOrderStatuses.map((item,index)=>{
+                {intl.formatMessage({ id: 'orders.orderList.orderTabs.orderstatus' })}：{orderList.bizOrderStatuses.map((item,index)=>{
                   switch (item) {
                     case "-1":
-                      return "已归档"
+                      return intl.formatMessage({ id: 'orders.orderList.orderTabs.archived' })
                     case "0":
-                      return "已取消"
+                      return intl.formatMessage({ id: 'orders.orderList.orderTabs.cancelled' })
                     case "1":
-                      return "处理中"
+                      return intl.formatMessage({ id: 'orders.orderList.orderTabs.process' })
                   }
                 }).join(",")}
               </span>
           </Tag>}
         </Flex>
-        {/* <Button  onClick={addNewTab}>
-          新建选项卡
-        </Button> */}
         <Modal
-          title="新建选项卡"
-          visible={isModalVisible}
+          title={intl.formatMessage({ id: 'orders.orderList.orderTabs.newTabTitle' })}
+          open={isModalVisible}
           onOk={() => {
           
             handleCancel();
           }}
           onCancel={handleCancel}
         >
-          <p>选项卡名称</p>
+          <p>{intl.formatMessage({ id: 'orders.orderList.orderTabs.tabName' })}</p>
           <Input></Input>
         </Modal>
       </div>
-        <OrdersListAjax {...filterCondition} />
+      <OrdersListAjax {...filterCondition} />
     </div>
   );
 })
@@ -107,31 +107,31 @@ function OrderTabs() {
   const [items,setItems] = useState<TabsProps['items']>([
     { 
       key:'',
-      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.all' }), 
+      label: intl.formatMessage({ id: 'orders.orderList.orderTabs.all' }), 
       children: <FilteredOrdersComponent id={''} activeKey={''} />,
       closable:false
     },
     { 
       key:'4',
-      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.readytoship' }), 
+      label: intl.formatMessage({ id: 'orders.orderList.orderTabs.readytoship' }), 
       children: <FilteredOrdersComponent id={'4'} activeKey={'4'} />,
       closable:false
     },
     { 
       key:'3',
-      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.cancelled' }), 
+      label: intl.formatMessage({ id: 'orders.orderList.orderTabs.cancelled' }), 
       children: <FilteredOrdersComponent id={'3'} activeKey={'3'} />,
       closable:false
     },
     { 
       key:'2',
-      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.process' }), 
+      label: intl.formatMessage({ id: 'orders.orderList.orderTabs.process' }), 
       children: <FilteredOrdersComponent id={'2'} activeKey={'2'} />,
       closable:false
     },
     { 
       key:'5',
-      label: intl.formatMessage({ id: 'orders.orderlist.orderTabs.neworders' }), 
+      label: intl.formatMessage({ id: 'orders.orderList.orderTabs.neworders' }), 
       children: <FilteredOrdersComponent id={'5'} activeKey={'5'} />,
       closable:false
     },
@@ -184,7 +184,7 @@ function OrderTabs() {
       <Tabs
         activeKey={activeKey}
         onChange={onChange}
-        destroyInactiveTabPane={true}
+        destroyOnHidden={true}
         type="editable-card"
         tabBarExtraContent={<>
           <Dropdown placement="bottomRight" trigger={["click"]} menu={{items:[
@@ -198,15 +198,15 @@ function OrderTabs() {
                     gap: 8,
                   }}
                   options={[
-                    { value: 1, label: '全部地点' },
-                    { value: 2, label: '默认地点' },
+                    { value: 1, label: intl.formatMessage({ id: 'orders.orderList.orderTabs.alllocations' }) },
+                    { value: 2, label: intl.formatMessage({ id: 'orders.orderList.orderTabs.defaultlocation' }) },
                   ]}
                 />
               </>,
             }
           ]}}>
             <Flex gap={6} className='cursor-pointer'>
-              <div className='color-474F5E'>全部地点</div>
+              <div className='color-474F5E'>{intl.formatMessage({ id: 'orders.orderList.orderTabs.alllocations' })}</div>
               <DownIcon className='color-474F5E font-12' />
             </Flex>
           </Dropdown>
@@ -215,13 +215,13 @@ function OrderTabs() {
         items={items}
       />
       <Modal
-        title="创建新选项卡"
-        visible={isModalVisible}
+        title={intl.formatMessage({ id: 'orders.orderList.orderTabs.createNewTab' })}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <Input
-          placeholder="请输入选项卡名称"
+          placeholder={intl.formatMessage({ id: 'orders.orderList.orderTabs.enterTabName' })}
           value={newTabName}
           onChange={e => setNewTabName(e.target.value)}
         />

@@ -12,10 +12,12 @@ import cookie from 'react-cookies';
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import LangSelect from "@/components/Select/LangSelect";
+import { getPrimaryDomain } from "@/utils/dataStructure";
 
 
 interface DataType {
     title:string;
+    handle:string;
     key: string;
     name: string;
     age: number;
@@ -68,12 +70,9 @@ export default function CustomPageListCard({list,count}) {
           render: (_, record) => (
             <Space size="middle">
               <div className='wrap' onClick={(e) => {
-                  e.stopPropagation()
-                  if(cookie.load("domain").domainName && cookie.load("domain").domainName!==""){
-                    window.open(`https://`+cookie.load("domain").domainName+`/`+record.title.replace(/\s+/g, "-")+`-n`+record.id+`.html`)
-                  }else{
-                    message.error("请先设置店铺")
-                  }
+                  e.stopPropagation();
+                  const primaryDomain = getPrimaryDomain();
+                  primaryDomain && window.open(`${primaryDomain}/pages/${record.handle}`)
                 }}>
                 <Tooltip title="预览">
                   <EyeOutlined className="font-16 cursor-pointer" />

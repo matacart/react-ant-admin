@@ -2,20 +2,20 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
 import { Divider, message } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import CustomInformationEdit from '../CustomInformationEdit';
-import DraftPaidCard from '../DraftPaidCard';
-import MaketCard from '../MaketCard';
-import OrderDraftLabel from '../OrderDraftLabel';
-import OrderNotesLable from '../OrderNotesLable';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useNavigate } from 'react-router-dom';
 import orderDraft from '@/store/order/orderDraft';
 import { addDraftOrder } from '@/services/y2/api';
-import AddProductCard from '../AddProductCard';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
-import { convertFlatToNested } from '../ProductTableModal';
+import AddProductCard from '../OrderDraft/AddProductCard';
+import DraftPaidCard from '../OrderDraft/DraftPaidCard';
+import CustomInformationEdit from '../OrderDraft/CustomInformationEdit';
+import MaketCard from '../OrderDraft/MaketCard';
+import OrderNotesLable from '../OrderDraft/OrderNotesLable';
+import OrderDraftLabel from '../OrderDraft/OrderDraftLabel';
+import { convertFlatToNested } from '../OrderDraft/ProductTableModal';
 
   
 function OrderDraftAdd() {

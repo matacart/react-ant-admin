@@ -1,5 +1,6 @@
-import { Checkbox, Select, Space } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useIntl } from "@umijs/max";
+import { Checkbox, Select } from "antd";
+import { useRef } from "react";
 import styled from "styled-components";
 
 interface optionType{
@@ -10,13 +11,9 @@ interface optionType{
 // 自定义筛选框
 function CheckSelectClear({options,setStatusOptions,text,style}:{options:optionType[],setStatusOptions:any,text:string,style?:any}) {
 
-    const [open,setOpen] = useState(false);
+    const Ref = useRef<HTMLDivElement>(null);
 
-    const Ref = useRef<HTMLDivElement>(null)
-
-    useEffect(()=>{
-        // setStatusOptions(options)
-    },[options])
+    const intl = useIntl();
 
     return (
         <Scoped ref={Ref}>
@@ -29,15 +26,29 @@ function CheckSelectClear({options,setStatusOptions,text,style}:{options:optionT
                     )
                 }}
                 getPopupContainer={()=>Ref.current!}
-                dropdownStyle={{padding:"6px 0"}}
-                dropdownRender={(menu) => {
+                styles={{
+                    popup: { 
+                        root: {
+                            padding:"6px 0"
+                        } 
+                    }
+                }}
+                popupRender={(menu) => {
                     const list = options.map((item,index)=>{
                         return (
-                            <Checkbox checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
-                                let newOption = [...options]
-                                newOption[index].checked = e.target.checked
-                                setStatusOptions(newOption)
-                            }}>{item.label}</Checkbox>
+                            <Checkbox
+                                key={index}
+                                checked={item.checked} 
+                                className="item" 
+                                style={{padding:"8px 12px",width:"100%"}} 
+                                onChange={(e)=>{
+                                    let newOption = [...options]
+                                    newOption[index].checked = e.target.checked
+                                    setStatusOptions(newOption)
+                                }}
+                            >
+                                {item.label}
+                            </Checkbox>
                         )
                     })
                     return (
@@ -47,7 +58,8 @@ function CheckSelectClear({options,setStatusOptions,text,style}:{options:optionT
                                 <span className="color-7A8499 cursor-pointer" onClick={()=>{
                                     let newOption = options.map(item=>({...item,checked:false}))
                                     setStatusOptions(newOption)
-                                }}>清除</span>
+                                }}>
+                                    {intl.formatMessage({ id: 'components.select.checkSelectClear.clear' })}</span>
                             </div>
                         </>
                     )

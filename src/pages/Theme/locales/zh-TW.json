@@ -1,0 +1,72 @@
+{
+  "design": {
+    "header": {
+      "live": "已啟用",
+      "draft": "草稿",
+      "preview": "預覽",
+      "save": "保存",
+      "undo": "撤銷",
+      "redo": "重做",
+      "backToAdmin": "返回管理後台",
+      "mode": "模式",
+      "modeAuto": "智能模式",
+      "modeOriginal": "開發模式",
+      "modeMapping": "用戶模式",
+      "navigation": {
+        "back": "返回",
+        "default": "默認模板",
+        "createTemplate": "創建模板",
+        "renameTemplate": "重命名模板",
+        "Home": "首頁",
+        "AllCollections": "分類頁",
+        "Products": "商品列表頁",
+        "ProductsDetail": "商品詳情頁",
+        "Cart": "購物車頁",
+        "BlogsList": "博客集合頁",
+        "BlogsDetail": "博客頁",
+        "Checkout": "結賬頁",
+        "404": "404頁",
+        "ProductsSearch": "搜索頁",
+        "SignIn": "登陸頁",
+        "SignUp": "註冊頁",
+        "Company": "公司帳號註冊頁",
+        "ActivateAccount": "激活頁",
+        "Center": "客戶帳戶頁",
+        "Password": "密碼頁",
+        "AddressNew": "地址頁",
+        "AddressEdit": "地址頁",
+        "OrderList": "客戶訂單頁",
+        "OrderDetail": "訂單詳情頁",
+        "PasswordNew": "忘記密碼頁",
+        "Page": "自定義頁面",
+        "Policy": "隱私政策",
+        "Features": "功能頁面",
+        "Customers": "客戶帳戶",
+        "tipDelete": "刪除",
+        "tipRename": "重命名"
+      },
+      "modalTemplateName": "模版名稱",
+      "modalTemplateNamePlaceholder": "請輸入模版名稱",
+      "modalBasedOnTemplate": "基於模板",
+      "deleteModalTitle": "確認要刪除此模板嗎？",
+      "deleteModalContent": "當前有商品正在使用此模版時，刪除後將改為使用默認模版。",
+      "deleteModalDelete": "刪除",
+      "renameTemplateModalWarningText": "改動模板名稱可能導致商品分類丟失模板關聯，影響在線商店，請謹慎操作。"
+    },
+    "left": {
+      "home": "首頁",
+      "expand": "展開",
+      "collapse": "折疊",
+      "template": "模板",
+      "toolBarComponent": "組件",
+      "toolBarGlobalSettings": "全局設置",
+      "toolBarAppEmbeds": "應用嵌入",
+      "itemTextPlaceholder": "輸入文本"
+    },
+    "right":{
+      "itemText":{
+        "placeholder":"輸入文本"
+      }
+    }
+  }
+}

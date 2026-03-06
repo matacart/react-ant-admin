@@ -1,0 +1,80 @@
+{
+    "shopTimeDisplay":{
+        "shopTimeDisplay":"店鋪所在時區時間",
+        "afternoon":"下午",
+        "morning":"上午",
+        "year":"年"
+    },
+    "dataCard":{
+        "todayData":"今日數據",
+        "more":"查看更多",
+        "salesRevenue":"銷售額",
+        "todaySalesRevenue":"今天到目前為止的銷售額",
+        "orderNumber":"訂單數",
+        "todayOrderNumber":"今天到目前為止的訂單數",
+        "visitorCount":"訪客數",
+        "todayVisitorCount":"今天到目前為止的訪客數"
+    },
+    "textCard":{
+        "package":{
+            "title":"為您的店鋪選擇套餐",
+            "content":"立即付費解鎖更多功能，享受更好的服務和支持。已支持以下付款方式：<br/>√ 銀聯支付（借記卡及信用卡，支持自動扣費）<br/>√ 信用卡支付（Visa、JCB、MasterCard、American Express，支持自動扣費）<br/>√ 微信支付",
+            "button":"選擇套餐"
+        },
+        "domain":{
+            "title":"為您的店鋪選擇域名",
+            "content":"一個好的域名，助您的品牌深入人心。您可以在Godaddy、阿里雲等域名服務商購買域名後，解析域名並綁定到MATACART後台。",
+            "button":"點擊設置"
+        }
+    },
+    "openStoreGuidance":{
+        "title":"開店引導",
+        "progress":"已完成{num}個任務",
+        "productTab":{
+            "name":"添加商品",
+            "title":"添加商品",
+            "desc":"您還可以繼續添加更多新產品",
+            "buttonText":"去添加",
+            "doneTitle":"您已添加了新產品",
+            "doneDesc":"您還可以繼續添加更多新產品",
+            "doneButtonText": "去添加"
+        },
+        "logisticsTab":{
+            "name":"配置物流",
+            "title":"配置物流",
+            "desc":"您還可以繼續添加更多新物流",
+            "buttonText":"去添加",
+            "doneTitle":"您已配置了物流",
+            "doneDesc":"MataCart支持按重量等多個維度設置不同國家/地區的物流模版，也可同時支持多個方案。在後台也可以添加物流商。",
+            "doneButtonText":"設置物流方式"
+        },
+        "paymentMethodTab":{
+            "name":"配置收款",
+            "title":"配置收款",
+            "desc":"您還可以繼續添加更多新收款方式",
+            "buttonText":"去添加",
+            "doneTitle":"您已配置了收款方式",
+            "doneDesc":"可根據您售賣的地區設置合適的付款方式",
+            "doneButtonText":"設置收款方式"
+        },
+        "customPageTab":{
+            "title":"創建自定義頁面",
+            "name":"創建自定義頁面",
+            "desc":"您還可以繼續添加更多自定義頁面",
+            "buttonText":"去添加",
+            "doneTitle":"您已添加了自定義頁面",
+            "doneDesc":"您已成功添加頁面，您可以繼續添加更多頁面或者完善已有頁面信息。",
+            "doneButtonText": "去設置"
+        },
+        "navigationTab":{
+            "title":"整理導航",
+            "name":"整理導航",
+            "desc":"您還可以繼續添加更多導航",
+            "buttonText":"去添加",
+            "doneTitle":"您已添加了導航",
+            "doneDesc":"您還可以繼續添加更多導航",
+            "doneButtonText": "去添加"
+        }
+    }
+    
+}

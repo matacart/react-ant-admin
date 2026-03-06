@@ -1,4 +1,3 @@
-import { SearchOutlined } from "@ant-design/icons"
 import { ConfigProvider, Input } from "antd"
 import styled from "styled-components"
 

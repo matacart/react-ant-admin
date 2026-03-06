@@ -1,11 +1,19 @@
+import blogs from "@/store/channel/blogs/blogs";
 import { Card, Flex, Form, FormInstance, Radio } from "antd"
 import { observer } from "mobx-react-lite";
+import { useMemo } from "react";
 import styled from "styled-components"
 
 
 const CommentCard = (props: { form: FormInstance })=>{
 
     const { form } = props;
+
+    useMemo(() => {
+        form.setFieldsValue({
+            comment: blogs.blogs.comment_mode,
+        })
+    }, [blogs.blogs.comment_mode])
 
     return (
         <Scoped>
@@ -23,9 +31,9 @@ const CommentCard = (props: { form: FormInstance })=>{
                         <Radio.Group
                             style={{ display: 'flex', gap:"12px", flexDirection: 'column' }}
                             options={[
-                                { value: 1, label: '禁用评论' },
-                                { value: 2, label: '允许评论，需经过审核' },
-                                { value: 3, label: '允许评论，并自动发布评论' },
+                                { value: "1", label: '禁用评论' },
+                                { value: "2", label: '允许评论，需经过审核' },
+                                { value: "3", label: '允许评论，并自动发布评论' },
                             ]}
                             onChange={()=>{
 
