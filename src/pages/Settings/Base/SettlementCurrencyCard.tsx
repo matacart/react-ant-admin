@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import InputSearch from "@/components/Search/InputSearch";
 import { getCurrenciesList, setCurrenciesList } from "@/services/y2/api";
 import { CheckOutlined, CloseOutlined, ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Form, Input, InputNumber, message, Modal, Switch, Table, TableProps } from "antd";
+import { App, Card, Flex, Form, InputNumber, Modal, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import cookie from 'react-cookies';
@@ -19,6 +19,8 @@ interface DataType {
 
 
 function SettlementCurrencyCard() {
+    
+    const { message } = App.useApp();
 
     const [form] = Form.useForm();
 
@@ -104,7 +106,7 @@ function SettlementCurrencyCard() {
         }
     ];
     useEffect(()=>{
-        setCurrency(cookie.load("domain").default_currency)
+        setCurrency(cookie.load("domain")?.default_currency)
     },[])
     // 获取币种
     const getCurrencies = ()=>{

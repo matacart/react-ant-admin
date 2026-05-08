@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Flex, Form, Input, message, Modal, Radio, Select, SelectProps, Space, TreeSelect } from "antd";
+import { App, Button, Card, Divider, Flex, Form, Input, Modal, Select, Space, TreeSelect } from "antd";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { addArticleCollection, getArticleCollection } from "@/services/y2/api";
@@ -7,16 +7,11 @@ import { convertToTree } from "@/utils/dataStructure";
 import articles from "@/store/channel/articles/articles";
 import LangSelect from "@/components/Select/LangSelect";
 import DefaultInput from "@/components/Input/DefaultInput";
-import MySelect from "@/components/Select/MySelect";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 
-const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-};
-
 export default function TissueCard() {
+
+    const { message } = App.useApp();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,7 +33,6 @@ export default function TissueCard() {
             setIsModalOpen(false)
             getArticleCollection().then(res=>{
                 const data = convertToTree(res.data);
-                // console.log(data)
                 setGroupList(res.data)
                 setTreeGroup(data)
             }).catch(err=>{

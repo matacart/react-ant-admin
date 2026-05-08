@@ -23,20 +23,20 @@ function SearchAll(){
 
     // 使用 lodash debounce 创建防抖函数
     const debouncedSearch: DebouncedFunc<(value: string) => void> = useMemo(() => {
-        return debounce((value: string) => {
+        return debounce(async (value: string) => {
             // 在这里执行搜索逻辑
             if (!value.trim()) {
                 setResults([]);
                 return;
             }
             setLoading(true);
-            globalSearch(value.trim()).then(res=>{
-                res.code == "SUCCESS" && setResults(res.data.searchResultList)
-            }).catch(()=>{
-              setResults([]);
-            }).finally(()=>{
-                setLoading(false);
-            });
+            const res = await globalSearch(value.trim());
+            if(res?.code == "SUCCESS"){
+                setResults(res.data.searchResultList)
+            }else{
+                setResults([]);
+            }
+            setLoading(false);
         }, 500);
     },[]);
 

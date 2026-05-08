@@ -7,9 +7,9 @@ import StylesStoreCard from './StylesStoreCard';
 import { getTemplateMallList } from '@/services/y2/api';
 import shopSetting from '@/store/channel/shopSetting/shopSetting';
 import LangSelect from '@/components/Select/LangSelect';
-import cookie from 'react-cookies';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
+import cookies from 'react-cookies';
 
 function ShopSetting(){
 
@@ -35,13 +35,12 @@ function ShopSetting(){
   ];
 
   useEffect(()=>{
-    // 默认语言
-    shopSetting.setLanguagesId(cookie.load("shop_lang") || '2');
     // 创建 AbortController 信号
     const signal = createAbortController();
     getTemplateMallList({
       page: 1,
-      limit:10,
+      limit:10
+      // languages_id:cookies.load("shop_lang"),
     },signal).then((res:any)=>{
       if(res.code == 0){
         shopSetting.setTemplateMallList(res.data)

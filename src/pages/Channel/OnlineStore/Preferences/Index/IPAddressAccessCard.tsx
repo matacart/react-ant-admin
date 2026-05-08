@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import MyInput from "@/components/Input/MyInput";
-import { Card, Flex, Form, message, Modal, Radio, Table, Tooltip} from "antd";
+import { App, Card, Flex, Form, Modal, Radio, Table, Tooltip} from "antd";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { addIPAddressAccess, delIPAddressAccess, getIPAddressAccessList } from "@/services/y2/api";
@@ -10,6 +10,8 @@ import preferences, { IPAddressAccess } from "@/store/channel/preferences/prefer
 import { observer } from "mobx-react-lite";
 
 function IPAddressAccessCard() {
+    
+    const { message } = App.useApp();
 
     const [open,setOpen] = useState(false);
 

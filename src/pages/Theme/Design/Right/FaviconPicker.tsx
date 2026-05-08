@@ -1,9 +1,9 @@
 import MyButton from "@/components/Button/MyButton";
 import { AddIcon } from "@/components/Icons/Icons";
-import { Flex, message, Spin, Upload, UploadProps } from "antd";
+import { Flex, App, Spin, Upload, UploadProps } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import axios from "axios";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 
 interface DataType{
@@ -12,6 +12,8 @@ interface DataType{
 }
 
 function FaviconPicker({item,data,setData}:{item:any,data:DataType,setData:(item:any,value:DataType)=>void}){
+    
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false);
 

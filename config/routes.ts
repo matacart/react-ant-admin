@@ -30,14 +30,21 @@ export default  [
         path:'signIn',
         name: 'singIn',
         component: './User/Login.tsx',
-      },{
+      },
+      {
         path:'signUp',
         name: 'singUp',
         component: './User/Register.tsx',
-      },{
+      },
+      {
         path:'forget',
         name: 'forget',
         component: './User/Forget.tsx',
+      },
+      {
+        path:'customer-email/verify',
+        name: 'customerEmailVerify',
+        component: './User/VerifyEmail.tsx',
       },
     ],
   },
@@ -46,7 +53,7 @@ export default  [
     path: '/home',
     name: 'home',
     icon: 'HomeOutlined',
-    component: "@/pages/Admin/index",
+    component: "@/pages/Admin/Index",
   },
   // 订单
   {  
@@ -126,7 +133,7 @@ export default  [
         {
           path: 'index',
           name: 'productsList',
-          component: './Products/ProductList/index', 
+          component: './Products/ProductList/Index', 
         },
         {
           path: 'migrate',
@@ -581,7 +588,20 @@ export default  [
   },
   {
     path: 'channels/google',
-    component: './Channel/Mount/Mount',
+    routes: [
+      {
+        path: '',
+        component: './Channel/Google/Index/Index',
+      },
+      {
+        path: 'google-domain',
+        component: './Channel/Google/DomainVerification/DomainVerification',
+      },
+      {
+        path: 'google-data-tracking',
+        component: './Channel/Google/DataTracking/DataTracking',
+      },
+    ]
   },
   {
     path: 'channels/telegram',
@@ -773,9 +793,10 @@ export default  [
         path:"fileManage",
         component:"./Settings/FileManage/FileManage"
       },
+      // 通知
       {
         path:"notice",
-        component:"./Settings/Notification/Notification"
+        component:"./Settings/Notification/Index/Notification"
       },
       // 域名
       {
@@ -794,7 +815,6 @@ export default  [
         path:"redirection",
         component:"./Settings/Domain/Redirection/Redirection"
       },
-
       {
         path:"settle",
         component:"./Settings/Settle/Settle"
@@ -829,29 +849,35 @@ export default  [
       },
     ]
   },
+  {
+    path:"settings/noticeEmail/:key",
+    layout: false,
+    component:"./Settings/Notification/NoticeEmail/NoticeEmail"
+  },
   // 主题
   {
     path: 'theme',
     icon: 'SettingOutlined',
     hideInMenu: true,
     layout: false,
+    component: './Theme/Index/Index',
     routes:[
       {
-        path: 'editor/:templateId/:languagesId/:versionId',
+        path: 'editor/:templateId/:versionId/:languageId/:mode',
         component: './Theme/Design/Index/Editor',
       },
       {
-        path: 'codeEditor/:id/:templateId/:languagesId/:versionId',
+        path: 'codeEditor/:id/:templateId/:versionId/:languageId/:mode',
         component: './Theme/CodeEditor/CodeEditor',
-      }
+      },
+      {
+        path: 'langFieldEdit/:templateId/:versionId/:languageId/:mode',
+        hideInMenu: true,
+        component: './Theme/LangEditor/LangEditor',
+      },
     ]
   },
   // 主题语言编辑
-  {
-    path: 'theme/langFieldEdit/:templateId/:languagesId/:versionId',
-    hideInMenu: true,
-    component: './Theme/LangEditor/LangEditor',
-  },
   {
     path: 'theme/styles/:templateId/:styleId',
     hideInMenu: true,

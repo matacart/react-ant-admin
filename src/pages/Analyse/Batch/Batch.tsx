@@ -1,16 +1,13 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Flex, Form, FormInstance, Input, message, Select, Tabs } from 'antd'
+import { Card, Tabs } from 'antd'
 import styled from 'styled-components';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useRef, useState } from 'react';
-import customPage from '@/store/channel/customPage/customPage';
 import type { TabsProps } from 'antd';
 import BatchList from './BatchList';
 import { getTaskList } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { status } from 'nprogress';
 
 function NewPage(){
 

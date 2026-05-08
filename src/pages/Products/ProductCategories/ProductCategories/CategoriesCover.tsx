@@ -2,8 +2,7 @@
 import { uploadPic } from "@/services/y2/api";
 import categories from "@/store/product/categories";
 import { PlusOutlined } from "@ant-design/icons";
-import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin, message } from "antd"
-import axios from "axios";
+import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin } from "antd"
 import { useState } from "react";
 import styled from "styled-components"
 
@@ -49,7 +48,7 @@ import styled from "styled-components"
                 setFileList(info.fileList);
             }
         }).catch((err)=>{
-            message.error('err')
+            // message.error('err')
         }).finally(()=>{
             setIsUpload(false)
         })

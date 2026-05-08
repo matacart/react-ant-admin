@@ -3,7 +3,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import { deleteSocialPicture, uploadSocialPicture } from "@/services/y2/api";
 import preferences from "@/store/channel/preferences/preferences";
 import { DeleteOutlined, ExclamationCircleFilled, LoadingOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Flex, GetProp, message, Tooltip, Upload, UploadProps} from "antd";
+import { App, Card, Flex, GetProp, Tooltip, Upload, UploadProps} from "antd";
 import modal from "antd/es/modal";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -11,6 +11,8 @@ import styled from "styled-components";
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 function SocialSharingPicturesCard() {
+    
+    const { message } = App.useApp();
 
     const [loading, setLoading] = useState(false);
 

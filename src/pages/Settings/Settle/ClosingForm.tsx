@@ -1,6 +1,5 @@
 import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
-import { observer } from "mobx-react-lite";
+import { Card, Checkbox, Col, Form, Radio } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -12,8 +11,6 @@ const style: React.CSSProperties = {
 
 function ClosingForm() {
 
-    const [loading, setLoading] = useState(false);
-
     const [fullNameRadio,setFullNameRadio] = useState(1)
 
     const [companyNameRadio,setCompanyNameRadio] = useState(1)
@@ -23,8 +20,6 @@ function ClosingForm() {
     const [addresseePhoneRadio,setAddresseePhoneRadio] = useState(1)
 
     const [orderNoteRadio,setOrderNoteRadio] = useState(1)
-
-    
 
     return (
         <Scoped>

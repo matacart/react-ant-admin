@@ -1,11 +1,13 @@
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Card, Flex, GetProp, message, Upload, UploadProps } from "antd"
+import { App, Card, Flex, GetProp, Upload, UploadProps } from "antd"
 import { useState } from "react";
 import styled from "styled-components"
 
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 export default function LogoCard() {
+    
+    const { message } = App.useApp();
 
     const [loading, setLoading] = useState(false);
 

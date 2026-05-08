@@ -29,10 +29,6 @@ function IndexCard(data:dataType) {
                 <div className="font-w-500" style={{marginBottom:"20px"}}>{data.title}</div>
                 <div className="font-w-400 font-14" style={{marginBottom:"32px"}}>{data.description}</div>
                 {data.footer}
-                {/* <Flex gap={12}>
-                    <DefaultButton text={"了解详情"} />
-                    {data.link2 && <PrimaryButton text={"前往设置"} onClick={()=>history.push(data.link2)} />}
-                </Flex> */}
             </div>
             <div className="right">
                 <img src={data.icon} />

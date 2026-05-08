@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Form, message } from 'antd'
+import { App, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -26,6 +26,8 @@ import ThemeTemplateCard from '../ProductCategories/ThemeTemplateCard';
 
 function NewProductCategories(){
     
+    const { message } = App.useApp();
+    
     const [loading,setLoading] = useState(false);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
@@ -41,22 +43,25 @@ function NewProductCategories(){
     }
 
     // 表单验证
-    const formValidation = ()=>{
-        return form.validateFields().then(res=>{
-            return true
-        }).catch(e=>{
-            if (e.errorFields.length > 0) {
-                form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
-            }
-            return false
-        })
-    }
+    // const formValidation = ()=>{
+    //     return form.validateFields().then(res=>{
+    //         return true
+    //     }).catch(e=>{
+    //         if (e.errorFields.length > 0) {
+    //             form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
+    //         }
+    //         return false
+    //     })
+    // }
 
     // 验证通过 -- 创建
     const onFinish = async () => {
-        if(await formValidation()){
+        form.validateFields().then(res=>{
             setLoading(true)
-            setCategory({...categories.categoriesInfo}).then(res=>{
+            setCategory({
+                ...categories.categoriesInfo,
+                handle:categories.categoriesInfo.handle || categories.categoriesInfo.title.replace(/\s+/g, '-').toLowerCase()
+            }).then(res=>{
                 message.success("已添加成功")
                 history.push("/products/categories")
             }).catch(err=>{
@@ -64,7 +69,22 @@ function NewProductCategories(){
             }).finally(()=>{
                 setLoading(false)
             })
-        }   
+        }).catch(e=>{
+            if (e.errorFields.length > 0) {
+                form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
+            }
+        })
+        // if(await formValidation()){
+        //     setLoading(true)
+        //     // setCategory({...categories.categoriesInfo}).then(res=>{
+        //     //     message.success("已添加成功")
+        //     //     history.push("/products/categories")
+        //     // }).catch(err=>{
+        //     //     console.log(err)
+        //     // }).finally(()=>{
+        //     //     setLoading(false)
+        //     // })
+        // }   
     };
 
     // 清空状态

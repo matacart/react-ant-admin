@@ -1,5 +1,5 @@
-import { Divider, Cascader, Input, Select, Space,Button, Row, Col, Tooltip, Form, message } from 'antd'
-import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone, PhoneTwoTone, QuestionCircleOutlined, ClockCircleFilled } from '@ant-design/icons'
+import { Divider, Input, Row, Col, Tooltip, Form, App } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import { useState } from 'react';
 import { accountAuthentication } from '@/services/y2/api';
@@ -15,6 +15,8 @@ import MerchantCertification from './MerchantCertification';
 const { TextArea } = Input;
 
 export default function MerchantApplication() {
+    
+    const { message } = App.useApp();
 
     const sleep = useSleep();
 

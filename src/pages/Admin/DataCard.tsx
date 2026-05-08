@@ -35,24 +35,17 @@ export default function DataCard() {
         visitorCount: 0,
     });
 
-    useEffect(()=>{
-
+    const getTdday = async ()=>{
         const startTimer = dayjs().startOf('day').valueOf();
         const endTimer = dayjs().endOf('day').valueOf();
-
         // 创建 AbortController 信号
         const signal = createAbortController();
+        const res = await getTodayData(startTimer/1000,endTimer/1000,{ signal });
+        res?.code == 0 && setTodayData(res.data);
+    }
 
-        // getTodayData(startTimer/1000,endTimer/1000,{ signal }).then((res:any)=>{
-        //     if(res.code !== 201){
-        //         setTodayData(res.data)
-        //     }
-        // }).catch(err=>{
-        //     // 检查是否是取消请求导致的错误
-        //     if (err.name !== 'CanceledError') {
-        //         console.log(err)
-        //     }
-        // })
+    useEffect(()=>{
+        getTdday();
     },[])
 
     return (

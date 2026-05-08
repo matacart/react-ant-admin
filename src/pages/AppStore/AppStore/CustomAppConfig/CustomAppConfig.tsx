@@ -1,9 +1,8 @@
 import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, ConfigProvider, Divider, Flex, Form, Input, List, message, Modal, Select, Table, TableProps, Tabs, TabsProps } from "antd"
+import { App, Flex, Tabs, TabsProps } from "antd"
 import { history, useParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import dayjs from 'dayjs';
 import WarningTag from "@/components/Tag/WarningTag"
 import PermissionConfigurationCard from "./PermissionConfigurationCard"
 import APICredentialsCard from './APICredentialsCard';
@@ -18,6 +17,8 @@ import DefaultButton from "@/components/Button/DefaultButton"
 import DeleteModal from "@/components/Modal/DeleteModal"
 
 function CustomAppConfig() {
+
+    const { message } = App.useApp();
 
     // 路由配置
     const params  = useParams();

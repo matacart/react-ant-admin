@@ -81,7 +81,7 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
             
             console.log("newSettings", newSettings);
             const operationData = {
-                mode: 'auto',
+                mode: editor.mode,
                 oseid: editor?.oseId ?? "",
                 themeId: editor.templateInfo.themeInfo?.id,
                 pageName: "",

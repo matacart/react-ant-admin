@@ -1,11 +1,11 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { ExportIcon, SuccessIcon } from "@/components/Icons/Icons"
+import { ExportIcon } from "@/components/Icons/Icons"
 import MyInput from "@/components/Input/MyInput";
 import { exportProductTask, JobExecResult } from "@/services/y2/api";
 import productList from "@/store/product/productList";
-import { CheckCircleFilled, ExclamationCircleFilled, ExclamationCircleOutlined, ExportOutlined } from "@ant-design/icons";
-import { Modal, Flex, Radio, Divider, Form, Input, notification, message, Typography } from "antd"
+import { CheckCircleFilled, ExclamationCircleFilled, ExportOutlined } from "@ant-design/icons";
+import { App, Modal, Flex, Radio, Divider, Form, notification, Typography } from "antd"
 import { observer } from "mobx-react-lite";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
@@ -24,11 +24,11 @@ const { confirm } = Modal;
 
 function ExportProductModal(){
 
+    const { message } = App.useApp();
+
     const Ref = useRef(null)
 
     const [open,setOpen] = useState(false)
-
-    const [exportDone,setExportDone] = useState(true)
 
     const [loading,setLoading] = useState(false)
 
@@ -191,10 +191,10 @@ function ExportProductModal(){
     },[productList.productList])
 
     useEffect(()=>{
-        form.setFieldsValue({
+        open && form.setFieldsValue({
             exportRange:1
         })
-    },[])
+    },[open])
 
     return(
         <Scoped ref={Ref}>

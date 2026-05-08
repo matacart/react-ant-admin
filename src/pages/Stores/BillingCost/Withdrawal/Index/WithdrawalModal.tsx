@@ -4,7 +4,7 @@ import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import { getMerchantWithdrawAdd, getMerchentBalance } from "@/services/y2/api";
-import { Col, Flex, Form, message, Modal, Row, Spin, Tag } from "antd";
+import { Col, Flex, Form, App, Modal, Row, Spin, Tag } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
 import styled from "styled-components";
@@ -15,6 +15,8 @@ interface MerchentBalance {
 }
 
 function WithdrawalModal(){
+    
+    const { message } = App.useApp();
 
     const [opne,setOpen] = useState(false);
 

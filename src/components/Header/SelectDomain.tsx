@@ -1,4 +1,4 @@
-import { domainSelect, getDomainLanguages, getWebsiteRoutes } from "@/services/y2/api";
+import { domainSelect, getDomainLanguages, getLanguagesList, getWebsiteRoutes } from "@/services/y2/api";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { Flex, message, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
@@ -126,16 +126,15 @@ export default function SelectDomain() {
     }
 
     // 店铺语言
-    const setLanguage = (store:storeType | null)=>{
-        // 根据code 查找对应的id
-        getDomainLanguages().then((res:any)=>{
-            if(res.code == 0){
-                const languages = res?.data || [];
-                sessionStorage.setItem('languages', JSON.stringify(languages));
-                const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
-                cookie.save('shop_lang', languagesId, { path: '/' });
-            }
-        })
+    const setLanguage = async (store:storeType | null)=>{
+        // 根据code 查找对应的id -- shop_lang 店铺默认语言
+        const domainLanguages = await getLanguagesList();
+        if(domainLanguages?.code == 0){
+            const languages = domainLanguages?.data || [];
+            sessionStorage.setItem('languages', JSON.stringify(languages));
+            const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
+            cookie.save('shop_lang', languagesId, { path: '/' });
+        }
     }
 
     // 加载更多数据的函数

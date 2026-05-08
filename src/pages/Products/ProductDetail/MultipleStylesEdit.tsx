@@ -3,9 +3,8 @@ import ProductStyleModal from "@/components/Modal/ProductStyleModal";
 import MySelect from "@/components/Select/MySelect";
 import {addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
 import product from "@/store/product/product";
-import productStore from "@/store/productStore";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
-import { Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, message, Tooltip, SelectProps, Table, TableProps, Space, Divider, AutoCompleteProps } from "antd";
+import { App, Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, Tooltip, SelectProps, AutoCompleteProps } from "antd";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -21,6 +20,9 @@ const { Option } = Select;
 const { confirm } = Modal;
 
 function MultipleStylesEdit(props:any) {
+    
+  const { message } = App.useApp();
+    
   const [specifications, setSpecifications] = useState([]);
   const [values, setValues] = useState<string[]>([]);
   const [tags, setTags] = useState<any[][]>([]); // 用于存储每个规格组的标签

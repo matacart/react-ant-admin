@@ -1,6 +1,6 @@
-import { Button, Form, Input, Divider, Checkbox, message, ConfigProvider, Dropdown, Flex } from 'antd';
+import { Button, Form, Input, Divider, Checkbox, App, ConfigProvider, Dropdown, Flex } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, history, useIntl } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
 import { getFakeCaptcha, register } from '@/services/y2/api';
 import {state} from '../../../config/myConfig'
@@ -11,7 +11,7 @@ import googleIcon from '@/../public/icons/logos/google.svg';
 import facebookIcon from '@/../public/icons/logos/facebook.svg';
 import appleIcon from '@/../public/icons/logos/apple.svg';
 import linkieIcon from '@/../public/icons/logos/linkie.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface Props {
     changeForm: (value: number) => void
@@ -32,7 +32,7 @@ const style: React.CSSProperties = {
 
 export default function Register(props: Props) {
 
-    const navigate = useNavigate();
+    const { message } = App.useApp();
 
     const [countdown, setCountdown] = useState(0); // 倒计时状态
 
@@ -105,7 +105,7 @@ export default function Register(props: Props) {
                             const msg = await register({ ...values,phoneCode });
                             if (msg.status == 1) {
                                 message.success(intl.formatMessage({id: 'user.register.success'}));
-                                navigate('/user/signIn');
+                                history.push('/user/signIn');
                                 return;
                             }else if(msg.status == -1){
                                 message.error(msg.msg);
@@ -332,7 +332,7 @@ export default function Register(props: Props) {
             </div>
             <Divider
                 style={{
-                    marginTop: '80px',
+                    marginTop: '40px',
                     fontSize: '14px',
                     lineHeight: '20px',
                     textAlign: 'center',

@@ -1,10 +1,7 @@
-import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, ConfigProvider, Dropdown, DropdownProps, Flex, MenuProps, message, Space, theme } from "antd";
 import React, { ReactNode, useRef, useState } from "react";
 import { styled } from 'styled-components';
 import { UnfoldIcon } from "../Icons/Icons";
-
-const { useToken } = theme;
 
 interface ButtonDropdownProps extends DropdownProps {
   text: string;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { Flex, message } from 'antd';
+import { App } from 'antd';
 import cookie from 'react-cookies';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { getArticleComments } from '@/services/y2/api';
@@ -10,6 +10,8 @@ import ArticlesCommentList from './ArticlesCommentList';
 
 
 function ArticlesComment(){
+    
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 

@@ -1,17 +1,13 @@
-import { history } from "@umijs/max"
-import { Card, Flex, message, Space, Table, TableProps, Tooltip } from "antd"
+import { Card, Flex, App, Space, Table, TableProps, Tooltip } from "antd"
 import { useMemo, useRef, useState } from "react";
 import styled from "styled-components"
 import SearchInput from "@/components/Input/SearchInput";
 import DeleteModal from "@/components/Modal/DeleteModal";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import cookie from 'react-cookies';
-import LangSelect from "@/components/Select/LangSelect";
+import { DeleteOutlined } from "@ant-design/icons";
 import { useAbortController } from "@/hooks/customHooks";
-import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import ErrorTag from "@/components/Tag/ErrorTag";
-import { getRechargeList, getWithdrawList } from "@/services/y2/api";
+import { getWithdrawList } from "@/services/y2/api";
 import ProcessingTag from "@/components/Tag/ProcessingTag";
 
 
@@ -26,6 +22,8 @@ interface DataType {
 }
 
 function WithdrawalList({withdrawal}:{withdrawal:any}) {
+
+    const { message } = App.useApp();
 
     const [data,setData] = useState(withdrawal.data ||[]);
 

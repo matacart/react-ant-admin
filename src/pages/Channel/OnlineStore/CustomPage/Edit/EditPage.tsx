@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, FormInstance, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useSearchParams } from '@umijs/max';
@@ -17,6 +17,8 @@ import SEOCard from '../Custompage/SEOCard';
 import ThemeTemplate from '../Custompage/ThemeTemplate';
 
 function EditPage(){
+    
+    const { message } = App.useApp();
 
     const [searchParams, setSearchParams] = useSearchParams();
 

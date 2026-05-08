@@ -1,14 +1,14 @@
 import SuccessTag from "@/components/Tag/SuccessTag";
 import { upDatePassword } from "@/services/y2/api";
-import { Button, Card, Flex, Form, Input, message, Modal } from "antd";
-import { useEffect, useState } from "react";
+import { App, Card, Flex, Form, Input, Modal } from "antd";
+import { useState } from "react";
 import styled from "styled-components";
 import accountManagement from "@/store/shops/accountManagementStore";
-import { observer } from "mobx-react-lite";
 import DefaultButton from "@/components/Button/DefaultButton";
 
 function LoginAccountCard() {
 
+    const { message } = App.useApp();
     
     const [accountForm] = Form.useForm();
     

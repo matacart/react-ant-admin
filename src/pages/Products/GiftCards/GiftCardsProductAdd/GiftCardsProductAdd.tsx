@@ -1,11 +1,8 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd'
+import { Button } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
-import newStore from '@/store/newStore';
-import { observer } from 'mobx-react-lite';
-import { useEffect, useRef, useState } from 'react';
 
 // 表单项商品数据类型
 interface DataType {

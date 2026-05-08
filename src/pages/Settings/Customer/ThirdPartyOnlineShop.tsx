@@ -1,24 +1,10 @@
 import DefaultTag from "@/components/Tag/DefaultTag";
 import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
-import { useState } from "react";
+import { Button, Card, Divider, Flex } from "antd";
 import styled from "styled-components";
 
-const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 16,
-};
 
 function ThirdPartyOnlineShop() {
-
-    const [loading, setLoading] = useState(false);
-
-    const [accountVersion,setAccountVersion] = useState(1)
-
-    const AccountTypeOptions = [
-       
-    ];
 
     return (
         <Scoped>

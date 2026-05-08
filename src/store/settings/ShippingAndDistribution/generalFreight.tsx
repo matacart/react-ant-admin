@@ -1,4 +1,6 @@
 import { makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
+
 
 class generalFreight {
     constructor() {
@@ -7,7 +9,7 @@ class generalFreight {
 
     deliverys = []
 
-    deliverysLanguage = "2"
+    deliverysLanguage = cookie.load("shop_lang") || '2'
 
     setDeliverysLanguage(res:string){
         this.deliverysLanguage = res
@@ -15,6 +17,10 @@ class generalFreight {
 
     setDeliverys(res:any){
         this.deliverys = res
+    }
+
+    reset(){
+        this.deliverysLanguage = cookie.load("shop_lang") || '2'
     }
 
 }

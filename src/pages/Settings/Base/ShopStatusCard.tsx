@@ -21,9 +21,12 @@ function shopStatusCard() {
                         label="商店状态"
                         >
                         <DefaultSelect
-                            defaultValue={baseInfoStore.storeStauts}
+                            defaultValue={baseInfoStore.storeInfo.status}
                             style={{ width: 256 }}
-                            onChange={(value)=>baseInfoStore.setStoreStauts(value)}
+                            onChange={(value)=>baseInfoStore.setStoreInfo({
+                                ...baseInfoStore.storeInfo,
+                                status:value
+                            })}
                             options={[
                                 { value: '0', label: '打烊' },
                                 { value: '1', label: '营业中' },

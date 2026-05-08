@@ -2,11 +2,11 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { addTemplateFile, RenameFile, templateFileUpload } from "@/services/y2/api";
+import { addTemplateFile, templateFileUpload } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Flex, Form, message, Modal, Radio, Select, Space, Tabs, TabsProps, Tooltip, Upload, UploadFile, UploadProps } from "antd";
+import { Flex, Form, App, Modal, Space, Tabs, TabsProps, Upload, UploadFile, UploadProps } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -24,6 +24,8 @@ interface LayoutModalType{
 }
 
 function AssetsModal({filePath,treeData,setTreeData}:LayoutModalType){
+    
+    const { message } = App.useApp();
 
     const [open, setOpen] = useState(false);
 

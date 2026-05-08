@@ -375,7 +375,7 @@ class editor {
       this.title = "";
       this.oseId = "";
       this.versionId = "";
-      this.mode = "auto";
+      this.mode = "mapping";
       this.languagesId = "2";
       this.isAuthor = false;
       this.authorToken = "";

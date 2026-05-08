@@ -1,6 +1,6 @@
 import { RemitIcon } from "@/components/Icons/Icons"
 import { DownOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Divider, Dropdown, Flex, MenuProps, message, Modal, Radio, Select, Space, Tabs, TabsProps } from "antd"
+import { App, Button, DatePicker, Divider, Dropdown, Flex, MenuProps, Modal, Radio, Select, Tabs, TabsProps } from "antd"
 import styled from "styled-components"
 import GeneralView from "./GeneralView";
 import { useState } from "react";
@@ -15,7 +15,8 @@ const style: React.CSSProperties = {
 const { RangePicker } = DatePicker;
 
 function AccountManagement(){
-
+    
+    const { message } = App.useApp();
 
     const [isBillingStatement,setIsBillingStatement] = useState(false)
 

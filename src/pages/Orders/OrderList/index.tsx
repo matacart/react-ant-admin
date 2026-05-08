@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import { Button, Dropdown, Flex, message, Modal, Space, Upload } from 'antd';
+import { App, Button, Dropdown, Flex, Modal, Space, Upload } from 'antd';
 import styled from 'styled-components'
 import { ExportOutlined } from '@ant-design/icons';
 import { history, useIntl } from '@umijs/max';
@@ -12,16 +12,14 @@ import ExportShippingModal from './ExportShippingModal';
 import orderList from '@/store/order/orderList';
 import ExportOrderPageModal from './ExportOrderPageModal';
 import ExportOrderDetailModal from './ExportOrderDetailModal';
-import cookie from 'react-cookies';
 
-interface MenuItem {
-  key: string;
-  label: React.ReactNode;
-  onClick?: () => void; // 可选的点击事件处理函数
-}
 
 export default function Orders() {
+
+  const { message } = App.useApp();
+
   const intl = useIntl();
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [updateTrackingModalVisible, setUpdateTrackingModalVisible] = useState(false);
 
@@ -86,8 +84,7 @@ export default function Orders() {
 
 
   useEffect(() => {
-    orderList.setLanguages(cookie.load("shop_lang") || '2');
-    orderList.setOrderIds([])
+    orderList.reset();
   }, []);
 
   return (

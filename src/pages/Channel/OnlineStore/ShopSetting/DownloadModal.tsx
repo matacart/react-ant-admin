@@ -3,13 +3,13 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import { downloadTemplate } from "@/services/y2/api";
 import { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Flex, Form, message, Modal } from "antd";
+import { App, Flex } from "antd";
 import styled from "styled-components";
 
 function DownloadModal({template}:{template:TemplateInstance | null}){
 
-    const [modal, contextHolder] = Modal.useModal();
-
+    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
+    
     const confirm = () => {
         const modalInstance = modal.info({
             centered: true,
@@ -41,7 +41,6 @@ function DownloadModal({template}:{template:TemplateInstance | null}){
     return (
         <>
             <Scoped onClick={confirm}>下载代码</Scoped>
-            {contextHolder}
         </>
     )
 }

@@ -10,9 +10,6 @@ import generalFreight from "@/store/settings/ShippingAndDistribution/generalFrei
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { observer } from "mobx-react-lite"
 import LangSelect from "@/components/Select/LangSelect"
-import cookie from 'react-cookies';
-
-
 
 function EditCustomLogistics() {
 
@@ -23,7 +20,7 @@ function EditCustomLogistics() {
 
     // 语言
     useEffect(()=>{
-        generalFreight.setDeliverysLanguage(cookie.load("shop_lang") || '2')
+        generalFreight.reset();
     },[])
 
     useEffect(()=>{

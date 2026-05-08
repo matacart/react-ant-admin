@@ -1,6 +1,4 @@
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Card, Flex, GetProp, Input, message, Upload, UploadProps } from "antd"
-import { useState } from "react";
+import { Card, Input } from "antd"
 import styled from "styled-components"
 
 

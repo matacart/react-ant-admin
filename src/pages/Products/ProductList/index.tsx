@@ -165,16 +165,8 @@ const App: React.FC = () => {
     }
   };
 
-  
-
   useEffect(()=>{
-    productList.setLanguagesId(cookie.load("shop_lang") || '2');
-    // 重新渲染初始化状态
-    productList.setFlag("");
-    productList.setIsAlliance("");
-    productList.setIsHosted("");
-    productList.setAllSelected(false)
-    productList.setProductList([]);
+    productList.reset();
   },[]);
 
   return (

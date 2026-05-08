@@ -2,7 +2,7 @@ import SearchInput from "@/components/Input/SearchInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Flex, message, Tabs, TabsProps } from "antd";
+import { Flex, App, Tabs, TabsProps } from "antd";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import LangContentCard, { formatKey } from "./LangContentCard";
@@ -21,6 +21,8 @@ import { useAbortController } from "@/hooks/customHooks";
 export const customOrder = ['general', 'blog', 'products', 'customer', 'sales', 'cart', 'transaction', 'trade', 'order', 'onboarding', 'reduction_code', 'checkout&system'];
 
 function LangEditor() {
+    
+    const { message } = App.useApp();
 
     const { templateId,languagesId,versionId }  = useParams();
 

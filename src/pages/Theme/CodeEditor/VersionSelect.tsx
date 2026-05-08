@@ -1,6 +1,7 @@
 import MySelect from "@/components/Select/MySelect";
 import { getThemeVersions } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
+import { history } from "@umijs/max";
 import { Flex } from "antd";
 import { debounce } from "lodash";
 import { observer } from "mobx-react-lite";
@@ -19,7 +20,6 @@ function VersionSelect() {
     const [loading,setLoading] = useState(false);
 
     const debouncedVersion = debounce(() => {
-        // 商品分类搜索
         setLoading(true);
         getThemeVersions({
             templateId:codeEditor.templateInfo?.id || "",
@@ -45,7 +45,7 @@ function VersionSelect() {
     return <Flex align="center">
         <div>版本：</div>
         <MySelect options={options} value={codeEditor.versionId} onChange={(value:string)=>{
-            codeEditor.setVersionId(value);
+            history.push(`/theme/codeEditor/${codeEditor.id}/${codeEditor.templateInfo?.id}/${value}/${codeEditor.languageId}/${codeEditor.mode}`)
         }} />
     </Flex>
 }

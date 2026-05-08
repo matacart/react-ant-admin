@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { Flex, Form, Input, message, Tooltip } from 'antd';
+import { App, Flex, Form } from 'antd';
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -9,11 +9,13 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 import ReturnDetails from './ReturnDetails';
 import ReturnInformation from './ReturnInformation';
 import ReturnGoods from './ReturnGoods';
-import { getOrderDetail, getReturnActions, getReturnReasons, getReturnStatuses, setOrderReturned } from '@/services/y2/api';
+import { getOrderDetail, setOrderReturned } from '@/services/y2/api';
 import orderReturnGoods from '@/store/order/orderReturnGoods';
 import { useParams,useNavigate } from 'react-router-dom';
 
 function AfterSales() {
+
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false)
 

@@ -3,7 +3,7 @@ import { ConfigProvider, Select } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 
-// 多语言选择框
+// 店铺语言选择框
 export default function LangSelect({lang,setLang}:{lang:string,setLang:any}){
 
     const intl = useIntl();

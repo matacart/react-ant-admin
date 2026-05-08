@@ -1,6 +1,4 @@
-import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
-import { observer } from "mobx-react-lite";
+import { Card, Checkbox, Col, Form, Radio } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 

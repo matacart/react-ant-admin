@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -22,6 +22,8 @@ import ThirdPartyLink from '../Articles/ThirdPartyLink';
 import ThemeTemplate from '../Articles/ThemeTemplate';
 
 function NewArticles(){
+    
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false);
     const sleep = useSleep();

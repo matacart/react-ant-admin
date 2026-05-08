@@ -61,14 +61,14 @@ export default function CoverPictureCard(){
             </Card>
             {/* 添加多媒体图片 Modal */}
             <Modal
-                width="90vw" style={{ maxWidth: "860px" }}
+                width="calc(100vw - 48px)"
+                style={{ maxWidth: "860px" }}
                 styles={{
                     body: {
-                    height: "710px",
-                    padding: 0
+                        padding: 0
                     }
                 }}
-                destroyOnClose
+                destroyOnHidden
                 centered
                 title='从文件库中选择'
                 open={addImgModalOpen}

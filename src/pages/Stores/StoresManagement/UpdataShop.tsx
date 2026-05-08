@@ -1,7 +1,6 @@
-import { SyncOutlined } from "@ant-design/icons";
-import { Flex, message, Modal, Tooltip } from "antd";
+import { Flex, App, Modal } from "antd";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import cookie from 'react-cookies';
 import { useIntl } from "@umijs/max";
@@ -17,6 +16,8 @@ interface VersionType {
 }
 
 function UpdataShop({record}:{record:any}){
+    
+    const { message } = App.useApp();
 
     const intl = useIntl();
 

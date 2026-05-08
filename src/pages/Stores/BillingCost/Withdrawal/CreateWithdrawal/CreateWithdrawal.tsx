@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Form, message } from 'antd'
+import { Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useIntl } from '@umijs/max';
@@ -7,9 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { setArticleCategorys } from '@/services/y2/api';
-import TitleCard from '@/pages/Channel/OnlineStore/Articles/Articles/TitleCard';
-import WithdrawalInfo from './WithdrawalInfo';
+
 
 function CreateWithdrawal(){
 

@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, Form, Input, List, message, Modal, Select, Table, TableProps, TabsProps } from "antd"
+import { Button, Card, Divider, Flex, Form, Input, Modal, Select, Table, TableProps, TabsProps } from "antd"
 import { history, useParams, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
@@ -40,7 +40,7 @@ function CustomAppConfigSetting() {
         try {
             const permissionsList = await getPermissionsList(searchParams.get("appId")?? "",searchParams.get("type")?? "","2")
             customAppConfigSetting.setPermissionsList(permissionsList.data)
-            console.log(permissionsList.data)
+            // console.log(permissionsList.data)
             customAppConfigSetting.setNewPermissionsList(permissionsList.data)
         } catch (error) {
             // 

@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
-import { Card, Flex, Form, Input, List, message, TabsProps, Upload } from "antd"
+import { Card, Flex, Input, List } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";

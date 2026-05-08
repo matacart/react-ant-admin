@@ -1,13 +1,14 @@
-import { Button, Card, Flex, Input, message } from "antd"
+import { App, Button, Card, Flex, Input } from "antd"
 import styled from "styled-components"
 import { history } from "@umijs/max"
 import copy from "copy-to-clipboard";
-import { useEffect } from "react";
 import customAppConfig from "@/store/appStore/customAppConfig";
 import dayjs from "dayjs";
 import DefaultButton from "@/components/Button/DefaultButton";
 
 function APICredentialsCard() {
+
+    const { message } = App.useApp();
 
     return (
         <Scoped>

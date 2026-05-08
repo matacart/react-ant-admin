@@ -1,78 +1,67 @@
 import { useIntl, Outlet } from '@umijs/max';
-import ILang from '@/components/Lang/lang';
 import styled from 'styled-components';
 import bgImage from '@/../public/img/logo-bak-02.jpg';
-// 入口
+import { App } from 'antd';
+import { Lang } from '@/components/Lang/Lang';
+// 用户布局入口
 const Login: React.FC = () => {
 
   const intl = useIntl();
   
   return (
-    <Scoped>
-      <div
-        className="login-wrap"
-        style={{
-          display: 'flex',
-          width: '100vw',
-          minWidth: '300px',
-          height: '100vh',
-        }}
-      >
-        {/* logo */}
+    <App>
+      <Scoped>
         <div
-          className="login-logo"
+          className="login-wrap"
           style={{
-            position: 'relative',
-            width: '67.5%',
-          }}
-        >
-          <div className="logo-container">
-            <p>{intl.formatMessage({ id: 'user.login.welcome' })}</p>
-            <img
-              src="/icons/login-text.svg"
-              style={{
-                objectFit: 'contain',
-                height: '30%',
-              }}
-            />
-          </div>
-        </div>
-        <div
-          className="login-form-scroll"
-          style={{
-            flex: '1',
-            minWidth: '400px',
+            display: 'flex',
+            width: '100vw',
+            minWidth: '300px',
             height: '100vh',
-            overflow: 'auto',
           }}
         >
+          {/* logo */}
           <div
-            className="login-form-container"
+            className="login-logo"
             style={{
               position: 'relative',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: '100vh',
-              backgroundColor: '#fff',
+              width: '67.5%',
             }}
           >
-                <ILang />
-            <div
-              className="login-form-wrap"
-              style={{
-                paddingTop: '30px',
-              }}
-            >
-              <>
+            <div className="logo-container">
+              <p>{intl.formatMessage({ id: 'user.index.welcome' })}</p>
+              <img
+                src="/icons/login-text.svg"
+                style={{
+                  objectFit: 'contain',
+                  height: '30%',
+                }}
+              />
+            </div>
+          </div>
+          <div
+            className="login-form-scroll"
+            style={{
+              flex: '1',
+              minWidth: '400px',
+              height: '100vh',
+              overflow: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <div className="lang-form-header">
+              <Lang />
+            </div>
+            <div className="login-form-container">
+              <div className="login-form-wrap">
                 <Outlet/>
-              </>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Scoped>
+      </Scoped>
+    </App>
   );
 };
 
@@ -141,25 +130,6 @@ const Scoped = styled.div`
       line-height: 42px;
   }
 
-  .login-header-container {
-      display: flex;
-      align-items: center;
-      padding: 10px 6px;
-      color: #242833;
-      border-radius: 4px;
-      /* transition: background-color ease 0.3s; */
-
-  }
-
-/* .login-header-container:hover {
-    transition-behavior: nomal;
-    transition-duration: 0.3s;
-    transition-timing-function: ease;
-    transition-delay: 0s;
-    transition-property: background-color;
-
-} */
-
   a {
       display: inline-block;
       color: #356dff;
@@ -174,16 +144,25 @@ const Scoped = styled.div`
       }
   }
 
-  .login-form-wrap {
+  .lang-form-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px 40px;
+  }
+  .login-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    .login-form-wrap {
       position: relative;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       width: 80%;
       max-width: 400px;
+      /* align-items: center; */
+      background-color: #fff;
+    }
   }
-
-
-
 `
 

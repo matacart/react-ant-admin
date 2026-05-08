@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
-import { Divider, Flex, message, Spin } from 'antd';
+import { App, Divider, Flex, Spin } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -26,6 +26,8 @@ import OrderDraftLabel from '../OrderDraft/OrderDraftLabel';
 
   
 function OrderDraftEdit() {
+    
+    const { message } = App.useApp();
 
     const navigate= useNavigate();
 

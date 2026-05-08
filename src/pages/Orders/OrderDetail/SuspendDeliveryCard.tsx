@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Col, Divider, Flex, Form, Input, message, Row, Tooltip } from "antd";
+import { App, Card, Col, Divider, Flex, Form, Row } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import { resumeOrderShipping } from "@/services/y2/api";
 
 
 function SuspendDeliveryCard({groupIndex}:{groupIndex:number}) {
+    
+    const { message } = App.useApp();
 
     const remainingInfo = order.remainingProductGroup[groupIndex]
 

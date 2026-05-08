@@ -1,5 +1,5 @@
 import { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
-import { Flex, message, Modal } from "antd";
+import { App, Flex, Modal } from "antd";
 import { useState } from "react";
 import UploadCompressedFile from "./UploadCompressedFile";
 import DefaultButton from "@/components/Button/DefaultButton";
@@ -7,6 +7,8 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import { updateVersion } from "@/services/y2/api";
 
 function VersionRepairModal({template}:{template: TemplateInstance | null}) {
+  
+    const { message } = App.useApp();
 
     const languageName = JSON.parse(sessionStorage.getItem('languages') || "[]").find((lang:any)=>lang.id===template?.languages_id)?.name || "";
 

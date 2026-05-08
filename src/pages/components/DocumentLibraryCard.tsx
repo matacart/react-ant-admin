@@ -1,6 +1,6 @@
 import { getFileList } from "@/services/y2/api"
 import { CheckOutlined, PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons"
-import { Button, Col, Image, GetProp, Input, Row, Select, Upload, UploadFile, UploadProps, Tooltip, Modal, Spin, message, Pagination, PaginationProps, InputRef } from "antd"
+import { App, Col, GetProp, Input, Row, Select, Upload, UploadProps, Modal, Spin, Pagination, PaginationProps, InputRef } from "antd"
 import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
@@ -14,6 +14,8 @@ interface FileListStatus {
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 function DocumentLibraryCard({groupId}:{groupId:string}) {
+    
+    const { message } = App.useApp();
 
     const [fileImgList,setFileImgList] = useState<any>([]);
 
@@ -214,7 +216,7 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
                                 <div className="item_card_box" onClick={()=>{handSelectImg(item,index)}}>
                                     {fileListStatus[item.id] && <div className="item_card_box_status"><CheckOutlined className="font-12" /></div>}
                                     <div className="item_img_box" style={{border:`${fileListStatus[item.id]?"2px solid #356dff":""}`}}>
-                                        <img className="item_img" src={item.url}/>
+                                        <img className="item_img" src={`${item.url}?x-oss-process=image/resize,w_200`}/>
                                         {/* <div className="overlay">
                                             <div onClick={(e)=>{
                                                 setPreviewImage(item.url)
@@ -264,9 +266,9 @@ const Scoped = styled.div`
         margin-bottom: 10px;
     }
     .cardContent{
-        overflow-y: auto;
         overflow-x:hidden;
-        height: 520px;
+        max-height: 520px;
+        overflow-y: auto;
         .item_card_box_upload{
             height: 160px;
             border: 2px dashed rgba(0, 0, 0, 0.2);

@@ -1,10 +1,9 @@
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, ExportOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, TabsProps, Upload } from "antd"
+import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
+import { App, Button, Card, Checkbox, Flex, Form, Input, Upload } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useState } from "react";
 import { setAddonsConfig } from "@/services/y2/api";
-import { useForm } from "antd/es/form/Form";
 import modal from "antd/es/modal";
 import axios from "axios";
 
@@ -12,6 +11,8 @@ import axios from "axios";
 const { TextArea } = Input;
 
 function AddManualCollection() {
+    
+    const { message } = App.useApp();
 
     const [imgLoading, setimgLoading] = useState(false);
 

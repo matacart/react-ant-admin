@@ -1,19 +1,22 @@
 import { ArrowLeftOutlined, DownOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Dropdown, Flex, Form, message, Row, Select, Tag } from "antd";
+import { App, Button, Dropdown, Flex, Tag } from "antd";
 import styled from "styled-components";
 import PurchaseGoodsCard from "../PurchaseGoodsCard";
 import CostSummaryCard from "../CostSummaryCard";
 import { history } from '@umijs/max';
 import { useEffect, useState } from "react";
-import { getPurchase } from "@/services/y2/api";
 import LocationsCard from "./LocationsCard";
-import globalStore from "@/store/globalStore";
 import ShippingDetailsCard from "./ShippingDetailsCard";
 import purchaseOrderEdit from "@/store/product/purchaseOrder/purchaseOrderEditStore";
 import { observer } from "mobx-react-lite";
 import RemarkCard from "./RemarkCard";
+import { useSleep } from "@/hooks/customHooks";
 
 function OldPurchaseOrder(){
+
+    const { message } = App.useApp();
+
+    const sleep = useSleep();
 
     const PurchaseOrderId = history.location.pathname.substring(history.location.pathname.lastIndexOf('/')+1)
 
@@ -77,10 +80,10 @@ function OldPurchaseOrder(){
 
     // 删除采购订单
     const deletePurchaseOrder = async () => {
-        purchaseOrderEdit.deletePurchaseOrder().then(res=>{
+        purchaseOrderEdit.deletePurchaseOrder().then(async res=>{
             if(res.code == 0){
-                message.success("删除成功")
-                globalStore.sleep(2000)
+                message.success("删除成功");
+                await sleep(2000);
                 history.push("/products/purchase_orders")
             }
         })

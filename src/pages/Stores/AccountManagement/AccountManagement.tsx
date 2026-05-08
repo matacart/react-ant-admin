@@ -1,4 +1,4 @@
-import { Card, Divider, Input, message, Select, Space } from "antd"
+import { App, Divider } from "antd"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 import LoginAccountCard from "./LoginAccountCard";
@@ -11,11 +11,13 @@ import AgreementAndPolicy from "./AgreementAndPolicy";
 import accountManagement from "@/store/shops/accountManagementStore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import MyButton from "@/components/Button/MyButton";
-import globalStore from "@/store/globalStore";
 import { setLocale } from "@umijs/max";
+import { i18n } from "@/components/Lang/Lang";
 
 
 function AccountManagement(){
+
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -121,22 +123,20 @@ function AccountManagement(){
                         {/* 更新 */}
                         <div className="submit-btn">
                             <MyButton type="primary" style={{ height: "36px" }} loading={isRenewal} onClick={async () => {
-                                // console.log(contactFormRef.current.validate())
                                 let isPass = true;
                                 await contactFormRef.current?.validate().then().catch(() => {
                                     isPass = false;
                                     return;
                                 });
-
                                 if (isPass) {
                                     setIsRenewal(true);
                                     try {
                                         setUserInfo(accountManagement.userInfo).then(res => {
-                                            if (res.code == "0") {
+                                            if(res?.code == "0") {
                                                 const languagesId = accountManagement.userInfo.languages_id
-                                                localStorage.setItem("use_lang",languagesId);
-                                                // // 设置语言
-                                                const language = globalStore.language.filter(item => item.id === languagesId)[0]?.code
+                                                localStorage.setItem("USE_LANG",languagesId);
+                                                // 设置语言
+                                                const language = i18n.find(item => item.id == languagesId)?.lang ?? "en-US";
                                                 setLocale(language,false);
                                                 message.success("更新成功");
                                             }

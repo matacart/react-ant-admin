@@ -1,15 +1,14 @@
-import { Button, Card, Flex, Form, Input, message, Modal, Select } from 'antd';
+import { App, Button, Card, Flex, Form, Input, Modal, Select } from 'antd';
 import { history } from '@umijs/max';
-import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, InfoCircleOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { creatAppStore, getEmployeeList } from '@/services/y2/api';
-import Rules from './../../../Settings/Rules/Rules';
 import LicensesAndTerms from './LicensesAndTerms';
 
 function BlankPage() {
 
-    const [isBtnLoading, setIsBtnLoading] = useState(false);
+    const { message } = App.useApp();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 

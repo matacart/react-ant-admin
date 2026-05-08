@@ -1,4 +1,4 @@
-import { Card, Flex, message } from "antd"
+import { Card, Flex } from "antd"
 import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import SEOEdit from "@/pages/Components/SEOEdit";

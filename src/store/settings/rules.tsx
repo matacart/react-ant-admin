@@ -1,4 +1,6 @@
 import { makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
+
 
 interface rulesType {
     content:string
@@ -9,7 +11,7 @@ class rules {
       makeAutoObservable(this)
     }
 
-    languagesId = "2"
+    languagesId = cookie.load("shop_lang") || '2'
 
     setLanguagesId(res:string){
         this.languagesId = res
@@ -46,6 +48,12 @@ class rules {
     setReturnPolicy(res:any){
         this.returnPolicy = res
     }
+
+
+    reset(){
+        this.languagesId = cookie.load("shop_lang") || '2'
+    }
+
 }
 
 export default new rules();

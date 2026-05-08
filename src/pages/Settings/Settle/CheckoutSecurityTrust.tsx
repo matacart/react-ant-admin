@@ -1,14 +1,5 @@
-import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
-import { observer } from "mobx-react-lite";
-import { useState } from "react";
+import { Card, Checkbox, Col } from "antd";
 import styled from "styled-components";
-
-const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
-};
 
 function CheckoutSecurityTrust() {
 

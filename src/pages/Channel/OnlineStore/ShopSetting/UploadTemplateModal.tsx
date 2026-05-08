@@ -1,12 +1,13 @@
 import DefaultButton from "@/components/Button/DefaultButton"
 import PrimaryButton from "@/components/Button/PrimaryButton"
-import { SuccessIcon } from "@/components/Icons/Icons"
-import { Modal, Flex, Checkbox, App, message } from "antd"
-import { useEffect, useRef, useState } from "react"
+import { Modal, Flex, App } from "antd"
+import { useState } from "react"
 import UploadCompressedFile from "./UploadCompressedFile"
 import { useSleep } from "@/hooks/customHooks"
 import { uploadTemplate } from "@/services/y2/api"
 function UploadTemplateModal({pagination,setPagination,getTemplateList}:{pagination:any,setPagination:(pagination:any)=>void,getTemplateList:()=>void}) {
+
+    const { message } = App.useApp();
 
     const [file, setFile] = useState(null)
 

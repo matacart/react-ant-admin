@@ -2,10 +2,9 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import MyDropDownSecondary from "@/components/Dropdown/MyDropDownSecondary";
 import { UnfoldIcon } from "@/components/Icons/Icons";
 import { batchArcOrder, batchUnarcOrder } from "@/services/y2/api";
-import { batchshipOrders, batchdelOrders, updateOrderStatus } from "@/services/y2/order";
 import orderList from "@/store/order/orderList";
 import { history, useIntl } from "@umijs/max";
-import { message, Modal, Checkbox, Button, Select, Flex, theme, notification } from "antd";
+import { Checkbox, Flex, theme, notification } from "antd";
 import React, { useRef } from "react";
 import styled from "styled-components";
 

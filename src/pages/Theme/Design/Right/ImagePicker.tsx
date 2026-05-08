@@ -1,10 +1,9 @@
 import MyButton from "@/components/Button/MyButton";
-import { AddIcon, EditorAddBtnIcon, SearchSecondIcon } from "@/components/Icons/Icons";
+import { AddIcon, SearchSecondIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
 import { getFileList, uploadPic } from "@/services/y2/api";
 import { CheckCircleFilled, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, Drawer, Flex, message, Row, Spin, Upload, UploadProps } from "antd";
-import Dragger from "antd/es/upload/Dragger";
+import { Col, Drawer, Flex, App, Row, Spin, Upload } from "antd";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -21,6 +20,8 @@ interface imageType{
 }
 
 function ImagePicker({item,data,setData}:{item:any,data:DataType,setData:(item:any,value:DataType)=>void}){
+    
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false);
 
@@ -48,7 +49,7 @@ function ImagePicker({item,data,setData}:{item:any,data:DataType,setData:(item:a
         formData.append("file", file)
         setLoading(true);
         uploadPic(formData).then((res: any) => {
-            if(res.data.code == 0){
+            if(res.code == 0){
                 // setData(item,{
                 //     url:res.data.data.src,
                 //     alt:info.name

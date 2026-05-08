@@ -3,15 +3,14 @@ import { BackIcon, DeleteIcon, DesktopIcon, DownIcon, EditorCategoryIcon, Editor
 import SuccessTag from '@/components/Tag/SuccessTag';
 import { delTemplateFile, getJsonTemplates, settingsSections, templateUpdate } from '@/services/y2/api';
 import editor from '@/store/theme/editor';
-import { Button, Dropdown, Flex, message, Modal, Space, Tooltip } from 'antd';
+import { Button, Dropdown, Flex, App, Modal, Space, Tooltip } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import LangSelect from '@/components/Select/LangSelect';
 import DefaultTag from '@/components/Tag/DefaultTag';
 import { SelectLang } from '@/components';
-import { history, useIntl } from '@umijs/max';
+import { history, useIntl, useSearchParams } from '@umijs/max';
 import MySelect from '@/components/Select/MySelect';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import { ExclamationCircleFilled } from '@ant-design/icons';
@@ -19,7 +18,6 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import DangerButton from '@/components/Button/DangerButton';
 import RenameTemplateModal from '../Index/RenameTemplateModal';
 import NewTemplateModal from '../Index/NewTemplateModal';
-import cookie from 'react-cookies';
 import VersionSelect from './VersionSelect';
 
 const { confirm } = Modal;
@@ -52,11 +50,16 @@ function escapeRegExp(string:string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function Header({templateId,previewDomain,templateName,nvData}:{templateId:string,previewDomain:string,templateName:string,nvData:any[]}) {
+function Header({templateId,previewDomain,nvData}:{templateId:string,previewDomain:string,nvData:any[]}) {
+    
+    const { message } = App.useApp();
 
     const intl = useIntl();
 
-    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
+        
+    const title = searchParams.get("title");
+    const templateName = searchParams.get("templateName") || "";
 
     const isNavigating = useRef(false);
 
@@ -369,7 +372,7 @@ function Header({templateId,previewDomain,templateName,nvData}:{templateId:strin
 
     // 店铺语言切换
     const setLang = (lang:string)=>{
-        editor.setLanguagesId(lang);
+        history.push(`/theme/editor/${editor.templateInfo.themeInfo.id}/${editor.versionId}/${lang}/${editor.mode}/?templateName=${templateName}&title=${title}`)
     }
 
     // 更新 Dropdown 菜单项
@@ -408,7 +411,7 @@ function Header({templateId,previewDomain,templateName,nvData}:{templateId:strin
                                 <DefaultButton text={"取消"} onClick={()=>newModal.destroy()} />
                                 <DangerButton text={"退出页面"} onClick={async ()=>{
                                     newModal.destroy();
-                                    navigate(`/website/shopSetting`);
+                                    history.push(`/website/shopSetting`);
                                 }} />
                             </Flex>
                         )
@@ -461,13 +464,12 @@ function Header({templateId,previewDomain,templateName,nvData}:{templateId:strin
                         <MySelect
                             value={editor.mode}
                             options={[
-                                { value: 'auto', label: intl.formatMessage({id:'theme.design.header.modeAuto'}),disabled:true },
                                 { value: 'original', label: intl.formatMessage({id:'theme.design.header.modeOriginal'}) },
                                 { value: 'mapping', label: intl.formatMessage({id:'theme.design.header.modeMapping'}) },
                             ]} 
                             style={{height:"36px",width:"100px"}} 
                             onChange={(value)=>{
-                                editor.setMode(value)
+                                history.push(`/theme/editor/${editor.templateInfo.themeInfo.id}/${editor.versionId}/${editor.languagesId}/${value}/?templateName=${templateName}&title=${title}`)
                             }} 
                         />
                     </Flex>

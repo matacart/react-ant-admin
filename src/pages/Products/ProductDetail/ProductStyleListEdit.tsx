@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space, Tooltip, Typography } from 'antd';
-import { deleteProductStyle, getProductStyleList } from '@/services/y2/api';
+import { App, Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Radio, Space, Tooltip, Typography } from 'antd';
 import { ExclamationCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
@@ -34,6 +33,8 @@ interface StyleItem {
 const { Text } = Typography;
 
 function ProductStyleListEdit (props:any){
+  
+  const { message } = App.useApp();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,7 +44,8 @@ function ProductStyleListEdit (props:any){
   // 
   const [copyStyles, setCopyStyles] = useState<StyleItem[]>([]);
 
-  const [modal, contextHolder] = Modal.useModal();
+  const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
+  
   function generateSku(attrValue){
     // 开始构建sku 
     // let attrValue: any[] = []
@@ -862,7 +864,6 @@ const handleWeightUnitChange = (id: number, unit: string) => {
             //   },
             // })}
           />
-          {contextHolder}
         </div>
       </Scoped>
     </Card>

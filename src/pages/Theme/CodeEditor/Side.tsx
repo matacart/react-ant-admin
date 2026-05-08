@@ -15,6 +15,7 @@ import LocaleModal from "./FileAdd/LocaleModal";
 import SnippetsModal from "./FileAdd/SnippetsModal";
 import AssetsModal from "./FileAdd/AssetsModal";
 import TemplatesModal from "./FileAdd/TemplatesModal";
+import { history } from "@umijs/max";
 
 const searchStyle = {
     height:"36px"
@@ -39,9 +40,7 @@ interface MyTreeDataNode extends TreeDataNode {
 
 function Side(){
 
-    const { id,templateId,versionId }  = useParams();
-
-    const navigate = useNavigate();
+    const { id,templateId,languageId,versionId,mode }  = useParams();
 
     type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
@@ -61,7 +60,7 @@ function Side(){
             if(!codeEditor.openFileList.some((node:any)=>node.key === info.node.key)){
                 codeEditor.setOpenFileList([...codeEditor.openFileList,{...info.node,url:url,languagesId:codeEditor.languageId,mode:codeEditor.mode}])
             }
-            navigate(`/theme/codeEditor/${id}/${templateId}/${codeEditor.languageId}/${versionId}?key=${url}`)
+            history.push(`/theme/codeEditor/${id}/${templateId}/${versionId}/${languageId}/${mode}?key=${url}`)
         }
     };
     

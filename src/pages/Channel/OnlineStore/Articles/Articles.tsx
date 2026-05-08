@@ -6,15 +6,10 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import ArticlesListCard from './ArticlesListCard';
 import { Flex } from 'antd';
-import articlesList from '@/store/channel/articles/articlesList';
-import cookie from 'react-cookies';
-
 
 function Articles(){
 
     const [isSkeleton,setIsSkeleton] = useState(false);
-
-    articlesList.setLanguagesId(cookie.load("shop_lang") || '2')
 
     return (
         <Scoped>

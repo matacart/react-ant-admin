@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useParams } from '@umijs/max';
@@ -26,6 +26,8 @@ import PrimaryButton from '@/components/Button/PrimaryButton';
 import MyButton from '@/components/Button/MyButton';
 
 function EditArticles(){
+    
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 

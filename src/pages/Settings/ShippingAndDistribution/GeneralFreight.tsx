@@ -1,6 +1,6 @@
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { history } from "@umijs/max";
-import { Button, Card, Divider, Flex, Form, Input, message, Spin, Upload, UploadProps } from "antd";
+import { Card, Divider, Flex } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 

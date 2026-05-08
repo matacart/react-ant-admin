@@ -2,10 +2,10 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import { useSleep } from "@/hooks/customHooks";
-import { addTemplateFile, RenameFile } from "@/services/y2/api";
+import { addTemplateFile } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
-import { Flex, Form, message, Modal, Radio, Tooltip } from "antd";
+import { Flex, Form, App, Modal } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -23,6 +23,8 @@ interface LayoutModalType{
 }
 
 function SnippetsModal({filePath,treeData,setTreeData}:LayoutModalType){
+    
+    const { message } = App.useApp();
 
     const sleep = useSleep();
 

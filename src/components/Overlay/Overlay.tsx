@@ -1,10 +1,10 @@
 import { ExclamationCircleOutlined, InfoCircleOutlined } from "@ant-design/icons"
-import { Button, Flex, Modal } from "antd"
+import { App, Button, Flex, Modal } from "antd"
 import styled from "styled-components"
 import React from "react";
 function ProductOverlay({status,okText,onExit,onSubmit}:{status:boolean,okText:string,onExit:()=>void,onSubmit:()=>void}) {
 
-    const [modal, contextHolder] = Modal.useModal();
+    const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const create = () => {
         onSubmit()
@@ -35,7 +35,6 @@ function ProductOverlay({status,okText,onExit,onSubmit}:{status:boolean,okText:s
                     </Button>
                 </Flex>
             </div>
-            {contextHolder}
         </Scoped>
     )
 }

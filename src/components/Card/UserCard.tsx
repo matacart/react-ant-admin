@@ -10,7 +10,7 @@ import { clearAllCookies } from "@/utils/common";
 // 清除所有cookie
 export default function UserCard(props:any) {
     /**
-     * 退出登录，并且将当前的 url 保存
+     * 退出登录
      */
     const loginOut = async () => {
         // 清除缓存
@@ -20,17 +20,9 @@ export default function UserCard(props:any) {
         clearAllCookies();
         // 清除主域名的公共token
         cookie.remove("token",{domain:test,path:"/"});
-        const { search, pathname } = window.location;
-        const urlParams = new URL(window.location.href).searchParams;
-        /** 此方法会跳转到 redirect 参数所在的位置 */
-        const redirect = urlParams.get('redirect');
-        // Note: There may be security issues, please note
-        if (window.location.pathname !== '/user/signIn' && !redirect) {
+        if (window.location.pathname !== '/user/signIn') {
             history.replace({
                 pathname: '/user/signIn'
-                // search: stringify({
-                //     redirect: pathname + search,
-                // }),
             });
         }
     };

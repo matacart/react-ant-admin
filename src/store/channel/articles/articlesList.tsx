@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
 
 class articlesList {
     constructor() {
         makeAutoObservable(this)
     }
 
-    languagesId = "2";
+    languagesId = cookie.load("shop_lang") || "2";
     setLanguagesId(value:string){
         this.languagesId = value;
     }

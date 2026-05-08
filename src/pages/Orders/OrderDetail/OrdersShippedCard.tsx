@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Col, Divider, Flex, Form, Input, message, notification, Row, Tooltip, Typography } from "antd";
+import { App, Card, Col, Divider, Flex, Form, notification, Row, Tooltip, Typography } from "antd";
 import { EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
@@ -17,6 +17,8 @@ import { history } from "@umijs/max";
 const { Text,Link } = Typography;
 
 function OrdersShippedCard({index}:{index:number}) {
+  
+  const { message } = App.useApp();
 
   const intl = useIntl();
 

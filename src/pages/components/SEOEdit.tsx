@@ -68,6 +68,8 @@ function SEOEdit({seo,setSEO,previewPrefix}:{seo:any,setSEO?:(title:string,descr
                             <Form.Item label="页面标题" tooltip="页面标题可帮助客户快速理解产品或页面内容，建议使用简洁直观的语言。">
                                 <DefaultInput value={title} onChange={(e:any)=>{
                                     setTitle(e.target.value)
+                                }} onBlur={(e:any)=>{
+                                    e.target.value == "" && setTitle(seo.title)
                                 }} placeholder={"页面标题"} />
                             </Form.Item>
                             <Form.Item label="描述" tooltip="建议详细描述商品特性或页面内容以吸引客户访问，不要堆砌关键词。">
@@ -78,6 +80,8 @@ function SEOEdit({seo,setSEO,previewPrefix}:{seo:any,setSEO?:(title:string,descr
                             <Form.Item label="链接" tooltip="描述性URL，例：product-item">
                                 <DefaultInput value={handle} placeholder="链接" onChange={(e:any)=>{
                                     setHandle(e.target.value.trim())
+                                }} onBlur={(e:any)=>{
+                                    e.target.value == "" && setHandle(seo.title)
                                 }} prefix={previewPrefix} />
                             </Form.Item>
                             <Form.Item label="搜索引擎关键词" tooltip="关键词可以提高搜索结果排名，建议1-2个关键词即可，堆砌关键词可能会降低排名！">

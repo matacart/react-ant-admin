@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Tag, message, Radio, Space, Tooltip, Typography } from 'antd';
+import { App, Card, Table, Button, Upload, Modal, Checkbox, Input, Select, InputNumber, Radio, Space, Tooltip, Typography } from 'antd';
 import { ExclamationCircleOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
@@ -29,6 +29,10 @@ interface StyleItem {
 const { Text } = Typography;
 
 function ProductStyleList (props:any){
+  
+  const { message } = App.useApp();
+
+  const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,7 +42,6 @@ function ProductStyleList (props:any){
   // 
   const [copyStyles, setCopyStyles] = useState<StyleItem[]>([]);
 
-  const [modal, contextHolder] = Modal.useModal();
   function generateSku(attrValue:any){
     // 开始构建sku 
     // let attrValue: any[] = []
@@ -855,7 +858,6 @@ const handleRemove = (item:any,index:number) => {
             //   },
             // })}
           />
-          {contextHolder}
         </div>
       </Scoped>
     </Card>

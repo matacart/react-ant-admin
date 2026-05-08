@@ -1,10 +1,7 @@
 
-import { Button, Col, ConfigProvider, Flex, Form, Input, message, Modal, Row, Select, Space } from 'antd';
+import { Button, ConfigProvider, Flex, Input, Modal, Select, Space } from 'antd';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { PlusOutlined } from '@ant-design/icons';
-import { AddSupplier, getCountryList } from '@/services/y2/api';
-import { useForm } from 'antd/es/form/Form';
+import { useState } from 'react';
 
 const { Search } = Input;
 

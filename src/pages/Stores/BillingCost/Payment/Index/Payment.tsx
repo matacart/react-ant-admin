@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { history } from '@umijs/max';
 import styled from 'styled-components';
-import PrimaryButton from '@/components/Button/PrimaryButton';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { Flex, message } from 'antd';
+import { App, Flex } from 'antd';
 import cookie from 'react-cookies';
 import { getRechargeList } from '@/services/y2/api';
 import PaymentList from './PaymentList';
 import PaymentModal from './PaymentModal';
 
 function Payment(){
+
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 

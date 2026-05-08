@@ -1,8 +1,7 @@
-import { InboxOutlined, PlusOutlined } from "@ant-design/icons"
-import { Flex, message, Upload, UploadProps } from "antd";
+import { PlusOutlined } from "@ant-design/icons"
+import { App, Flex, Upload } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
-import { getTaskStatus, importProductTask } from "@/services/y2/api";
 import DefaultButton from "@/components/Button/DefaultButton";
 import { useSleep } from "@/hooks/customHooks";
 import productList from "@/store/product/productList";
@@ -12,6 +11,8 @@ import { observer } from "mobx-react-lite";
  const { Dragger } = Upload;
 // 批量导入
 const ProductUploadImport = ({size,file,setFile}:{size:number,file:any,setFile:any})=>{
+  
+  const { message } = App.useApp();
 
   // 使用 useRef 存储定时器
   const timerRef = useRef<NodeJS.Timeout>()

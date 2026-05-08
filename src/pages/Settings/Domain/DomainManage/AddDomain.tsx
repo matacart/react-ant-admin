@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, CheckCircleFilled} from "@ant-design/icons"
-import { Card, Flex, Form, message, Steps, theme } from "antd"
+import { App, Card, Flex, Form, Steps, theme } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
@@ -13,6 +13,8 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import { useSleep } from "@/hooks/customHooks";
 
 function AddDomain() {
+    
+    const { message } = App.useApp();
 
     const { token } = theme.useToken();
 

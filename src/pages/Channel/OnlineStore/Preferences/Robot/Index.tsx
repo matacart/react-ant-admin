@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, ExportOutlined } from '@ant-design/icons'
-import { Card, Flex, message } from 'antd'
+import { App, Card, Flex } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -13,6 +13,8 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import { getRobotsTxtConfig, resetRobotsTxtConfig, updateRobotsTxtConfig } from '@/services/y2/api';
 
 function Index(){
+    
+    const { message } = App.useApp();
 
     const previewDomain = getPrimaryDomain();
 

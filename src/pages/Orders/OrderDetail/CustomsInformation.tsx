@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Divider, Flex, Form, message, Tooltip } from "antd";
+import { App, Card, Divider, Flex, Form, Tooltip } from "antd";
 import { CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useIntl } from "@umijs/max";
@@ -12,6 +12,8 @@ import copy from "copy-to-clipboard";
 import DeliveryAddressModal from "./Modal/DeliveryAddressModal";
 
 function CustomsInformation() {
+
+    const { message } = App.useApp();
 
     const intl = useIntl();
 

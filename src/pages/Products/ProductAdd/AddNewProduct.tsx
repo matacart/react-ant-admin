@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -50,6 +50,8 @@ interface DataType {
 }
 
 function AddNewProduct(){
+    
+    const { message } = App.useApp();
 
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
@@ -120,6 +122,7 @@ function AddNewProduct(){
             try {
                 await upDateProduct({
                     ...product.productInfo,
+                    handle:product.productInfo.handle || product.productInfo.title.replace(/\s+/g, '-').toLowerCase(),
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
                     diversion:JSON.stringify([product.productInfo.diversion || {}]),

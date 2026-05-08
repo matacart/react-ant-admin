@@ -36,34 +36,34 @@ function Header({setHeight,url,initialState}:{setHeight:any,url:string,initialSt
 
     useEffect(()=>{
         // 获取用户账号状态信息
-        // currentUserStatus().then((res:any)=>{
-        //     setUserStatus(res)
-        //     if(res.code == 0){
-        //         const endtimer = parseInt(res.data.package.end_time || 0)
-        //         const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
-        //         res.code == 0 && setTimer(RemainTime)
-        //         RemainTime<=15 ? setHeight(100) : setHeight(60)
-        //     }else{
-        //         setHeight(100)
-        //         // 默认店铺
-        //         cookie.save('domain', JSON.stringify({
-        //             default_currency: "USD",
-        //             default_lang: "en-us",
-        //             default_lang_name: "English",
-        //             domain_name: "",
-        //             id: "0",
-        //             package_id: "3",
-        //             package_name: "高级版",
-        //             second_domain: "htj4yk94",
-        //             status: "1",
-        //             store_logo: "",
-        //             store_name: "YIKEC",
-        //             timezone: "Pacific/Honolulu"
-        //         }), { path: '/' });
-        //     }
-        // }).catch(()=>{
-        //     setHeight(60)
-        // })
+        currentUserStatus().then((res:any)=>{
+            setUserStatus(res)
+            if(res.code == 0){
+                const endtimer = parseInt(res.data.package.end_time || 0)
+                const RemainTime = Math.floor((endtimer*1000 - Date.now())/1000/60/60/24)
+                res.code == 0 && setTimer(RemainTime)
+                RemainTime<=15 ? setHeight(100) : setHeight(60)
+            }else{
+                setHeight(100)
+                // 默认店铺
+                cookie.save('domain', JSON.stringify({
+                    default_currency: "USD",
+                    default_lang: "en-us",
+                    default_lang_name: "English",
+                    domain_name: "",
+                    id: "0",
+                    package_id: "3",
+                    package_name: "高级版",
+                    second_domain: "htj4yk94",
+                    status: "1",
+                    store_logo: "",
+                    store_name: "YIKEC",
+                    timezone: "Pacific/Honolulu"
+                }), { path: '/' });
+            }
+        }).catch(()=>{
+            setHeight(60)
+        })
     },[globalStore.headRefresh])
 
 

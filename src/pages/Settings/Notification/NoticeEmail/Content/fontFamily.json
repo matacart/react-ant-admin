@@ -1,0 +1,59 @@
+[
+    {
+        "label": "inherit",
+        "value": "inherit"
+    },
+    {
+        "label": "Arial",
+        "value": "Arial"
+    },
+    {
+        "label": "Arial Black",
+        "value": "Arial Black"
+    },
+    {
+        "label": "Sans Serif",
+        "value": "Sans Serif"
+    },
+    {
+        "label": "Serif",
+        "value": "Serif"
+    },
+    {
+        "label": "Wide",
+        "value": "Wide"
+    },
+    {
+        "label": "Narrow",
+        "value": "Narrow"
+    },
+    {
+        "label": "Comic Sans MS",
+        "value": "Comic Sans MS"
+    },
+    {
+        "label": "Garamond",
+        "value": "Garamond"
+    },
+    {
+        "label": "Georgia",
+        "value": "Georgia"
+    },
+    {
+        "label": "Helvetica",
+        "value": "Helvetica"
+    },
+    {
+        "label": "Tahoma",
+        "value": "Tahoma"
+    },
+    {
+        "label": "Trebuchet MS",
+        "value": "Trebuchet MS"
+    },
+    {
+        "label": "Verdana",
+        "value": "Verdana"
+    }
+    
+]

@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -17,6 +17,8 @@ import SEOCard from '../Custompage/SEOCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 
 function NewPage(){
+    
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false);
 

@@ -11,6 +11,12 @@ class codeEditor {
       makeAutoObservable(this)
     }
 
+    id:string = ""; 
+
+    setId(value:string){
+      this.id = value;
+    }
+
     mode:string = 'auto';
 
     setMode(value:string){
@@ -63,6 +69,7 @@ class codeEditor {
 
 
     reset(){
+      this.id = "";
       this.mode = 'auto';
       this.languageId = '2';
       this.versionId = '';

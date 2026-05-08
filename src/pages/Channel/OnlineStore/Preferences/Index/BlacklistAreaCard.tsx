@@ -1,5 +1,5 @@
 import DefaultButton from "@/components/Button/DefaultButton";
-import { Card, Checkbox, Collapse, CollapseProps, Flex, message, Modal, Table, Tooltip} from "antd";
+import { App, Card, Checkbox, Collapse, Flex, Modal, Table, Tooltip} from "antd";
 import styled from "styled-components";
 import countries from "@/pages/Channel/OnlineStore/Preferences/Data/countries.json";
 import { useEffect, useState } from "react";
@@ -12,6 +12,8 @@ import preferences, { IPBlack } from "@/store/channel/preferences/preferences";
 import DeleteModal from "@/components/Modal/DeleteModal";
 
 function BlacklistAreaCard() {
+    
+    const { message } = App.useApp();
 
     // 获取当前语言
     const language = getLocale();

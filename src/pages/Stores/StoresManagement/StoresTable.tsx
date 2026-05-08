@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Flex, message, Modal, Popover, Switch, Table, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Flex, App, Modal, Table, Tooltip } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -11,8 +11,6 @@ import ErrorTag from '@/components/Tag/ErrorTag';
 import WarningTag from '@/components/Tag/WarningTag';
 import MyButton from '@/components/Button/MyButton';
 import { useAbortController } from '@/hooks/customHooks';
-import cookie from 'react-cookies';
-import axios from 'axios';
 import UpdataShop from './UpdataShop';
 
 type ColumnsType<T> = TableProps<T>['columns'];
@@ -65,6 +63,8 @@ function replaceSubdomain(url:string,newSubdomain:string,oldSubdomain:string) {
 }
 
 function StoresTable() {
+    
+  const { message } = App.useApp();
 
   const [loading, setLoading] = useState(false);
 

@@ -258,6 +258,22 @@ declare namespace ApiChannel {
   }
 }
 
+declare namespace ApiMessage {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiEmail {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
 declare namespace ApiSite {
   type Default = {
     code:number|string, 

@@ -1,0 +1,140 @@
+import { Drawer, Flex } from "antd"
+import styled from "styled-components"
+import MyButton from "@/components/Button/MyButton";
+import MyInput from "@/components/Input/MyInput";
+import { LeftIcon, SearchSecondIcon } from "@/components/Icons/Icons";
+import { useEffect, useState } from "react";
+import { CheckCircleFilled } from "@ant-design/icons";
+import { settingType } from "@/store/settings/notification/noticeEmail";
+import { useIntl } from "@umijs/max";
+
+function FontPickerComponent({setting,data,setSections,rightRef}:{setting:settingType,data:any,setSections:(id:string,value:any)=>void,rightRef:React.RefObject<HTMLDivElement>}) {
+
+    const intl = useIntl();
+    
+    const [open, setOpen] = useState(false);
+
+    const fontFamilyList = require("./fontFamily.json");
+
+    const [fontFamily,setFontFamily] = useState<{'font-family': string} | undefined>(undefined);
+
+    const cancel = ()=>{
+        setFontFamily(data.value || setting?.default);
+        setOpen(false);
+    }
+
+    const submit = ()=>{
+        const newValue:settingType = {
+            ...data,
+            value:fontFamily,
+        }
+        setSections(setting.id,newValue);
+        setOpen(false);
+    }
+
+    const setDefaultFontFamily = ()=>{
+        if(!setting?.default){
+            console.log("没有默认字体");
+            return;
+        }
+        setFontFamily(setting.default);
+        const newValue:settingType = {
+            ...data,
+            value:setting.default,
+        }
+        setSections(setting.id,newValue);
+    }
+
+
+    useEffect(()=>{
+        setFontFamily(data.value || setting?.default);
+    },[]);
+
+    return (
+        <Scoped>
+            <Flex className="title" align="center">
+                <div className="font-14 color-474F5E">{setting.label}</div>
+            </Flex>
+            <div className="content">
+                <div style={{fontFamily:fontFamily?.['font-family']}}>{fontFamily?.['font-family'] == "inherit" ? intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.fontFamily' }) : fontFamily?.['font-family']}</div>
+                <Flex gap={12} className="btn-box">
+                    <MyButton className="btn" text={intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.setDefault' })} onClick={setDefaultFontFamily} />
+                    <MyButton className="btn" text={intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.replace' })} onClick={()=>setOpen(true)} />
+                </Flex>
+            </div>
+            {/* 字体选择器 */}
+            <Drawer
+                getContainer={()=>rightRef.current!}
+                width={296}
+                closeIcon={null}
+                title={
+                    <Flex align="center" gap={2}>
+                        <LeftIcon className="font-20 font-w-500 cursor-pointer" onClick={cancel} />
+                        <div>{intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.title' })}</div>
+                    </Flex>
+                }
+                mask={false}
+                open={open}
+                rootStyle={{
+                    position:"absolute"
+                }}
+                className="my-drawer"
+                classNames={{
+                    header:"my-drawer-header",
+                    body:"my-drawer-content"
+                }}
+                onClose={cancel}
+                footer={
+                    <Flex justify="space-between" align="center" gap={20}>
+                        <div style={{flex:1}}>
+                            <div style={{fontFamily:fontFamily?.['font-family']}}>{fontFamily?.['font-family'] == "inherit" ? intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.fontFamily' }) : fontFamily?.['font-family']}</div>
+                        </div>
+                        <Flex gap={8}>
+                            <MyButton color="primary" variant="solid" text={intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.submit' })} onClick={submit}/>
+                        </Flex>
+                    </Flex>
+                }
+            >
+                <>
+                    <Flex style={{padding: '12px'}}>
+                        <MyInput placeholder={intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.search' })} suffix={<SearchSecondIcon />} style={{height:"36px"}} />
+                    </Flex>
+                    <div className="menu-box">
+                        {fontFamilyList.map((item:any,index:number)=>(
+                            <Flex key={index} className="menu-item" justify="space-between" align="center" onClick={()=>{
+                                setFontFamily({
+                                    'font-family':item.value,
+                                });
+                            }}>
+                                {item.label == "inherit" ? intl.formatMessage({ id: 'settings.notification.noticeEmail.right.fontPickerComponent.fontFamily' }) : item.label}
+                                {item.value == fontFamily?.['font-family'] && <CheckCircleFilled className="color-356DFF font-16" />}
+                            </Flex>
+                        ))}
+                    </div>
+                </>
+            </Drawer>
+        </Scoped>
+    )
+}
+
+export default FontPickerComponent
+
+const Scoped = styled.div`
+    padding-bottom: 24px;
+    .title{
+        padding-bottom: 12px;
+    }
+    .content{
+        padding: 16px;
+        border-radius: 4px;
+        background: #f7f8fb;
+        border: 1px dashed #d7dbe7;
+        .btn-box{
+            margin-top: 10px;
+            .btn{
+                height: 36px;
+                flex:1;
+            }
+        }
+    }
+`

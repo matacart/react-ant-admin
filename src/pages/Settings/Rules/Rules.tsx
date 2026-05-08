@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
-import { Divider, message } from "antd"
+import { App, Divider } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
@@ -10,7 +10,6 @@ import TermsOfService from "./TermsOfService"
 import ShippingPolicy from "./ShippingPolicy"
 import rules from "@/store/settings/rules"
 import StatementModal from "@/components/Modal/StatementModal"
-import cookie from 'react-cookies';
 import { useSleep } from "@/hooks/customHooks"
 import { getRuleList, setRuleList } from "@/services/y2/api"
 import LangSelect from "@/components/Select/LangSelect"
@@ -18,6 +17,8 @@ import { observer } from "mobx-react-lite"
 import MyButton from "@/components/Button/MyButton"
 
 function Rules() {
+
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -41,7 +42,7 @@ function Rules() {
 
     useEffect(()=>{
         // 默认语言
-        rules.setLanguagesId(cookie.load("shop_lang") || '2');
+        rules.reset();
     },[])
 
     useEffect(()=>{

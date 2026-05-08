@@ -1,6 +1,5 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Card, Divider, Flex, Form, GetProp, Input, message, Space, Spin, Switch, Table, TableProps, Upload, UploadProps } from "antd";
-import { observer } from "mobx-react-lite";
+import { DeleteOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { Card, Input, Space, Switch, Table, TableProps } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 

@@ -1,8 +1,7 @@
-import { Button, Form, Input, message, ConfigProvider, Dropdown, Flex } from 'antd';
+import { Button, Form, Input, App, ConfigProvider, Dropdown, Flex } from 'antd';
 import { LockOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormattedMessage, useIntl, Link ,history,useModel} from '@umijs/max';
 import React,{ useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
 import { getFakeCaptcha, resetPassword } from '@/services/y2/api';
 import styled from 'styled-components';
 import { UnfoldIcon } from '@/components/Icons/Icons';
@@ -19,6 +18,8 @@ const style = {
 }
 
 export default function LoginForm() {
+    
+    const { message } = App.useApp();
 
     const intl = useIntl();
     const [phone, setPhone] = useState('');

@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { Divider,Flex,Form,MenuProps,message, Modal } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { App, Divider,Flex,Form,MenuProps } from 'antd';
+import { useEffect, useState } from 'react';
 import TradingRecords from './TradingRecords';
 import { deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
@@ -9,8 +9,7 @@ import ProductStyleListEdit from './ProductStyleListEdit';
 import { styled } from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import cookie from 'react-cookies';
-import { history,useParams,useNavigate } from '@umijs/max';
-import copy from 'copy-to-clipboard';
+import { history,useParams } from '@umijs/max';
 import dayjs from "dayjs";
 import product from '@/store/product/product';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
@@ -61,6 +60,8 @@ interface ProductDetail {
 }
 
 function ProductDetail() {
+
+    const { modal,message } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const {productId,languageId} = useParams();
     // 域名信息
@@ -143,23 +144,20 @@ function ProductDetail() {
     // 提示
     const [isSkeleton,setIsSkeleton] = useState(true)
     const [loading,setLoading] = useState(false)
-
-    const [modal, contextHolder] = Modal.useModal();
     
     const [style, setStyle] = useState([]);
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
     // 删除
-    function productDel(id:any){
-        return deleteProduct(id).then(res=>{
-            if(res.code==0){
-                message.success('删除成功');
-                history.push('/products/index');
-            }else{
-                message.error('noooo');
-            }
-            
-        })
+    async function productDel(id:any){
+        const res = await deleteProduct(id);
+        // 业务状态 code
+        if(res?.code==0){
+            message.success('删除成功');
+            history.push('/products/index');
+        }else{
+            message.error('noooo');
+        }
     }
     // 设置产品状态
     function setProductStatus(status:string){
@@ -239,44 +237,38 @@ function ProductDetail() {
     // 获取商品详情
     const fetchProductDetail = async (id:string,langId:string) => {
         setIsSkeleton(true)
-        getProductDetail(id,langId).then(res=>{
-            // 格式
-            if(res.data && JSON.stringify(res.data) != "[]"){
-                setProductTitle(res.data.title)
-                // 格式过滤 --- 有效的json格式
-                let newAdditonalImage = []
-                try {
-                    newAdditonalImage = (JSON.parse(res.data.additional_image || "[]") instanceof Array)?JSON.parse(res.data.additional_image || "[]"):[]
-                } catch (error) {
-                    console.log(error)
-                    newAdditonalImage = []
-                }
-                if(res.data.product_image == ""){
-                    product.setProductInfo({
-                        ...res.data,
-                        start_time:(res.data.start_time == "0" || res.data.start_time == "") ? "" : dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                        end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                        additional_image:[...newAdditonalImage]
-                    })
-                }else{
-                    console.log(res.data)
-                    product.setProductInfo({
-                        ...res.data,
-                        start_time:(res.data.start_time == "0" || res.data.start_time == "")?"":dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                        end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                        additional_image:[res.data.product_image,...newAdditonalImage]
-                    })
-                }
-                // 属性
-                product.setAttributes(res.data.attributes || [])
-                // 变体
-                product.setVariants(res.data.variants || [])
+        const res = await getProductDetail(id,langId);
+        if(res.code == 0 && res.data){
+            setProductTitle(res.data.title);
+            // 格式过滤 --- 有效的json格式
+            let newAdditonalImage = []
+            try {
+                newAdditonalImage = (JSON.parse(res.data.additional_image || "[]") instanceof Array)?JSON.parse(res.data.additional_image || "[]"):[]
+            } catch (error) {
+                console.log(error)
+                newAdditonalImage = []
             }
-        }).catch(()=>{
-        }).finally(async ()=>{
-            // await sleep(2000)
-            setIsSkeleton(false)
-        })
+            if(res.data.product_image == ""){
+                product.setProductInfo({
+                    ...res.data,
+                    start_time:(res.data.start_time == "0" || res.data.start_time == "") ? "" : dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    additional_image:[...newAdditonalImage]
+                })
+            }else{
+                product.setProductInfo({
+                    ...res.data,
+                    start_time:(res.data.start_time == "0" || res.data.start_time == "")?"":dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    additional_image:[res.data.product_image,...newAdditonalImage]
+                })
+            }
+            // 属性
+            product.setAttributes(res.data.attributes || [])
+            // 变体
+            product.setVariants(res.data.variants || [])
+        }
+        setIsSkeleton(false)
     };
 
     // 表单验证
@@ -396,7 +388,6 @@ function ProductDetail() {
                             <div className='mc-footer'>
                                 <Flex gap={12}>
                                     <DangerButton text='将商品删除' onClick={delProduct} />
-                                    {contextHolder}
                                     {product.productInfo.status !== "2"?
                                     <DefaultButton text='将商品存档' onClick={onFile} />
                                     :<DefaultButton text='将商品取消存档' onClick={noONFile} />}

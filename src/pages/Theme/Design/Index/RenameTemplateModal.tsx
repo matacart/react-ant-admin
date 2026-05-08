@@ -4,7 +4,7 @@ import { EditIcon } from "@/components/Icons/Icons";
 import DefaultInput from "@/components/Input/DefaultInput";
 import WarningTagText from "@/components/Tag/WarningTagText";
 import { useIntl } from "@umijs/max";
-import { Flex, Form, message, Modal, Tooltip } from "antd";
+import { Flex, Form, App, Modal, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { optionType } from "./NewTemplateModal";
@@ -29,6 +29,8 @@ export default function RenameTemplateModal({
     isDefault:boolean,
     backMainItems:()=>void,
 }){
+    
+    const { message } = App.useApp();
 
     const intl = useIntl();
 

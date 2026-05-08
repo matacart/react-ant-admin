@@ -1,5 +1,5 @@
 import { action, makeAutoObservable, observable } from "mobx";
-import { useRef } from "react";
+import cookie from 'react-cookies';
 
 // 引入mobx
 // https://blog.csdn.net/qq_53123067/article/details/129707090?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522171694792616800197099744%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=171694792616800197099744&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-2-129707090-null-null.142^v100^pc_search_result_base9&utm_term=mobx&spm=1018.2226.3001.4187
@@ -24,15 +24,15 @@ class productList {
         makeAutoObservable(this)
     }
 
-    languagesId = '2';
+    languagesId = cookie.load("shop_lang") || '2'
 
     setLanguagesId(value:string){
         this.languagesId = value;
     }
 
     // 状态切换
-    @observable flag:string|undefined = '';
-    @action setFlag = (flag: string|undefined) => {
+    flag:string|undefined = '';
+    setFlag = (flag: string|undefined) => {
         this.flag = flag;
     }
     // 精选
@@ -109,6 +109,17 @@ class productList {
     setExportTask = (value: any) => {
         this.exportTask = value;
     }
+
+
+    reset(){
+        this.languagesId = cookie.load("shop_lang") || '2';
+        this.flag = '';
+        this.isAlliance = '';
+        this.isHosted = '';
+        this.setAllSelected(false);
+        this.setProductList([]);
+    }
+
 }
 export default new productList();
 

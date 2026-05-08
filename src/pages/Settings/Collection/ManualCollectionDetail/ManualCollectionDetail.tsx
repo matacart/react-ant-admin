@@ -1,9 +1,9 @@
 import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, Radio, Row, Select, TabsProps, Upload } from "antd"
+import { App, Button, Card, Checkbox, Flex, Form, Input, Select, Upload } from "antd"
 import { history, useParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsConfigArray, getAddonsConfigs, setAddonsConfig, upDataAddonsConfig } from "@/services/y2/api";
+import { getAddonsConfigArray, upDataAddonsConfig } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import axios from "axios";
 import modal from "antd/es/modal";
@@ -12,6 +12,8 @@ import modal from "antd/es/modal";
 const { TextArea } = Input;
 
 function ManualCollectionDetail() {
+
+    const { message } = App.useApp();
 
     const params = useParams();
 

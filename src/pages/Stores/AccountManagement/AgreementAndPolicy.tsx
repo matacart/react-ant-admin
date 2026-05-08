@@ -1,9 +1,7 @@
 import { ExportIcon } from "@/components/Icons/Icons";
-import SuccessTag from "@/components/Tag/SuccessTag";
-import { Button, Card, Divider, Flex, message, Select, Switch, Table, TableProps } from "antd";
+import { App, Card, Divider, Flex, Switch } from "antd";
 import { observer } from "mobx-react-lite";
 import accountManagement from "@/store/shops/accountManagementStore";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import { setUserSharing } from "@/services/y2/api";
@@ -11,10 +9,11 @@ import { setUserSharing } from "@/services/y2/api";
 
 function AgreementAndPolicy() {
 
+    const { message } = App.useApp();  // 获取带有上下文的 modal 对象
+
     const sharedState = (checked:boolean)=>{
         setUserSharing(checked?"1":"0").then(res=>{
-            // console.log(res)
-            if(res.code == 0){
+            if(res?.code == 0){
                 checked?message.success("已开启"):message.success("已关闭")
                 accountManagement.setUserInfo({...accountManagement.userInfo,data_sharing:checked?"1":"0"})
             }else{

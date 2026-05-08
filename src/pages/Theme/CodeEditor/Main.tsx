@@ -34,7 +34,7 @@ function Main(){
               const currentIndex = codeEditor.openFileList.findIndex((f: FileType) => f.key === file.key);
               // 剩余文件
               const newOpenFileList = codeEditor.openFileList.filter((item: FileType) => item.key !== file.key);
-              codeEditor.setOpenFileList(newOpenFileList)
+              codeEditor.setOpenFileList(newOpenFileList);
               // 激活文件偏移
               if(codeEditor.activeFileKey == file.key){
                 if(newOpenFileList[currentIndex-1]?.key){

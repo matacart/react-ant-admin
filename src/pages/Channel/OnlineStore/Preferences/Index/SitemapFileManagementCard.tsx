@@ -1,17 +1,19 @@
 import DefaultButton from "@/components/Button/DefaultButton";
-import { CompressedFileIcon } from "@/components/Icons/Icons";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { delSitemapFile, getSitemapList, switchSitemap, uploadSitemap } from "@/services/y2/api";
 import preferences, { SitemapFile } from "@/store/channel/preferences/preferences";
 import { getPrimaryDomain } from "@/utils/dataStructure";
 import { DeleteOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Flex, message, Modal, Switch, Table, Tooltip, Upload} from "antd";
+import { App, Card, Flex, Modal, Switch, Table, Tooltip, Upload} from "antd";
 import Dragger from "antd/lib/upload/Dragger";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 function SitemapFileManagementCard() {
+
+    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const previewDomain = getPrimaryDomain();
 
@@ -30,14 +32,22 @@ function SitemapFileManagementCard() {
             title: 'Sitemap文件',
             dataIndex: 'file_name',
             key: 'file_name',
+            width: 400,
+            render: (text:any, record:any) => (
+                <div className="font-12">
+                    <span className="color-356DFF cursor-pointer" onClick={()=>window.open(`${previewDomain}/sitemap/${text}`)}>{`${previewDomain}/sitemap/${text}`}</span>
+                </div>
+            ),
         },
         {
             title: '大小',
+            width: 100,
             dataIndex: 'file_size_formatted',
             key: 'file_size_formatted',
         },
         {
             title: '上传日期',
+            width: 200,
             dataIndex: 'create_time_formatted',
             key: 'create_time_formatted',
         },
@@ -75,13 +85,15 @@ function SitemapFileManagementCard() {
         }
     ]
 
-    const sitemapSwitch = (checked:boolean)=>{
+    // 切换Sitemap状态
+    const setSitemapStatus = (status:"on" | "off",confirmPromise?:any)=>{
+        confirmPromise && confirmPromise.destroy();
         setSwitchLoading(true);
-        switchSitemap(checked?"on":"off").then(res=>{
+        switchSitemap(status).then(res=>{
             if(res.code == 0){
                 message.success("成功");
                 preferences.setSitemapStatus({
-                    active: checked?"on":"off",
+                    active: status,
                 })
             }
         }).catch(err=>{
@@ -89,6 +101,26 @@ function SitemapFileManagementCard() {
         }).finally(()=>{
             setSwitchLoading(false);
         })
+    }
+    const sitemapSwitch = (checked:boolean)=>{
+        if(checked){
+            setSitemapStatus("on");
+        }else{
+            const confirmPromise = modal.confirm({
+                title: '确认要关闭Sitemap吗？',
+                content: '关闭后，谷歌等搜索引擎爬虫将无法访问网站的sitemap.xml地址，这会严重影响SEO爬行和收录。',
+                centered: true,
+                onCancel:()=>{
+                    confirmPromise.destroy();
+                },
+                footer:()=>{
+                    return <Flex justify="flex-end" gap={12}>
+                        <DefaultButton key="cancel" onClick={()=>confirmPromise.destroy()} text={"取消"} />
+                        <PrimaryButton key="ok" type="primary" onClick={()=>setSitemapStatus("off",confirmPromise)} text={"确认"} />
+                    </Flex>
+                }
+            })
+        }
     }
 
     const [file,setFile] = useState<File>();
@@ -158,7 +190,7 @@ function SitemapFileManagementCard() {
                                 </span>
                             </Tooltip>
                         </Flex>
-                        <div className="font-12">当前地址：<span className="color-356DFF">{previewDomain}/sitemap.xml</span></div>
+                        <div className="font-12">当前地址：<span className="color-356DFF cursor-pointer" onClick={()=>window.open(`${previewDomain}/sitemap.xml`)}>{previewDomain}/sitemap.xml</span></div>
                     </div>
                     <div>
                         <Switch loading={switchLoading} checked={preferences.sitemapStatus.active == "on"} onChange={sitemapSwitch} />

@@ -1,10 +1,9 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message, Spin } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useParams } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import cookie from 'react-cookies';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { getCategory, setCategory } from '@/services/y2/api';
 import DefaultButton from '@/components/Button/DefaultButton';
@@ -27,6 +26,8 @@ import { getPrimaryDomain } from '@/utils/dataStructure';
 // 表单项商品数据类型
 
 function EditProductCategories(){
+    
+    const { message } = App.useApp();
 
     // 预览域名
     const previewDomain = getPrimaryDomain();

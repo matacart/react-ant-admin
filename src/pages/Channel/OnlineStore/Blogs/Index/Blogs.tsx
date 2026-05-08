@@ -3,7 +3,7 @@ import { history } from '@umijs/max';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { Flex, message } from 'antd';
+import { App, Flex } from 'antd';
 import cookie from 'react-cookies';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import BlogsList from './BlogsList';
@@ -11,6 +11,8 @@ import { getArticleCategorys } from '@/services/y2/api';
 
 
 function Blogs(){
+    
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 

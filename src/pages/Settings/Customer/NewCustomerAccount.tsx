@@ -1,6 +1,4 @@
-import DefaultTag from "@/components/Tag/DefaultTag";
-import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
+import { Button, Card, Divider, Flex, Radio } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -42,10 +40,6 @@ function NewCustomerAccount() {
     const [loading, setLoading] = useState(false);
 
     const [accountVersion,setAccountVersion] = useState(1)
-
-    const AccountTypeOptions = [
-       
-    ];
 
     const DndList = () => {
         const [items, setItems] = useState<Item[]>([

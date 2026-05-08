@@ -1,15 +1,14 @@
-import { Button, Card, message, Tabs, TabsProps } from "antd"
+import { App, Card, Tabs, TabsProps } from "antd"
 import styled from "styled-components"
 import AccessRangeAllCard from "./AccessRangeAllCard";
-import WebHookSubscriptionTable from "./WebHookSubscriptionTable";
-import { useEffect } from "react";
 import customAppConfigSetting from "@/store/appStore/customAppConfigSetting";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { upDatePermissionsList } from "@/services/y2/api";
-import customAppConfig from "@/store/appStore/customAppConfig";
 import { useSearchParams } from "react-router-dom";
 
 function AccessRangeCard(){
+
+    const { message } = App.useApp();
 
     const [searchParams, setSearchParams] = useSearchParams("");
 

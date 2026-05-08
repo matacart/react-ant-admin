@@ -5,7 +5,7 @@ import MySelect from "@/components/Select/MySelect";
 import { addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleValueList } from "@/services/y2/api";
 import product from "@/store/product/product";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
-import { Card, Checkbox, Button, Tag, Select, Modal, message, Tooltip, SelectProps, AutoCompleteProps } from "antd";
+import { App, Card, Checkbox, Button, Tag, Select, Modal, Tooltip, SelectProps, AutoCompleteProps } from "antd";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -17,6 +17,9 @@ const { Option } = Select;
 const { confirm } = Modal;
 
 function MultipleStylesCard(props:any) {
+  
+  const { message } = App.useApp();
+
   const [specifications, setSpecifications] = useState([]);
   const [values, setValues] = useState<string[]>([]);
   const [tags, setTags] = useState<any[][]>([]); // 用于存储每个规格组的标签

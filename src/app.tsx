@@ -4,24 +4,22 @@ import { history,Link,RunTimeLayoutConfig,setLocale,useIntl } from '@umijs/max';
 import { getAccessToken, getCurrenciesList, getPlatformInfo, getShippingcourier, getTimeZoneList, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { App, Flex, Menu, message } from 'antd';
+import { App, ConfigProvider, Flex, message } from 'antd';
 import React, { lazy, useEffect, useState } from 'react';
-import { AddIcon, PrintIcon, RightIcon } from './components/Icons/Icons';
+import { AddIcon, RightIcon } from './components/Icons/Icons';
 import { requestConfig } from '@/utils/requestConfig';
 // layout
 import defaultSettings from '../config/defaultSettings';
 const loginPath = '/user/signIn';
 // 在 app.tsx 文件顶部添加导入语句
 import "nprogress/nprogress.css";
-import globalStore from './store/globalStore';
 import channels from './store/menu/channels';
 import { reaction } from 'mobx';
-import { languageMap } from './locales/langMap';
+import { i18n } from './components/Lang/Lang';
 // 懒加载组件
 const LazyHeader = lazy(() => import('./components/Header/Header'));
 const LazyMCPaymentHead = lazy(() => import('./components/Header/MCPaymentHead'));
 const LazySalesChannel = lazy(() => import('./components/Menu/SalesChannel'));
-const LazyFacebookChannel = lazy(() => import('./pages/Channel/FaceBook/Index/Index'));
 // import SalesChannel from './components/Menu/SalesChannel';
 // import Header from './components/Header/Header';
 // import MCPaymentHead from './components/Header/MCPaymentHead';
@@ -29,11 +27,6 @@ const LazyFacebookChannel = lazy(() => import('./pages/Channel/FaceBook/Index/In
 
 // 配置化请求参数
 const CONFIG_REQUESTS = [
-  // { 
-  //   url: '/api/ApiAppstore/languages_select',
-  //   storageKey: 'languages',
-  //   retry: 3
-  // },
   {
     url: '/api/ApiAppstore/currencies_select',
     storageKey: 'currencies', 
@@ -97,15 +90,16 @@ export async function getInitialState(): Promise<{
     //调用(mock中的)接口获取用户信息
     try {
       const msg = await queryCurrentUser();
-      // 用户语言
-      localStorage.setItem("use_lang", msg?.data?.languages_id ?? "2");
-      // 设置语言
-      const language = globalStore.language.filter(item => item.id === msg?.data?.languages_id)[0]?.code
-      setLocale(language,false);
+      if(msg?.code == 0){
+        // platform语言
+        localStorage.setItem("USE_LANG", msg?.data?.languages_id ?? "2");
+        // 设置语言
+        const language = i18n.find(item => item.id == msg?.data?.languages_id)?.lang ?? "en-US";
+        setLocale(language,false);
+      } 
       // 获取平台信息
-      getPlatformInfo().then(res=>{
-        res.code == 0 && localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data));
-      });
+      const platformInfo = await getPlatformInfo();
+      platformInfo?.code == 0 && localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(platformInfo.data));
       // 获取物流服务
       getShippingcourier().then(res=>{
         res.code == 0 && localStorage.setItem("MC_DATA_SHIPPING_COURIER",JSON.stringify(res.data??[]));
@@ -157,7 +151,7 @@ export async function getInitialState(): Promise<{
   // 如果不是登录 || 注册 || 重置 页面，执行
   const { location } = history;
   // 例如 访问/welcome
-  if (location.pathname == loginPath || location.pathname == '/user/forget' || location.pathname == '/user/signUp') {
+  if (location.pathname == loginPath || location.pathname == '/user/forget' || location.pathname == '/user/signUp' || location.pathname == '/user/customer-email/verify') {
   }else{
     // currentUser 用户信息
     const currentUser = await fetchUserInfo(); // 调接口获取用户信息
@@ -209,9 +203,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 内容渲染
     childrenRender: (children) => {
       return (
-        <App>
-          {children}
-        </App>
+        <ConfigProvider>
+          <App>
+            {children}
+          </App>
+        </ConfigProvider>
       );
     },
     // 默认配置应放在最前面防止覆盖
@@ -316,83 +312,80 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   };
 };
 
-// 请求配置
-export const request = requestConfig;
-// 获取 菜单渲染
+// 修改 菜单渲染
 function getNewMenuDataRender(menuData:any[],stores:string,initialState:any) {
-  const intl = useIntl();
-  const lang = languageMap[intl.locale];
-
   let filteredMenuData = [];
   if(stores.slice(0,8) == "/stores/"){
-    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,8) == "/stores/" )
+    // 菜单一：/stores/下的菜单
+    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,8) == "/stores/" );
   }else if(stores.slice(0,11) == "/inner-msg/"){
-    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,11) == "/inner-msg/" )
+    // 菜单二：/inner-msg/下的菜单
+    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,11) == "/inner-msg/" );
   }else{
-    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,8) !== "/stores/" && item.path.slice(0,11) !== "/inner-msg/" )
+    // 菜单三：默认下的菜单
+    filteredMenuData = menuData.filter((item:any) => item.path.slice(0,8) !== "/stores/" && item.path.slice(0,11) !== "/inner-msg/" );
+    initialState?.channelMenu?.forEach((item:any) => {
+      let path = "";
+      const name = JSON.parse(item.channelName)["zh-hans-cn"]??"";
+      switch(item.channelHandle){
+        case "line":
+          path = "/channels/line";
+          break;
+        case "tiktok":
+          path = "/channels/tiktok";
+          break;
+        case "whatsapp":
+          path = "/channels/whatsapp";
+          break;
+        case "google":
+          path = "/channels/google";
+          break;
+        case "telegram":
+          path = "/channels/telegram";
+          break;
+        case "pinterest":
+          path = "/channels/pinterest";
+          break;
+        case "live":
+          path = "/channels/live";
+          break;
+        case "microsoft":
+          path = "/channels/microsoft";
+          break;
+        case "marketplace":
+          path = "/channels/marketplace";
+          break;
+        case "buy_button":
+          path = "/channels/buy_button";
+          break;
+        case "wechat_official":
+          path = "/channels/wechat_official";
+          break;
+        case "post":
+          path = "/channels/post";
+          break;
+        case "mc":
+          path = "/channels/mc";
+          break;
+        case "pos":
+          path = "/channels/pos";
+          break;
+        case "facebook":
+          path = "/channels/facebook";
+          break;
+      }
+      const newItem = {
+        path: path, // 生成路径
+        name: name, // 渠道名称
+        // 禁用国际化
+        locale: false,
+        icon: <img src={item?.menuLogo} style={{width:"16px"}} />, // 渠道图标
+      }
+      filteredMenuData.push(newItem)
+    })
   }
-  initialState?.channelMenu?.forEach((item:any) => {
-    let path = "";
-    const name = JSON.parse(item.channelName)[lang]??"";
-
-    console.log(name)
-    switch(item.channelHandle){
-      case "line":
-        path = "/channels/line";
-        break;
-      case "tiktok":
-        path = "/channels/tiktok";
-        break;
-      case "whatsapp":
-        path = "/channels/whatsapp";
-        break;
-      case "google":
-        path = "/channels/google";
-        break;
-      case "telegram":
-        path = "/channels/telegram";
-        break;
-      case "pinterest":
-        path = "/channels/pinterest";
-        break;
-      case "live":
-        path = "/channels/live";
-        break;
-      case "microsoft":
-        path = "/channels/microsoft";
-        break;
-      case "marketplace":
-        path = "/channels/marketplace";
-        break;
-      case "buy_button":
-        path = "/channels/buy_button";
-        break;
-      case "wechat_official":
-        path = "/channels/wechat_official";
-        break;
-      case "post":
-        path = "/channels/post";
-        break;
-      case "mc":
-        path = "/channels/mc";
-        break;
-      case "pos":
-        path = "/channels/pos";
-        break;
-      case "facebook":
-        path = "/channels/facebook";
-        break;
-    }
-    console.log(path)
-    const newItem = {
-      path: path, // 生成路径
-      name: name, // 渠道名称
-      icon: <img src={item?.menuLogo} style={{width:"16px"}} />, // 渠道图标
-    }
-    filteredMenuData.push(newItem)
-  })
-
-
-  console.log(filteredMenuData)
   return filteredMenuData;
 }
+
+// 请求配置
+export const request = requestConfig;

@@ -1,8 +1,7 @@
 import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, Form, Input, List, message, Modal, Select, Table, TableProps, TabsProps } from "antd"
+import { App, Button, Card, Divider, Flex, Form, Input, Modal, Select, Table, TableProps, TabsProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
-import BlankPage from "./BlankPage"
 import { useEffect, useState } from "react"
 import { creatAppStore, delDevApp, getEmployeeList, setAppStatus, unInstallDevApp } from "@/services/y2/api"
 
@@ -26,6 +25,8 @@ interface DataType {
 
 function AppList(props) {
 
+    const { message } = App.useApp();
+
     const [data,setData] = useState<null | []>([]);
 
     const [isBtnLoading, setIsBtnLoading] = useState(false);
@@ -42,11 +43,10 @@ function AppList(props) {
             setIsModalOpen(false)
             // 提交表单
             creatAppStore(values).then(res=>{
-                console.log(res)
-                res.code == 0 && message.success("创建应用成功");
+                console.log(res);
+                res?.code == 0 && message.success("创建应用成功");
             })
         }).catch((errorInfo)=>{
-            // console.log(errorInfo)
         }) 
     }
 

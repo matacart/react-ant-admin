@@ -1,5 +1,5 @@
 import { ClockCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Checkbox, Flex, Form, InputRef, message, Modal, Select, SelectProps, Switch, Tag, Tooltip, Space } from "antd";
+import { App, Card, Checkbox, Flex, Form, InputRef, Modal, Select, SelectProps, Switch, Tag, Tooltip, Space } from "antd";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -77,6 +77,8 @@ const FixedHeightInputNumber = styled(DefaultInputNumber)`
 `;
 
 function ProductSettingsCard() {
+
+    const { message } = App.useApp();
 
     const [form] = useForm();
     

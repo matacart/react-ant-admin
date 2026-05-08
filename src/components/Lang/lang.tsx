@@ -1,131 +1,169 @@
-import { createStyles } from 'antd-style';
-import { useIntl, SelectLang } from '@umijs/max';
-import langShow from '@/locales/langShow';
+import { useIntl } from '@umijs/max';
+import { ConfigProvider, Dropdown, Flex, Select, theme } from 'antd';
+import { GlobalOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+import React from 'react';
+import { setLocale } from 'umi';
+
+export const i18n = [
+  {  
+    "id": "1",
+    "code": "zh-cn",
+    "language_code": "zh-hans-cn",
+    "lang": "zh-CN", // 国际化语言
+    "label": "简体中文",  
+    "icon": "🇨🇳", // 中国国旗  
+    "title": "语言"
+  },  
+  {  
+    "id": "6",
+    "code": "zh-tw",
+    "language_code": "zh-hant-tw",
+    "lang": "zh-TW",  
+    "label": "繁體中文",  
+    "icon": "tw", 
+    "title": "語言"  
+  },
+  { 
+    "id": "2",
+    "code": "en-us",
+    "language_code": "en",
+    "lang": "en-US",  
+    "label": "English",  
+    "icon": "🇺🇸", // 美国国旗  
+    "title": "Language"  
+  },  
+  {  
+    "id": "3",
+    "code": "ja-jp",
+    "language_code": "ja",
+    "lang": "ja-JP",  
+    "label": "日本語",  
+    "icon": "🇯🇵", // 日本国旗  
+    "title": "言語"  
+  },  
+  {  
+    "id": "10",
+    "code": "es-es",
+    "language_code": "es",
+    "lang": "es-ES",  
+    "label": "Español",  
+    "icon": "🇪🇸", // 西班牙国旗  
+    "title": "Idioma"  
+  },  
+  {  
+    "id": "8",
+    "code": "fr-fr",
+    "language_code": "fr",
+    "lang": "fr-FR",  
+    "label": "Français",  
+    "icon": "🇫🇷", // 法国国旗  
+    "title": "Langue"  
+  },  
+  {  
+    "id": "5",
+    "code": "de-de",
+    "language_code": "de",
+    "lang": "de-DE",  
+    "label": "Deutsch",  
+    "icon": "🇩🇪", // 德国国旗  
+    "title": "Sprache"  
+  },  
+  {  
+    "id": "4",
+    "code": "ko-kr",
+    "language_code": "ko",
+    "lang": "ko-KR",
+    "label": "한국어",  
+    "icon": "🇰🇷", // 韩国国旗  
+    "title": "언어"  
+  },  
+  {  
+    "id": "7",
+    "code": "ru-ru",
+    "language_code": "ru",
+    "lang": "ru-RU",  
+    "label": "Русский",  
+    "icon": "🇷🇺", // 俄罗斯国旗  
+    "title": "Язык"  
+  }
+]
+
+const menuStyle: React.CSSProperties = {
+  padding: "8px 0",
+  width: "120px",
+  boxShadow: 'none',
+};
 
 
-const useStyles = createStyles(({ token }) => {
-    return {
-      lang: {
-        width: 42,
-        height: 42,
-        lineHeight: '42px',
-        right: 16,
-        borderRadius: token.borderRadius,
-        ':hover': {
-          backgroundColor: token.colorBgTextHover,
-        },
-      },
-    };
-  });
+// 国际化组件
+export const Lang = () => {
 
+  const { locale } = useIntl();
 
-  // 国际化组件
-const Lang = () => {
-    const { styles } = useStyles();
-  
-    return (
-      <div className={styles.lang} data-lang>
-        {SelectLang && <SelectLang reload={false} postLocalesData={()=>{return[  
-              {  
-                "lang": "zh-CN",  
-                "label": "简体中文",  
-                "icon": "🇨🇳", // 中国国旗  
-                "title": "语言"  
-              },  
-              {  
-                "lang": "zh-TW",  
-                "label": "繁體中文",  
-                "icon": "tw", 
-                "title": "語言"  
-              },
-              {  
-                  "lang": "en-US",  
-                  "label": "English",  
-                  "icon": "🇺🇸", // 美国国旗  
-                  "title": "Language"  
-              },  
-              {  
-                "lang": "ja-JP",  
-                "label": "日本語",  
-                "icon": "🇯🇵", // 日本国旗  
-                "title": "言語"  
-              },  
-              {  
-                  "lang": "es-ES",  
-                  "label": "Español",  
-                  "icon": "🇪🇸", // 西班牙国旗  
-                  "title": "Idioma"  
-              },  
-              {  
-                  "lang": "fr-FR",  
-                  "label": "Français",  
-                  "icon": "🇫🇷", // 法国国旗  
-                  "title": "Langue"  
-              },  
-              {  
-                  "lang": "de-DE",  
-                  "label": "Deutsch",  
-                  "icon": "🇩🇪", // 德国国旗  
-                  "title": "Sprache"  
-              },  
-  
-              {  
-                  "lang": "ko-KR",  
-                  "label": "한국어",  
-                  "icon": "🇰🇷", // 韩国国旗  
-                  "title": "언어"  
-              },  
-              {  
-                  "lang": "ru-RU",  
-                  "label": "Русский",  
-                  "icon": "🇷🇺", // 俄罗斯国旗  
-                  "title": "Язык"  
-              },  
-              {  
-                  "lang": "ar-SA",  
-                  "label": "العربية",  
-                  "icon": "🇸🇦", // 沙特阿拉伯国旗（作为阿拉伯语的代表）  
-                  "title": "لغة"  
-              },  
-              {  
-                  "lang": "pt-BR",  
-                  "label": "Português",  
-                  "icon": "🇧🇷", // 巴西国旗（作为葡萄牙语的代表）  
-                  "title": "Idioma"  
-              }  
-            ]}
-         }
-        />}
-      </div>
-    );
+  const { useToken } = theme;
+
+  const { token } = useToken();
+
+  const contentStyle: React.CSSProperties = {
+    backgroundColor: token.colorBgElevated,
+    borderRadius: token.borderRadiusLG,
+    boxShadow: token.boxShadowSecondary,
   };
-  
-const ILang = () => {
-    const intl = useIntl();
-    const lang = langShow[intl.locale as keyof typeof langShow];
-    return (
-          <div
-            className="login-header-wrap"
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              width: '100%',
-              padding: '10px 40px 20px',
-            }}
-          >
-            <div className="login-header-container">
-              <div
-                style={{
-                  marginTop: '4px',
-                }}
-              >
-                {lang.label}
-              </div>
-              {/* 国际化组件 */}
-              <Lang />
-            </div>
-          </div>
-    )
-}
 
-export default ILang;
+  const currentLang = i18n.find(item => item.lang === locale);
+
+  // 国际化选项
+  const options: any[] = i18n.map(item => ({
+    label: <span key={item.lang} onClick={()=>setLocale(item.lang,false)}>{item.label}</span>,
+    value: item.code,
+  }));
+
+  return (
+    <LangWrapper>
+      <ConfigProvider
+        theme={{
+          token: {
+            borderRadius:0,
+            paddingXXS:0,
+          },
+        }}
+      >
+        <Dropdown 
+          menu={{ items: options }} 
+          placement="bottomRight"
+          popupRender={(menu)=>{
+            return (
+              <div style={contentStyle}>
+                <div>
+                    {React.cloneElement(
+                      menu as React.ReactElement<{
+                          style: React.CSSProperties;
+                      }>,
+                      { style: menuStyle },
+                    )}
+                </div>
+              </div>
+            )
+          }}
+        >
+          <Flex gap={12} className="lang">
+            <div>{currentLang?.label}</div>
+            <GlobalOutlined className='font-20' />
+          </Flex>
+        </Dropdown>
+      </ConfigProvider>
+    </LangWrapper>
+  );
+};
+
+const LangWrapper = styled.div`
+  .lang{
+    padding: 10px 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover {
+      background-color: #F7F8FB;
+    }
+  }
+`;

@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
-import { Divider, message } from "antd"
+import { App, Divider } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import SettlementCurrencyCard from "./SettlementCurrencyCard"
@@ -12,17 +12,42 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
 import cookie from 'react-cookies'
 import PrimaryButton from "@/components/Button/PrimaryButton"
+import { getStoreInfo, setStoreInfo } from "@/services/y2/api"
 
 function Base() {
 
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
-    const [isRenewal,setIsRenewal] = useState(false);
+    const [loading,setLoading] = useState(false);
+
+    const submit = () => {
+        setLoading(true)
+        setStoreInfo(baseInfoStore.storeInfo).then(res=>{
+            if(res.code == 0){
+                cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.storeInfo.timezone)[0]), { path: '/' });
+                message.success('更新成功')
+            }
+        }).catch(err=>{
+            message.error(err.message)
+        }).finally(()=>{
+            setLoading(false)
+        })
+    }
 
     useEffect(()=>{
-        baseInfoStore.getStore().then(res=>{
-            setIsSkeleton(!res)
+
+        const lang = cookie.load("shop_lang") || '2'
+
+        getStoreInfo({languages_id:lang}).then(res=>{
+            if(res.code == 0){
+                baseInfoStore.setStoreInfo(res.data)
+            }
+        }).catch(err=>{
+            message.error(err.message)
+        }).finally(()=>{
+            setIsSkeleton(false)
         })
     },[])
 
@@ -114,22 +139,10 @@ function Base() {
                     >
                     </Divider>
                     <div className="submit-btn">
-                        <PrimaryButton loading={isRenewal} onClick={()=>{
-                            setIsRenewal(true)
-                            baseInfoStore.setStore().then((res:any)=>{
-                                if(res.code==0){
-                                    cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.timezone)[0]), { path: '/' });
-                                    message.success('更新成功')
-                                }else{
-                                    message.error('更新失败')
-                                }
-                                setIsRenewal(false)
-                            })
-                        }} text="更新" />
+                        <PrimaryButton loading={loading} onClick={submit} text="更新" />
                     </div>
                 </div>
             </div>}
-            {/* <OverlayEdit /> */}
         </Scoped>
     )
 }

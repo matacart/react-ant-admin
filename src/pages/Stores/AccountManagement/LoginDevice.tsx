@@ -1,11 +1,11 @@
 import SuccessTag from "@/components/Tag/SuccessTag";
-import { Button, Card, Divider, Flex, message, Modal, Select, Table, TableProps } from "antd";
+import { App, Button, Card, Divider, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import accountManagement from "@/store/shops/accountManagementStore";
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { history, useModel,useIntl } from '@umijs/max';
+import { history } from '@umijs/max';
 import { delLoginRecord, logout } from "@/services/y2/api";
 import cookie from 'react-cookies'
 import { stringify } from "querystring";
@@ -21,7 +21,7 @@ interface DataType {
 
 function LoginDevice() {
 
-    const [modal, contextHolder] = Modal.useModal();
+    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const confirm = (record) => {
         modal.confirm({
@@ -181,8 +181,6 @@ function LoginDevice() {
                     <Table<DataType> columns={columns} dataSource={data} pagination={false} />
                 </div>
             </Card>
-            {/*  */}
-            {contextHolder}
         </Scoped>
     )
 

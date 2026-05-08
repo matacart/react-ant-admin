@@ -6,63 +6,54 @@ import UploadImportDrag from '@/components/UploadFile/UploadImportDrag';
 
 function BlankPage() {
 
-    const [modal, contextHolder] = Modal.useModal();
 
-    // 
     const confirmExcel = () => {
-        modal.confirm({
-            width:620,
-            title: '导入客户',
-            icon: <></>,
-            centered:true,
-            destroyOnClose:true,
-            content: <>
-                <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
-                <div>
-                    <UploadImportDrag size={10} />
-                </div>
-                <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
-                <div style={{margin:"8px 0px"}}>
-                    <Checkbox>覆盖拥有相同邮箱或电话的现有客户</Checkbox>
-                    {/* <span></span> */}
-                </div>
-            </>,
-            okText: '上传并导入',
-            cancelText: '取消',
-        });
+        // modal.confirm({
+        //     width:620,
+        //     title: '导入客户',
+        //     icon: <></>,
+        //     centered:true,
+        //     destroyOnClose:true,
+        //     content: <>
+        //         <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
+        //         <div>
+        //             <UploadImportDrag size={10} />
+        //         </div>
+        //         <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
+        //         <div style={{margin:"8px 0px"}}>
+        //             <Checkbox>覆盖拥有相同邮箱或电话的现有客户</Checkbox>
+        //             {/* <span></span> */}
+        //         </div>
+        //     </>,
+        //     okText: '上传并导入',
+        //     cancelText: '取消',
+        // });
     };
 
     const confirmShopify = () => {
-        modal.confirm({
-          title: '通过Shopify csv批量导入客户',
-          width:620,
-          centered:true,
-          icon: <></>,
-          content: <>
-                <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
-                <div>
-                    <UploadImportDrag size={10} />
-                </div>
-                <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
-                <div style={{margin:"8px 0px"}}>
-                    <Checkbox>覆盖拥有相同邮箱或电话的现有客户</Checkbox>
-                    {/* <span></span> */}
-                </div>
-            </>,
-          okText: '上传并导入',
-          cancelText: '取消',
-        });
+        // modal.confirm({
+        //   title: '通过Shopify csv批量导入客户',
+        //   width:620,
+        //   centered:true,
+        //   icon: <></>,
+        //   content: <>
+        //         <div style={{margin:"8px 0px"}}>下载<a style={{margin:"0 8px"}}>批量导入模板</a>以查看所需格式的示例。若表格导入出现问题，可查看<a style={{margin:"0 8px"}}>常见问题</a></div>
+        //         <div>
+        //             <UploadImportDrag size={10} file={undefined} setFile={undefined} />
+        //         </div>
+        //         <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过10M</div>
+        //         <div style={{margin:"8px 0px"}}>
+        //             <Checkbox>覆盖拥有相同邮箱或电话的现有客户</Checkbox>
+        //             {/* <span></span> */}
+        //         </div>
+        //     </>,
+        //   okText: '上传并导入',
+        //   cancelText: '取消',
+        // });
     };
 
     const confirmStoreRelocation = () => {
-        modal.confirm({
-          title: '店铺搬迁',
-          centered:true,
-          icon: <></>,
-          content: '暂不支持',
-          okText: '确认',
-          cancelText: '取消',
-        });
+        
     };
 
     return(
@@ -107,7 +98,6 @@ function BlankPage() {
                 </div>
             </div>
             {/* Excel批量导入 */}
-            {contextHolder}
         </Scoped>
         
     )

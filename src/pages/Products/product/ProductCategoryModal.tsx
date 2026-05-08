@@ -5,8 +5,8 @@ import LangSelect from "@/components/Select/LangSelect";
 import { useAbortController } from "@/hooks/customHooks";
 import { getCategoryList } from "@/services/y2/api";
 import product from "@/store/product/product";
-import { Avatar, Flex, message, Modal, Table, TableProps } from "antd";
-import React, { useEffect, useMemo, useRef } from "react";
+import { App, Avatar, Flex, Modal, Table, TableProps } from "antd";
+import React, {useMemo, useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -22,6 +22,8 @@ interface DataType {
 }
 
 export default function ProductCategoryModal() {
+
+    const { message } = App.useApp();
 
     const [open,setOpen] = useState(false);
 

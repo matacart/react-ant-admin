@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Form, Modal, Input, message, Select, Table, Space, TableProps, InputNumber, Flex, Col, Row, Popconfirm } from 'antd';
-import { ClockCircleOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons/lib/icons';
+import React from 'react';
+import { Form, InputNumber, Flex, Popconfirm } from 'antd';
+import { ClockCircleOutlined, DeleteOutlined } from '@ant-design/icons/lib/icons';
 import styled from 'styled-components';
 import { WarningIcon } from '@/components/Icons/Icons';
 import SimpleCard from '@/components/Card/SimpleCard';

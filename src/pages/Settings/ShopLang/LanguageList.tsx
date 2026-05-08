@@ -11,17 +11,16 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Checkbox, Flex, message, Modal, Skeleton, Spin, Table, Tag } from 'antd';
+import { App, Button, Checkbox, Flex, Modal, Skeleton, Spin, Table, Tag } from 'antd';
 import type { TableColumnsType } from 'antd';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
 import styled from 'styled-components';
 import { addLanguages, delLanguages, getLanguagesList } from '@/services/y2/api';
 import _ from 'lodash';
 import cookie from 'react-cookies';
-import globalStore from '@/store/globalStore';
-import modal from 'antd/es/modal';
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import { useSleep } from '@/hooks/customHooks';
 
 interface DataType {
     key: string;
@@ -32,8 +31,6 @@ interface RowContextProps {
     setActivatorNodeRef?: (element: HTMLElement | null) => void;
     listeners?: SyntheticListenerMap;
 }
-
-const CheckboxGroup = Checkbox.Group;
   
 const RowContext = React.createContext<RowContextProps>({});
   
@@ -87,6 +84,10 @@ const Row: React.FC<RowProps> = (props) => {
 
 export default function LanguageList() {
 
+    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
+
+    const sleep = useSleep();
+
     const [isLoading, setIsLoading] = useState(false);
 
     const [loading,setLoading] = useState(false);
@@ -99,10 +100,8 @@ export default function LanguageList() {
 
     const [hasLanguages,setHasLanguages] = useState<any[]>([]);
     const [languages,setLanguages] = useState<any[]>([]);
-    // const [checkLanguages,setCheckLanguages] = useState<string[]>([]);
 
     const [isCheckedAll,setIsCheckedAll] = useState(false);
-
 
     const columns: TableColumnsType<DataType> = [
         { key: 'sort', align: 'center', width: 80, render: () => <DragHandle /> },
@@ -137,7 +136,7 @@ export default function LanguageList() {
                                 }}>删除语言</div>)}
                             ]:[
                                 {key:"1",label:(
-                                    <div onClick={()=>setDefaultLanguage(record)}>修改默认语言</div>
+                                    <div>修改默认语言</div>
                                 )},
                             ]
                         }}
@@ -156,15 +155,6 @@ export default function LanguageList() {
             if(res.code == 0){
                 let newDataSource = [...dataSource]
                 newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
-                const tempData = newDataSource.map((item:any)=>{
-                    return{
-                        id:item.language.id,
-                        name:item.language.name,
-                        code:item.language.code,
-                        language_code:item.language.language_code,
-                    }
-                })
-                sessionStorage.setItem("languages",JSON.stringify(tempData))
                 setDataSource(newDataSource)
                 getLanguages()
             }
@@ -184,10 +174,10 @@ export default function LanguageList() {
             is_default:"1",
             sort:"0",
             checked:"1"
-        }]).then(res=>{
+        }]).then(async res=>{
             if(res.code == 0){
+                await sleep(2000);
                 getLanguages();
-                cookie.save('default_lang', record.language.code, { path: '/' });
             }
         })
     }
@@ -275,20 +265,7 @@ export default function LanguageList() {
             if(res.code == 0){
                 setIsCheckedAll(false)
                 setIsLangModalOpen(false)
-                const newLangs = langs.map((item:any)=>{
-                    return{
-                        id:item.languages_id,
-                        name:item.name,
-                        code:item.code,
-                        language_code:item.language_code,
-                    }
-                })
-                const newSessionLanguages = [
-                    ...newLangs,
-                    ...JSON.parse(sessionStorage.getItem('languages') || "[]")
-                ]
-                sessionStorage.setItem('languages', JSON.stringify(newSessionLanguages));
-                await globalStore.sleep(2000);
+                await sleep(2000);
                 getLanguages()
             } 
         }).catch(err=>{
@@ -321,7 +298,6 @@ export default function LanguageList() {
             setIsLoading(false)
         })
     }
-
     useEffect(() => {
         getLanguages()
     }, [])

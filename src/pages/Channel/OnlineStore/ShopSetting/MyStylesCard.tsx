@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Card, Divider, Flex, MenuProps, message, Pagination, Progress, Row, Spin } from 'antd';
+import { App, Card, Divider, Flex, MenuProps, Pagination, Progress, Spin } from 'antd';
 import { RocketIcon } from "@/components/Icons/Icons";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
@@ -15,7 +15,6 @@ import DownloadModal from "./DownloadModal";
 import { useAbortController } from "@/hooks/customHooks";
 import { ExclamationCircleFilled, LoadingOutlined } from "@ant-design/icons";
 import { history } from "@umijs/max";
-import cookie from 'react-cookies';
 import VersionSwitchModal from "./VersionSwitchModal";
 import VersionAddModal from "./VersionAddModal";
 import VersionRepairModal from "./VersionRepairModal";
@@ -29,6 +28,8 @@ interface MyStylesCardProps {
 }
 
 function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
+    
+  const { message } = App.useApp();
 
   const [loading,setLoading] = useState(false);
 
@@ -53,7 +54,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
       limit: pagination.pageSize,
       languages_id:shopSetting.languagesId,
     }).then((res:any)=>{
-      if(res.data.length !== 0){
+      if(res?.code == 0){
         shopSetting.setTemplateInstanceList(res.data);
         setPagination({
           ...pagination,
@@ -141,8 +142,9 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
               </ConfigProvider>
             </Flex>
         </Flex> */}
-        {/* 当前模板 */}
+        
         <Card>
+          {/* 当前模板 */}
           <Flex className="current-topic-box">
             <div className="current-topic-left">
               <h2 className="font-16 title">当前模板</h2>
@@ -155,9 +157,9 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                       <h3>{shopSetting.templateInstanceUsing?.template_name}</h3>
                       <p className="font-12 color-7A8499">
                         <span>
-                          版本号：{shopSetting.templateInstanceUsing?.template_version}
+                          版本号：{shopSetting.templateInstanceUsing?.active_version}
                           <Divider type="vertical" />
-                          版本id：{shopSetting.templateInstanceUsing?.template_version_id}
+                          版本id：{shopSetting.templateInstanceUsing?.active_version_id}
                           <Divider type="vertical" />
                           语言：
                           {
@@ -199,11 +201,11 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '3',
                           },
                           {
-                            label: <div onClick={()=>history.push(`/theme/langFieldEdit/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}/${shopSetting.templateInstanceUsing?.template_version_id}`)}>编辑语言</div>,
+                            label: <div onClick={()=>history.push(`/theme/langFieldEdit/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.templateInstanceUsing?.template_version_id}/${shopSetting.languagesId}/${"mapping"}`)}>编辑语言</div>,
                             key: '4',
                           },
                           {
-                            label: <a onClick={()=>history.push(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.languagesId}/${shopSetting.templateInstanceUsing?.template_version_id}`)}>编辑代码</a>,
+                            label: <a onClick={()=>history.push(`/theme/codeEditor/${shopSetting.templateInstanceUsing?.id}/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.templateInstanceUsing?.active_version_id}/${shopSetting.languagesId}/${"mapping"}`)}>编辑代码</a>,
                             key: '5',
                           },
                           {
@@ -211,7 +213,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '6',
                           }
                         ]}} trigger={['click']} text="操作" />
-                        <PrimaryButton text="设计" onClick={()=>history.push(`/theme/editor/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.templateInstanceUsing?.languages_id}/${shopSetting.templateInstanceUsing?.template_version_id}/?templateName=templates/index.json&title=Home`)} />
+                        <PrimaryButton text="设计" onClick={()=>history.push(`/theme/editor/${shopSetting.templateInstanceUsing?.template_id}/${shopSetting.templateInstanceUsing?.active_version_id}/${shopSetting.templateInstanceUsing?.languages_id}/${"mapping"}/?templateName=templates/index.json&title=Home`)} />
                       </Flex>
                     </div>
                   </Flex>
@@ -276,7 +278,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
               </Flex>
             </div>
           </Flex>
-          {/*  */}
+          {/* 模板库 */}
           <Flex className="themeList-warp">
             <div className="left">
               <h2 className="font-16">模板库</h2>
@@ -321,14 +323,18 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                               items:[
                                 {
                                   label: <a onClick={()=>{
-                                    setInstanceStatus(template.id,"1").then(async res=>{
+                                    setInstanceStatus({
+                                      id:template.id,
+                                      status:1,
+                                      languages_id:shopSetting.languagesId
+                                    }).then(async res=>{
                                       const { data } = await getTemplateInstanceUsing(shopSetting.languagesId) as any;
                                       shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
                                       getTemplateInstanceList({
                                         page: pagination.current,
                                         limit: pagination.pageSize
                                       }).then((res:any)=>{
-                                        if(res.data.length !== 0){
+                                        if(res?.code== 0){
                                           shopSetting.setTemplateInstanceList(res.data);
                                           setPagination({
                                             ...pagination,
@@ -355,7 +361,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                   key: '4',
                                 },
                                 {
-                                  label: <a onClick={()=>history.push(`/theme/codeEditor/${template?.id}/${template?.template_id}/${shopSetting.languagesId}/${template.template_version_id || "0"}`)}>编辑代码</a>,
+                                  label: <a onClick={()=>history.push(`/theme/codeEditor/${template?.id}/${template?.template_id}/${template.template_version_id || "0"}/${shopSetting.languagesId}/${'mapping'}`)}>编辑代码</a>,
                                   key: '5',
                                 },
                                 {
@@ -404,7 +410,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             trigger={['click']} 
                             text="操作"
                           />
-                          <DefaultButton text="设计" onClick={()=>history.push(`/theme/editor?templateId=${template?.template_id}&languagesId=${shopSetting?.languagesId}&templateName=templates/index.json&title=Home`)} />
+                          <DefaultButton text="设计" onClick={()=>history.push(`/theme/editor/${template?.template_id}/${template.template_version_id || "0"}/${shopSetting.languagesId}/${'mapping'}/?templateName=templates/index.json&title=Home`)} />
                         </Flex>
                       </Flex>
                     )

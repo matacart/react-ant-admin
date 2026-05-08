@@ -1,7 +1,6 @@
-import { EditOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Col, DatePicker, Form, Input, message, Modal, Row, Select, Space } from "antd";
+import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { App, Card, Col, DatePicker, Form, Input, Modal, Row, Select } from "antd";
 import styled from "styled-components";
-import { set, values } from 'lodash';
 import { useEffect, useState } from "react";
 import purchaseOrderStore from "@/store/product/purchaseOrder/purchaseOrderStore";
 
@@ -9,6 +8,8 @@ import purchaseOrderStore from "@/store/product/purchaseOrder/purchaseOrderStore
 const { TextArea } = Input;
 
 function ShippingDetailsCard() {
+    
+    const { message } = App.useApp();
 
     const [form] = Form.useForm();
 

@@ -4,7 +4,7 @@ import { EditIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
 import { RenameFile } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
-import { Flex, Form, message, Modal, Tooltip } from "antd";
+import { Flex, Form, App, Modal, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 
 
@@ -17,6 +17,8 @@ interface RenameModalType{
 }
 
 function RenameModal({filePath,name,item,treeData,setTreeData}:RenameModalType){
+    
+    const { message } = App.useApp();
 
     const [open, setOpen] = useState(false);
 

@@ -21,5 +21,7 @@ function NumberInput({...props}) {
 export default NumberInput
 
 const ScopedNumber = styled(InputNumber)`
-  height: 36px;
+  .ant-input-number-input-wrap .ant-input-number-input{
+    height: 36px;
+  }
 `

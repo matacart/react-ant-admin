@@ -1,5 +1,5 @@
 import { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
-import { Flex, Form, message, Modal, Tooltip } from "antd";
+import { App, Flex, Form, Modal, Tooltip } from "antd";
 import { useState } from "react";
 import UploadCompressedFile from "./UploadCompressedFile";
 import DefaultButton from "@/components/Button/DefaultButton";
@@ -9,6 +9,8 @@ import MyInput from "@/components/Input/MyInput";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
 function VersionAddModal({template}:{template: TemplateInstance | null}) {
+  
+    const { message } = App.useApp();
 
     const [file, setFile] = useState(null);
 

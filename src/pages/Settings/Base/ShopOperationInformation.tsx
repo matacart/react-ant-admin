@@ -11,6 +11,7 @@ import { set } from 'lodash';
 import { select } from "react-cookies";
 import { useForm } from "antd/es/form/Form";
 import DefaultSelect from "@/components/Select/DefaultSelect";
+import DefaultButton from "@/components/Button/DefaultButton";
 
 function ShopOperationInformation() {
 
@@ -98,7 +99,7 @@ function ShopOperationInformation() {
                     <Form.Item
                         label="账单地址"
                         name="logo"
-                        >
+                    >
                         <div>
                             代表公司注册地址或者个人常驻地址，请慎重填写。账单地址将决定您的账单税费，请关注账单费用的变化，且有可能会造成您之前绑定的信用卡扣费失败。系统会帮您在后台处理已绑卡的切换，如果收到失败提示，请及时重新绑卡，避免自动续费扣费失败而导致产品的无法使用。详细了解
                         </div>
@@ -108,7 +109,7 @@ function ShopOperationInformation() {
                                 <div style={{marginLeft:"12px"}}>中国</div>
                             </Flex>
                             <Flex align="center">
-                                <Button onClick={()=>setIsOpenBillingAddress(true)}>编辑</Button>
+                                <DefaultButton onClick={()=>setIsOpenBillingAddress(true)} text="编辑" />
                             </Flex>
                         </Flex>
                     </Form.Item>
@@ -116,7 +117,7 @@ function ShopOperationInformation() {
                         label="商品种类"
                         >
                         <DefaultSelect
-                            defaultValue={baseInfoStore.productType}
+                            defaultValue={baseInfoStore.storeInfo.product_type}
                             style={{ width: 256 }}
                             options={[
                                 { value: '0', label: '全类目' },
@@ -132,20 +133,25 @@ function ShopOperationInformation() {
                                 { value: '10', label: '未填写' }
                             ]}
                             onChange={(e)=>{
-                                baseInfoStore.setProductType(e)
+                                baseInfoStore.setStoreInfo({
+                                    ...baseInfoStore.storeInfo,
+                                    product_type:e
+                                })
                             }}
                         />
                     </Form.Item>
                     <Form.Item
                         label="经营所在地时区"
-                        >
+                    >
                         <DefaultSelect
-                            defaultValue={baseInfoStore.timezone}
+                            defaultValue={baseInfoStore.storeInfo.timezone}
                             style={{ width: 256 }}
                             options={timeZone}
                             onChange={(e)=>{
-                                console.log(e)
-                                baseInfoStore.setTimeZone(e)
+                                baseInfoStore.setStoreInfo({
+                                    ...baseInfoStore.storeInfo,
+                                    timezone:e
+                                })
                             }}
                         />
                     </Form.Item>

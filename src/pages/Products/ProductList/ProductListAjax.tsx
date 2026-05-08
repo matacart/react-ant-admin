@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
+import { App, Avatar, Checkbox, Flex, Input, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import { CopyOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
 import { getProductList, upDateProductStatus } from '@/services/y2/api';
@@ -11,6 +11,8 @@ import productList from '@/store/product/productList';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
 import { getPrimaryDomain } from '@/utils/dataStructure';
+import DefaultButton from '@/components/Button/DefaultButton';
+import PrimaryButton from '@/components/Button/PrimaryButton';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -67,6 +69,8 @@ function ProductListAjax(selectProps:any) {
 
   const { createAbortController } = useAbortController();
 
+  const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
+
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [onLoadingList, setOnLoadingList] = useState<any>([]);
@@ -74,7 +78,6 @@ function ProductListAjax(selectProps:any) {
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [productStatusModal, contextProductStatusModal] = Modal.useModal();
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -93,19 +96,19 @@ function ProductListAjax(selectProps:any) {
   const [copyProductInventory, setCopyProductInventory] = useState(false);
   // 商品状态弹窗
   const productStatusConfirm = (product:DataType,index:number,checked:boolean) => {
-    const tempModal = productStatusModal.info({
+    const tempModal = modal.info({
       title: product.status == "1"?"确认下架此商品？":"确认上架此商品？",
       icon: <InfoCircleFilled />,
-      content: product.status == "1"?"已下架的商品将在网店中隐藏，无法被客户看到":"已上架的商品会在网店中展示，可供你的客户浏览及购买",
+      content: product.status == "1"?"已下架的商品将在网店中隐藏，无法被客户看到。":"已上架的商品会在网店中展示，可供你的客户浏览及购买。",
       centered:true,
-      footer:<div style={{textAlign:"right"}}>
-        <Button onClick={()=>{
+      footer:<Flex justify='flex-end' gap={12} style={{marginTop:"20px"}}>
+        <DefaultButton onClick={()=>{
           tempModal.destroy();
           let tempSwitchList = [...onLoadingList];
           tempSwitchList[index] = false;
           setOnLoadingList(tempSwitchList);
-        }}>取消</Button>
-        <Button type="primary" style={{marginLeft:"10px",marginTop:"10px"}} onClick={()=>{
+        }} text='取消' />
+        <PrimaryButton onClick={()=>{
           tempModal.destroy();
           // 修改商品状态
           upDateProductStatus(product.product_id,checked?"1":"0").then(res=>{
@@ -118,8 +121,8 @@ function ProductListAjax(selectProps:any) {
             tempSwitchList[index] = false;
             setOnLoadingList(tempSwitchList);
           })
-        }}>确认</Button>
-      </div>,
+        }} text="确认" />
+      </Flex>,
     });
   };
   // 
@@ -267,37 +270,28 @@ function ProductListAjax(selectProps:any) {
       // 条件
       condition:JSON.stringify(productList.condition)
     }
-
-    try {
-
-      const signal = createAbortController();
-      const result = await getProductList(res,signal)
-      setLoading(false);
-      // 201 空
-      if(result.code == 0 || result.code == 201){
-        let switchList:boolean[] = [];
-        result.data?.forEach((item:any)=>{
-          switchList.push(false)
-        })
-        // 初始化开关数组
-        setOnLoadingList(switchList);
-        setData(result.data);
-        setLoading(false)
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: Number(result.count),
-          }
-        });
-        productList.setCount(Number(result.count))
-        return
-      }
-      throw new Error(result.msg);
-    }catch(error:any){
-      if (error.name !== 'CanceledError') {
-        message.error('获取数据失败');
-      }
+    const signal = createAbortController();
+    const result = await getProductList(res,signal);
+    setLoading(false);
+    // 201 空
+    if(result?.code == 0 || result?.code == 201){
+      let switchList:boolean[] = [];
+      result.data?.forEach((item:any)=>{
+        switchList.push(false)
+      })
+      // 初始化开关数组
+      setOnLoadingList(switchList);
+      setData(result.data);
+      setLoading(false)
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: Number(result.count),
+        }
+      });
+      productList.setCount(Number(result.count))
+      return
     }
     setLoading(false);
   };
@@ -305,7 +299,7 @@ function ProductListAjax(selectProps:any) {
     fetchData();
   }, [productList.languagesId,productList.condition,productList.isAlliance,productList.isHosted,productList.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize]);
 
-  const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+  const handleTableChange = (pagination:any, filters:any, sorter:any) => {
     setTableParams({
       pagination,
       filters,
@@ -433,7 +427,6 @@ function ProductListAjax(selectProps:any) {
           </Radio.Group>
         </Content>
       </Modal>
-      {contextProductStatusModal}
     </Scoped>
   );
 };

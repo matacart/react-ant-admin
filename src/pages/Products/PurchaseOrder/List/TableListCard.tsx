@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Checkbox, Input, message, Modal, Table, Tag, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Table, Tag } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
@@ -24,9 +24,6 @@ function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
   
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
 
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const [productStatusModal, contextProductStatusModal] = Modal.useModal();
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -194,29 +191,5 @@ const Scoped = styled.div`
     border: 1px solid #eef1f7;
     border-radius: 6px;
     border-bottom: none;
-  }
-`
-const ButtonIcon = styled.div`
-.wrap{
-    height:36px;
-    width: 36px;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    border-radius:4px;
-    &:hover{
-        background-color: rgba(60, 181, 218, 0.114);
-        cursor:pointer;
-    }
-}
-`
-
-const Content = styled.div`
-  display:flex;
-  flex-direction: column;
-  gap: 5px;
-  span{
-  font-size: 14px;
-  color: #313131
   }
 `

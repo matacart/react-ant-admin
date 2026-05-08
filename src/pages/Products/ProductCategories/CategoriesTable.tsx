@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Checkbox, Input, message, Modal, Table, Tooltip } from 'antd';
+import { App, Avatar, Checkbox, Input, Modal, Table, Tooltip } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
-import { CopyOutlined, DeleteOutlined, ExclamationCircleOutlined, EyeOutlined, QuestionCircleOutlined} from '@ant-design/icons';
+import { CopyOutlined, DeleteOutlined, EyeOutlined, QuestionCircleOutlined} from '@ant-design/icons';
 import { deleteCategory, getCategoryList } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
-import modal from 'antd/es/modal';
-import cookie from 'react-cookies';
 import categoriesList from '@/store/product/categoriesList';
 import { useAbortController } from '@/hooks/customHooks';
 import { getPrimaryDomain } from '@/utils/dataStructure';
+import DeleteModal from '@/components/Modal/DeleteModal';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -32,6 +31,8 @@ interface TableParams {
 }
 
 function CategoriesTable() {
+
+  const { message } = App.useApp();
 
   // 预览域名默认
   const previewDomain = getPrimaryDomain();
@@ -70,27 +71,17 @@ function CategoriesTable() {
   //列表数据
   const [data, setData] = useState<DataType[]>([]);
 
-  const confirm = (record:any) => {
-    modal.confirm({
-        title: "确认要删除此分类吗？",
-        centered:true,
-        icon: <ExclamationCircleOutlined />,
-        content: '删除后，你的店铺将不再展示此分类',
-        okText: '删除',
-        cancelText: '取消',
-        onOk(){
-          setLoading(true);
-          deleteCategory(record.id).then(res=>{
-            if(res.code == 0){
-              message.success("删除成功")
-              const newData = data.filter((item) => item.id !== record.id);
-              console.log(newData);
-              setData(newData);
-              setLoading(false);
-            }
-          })
-        }
-    });
+  // 删除分类
+  const deleteCategoryItem = (record:any) => {
+    setLoading(true);
+    deleteCategory(record.id).then(res=>{
+      if(res.code == 0){
+        message.success("删除成功")
+        const newData = data.filter((item) => item.id !== record.id);
+        setData(newData);
+        setLoading(false);
+      }
+    })
   };
 
   // 表头
@@ -175,16 +166,18 @@ function CategoriesTable() {
               </Tooltip>
             </ButtonIcon>
             <ButtonIcon>
-              <Tooltip title="删除">
-                <div className='wrap' onClick={(e) => {
-                  e.stopPropagation()
-                  confirm(record)
-                //   setCopyProduct(record)
-                //   setModalOpen(true);
-                }}>
-                  <DeleteOutlined style={{color:"red"}} />
-                </div>
-              </Tooltip>
+              <DeleteModal 
+                removeFunc={()=>deleteCategoryItem(record)} 
+                title="确认要删除此分类吗？"
+                content={"删除后，你的店铺将不再展示此分类。"}
+                tElement={
+                  <Tooltip title="删除">
+                    <div className='wrap'>
+                      <DeleteOutlined className="font-20 color-F86140 cursor-pointer" />
+                    </div>
+                  </Tooltip>
+                } 
+              />
             </ButtonIcon>
           </div>
         )

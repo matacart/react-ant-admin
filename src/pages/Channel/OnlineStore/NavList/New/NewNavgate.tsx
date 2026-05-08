@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, message } from 'antd'
+import { App, Flex } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
@@ -19,6 +19,8 @@ import Subnumber from '../Navgate/Subnumber';
 import Relevance from '../Navgate/Relevance';
 
 function NewNavgate(){
+    
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false);
 

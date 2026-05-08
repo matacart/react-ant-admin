@@ -1,4 +1,4 @@
-import { Divider, Form, message } from 'antd'
+import { App, Divider, Form } from 'antd'
 import { ShopTwoTone, GlobalOutlined, NodeIndexOutlined, PayCircleOutlined, MailTwoTone } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -17,6 +17,8 @@ interface SelectListType {
 }
 
 export default function Create() {
+
+    const { message } = App.useApp();  // 获取带有上下文的 modal 对象
 
     // 平台信息
     const previewDomain = JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || "{}")?.preview_domain;

@@ -1,7 +1,7 @@
 import { AddIcon } from "@/components/Icons/Icons";
 import DefaultInput from "@/components/Input/DefaultInput";
 import MySelect from "@/components/Select/MySelect";
-import { Flex, Form, message, Modal } from "antd";
+import { Flex, Form, App, Modal } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { createTemplateFile } from "@/services/y2/api";
@@ -35,6 +35,8 @@ const splitByLastDot = (str:string)=>{
   }
 
 export default function NewTemplateModal({templateInfo,templateList,isDefault}:{templateInfo:templateInfo,templateList:jsonTemplate[],isDefault:boolean}){
+    
+    const { message } = App.useApp();
 
     const intl = useIntl();
 

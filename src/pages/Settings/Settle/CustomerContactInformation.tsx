@@ -1,6 +1,5 @@
 import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
-import { observer } from "mobx-react-lite";
+import { Card, Checkbox, Col, Form, Radio } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -12,13 +11,7 @@ const style: React.CSSProperties = {
 
 function CustomerContactInformation() {
 
-    const [loading, setLoading] = useState(false);
-
     const [accountVersion,setAccountVersion] = useState(1)
-
-    const AccountTypeOptions = [
-       
-    ];
 
     return (
         <Scoped>

@@ -1,5 +1,5 @@
-import { getAccessToken, login } from '@/services/y2/api';
-import { message, Button, Form, Input, Divider,Checkbox, Flex, Dropdown, ConfigProvider } from 'antd';
+import { login } from '@/services/y2/api';
+import { App, Button, Form, Input, Divider,Checkbox, Flex, Dropdown, ConfigProvider } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
@@ -26,6 +26,7 @@ const style = {
 }
 
 export default function Login() {
+    const { message } = App.useApp();
     //国际化
     const intl = useIntl();
     const [type, setType] = useState<string>('account');
@@ -36,36 +37,34 @@ export default function Login() {
     const [searchKey, setSearchKey] = useState('');
 
     const Ref = useRef(null);
-    // const items = JSON.parse(sessionStorage.getItem("country") || "[]").filter(item=>item.country_name.includes(searchKey))
+
     const filteredItems  = JSON.parse(sessionStorage.getItem("country") || "[]").filter((item: any) => item.country_name.includes(searchKey));
 
-    const items = filteredItems
-      .map((item: any) => {
-        return {
-          key: item.country_id,
-          label: <a onClick={() => {
-            setSearchKey("")
-            setPhoneCode(item.codes)
-          }} style={{ color: phoneCode == item.codes ? "#356DFF" : "" }}>
-            <span style={{ marginRight: "8px" }}>{item.country_name}</span>{"+" + item.codes}
-          </a>,
-        }
-      })
-      .concat(
-        filteredItems.length === 0 ? [{
-          key: 'no-data',
-          disabled: true,
-          label: (
-            <div style={{ 
-              color: '#999',
-              textAlign: 'center',
-              padding: '8px 0'
-            }}>
-              <FormattedMessage id="pages.search.noData" defaultMessage="无匹配数据" />
-            </div>
-          )
-        }] : []
-      );
+    const items = filteredItems.map((item: any) => {
+      return {
+        key: item.country_id,
+        label: <a onClick={() => {
+          setSearchKey("")
+          setPhoneCode(item.codes)
+        }} style={{ color: phoneCode == item.codes ? "#356DFF" : "" }}>
+          <span style={{ marginRight: "8px" }}>{item.country_name}</span>{"+" + item.codes}
+        </a>,
+      }
+    }).concat(
+      filteredItems.length === 0 ? [{
+        key: 'no-data',
+        disabled: true,
+        label: (
+          <div style={{ 
+            color: '#999',
+            textAlign: 'center',
+            padding: '8px 0'
+          }}>
+            <FormattedMessage id="pages.search.noData" defaultMessage="无匹配数据" />
+          </div>
+        )
+      }] : []
+    );
     const fetchUserInfo = async () => {
       const userInfo = await initialState?.fetchUserInfo?.();
       if (userInfo) {
@@ -77,31 +76,6 @@ export default function Login() {
         });
       }
     };
-
-    // 已记住登录
-    // const goHome = async () => {
-    //   if(cookie.load("token")){
-    //     // console.log(cookie.load("access_token"));
-    //     let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
-    //     await getAccessToken().then(res => {
-    //       if(window.location.hostname.startsWith("localhost")){
-    //         cookie.save("access_token",res.access_token,{path:"/"})
-    //       }else{
-    //         cookie.save('access_token', res.access_token, { domain:test,path: '/' });
-    //       }
-    //     }).catch((err) => { console.log(err) });
-
-    //     // console.log(cookie.load("access_token"));
-    //     await fetchUserInfo();
-    //     const urlParams = new URL(window.location.href).searchParams;
-    //     // 是否是商户
-    //     // history.push("/stores/merchantApplication")
-    //     // 是否有店铺
-    //     history.push(urlParams.get('redirect') || '/');
-    //     // setUserLoginState(msg);
-    //     return;
-    //   }
-    // }
 
     const onFinish = async (values: API.LoginParams) => {
       console.log(new Date().getTime());
@@ -120,11 +94,10 @@ export default function Login() {
           let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
           const token = msg.token;
           if(window.location.hostname.startsWith("localhost")){
-            cookie.save("token",token,{path:"/"})
+            cookie.save("token",token || "",{path:"/"})
           }else{
-            cookie.save("token",token,{domain:test,path:"/"})
+            cookie.save("token",token || "",{domain:test,path:"/"})
           }
-          // localStorage.setItem('token', token);
           
           const defaultLoginSuccessMessage = intl.formatMessage({
             id: 'user.login.success',
@@ -132,34 +105,26 @@ export default function Login() {
           });
           message.success(defaultLoginSuccessMessage);
           // 获取用户信息
-
-          console.log(cookie.load("token"));
+          // console.log(cookie.load("token"));
           await fetchUserInfo();
           const urlParams = new URL(window.location.href).searchParams;
+          // 获取重定向URL
+          const redirectUrl = urlParams.get('redirect');
+          console.log(redirectUrl);
           // 是否是商户
           // history.push("/stores/merchantApplication")
           // 是否有店铺
-          history.push(urlParams.get('redirect') || '/');
-          // setUserLoginState(msg);
+          history.push(redirectUrl || '/');
           return;
         }
         throw new Error(msg.msg);
       } catch (error:any) {
-        // const defaultLoginFailureMessage = intl.formatMessage({
-        //   id: 'pages.login.failure',
-        //   defaultMessage: error.message,
-        // });
-        // console.log(error.message);
         message.error(error.message);
       }
     };
     
     
     useEffect(() => {
-      // goHome()
-      // console.log(sessionStorage.getItem("country"));
-      // sessionStorage.getItem("country") || "[]"
-      // console.log(JSON.parse(sessionStorage.getItem("country") || "[]"))
     }, []);
     
     return (
@@ -295,7 +260,7 @@ export default function Login() {
             {/* 分割线 */}
             <Divider
               style={{
-                marginTop: '80px',
+                marginTop: '40px',
                 fontSize: '14px',
                 lineHeight: '20px',
                 textAlign: 'center',
@@ -414,7 +379,6 @@ const Scoped = styled.div`
         border-radius: 4px;
         height: 46px;
     }
-
 
     .external-login-button img {
         object-fit: cover;

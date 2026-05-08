@@ -1,5 +1,5 @@
 import { history } from "@umijs/max"
-import { Card, Flex, message, Space, Table, TableProps, Tooltip } from "antd"
+import { App, Card, Flex, Space, Table, TableProps, Tooltip } from "antd"
 import { useMemo, useRef, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs"
@@ -23,6 +23,8 @@ interface DataType {
 }
 
 function BlogsList({blogs,langId}:{blogs:any,langId:string}) {
+    
+    const { message } = App.useApp();
 
     const [data,setData] = useState(blogs.data ||[]);
 

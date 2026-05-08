@@ -7,9 +7,12 @@ type EditorInstance = any; // 替换为实际的类型
   
 export default function App({content,setContent}:{content:string,setContent:any}){  
   const editorRef = useRef<EditorInstance>(null); 
+
+  const isInitRef = useRef(false);
   // 初始化回调函数
   const initData = () => {
-    editorRef.current?.setContent(content)
+    editorRef.current?.setContent(content);
+    isInitRef.current = true;
   };
 
   // 生成唯一的编辑器ID
@@ -25,16 +28,18 @@ export default function App({content,setContent}:{content:string,setContent:any}
         value={content}
         onInit={(_evt, editor) => (editorRef.current = editor)}
         onEditorChange={(newValue) => {
-          setContent(newValue);
+          if(isInitRef.current){
+            setContent(newValue);
+          }
         }}
         init={{
-            language_url: '/langs/zh_CN.js',
+            language_url: '/tinymce/langs/zh_CN.js',
             language: 'zh_CN',
             height: 240, //高度
             menubar: false,  // 显示菜单栏
             // 工具栏是否换行
             toolbar_mode: 'wrap',
-            icons: 'thin', // 使用更小的图标
+            icons: 'default', // 使用更小的图标
             branding: false,
             // 禁用调整大小
             resize: false,
@@ -56,7 +61,7 @@ export default function App({content,setContent}:{content:string,setContent:any}
                 'table',
                 'preview',
                 'wordcount',
-                'fontsize',
+                // 'fontsize',
             ],
             toolbar:
             'bold italic link forecolor bullist |' +

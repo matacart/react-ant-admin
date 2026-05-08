@@ -16,14 +16,12 @@ function Brand() {
 
     const navigate = useNavigate()
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(false)
 
     const [isRenewal,setIsRenewal] = useState(false)
 
     useEffect(()=>{
-        baseInfoStore.getStore().then(res=>{
-            setIsSkeleton(!res)
-        })
+        
     },[])
     
     return (

@@ -19,28 +19,7 @@ export default function GiftCardsSelectCard(){
    
     useEffect(()=>{
         // 添加语言
-        let tempList = [];
-        if(languageData.length==0){
-            tempList = JSON.parse(sessionStorage["languages"] || "[]").map((item:any)=>{
-                // console.log(item.code)
-                // console.log(item.code == cookie.load("default_lang"))
-                item.code == cookie.load("default_lang") && setLanguage(item.id)
-                return {
-                    value: item.id,
-                    label: item.name
-                }
-            })
-            setLanguageData(tempList)
-        };
-        if(timeTags.length == 0){
-            // getTags(language)
-        }
     },[])
-    
-    // 语言选择
-    const languageChange= (value: string) => {
-        setLanguage(value)
-    };
     
     return (
         <Scoped> 

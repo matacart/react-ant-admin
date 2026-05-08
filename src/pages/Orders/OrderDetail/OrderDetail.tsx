@@ -1,7 +1,7 @@
-import { ArrowLeftOutlined, LoadingOutlined, RightOutlined } from '@ant-design/icons'
-import { Flex, Form, MenuProps, message, Spin, Tooltip } from 'antd'
+import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
+import { App, Flex, MenuProps, Spin, Tooltip } from 'antd'
 import styled from 'styled-components';
-import { useNavigate,useSearchParams,useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import OrdersShippedCard from './OrdersShippedCard';
@@ -29,9 +29,12 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import CancelOrderModal from './Modal/CancelOrderModal';
 import ReturnInProgress from './ReturnInProgress';
 import SuspendDeliveryCard from './SuspendDeliveryCard';
+import { useParams } from '@umijs/max';
 
 
 function OrderDetail() {
+
+  const { message } = App.useApp();
 
   const navigate = useNavigate();
 

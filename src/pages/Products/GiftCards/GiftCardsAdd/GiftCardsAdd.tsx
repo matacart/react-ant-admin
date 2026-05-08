@@ -1,9 +1,9 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Form, Input, message, Select } from 'antd'
+import { Button } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import GiftCardInformationCard from './GiftCardInformationCard';
 import ExpiredInformationCard from './ExpiredInformationCard';
 import SelectCreateCustomerCard from './SelectCreateCustomerCard';

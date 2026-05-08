@@ -1,0 +1,17 @@
+export default {
+    "user.login.title": "Login",
+    "user.login.success": "Login successful",
+    "user.login.usernameRequired": "Username is required!",
+    "user.login.usernameLabel": "Username/Phone Number",
+    "user.login.passwordRequired": "Password is required!",
+    "user.login.passwordLabel": "Password",
+    "user.login.rememberMe": "Remember me",
+    "user.login.login": "Login",
+    "user.login.register": "User Registration",
+    "user.login.forgotPassword": "Forgot Password",
+    "user.login.or": "or",
+    "user.login.linkGoogle": "Sign in with Google",
+    "user.login.linkFacebook": "Sign in with Facebook",
+    "user.login.linkApple": "Sign in with Apple",
+    "user.login.linkLinkie": "Sign in with Linkie",
+}

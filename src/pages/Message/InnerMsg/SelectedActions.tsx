@@ -1,4 +1,4 @@
-import { App, Checkbox, Flex, message } from "antd";
+import { App, Checkbox, Flex } from "antd";
 import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import innerMsg from "@/store/message/innerMsg/innerMsg";
@@ -21,7 +21,7 @@ function SelectedActions({fetchMessageList}: {fetchMessageList: () => void}) {
     const intl = useIntl();
 
     // 使用 App 组件提供的上下文
-    const { modal } = App.useApp();
+    const { modal, message } = App.useApp();
     
     return (
       <Scoped style={{padding:"10px 0px",backgroundColor: '#fafafa'}}>

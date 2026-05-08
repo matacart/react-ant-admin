@@ -1,16 +1,13 @@
 import { deleteFile } from "@/services/y2/api"
 import { DeleteOutlined, FolderOutlined, PaperClipOutlined } from "@ant-design/icons";
 import copy from 'copy-to-clipboard';
-import { Dropdown, Flex, MenuProps, message, Modal, Pagination, Popover, Space, Table, TableProps, theme, Tooltip } from "antd"
-import { useEffect, useRef, useState } from "react"
+import { App, Dropdown, Flex, MenuProps, Space, Table, TableProps, theme, Tooltip } from "antd"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 import React from "react";
-import fileData from "@/store/fileData";
 import { observer } from "mobx-react-lite";
-import { ProColumns, ProTable } from "@ant-design/pro-components";
 import { TableRowSelection } from "antd/es/table/interface";
 import DeleteModal from "@/components/Modal/DeleteModal";
-import { title } from 'process';
 
 const { useToken } = theme;
 
@@ -24,6 +21,8 @@ interface DataType {
 }
 
 function GroupCardTable({dataSource,paginationConfig,loading}:{dataSource:DataType[],paginationConfig:any,loading:boolean}) {
+
+    const { message } = App.useApp();
 
     useEffect(()=>{
         if(dataSource!==undefined){

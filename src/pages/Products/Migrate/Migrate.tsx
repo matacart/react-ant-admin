@@ -1,19 +1,19 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Drawer, Flex, Form, FormInstance, Input, message, Select } from 'antd'
+import { App } from 'antd'
 import styled from 'styled-components';
-import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import articles from "@/store/channel/website/articles";
 import { observer } from 'mobx-react-lite';
-import { createArticles } from '@/services/y2/api';
 import { useSleep } from '@/hooks/customHooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ExportIcon } from '@/components/Icons/Icons';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import ShopWebsiteCard from './ShopWebsiteCard';
 import ShopAuthorizationCard from './ShopAuthorizationCard';
 
 function Migrate(){
+
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false)
 

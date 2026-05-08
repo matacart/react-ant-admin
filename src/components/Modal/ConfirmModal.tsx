@@ -1,6 +1,5 @@
 import { DeleteOutlined, ExclamationCircleFilled } from "@ant-design/icons";
-import { Button, Flex, Modal } from "antd";
-import { useState } from "react";
+import { App, Button, Flex } from "antd";
 import styled from "styled-components";
 import DefaultButton from "../Button/DefaultButton";
 import PrimaryButton from "../Button/PrimaryButton";
@@ -9,7 +8,7 @@ import PrimaryButton from "../Button/PrimaryButton";
 // 删除 弹窗提示
 export default function ConfirmModal({confirmFun,title,content,okText,tElement}:any){
 
-    const [modal, contextHolder] = Modal.useModal();
+    const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const confirm = () => {
         const newModal = modal.confirm({
@@ -35,7 +34,6 @@ export default function ConfirmModal({confirmFun,title,content,okText,tElement}:
         // 阻止父组件事件传递
         <Scoped className="delete_modal" onClick={(e)=>e.stopPropagation()}>
             <span onClick={()=>confirm()}>{tElement}</span>
-            {contextHolder}
         </Scoped>
     )
 }

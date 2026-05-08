@@ -1,0 +1,17 @@
+export default {
+    "user.login.title": "登入",
+    "user.login.success": "登入成功",
+    "user.login.usernameRequired": "用戶名是必填項！",
+    "user.login.usernameLabel": "用戶名/手機號",
+    "user.login.passwordRequired": "密碼是必填項！",
+    "user.login.passwordLabel": "密碼",
+    "user.login.rememberMe": "記住我",
+    "user.login.login": "登入",
+    "user.login.register": "用戶註冊",
+    "user.login.forgotPassword": "忘記密碼",
+    "user.login.or": "或",
+    "user.login.linkGoogle": "使用谷歌登入",
+    "user.login.linkFacebook": "使用Facebook登入",
+    "user.login.linkApple": "使用蘋果登入",
+    "user.login.linkLinkie": "使用Linkie登入",
+}

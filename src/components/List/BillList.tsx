@@ -4,10 +4,6 @@ import type { GetProp, MenuProps, RadioChangeEvent, SelectProps, TableColumnsTyp
 import qs from 'qs';
 import { CopyOutlined, DownOutlined, EyeOutlined, QuestionCircleOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { result } from 'lodash';
-import axios from 'axios';
-import { deleteProduct, getProductList } from '@/services/y2/api';
-import { Response } from 'express';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -82,7 +78,7 @@ const menuProps = {
 
 
 
-export default function ProductListAjax() {
+export default function BillList() {
 
   const [loading, setLoading] = useState(false);
 

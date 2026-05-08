@@ -1,4 +1,4 @@
-import { ConfigProvider, Flex, Form, FormInstance, message, Select, Spin } from "antd";
+import { ConfigProvider, Flex, Form, FormInstance, Select, Spin } from "antd";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { debounce } from 'lodash';
 import { EditorFeaturedCollectionIcon, EditorFeaturedProductIcon, EditorRichTextIcon, LeftIcon } from "@/components/Icons/Icons";

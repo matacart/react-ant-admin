@@ -2,7 +2,7 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import MyDropdownExpansion from '@/components/Dropdown/MyDropdownExpansion';
 import { UnfoldIcon } from '@/components/Icons/Icons';
-import { Flex, message } from 'antd';
+import { Flex, App } from 'antd';
 import React, { useState } from 'react';
 // 离线版本
 import { loader } from '@monaco-editor/react';
@@ -33,6 +33,8 @@ interface FileVersion {
 
 
 function MyMonacoEditor({file}:{file:any}){
+    
+    const { message } = App.useApp();
 
     const [fileInfo, setFileInfo] = useState<any>(file);
 

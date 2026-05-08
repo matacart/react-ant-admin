@@ -6,16 +6,10 @@ import { useSleep } from "@/hooks/customHooks";
 import { addTemplateFile } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
-import { Flex, Form, message, Modal } from "antd";
+import { Flex, Form, App, Modal } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-
-const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-};
 
 interface LayoutModalType{
     treeData:any[],
@@ -24,6 +18,8 @@ interface LayoutModalType{
 }
 
 function LayoutModal({filePath,treeData,setTreeData}:LayoutModalType){
+    
+    const { message } = App.useApp();
 
     const sleep = useSleep();
 

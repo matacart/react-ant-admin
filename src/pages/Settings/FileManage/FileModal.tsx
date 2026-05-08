@@ -1,10 +1,10 @@
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import DefaultSelect from "@/components/Select/DefaultSelect"
 import fileData from "@/store/fileData"
-import { ExclamationCircleFilled, ExclamationCircleOutlined, InboxOutlined, PlusOutlined } from "@ant-design/icons"
-import { message, Modal, Popover, Select, Spin, Tabs, TabsProps, Tag, Upload, UploadProps } from "antd"
+import { ExclamationCircleFilled, InboxOutlined } from "@ant-design/icons"
+import { App, Modal, Spin, Upload, UploadProps } from "antd"
 import axios from "axios"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 
@@ -16,6 +16,8 @@ interface optionType{
 const { Dragger } = Upload;
 
 function FileModal({groupId,groupList}:{groupId:string,groupList:any}) {
+
+    const { message } = App.useApp();
 
     const [loading, setLoading] = useState(false);
 

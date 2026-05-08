@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import NumberInput from "@/components/Input/NumberInput";
 import { setCancelOrder, splitOrderProducts } from "@/services/y2/api";
 import order from "@/store/order/order";
-import { Checkbox, Flex, Form, Input, message, Modal, Table, TableProps } from "antd";
+import { App, Checkbox, Flex, Form, Input, Modal, Table, TableProps } from "antd";
 import { cloneDeep } from "lodash";
 import { toJS } from "mobx";
 import { useEffect, useState } from "react";
@@ -25,6 +25,8 @@ type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'
 const { TextArea } = Input;
 
 function SplitPackage({groupIndex}:{groupIndex:number}){
+
+    const { message } = App.useApp();
 
     const [form] = Form.useForm();
 

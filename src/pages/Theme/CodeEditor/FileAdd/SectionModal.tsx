@@ -5,7 +5,7 @@ import { useSleep } from "@/hooks/customHooks";
 import { addTemplateFile } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
-import { Flex, Form, message, Modal, Radio } from "antd";
+import { Flex, Form, App, Modal, Radio } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -23,6 +23,8 @@ interface LayoutModalType{
 }
 
 function SectionModal({treeData,setTreeData,filePath}:LayoutModalType){
+    
+    const { message } = App.useApp();
 
     const sleep = useSleep();
 

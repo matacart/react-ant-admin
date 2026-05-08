@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { Flex, message } from 'antd';
+import { Flex, App } from 'antd';
 import { getWithdrawList } from '@/services/y2/api';
 import WithdrawalList from './WithdrawalList';
-import PrimaryButton from '@/components/Button/PrimaryButton';
-import { history } from '@umijs/max';
 import WithdrawalModal from './WithdrawalModal';
 
 function Withdrawal(){
+
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 

@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined, CopyOutlined } from '@ant-design/icons'
-import { Flex, Form, Input, MenuProps, message, Select, TableProps, Tooltip } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useIntl, useParams } from '@umijs/max';

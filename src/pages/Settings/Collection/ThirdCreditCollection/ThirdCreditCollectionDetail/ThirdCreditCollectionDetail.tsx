@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, Radio, Select, TabsProps, Upload } from "antd"
-import { history, useParams, useSearchParams } from "@umijs/max"
+import { App, Card, Flex, Form, Input, Radio, Select } from "antd"
+import { history, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
 import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
@@ -27,6 +27,8 @@ interface FormItem {
 
 const { TextArea } = Input;
 function ThirdCreditCollectionDetail() {
+    
+    const { message } = App.useApp();
 
     const [searchParams, setSearchParams] = useSearchParams();
 

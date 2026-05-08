@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useIntl } from '@umijs/max';
@@ -16,6 +16,8 @@ import blogs from '@/store/channel/blogs/blogs';
 import { setArticleCategorys } from '@/services/y2/api';
 
 function CreateBlogs(){
+    
+    const { message } = App.useApp();
 
     const intl = useIntl();
 

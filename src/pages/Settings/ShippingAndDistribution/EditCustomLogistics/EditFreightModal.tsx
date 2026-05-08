@@ -1,15 +1,12 @@
-import DangerButton from "@/components/Button/DangerButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import { AddIcon, EditIcon } from "@/components/Icons/Icons";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight";
-import { transformConfig } from "@/utils/dataStructure";
-import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Col, ConfigProvider, Divider, Flex, Form, Input, InputNumber, message, Modal, Radio, Row, Select, Space, Spin, Tooltip } from "antd"
-import { values } from "lodash";
-import { useEffect, useState } from "react"
+import { MinusCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { App, Button, Col, ConfigProvider, Flex, Form, Input, InputNumber, Modal, Row, Select, Spin, Tooltip } from "antd"
+import { useState } from "react"
 import styled from "styled-components"
 
 const { TextArea } = Input;
@@ -36,6 +33,8 @@ interface DataType {
 }
 
 export default function EditFreightModal({record}:{record:any}){
+
+    const { message } = App.useApp();
 
     const [formFreight] = Form.useForm();
 
@@ -195,7 +194,6 @@ export default function EditFreightModal({record}:{record:any}){
                 setOpen(true)
             }}><EditIcon className="font-20 cursor-pointer" /></div>
             {/*  */}
-            
             <Modal open={open} title="编辑运费" centered onCancel={()=>setOpen(false)} width={1000} footer={
                 (_, { OkBtn, CancelBtn }) => (
                     <Flex justify="end" gap={8}>

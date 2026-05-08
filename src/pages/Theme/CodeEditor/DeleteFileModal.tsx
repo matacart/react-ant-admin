@@ -4,7 +4,7 @@ import { DeleteIcon } from "@/components/Icons/Icons";
 import { deleteTemplateFile } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { Flex, message, Tooltip } from "antd";
+import { Flex, App, Tooltip } from "antd";
 import modal from "antd/es/modal";
 import { useState } from "react";
 
@@ -17,6 +17,8 @@ interface DelModalType{
 }
 
 function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType){
+    
+    const { message } = App.useApp();
 
     const [loading, setLoading] = useState(false);
     // 递归函数：从树中删除指定节点

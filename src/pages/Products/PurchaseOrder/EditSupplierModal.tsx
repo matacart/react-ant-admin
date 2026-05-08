@@ -1,11 +1,13 @@
 
-import { Button, Col, Form, Input, message, Modal, Row, Select } from 'antd';
+import { App, Col, Form, Input, Modal, Row, Select } from 'antd';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { editSupplier, getCityList, getCountryList, getProvinceList, getSupplier } from '@/services/y2/api';
+import { editSupplier, getCityList, getProvinceList, getSupplier } from '@/services/y2/api';
 import { useForm } from 'antd/es/form/Form';
 
 function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:any,getSupplierList:any,editSupplierRef:any}) {
+    
+    const { message } = App.useApp();
 
     const [supplierOpen,setSupplierOpen] = useState(false);
 

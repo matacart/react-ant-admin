@@ -55,6 +55,7 @@ function VersionSwitchModal({template,type}:{template:TemplateInstance|null,type
                         <span className="color-356DFF cursor-pointer" onClick={()=>{
                             setLoading(true);
                             setTemplateVersion({
+                                id:template?.id || "",
                                 template_id:template?.template_id || "",
                                 languages_id:template?.languages_id || "",
                                 version_id:record.id,
@@ -71,8 +72,8 @@ function VersionSwitchModal({template,type}:{template:TemplateInstance|null,type
                                     if(type == "using" && template){
                                         shopSetting.setTemplateInstanceUsing({
                                             ...template,
-                                            template_version_id:record.id || "",
-                                            template_version:record.version || "",
+                                            active_version_id:record.id || "",
+                                            active_version:record.version || "",
                                         })
                                     }
                                     // ...template,

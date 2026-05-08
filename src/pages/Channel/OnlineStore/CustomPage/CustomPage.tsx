@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, message } from 'antd';
+import { Flex } from 'antd';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';

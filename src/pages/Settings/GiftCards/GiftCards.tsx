@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
-import { Button, Divider, Flex, Form, Input, message, Select, Skeleton, Upload } from "antd"
+import { Button, Divider } from "antd"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
 import baseInfoStore from "@/store/setUp/baseInfoStore"
@@ -14,14 +14,12 @@ function GiftCards() {
 
     const navigate = useNavigate()
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
+    const [isSkeleton,setIsSkeleton] = useState(false)
 
     const [isRenewal,setIsRenewal] = useState(false)
 
     useEffect(()=>{
-        baseInfoStore.getStore().then(res=>{
-            setIsSkeleton(!res)
-        })
+       
     },[])
     
     return (

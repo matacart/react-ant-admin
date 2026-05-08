@@ -1,7 +1,7 @@
 import SuccessTag from "@/components/Tag/SuccessTag";
 import { ArrowLeftOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate, useParams } from "@umijs/max";
-import { Button, Card, Col, Flex, message, Row, Spin } from "antd";
+import { App, Button, Card, Col, Row, Spin } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -29,6 +29,9 @@ interface ProductDetail {
 // export const MyContext = createContext({});
 
 function Index() {
+
+    const { message } = App.useApp();
+    
     // 获取商品详情
     const [productDetail, setProductDetail] = useState<ProductDetail | null>(null);
     const navigate = useNavigate(); // 使用 useNavigate 钩子
@@ -46,49 +49,43 @@ function Index() {
     const [saveLoading,setSaveLoading] = useState(false);
     const [language,setLanguage] = useState("");
 
-    
     // 变体---控制变体组合
     const [onVariant,setOnVariant] = useState(false);
 
     // 删除
-    
-    
-    
-
-    
-    const fetchProductDetail = async (language?:string) => {
-        setIsLoading(true)
-        try {
-            setProductDetail(response.data);
-            if(response.data){
-                setProductStatus(response.data.status);
-            } else {
-                console.error('Invalid data format:', response);
-            }
-        } catch (error) {
-            console.error('Error fetching product detail:', error);
-        }
-        setIsLoading(false)
-    };
+    // const fetchProductDetail = async (language?:string) => {
+    //     setIsLoading(true)
+    //     try {
+    //         setProductDetail(response.data);
+    //         if(response.data){
+    //             setProductStatus(response.data.status);
+    //         } else {
+    //             console.error('Invalid data format:', response);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching product detail:', error);
+    //     }
+    //     setIsLoading(false)
+    // };
 
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
     },[]);
     
-    const prevProduct=(id:string)=>{
-        if(id==="" || id===null){
-            message.error("这是第一个商品")
-        }else{
-            history.push(`/products/edit/${id}/${oldStore.language}`)
-        }
-    }
-    const nextProduct=(id:string)=>{
-        if(id==="" || id===null){
-            message.error("这是最后一个商品")
-        }else{
-            history.push(`/products/edit/${id}/${oldStore.language}`)
-        }
-    }
+    // const prevProduct=(id:string)=>{
+    //     if(id==="" || id===null){
+    //         message.error("这是第一个商品")
+    //     }else{
+    //         history.push(`/products/edit/${id}/${oldStore.language}`)
+    //     }
+    // }
+    // const nextProduct=(id:string)=>{
+    //     if(id==="" || id===null){
+    //         message.error("这是最后一个商品")
+    //     }else{
+    //         history.push(`/products/edit/${id}/${oldStore.language}`)
+    //     }
+    // }
     return (
         <div>
             {/* 弹窗 */}

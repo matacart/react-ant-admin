@@ -2,7 +2,7 @@ import { Button, Card, Flex, Form, Modal, Spin } from "antd";
 import React, { useEffect, useMemo, useState } from 'react';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import type { GetProp, UploadFile, UploadProps } from 'antd';
-import { message, Upload, Image } from 'antd';
+import { App, Upload, Image } from 'antd';
 import styled from 'styled-components';
 import axios from "axios";
 import { observer } from "mobx-react-lite";
@@ -25,6 +25,9 @@ const getBase64 = (file: FileType): Promise<string> =>
   });
 
 function ProductImg() {
+
+  const { message } = App.useApp();
+  
   const [loading,setLoading] = useState(false);
   // 视频弹窗加载
   const [videoLoading, setVideoLoading] = useState(false);

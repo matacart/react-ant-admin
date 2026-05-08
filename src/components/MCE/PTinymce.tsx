@@ -21,8 +21,8 @@ export default function App({content,setContent}:{content:string,setContent:any}
         onInit={(_evt, editor) => (editorRef.current = editor)}  
         initialValue={content}
         init={{
+          language_url: '/langs/zh_CN.js',
           language: 'zh_CN',
-          language_url: '/tinymce/langs/zh_CN.js', // 指向部署的高级语言包文件
           height: 650,
           min_height: 400, //没内容时的高度
           menubar: false,  // 显示菜单栏

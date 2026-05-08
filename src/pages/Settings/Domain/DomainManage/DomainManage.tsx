@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, ExportOutlined, GlobalOutlined } from "@ant-design/icons"
-import { Card, Flex, Form, List, message, Modal, Table, TableProps, TabsProps } from "antd"
+import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExportOutlined, GlobalOutlined } from "@ant-design/icons"
+import { App, Card, Flex, Form, Modal, Table, TableProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import SuccessTag from "@/components/Tag/SuccessTag";
@@ -26,9 +26,9 @@ interface DataType {
 
 function DomainManage() {
 
-    const [isSkeleton,setIsSkeleton] = useState(true);
+    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
 
-    const [modal, contextHolder] = Modal.useModal();
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -222,8 +222,6 @@ function DomainManage() {
                         </Form.Item>
                     </Form>
                 </Modal>
-                {/* 删除 */}
-                {contextHolder}
             </div>}
         </Scoped>
     )

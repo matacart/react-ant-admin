@@ -31,8 +31,8 @@ import { getPrimaryDomain } from "@/utils/dataStructure";
                         <SEOEdit seo={categories.categoriesInfo} setSEO={setSEO} previewPrefix={previewPrefix} />
                     </span>
                 </div>
-                <Flex className="webUrl">{`${previewPrefix}${categories.categoriesInfo.handle?categories.categoriesInfo.handle.replace(new RegExp(" ","gm"),"-"):categories.categoriesInfo.title.replace(new RegExp(" ","gm"),"-")}`}</Flex>
-                <div className="webTitle">{categories.categoriesInfo.meta_title==""?(categories.categoriesInfo.title==""?"未填写标题":categories.categoriesInfo.title):categories.categoriesInfo.meta_title}</div>
+                <Flex className="webUrl">{`${previewPrefix}${categories.categoriesInfo.handle?categories.categoriesInfo.handle.replace(new RegExp(" ","gm"),"-"):""}`}</Flex>
+                <div className="webTitle">{categories.categoriesInfo.meta_title==""?"未填写标题":categories.categoriesInfo.meta_title}</div>
                 {/* 未填写标题 */}
                 <div className="webDesc">{categories.categoriesInfo.meta_description==""?(categories.categoriesInfo.content==""?"未填写描述":categories.categoriesInfo.content.replace(/<[^>]*>/g,"")):categories.categoriesInfo.meta_description}</div>
             </Card>

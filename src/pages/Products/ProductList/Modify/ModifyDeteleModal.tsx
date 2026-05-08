@@ -1,14 +1,15 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import { WarningIcon } from "@/components/Icons/Icons";
-import { Flex, Input, message, Modal, Radio } from "antd"
-import { useRef, useState } from "react"
+import { App, Flex, Modal } from "antd"
+import { useState } from "react"
 import styled from "styled-components";
-import { text } from 'express';
 import MyButton from "@/components/Button/MyButton";
 import { deleteProductList } from "@/services/y2/api";
 import productList from "@/store/product/productList";
 
 function ModifyDeteleModal({count,onFetchData}:{count:number,onFetchData:any}){
+
+    const { message } = App.useApp();
 
     const [open,setOpen] = useState(false)
 
@@ -17,7 +18,7 @@ function ModifyDeteleModal({count,onFetchData}:{count:number,onFetchData:any}){
     const submit = ()=>{
         setLoading(true)
         deleteProductList(productList.productList.toString()).then(res=>{
-            if(res.code == 0){
+            if(res?.code == 0){
               // 清除选中状态
               productList.setProductList([])
               // 重新加载数据
@@ -26,7 +27,6 @@ function ModifyDeteleModal({count,onFetchData}:{count:number,onFetchData:any}){
             }
         }).catch(err=>{
             message.error('商品删除失败');
-            console.log(err);
         }).finally(()=>{
             setLoading(false)
             setOpen(false)

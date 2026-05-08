@@ -33,7 +33,10 @@ function ProductData({form}:{form:any}) {
                 >
                     <DefaultInput
                         onChange={(e:any) => {
-                            product.setProductInfo({...product.productInfo,title:e.target.value})
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                title:e.target.value,
+                            })
                         }}
                         placeholder="例如：冬季，毛衣" />
                     {/* 5 */}

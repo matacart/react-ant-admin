@@ -1,5 +1,5 @@
 import { history } from "@umijs/max"
-import { Card, Flex, MenuProps, message, Space, Table, TableProps, Tooltip } from "antd"
+import { App, Card, Flex, MenuProps, Space, Table, TableProps, Tooltip } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs"
@@ -8,7 +8,6 @@ import DefaultSelect from "@/components/Select/DefaultSelect";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { delArticles, getArticleList } from "@/services/y2/api";
-import cookie from 'react-cookies';
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
@@ -27,11 +26,14 @@ interface DataType {
     name: string;
     age: number;
     address: string;
+    image:string;
     status:string;
     tags: string[];
 }
 
 function ArticlesListCard() {
+
+    const { message } = App.useApp();
 
     const [data,setData] = useState([]);
 
@@ -116,10 +118,8 @@ function ArticlesListCard() {
                       </Tooltip>
                     }
                     removeFunc={()=>{
-                        // UninstallApp(record.id)
                         delArticles(record.id).then(()=>{
-                          // getArticleList()
-                          setData(data.filter(item => item.id !== record.id))
+                          setData(data.filter((item:DataType) => item.id !== record.id))
                           message.success("删除成功")
                         }).catch(()=>{
                           console.log("删除失败")

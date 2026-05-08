@@ -1,14 +1,16 @@
 import { ArrowLeftOutlined, RightOutlined, SearchOutlined } from "@ant-design/icons"
-import { Card, Flex, Input, List, message } from "antd"
+import { App, Card, Flex, Input, List } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsList, setAddonsConfig } from "@/services/y2/api";
+import { getAddonsList } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import LangSelect from "@/components/Select/LangSelect";
 import cookie from 'react-cookies';
 
 function OtherCollection() {
+    
+    const { message } = App.useApp();
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 

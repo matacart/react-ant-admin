@@ -1,6 +1,6 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import styled from 'styled-components';
-import { Divider, message } from 'antd';
+import { App, Divider } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -19,6 +19,8 @@ import { convertFlatToNested } from '../OrderDraft/ProductTableModal';
 
   
 function OrderDraftAdd() {
+
+    const { message } = App.useApp();
 
     const [loading, setLoading] = useState(false);
     

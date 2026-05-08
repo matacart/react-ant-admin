@@ -1,5 +1,5 @@
 import { ExclamationCircleFilled } from "@ant-design/icons";
-import { Flex, Modal } from "antd";
+import { App, Flex, Modal } from "antd";
 import styled from "styled-components";
 import DefaultButton from "../Button/DefaultButton";
 import DangerButton from "../Button/DangerButton";
@@ -21,7 +21,8 @@ export default function DeleteModal({removeFunc,title,content,tElement,loading}:
 
     const intl = useIntl();
 
-    const [modal, contextHolder] = Modal.useModal();
+    const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
+
     const confirm = () => {
         const newModal = modal.confirm({
             title: title,
@@ -44,7 +45,6 @@ export default function DeleteModal({removeFunc,title,content,tElement,loading}:
         // 阻止父组件事件传递
         <Scoped className="delete_modal" onClick={(e)=>e.stopPropagation()}>
             <span onClick={()=>confirm()}>{tElement}</span>
-            {contextHolder}
         </Scoped>
     )
 }

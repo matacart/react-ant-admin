@@ -1,4 +1,3 @@
-import DangerButton from "@/components/Button/DangerButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import { AddIcon } from "@/components/Icons/Icons";
@@ -6,9 +5,8 @@ import DefaultSelect from "@/components/Select/DefaultSelect";
 import { useSleep } from "@/hooks/customHooks";
 import { getDeliveryList, setAddonsConfigs } from "@/services/y2/api";
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight";
-import { MinusCircleOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Col, ConfigProvider, Divider, Flex, Form, Input, InputNumber, message, Modal, Radio, Row, Select, Space, Spin, Tooltip } from "antd"
-import { values } from "lodash";
+import { MinusCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { App, Button, Col, ConfigProvider, Flex, Form, Input, InputNumber, Modal, Row, Select, Spin, Tooltip } from "antd"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
@@ -25,6 +23,8 @@ type FieldConfig = {
 };
 
 export default function AddFreightModal({type}:{type:string}){
+
+    const { message } = App.useApp();
 
     const [formFreight] = Form.useForm();
 

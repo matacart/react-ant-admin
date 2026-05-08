@@ -1,6 +1,5 @@
-import PrimaryButton from "@/components/Button/PrimaryButton";
-import { DeleteIcon, EditIcon, EditorMoreIcon, FoldIcon, PositionIcon, ReceiveGoodsIcon, UnfoldIcon } from "@/components/Icons/Icons";
-import { Button, Card, Divider, Dropdown, Flex, Form, Input, List, MenuProps, message, Space, Table, TableProps, Tabs, TabsProps, Tag } from "antd"
+import { DeleteIcon, EditorMoreIcon, FoldIcon, PositionIcon, ReceiveGoodsIcon, UnfoldIcon } from "@/components/Icons/Icons";
+import { App, Card, Divider, Dropdown, Flex, List, MenuProps, Table, TableProps, Tabs, TabsProps } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import AddFreightModal from "./AddFreightModal";
@@ -28,6 +27,8 @@ interface DataType {
 }
 
 function ManagementGroup() {
+
+    const { message } = App.useApp();
 
     const [isExpansionDetails,setIsExpansionDetails] = useState(false)
     // 

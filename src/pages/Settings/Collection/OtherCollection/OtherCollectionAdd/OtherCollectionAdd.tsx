@@ -1,9 +1,9 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
-import { Button, Card, Checkbox, Divider, Flex, Form, Input, List, message, Radio, Select, TabsProps, Upload } from "antd"
+import { App, Card, Flex, Form, Input, Radio, Select } from "antd"
 import { history, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsConfigCreditCard, setAddonsConfig, setAddonsConfigs } from "@/services/y2/api";
+import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import collection from "@/store/settings/collection";
@@ -23,6 +23,8 @@ interface FormItem {
 
 const { TextArea } = Input;
 function OtherCollectionAdd() {
+    
+    const { message } = App.useApp();
 
     const [searchParams, setSearchParams] = useSearchParams();
 

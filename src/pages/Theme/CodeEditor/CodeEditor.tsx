@@ -1,9 +1,9 @@
-import { Flex, message, Spin } from "antd"
+import { Flex, App, Spin } from "antd"
 import Header from "./Header"
 import Side from "./Side"
 import styled from "styled-components"
 import Main from "./Main"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getTemplateInfo, getThemeFileList } from "@/services/y2/api"
 import codeEditor from "@/store/theme/codeEditor"
@@ -12,42 +12,44 @@ import { observer } from "mobx-react-lite"
 
 function CodeEditor(){
 
-    const { id,templateId,languageId,versionId }  = useParams();
+    const { message } = App.useApp();
+
+    const { id,templateId,languageId,versionId,mode }  = useParams();
 
     const [isSkeleton,setIsSkeleton] = useState(true);
 
     const [loading,setLoading] = useState(false);
 
     const fetch = async ()=>{
-        setLoading(true)
         try {
             const results = await Promise.allSettled([
                 getThemeFileList({
                     id:id??"",
                     templateId:templateId??"",
-                    mode:codeEditor.mode,
+                    mode:mode || "mapping",
                     languages_id:languageId || "2",
                     version_id:versionId??"",
                     versionId:versionId??"",
                 }),
-                getTemplateInfo(templateId ?? "",codeEditor.languageId)
+                getTemplateInfo(templateId ?? "",languageId || "2")
             ])
             const [fileListResult, templateInfoResult] = results;
             if(fileListResult.status === "fulfilled"){
-                codeEditor.setFileList(fileListResult.value?.data?.files || [])
-                codeEditor.setLanguageId(languageId || "2")
-                codeEditor.setVersionId(versionId??"")
+                codeEditor.setFileList(fileListResult.value?.data?.files || []);
+                codeEditor.setLanguageId(languageId || "2");
+                codeEditor.setVersionId(versionId??"");
+                codeEditor.setMode(mode || "mapping");
+                codeEditor.setId(id || "");
             }
             if(templateInfoResult.status === "fulfilled"){
                 codeEditor.setTemplateInfo(templateInfoResult.value?.data?.templateInstanceInfo || null)
             }
         }catch (error) { 
         }finally{ 
-            setLoading(false);
             setIsSkeleton(false);
         }
     }
-
+    
     useEffect(()=>{
         fetch();
         return () => {
@@ -56,32 +58,34 @@ function CodeEditor(){
         };
     },[])
 
+    // 监听mode,languageId,versionId变化，更新文件列表
     useEffect(()=>{
-        if (isSkeleton) {
-            return;
-        }
+        if(isSkeleton) return;
         setLoading(true)
         getThemeFileList({
             id:id??"",
             templateId:templateId??"",
-            mode:codeEditor.mode,
-            languages_id:codeEditor.languageId,
-            version_id:codeEditor.versionId??"",
-            versionId:codeEditor.versionId || ""
+            mode:mode || "mapping",
+            languages_id:languageId || "",
+            version_id:versionId??"",
+            versionId:versionId || ""
         }).then((res:any)=>{
             if(res.code == "SUCCESS"){
                 codeEditor.setFileList(res.data?.files || []);
-                codeEditor.setIsAuthor(res.data.isAuthor);
+                codeEditor.setLanguageId(languageId || "2");
+                codeEditor.setVersionId(versionId??"");
+                codeEditor.setMode(mode || "mapping");
+                codeEditor.setId(id || "");
             }else{
                 message.error(res.msg)
             }
         }).catch(()=>{
             // 错误处理
         }).finally(()=>{
-            setLoading(false)
+            setLoading(false);
         })
         // 状态清除
-    },[codeEditor.mode,codeEditor.languageId,codeEditor.versionId])
+    },[mode,languageId,versionId,id])
 
     return (
         <Scoped>

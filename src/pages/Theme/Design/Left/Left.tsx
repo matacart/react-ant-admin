@@ -200,7 +200,7 @@ function Left({title}:{title:string}){
                                             </Flex>
                                             {/* 添加内容 */}
                                             {sectionId !== "header" && <Flex className="addBlockBtn" align="center" gap={2}>
-                                                <BlockAdd current={current} maxBlock={maxBlock} />
+                                                {/* <BlockAdd current={current} maxBlock={maxBlock} /> */}
                                                 {/* <Popover
                                                     open={popoverStates[popoverId] || false}
                                                     onOpenChange={(open) => current == maxBlock ? ()=>{} : handlePopoverOpenChange(popoverId,open)}

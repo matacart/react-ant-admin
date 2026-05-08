@@ -19,7 +19,10 @@ function OrderSetUpCard() {
                         label="订单编号前缀"
                         >
                         <div style={{marginBottom:"14px"}}>默认情况下，订单号从1001开始。你可以添加前缀来创建ID，例如“ EN1001”</div>
-                        <DefaultInput placeholder="订单编号前缀" value={baseInfoStore.ordersPrefix} onChange={(e:any)=>baseInfoStore.setOrdersPrefix(e.target.value)} />
+                        <DefaultInput placeholder="订单编号前缀" value={baseInfoStore.storeInfo.orders_prefix} onChange={(e:any)=>baseInfoStore.setStoreInfo({
+                            ...baseInfoStore.storeInfo,
+                            orders_prefix:e.target.value
+                        })} />
                     </Form.Item>
                 </Form>
             </Card>

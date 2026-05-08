@@ -1,9 +1,6 @@
-import DefaultButton from "@/components/Button/DefaultButton";
 import SimpleCard from "@/components/Card/SimpleCard";
-import DefaultTag from "@/components/Tag/DefaultTag";
-import baseInfoStore from "@/store/set-up/baseInfoStore";
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Card, Flex, Form, GetProp, Input, message, Radio, Tooltip, Upload, UploadProps } from "antd";
+import { DeleteOutlined, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import { App, GetProp, Upload, UploadProps } from "antd";
 import modal from "antd/es/modal";
 import axios from "axios";
 import { useState } from "react";
@@ -12,6 +9,8 @@ import styled from "styled-components";
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 function AppIconCard(){
+
+    const { message } = App.useApp();
 
     const [storeLogo,setStoreLogo] = useState("");
 

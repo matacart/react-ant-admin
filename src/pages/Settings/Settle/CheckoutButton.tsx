@@ -1,6 +1,4 @@
-import { ExportOutlined } from "@ant-design/icons";
-import { Button, Card, Checkbox, Col, Divider, Flex, Form, GetProp, Input, message, Radio, Row, Spin, Upload, UploadProps } from "antd";
-import { observer } from "mobx-react-lite";
+import { Card, Checkbox, Col, Form, Radio, Row } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
 
@@ -12,19 +10,7 @@ const style: React.CSSProperties = {
 
 function CheckoutButton() {
 
-    const [loading, setLoading] = useState(false);
-
     const [fullNameRadio,setFullNameRadio] = useState(1)
-
-    const [companyNameRadio,setCompanyNameRadio] = useState(1)
-
-    const [addressLine2Radio,setAddressLine2Radio] = useState(1)
-
-    const [addresseePhoneRadio,setAddresseePhoneRadio] = useState(1)
-
-    const [orderNoteRadio,setOrderNoteRadio] = useState(1)
-
-    
 
     return (
         <Scoped>

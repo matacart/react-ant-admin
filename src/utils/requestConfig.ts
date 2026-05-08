@@ -12,12 +12,12 @@ NProgress.configure({ showSpinner: false }) // 是否显示右上角螺旋加载
 const loginPath = '/user/signIn';
 
 // 与后端约定的响应数据格式
-interface ResponseStructure {
-    code: number;
-    data: any;
-    errorCode?: number;
-    errorMessage?: string;
-}
+// interface ResponseStructure {
+//     code: number;
+//     data: any;
+//     errorCode?: number;
+//     errorMessage?: string;
+// }
   
 // 全局计数器
 let requestCount = 0;
@@ -30,23 +30,22 @@ const startProgress = () => {
 };
 // 结束进度条
 const endProgress = () => {
-requestCount--;
-if (requestCount === 0) {
-    NProgress.done(); // 只有当计数器回到 0 时才关闭进度条
-}
+    requestCount--;
+    if (requestCount === 0) {
+        NProgress.done(); // 只有当计数器回到 0 时才关闭进度条
+    }
 };
 
 let isMessageShown = false;
 const showErrorMessage = () => {
-if (!isMessageShown) {
-    message.error("网络错误，请稍后处理");
-    isMessageShown = true;
-
-    // 5秒后允许再次提示
-    setTimeout(() => {
-    isMessageShown = false;
-    }, 5000);
-}
+    if (!isMessageShown) {
+        message.error("网络错误，请稍后处理");
+        isMessageShown = true;
+        // 5秒后允许再次提示
+        setTimeout(() => {
+            isMessageShown = false;
+        }, 5000);
+    }
 };
 
 // 请求封装
@@ -57,65 +56,46 @@ export const requestConfig: RequestConfig = {
         // 抛出错误
         errorThrower: (res: any) => {
             if (!res) throw new Error('空响应');
-        },
-        // 错误接收及处理
-        errorHandler(error: any, opts: any) {
-            endProgress();
-            // 处理网络错误和超时
-            if (error.config?.retryOnError && (error.code === 'ECONNABORTED' || !navigator.onLine)) {
-                return new Promise((resolve, reject) => {
-                let retryCount = 0;
-                const maxRetries = 3;
-                const retryRequest = () => {
-                    if (retryCount >= maxRetries) {
-                    showErrorMessage(); // 使用节流提示
-                        return reject(error);
-                    }
-                    retryCount++;
-                    setTimeout(() => {
-                        axios.request(error.config).then(response => resolve(response)).catch(() => retryRequest());
-                    }, Math.min(1000 * Math.pow(2, retryCount), 10000));
-                };
-                retryRequest();
-                });
-            }
-            return error;
-        },
+        }
     },
     // 请求拦截器
     requestInterceptors: [
         (config: any) => {
-        // 随机生成8位字符串 追踪ID
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const length = 8;
-        let result = '';
-        for (let i = 0; i < length; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            result += characters.charAt(randomIndex);
-        }
-
-        // 在POST请求中添加追踪ID
-        if(config.method == "post"){
-            config.url = config.url+"?__trackId__="+result
-        }
-
-        // 启动进度条
-        if (!config.skipAuthRefresh) {
-            startProgress(); 
-        }
-        // 在请求拦截器中追加token和授权信息（除登录接口）
-        const token = cookie.load("token")
-        if (token && config.url != loginPath){
-            config.headers['token'] = token;
-            config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
-        }
-        return config;
+            // 随机生成8位字符串 追踪ID
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const length = 8;
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                result += characters.charAt(randomIndex);
+            }
+            // 在POST请求中添加追踪ID
+            if(config.method == "post"){
+                config.url = config.url+"?__trackId__="+result
+            }
+            // 启动进度条
+            if (!config.skipAuthRefresh) {
+                startProgress(); 
+            }
+            // 将当前页面 URL 保存到请求配置中
+            if(window.location.pathname !== loginPath) {
+                config._originalPageUrl = window.location.href;
+            }
+            // 在请求拦截器中追加token和授权信息（除登录接口）
+            const token = cookie.load("token")
+            if (token && config.url != loginPath){
+                config.headers['token'] = token;
+                config.headers['Authorization'] = 'Bearer ' + cookie.load("access_token");
+            }
+            return config;
         },
     ],
     // 响应拦截器
     responseInterceptors: [
-        // access_token 过期
-        (res:any) =>{
+        [
+            // access_token 过期
+            // 成功响应数据
+            (res:any) =>{
             endProgress();
             // 确保res存在
             if (!res) {
@@ -153,13 +133,48 @@ export const requestConfig: RequestConfig = {
                 cookie.remove("token",{ domain:test,path: '/' })
                 // 清除cookie
                 clearAllCookies();
-                history.push(loginPath);
+                // 使用请求拦截器中保存的页面URL，登录成功后返回原页面
+                const redirectPath = encodeURIComponent(res.config._originalPageUrl || "");
+                history.push(`${loginPath}?${redirectPath ? `redirect=${redirectPath}` : ""}`);
             }
             if(res.data.code>2000){
                 // 数据异常
                 message.error(res.data.msg);
             }
             return res;
-        },
+            },
+            // 错误接收及处理
+            (error:any) => {
+                endProgress();
+                // 处理取消请求
+                if(error?.code == "ERR_CANCELED"){
+                    return Promise.resolve({
+                        data:null,
+                        msg:"请求取消"
+                    }) as any;
+                }
+                // 处理网络错误和超时
+                if (error.config?.retryOnError && (error.code === 'ECONNABORTED' || !navigator.onLine)) {
+                    return new Promise((resolve, reject) => {
+                        let retryCount = 0;
+                        const maxRetries = 3;
+                        const retryRequest = () => {
+                            if (retryCount >= maxRetries) {
+                            showErrorMessage(); // 使用节流提示
+                                return reject(error);
+                            }
+                            retryCount++;
+                            setTimeout(() => {
+                                axios.request(error.config).then(response => resolve(response as any)).catch(() => retryRequest());
+                            }, Math.min(1000 * Math.pow(2, retryCount), 10000));
+                        };
+                        retryRequest();
+                    });
+                }
+                // 处理其他错误
+                return Promise.reject(error);
+            }
+        ]
+        
     ],
 }

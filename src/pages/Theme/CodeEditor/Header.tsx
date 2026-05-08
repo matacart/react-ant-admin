@@ -1,15 +1,14 @@
 import DefaultButton from "@/components/Button/DefaultButton";
-import { HelpIcon, LeftIcon, PreviewIcon, RemitIcon, TiledIcon, UnfoldIcon } from "@/components/Icons/Icons";
+import { HelpIcon, LeftIcon, PreviewIcon, RemitIcon, TiledIcon } from "@/components/Icons/Icons";
 import LangSelect from "@/components/Select/LangSelect";
 import MySelect from "@/components/Select/MySelect";
 import { getGenerateAuthToken } from "@/services/y2/api";
 import codeEditor from "@/store/theme/codeEditor";
 import { history } from "@umijs/max";
-import { Flex, message, Modal, Tooltip } from "antd";
+import { Flex, App, Modal, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import cookie from 'react-cookies';
 import VersionSelect from "./VersionSelect";
 import { getPrimaryDomain } from "@/utils/dataStructure";
 
@@ -19,6 +18,8 @@ interface ItemType{
 }
 
 function Header({templateId}:{templateId:string}){
+    
+    const { message } = App.useApp();
 
     // 预览域名
     const previewDomain = getPrimaryDomain();
@@ -33,7 +34,7 @@ function Header({templateId}:{templateId:string}){
                 </Tooltip>
             </>,
             onClick: () => {
-                history.push(`/theme/editor?templateId=${templateId}&languagesId=${languageId}&templateName=templates/index.json`)
+                history.push(`/theme/editor?templateId=${templateId}&languagesId=${codeEditor.languageId}&templateName=templates/index.json`)
             }
         },
         {
@@ -82,11 +83,11 @@ function Header({templateId}:{templateId:string}){
     ]
 
     const setMode = (value:string)=>{
-        codeEditor.setMode(value)
+        history.push(`/theme/codeEditor/${codeEditor.id}/${codeEditor.templateInfo?.id}/${codeEditor.versionId}/${codeEditor.languageId}/${value}`)
     }
 
     const setLang = (value:string)=>{
-        codeEditor.setLanguageId(value);
+        history.push(`/theme/codeEditor/${codeEditor.id}/${codeEditor.templateInfo?.id}/${codeEditor.versionId}/${value}/${codeEditor.mode}`)
     }
 
     useEffect(()=>{
@@ -109,9 +110,8 @@ function Header({templateId}:{templateId:string}){
                 <Flex align="center">
                     <div>模式：</div>
                     <MySelect
-                        defaultValue={codeEditor.mode}
+                        value={codeEditor.mode}
                         options={[
-                            { value: 'auto', label: '智能模式' },
                             { value: 'original', label: '开发模式' },
                             { value: 'mapping', label: '用户模式' },
                         ]} style={{height:"36px",width:"100px"}} 

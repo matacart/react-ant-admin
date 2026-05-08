@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
 
 
 export interface TemplateInstance{
@@ -12,7 +13,8 @@ export interface TemplateInstance{
     languages_id:string;
     template_version_id:string;
     install_time:string;
-
+    active_version?:string;
+    active_version_id?:string;
 }
 
 export interface TemplateMall{
@@ -41,7 +43,7 @@ class shopsetting {
     }
 
     // 语言
-    languagesId = "2";
+    languagesId = cookie.load("shop_lang") || '2';
     setLanguagesId(value:string) {
         this.languagesId = value;
     }

@@ -6,8 +6,8 @@ import cookie from 'react-cookies';
 
 // --重试--
 // 平台信息
-export async function getPlatformInfo(){
-  return await request<ApiAppstore.Default>('/ApiAppstore/platform_info',{
+export function getPlatformInfo(){
+  return request<ApiAppstore.Default>('/ApiAppstore/platform_info',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -16,23 +16,11 @@ export async function getPlatformInfo(){
   })
 }
 
-// 店铺语言
-export async function getDomainLanguages(){
-  return await request<ApiAppstore.Default>('/ApiAppstore/languages_select',{
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id
-    }
-  })
-}
+
 
 // 全局搜索
-export async function globalSearch(keyword:string) {
-  return await request<ApiSearch.Default>('/ApiSearch/globalSearch',{
+export function globalSearch(keyword:string) {
+  return request<ApiSearch.Default>('/ApiSearch/globalSearch',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -44,7 +32,7 @@ export async function globalSearch(keyword:string) {
 }
 
 // 店铺查询
-export async function domainSelect( options?: { [key: string]: any }) {
+export function domainSelect( options?: { [key: string]: any }) {
   return request<API.LoginResult>('/ApiAppstore/domain_select', {
     method: 'POST',
     retryOnError: true,
@@ -56,7 +44,7 @@ export async function domainSelect( options?: { [key: string]: any }) {
 }
 
 // 店铺列表
-export async function getDomainList( options?: { [key: string]: any }) {
+export function getDomainList( options?: { [key: string]: any }) {
   return request<ApiAppstore.domainList>('/ApiAppstore/domain_list', {
     method: 'POST',
     retryOnError: true,
@@ -68,7 +56,7 @@ export async function getDomainList( options?: { [key: string]: any }) {
 }
 
 /** 获取当前的用户 GET /currentUser */
-export async function currentUser(options?: { [key: string]: any }) {
+export function currentUser(options?: { [key: string]: any }) {
   return request<ApiAppstore.CurrentUser>('/ApiAppstore/currentUser', {
     method: 'POST',
     retryOnError: true,
@@ -132,7 +120,7 @@ export async function getCurrenciesList(page?: number, limit?: number) {
   })
 }
 
-// 获取语言列表 -- 所有
+// 获取语言列表 -- 所有：暂用于平台语言
 export async function getLanguagesList() {
   return await request<ApiAppstore.Default>(`/ApiAppstore/languages_list`, {
     method: 'POST',
@@ -141,7 +129,21 @@ export async function getLanguagesList() {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      domain_id:cookie.load("domain")?.id,
+      domain_id:cookie.load("domain")?.id
+    }
+  })
+}
+
+// 店铺语言列表 -- 绑定定到店铺的语言
+export function getDomainLanguages(){
+  return request<ApiAppstore.Default>('/ApiAppstore/languages_select',{
+    method: 'POST',
+    retryOnError: true,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id
     }
   })
 }
@@ -159,7 +161,7 @@ export async function getShippingcourier() {
 
 // 基础设置 --- 
 export async function getTodayData(startDate:number,endDate:number,options?: { signal?: AbortSignal }) {
-  return request('/ApiStore/today_statistics', {
+  return request<ApiStore.Default>('/ApiStore/today_statistics', {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -717,7 +719,7 @@ export async function uploadPic(formData:FormData){
 
 // 视频上传
 export async function doUploadVideo(formData:FormData){
-  return request('/ApiAppstore/doUploadVideo', {
+  return request<ApiAppstore.Default>('/ApiAppstore/doUploadVideo', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -728,7 +730,7 @@ export async function doUploadVideo(formData:FormData){
 
 // 删除产品 ----- 产品
 export async function deleteProduct(id: string) {
-  return request('/ApiStore/product_del', {
+  return request<ApiStore.Default>('/ApiStore/product_del', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -752,8 +754,8 @@ export async function deleteProduct(id: string) {
 // /ApiStore/product_detail?page=${page}&limit=${limit}  测试
 // 改用product_list
 // 根据id & languages_id获取产品详情
-export async function getProductDetail(id: string,languagesId: string) {
-  return request(`/ApiStore/product`, {
+export function getProductDetail(id: string,languagesId: string) {
+  return request<ApiStore.Default>('/ApiStore/product', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -879,7 +881,7 @@ export async function upDateProductStatus(productId: string, status: string) {
 
 // 批量删除
 export async function deleteProductList(ids:string) {
-  return await request('/ApiStore/product_batchdel', {
+  return await request<ApiStore.Default>('/ApiStore/product_batchdel', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1544,39 +1546,30 @@ export async function getAddWarehouse(id:string){
 }
 
 // 店铺信息
-export async function getStoreInfo(id:string){
+export async function getStoreInfo(res:{
+  languages_id:string
+}){
   return await request<ApiAppstore.Default>('/ApiAppstore/store',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      id:id,
-      languages_id:""
+      id:cookie.load("domain")?.id,
+      ...res
     }
   })
 }
 
 // 更新店铺信息
 export async function setStoreInfo(res:any){
-  return await request('/ApiAppstore/store_set',{
+  return await request<ApiAppstore.Default>('/ApiAppstore/store_set',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      id:res.id,
-      store_logo:res.storeLogo,
-      store_name:res.storeName,
-      merchant_email:res.merchantEmail,
-      service_email:res.serviceEmail,
-      timezone:res.timezone,
-      product_type:res.productType,
-      country_name:"",
-      orders_prefix:res.ordersPrefix,
-      remark:"",        
-      // currency_id:res.currencyId,
-      status:res.storeStauts,
+      ...res
     }
   })
 }
@@ -2059,7 +2052,7 @@ export async function getUserInfo() {
 
 // 更新账号信息
 export async function setUserInfo(res:any) {
-  return request("/ApiAppstore/user_contact_set", {
+  return request<ApiAppstore.Default>("/ApiAppstore/user_contact_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2069,7 +2062,6 @@ export async function setUserInfo(res:any) {
       contact_code:res.contact_code,
       contact_phone:res.contact_phone,
       languages_id:res.languages_id
-      // domain_id: cookie.load("domain")?.id
     }
   });
 }
@@ -2102,7 +2094,7 @@ export async function delLoginRecord(id:string) {
 
 // 更新共享数据状态
 export async function setUserSharing(res:string) {
-  return request("/ApiAppstore/data_sharing_set", {
+  return request<ApiAppstore.Default>("/ApiAppstore/data_sharing_set", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2151,7 +2143,7 @@ export async function getEmployeeList() {
 
 // 创建应用 -- 更新
 export async function creatAppStore(res:any) {
-  return request("/ApiAppstore/app_add", {
+  return request<ApiAppstore.Default>("/ApiAppstore/app_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3523,7 +3515,6 @@ export async function getTemplateMallList(res:any,signal?:AbortSignal){
     },
     data: {
       domain_id:cookie.load("domain")?.id,
-      languages_id:localStorage.getItem("use_lang"),
       ...res
     },
     signal:signal,
@@ -3531,7 +3522,11 @@ export async function getTemplateMallList(res:any,signal?:AbortSignal){
 }
 
 // 模板发布
-export async function setInstanceStatus(templateId:string,status:string){
+export async function setInstanceStatus(res:{
+  id:string,
+  status:number,
+  languages_id:string
+}){
   return request(`/ApiTemplate/instance_status`, {
     method: 'POST',
     headers: {
@@ -3539,9 +3534,7 @@ export async function setInstanceStatus(templateId:string,status:string){
     },
     data: {
       domain_id:cookie.load("domain")?.id,
-      languages_id:localStorage.getItem("use_lang"),
-      id:templateId,
-      status:status
+      ...res
     }
   })
 }
@@ -3930,6 +3923,7 @@ export async function getGenerateAuthToken(signal?:AbortSignal){
 
 // 版本切换
 export async function setTemplateVersion(res:{
+  id:string,
   template_id:string,
   languages_id:string,
   version_id:string,
@@ -4177,6 +4171,10 @@ export async function uninstallSaleChannel(id:string,signal?:AbortSignal){
   })
 }
 
+
+
+
+
 // 渠道应用 -- 订到导航
 export async function pinSaleChannel(res:{
   domain_app_id:string,
@@ -4210,3 +4208,87 @@ export async function getSaleChannelList(signal?:AbortSignal){
     signal:signal,
   })
 }
+
+// 邮件通知 ApiMessage/custom_template_config
+export async function getCustomTemplateConfig(res:{
+  languages_id:string,
+},signal?:AbortSignal){
+  return request<ApiMessage.Default>(`/ApiMessage/custom_template_config`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    },
+    signal:signal,
+  })
+}
+
+// 邮件通知 配置
+export async function setCustomTemplateConfig(res:{
+  languages_id:string,
+  config_key:string,
+  config_value:boolean,
+},signal?:AbortSignal){
+  return request<ApiMessage.Default>(`/ApiMessage/custom_template_config_save`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+
+// 邮件通知 客服邮箱验证
+export async function sendServiceVerifyEmail(res:{
+  languages_id:string,
+  email:string,
+},signal?:AbortSignal){
+  return request<ApiEmail.Default>(`/ApiEmailVerify/sendVerifyEmail`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 客服邮箱验证状态
+export function getVerifyEmailStatus(signal?:AbortSignal){
+  return request<ApiEmail.Default>(`/ApiMerchant/customerEmailStatus`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+    }
+  })
+}
+
+// 激活客服邮箱
+export function activateServiceVerifyEmail(res:{
+  lang:string,
+  token:string,
+},signal?:AbortSignal){
+  return request<ApiEmail.Default>(`/ApiEmailVerify/activateVerify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+

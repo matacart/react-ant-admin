@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form, message } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useIntl, useParams } from '@umijs/max';
@@ -18,6 +18,8 @@ import { getArticleCategorysDetail, setArticleCategorys } from '@/services/y2/ap
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
 function EditBlogs(){
+
+    const { message } = App.useApp();
 
     const intl = useIntl();
 

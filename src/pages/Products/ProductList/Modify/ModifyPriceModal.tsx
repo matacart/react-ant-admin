@@ -1,7 +1,6 @@
-import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect"
 import { updataBatchUpdatePrice } from "@/services/y2/api";
-import { Flex, Input, message, Modal, Radio } from "antd"
+import { App, Flex, Modal, Radio } from "antd"
 import { useRef, useState } from "react"
 import styled from "styled-components";
 import cookie from 'react-cookies';
@@ -18,8 +17,8 @@ const style: React.CSSProperties = {
 };
 
 function ModifyPriceModal({type,onFetchData}:{type:string,onFetchData:any}){
-
-    const Ref = useRef(null)
+    
+    const { message } = App.useApp();
 
     const text = (type=='specls'?'售价':'原价')
 

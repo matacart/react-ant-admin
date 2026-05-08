@@ -1,5 +1,5 @@
 import { history } from "@umijs/max"
-import { Card, Flex, message, Space, Table, TableProps, Tooltip } from "antd"
+import { App, Card, Flex, Space, Table, TableProps, Tooltip } from "antd"
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs"
@@ -8,7 +8,6 @@ import DefaultSelect from "@/components/Select/DefaultSelect";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { delCustomerPage, getCustomerPageList } from "@/services/y2/api";
-import cookie from 'react-cookies';
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import LangSelect from "@/components/Select/LangSelect";
@@ -27,6 +26,8 @@ interface DataType {
 }
 
 export default function CustomPageListCard({list,count}) {
+
+    const { message } = App.useApp();
 
     const [data,setData] = useState(list);
 

@@ -1,9 +1,8 @@
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { Avatar, Button, Checkbox, Input, message, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { App, Avatar, Button, Modal, Popover, Switch, Table } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import qs from 'qs';
-import { CopyOutlined, ExclamationCircleOutlined, EyeOutlined, InfoCircleFilled, PictureOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { deleteProduct, getCountryList, getProductList, upDateProductStatus } from '@/services/y2/api';
+import { InfoCircleFilled } from '@ant-design/icons';
+import { getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import cookie from 'react-cookies';
@@ -60,6 +59,9 @@ const getRandomuserParams = (params: TableParams) => ({
 });
 
 function GiftCardsTableCard(selectProps:any) {
+  
+  const { message } = App.useApp();
+
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
   const [onLoadingList, setOnLoadingList] = useState<any>([]);

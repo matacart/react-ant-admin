@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Flex, message, Spin } from 'antd';
+import { Flex, App, Spin } from 'antd';
 import styled, { createGlobalStyle } from 'styled-components';
 import editor from '@/store/theme/editor';
 import { observer } from 'mobx-react-lite';
@@ -15,15 +15,17 @@ import GlobalSettingsRight from '../Right/GlobalSettingsRight/GlobalSettingsRigh
 import ApplicationRight from '../Right/ApplicationRight';
 import { usePreviewCommunication } from '@/components/Communication/ParentWindowCommunicationManager';
 import { v4 as uuidv4 } from 'uuid';
-import cookie from 'react-cookies';
 import { getPrimaryDomain } from '@/utils/dataStructure';
+import { i18n } from '@/components/Lang/Lang';
 
 function Editor() {
+    
+    const { message } = App.useApp();
 
     // 预览域名
     const previewDomain = getPrimaryDomain();
     
-    const { templateId = '',languageId = "2",versionId ='' }  = useParams();
+    const { templateId = '',versionId ='',languageId = "2",mode = 'mapping' }  = useParams();
 
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -125,7 +127,7 @@ function Editor() {
           mode: mode,
           themeId: templateId??"",
           versionId:versionId,
-          language: (intl as any)?.momentLocale == "zh-cn"?"zh-hans-cn":(intl as any)?.momentLocale == "zh-tw"?"zh-hant-tw":(intl as any)?.momentLocale
+          language: i18n.find((item:any)=>item.lang == intl.locale)?.language_code || "en-us",
         },signal)
         if(languageSchemaData.code == "SUCCESS"){
           // 将嵌套对象扁平化后再添加到语言包中
@@ -174,7 +176,7 @@ function Editor() {
         const signal = createAbortController();
         const pages = await getTemplatePage({
           themeId: templateId || "",
-          languages_id: editor.languagesId,            
+          languages_id: languageId,            
         },signal);
         if(pages.code == 0){
           const newNavigationData = pages.data.list;
@@ -206,15 +208,16 @@ function Editor() {
       try {
         // 等待所有初始化函数执行完毕
         await Promise.all([
-          getInstalledSections(templateName,languageId,versionId,editor.mode),
-          getSettingsSections(languageId,versionId,editor.mode),
-          getLanguageSchema(versionId,editor.mode),
+          getInstalledSections(templateName,languageId,versionId,mode),
+          getSettingsSections(languageId,versionId,mode),
+          getLanguageSchema(versionId,mode),
           getTemplateInfo(languageId),
           getNavigationData(),
           getAuthorToken(),
         ]);
         editor.setLanguagesId(languageId);
         editor.setVersionId(versionId);
+        editor.setMode(mode);
       } catch (error) {
         console.error('Initialization failed:', error);
       } finally {
@@ -230,11 +233,14 @@ function Editor() {
         setIsLoading(true)
         // 等待所有初始化函数执行完毕
         await Promise.all([
-          getInstalledSections(templateName,editor.languagesId,editor.versionId,editor.mode),
-          getSettingsSections(editor.languagesId,editor.versionId,editor.mode),
-          getTemplateInfo(editor.languagesId),
+          getInstalledSections(templateName,languageId,versionId,mode),
+          getSettingsSections(languageId,versionId,mode),
+          getTemplateInfo(languageId),
           getNavigationData(),
         ]);
+        editor.setLanguagesId(languageId);
+        editor.setVersionId(versionId);
+        editor.setMode(mode);
       } catch (error) {
         console.error('Initialization failed:', error);
       } finally {
@@ -266,9 +272,7 @@ function Editor() {
       }
       ShopInfo();
       // 获取语言对应的languageCode
-      const language = JSON.parse(sessionStorage.getItem("languages") || "[]")?.filter((item:any)=>item.id==editor.languagesId)[0]
-      setLanguageCode(language.language_code)
-    }, [templateName,editor.languagesId,editor.mode,editor.versionId])
+    }, [templateName,languageId,mode,versionId])
   
     // 离开提示
     useEffect(() => {
@@ -317,24 +321,45 @@ function Editor() {
     
     // 监听主题设置变化并发送到iframe
     useEffect(() => {
-      // if (!isSkeleton && iframeRef.current && editor.oseId) {
-      //   // 发送主题设置更新
-      //   sendToIframe({
-      //     type: 'THEME_SETTINGS_UPDATE',
-      //     data: {
-      //       newUrl:`http://localhost:3000/${languageCode}/?preview=2&themeId=${templateId}&templateName=${templateName}&mode=${mode}&versionId=${editor.versionId}&oseId=${editor.oseId}`,
-      //       settings: editor.settings.settingsData,
-      //       timestamp: Date.now()
-      //     }
-      //   });
-      // }
+      if (!isSkeleton && iframeRef.current && editor.oseId) {
+        console.log({
+          preview:"2",
+          templateName:templateName,
+          templateId:templateId??"",
+          oseId:editor.oseId,
+          language:languageCode,
+          mode:editor.mode,
+          versionId:editor.versionId,
+          isAuthor:editor.isAuthor?"1":"0",
+          authorToken:editor.authorToken,
+          timestamp: Date.now()
+        })
+        // 发送主题设置更新
+        // const newUrl = `http://localhost:3000/${languageCode}/?preview=2&themeId=${templateId}&templateId=${templateId}&mode=${editor.mode}&versionId=${editor.versionId}&oseId=${editor.oseId}&isAuthor=${editor.isAuthor?"1":"0"}&authorToken=${editor.authorToken}&timestamp=${Date.now()}`
+        // iframeRef.current.src = newUrl
+        // sendToIframe({
+        //   type: 'THEME_SETTINGS_UPDATE',
+        //   data: {
+        //     preview:"2",
+        //     templateName:templateName,
+        //     templateId:templateId??"",
+        //     oseId:editor.oseId,
+        //     language:languageCode,
+        //     mode:editor.mode,
+        //     versionId:editor.versionId,
+        //     isAuthor:editor.isAuthor?"1":"0",
+        //     authorToken:editor.authorToken,
+        //     timestamp: Date.now()
+        //   }
+        // });
+      }
     }, [editor.settings.settingsData, isSkeleton]);
 
 
     return <Scoped>
       {/* header */}
       {isSkeleton?<SkeletonCard />:<Spin spinning={isLoading}>
-        <Header templateId={templateId??""} previewDomain={previewDomain} templateName={templateName??"templates/index.json"} nvData={navigationData} />
+        <Header templateId={templateId??""} previewDomain={previewDomain} nvData={navigationData} />
         <Flex>
           {/* left */}
           <div className="left">
@@ -345,7 +370,7 @@ function Editor() {
               {/* 模式和语言切换，iframe 应该重新加载 */}
               <iframe ref={iframeRef} src={`${previewDomain}/${languageCode}/?preview=2&templateName=${templateName}&mode=${editor.mode}&versionId=${editor.versionId}&oseId=${editor.oseId}`} width="100%" height="100%" style={{border:"0"}}/>
               {/* dev模式和语言切换，iframe 应该重新加载 */}
-              {/* <iframe ref={iframeRef} src={`http://localhost:3000/${languageCode}/?preview=2&templateName=${templateName}&mode=${mode}&versionId=${editor.versionId}&oseId=${editor.oseId}`} width="100%" height="100%" style={{border:"0"}}/> */}
+              {/* <iframe ref={iframeRef} src={`http://localhost:3000/${languageCode}/?preview=2&templateName=${templateName}&mode=${editor.mode}&versionId=${editor.versionId}&oseId=${editor.oseId}`} width="100%" height="100%" style={{border:"0"}}/> */}
             </div>
           </Flex>
           {/* right */}

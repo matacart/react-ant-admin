@@ -7,7 +7,6 @@ import productList from '@/store/product/productList';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import categoriesList from '@/store/product/categoriesList';
-import cookie from 'react-cookies';
 
 const TabLabel = styled.div`
     font-size: 16px;
@@ -72,9 +71,6 @@ const App: React.FC = () => {
       remove(targetKey);
     }
   };
-
-  // 
-  categoriesList.setLanguagesId(cookie.load("shop_lang") || '2');
 
   return (
     <Scoped>

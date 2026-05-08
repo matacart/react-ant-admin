@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons"
-import { Flex, message, Upload, UploadProps } from "antd";
+import { App, Flex, Upload } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components"
 import DefaultButton from "@/components/Button/DefaultButton";
@@ -10,6 +10,7 @@ import { CompressedFileIcon } from "@/components/Icons/Icons";
  const { Dragger } = Upload;
 // 批量导入
 const UploadCompressedFile = ({size,file,setFile,status}:{size:number,file:any,setFile:any,status:string})=>{
+  const { message } = App.useApp();
 
   // 使用 useRef 存储定时器
   const timerRef = useRef<NodeJS.Timeout>()

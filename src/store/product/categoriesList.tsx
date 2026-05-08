@@ -1,5 +1,6 @@
 import { action, makeAutoObservable, observable } from "mobx";
-import { useRef } from "react";
+import cookie from 'react-cookies';
+
 
 interface conditionType{
     keyword:string,
@@ -21,7 +22,7 @@ class categoriesList {
     }
 
     // 语言
-    languagesId = "1";
+    languagesId = cookie.load("shop_lang") || '2'
 
     setLanguagesId(value:string){
         this.languagesId = value;
