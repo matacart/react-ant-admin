@@ -24,7 +24,6 @@ interface ProductType {
   cod_gg_pix_id:string;
   cod_tk_pix_id:string;
 
-  diversion: any[];
   is_share: string;
   is_sys: string;
   hosted_status: number;
@@ -42,8 +41,9 @@ interface ProductType {
   manufactuer: string;
   weight: number;
   spu: string;
-  continueSell: number;
-  inventoryTracking: number;
+  inventory_policy: string;
+  inventory_management:string;
+  subtract:string;
   sales_count: string;
   minimum: string;
   quantity: string;
@@ -56,15 +56,24 @@ interface ProductType {
   title: string;
   end_time: string | undefined;
   start_time: string | undefined;
-  cost_price: string;
-  price: string;
   specialprice: string;
-  origin_price:string;
+  price: string;
+  original_price:string;
+  cost_price: string;
   product_image: string;
   additional_image: string[];
   content: string;
   content1: string;
   handle:string;
+}
+
+
+export interface attributeType {
+    id: string;
+    option_id: string;
+    option_name: string;
+    option_values_name: string;
+    option_values_id: string;
 }
 
 class Product{
@@ -80,24 +89,26 @@ class Product{
         title: "",
         content1: "",
         content: "",
-        end_time: "",
-        start_time: "",
-        cost_price: "1000",
-        specialprice: "1000",
-        origin_price: "",
-        price: "1000",
         product_image: "",
         additional_image: [],
+        specialprice: "1000",
+        end_time: "",
+        start_time: "",
+        price: "1000",
+        original_price: "1000",
+        cost_price: "1000",
         needTax: 0,
-        model: "",
         inquiry_status: 0,
-        quantity: "1000",
-        sku: "",
+        model: "",
         barcode: "",
-        inventoryTracking: 0,
-        sales_count: "1000",
+        sku: "",
+        quantity: "1000",
         minimum: "1",
-        continueSell: 0,
+        sales_count: "1000",
+        inventory_management: "0",
+        inventory_policy: "deny",
+        subtract:"0",
+        // 
         tag: "",
         weight: 0,
         languages_id: "2",
@@ -119,7 +130,6 @@ class Product{
         cod_gg_pix_id:"",
         cod_tk_pix_id:"",
 
-        diversion: [],
         is_share: "0",
         is_sys: "0",
         hosted_status: 0,
@@ -148,10 +158,16 @@ class Product{
       this.productInfo = res;
     }
 
-    // 属性
-    attributes:any = []
+    // 第三方数据
+    diversion:any={}
+    setDiversion(res:any){
+      this.diversion = res
+    }
 
-    setAttributes(res: any) {
+
+    // 属性
+    attributes:attributeType[] = []
+    setAttributes(res: attributeType[]) {
       this.attributes = res
     }
    
@@ -168,7 +184,6 @@ class Product{
     }
     // 状态为9的变体  --- 要删除的变体
     tempVariants = []
-
     setTempVariants(res:any){
       this.tempVariants = res
     }
@@ -176,6 +191,7 @@ class Product{
     // 重置状态
     reset() {
       this.productInfo = {...this.getInitProduct()};
+      this.diversion = {};
       this.attributes = [];
       this.tempAttributes = [];
       this.variants = [];

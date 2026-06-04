@@ -37,27 +37,9 @@ import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
 import StockCard from '../Product/StockCard';
 import SEOCard from '../Product/SEOCard';
 import { getPrimaryDomain } from '@/utils/dataStructure';
+import VariantList from '../Product/VariantList';
+import AttributesMapList from '../Product/AttributesMapList';
 
-
-// 信息
-interface ProductDetail {
-    title:string;
-    content: string;
-    content1: string;
-    // 商品图片/视频
-    // selectedImgList: UploadFile[];
-    // price:valueType;
-    // originPrice:valueType;
-    // specialprice:valueType;
-    // sku:string;
-    // ISBN:string;
-    // quantity:number;
-    // inventoryTracking:boolean;
-    // continueSell:boolean;
-    // status:string;
-    // weight:string;
-    // tag:string;
-}
 
 function ProductDetail() {
 
@@ -138,6 +120,7 @@ function ProductDetail() {
             ),
         },
     ];
+
     const [productTitle,setProductTitle] = useState(""); //标题
 
     const [form] = Form.useForm();
@@ -240,6 +223,8 @@ function ProductDetail() {
         const res = await getProductDetail(id,langId);
         if(res.code == 0 && res.data){
             setProductTitle(res.data.title);
+            // 提取数据
+            const { diversion,attributes,variants,...productInfo } = res.data;
             // 格式过滤 --- 有效的json格式
             let newAdditonalImage = []
             try {
@@ -250,23 +235,27 @@ function ProductDetail() {
             }
             if(res.data.product_image == ""){
                 product.setProductInfo({
-                    ...res.data,
+                    ...productInfo,
                     start_time:(res.data.start_time == "0" || res.data.start_time == "") ? "" : dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
                     end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
                     additional_image:[...newAdditonalImage]
                 })
             }else{
                 product.setProductInfo({
-                    ...res.data,
+                    ...productInfo,
                     start_time:(res.data.start_time == "0" || res.data.start_time == "")?"":dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
                     end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
                     additional_image:[res.data.product_image,...newAdditonalImage]
                 })
             }
+            // 第三方数据
+            product.setDiversion(diversion || {})
             // 属性
-            product.setAttributes(res.data.attributes || [])
+            product.setAttributes(attributes || [])
             // 变体
-            product.setVariants(res.data.variants || [])
+            product.setVariants(variants || [])
+        }else{
+            message.error("商品不存在");
         }
         setIsSkeleton(false)
     };
@@ -279,7 +268,6 @@ function ProductDetail() {
             if (e.errorFields.length > 0) {
                 form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
             }
-            console.log(e)
             return false
         })
     }
@@ -293,7 +281,7 @@ function ProductDetail() {
                     ...product.productInfo,
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
-                    diversion:JSON.stringify([product.productInfo.diversion || {}]),
+                    diversion:JSON.stringify([product.diversion || {}]),
                     attributes:JSON.stringify([...product.attributes,...product.tempAttributes]),
                     variants:JSON.stringify([...product.variants,...product.tempVariants])
                 })
@@ -366,8 +354,8 @@ function ProductDetail() {
                                     <ProductImg />
                                     <PriceOrTransaction form={form} />
                                     <StockCard form={form} />
-                                    <MultipleStylesEdit onVariant={onVariant} setOnVariant={setOnVariant} style={style} setStyle={setStyle} />
-                                    {onVariant && <ProductStyleListEdit style = {style} setStyle={setStyle} />}
+                                    <AttributesMapList onVariant={onVariant} setOnVariant={setOnVariant} style={style} setStyle={setStyle} />
+                                    {onVariant && <VariantList attributesMap={style} setAttributesMap={setStyle} />}
                                 </div>
                                 <div className='mc-layout-extra'>
                                     <Relevance />

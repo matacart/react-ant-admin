@@ -27,12 +27,18 @@ function Base() {
         setStoreInfo(baseInfoStore.storeInfo).then(res=>{
             if(res.code == 0){
                 cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.storeInfo.timezone)[0]), { path: '/' });
-                message.success('更新成功')
+                const newDomain = {
+                    ...cookie.load("domain") || {},
+                    store_name:baseInfoStore.storeInfo.store_name,
+                    store_logo:baseInfoStore.storeInfo.store_logo,
+                }
+                cookie.save("domain", newDomain, { path: '/' });
+                message.success('更新成功');
             }
         }).catch(err=>{
-            message.error(err.message)
+            message.error(err.message);
         }).finally(()=>{
-            setLoading(false)
+            setLoading(false);
         })
     }
 

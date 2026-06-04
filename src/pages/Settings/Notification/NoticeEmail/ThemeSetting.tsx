@@ -13,6 +13,7 @@ import { SaveTempTemplate } from "@/services/y2/apiEmail";
 import Textarea from "./Content/Textarea";
 import ImagePicker from "./Settings/ImagePicker";
 import { useIntl } from "@umijs/max";
+import { LeftIcon } from "@/components/Icons/Icons";
 
 
 
@@ -20,9 +21,9 @@ function ThemeSetting() {
 
     const intl = useIntl();
 
-    const [options,setOptions] = useState([]);
-
     const rightRef = useRef<any>(null);
+
+    const [options,setOptions] = useState([]);
 
     const { message } = App.useApp();
 
@@ -39,7 +40,8 @@ function ThemeSetting() {
             settingsData: JSON.stringify(settingsData),
         }).then(res => {
             if (res.code == 0) {
-                // console.log(res)
+                // 更新最后保存时间戳
+                noticeEmail.setLastSavedAt(Date.now());
             }
         }).catch(err => {
             message.error(intl.formatMessage({ id: 'components.message.error' }));
@@ -120,11 +122,8 @@ function ThemeSetting() {
 
 
     return (
-        <Scoped ref={rightRef}>
-            <Flex className="right-header">
-                <div className="font-20 font-w-500 color-242833">{intl.formatMessage({ id: 'settings.notification.noticeEmail.right.themeSetting' })}</div>
-            </Flex>
-            <div className='right-warp'>
+        <Scoped>
+            <div className='right-warp' ref={rightRef}>
                 <ConfigProvider
                     theme={{
                         token: {
@@ -158,5 +157,10 @@ const Scoped = styled.div`
         padding: 0px;
         max-height: calc(100% - 43px);
         overflow-y: auto;
+    }
+
+
+    .back{
+        cursor: pointer;
     }
 `

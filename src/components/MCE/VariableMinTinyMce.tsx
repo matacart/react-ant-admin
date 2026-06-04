@@ -44,7 +44,7 @@ const VariableMinTinyMce = forwardRef(({content,setContent}:{content:string,setC
             init={{
                 language_url: '/tinymce/langs/zh_CN.js',
                 language: 'zh_CN',
-                height: 240, //高度
+                height: 280, //高度
                 menubar: false,  // 显示菜单栏
                 // 工具栏是否换行
                 toolbar_mode: 'wrap',
@@ -73,7 +73,7 @@ const VariableMinTinyMce = forwardRef(({content,setContent}:{content:string,setC
                     // 'fontsize',
                 ],
                 toolbar:
-                'bold italic link forecolor bullist |' +
+                'bold italic link forecolor bullist alignleft aligncenter alignright alignjustify |' +
                 'fontsize | fullscreen',
                 content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
 

@@ -9,6 +9,7 @@ import product from "@/store/product/product";
 import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
 import MyRangePicker from "@/components/DatePicker/MyRangePicker";
 import { FormInstance } from "antd/lib";
+import localeValues from "antd/es/locale/en_US";
 
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
@@ -24,6 +25,7 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
             specialprice:parseInt(product.productInfo.specialprice || "0"),
             costPrice:parseInt(product.productInfo.cost_price || "0"),
             price:parseInt(product.productInfo.price || "0"),
+            originalPrice:parseInt(product.productInfo.original_price || "0"),
             needTax:product.productInfo.needTax == 1?true:false,
             inquiryStatus:product.productInfo.inquiry_status == 1?true:false,
             specialTime:[
@@ -56,8 +58,8 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                 <DefaultInputNumber
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
-                                    formatter={(value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value:number) => value.toString()?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    precision={2}
+                                    stringMode
                                     className="ant-input"
                                     onChange={(value:number)=>{
                                         product.setProductInfo({
@@ -114,6 +116,32 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                         <Col span={11}>
                             <Form.Item name="price" label={
                                 <>
+                                    售价
+                                    <Tooltip title={<>当商品参与各类促销活动时，可能不会使用此价格进行结账，具体以实际活动售价为准</>}>
+                                        <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
+                                            <QuestionCircleOutlined />
+                                        </span>
+                                    </Tooltip>
+                                </>
+                            } className="price-item">
+                                <DefaultInputNumber
+                                    className="ant-input"
+                                    min={0}
+                                    prefix={cookie.load("symbolLeft")}
+                                    precision={2}
+                                    stringMode
+                                    onChange={(value:number)=>{
+                                        product.setProductInfo({
+                                            ...product.productInfo,
+                                            price:value?.toString() || ""
+                                        })
+                                    }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col offset={2} span={11}>
+                            <Form.Item name="originalPrice" label={
+                                <>
                                     原价
                                     <Tooltip title={<>
                                         请输入一个高于当前价格的数值显示降价。降价前的价格通常会显示为划线价。（例如<Text className="color-FFFFFF" style={{textDecoration: "line-through"}}>$20.00</Text>）
@@ -128,18 +156,20 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                     className="ant-input"
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
-                                    formatter={(value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value:number) => value.toString()?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    precision={2}
+                                    stringMode
                                     onChange={(value:number)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
-                                            price:value?.toString() || ""
+                                            original_price:value?.toString() || ""
                                         })
                                     }}
                                 />
                             </Form.Item>
                         </Col>
-                        <Col offset={2} span={11}>
+                    </Row>
+                    <Row>
+                        <Col span={11}>
                             <Form.Item name="costPrice" label={
                                 <>
                                     成本价
@@ -154,8 +184,8 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                     className="ant-input"
                                     min={0}
                                     prefix={cookie.load("symbolLeft")}
-                                    formatter={(value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                    parser={(value:number) => value.toString()?.replace(/\$\s?|(,*)/g, '') as unknown as number}
+                                    precision={2}
+                                    stringMode
                                     onChange={(value:number)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
@@ -165,9 +195,7 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                 />
                             </Form.Item>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col span={5}>
+                        <Col offset={2} span={5}>
                             <Form.Item label={
                                 <>
                                     利润

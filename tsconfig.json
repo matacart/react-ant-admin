@@ -18,7 +18,7 @@
       "@/*": ["src/*"],
       "@@/*": ["src/.umi/*"],
       "@@test/*": ["./src/.umi-test/*"],
-      "@dnd-kit/*": ["node_modules/@dnd-kit/*"]
+      "@dnd-kit/*": ["node_modules/@dnd-kit/*"],
     },
     "plugins": [
       {

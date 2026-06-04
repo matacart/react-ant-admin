@@ -67,6 +67,12 @@ class noticeEmail {
       this.oseId = value;
     }
 
+    // 最后保存时间戳
+    lastSavedAt = 0;
+    setLastSavedAt(value: number) {
+        this.lastSavedAt = value;
+    }
+
     // 模板编码
     templateCode = "";
     setTemplateCode(value:string){
@@ -132,6 +138,7 @@ class noticeEmail {
             schema:[]
         };
         this.templateConfig = {};
+        this.lastSavedAt = 0;
     }
 
 }

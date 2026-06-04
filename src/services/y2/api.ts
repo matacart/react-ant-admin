@@ -770,14 +770,14 @@ export function getProductDetail(id: string,languagesId: string) {
 
 // 选项类型
 export async function getOptionType() {
-  return request('/ApiStore/product_option_type_select', {
+  return request<ApiStore.Default>('/ApiStore/product_option_type_select', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      "domain_id": cookie.load("domain")?.id,
     }
-    // data: {
-    //   "domain_id": cookie.load("domain")?.id,
-    // },
   })
 }
 
@@ -922,28 +922,6 @@ export async function addStyleName(id:string,languagesId:string,productStyleName
   })
 }
 
-// 创建款式内容 需要先获取款式id 
-// languages_id: 1
-// option_values_name: 123
-// sort: 1
-// option_id: 1362219716562
-// status: 
-export async function addStyleContent(languagesId:string,productStyleValue:string,styleNameId:number){
-  return await request('/ApiStore/product_option_values_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "languages_id":languagesId,
-      "option_values_name":productStyleValue,
-      "sort":1,
-      "option_id":styleNameId,
-      "status":1
-    }
-  })
-}
-
 // 将款式添加到对应的产品id
 // option_id: 1363158285484
 // optionvaluesIds: 1363166745810
@@ -993,15 +971,15 @@ export async function getProductOption(id:string,languagesId:string){
 }
 
 
-// 
+// 获取所有款式选项
 export async function getProductOptionSelect(languagesId:string){
-  return await request('/ApiStore/product_option_select',{
+  return await request<ApiStore.Default>('/ApiStore/product_option_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      // "model":model,
+      "domain_id": cookie.load("domain")?.id,
       "languages_id":languagesId
     }
   })
@@ -1049,8 +1027,8 @@ export async function deleteProductStyle(id:number){
 }
 
 // 获取所有款式
-export async function getProductStyleValueList(optionId:string,language:string){
-  return await request('/ApiStore/product_option_values_select',{
+export function getProductStyleValueList(optionId:string,language:string){
+  return request<ApiStore.Default>('/ApiStore/product_option_values_select',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1064,9 +1042,9 @@ export async function getProductStyleValueList(optionId:string,language:string){
   })
 }
 
-// 
+// 添加款式选项
 export async function addProductOptionValues(id:string,language:string,optionId:string,optionValuesName:string){
-  return await request('/ApiStore/product_option_values_add',{
+  return request('/ApiStore/product_option_values_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2693,7 +2671,7 @@ export async function exportOrderTask(res:any) {
 
 // 客户列表
 export async function getCustomerList(page: any, limit: any) {
-  return request(`/ApiAppstore/customers_list`, {
+  return request<ApiAppstore.Default>(`/ApiAppstore/customers_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

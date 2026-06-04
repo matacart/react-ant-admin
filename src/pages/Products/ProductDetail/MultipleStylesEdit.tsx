@@ -9,12 +9,6 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-// interface MultipleStylesEditProps {
-//   onSecondInputChange?: (value: string) => void;
-// }
-
-type TagRender = SelectProps['tagRender'];
-
 const { Option } = Select;
 
 const { confirm } = Modal;
@@ -390,8 +384,9 @@ function MultipleStylesEdit(props:any) {
     info.push([])
     // // 更新输入框引用
   }
-  // 是否有相同的属性
+  // 检查是否有相同的属性
   function hasSameAttributes(arr) {
+    console.log(arr)
     const seenAttributes = new Set();
     for (const item of arr) {
       if (seenAttributes.has(item.attributes)) {

@@ -125,7 +125,7 @@ function AddNewProduct(){
                     handle:product.productInfo.handle || product.productInfo.title.replace(/\s+/g, '-').toLowerCase(),
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
-                    diversion:JSON.stringify([product.productInfo.diversion || {}]),
+                    diversion:JSON.stringify([product.diversion || {}]),
                     attributes:JSON.stringify([...product.attributes,...product.tempAttributes]),
                     variants:JSON.stringify([...product.variants,...product.tempVariants])
                 })
@@ -189,8 +189,8 @@ function AddNewProduct(){
                             <ProductImg />
                             <PriceOrTransaction form={form} />
                             <StockCard form={form} />
-                            <MultipleStylesCard style = {style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
-                            {onVariant && <ProductStyleList style = {style} setStyle={setStyle} />}
+                            <MultipleStylesCard style={style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
+                            {onVariant && <ProductStyleList style={style} setStyle={setStyle} />}
                         </div>
                         <div className='mc-layout-extra'>
                             <Relevance />

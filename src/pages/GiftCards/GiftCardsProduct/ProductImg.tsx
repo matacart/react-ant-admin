@@ -1,0 +1,404 @@
+import { Button, Card, Flex, Form, Modal, Spin } from "antd";
+import React, { useEffect, useMemo, useState } from 'react';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import type { GetProp, UploadFile, UploadProps } from 'antd';
+import { App, Upload, Image } from 'antd';
+import styled from 'styled-components';
+import axios from "axios";
+import { observer } from "mobx-react-lite";
+import product from "@/store/product/product";
+import DefaultInput from "@/components/Input/DefaultInput";
+import DefaultButton from "@/components/Button/DefaultButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import { doUploadVideo, uploadPic } from "@/services/y2/api";
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+const getBase64 = (file: FileType): Promise<string> => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result as string);
+  reader.onerror = (error) => reject(error);
+});
+
+function ProductImg({form}:{form:any}) {
+
+  const { message } = App.useApp();
+  
+  const [loading,setLoading] = useState(false);
+  // 视频弹窗加载
+  const [videoLoading, setVideoLoading] = useState(false);
+
+  const [addUrlModalOpen, setAddUrlModalOpen] = useState(false);
+
+// ##################### 添加多媒体文件 ###############################
+
+  // 从文件库中选择
+  const [fileLibrary, setFileLibrary] = useState<any>([]);
+
+  // Modal被选中的图片列表
+  const [tempSelectedImg, setSelectedImg] = useState<any>([]);
+
+  // 文件库
+  const getImgList = () => {
+    axios.post('/api/cloudImgList').then((req: any) => {
+      console.log(req.data)
+      setFileLibrary(req.data);
+    })
+  }
+
+  // Modal 中选中顺序
+  const getTempSelectedImgIndex = (img: any) => {
+    return tempSelectedImg.indexOf(img);
+  }
+  // 是否已被之前选中
+  // const isBeforeSelected = (img: any) => {
+  //   return oldStore.isIncludeSelectedImgList(img);
+  // }
+  // 是否现在被选中
+  const isCurrentSelected = (img: any) => {
+    return tempSelectedImg.indexOf(img) > -1
+  }
+  // 图片选中
+  const imgClass = (img: any) => {
+    // if (isBeforeSelected(img)) {
+    //   return "img-selected-band";
+    // } else if (isCurrentSelected(img)) {
+    //   return "img-selected img-mask"
+    // } else {
+    //   return "img-mask"
+    // }
+  }
+// ###########   图片上传  ######################
+
+  const { Dragger } = Upload;
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  let imageMap = new Map();
+  // 图片集合
+
+  const [selectFileCount,setSelectFileCount] = useState(0);
+
+  useEffect(() => {
+    const newImgList = [...product.productInfo.additional_image].map((item,index)=>{
+      return {
+        uid:index.toString(),
+        name: item.toString(),
+        status: 'done',
+        url:item,
+      }
+    })
+    setFileList(newImgList as any)
+  }, [])
+  
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+  // 上传图片
+  const beforeUploadImg = async (info: any) => {
+    setLoading(true);
+    let formData = new FormData()
+    formData.append("file", info)
+    uploadPic(formData).then((res: any) => {
+      if(res.code == 0){
+        setFileList([...fileList,{
+          uid:(fileList.length).toString(),
+          name: res.data.src.toString(),
+          status: 'done',
+          url:res.data.src.toString(),
+        }]);
+        product.setProductInfo(
+          {
+            ...product.productInfo,
+            additional_image:[...product.productInfo.additional_image,res.data.src.toString()]
+          }
+        )
+      }
+    }).catch((err: any) => {
+      message.error("上传失败", err.msg);
+    }).finally(() => {
+      setLoading(false);
+    })
+  };
+
+  const onRemoveImg = (file: FileType) => {
+    setFileList(fileList.filter(item => item.uid !== file.uid));
+    // 试试
+    const newAdditionalImage = product.productInfo.additional_image.filter((item:any,index:number)=>{
+      return index.toString() !== file.uid
+    })
+    product.setProductInfo(
+      {
+        ...product.productInfo,
+        additional_image:newAdditionalImage
+      }
+    )
+  };
+
+  const uploadButton = (
+    <button style={{ border: 0, background: 'none' }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
+
+  // 从文件库添加文件
+  // const addFileLibrary = (items:any)=>{
+  //   let newFileList = [...fileList];
+  //   items.forEach((item:any)=>{
+  //     newFileList.push({
+  //       uid:item.id,
+  //       name:item.id,
+  //       status:"done",
+  //       url:item.url
+  //     })
+  //     oldStore.temp.set(item.id, item.url)
+  //   })
+  //   // console.log(newFileList)
+  //   setFileList(newFileList);
+  // }
+
+  // 上传视频
+  const videoProps: UploadProps = {
+    name: 'file',
+    showUploadList:false,
+    maxCount:1,
+    headers: {
+      authorization: 'authorization-text',
+    },
+    // 手动上传
+    beforeUpload:(file)=>{
+      // 检查文件是否为视频格式
+      const validVideoTypes = [
+        'video/mp4',
+        'video/quicktime', // MOV
+        'video/x-msvideo', // AVI
+        'video/x-ms-wmv',
+        'video/x-flv',
+        'video/webm',
+        'video/x-m4v',
+        'video/x-matroska' // MKV
+      ];
+      if (!validVideoTypes.includes(file.type)) {
+        message.error("请上传有效的视频文件（MP4, MOV, AVI, WMV, FLV, WEBM, M4V, MKV 等）");
+        return false;
+      }
+      if(file.size > 1024*1024*5){
+        message.error("请上传小于5M的视频文件");
+        return false
+      }
+      setVideoLoading(true);
+      let formData = new FormData();
+      formData.append("file", file);
+      doUploadVideo(formData).then((res: any) => {
+        if(res.code == 0){
+          form.setFieldValue('youTubeUrl', res.data.src)
+        }
+      }).catch((err: any) => {
+        message.error("上传失败", err.msg);
+      }).finally(() => {
+        setVideoLoading(false);
+      })
+      return false;
+    },
+  };
+
+  const videoSubmit = ()=>{
+    // 手动效验
+    form.validateFields(["youTubeUrl"]).then((values) => {
+      if(values.youTubeUrl){
+        product.setProductInfo({
+          ...product.productInfo,
+          product_video:values.youTubeUrl
+        })
+        setAddUrlModalOpen(false)
+        return true
+      }else{
+        return false
+      }
+    })
+  }
+
+  const videoCancel = ()=>{
+    form.resetFields()
+    // form.setFieldValue("youTubeUrl", oldStore.productVideo)
+    setAddUrlModalOpen(false)
+  }
+
+  return (
+    <Scoped>
+      <Card title="商品图片/视频" className="product-img-card"
+        extra={<>
+          <a onClick={() => {
+            setAddUrlModalOpen(true);
+            // 表单
+            form.setFieldValue("youTubeUrl",product.productInfo.product_video);
+          }}>添加视频URL</a>
+          {/* <a style={{
+            marginLeft: 20
+          }}
+            onClick={() => {
+              setAddImgModalOpen(true);
+              getImgList();
+            }}
+          >添加多媒体文件</a> */}
+        </>}
+      >
+        <div className="content" style={{
+          display: "flex",
+          height: "auto",
+        }}>
+          {/* 图片展示 */}
+          <Spin spinning={loading}>
+            <Upload
+              listType="picture-card"
+              beforeUpload={(info)=>{
+                beforeUploadImg(info)
+                return false
+              }}
+              onRemove={(file)=>{
+                onRemoveImg(file)
+              }}
+              multiple={true}
+              fileList={fileList}
+              onPreview={handlePreview}
+            >
+              {fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+            {previewImage && (
+              <>
+                <div style={{zIndex:"999"}}>123</div>
+                <Image
+                  wrapperStyle={{ display: 'none' }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                  }}
+                  src={previewImage}
+                />
+              </>
+            )}
+          </Spin>
+        </div>
+        {/* 添加url Modal */}
+        <Modal
+          title="YouTube视频"
+          centered
+          // destroyOnClose
+          width="90vw"
+          open={addUrlModalOpen}
+          onCancel={videoCancel}
+          style={{
+            maxWidth: "860px"
+          }}
+          footer={
+            <Flex justify="end">
+              <Flex gap={12}>
+                <DefaultButton text={"取消"} onClick={videoCancel} />
+                <PrimaryButton text={"保存"} onClick={videoSubmit} />
+              </Flex>
+            </Flex>
+          }
+          
+        >
+          <Spin spinning={videoLoading}>
+            <Form layout="vertical"
+              form={form}
+              clearOnDestroy
+              // onFinish={onFinish}
+            >
+              <Form.Item
+                label={<div style={{ fontWeight: 500, fontSize: "14px" }}>复制 YouTube 视频URL到下面输入框</div>}
+                name='youTubeUrl'
+                rules={[{
+                  validator:async (rule, value,callback) => {
+                    // 校验逻辑保持不变
+                    const regexYouTube = /^(?:https?:\/\/)?(?:www\.)?((youtube\.com\/watch\?v=)|(youtu\.be\/))([a-zA-Z0-9_-]{11})$/;
+                    // 本地视频
+                    if("//oss.handingcdn.com" == value.slice(0,20) || "//img1.s.handingcdn.com" == value.slice(0,23)){
+                      return Promise.resolve();
+                    }
+                    if(!regexYouTube.test(value)) {
+                      // callback('请输入正确的YouTube视频链接！')
+                      return Promise.reject(new Error('请输入正确的视频链接！'));
+                    }else{
+                      return Promise.resolve();
+                    }
+                  }
+                }]}
+              >
+                <DefaultInput defaultValue={product.productInfo.product_video}/>
+              </Form.Item>
+              <div style={{
+                color: "rgb(122, 132, 153)"
+              }}>目前仅支持YouTube视频和本地上传视频</div>
+              <div style={{margin:"20px 0"}}>
+                <Upload {...videoProps}>
+                  <Button icon={<UploadOutlined />}>上传本地视频</Button>
+                </Upload>
+              </div>
+            </Form>
+          </Spin>
+        </Modal>
+        {/* 添加多媒体图片 Modal */}
+      </Card>
+    </Scoped>
+  )
+}
+
+
+
+export default observer(ProductImg)
+
+
+const UploadTipDesc = styled.div`
+  margin-top: 12px;
+  margin-bottom: 0;
+  color: #7a8499;
+`
+
+const Scoped = styled.div`
+
+
+
+.product-img-card{
+  .ant-card-head-title{
+      font-weight: 400;
+  }
+}
+
+.content{
+  height:40px;
+}
+.footer{
+
+}
+
+
+`
+const Mask = styled.div`
+.img-mask{
+  position:absolute;
+  border-radius:6px;
+  height: 128px;
+  width: 128px;
+  z-index: 20;
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+.img-selected{
+
+  border: 3px solid rgba(0, 132, 255, 0.5);
+}
+.img-selected-band{
+  background-color: rgb(184, 14, 14);
+} 
+`

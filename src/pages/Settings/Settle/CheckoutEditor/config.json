@@ -1,0 +1,92 @@
+{
+    "personalizations": {
+        "header": {
+            "banner": {
+                "pc": {
+                    "image": {
+                        "url": "",
+                        "id": "",
+                        "height": "natural"
+                    }
+                },
+                "phone": {
+                    "image": {
+                        "url": "",
+                        "id": "",
+                        "height": "high"
+                    }
+                },
+                "image": {
+                    "show": "center"
+                },
+                "fullScreen": true
+            },
+            "logo": {
+                "image": {
+                    "url": "",
+                    "id": ""
+                },
+                "size": "medium"
+            },
+            "alignment": "left",
+            "position": "content"
+        },
+        "main": {
+            "backgroundImage": {
+                "image": {
+                    "url": "",
+                    "id": ""
+                }
+            }
+        },
+        "orderSummary": {
+            "backgroundImage": {
+                "image": {
+                    "url": "",
+                    "id": ""
+                }
+            },
+            "phoneCollapse": "close"
+        },
+        "customerHeader": {
+            "logo": {
+                "image": {
+                    "url": "",
+                    "id": ""
+                },
+                "size": "medium"
+            }
+        },
+        "customerCenter": {
+            "backgroundImage": {
+                "image": {
+                    "url": "",
+                    "id": ""
+                }
+            }
+        }
+    },
+    "checkout": {
+        "stepType": "1"
+    },
+    "styleSystem": {
+        "colors": {
+            "global": {
+                "brand": "#082239",
+                "critical": "#F04949",
+                "accent": "#276EAF"
+            },
+            "form": {
+                "color": "transparent"
+            }
+        },
+        "typography": {
+            "secondary": {
+                "name": "Arial"
+            },
+            "primary": {
+                "name": "Arial"
+            }
+        }
+    }
+}

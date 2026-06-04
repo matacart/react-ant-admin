@@ -43,7 +43,7 @@ function Left() {
             settingsData:JSON.stringify(noticeEmail.settings?.settingsData),
         }).then(res=>{
             if(res.code == 0){
-                // console.log(res);
+                noticeEmail.setLastSavedAt(Date.now());
             }
         }).catch(err=>{
             console.log(err)

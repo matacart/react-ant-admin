@@ -22,8 +22,6 @@ class baseInfoStore{
     setStoreInfo(storeInfo:any){
         this.storeInfo = storeInfo;
     }
-
-   
     
     // 获取
     // async getStore(){

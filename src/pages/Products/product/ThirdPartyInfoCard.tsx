@@ -10,10 +10,7 @@ import product from "@/store/product/product";
 function ThirdPartyInfoCard() {
 
     const setDiversion = (diversion:any) => {
-        product.setProductInfo({
-            ...product.productInfo,
-            diversion:diversion
-        })
+        product.setDiversion(diversion)
     }
 
     return (
@@ -28,18 +25,15 @@ function ThirdPartyInfoCard() {
                             </span>
                         </Tooltip>
                     </div>
-                    {product.productInfo.diversion && <ProductThirdTripartite diversion={product.productInfo.diversion} setDiversion={setDiversion} />}
+                    {product.diversion && <ProductThirdTripartite diversion={product.diversion} setDiversion={setDiversion} />}
                 </div>
                 <div className="content">
                     <div className="item between">
                         <span>绑定状态</span>
-                        <Switch checked={product.productInfo.diversion?.status == 1?true:false} onChange={(e) => {
-                             product.setProductInfo({
-                                ...product.productInfo,
-                                diversion:{
-                                    ...product.productInfo.diversion,
-                                    status:e?1:0
-                                }
+                        <Switch checked={product.diversion?.status == 1?true:false} onChange={(e) => {
+                            setDiversion({
+                                ...product.diversion,
+                                status:e?1:0
                             })
                         }} />
                     </div>

@@ -9,7 +9,10 @@ import { getCustomerList } from '@/services/y2/api';
 
 // 表单项订单数据类型
 interface DataType {
+  id: string;
   realname: string;
+  first_name: string;
+  last_name: string;
   address: string;
   price: number;
   status: string;
@@ -47,9 +50,10 @@ export default function CustmoerListAjax() {
       title: '姓名',
       dataIndex: 'realname',
       width: 100,
-      render: (text: string) => (
-        <span style={{ color: '#242833' }}>{text}</span>
-      ),
+      render: (text: string, record: any) => {
+        const name = record.first_name + record.last_name;
+        return <span>{name || record.id}</span>;
+      },
     },
     {
       title: '邮箱订阅状态',
@@ -89,14 +93,13 @@ export default function CustmoerListAjax() {
 
   const fetchData = () => {
     setLoading(true);
-    getCustomerList(tableParams.pagination?.current, tableParams.pagination?.pageSize).then((res) => {
-      console.log(res.data)
+    getCustomerList(tableParams.pagination?.current, tableParams.pagination?.pageSize).then(res => {
         setData(res.data)
         setTableParams({
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
-            total: res.count,
+            total: Number(res.count),
           }
         });
       }).catch(error => {

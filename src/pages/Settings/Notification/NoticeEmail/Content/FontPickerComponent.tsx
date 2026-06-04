@@ -7,14 +7,14 @@ import { useEffect, useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { settingType } from "@/store/settings/notification/noticeEmail";
 import { useIntl } from "@umijs/max";
+import fontFamilyList from "@/../public/json/fontFamily.json";
+
 
 function FontPickerComponent({setting,data,setSections,rightRef}:{setting:settingType,data:any,setSections:(id:string,value:any)=>void,rightRef:React.RefObject<HTMLDivElement>}) {
 
     const intl = useIntl();
     
     const [open, setOpen] = useState(false);
-
-    const fontFamilyList = require("./fontFamily.json");
 
     const [fontFamily,setFontFamily] = useState<{'font-family': string} | undefined>(undefined);
 

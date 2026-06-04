@@ -79,7 +79,6 @@ function Notification() {
             noticeEmail.reset();
         };
     },[])
-
     
 
     // 店铺语言变化，重新获取数据
@@ -111,7 +110,7 @@ function Notification() {
                 <Header spinning={spinning} setSpinning={setSpinning} />
                 <Flex style={{marginTop:"12px",height:"calc(100vh - 72px)"}}>
                     <Left />
-                    <Main />
+                    <Main setSpinning={setSpinning} />
                     <Right />
                 </Flex>
             </Spin>}

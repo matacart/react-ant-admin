@@ -17,14 +17,15 @@ function StockCard({form}:{form:any}){
             quantity:product.productInfo.quantity,
             minimum:product.productInfo.minimum,
             salesCount:product.productInfo.sales_count,
-            inventoryTracking:product.productInfo.inventoryTracking == 1?true:false,
-            continueSell:product.productInfo.continueSell == 1?true:false
+            inventoryManagement:product.productInfo.inventory_management == '1'?true:false,
+            subtract:product.productInfo.subtract == '1'?true:false,
+            inventoryPolicy:product.productInfo.inventory_policy == 'continue'?true:false,
         })
     },[])
 
     return (
         <Scoped>
-            <Card title='库存' >
+            <Card title='库存'>
                 <Form layout="vertical" form={form}>
                     <Row>
                         <Col span={11}>
@@ -49,10 +50,7 @@ function StockCard({form}:{form:any}){
                             </Form.Item>
                         </Col>
                         <Col offset={2} span={11}>
-                            <Form.Item 
-                                name="ISBN" 
-                                label="条码(ISBN、UPC、GTIN等)"
-                            >
+                            <Form.Item name="ISBN" label="条码(ISBN、UPC、GTIN等)">
                                 <DefaultInput
                                     placeholder="条码(ISBN、UPC、GTIN等)"
                                     onChange={(e:any)=>{
@@ -67,13 +65,10 @@ function StockCard({form}:{form:any}){
                     </Row>
                     <Row>
                         <Col span={11}>
-                            <Form.Item
-                                name="SKU"
-                                label="SKU"
-                            >
+                            <Form.Item name="SKU" label="SKU">
                                 <DefaultInput
                                     placeholder="SKU"
-                                    onChange={(e:any) => {
+                                    onChange={(e:any)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
                                             sku:e.target.value
@@ -88,10 +83,10 @@ function StockCard({form}:{form:any}){
                                     className="ant-input"
                                     placeholder="库存数量"
                                     min={0}
-                                    onChange={(value:number)=>{
+                                    onChange={(value:any)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
-                                            quantity:value?.toString() || ""
+                                            quantity:value
                                         })
                                     }}
                                 />
@@ -100,18 +95,15 @@ function StockCard({form}:{form:any}){
                     </Row>
                     <Row>
                         <Col span={11}>
-                            <Form.Item
-                                name="minimum"
-                                label="最少购买"
-                            >
+                            <Form.Item name="minimum" label="最少购买">
                                 <DefaultInputNumber
                                     className="ant-input"
                                     placeholder="最少购买"
                                     min={0}
-                                    onChange={(value:number) =>{
+                                    onChange={(value:any)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
-                                            minimum:value?.toString() || ""
+                                            minimum:value
                                         })
                                     }}
                                 />
@@ -123,10 +115,10 @@ function StockCard({form}:{form:any}){
                                     className="ant-input"
                                     placeholder="商品销量"
                                     min={0}
-                                    onChange={(value:number)=>{
+                                    onChange={(value:any)=>{
                                         product.setProductInfo({
                                             ...product.productInfo,
-                                            sales_count:value?.toString() || ""
+                                            sales_count:value
                                         })
                                     }}
                                 />
@@ -134,28 +126,40 @@ function StockCard({form}:{form:any}){
                         </Col>
                     </Row>
                     <Form.Item
-                        name="inventoryTracking"
+                        name="inventoryManagement"
                         style={{
                             marginBottom: 0
                         }}
                         valuePropName="checked"
                     >
-                        <Checkbox onChange={(e)=>{
+                        <Checkbox onChange={(checked:any)=>{
                             product.setProductInfo({
                                 ...product.productInfo,
-                                inventoryTracking:e.target.checked?1:0
+                                inventory_management:checked?'1':'0'
                             })
                         }}>开启库存追踪</Checkbox>
                     </Form.Item>
-                    <Form.Item name="continueSell" valuePropName="checked">
-                        <Checkbox
-                            onChange={(e)=>{
-                                product.setProductInfo({
-                                    ...product.productInfo,
-                                    continueSell:e.target.checked?1:0
-                                })
-                            }}
-                        >
+                    <Form.Item
+                        name="subtract"
+                        style={{
+                            marginBottom: 0
+                        }}
+                        valuePropName="checked"
+                    >
+                        <Checkbox onChange={(checked:any)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                subtract:checked?'1':'0'
+                            })
+                        }}>是否扣减库存</Checkbox>
+                    </Form.Item>
+                    <Form.Item name="inventoryPolicy" valuePropName="checked">
+                        <Checkbox onChange={(checked:any)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                inventory_policy:checked?'continue':'deny'
+                            })
+                        }}>
                             缺货后继续销售
                             <Tooltip title="此设置同时适用MataCart后台管理">
                                 <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>

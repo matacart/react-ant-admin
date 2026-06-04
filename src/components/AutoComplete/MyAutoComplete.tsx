@@ -5,9 +5,10 @@ import { useRef, useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 
 interface MyAutoCompleteProps extends Omit<AutoCompleteProps, 'popupRender'> {
+    text?:string;
     onClick?: () => void; // 可选的 onClick 属性
 }
-export default function MyAutoComplete({onClick,placeholder,...props}:MyAutoCompleteProps){
+export default function MyAutoComplete({onClick,placeholder,text,...props}:MyAutoCompleteProps){
 
     return (
         <Scoped>
@@ -31,17 +32,17 @@ export default function MyAutoComplete({onClick,placeholder,...props}:MyAutoComp
                     popupRender={(menu) => {
                         return (
                             <div style={{overflow: 'auto', maxHeight: 300,margin:"2px 0 8px 0"}}>
-                                <Flex className="color-356DFF cursor-pointer" gap={8} style={{padding:"8px 12px",borderBottom:"1px solid #E6E6E6"}} onClick={onClick}>
+                                {text && <Flex className="color-356DFF cursor-pointer" gap={8} style={{padding:"8px 12px",borderBottom:"1px solid #E6E6E6"}} onClick={onClick}>
                                     <AddIcon className="font-18" />
-                                    <div>创建新客户</div>
-                                </Flex>
+                                    <div>{text}</div>
+                                </Flex>}
                                 {menu}
                             </div>
                         )
                     }}
                 >
                 {/*  */}
-                    <Input className="input" placeholder={placeholder?.toString() || ""} suffix={<SearchOutlined />} />
+                    <Input className="input" placeholder={placeholder?.toString() || ""} />
                 </AutoComplete>
             </ConfigProvider>
         </Scoped>

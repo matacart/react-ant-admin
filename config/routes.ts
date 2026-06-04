@@ -175,24 +175,6 @@ export default  [
           name: 'categories',
           menu: false,
           component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
-        },
-        {
-          path: 'gift-cards',
-          name: 'giftCards',
-          component: './Products/GiftCards/GiftCards',
-        },
-        {
-          path: 'gift-cards/new',
-          name: 'giftCards',
-          hideInMenu: true,
-          parentKeys: ['/products/gift-cards'],
-          component: './Products/GiftCards/GiftCardsAdd/GiftCardsAdd',
-        },
-        {
-          path: 'gift-cards-products/new',
-          hideInMenu: true,
-          parentKeys: ['/products/gift-cards'],
-          component: './Products/GiftCards/GiftCardsProductAdd/GiftCardsProductAdd',
         }
       ]
   },
@@ -255,13 +237,62 @@ export default  [
       
     ],
   },
-  
   // 折扣
   {
     path: '/discount' ,
     name: 'discounts',
     icon: 'TagOutlined',
-    component: './Discount/Discount'
+    routes:[
+      {
+        path: '/discount',
+        redirect: '/discount/index'
+      },
+      {
+        path: 'index',
+        name: 'discountPromotion',
+        component: './Discount/Index/Index'
+      },
+      {
+        path: 'coupon',
+        name: 'coupon',
+        component: './Discount/Coupon/Coupon'
+      },
+    ]
+  },
+  // 礼品卡
+  {
+    path: '/gift-cards' ,
+    name: 'giftCards',
+    icon: 'GiftOutlined',
+    routes:[
+      {
+        path: '/gift-cards',
+        redirect: '/gift-cards/index'
+      },
+      {
+        path: 'index',
+        name: 'list',
+        component: './GiftCards/Index/Index'
+      },
+      {
+        path: 'new',
+        hideInMenu: true,
+        parentKeys: ['/gift-cards/index'],
+        component: './GiftCards/GiftCardsNew/Index',
+      },
+      {
+        path: 'products',
+        name: 'product',
+        component: './GiftCards/Products/Index',
+      },
+      {
+        path: 'products/new',
+        parentKeys: ['/gift-cards/products'],
+        hideInMenu: true,
+        name: 'product',
+        component: './GiftCards/GiftCardsProductNew/Index',
+      }
+    ]
   },
   // 营销
   {
@@ -744,7 +775,7 @@ export default  [
       // 发货与配送
       {
         path:"delivery",
-        component:"./Settings/ShippingAndDistribution/ShippingAndDistribution"
+        component:"./Settings/ShippingAndDistribution/Index/ShippingAndDistribution"
       },
       // 自定义运费
       {
@@ -753,7 +784,7 @@ export default  [
       },
       // 通用运费
       {
-        path:"logistics/edit/custom/:id",
+        path:"logistics/edit/common",
         component:"./Settings/ShippingAndDistribution/EditCustomLogistics/EditCustomLogistics"
       },
       // 仓库地址
@@ -817,7 +848,7 @@ export default  [
       },
       {
         path:"settle",
-        component:"./Settings/Settle/Settle"
+        component:"./Settings/Settle/Index/Settle"
       },
       {
         path: 'package',
@@ -849,12 +880,20 @@ export default  [
       },
     ]
   },
+  // 结账编辑器
+  {
+    path:"settings/settle/checkout-editor",
+    layout: false,
+    component:"./Settings/Settle/CheckoutEditor/CheckoutEditor"
+
+  },
+  // 通知邮件编辑器
   {
     path:"settings/noticeEmail/:key",
     layout: false,
     component:"./Settings/Notification/NoticeEmail/NoticeEmail"
   },
-  // 主题
+  // 主题编辑
   {
     path: 'theme',
     icon: 'SettingOutlined',
@@ -877,7 +916,7 @@ export default  [
       },
     ]
   },
-  // 主题语言编辑
+  // 主题模板风格
   {
     path: 'theme/styles/:templateId/:styleId',
     hideInMenu: true,

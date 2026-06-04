@@ -316,6 +316,8 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
             }
         })
         setLanguages(tempList)
+
+        
     }, [])
 
 

@@ -1,4 +1,4 @@
-import MyAutoComplete from "@/components/AutoComplete/MyAutoComplete";
+import CustomerAutoComplete from "@/components/AutoComplete/CustomerAutoComplete";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
@@ -113,7 +113,7 @@ function CreateCustomerModal(){
 
     return (
         <>
-            <MyAutoComplete style={{width:"100%",height:"36px"}} onSelect={(value,option)=>{
+            <CustomerAutoComplete style={{width:"100%",height:"36px"}} onSelect={(value,option)=>{
                 // 客户信息
                 orderDraft.setCustomerInfo({
                     id:option.info.id,

@@ -1,24 +1,22 @@
 import DefaultAutoComplete from "@/components/AutoComplete/DefaultAutoComplete";
+import DefaultButton from "@/components/Button/DefaultButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
 import AttributesModal from "@/components/Modal/AttributesModal";
 import ProductStyleModal from "@/components/Modal/ProductStyleModal";
 import MySelect from "@/components/Select/MySelect";
 import { addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleValueList } from "@/services/y2/api";
 import product from "@/store/product/product";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
-import { App, Card, Checkbox, Button, Tag, Select, Modal, Tooltip, SelectProps, AutoCompleteProps } from "antd";
+import { App, Card, Checkbox, Button, Tag, Select, Modal, Tooltip, SelectProps, AutoCompleteProps, Flex } from "antd";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-// type TagRender = SelectProps['tagRender'];
-
 const { Option } = Select;
-
-const { confirm } = Modal;
 
 function MultipleStylesCard(props:any) {
   
-  const { message } = App.useApp();
+  const { message,modal } = App.useApp();
 
   const [specifications, setSpecifications] = useState([]);
   const [values, setValues] = useState<string[]>([]);
@@ -46,28 +44,32 @@ function MultipleStylesCard(props:any) {
 
   // 确认关联变体
   const showVariantConfirm = () => {
-    confirm({
+    const confirm = modal.confirm({
       title: '确认展开多款式?',
       icon: <ExclamationCircleFilled />,
       centered:true,
       content: '展开多款式后，操作属性，关联SKU也将同步操作，这可能对款式列表关联的数据造成影响',
-      onOk() {
-        props.setOnVariant(true)
-      },
-      onCancel() {
-        props.setOnVariant(false)
-      },
+      footer: <>
+        <Flex justify="flex-end" style={{marginTop:"20px"}} gap={12}>
+          <DefaultButton onClick={()=>{
+            props.setOnVariant(false)
+            confirm.destroy()
+          }} text="取消" />
+          <PrimaryButton onClick={()=>{
+            props.setOnVariant(true)
+            confirm.destroy()
+          }} text="确认" />
+        </Flex>
+      </>,
     });
   };
 
   // 原始数据
   const [info,setInfo] = useState<any>([]);
-  const [infoCopy,setInfoCopy] = useState<any>([]);
   // 表格数据
   const [tagData,setTagData] = useState<any>([]);
   // 表格行
   const [flag,setFlag] = useState<number>();
-  const [styleDate,setStyleDate] = useState<any>([]);
   const [attributesModal, setAttributesModal] = useState(false);
 
   // 自定义标签
@@ -121,7 +123,6 @@ function MultipleStylesCard(props:any) {
         }
       });
     })
-    // console.log(newSpecifications)
     setSpecifications(newSpecifications)
     let newInfo:any = [...info]
     newInfo[i] = data
@@ -129,41 +130,6 @@ function MultipleStylesCard(props:any) {
     product.setAttributes(newInfo.flat())
     props.onVariant && props.setStyle(newInfo)
 
-    // // setInfoCopy(newInfo)
-    // product.setAttributes(newInfo.flat())
-    // let temp:any = []
-    // // 重新赋值
-    // value.forEach((e:any)=>{
-    //   if(e.status !== "9"){
-    //     temp.push((e.id == null || e.id == "") ?e.option_values_name:e.id)
-    //   }
-    // })
-    // let newTags = [...tags];
-    // newTags[i] = temp
-    // setTags(newTags)
-    // // 更新所有标签的扁平化列表，并通知父组件
-    // // 数据分流  ---- 修改
-    // let tagsId:any = [...newTags];
-    // let tagsValues:any = [...newTags];
-    // newTags.forEach((res,index) => {
-    //   if(res.length>0){
-    //     res.forEach(e => {
-    //       Array.from(newInfo.flat(),(x:any)=>{
-    //         if(x.id == e){
-    //           tagsValues[index] = tagsValues[index].map(value => {
-    //             if (value == e) {
-    //               return x.option_values_name; // 将3替换为'three'
-    //             }
-    //             return value; // 其他值保持不变
-    //           })
-    //         }
-    //       })
-    //     })
-    //   }
-    // });
-    // console.log(newTags)
-    // props.setStyle(tagsValues)
-    // console.log(tagsValues)
   }
   // 收集所有输入值后调用父组件提供的回调函数
   useEffect(() => {
@@ -231,14 +197,6 @@ function MultipleStylesCard(props:any) {
     })
     // console.log(product.attributes)
   },[])
-  // 处理回车键事件  ---待
-  function handleKeyDown(e: React.KeyboardEvent, index: number) {
-    if (e.key === 'Enter') {
-      const newTags = [...tags];
-      const currentTags = newTags[index] || [];
-      const newValue = values[index].trim();
-    }
-  }
 
   // 添加 useRef 来保存输入框的引用
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -334,22 +292,6 @@ function MultipleStylesCard(props:any) {
     
   }
 
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false); // 控制模态框的显示状态
-  // 模态框确认按钮点击事件处理器
-  const handleOk = () => {
-    setIsEditModalVisible(false);
-  };
-
-  // 模态框取消按钮点击事件处理器
-  const handleCancel = () => {
-    setIsEditModalVisible(false);
-  };
-  // 新增处理复选框变化的函数
-  function handleHideOptionCheckboxChange(e: { target: { checked: boolean; }; }) {
-    console.log('复选框状态:', e.target.checked);
-    // 这里可以添加更多的逻辑来处理复选框的变化
-  }
-
   // 删除整个规格组
   function handleRemove(index: number) {
     info[index].forEach((element:any) => {
@@ -388,8 +330,9 @@ function MultipleStylesCard(props:any) {
     info.push([])
     // // 更新输入框引用
   }
-  // 是否有相同的属性
+  // 检查是否有相同的属性
   function hasSameAttributes(arr) {
+    
     const seenAttributes = new Set();
     for (const item of arr) {
       if (seenAttributes.has(item.attributes)) {
@@ -400,23 +343,16 @@ function MultipleStylesCard(props:any) {
     return false; // 没有找到相同的 attributes
   }
 
-  // 
   const inputRef = useRef(null);
 
   return (
     <Scoped>
-      {/* <span onClick={isVariant}>展开变体</span> */}
-      {/*  */}
-      {/* props.setOnVariant(!props.onVariant) */}
       <Card title="多款式" extra={<div onClick={()=>{
         !props.onVariant?showVariantConfirm():props.setOnVariant(!props.onVariant)
       }} style={{textAlign:"right",cursor:"pointer"}}>此商品有多个款式
         <Checkbox style={{marginLeft:"10px"}} checked={props.onVariant}>
         </Checkbox>
       </div>}>
-        {/* <Checkbox checked={checked} onChange={handleCheckboxChange}>
-          此商品有多个款式
-        </Checkbox> */}
         {(
           <>
           {specifications.map((spec, index) => {
