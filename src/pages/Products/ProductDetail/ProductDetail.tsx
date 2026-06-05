@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import TradingRecords from './TradingRecords';
 import { deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
-import MultipleStylesEdit from './MultipleStylesEdit';
-import ProductStyleListEdit from './ProductStyleListEdit';
 import { styled } from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import cookie from 'react-cookies';
@@ -39,6 +37,7 @@ import SEOCard from '../Product/SEOCard';
 import { getPrimaryDomain } from '@/utils/dataStructure';
 import VariantList from '../Product/VariantList';
 import AttributesMapList from '../Product/AttributesMapList';
+import { toJS } from 'mobx';
 
 
 function ProductDetail() {
@@ -128,9 +127,6 @@ function ProductDetail() {
     const [isSkeleton,setIsSkeleton] = useState(true)
     const [loading,setLoading] = useState(false)
     
-    const [style, setStyle] = useState([]);
-    // 变体---控制变体组合
-    const [onVariant,setOnVariant] = useState(false);
     // 删除
     async function productDel(id:any){
         const res = await deleteProduct(id);
@@ -277,13 +273,28 @@ function ProductDetail() {
         if(await formValidation()){
             setLoading(true)
             try {
+                const remove = product.variants.filter((item:any)=>!product.variantList.some(variant => variant.id === item.id))
+                // 转换格式
+                let newAttributesOptions:any = [];
+                toJS(product.attributesMap).forEach((attributes:any)=>{
+                    attributes.optionValue.forEach((item:string)=>{
+                        const option = attributes.options.find((option:any)=>option.option_values_id == item);
+                        option && newAttributesOptions.push({
+                            option_id:attributes.value,
+                            option_name:attributes.label,
+                            ...option,
+                        })
+                    })
+                })
+                const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
+                // 过滤要删除的属性
                 await upDateProduct({
                     ...product.productInfo,
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
                     diversion:JSON.stringify([product.diversion || {}]),
-                    attributes:JSON.stringify([...product.attributes,...product.tempAttributes]),
-                    variants:JSON.stringify([...product.variants,...product.tempVariants])
+                    attributes:JSON.stringify([...newAttributesOptions,...removeAttributes]),
+                    variants:JSON.stringify([...product.variantList,...remove])
                 })
                 message.success('修改成功')
                 setProductTitle(product.productInfo.title)

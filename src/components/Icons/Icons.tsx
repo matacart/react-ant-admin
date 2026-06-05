@@ -233,6 +233,10 @@ const SuccessSecondSvg = () => (
   <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" strokeWidth="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
 )
 
+const ImageUploadSvg = () => (
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" fontSize="24"><path d="M16.25 11v2.75H19v1.5h-2.75V18h-1.5v-2.75H12v-1.5h2.75V11h1.5Z" fill="#474F5E"></path><path d="M16.5 3.25c.69 0 1.25.56 1.25 1.25v5h-1.5V4.75H3.75v7.342l1.822-1.961a1.25 1.25 0 0 1 1.79-.043l1.37 1.339 3.366-3.62a1.25 1.25 0 0 1 1.4-.302L12.98 9.06l-3.324 3.575a1.25 1.25 0 0 1-1.788.043l-1.37-1.34-2.748 2.956v.955h6.667v1.5H3.5c-.69 0-1.25-.56-1.25-1.25v-11c0-.69.56-1.25 1.25-1.25h13Z" fill="#474F5E"></path><path d="M6 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z" fill="#474F5E"></path></svg>
+)
+
 
 const PauseSecondSvg = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
@@ -912,6 +916,9 @@ export const EditorApplyIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorApplySvg} {...props} />
 );
 
+export const ImageUploadIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ImageUploadSvg} {...props} />
+);
 
 export const EditorRightIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={EditorRightSvg} {...props} />

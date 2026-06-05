@@ -9,6 +9,8 @@ import AttributesModal from "./AttributesModal";
 import MySelect from "@/components/Select/MySelect";
 import MyButton from "@/components/Button/MyButton";
 import AttributesTagModal from "./AttributesTagModal";
+import { toJS } from "mobx";
+import { DeleteIcon } from "@/components/Icons/Icons";
 
 /**
  * 将原始属性数组转换为 { label, value, options, optionValue }
@@ -40,16 +42,26 @@ async function transformAttributes(attributes:attributeType[], fetchOptions:any)
   for (const [optId, { label, optionValueSet }] of groupMap.entries()) {
     const options = await fetchOptions(optId);   // 从外部接口获取完整选项列表
 
-
+    // 3. 过滤出原始数据中存在的选项用于补充
+    const newOptions = options.map((option:any) => {
+      const newAttributes = product.attributes.find((item:any) => item.option_values_id == option.option_values_id)
+      if(newAttributes){
+        // 将属性状态设置为9
+        product.setAttributes(product.attributes.map((item:any) => item.option_values_id == option.option_values_id ? {...item,status:"9"} : item))
+        return toJS(newAttributes)
+      }
+      return option
+    })
 
     const optionValue = Array.from(optionValueSet); // 原始数据中的选项值数组
     result.push({
       label,
       value: optId,
-      options:options,
+      options:newOptions,
       optionValue
     });
   }
+
   return result;
 }
 
@@ -158,7 +170,6 @@ function AttributesMapList() {
         firstRef.current = false
         return;
       }
-      console.log(attributesMap);
       // 提交时 有则替换修改 无则将状态改为9
       product.setAttributesMap([...attributesMap])
     },[attributesMap])
@@ -216,14 +227,30 @@ function AttributesMapList() {
                                 if(value.length == 0){
                                     return
                                 }
+                                // 在删除时要把对应的options重置
+                                let newOptions = [];
+                                if(value.length < attributes.optionValue.length){
+                                  newOptions = attributes.options.map((item:any)=>value.includes(item.option_values_id)?item:{
+                                    option_values_id:item.option_values_id,
+                                    option_values_name:item.option_values_name
+                                  });
+                                }
                                 // 如果在 attributes.options 中存在 value 对应的 option_values_id 则更新 optionValue
+                                // 同时把该项的options对应的数据更新
                                 if(areAllIdsPresent(value,attributes.options)){
-                                    const newAttributesMap = [...attributesMap.map((item:any)=>{
+                                    const newAttributesMap = [
+                                      ...attributesMap.map((item:any)=>{
                                         if(item.value === attributes.value){
-                                            return {...item,optionValue:value}
+                                            return {
+                                              ...item,
+                                              options:newOptions.length > 0?newOptions:item.options,
+                                              optionValue:value
+                                            }
                                         }
                                         return item
-                                    })]
+                                      })
+                                    ]
+                                    console.log(newAttributesMap)
                                     setAttributesMap(newAttributesMap)
                                 }else{
                                     // 创建 新的 option_values_id 并更新 attributes.options
@@ -253,11 +280,9 @@ function AttributesMapList() {
                             }}
                         />
                         <AttributesTagModal attributes={attributes} attributesMap={attributesMap} setAttributesMap={setAttributesMap}  />
-                        <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" style={{cursor: "pointer"}} onClick={() => handleRemove(attributes)}>
+                        <span style={{cursor: "pointer"}} onClick={() => handleRemove(attributes)}>
                             <Tooltip title="删除">
-                            <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20">
-                                <path d="M18 4.25h-4.325a3.751 3.751 0 0 0-7.35 0H2v1.5h1.305l.947 12.308A.75.75 0 0 0 5 18.75h10a.75.75 0 0 0 .748-.692l.947-12.308H18v-1.5Zm-2.81 1.5-.884 11.5H5.694L4.81 5.75h10.38Zm-5.19-3c.98 0 1.813.626 2.122 1.5H7.878A2.25 2.25 0 0 1 10 2.75Z" fill="#F86140"></path>
-                            </svg>
+                              <DeleteIcon className="font-20 color-F86140" />
                             </Tooltip>
                         </span>
                     </Flex>

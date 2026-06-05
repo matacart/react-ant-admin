@@ -1,29 +1,32 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MySelect from "@/components/Select/MySelect";
-import { getProductStyleValueList } from "@/services/y2/api";
+import { getProductStyleValueList, uploadPic } from "@/services/y2/api";
 import product from "@/store/product/product";
-import { App, Flex, Modal, Table, TableProps, Tooltip } from "antd"
+import { App, Flex, Modal, Table, TableProps, Tooltip, Upload, Image } from "antd"
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import cookie from 'react-cookies';
 import { DeleteOutlined } from "@ant-design/icons";
 import MyInput from "@/components/Input/MyInput";
+import NumberInput from "@/components/Input/NumberInput";
+import { EditIcon, ImageUploadIcon } from "@/components/Icons/Icons";
 
 
 // 替换函数
 function replaceOptionNames(originalArray:any, replacements:any) {
   // 构建 id -> 新 name 的映射
   const replacementMap = new Map(
-    replacements.map(item => [item.option_values_id, item.option_values_name])
+    replacements.map((item:any) => [item.option_values_id, item])
   );
-  // 遍历原始数组，如果 id 命中映射则替换 name，否则保留原值
-  return originalArray.map(item => {
-    if (replacementMap.has(item.option_values_id)) {
+  // 遍历原始数组，如果 id 命中映射则替换所有字段，否则保留原值
+  return originalArray.map((item:any) => {
+    const replacement = replacementMap.get(item.option_values_id);
+    if (replacement && typeof replacement === 'object') {
       return {
         ...item,
-        option_values_name: replacementMap.get(item.option_values_id)
+        ...replacement
       };
     }
     return item;
@@ -32,6 +35,7 @@ function replaceOptionNames(originalArray:any, replacements:any) {
 
 interface DataType {
     key: string;
+    option_values_id: string;
     option_values_name: string;
     option_values_price:string;
     attribute_image:string;
@@ -40,12 +44,13 @@ interface DataType {
 }
 
 
-
 function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attributes:any,attributesMap:any,setAttributesMap:any}){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [loading,setLoading] = useState(false);
+
+    const [isHovering,setIsHovering] = useState<boolean[]>([]);
 
     const { message } = App.useApp();
 
@@ -54,15 +59,15 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
     // 语言
     const [languages,setLanguages] = useState([]);
 
-    const [data,setData] = useState<DataType[]>([])
+    const [data,setData] = useState<DataType[]>([]);
 
     const columns: TableProps<DataType>['columns'] = [
         {
             title: '规格名称',
             dataIndex: 'name',
             key: 'name',
-            width:200,
-            render: (text,record,index) => <MyInput value={record.option_values_name} onChange={(e)=>{
+            width:180,
+            render: (text,record,index) => <MyInput style={{ width:"100%",height:"36px" }} value={record.option_values_name} onChange={(e)=>{
                 let newData = [...data]
                 newData[index].option_values_name = e.target.value
                 setData(newData)
@@ -70,15 +75,13 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
             />,
         },
         {
-            title: '加价',
+            title: '价格',
             dataIndex: 'price',
             key: 'price',
-            width:200,
-            render: (text,record,index) => <MyInput value={record.option_values_price} onChange={(e)=>{
-                let newData = [...data]
-                newData[index].option_values_price = e.target.value
-                setData(newData)
-            }} />,
+            width:180,
+            render: (value: string, record: DataType,index: number) => (    
+                <NumberInput style={{width:'100%'}} value={value} onChange={(value:string) => handleChangePrice(value,record,index)}  />
+            ),
         },
         {
             title: '规格图片',
@@ -87,17 +90,28 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
             width:100,
             render: (text,record,index) => (
                 <>  
-                    {(record.attribute_image == null || record.attribute_image == "") ? <div className='imgBox' onClick={()=>{
-                    }}>
-                        <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>:<div className='singleImg' onClick={()=>{
-                        let newData = [...data]
-                        newData[index].attribute_image = ''
-                        setData(newData)
-                    }} onMouseOver={() => {
-                    }} onMouseOut={() => {
-                    }}>
-                        {/* <Image src={JSON.parse(record.attribute_image)[0]} /> */}
+                    {(record.attribute_image == null || record.attribute_image == "") ? <Upload
+                        showUploadList={false} 
+                        beforeUpload={(file) => handleImgUpload(file,index)}
+                    >
+                        <div className='imgBox'><ImageUploadIcon /></div>
+                    </Upload>:<div className='singleImg' 
+                        onClick={()=>{
+                            let newData = [...data]
+                            newData[index].attribute_image = ''
+                            setData(newData)
+                        }}
+                        onMouseOver={() => {
+                            let newIsHovering = [...isHovering]
+                            newIsHovering[index] = true
+                            setIsHovering(newIsHovering)
+                        }} onMouseOut={() => {
+                            let newIsHovering = [...isHovering]
+                            newIsHovering[index] = false
+                            setIsHovering(newIsHovering)
+                        }}
+                    >
+                        <Image src={record.attribute_image ? record.attribute_image+"?x-oss-process=image/resize,w_100" : ""} style={{width:"100%",height:"100%"}} />
                         <div className="overlay"
                             style={{
                                 width: '100%',
@@ -108,6 +122,7 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                opacity: isHovering[index] ? 1 : 0,
                                 transition: 'opacity 0.3s ease',
                                 cursor:"pointer"
                             }}
@@ -122,23 +137,50 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
         }
     ];
 
+    // 上传图片
+    const handleImgUpload = (file: any,index: number) => {
+        if (file.type.indexOf('image') === -1) {
+            message.error('请上传图片文件');
+            return false;
+        }
+        if (file.size > 4 * 1024 * 1024) {
+            message.error('图片大小不能超过4MB');
+            return false;
+        }
+        let formData = new FormData()
+        formData.append("file", file)
+        setLoading(true);
+        uploadPic(formData).then((res: any) => {
+            if(res.code == 0){
+                const newImg = res.data.src;
+                const newData = [...data];
+                newData[index].attribute_image = newImg
+                setData(newData)
+            }else{
+                message.error(res.msg || "err", 1)
+            }
+        }).catch((err: any) => {
+        }).finally(() => {
+            setLoading(false);
+        })
+        return false;
+    };
+
+    // 价格
+    const handleChangePrice = (value: string, record: DataType, index: number) => {
+        let newData = [...data];
+        newData[index].option_values_price = value.toString();
+        setData(newData);
+    }
+
     // 提交表单
     const submit = ()=>{
         // 更新
-        // data.forEach(item=>{
-        //     addProductOptionValues(item.option_values_id,lang,attributes.value,item.option_values_name).then(res=>{
-        //         if(res !== 0){
-        //             console.log("失败")
-        //         }
-        //     }).catch(err=>{
-
-        //     }).finally();
-        // })
         const newAtt = {
             ...attributes,
             options:replaceOptionNames(attributes.options,data)
         }
-        setAttributesMap(attributesMap.map(item => {
+        setAttributesMap(attributesMap.map((item:any) => {
             return item.value == newAtt.value ? newAtt : item
         }))
         setIsModalOpen(false)
@@ -156,15 +198,28 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
     }
 
     const setLangs = (lang:string)=>{
+        setLoading(true)
         getProductStyleValueList(attributes.value,lang).then(res=>{
-            const newAttributesOptions = attributes.optionValue.map(value=>{
-                return res.data.find(item=>item.option_values_id == value)
+            // 先过滤出需要的数据 补充
+            const newOptions = attributes.optionValue.map((option:string) => {
+                const item = attributes.options.find((i:any) => i.option_values_id == option)
+                return item ? item : undefined
+            })
+            // 获取到需要的属性 多语言 翻译
+            const newAttributesOptions = newOptions.map((value:any)=>{
+                const item = res.data.find((item:any)=>item.option_values_id == value.option_values_id);
+                return item ? {
+                    ...value,
+                    option_values_name: item.option_values_name
+                } : value
             })
             setLang(lang)
             setData(newAttributesOptions)
         }).catch(err=>{
             message.error("err");
-        })
+        }).finally(()=>{
+            setLoading(false)
+        });
     }
 
     useEffect(()=>{
@@ -180,11 +235,9 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
 
     return (
         <Scoped>
-            <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" style={{cursor: "pointer"}} onClick={()=>handleEdit()}>
+            <span style={{cursor: "pointer"}} onClick={()=>handleEdit()}>
                 <Tooltip title="编辑">
-                <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
-                    <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
-                </svg>
+                    <EditIcon className="font-20" />
                 </Tooltip>
             </span>
             <MyModal title={<div>{"编辑规格"}</div>} width={620} centered open={isModalOpen} onCancel={cancel} 
@@ -212,7 +265,7 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
                         />
                     </Flex>
                 </Flex>
-                <Table<DataType> columns={columns} loading={loading} pagination={false} dataSource={data} />
+                <Table<DataType> rowKey={(record) => record.option_values_id} columns={columns} loading={loading} pagination={false} dataSource={data} />
             </MyModal>
         </Scoped>
     )
@@ -228,6 +281,42 @@ const MyModal = styled(Modal)`
     padding-bottom: 12px;
     .header{
         margin-bottom: 20px;
+    }
+    .imgBox{
+        width: 60px;
+        height: 60px;
+        border: 1px dashed #D9D9D9;
+        border-radius: 4px;
+        cursor:pointer;
+        text-align: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+    }
+    .imgBox:hover{
+        color: #1890ff;
+        border: 1px dashed #1890ff;
+    }
+    .singleImg{
+        position: relative;
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+    }
+    .overlay{
+        position: 'absolute';
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: 'rgba(0, 0, 0, 0.5)';
+        display: 'flex';
+        align-items: 'center';
+        justify-content: 'center';
+        opacity: 1 ;
+        transition: 'opacity 0.3s ease';
     }
 `
 

@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import { useEffect, useMemo, useState } from 'react';
-import MultipleStylesCard from './MultipleStylesCard';
-import ProductStyleList from './ProductStyleList';
+import { useEffect, useState } from 'react';
 import product from '@/store/product/product';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { upDateProduct } from '@/services/y2/api';
@@ -29,40 +27,18 @@ import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
 import StockCard from '../Product/StockCard';
 import SEOCard from '../Product/SEOCard';
 import AttributesMapList from '../Product/AttributesMapList';
+import VariantList from '../Product/VariantList';
+import { toJS } from 'mobx';
 
 // 表单项商品数据类型
-interface DataType {
-    key: React.Key;
-    imgUrl?: string;
-    product_image?: string;
-    title?: string;
-    content?: string;
-    price?: number;
-    costPrice?: number;
-    ISBN?: string;
-    inventory?: number;
-    HSCode?:string;
-    notion?: string;
-    model?: string;
-    state?: boolean;
-    tag?: string;
-    productid:string;
-    languages_id:string
-}
 
 function AddNewProduct(){
     
     const { message } = App.useApp();
 
-    // 变体---控制变体组合
-    const [showVariant,setShowVariant] = useState(false);
-
-    const [style, setStyle] = useState([]);
-
     const [isSkeleton,setIsSkeleton] = useState(true);
 
     const [loading,setLoading] = useState(false);
-
     // 表单
     const [form] = Form.useForm();
 
@@ -122,14 +98,28 @@ function AddNewProduct(){
         if(await formValidation()){
             setLoading(true)
             try {
+                const remove = product.variants.filter((item:any)=>!product.variantList.some(variant => variant.id === item.id))
+                // 转换格式
+                let newAttributesOptions:any = [];
+                toJS(product.attributesMap).forEach((attributes:any)=>{
+                    attributes.optionValue.forEach((item:string)=>{
+                        const option = attributes.options.find((option:any)=>option.option_values_id == item);
+                        option && newAttributesOptions.push({
+                            option_id:attributes.value,
+                            option_name:attributes.label,
+                            ...option,
+                        })
+                    })
+                })
+                const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
                 await upDateProduct({
                     ...product.productInfo,
                     handle:product.productInfo.handle || product.productInfo.title.replace(/\s+/g, '-').toLowerCase(),
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
                     diversion:JSON.stringify([product.diversion || {}]),
-                    attributes:JSON.stringify([...product.attributes,...product.tempAttributes]),
-                    variants:JSON.stringify([...product.variants,...product.tempVariants])
+                    attributes:JSON.stringify([...newAttributesOptions,...removeAttributes]),
+                    variants:JSON.stringify([...product.variantList,...remove])
                 })
                 message.success('创建成功')
             }catch(err){
@@ -139,7 +129,6 @@ function AddNewProduct(){
             }
         }   
     };
-
 
     useEffect(()=>{
         // 清空状态
@@ -192,7 +181,7 @@ function AddNewProduct(){
                             <PriceOrTransaction form={form} />
                             <StockCard form={form} />
                             <AttributesMapList />
-                            {product.productInfo.has_variant == "1" && <div>123</div>}
+                            {product.productInfo.has_variant == "1" && <VariantList />}
                         </div>
                         <div className='mc-layout-extra'>
                             <Relevance />

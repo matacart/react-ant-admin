@@ -78,6 +78,28 @@ export interface attributeType {
     option_values_id: string;
 }
 
+export interface variantsType {
+  // 标识 -- id不存在识别
+  key?:string;
+
+  id: string;
+  status: string;
+  image: '',
+  option_values_ids:string,
+  option_values_names:string,
+  price:string,
+  original_price:string,
+  cost_price:string,
+  quantity:string,
+  sku: string,
+  sort:string,
+  hs_code: string,
+  weight: string,
+}
+
+
+
+
 class Product{
     
     constructor() {
@@ -167,7 +189,6 @@ class Product{
       this.diversion = res
     }
 
-
     // 属性
     attributes:attributeType[] = []
     setAttributes(res: attributeType[]) {
@@ -176,36 +197,31 @@ class Product{
 
     // 格式化后的属性
     attributesMap:any = []
-
     setAttributesMap = (res:any)=>{
       this.attributesMap = res;
     }
-   
-    // 状态为9的属性  --- 要删除的属性
-    tempAttributes = []
-    setTempAttributes(res: any) {
-      this.tempAttributes = res
-    }
 
     // 变体
-    variants: any = []
-    setVariants(res: any) {
+    variants: variantsType[] = []
+    setVariants(res: variantsType[]) {
       this.variants = res
     }
-    // 状态为9的变体  --- 要删除的变体
-    tempVariants = []
-    setTempVariants(res:any){
-      this.tempVariants = res
+
+    // 格式化后的变体
+    variantList:any[] = []
+    setVariantList(res:any){
+      this.variantList = res
     }
+    
 
     // 重置状态
     reset() {
       this.productInfo = {...this.getInitProduct()};
       this.diversion = {};
       this.attributes = [];
-      this.tempAttributes = [];
+      this.attributesMap = [];
       this.variants = [];
-      this.tempVariants = [];
+      this.variantList = [];
     }
     
 }
