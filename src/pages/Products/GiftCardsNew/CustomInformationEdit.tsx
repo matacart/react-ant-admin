@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import { DeleteIcon, EmailIcon, TelIcon } from '@/components/Icons/Icons';
 import CreateCustomerModal from './CreateCustomerModal';
-import giftCard from '@/store/giftCard/giftCard';
+import giftCard from '@/store/product/giftCard';
 
 function CustomInformationEdit() {
   return (

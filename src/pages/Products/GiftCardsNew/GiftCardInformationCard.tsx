@@ -1,4 +1,5 @@
 import DefaultInput from "@/components/Input/DefaultInput";
+import giftCard from "@/store/product/giftCard";
 import { Card, Form } from "antd";
 import { useEffect, useState } from "react";
 
@@ -24,7 +25,7 @@ function GiftCardInformationCard() {
                     rules={[{required:true}]}
                     label="礼品卡面额"
                 >
-                    <DefaultInput />
+                    <DefaultInput prefix={giftCard.symbolLeft} />
                 </Form.Item>
             </Form>
         </Card>

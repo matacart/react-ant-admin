@@ -4,7 +4,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
 import { createCustomer, getAddressList, getCustomerList } from "@/services/y2/api";
-import giftCard from "@/store/giftCard/giftCard";
+import giftCard from "@/store/product/giftCard";
 import { Col, Flex, Form, Modal, Row, Space } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import { useEffect, useState } from "react";

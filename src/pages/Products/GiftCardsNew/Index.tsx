@@ -7,9 +7,19 @@ import ExpiredInformationCard from './ExpiredInformationCard';
 import RemarkCard from './RemarkCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import CustomInformationEdit from './CustomInformationEdit';
+import { useState } from 'react';
+import giftCard from '@/store/product/giftCard';
 
 
 function Index(){
+
+    const [loading, setLoading] = useState(false);
+
+    const submit = ()=>{
+        console.log(giftCard.giftCardInfo);
+        console.log('submit');
+    }
+
     return (
         <Scoped>
             <div className='mc-layout-wrap'>
@@ -17,7 +27,7 @@ function Index(){
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                history.push('/gift-cards/index')
+                                history.push('/products/gift-cards')
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
@@ -36,7 +46,7 @@ function Index(){
                     </div>
                     <Divider/>
                     <div className='mc-footer'>
-                        <PrimaryButton onClick={() => {}} text='创建' />
+                        <PrimaryButton onClick={submit} text='创建' />
                     </div>
                 </div>
             </div>

@@ -175,6 +175,31 @@ export default  [
           name: 'categories',
           menu: false,
           component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
+        },
+        // 礼品卡
+        {
+          path: 'gift-cards',
+          name: 'giftCards',
+          component: './Products/GiftCardsIndex/Index',
+        },
+        {
+          path: 'gift-cards/new',
+          name: 'giftCards',
+          hideInMenu: true,
+          parentKeys: ['/products/gift-cards'],
+          component: './Products/GiftCardsNew/Index',
+        },
+        {
+          path: 'gift-cards-product',
+          name: 'giftCardsProduct',
+          component: './Products/GiftCardsProduct/Index',
+        },
+        {
+          path: 'gift-cards-product/new',
+          name: 'giftCardsProduct',
+          hideInMenu: true,
+          parentKeys: ['/products/gift-cards-product'],
+          component: './Products/GiftCardsProductNew/Index',
         }
       ]
   },
@@ -257,41 +282,6 @@ export default  [
         name: 'coupon',
         component: './Discount/Coupon/Coupon'
       },
-    ]
-  },
-  // 礼品卡
-  {
-    path: '/gift-cards' ,
-    name: 'giftCards',
-    icon: 'GiftOutlined',
-    routes:[
-      {
-        path: '/gift-cards',
-        redirect: '/gift-cards/index'
-      },
-      {
-        path: 'index',
-        name: 'list',
-        component: './GiftCards/Index/Index'
-      },
-      {
-        path: 'new',
-        hideInMenu: true,
-        parentKeys: ['/gift-cards/index'],
-        component: './GiftCards/GiftCardsNew/Index',
-      },
-      {
-        path: 'products',
-        name: 'product',
-        component: './GiftCards/Products/Index',
-      },
-      {
-        path: 'products/new',
-        parentKeys: ['/gift-cards/products'],
-        hideInMenu: true,
-        name: 'product',
-        component: './GiftCards/GiftCardsProductNew/Index',
-      }
     ]
   },
   // 营销

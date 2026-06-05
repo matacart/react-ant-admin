@@ -1,10 +1,18 @@
 import { Card, DatePicker, Form, Input, Radio, Select, Tooltip } from "antd";
 import { ConsoleSqlOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import dayjs from 'dayjs';
 import styled from "styled-components";
 import moment from 'moment';
+import dayjs from "dayjs";
+// 引入 utc 插件
+import utc from "dayjs/plugin/utc";
+// 引入 timezone 插件
+import timezone from "dayjs/plugin/timezone";
+
+import MyDatePicker from "@/components/DatePicker/MyDatePicker";
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const style: React.CSSProperties = {
     display: 'flex',
@@ -14,12 +22,14 @@ const style: React.CSSProperties = {
 
 function ExpiredInformationCard() {
 
-    const [isExpirationDate,setIsExpirationDate] = useState("1")
+    const [isExpirationDate,setIsExpirationDate] = useState(1);
+
+    const [currentTime,setCurrentTime] = useState<dayjs.Dayjs>();
   
     useEffect(()=>{
-       
-    })
-
+        setCurrentTime(dayjs());
+        // const time = dayjs.tz(Date.now(), "Asia/Shanghai").format("YYYY-MM-DD");
+    },[])
 
     return (
         <Scoped>
@@ -43,9 +53,9 @@ function ExpiredInformationCard() {
                         ]}
                     />
                 </div>
-                {isExpirationDate == "2" && <>
-                    <DatePicker onChange={()=>{}} disabledDate={(current) => current && current < moment().startOf('day')} />
-                    <div style={{marginTop:"4px"}} className="font-12 color-7A8499">(UTC+08:00) Asia/Shanghai</div>
+                {isExpirationDate == 2 && <>
+                    <MyDatePicker className="my-date-picker" value={currentTime} onChange={()=>{}} disabledDate={(current) => current && current < moment().startOf('day')} />
+                    <div style={{marginTop:"6px"}} className="font-12 color-7A8499">(UTC+08:00) Asia/Shanghai</div>
                 </>}  
             </Card>
         </Scoped>
@@ -58,7 +68,9 @@ export default ExpiredInformationCard
 
 const Scoped = styled.div`
 
-    
+    .my-date-picker{
+        height: 36px;
+    }
 
     .radio-box{
         margin-top: 20px;

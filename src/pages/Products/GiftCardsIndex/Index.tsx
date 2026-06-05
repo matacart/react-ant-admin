@@ -105,7 +105,7 @@ const App: React.FC = () => {
               </Flex>
             </Flex>
             <div className='create-title-right'>
-              <PrimaryButton onClick={() => history.push('/gift-cards/new')} text='创建礼品卡' />
+              <PrimaryButton onClick={() => history.push('/products/gift-cards/new')} text='创建礼品卡' />
             </div>
           </div>
           <div className='create-content'>
