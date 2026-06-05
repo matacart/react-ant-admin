@@ -4,18 +4,15 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import { EditIcon } from "@/components/Icons/Icons";
 import DefaultInput from "@/components/Input/DefaultInput";
 import MySelect from "@/components/Select/MySelect";
-import { addStyleName, getOptionType, getProductOption, getProductStyleValueList } from "@/services/y2/api";
+import { addStyleName, getProductOption, getProductStyleValueList } from "@/services/y2/api";
 import product from "@/store/product/product";
-import { Col, Flex, Form, Modal, Row, Select, Space, Switch } from "antd"
+import { App, Flex, Form, Input, Modal } from "antd"
 import FormItem from "antd/es/form/FormItem";
-import { useEffect, useRef, useState } from "react";
+import _ from "lodash";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-
-// 
-
-
-function AttributesModal({optionsList,setOptionList,attributes,attributesMap,setAttributesMap}: {optionsList:any,setOptionList:any,attributes:any,attributesMap:any,setAttributesMap:any}){
+function AttributesModal({optionsList,attributesOptionType,setOptionList,attributes,attributesMap,setAttributesMap}: {optionsList:any,setOptionList:any,attributesOptionType:any,attributes:any,attributesMap:any,setAttributesMap:any}){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,11 +22,10 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
 
     const [form] = Form.useForm();
 
+    const { message } = App.useApp();
+
     // 属性
     const [options,setOptions] = useState([]);
-
-    // 属性类型
-    const [typeOptions,setTypeOptions] = useState([]);
 
     // 语言
     const [languages,setLanguages] = useState([]);
@@ -59,6 +55,10 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
                             ...item,
                             label:values.option_name,
                         }:item));
+                        setOptionList(optionsList.map((item:any)=>item.option_id == values.id ? {
+                            ...item,
+                            option_name:values.option_name
+                        }:item))
                     }
                 }
             })
@@ -101,7 +101,6 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
                     option_type:res?.data?.option_type_id,
                     status:"1",
                 })
-                flag.current++;
                 setIsCreate(false)
                 setIsModalOpen(true)
             }
@@ -110,10 +109,6 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
         }).finally(()=>{
             
         })
-    }
-
-    const getOptions = async (optionId:string)=>{
-        return 
     }
 
     useEffect(()=>{
@@ -132,25 +127,12 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
             }
         })
         setLanguages(tempList)
-        // 属性类型
-        getOptionType().then(res=>{
-            setTypeOptions(res.data.map((item:any)=>({
-                label:item.product_option_type_name,
-                value:item.product_option_type_id
-            })))
-        })
+        
     },[])
-
-    const flag = useRef(0);
-
-    useEffect(()=>{
-        console.log(attributes)
-    },[attributes])
 
     return (
         <Scoped>
             <MyAutoComplete
-                key={flag.current}
                 text={"创建新属性"} 
                 styles={{
                     root: {
@@ -162,23 +144,25 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
                 value={attributes.label}
                 onSelect={async (value,option)=>{
                     if(attributes.value == option.value) return;
-                    let newOption:any = [];
-                    if(attributes.options.length == 0){
-                        newOption = await getProductStyleValueList(option.value,product.productInfo.languages_id).then(res=>{return res?.data || []})
+                    // 是否存在重复值
+                    if(attributesMap.some((item:any)=>item.value == option.value)){
+                        message.error("不能选择重复的属性")
+                        return;
                     }
-                    console.log(option)
-                    setAttributesMap(attributesMap.map((item:any)=>item.value == option.value?{
-                        options:item.options.length > 0 ? item.options : (newOption || []),
+                    const newOptions = await getProductStyleValueList(option.value as string,product.productInfo.languages_id).then(res=>{return res?.data || []})
+                    const newAttributesMap = _.cloneDeep(attributesMap).map((item:any)=>item.value == attributes.value?{
                         label:option.label,
-                        optionValue:[],
-                        value:option.value
-                    }:item))
+                        value:option.value,
+                        options:newOptions || [],
+                        optionValue:[]
+                    }:item)
+                    setAttributesMap(newAttributesMap)
                 }} 
                 placeholder="搜索或创建属性" 
                 options={options} 
                 onClick={addAttributes}
             />
-            <EditIcon className="icon" onClick={editAttributes} />
+            {attributes.value && <EditIcon className="icon" onClick={editAttributes} />}
             <MyModal title={<div>{isCreate?"创建属性":"编辑属性"}</div>} width={620} centered open={isModalOpen} onCancel={cancel} 
                 footer = {(_, { OkBtn, CancelBtn }) => (
                     <Flex justify="end">
@@ -190,7 +174,7 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
                 )}
             >
                 <Form style={{marginTop:"24px"}} form={form} layout="vertical">
-                    <FormItem name="id" label="属性ID" hidden={true}></FormItem>
+                    <FormItem name="id" label="属性ID" hidden={true}><Input hidden /></FormItem>
                     <FormItem name="languageID" label="语言" required={false} rules={[{ required: true, message: '请输入属性名称' }]}>
                         <MySelect style={{height:"36px"}} options={languages} />
                     </FormItem>
@@ -198,7 +182,7 @@ function AttributesModal({optionsList,setOptionList,attributes,attributesMap,set
                         <DefaultInput placeholder="请输入属性名称" style={{ width:"100%",height:"36px" }} />
                     </FormItem>
                     <FormItem name="option_type" label="属性类型" required={false} rules={[{ required: true, message: '请选择属性类型' }]}>
-                        <MySelect style={{height:"36px"}} options={typeOptions} />
+                        <MySelect style={{height:"36px"}} options={attributesOptionType} />
                     </FormItem>
                     <FormItem name="status" label="状态" required={false} rules={[{ required: true, message: '请选择状态' }]}>
                         <MySelect style={{height:"36px"}} options={[

@@ -124,6 +124,14 @@ declare namespace ApiStore {
     data:any,
     msg:string,
   }
+
+  type ProductOption = {
+    code:number,
+    id:number,
+    msg:string,
+  }
+  
+
   type addTags = {
     code:number,
     count?:string,

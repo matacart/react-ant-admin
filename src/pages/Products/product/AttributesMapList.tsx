@@ -1,14 +1,14 @@
-import {addProductOptionValues, addStyleName, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
+import {addProductOptionValues, getOptionType, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
 import product, { attributeType } from "@/store/product/product";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
-import { App, Card, Checkbox, Button, AutoComplete, Input, Tag, Select, Modal, Tooltip, SelectProps, AutoCompleteProps, Flex } from "antd";
+import { App, Card, Checkbox, Tooltip, AutoCompleteProps, Flex } from "antd";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import AttributesModal from "./AttributesModal";
 import MySelect from "@/components/Select/MySelect";
-import DefaultButton from "@/components/Button/DefaultButton";
 import MyButton from "@/components/Button/MyButton";
+import AttributesTagModal from "./AttributesTagModal";
 
 /**
  * 将原始属性数组转换为 { label, value, options, optionValue }
@@ -39,11 +39,14 @@ async function transformAttributes(attributes:attributeType[], fetchOptions:any)
   const result = [];
   for (const [optId, { label, optionValueSet }] of groupMap.entries()) {
     const options = await fetchOptions(optId);   // 从外部接口获取完整选项列表
+
+
+
     const optionValue = Array.from(optionValueSet); // 原始数据中的选项值数组
     result.push({
       label,
       value: optId,
-      options,
+      options:options,
       optionValue
     });
   }
@@ -63,14 +66,12 @@ function areAllIdsPresent(idsToCheck:string[], dataList:any[]) {
   return idsToCheck.every(id => existingIds.has(id));
 }
 
-// 添加款式选项
-function addOptionValue(id:string,language:string,optionId:string,optionValuesName:string){
-    return 
-}
-
-function AttributesMapList(props:any) {
+function AttributesMapList() {
     
-    const { message,modal } = App.useApp();
+    const { message, modal } = App.useApp();
+
+    // 属性类型
+    const [attributesOptionType,setAttributesOptionType] = useState([]);
 
     // 属性选项
     const [optionList,setOptionList] = useState<AutoCompleteProps['options']>([
@@ -93,104 +94,36 @@ function AttributesMapList(props:any) {
     ])
     // 属性集合
     const [attributesMap, setAttributesMap] = useState<any[]>([]);
-    // 原始数据
-    const [info,setInfo] = useState<any>([]);
-
-    const [tags, setTags] = useState<any[][]>([]); // 用于存储每个规格组的标签
 
     const [values, setValues] = useState<string[]>([]);
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    // 确认关联变体
-    const showVariantConfirm = () => {
-        confirm({
-        title: '确认展开多款式?',
-        icon: <ExclamationCircleFilled />,
-        centered:true,
-        content: '展开多款式后，操作属性，关联SKU也将同步操作，这可能对款式列表关联的数据造成影响',
-        onOk() {
-            props.setOnVariant(true)
-        },
-        onCancel() {
-            props.setOnVariant(false)
-        },
-        });
+    // 关联变体
+    const relevanceVariant = () => {
+      if(product.productInfo.has_variant == "1"){
+        product.setProductInfo({
+          ...product.productInfo,
+          has_variant:"0"
+        })
+        return;
+      }
+      const myModal = modal.confirm({
+          title: '确认展开多款式?',
+          icon: <ExclamationCircleFilled />,
+          centered:true,
+          content: '展开多款式后，操作属性，关联SKU也将同步操作，这可能对款式列表关联的数据造成影响',
+          onOk() {
+            product.setProductInfo({
+              ...product.productInfo,
+              has_variant:"1"
+            })
+            myModal.destroy();
+          },
+          onCancel() {
+            myModal.destroy();
+          },
+      });
     };
   
-    // 表格数据
-    const [tagData,setTagData] = useState<any>([]);
-    // 表格行
-    const [flag,setFlag] = useState<number>();
-    const [attributesModal, setAttributesModal] = useState(false);
-
-    // 自定义标签
-    const tagRender = (props:any,index:any,spec:any) => {
-        const { label, value, closable, onClose } = props;
-        const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
-        event.preventDefault();
-        event.stopPropagation();
-        };
-        return (
-        <Tag
-            color="#DCEDFF"
-            onMouseDown={onPreventMouseDown}
-            closable={closable}
-            onClick={()=>{
-            setAttributesModal(true)
-            setTagData(info[index])
-            setFlag(index)
-            }}
-            onClose={onClose}
-            style={{color:"#000",padding: '3px 10px'}}
-        >
-            <span style={{cursor:"pointer",fontSize:"14px"}}>{label}</span>
-        </Tag>
-        );
-    };
-    // 修改
-    const editTagData = (data:any,i:number)=>{
-        let newSpecifications = [...specifications]
-        data.forEach((selectData:any)=>{
-        newSpecifications[i].optionValueList.forEach(countData => {
-            if(selectData.option_values_id == countData.option_values_id){
-            // 更新
-            countData.option_values_name = selectData.option_values_name
-            // if(selectData.option_values_name !== countData.option_values_name){
-            //   console.log(countData.option_values_name)
-            //   console.log(selectData.option_values_name)
-            //   addProductOptionValues(selectData.option_values_id,product.language,selectData.option_id,selectData.option_values_name).then(res=>{
-            //     if(res.code==0){
-            //       countData.option_values_name = selectData.option_values_name
-            //       setSpecifications(newSpecifications)
-            //       // console.log(newSpecifications[i].optionValueList)
-            //       // 数据
-            //       // message.success('产品款式值更新成功');
-            //     }else{
-            //       message.error('产品款式值更新失败----');
-            //     }
-            //   })
-            // }
-            }
-        });
-        })
-        // console.log(newSpecifications)
-        setSpecifications(newSpecifications)
-        let newInfo:any = [...info]
-        newInfo[i] = data
-        setInfo(newInfo)
-        product.setAttributes(newInfo.flat())
-        props.onVariant && props.setStyle(newInfo)
-    }
-
-    // 修改属性
-    const setAttributes = (key:any,value:any)=>{
-        (attributesMap.map(item=>item.value == key?{
-            ...item,
-            optionValue:[],
-            value:value
-        }:item))
-    }
-
     // 获取所有款式的选项
     const fetchOptions = (optionId: string) => {
         return getProductStyleValueList(optionId,product.productInfo.languages_id).then(res=>{
@@ -201,152 +134,63 @@ function AttributesMapList(props:any) {
     useEffect(() => {
         const fetchData = async () => {
             const attributesMap = await transformAttributes(product.attributes,fetchOptions);
-            console.log(attributesMap)
-            setAttributesMap(attributesMap)
+            setAttributesMap(attributesMap);
+            product.setAttributesMap(attributesMap);
         }
         fetchData();
     }, []);
     // 获取所有属性
     useEffect(()=>{
-        getProductOptionSelect(product.productInfo.languages_id).then(res=>{
-            res?.data && setOptionList(res.data)
-        })
+      getProductOptionSelect(product.productInfo.languages_id).then(res=>{
+          res?.data && setOptionList(res.data)
+      })
+      getOptionType().then(res=>{
+        setAttributesOptionType(res.data.map((item:any)=>({
+            label:item.product_option_type_name,
+            value:item.product_option_type_id
+        })))
+      })
     },[])
 
-
+    const firstRef = useRef(true);
     useEffect(()=>{
-        console.log(attributesMap)
-    },[attributesMap])
- 
-  // 添加 useRef 来保存输入框的引用
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  inputRefs.current = Array(values.length).fill(null);
-  // 处理标签选择或输入变化 -- 新增 -- 减
-  async function handleTagChange(value: any,option:any,index:number) {
-    // 增
-    if((tags[index].length??=0)<value.length){
-      if(specifications[index].optionId == undefined || specifications[index].optionId == "") return message.error("请先输入属性")
-      let newOption;
-      option[option.length-1].value == undefined?newOption= specifications[index].optionValueList.filter(item=>item.option_values_name == value[value.length-1]):newOption=specifications[index].optionValueList.filter(item=>item.option_values_id == value[value.length-1])
-      let newTags = [...tags]; 
-      // 存在---
-      try{
-        if(newOption.length>0){
-          // 输入
-          let valueId:string;
-          for(let item in specifications[index].optionValueList){
-            if(specifications[index].optionValueList[item].option_values_name == value[value.length-1]){
-              valueId = specifications[index].optionValueList[item].option_values_id
-              break;
-            }
-          }
-          if(tags[index].some(item=> item == valueId)){
-            message.error("请勿重复输入")
-            return
-          }
-          newTags[index] = [...newTags[index],newOption[0].option_values_id]
-          setTags(newTags)
-          info[index].push({
-            option_name:specifications[index].attributes,
-            option_values_name:option[option.length-1].label,
-            option_values_id:newOption[0].option_values_id,
-            option_id:specifications[index].optionId
-          })
-          product.setAttributes(info.flat())
-          props.onVariant && props.setStyle([...info])
-          // 
-        }else{
-          // 创建---
-          addProductOptionValues("",product.productInfo.languages_id,specifications[index].optionId,value[value.length-1]).then(res=>{
-            // console.log(res)
-            if(res.code == 0){
-              newTags[index] = [...newTags[index],res.id]
-              let newSpecifications = [...specifications]
-              newSpecifications[index].optionValueList.push({
-                option_values_id:res.id,
-                option_values_name:value[value.length-1]
-              })
-              setSpecifications(newSpecifications)
-              setTags(newTags)
-              // console.log(option)
-              // console.log(option[option.length-1].label)
-              info[index].push({
-                option_name:specifications[index].attributes,
-                option_values_name:value[value.length-1],
-                option_values_id:res.id,
-                option_id:specifications[index].optionId
-              })
-              product.setAttributes(info.flat())
-              props.onVariant && props.setStyle([...info])
-            }else{
-              message.error("添加失败")
-            }
-          })
-        }
-      }catch(e){
-        console.log(e)
+      if(firstRef.current){
+        firstRef.current = false
+        return;
       }
-      // 
-    }else{
-      // 减
-      let newTags = [...tags];
-      let optionValueId = tags[index].filter(element => !value.includes(element))
-      // console.log(optionValueId[0])
-      let newInfo = [...info]
-      newInfo[index] = info[index].filter(element => {
-        if(element.option_values_id === optionValueId[0]){
-          console.log(element.id)
-          if((element.id??="")!==""){
-            product.tempAttributes.push({...element,status:"9"})
-          }
-          return false
-        }
-        return true
-      })
-      product.setAttributes(newInfo.flat())
-      newTags[index] = value
-      setTags(newTags)
-      setInfo(newInfo)
-      props.onVariant && props.setStyle([...newInfo])
-    }
-    
-  }
+      console.log(attributesMap);
+      // 提交时 有则替换修改 无则将状态改为9
+      product.setAttributesMap([...attributesMap])
+    },[attributesMap])
 
+    // 添加 useRef 来保存输入框的引用
+    const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    inputRefs.current = Array(values.length).fill(null);
     // 删除整个规格组
     function handleRemove(attributes:any) {
-        setAttributesMap(attributesMap.filter((item:any)=>item.value != attributes.value))
+      setAttributesMap(attributesMap.filter((item:any)=>item.value != attributes.value))
     }
     // 添加新的规格组
     function handleAdd(){
-        setAttributesMap([
-            ...attributesMap,
-            {
-                label:"",
-                value:"",
-                options:[],
-                optionValue:[]
-            }
-        ])
-    }
-    // 检查是否有相同的属性
-    function hasSameAttributes(arr) {
-        console.log("arr",arr)
-        const seenAttributes = new Set();
-        for (const item of arr) {
-        if (seenAttributes.has(item.attributes)) {
-            return true; // 找到了相同的 attributes
+      if(attributesMap.some(item=>item.value == "")){
+        message.error("请勿添加多个无效款式")
+        return;
+      }
+      setAttributesMap([
+        ...attributesMap,
+        {
+          label:"",
+          value:"",
+          options:[],
+          optionValue:[]
         }
-        seenAttributes.add(item.attributes);
-        }
-        return false; // 没有找到相同的 attributes
+      ])
     }
 
   return (
     <Scoped>
-      <Card title="多款式" extra={<div onClick={()=>{
-        !props.onVariant?showVariantConfirm():props.setOnVariant(!props.onVariant)
-      }} style={{textAlign:"right",cursor:"pointer"}}>此商品有多个款式
-        <Checkbox style={{marginLeft:"10px"}} checked={props.onVariant}>
+      <Card title="多款式" extra={<div onClick={relevanceVariant} style={{textAlign:"right",cursor:"pointer"}}>此商品有多个款式
+        <Checkbox style={{marginLeft:"10px"}} checked={product.productInfo.has_variant == "1"}>
         </Checkbox>
       </div>}>
         {(
@@ -354,10 +198,13 @@ function AttributesMapList(props:any) {
             {attributesMap.map((attributes, index) => {
                 return (
                     <Flex key={index} align="center" gap={12} style={{marginBottom:"20px"}}>
-                        <AttributesModal optionsList={optionList} setOptionList={setOptionList} attributes={attributes} attributesMap={attributesMap} setAttributesMap={setAttributesMap} />
+                        <AttributesModal optionsList={optionList} attributesOptionType={attributesOptionType} setOptionList={setOptionList} attributes={attributes} attributesMap={attributesMap} setAttributesMap={setAttributesMap} />
                         <MySelect 
                             mode="tags"
                             style={{height:"42px",flex:"1"}} 
+                            classNames={{
+                              root: 'my-select'
+                            }}
                             options={attributes.options.map((item:any)=>{
                                 return {
                                     label:item.option_values_name,
@@ -405,18 +252,7 @@ function AttributesMapList(props:any) {
                                 }
                             }}
                         />
-                        {/* 添加图标 */}
-                        <span className="edit-icon btn-icon__1h8Qx edit__3TiEz" style={{cursor: "pointer"}} onClick={()=>{
-                            setAttributesModal(true)
-                            setTagData(info[index])
-                            setFlag(index)
-                        }}>
-                            <Tooltip title="编辑">
-                            <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconEdit" font-size="20">
-                                <path d="M13.551 2.47a.75.75 0 0 0-1.06 0l-9.9 9.9a.75.75 0 0 0-.22.53v4.242c0 .414.336.75.75.75h4.243a.75.75 0 0 0 .53-.22l9.9-9.899a.75.75 0 0 0 0-1.06L13.551 2.47Zm-9.68 10.74 9.15-9.15 3.182 3.183-9.15 9.15H3.873V13.21Zm13.807 4.682a.1.1 0 0 0 .1-.1v-1.3a.1.1 0 0 0-.1-.1h-6.8a.1.1 0 0 0-.1.1v1.3a.1.1 0 0 0 .1.1h6.8Z" fill="#474F5E"></path>
-                            </svg>
-                            </Tooltip>
-                        </span>
+                        <AttributesTagModal attributes={attributes} attributesMap={attributesMap} setAttributesMap={setAttributesMap}  />
                         <span className="delete-icon btn-icon__1h8Qx delete__3TiEz" style={{cursor: "pointer"}} onClick={() => handleRemove(attributes)}>
                             <Tooltip title="删除">
                             <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" data-icon="SLIconDelete" font-size="20">
@@ -449,5 +285,11 @@ export default observer(AttributesMapList);
 const Scoped = styled.div`
   .ant-select-selection-search-input{
     height: 100%;
+  }
+  .add-specification-button{
+    height: 36px;
+  }
+  .my-select{
+
   }
 `

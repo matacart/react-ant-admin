@@ -906,7 +906,7 @@ export async function updataBatchUpdatePrice(res:any) {
 
 // 创建款式名称 languages_id product_option_name sort product_option_type_id status
 export async function addStyleName(id:string,languagesId:string,productStyleName:string,productOptionType:string){
-  return await request('/ApiStore/product_option_add',{
+  return await request<ApiStore.ProductOption>('/ApiStore/product_option_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -958,7 +958,7 @@ export async function getProductStyleList(model:string,languagesId:string){
 }
 
 export async function getProductOption(id:string,languagesId:string){
-  return await request('/ApiStore/product_option',{
+  return await request<ApiStore.Default>('/ApiStore/product_option',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1044,7 +1044,7 @@ export function getProductStyleValueList(optionId:string,language:string){
 
 // 添加款式选项
 export async function addProductOptionValues(id:string,language:string,optionId:string,optionValuesName:string){
-  return request('/ApiStore/product_option_values_add',{
+  return request<ApiStore.ProductOption>('/ApiStore/product_option_values_add',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

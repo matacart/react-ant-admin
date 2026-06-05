@@ -41,21 +41,7 @@ function MultipleStylesEdit(props:any) {
     },
   ]);
 
-  // 确认关联变体
-  const showVariantConfirm = () => {
-    confirm({
-      title: '确认展开多款式?',
-      icon: <ExclamationCircleFilled />,
-      centered:true,
-      content: '展开多款式后，操作属性，关联SKU也将同步操作，这可能对款式列表关联的数据造成影响',
-      onOk() {
-        props.setOnVariant(true)
-      },
-      onCancel() {
-        props.setOnVariant(false)
-      },
-    });
-  };
+  
 
   // 原始数据
   const [info,setInfo] = useState<any>([]);

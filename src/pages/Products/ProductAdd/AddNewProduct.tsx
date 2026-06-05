@@ -28,6 +28,7 @@ import ProtectionInformation from '../Product/ProtectionInformation';
 import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
 import StockCard from '../Product/StockCard';
 import SEOCard from '../Product/SEOCard';
+import AttributesMapList from '../Product/AttributesMapList';
 
 // 表单项商品数据类型
 interface DataType {
@@ -54,7 +55,8 @@ function AddNewProduct(){
     const { message } = App.useApp();
 
     // 变体---控制变体组合
-    const [onVariant,setOnVariant] = useState(false);
+    const [showVariant,setShowVariant] = useState(false);
+
     const [style, setStyle] = useState([]);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
@@ -189,8 +191,8 @@ function AddNewProduct(){
                             <ProductImg />
                             <PriceOrTransaction form={form} />
                             <StockCard form={form} />
-                            <MultipleStylesCard style={style} setStyle={setStyle} onVariant={onVariant} setOnVariant={setOnVariant} />
-                            {onVariant && <ProductStyleList style={style} setStyle={setStyle} />}
+                            <AttributesMapList />
+                            {product.productInfo.has_variant == "1" && <div>123</div>}
                         </div>
                         <div className='mc-layout-extra'>
                             <Relevance />

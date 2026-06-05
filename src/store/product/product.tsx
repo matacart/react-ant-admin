@@ -1,4 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
 
 interface ProductType {
   product_video: string;
@@ -65,6 +66,7 @@ interface ProductType {
   content: string;
   content1: string;
   handle:string;
+  has_variant:string;
 }
 
 
@@ -111,7 +113,7 @@ class Product{
         // 
         tag: "",
         weight: 0,
-        languages_id: "2",
+        languages_id: cookie.load("shop_lang") || '2',
         manufactuer: "",
         spu: "",
         weight_class_id: 1,
@@ -148,6 +150,7 @@ class Product{
         prevProductId: "",
         product_video: "",
         handle:"",
+        has_variant:"0",
       };
     }
 
@@ -169,6 +172,13 @@ class Product{
     attributes:attributeType[] = []
     setAttributes(res: attributeType[]) {
       this.attributes = res
+    }
+
+    // 格式化后的属性
+    attributesMap:any = []
+
+    setAttributesMap = (res:any)=>{
+      this.attributesMap = res;
     }
    
     // 状态为9的属性  --- 要删除的属性

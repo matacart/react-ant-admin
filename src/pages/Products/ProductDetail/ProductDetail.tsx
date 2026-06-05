@@ -354,8 +354,8 @@ function ProductDetail() {
                                     <ProductImg />
                                     <PriceOrTransaction form={form} />
                                     <StockCard form={form} />
-                                    <AttributesMapList onVariant={onVariant} setOnVariant={setOnVariant} style={style} setStyle={setStyle} />
-                                    {onVariant && <VariantList attributesMap={style} setAttributesMap={setStyle} />}
+                                    <AttributesMapList />
+                                    {product.productInfo.has_variant == "1" && <VariantList />}
                                 </div>
                                 <div className='mc-layout-extra'>
                                     <Relevance />
