@@ -118,7 +118,7 @@ export default function EditFreightModal({record}:{record:any}){
         }))
     }
    
-    const options = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+    const options = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map(item=>{
         return {
             label:item.country_name,
             value:item.iso_code_2,

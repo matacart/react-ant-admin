@@ -4,18 +4,18 @@ import { useMemo, useState } from "react";
 
 const { TextArea } = Input;
 
-function ItemTextArea({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function ItemTextArea({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     const intl = useIntl();
 
     // 默认数据
     const defaultData = item.default || undefined;
 
-    const [value,setValue] = useState(data || defaultData);
+    const [value,setValue] = useState(data?.value || defaultData);
 
     useMemo(()=>{
-        setValue(data || defaultData);
-    },[data])
+        setValue(data?.value || defaultData);
+    },[data?.value])
 
     return (
         <TextArea
@@ -23,7 +23,9 @@ function ItemTextArea({item,data,setData}:{item:any,data:string,setData:(item:an
             value={value} 
             placeholder={item?.placeholder || intl.formatMessage({id: 'theme.left.ItemText.placeholder'})}
             onChange={(e:any)=>{
-                setData(item,e.target.value);
+                setData(item,{
+                    value: e.target.value
+                });
                 setValue(e.target.value);
             }}
         />

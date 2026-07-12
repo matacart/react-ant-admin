@@ -8,7 +8,7 @@ import { useMemo, useRef, useState } from "react"
 import styled from "styled-components"
 
 interface DataType{
-    id:string,
+    value:string,
     resource:any,
 }
 
@@ -50,11 +50,11 @@ function BlogCollection({item,data,setData}:{item:any,data:DataType,setData:(ite
     // 删除
     const delMenu = () => {
         setData(item,{
-            id: "",
+            value: "",
             resource: null
         });
         setValue({
-            id: "",
+            value: "",
             resource: null
         });
     }
@@ -65,7 +65,7 @@ function BlogCollection({item,data,setData}:{item:any,data:DataType,setData:(ite
 
     return (
         <Scoped ref={mRef}>
-            {value?.id ? (
+            {value?.value ? (
                 <div className="select_item">
                     <div className="select_item_container">{value?.resource?.title}</div>
                     <Flex gap={12}>
@@ -110,14 +110,14 @@ function BlogCollection({item,data,setData}:{item:any,data:DataType,setData:(ite
                         {menu.map((item,index)=>(
                             <Flex key={item.id} className="menu-item" justify="space-between" align="center" onClick={()=>{
                                 setValue({
-                                    id: item.id.toString(),
+                                    value: item.id.toString(),
                                     resource: {
                                         title: item.title 
                                     }
                                 });
                             }}>
                                 <div>{item.title}</div>
-                                {item.id == value?.id && <CheckCircleFilled className="color-356DFF font-16" />}
+                                {item.id == value?.value && <CheckCircleFilled className="color-356DFF font-16" />}
                             </Flex>
                         ))}
                         <Flex className="menu-item" align="center" justify="center" gap={6} >

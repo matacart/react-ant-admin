@@ -1,7 +1,8 @@
 import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
-import { Divider } from "antd"
+import { App, Divider } from "antd"
 import styled from "styled-components"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { history } from "@umijs/max"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import CustomerAccountInformation from "./CustomerAccountInformation"
 import CustomerContactInformation from "./CustomerContactInformation"
@@ -13,36 +14,157 @@ import OrderProcessing from "./OrderProcessing"
 import UsePromoCode from "./UsePromoCode"
 import CheckoutButton from "./CheckoutButton"
 import CheckoutSecurityTrust from "./CheckoutSecurityTrust"
-import { useNavigate } from "react-router-dom"
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import TopicConfiguration from "./TopicConfiguration"
+import { getCheckoutConfigDrafts, getCheckoutConfigLive, getCheckoutSettingsInfo, setCheckoutSettingsInfo } from "@/services/y2/apiCheckout"
+import LangSelect from "@/components/Select/LangSelect"
+import settingsInfo, { CheckoutConfig } from "@/store/settings/settle/settingsInfo"
+import { observer } from "mobx-react-lite"
+import ProductOverlay from "@/components/Overlay/Overlay"
+import _ from 'lodash';
 
 
 function Settle() {
 
-    const navigate = useNavigate()
+    const { message } = App.useApp();
 
-    const [isSkeleton,setIsSkeleton] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
-    const [isRenewal,setIsRenewal] = useState(false)
+    const [loading,setLoading] = useState(false);
+
+    const [isUpdate,setIsUpdate] = useState(false);
+
+    // 格式化处理函数
+    const formatData = (data:any) => {
+        if(typeof data === 'string' && data !== '{}' && data !== '[]'){
+            return JSON.parse(data)
+        }
+        return ""
+    }
+
+
+    const setLang = (lang:string) => {
+        settingsInfo.setLanguagesId(lang);
+    }
+
+    const fetchData = async ()=>{
+        setIsSkeleton(true)
+        try{
+            const [settingsRes, liveRes, draftRes] = await Promise.all([
+                getCheckoutSettingsInfo({ languages_id: settingsInfo.languagesId }),
+                getCheckoutConfigLive({ languages_id: settingsInfo.languagesId }),
+                getCheckoutConfigDrafts({ languages_id: settingsInfo.languagesId, type: "draft" })
+            ]);
+            if(settingsRes.code === 0){
+                const {
+                    checkout_form_config,
+                    stock_lock_config,
+                    payment_security,
+                    after_sale_guarantee,
+                    product_detail_settle_button_config,
+                    cart_settle_button_config,
+                    checkout_settle_button_config,
+                    tip_config_info,
+                    tip_show_config_info,
+                    accept_subscription_by_other_contact, // 特殊字段单独提取
+                    ...config
+                } = settingsRes.data || {};
+                const newConfig = _.mapKeys(config, (value, key) => _.camelCase(key)) as CheckoutConfig;
+                settingsInfo.setConfig({
+                    ...newConfig,
+                    acceptSubscriptionByOtherContactType:accept_subscription_by_other_contact || "0",
+                })
+                formatData(stock_lock_config) && settingsInfo.setStockLockConfig(formatData(stock_lock_config))
+                formatData(payment_security) && settingsInfo.setPaymentSecurity(formatData(payment_security))
+                formatData(after_sale_guarantee) && settingsInfo.setAfterSaleGuarantee(formatData(after_sale_guarantee))
+                formatData(checkout_form_config) && settingsInfo.setCheckoutFormConfig(formatData(checkout_form_config))
+                formatData(product_detail_settle_button_config) && settingsInfo.setProductDetailSettleButtonConfig(formatData(product_detail_settle_button_config))
+                formatData(cart_settle_button_config) && settingsInfo.setCartSettleButtonConfig(formatData(cart_settle_button_config))
+                formatData(checkout_settle_button_config) && settingsInfo.setCheckoutSettleButtonConfig(formatData(checkout_settle_button_config))
+                formatData(tip_config_info) && settingsInfo.setTipConfigInfo(formatData(tip_config_info))
+                formatData(tip_show_config_info) && settingsInfo.setTipShowConfigInfo(formatData(tip_show_config_info))
+            }
+            if(liveRes.code === 0){
+                settingsInfo.setCheckoutConfigLive(liveRes.data.config || null)
+            }
+            if(draftRes.code === 0){
+                settingsInfo.setCheckoutConfigDraft(draftRes.data.list || [])
+            }
+        }catch(err){
+            console.log(err)
+        }finally{
+            setIsSkeleton(false)
+        }
+    }
+    
+    // 提交配置
+    const submit = async ()=>{
+        setLoading(true)
+        setCheckoutSettingsInfo({
+            languages_id: settingsInfo.languagesId,
+            ...settingsInfo.config,
+            checkoutFormConfig: JSON.stringify(settingsInfo.checkoutFormConfig),
+            afterSaleGuarantee: JSON.stringify(settingsInfo.afterSaleGuarantee),
+            paymentSecurity: JSON.stringify(settingsInfo.paymentSecurity),
+            stockLockConfig: JSON.stringify(settingsInfo.stockLockConfig),
+            productDetailSettleButtonConfig: JSON.stringify(settingsInfo.productDetailSettleButtonConfig),
+            cartSettleButtonConfig: JSON.stringify(settingsInfo.cartSettleButtonConfig),
+            checkoutSettleButtonConfig: JSON.stringify(settingsInfo.checkoutSettleButtonConfig),
+            tipConfigInfo: JSON.stringify(settingsInfo.tipConfigInfo),
+            tipShowConfigInfo: JSON.stringify(settingsInfo.tipShowConfigInfo),
+        }).then(()=>{
+            message.success("success")
+        }).catch(err=>{
+            message.success("err")
+        }).finally(()=>{
+            setLoading(false)
+        })
+    }
+
+    // 监听配置变化
+    useMemo(()=>{
+        if(isSkeleton) return;
+        setIsUpdate(true)
+    },[
+        settingsInfo.config,
+        settingsInfo.checkoutFormConfig,
+        settingsInfo.afterSaleGuarantee,
+        settingsInfo.paymentSecurity,
+        settingsInfo.stockLockConfig,
+        settingsInfo.productDetailSettleButtonConfig,
+        settingsInfo.cartSettleButtonConfig,
+        settingsInfo.checkoutSettleButtonConfig,
+        settingsInfo.tipConfigInfo,
+        settingsInfo.tipShowConfigInfo
+    ])
 
     useEffect(()=>{
-      
+        fetchData()
+        // 初始化更新状态
+        setIsUpdate(false)
+    },[settingsInfo.languagesId])
+
+    useEffect(()=>{
+        // 组件销毁时，重置更新状态
+        return ()=>{
+            settingsInfo.reset()
+        }
     },[])
-    
+
     return (
         <Scoped>
             {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
-                            <div className="mc-header-left-secondary" onClick={()=>navigate("/settings/index")}>
+                            <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/index")}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">结账</div>
                         </div>
                         <div className='mc-header-right'>
                             <div className="mc-header-right-content">
+                                <LangSelect lang={settingsInfo.languagesId} setLang={setLang} />
                             </div>
                         </div>
                     </div>
@@ -130,8 +252,8 @@ function Settle() {
                             </div>
                         </div>
                     </div>
-                     {/* 订单处理 */}
-                     <div className='mc-layout-main'>
+                    {/* 订单处理 */}
+                    <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
                             <div className="mc-layout-content-left">
                                 <div className="font-20 color-242833 font-w-600">订单处理</div>
@@ -190,15 +312,22 @@ function Settle() {
                     >
                     </Divider>
                     <div className="submit-btn">
-                        <PrimaryButton loading={isRenewal} onClick={()=>{
-                        }} text="更新" />
+                        <PrimaryButton loading={loading} onClick={submit} text="更新" />
                     </div>
                 </div>
+                {/* 遮罩提示 */}
+                {isUpdate && <ProductOverlay status={loading} okText="确定" onExit={()=>{
+                    setIsUpdate(false);
+                    history.push("/settings")
+                }} onSubmit={async ()=>{
+                    await submit()
+                    setIsUpdate(false);
+                }} />}
             </div>}
         </Scoped>
     )
 }
-export default Settle
+export default observer(Settle)
 
 const Scoped = styled.div`
 .mc-layout-wrap{

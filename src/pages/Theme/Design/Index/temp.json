@@ -1,0 +1,459 @@
+{
+    "color_page_background": {
+        "value": "#6e0e0e",
+        "resource": null
+    },
+    "color_text": {
+        "value": "#3F495C"
+    },
+    "color_light_text": {
+        "value": "#626C80"
+    },
+    "color_sale": {
+        "value": "#3F495C"
+    },
+    "color_discount": {
+        "value": "#E32619"
+    },
+    "color_entry_line": {
+        "value": "#EAECEC"
+    },
+    "color_btn_background": {
+        "value": "#7AA5C1"
+    },
+    "color_btn_text": {
+        "value": "#FFFFFF"
+    },
+    "color_secondary_btn_backgroud": {
+        "value": "#FFFFFF"
+    },
+    "color_secondary_btn_text": {
+        "value": "#3F495C"
+    },
+    "color_secondary_btn_border": {
+        "value": "#DDDDDD"
+    },
+    "color_tag_background": {
+        "value": "#E32619"
+    },
+    "color_tag_text": {
+        "value": "#FFFFFF"
+    },
+    "color_cart_dot": {
+        "value": "#7AA5C1"
+    },
+    "color_cart_dot_text": {
+        "value": "#FFFFFF"
+    },
+    "color_image_background": {
+        "value": "#F4F7FB"
+    },
+    "color_section_background": {
+        "value": "#F4F7FB"
+    },
+    "color_mask": {
+        "value": "#171717"
+    },
+    "color_scheme_1_bg": {
+        "value": "#7AA5C1"
+    },
+    "color_scheme_1_gradient": {
+        "value": ""
+    },
+    "color_scheme_1_text": {
+        "value": "#FFFFFF"
+    },
+    "color_scheme_2_bg": {
+        "value": "#FFFFFF"
+    },
+    "color_scheme_2_gradient": {
+        "value": ""
+    },
+    "color_scheme_2_text": {
+        "value": "#3F495C"
+    },
+    "color_scheme_3_bg": {
+        "value": "#7AA5C1"
+    },
+    "color_scheme_3_gradient": {
+        "value": ""
+    },
+    "color_scheme_3_text": {
+        "value": "#FFFFFF"
+    },
+    "type_title_font": {
+        "value": "El Messiri"
+    },
+    "type_title_letter_spacing": {
+        "value": "0"
+    },
+    "type_title_size": {
+        "value": "30"
+    },
+    "type_title_line_height": {
+        "value": "1.2"
+    },
+    "type_title_uppercase": {
+        "value": false
+    },
+    "type_body_font": {
+        "value": "Libre Franklin"
+    },
+    "type_body_letter_spacing": {
+        "value": "0"
+    },
+    "type_body_size": {
+        "value": "16"
+    },
+    "type_body_line_height": {
+        "value": "1.6"
+    },
+    "type_navigation_font": {
+        "value": "body"
+    },
+    "type_navigation_size": {
+        "value": "14"
+    },
+    "type_navigation_uppercase": {
+        "value": false
+    },
+    "page_width": {
+        "value": 1100
+    },
+    "section_vertical_gap": {
+        "value": 0
+    },
+    "grid_horizontal_space": {
+        "value": 8
+    },
+    "grid_vertical_space": {
+        "value": 12
+    },
+    "btn_border_radius": {
+        "value": 4
+    },
+    "btn_border_thickness": {
+        "value": 1
+    },
+    "btn_border_opacity": {
+        "value": 100
+    },
+    "btn_shadow_offset_x": {
+        "value": 0
+    },
+    "btn_shadow_offset_y": {
+        "value": 0
+    },
+    "btn_shadow_blur": {
+        "value": 0
+    },
+    "btn_shadow_opacity": {
+        "value": 0
+    },
+    "input_border_thickness": {
+        "value": 1
+    },
+    "input_border_opacity": {
+        "value": 20
+    },
+    "input_border_radius": {
+        "value": 4
+    },
+    "input_shadow_opacity": {
+        "value": 0
+    },
+    "input_shadow_offset_x": {
+        "value": 0
+    },
+    "input_shadow_offset_y": {
+        "value": 0
+    },
+    "input_shadow_blur": {
+        "value": 0
+    },
+    "sku_selector_border_radius": {
+        "value": 4
+    },
+    "sku_selector_border_thickness": {
+        "value": 1
+    },
+    "sku_selector_border_opacity": {
+        "value": 20
+    },
+    "sku_selector_shadow_offset_x": {
+        "value": 0
+    },
+    "sku_selector_shadow_offset_y": {
+        "value": 0
+    },
+    "sku_selector_shadow_blur": {
+        "value": 0
+    },
+    "sku_selector_shadow_opacity": {
+        "value": 0
+    },
+    "content_border_thickness": {
+        "value": 0
+    },
+    "content_border_opacity": {
+        "value": 0
+    },
+    "content_border_radius": {
+        "value": 8
+    },
+    "content_mb_border_radius": {
+        "value": 4
+    },
+    "content_shadow_opacity": {
+        "value": 8
+    },
+    "content_shadow_offset_x": {
+        "value": 0
+    },
+    "content_shadow_offset_y": {
+        "value": 0
+    },
+    "content_shadow_blur": {
+        "value": 20
+    },
+    "media_border_thickness": {
+        "value": 0
+    },
+    "media_border_opacity": {
+        "value": 0
+    },
+    "media_border_radius": {
+        "value": 8
+    },
+    "media_mb_border_radius": {
+        "value": 4
+    },
+    "media_shadow_opacity": {
+        "value": 0
+    },
+    "media_shadow_offset_x": {
+        "value": 0
+    },
+    "media_shadow_offset_y": {
+        "value": 0
+    },
+    "media_shadow_blur": {
+        "value": 0
+    },
+    "menu_modal_border_thickness": {
+        "value": 1
+    },
+    "menu_modal_border_opacity": {
+        "value": 20
+    },
+    "menu_modal_border_radius": {
+        "value": 8
+    },
+    "menu_modal_shadow_opacity": {
+        "value": 5
+    },
+    "menu_modal_shadow_offset_x": {
+        "value": 0
+    },
+    "menu_modal_shadow_offset_y": {
+        "value": 0
+    },
+    "menu_modal_shadow_blur": {
+        "value": 20
+    },
+    "drawer_border_thickness": {
+        "value": 1
+    },
+    "drawer_border_opacity": {
+        "value": 20
+    },
+    "drawer_shadow_offset_x": {
+        "value": 0
+    },
+    "drawer_shadow_offset_y": {
+        "value": 0
+    },
+    "drawer_shadow_blur": {
+        "value": 20
+    },
+    "drawer_shadow_opacity": {
+        "value": 5
+    },
+    "card_border_thickness": {
+        "value": 0
+    },
+    "card_border_opacity": {
+        "value": 0
+    },
+    "card_border_radius": {
+        "value": 8
+    },
+    "card_mb_border_radius": {
+        "value": 4
+    },
+    "card_shadow_offset_x": {
+        "value": 0
+    },
+    "card_shadow_offset_y": {
+        "value": 0
+    },
+    "card_shadow_blur": {
+        "value": 0
+    },
+    "card_shadow_opacity": {
+        "value": 0
+    },
+    "product_discount": {
+        "value": true
+    },
+    "product_discount_tag_style": {
+        "value": "save"
+    },
+    "product_discount_style": {
+        "value": "number"
+    },
+    "product_discount_position": {
+        "value": "left_bottom"
+    },
+    "product_discount_radius": {
+        "value": 4
+    },
+    "product_add_to_cart": {
+        "value": true
+    },
+    "product_quick_view": {
+        "value": true
+    },
+    "product_title_show_type": {
+        "value": "full_display"
+    },
+    "product_mobile_title_show": {
+        "value": true
+    },
+    "product_card_style": {
+        "value": 1
+    },
+    "product_card_color_scheme": {
+        "value": "2"
+    },
+    "product_card_image_padding": {
+        "value": 0
+    },
+    "product_card_divider": {
+        "value": false
+    },
+    "cart_open_type": {
+        "value": "minicart"
+    },
+    "social_facebook_link": {
+        "value": ""
+    },
+    "social_twitter_link": {
+        "value": ""
+    },
+    "social_pinterest_link": {
+        "value": ""
+    },
+    "social_instagram_link": {
+        "value": ""
+    },
+    "social_snapchat_link": {
+        "value": ""
+    },
+    "social_tiktok_link": {
+        "value": ""
+    },
+    "social_youtube_link": {
+        "value": ""
+    },
+    "social_linkedin_link": {
+        "value": ""
+    },
+    "share_to_facebock": {
+        "value": true
+    },
+    "share_to_twitter": {
+        "value": true
+    },
+    "share_to_pinterest": {
+        "value": true
+    },
+    "share_to_line": {
+        "value": true
+    },
+    "share_to_whatsapp": {
+        "value": true
+    },
+    "share_to_tumblr": {
+        "value": true
+    },
+    "favicon_image": {
+        "value": ""
+    },
+    "co_banner_pc_img": {
+        "value": {}
+    },
+    "co_banner_phone_img": {
+        "value": {}
+    },
+    "co_banner_pc_height": {
+        "value": "low"
+    },
+    "co_banner_phone_height": {
+        "value": "low"
+    },
+    "co_banner_img_show": {
+        "value": "center"
+    },
+    "co_full_screen": {
+        "value": true
+    },
+    "co_checkout_image": {
+        "value": {}
+    },
+    "co_logo_size": {
+        "value": "medium"
+    },
+    "co_logo_position": {
+        "value": "left"
+    },
+    "co_bg_image": {
+        "value": {}
+    },
+    "co_background_color": {
+        "value": "#FFFFFF"
+    },
+    "co_form_bg_color": {
+        "value": "white"
+    },
+    "co_order_bg_image": {
+        "value": {}
+    },
+    "co_order_background_color": {
+        "value": "#FAFAFA"
+    },
+    "co_color_btn_bg": {
+        "value": "#276EAF"
+    },
+    "co_color_err_color": {
+        "value": "#F04949"
+    },
+    "co_color_msg_color": {
+        "value": "#276EAF"
+    },
+    "show_breadcrumb": {
+        "value": true
+    },
+    "co_type_title_font": {
+        "value": {
+            "lib": "system",
+            "value": "System"
+        }
+    },
+    "co_type_body_font": {
+        "value": {
+            "lib": "system",
+            "value": "System"
+        }
+    }
+}

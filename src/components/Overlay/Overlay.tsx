@@ -1,7 +1,9 @@
 import { ExclamationCircleOutlined, InfoCircleOutlined } from "@ant-design/icons"
-import { App, Button, Flex, Modal } from "antd"
+import { App, Button, Flex } from "antd"
 import styled from "styled-components"
 import React from "react";
+import DefaultButton from "../Button/DefaultButton";
+import PrimaryButton from "../Button/PrimaryButton";
 function ProductOverlay({status,okText,onExit,onSubmit}:{status:boolean,okText:string,onExit:()=>void,onSubmit:()=>void}) {
 
     const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
@@ -11,14 +13,20 @@ function ProductOverlay({status,okText,onExit,onSubmit}:{status:boolean,okText:s
     };
 
     const confirm = () => {
-        modal.confirm({
+        const confirmModal = modal.confirm({
           title: '未保存的内容将丢失，确认退出页面？',
           icon: <ExclamationCircleOutlined />,
           content:<div style={{height:"20px"}}></div>,
-          okText: '退出页面',
-          cancelText: '取消',
           centered: true,
-          onOk:onExit
+          footer: ()=><>
+            <Flex gap={12} justify="flex-end">
+                <DefaultButton onClick={()=>confirmModal.destroy()} text="取消" />
+                <PrimaryButton onClick={()=>{
+                    confirmModal.destroy()
+                    onExit()
+                }} text="退出页面" />
+            </Flex>
+          </>,
         })
     };
 

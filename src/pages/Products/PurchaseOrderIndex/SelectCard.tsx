@@ -1,15 +1,12 @@
 import { Input, Button, Select, MenuProps, Flex, Tag } from "antd";
 import { useEffect, useRef, useState } from "react"
 import { SearchOutlined } from "@ant-design/icons";
-import TableListCard from "./TableListCard";
 import { getAddWarehouseList, getPurchaseList, selectSupplier } from "@/services/y2/api";
 import purchaseOrderList from "@/store/product/purchaseOrder/purchaseOrderListStore";
 import { observer } from "mobx-react-lite";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
 import SelectCheckBox from "@/components/Select/SelectCheckBox";
-import SelectCheckBox2 from "@/components/Select/SelectCheckBox2";
-
-const { Search } = Input;
+import TableListCard from "./TableListCard";
 
 function SelectCard(){
 

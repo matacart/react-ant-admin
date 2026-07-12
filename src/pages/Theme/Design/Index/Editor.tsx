@@ -4,9 +4,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import editor from '@/store/theme/editor';
 import { observer } from 'mobx-react-lite';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { useSearchParams } from 'react-router-dom';
 import { getGenerateAuthToken, getTemplatePage, installedSections, languageSchema, settingsSections, templateInfo } from '@/services/y2/api';
-import { addLocale, useIntl, useParams } from '@umijs/max';
+import { addLocale, useIntl, useParams, useSearchParams } from '@umijs/max';
 import { useAbortController } from '@/hooks/customHooks';
 import Header from '../Header/Header';
 import Left from '../Left/Left';
@@ -106,6 +105,10 @@ function Editor() {
         },signal)
         if(settingsData.code == "SUCCESS"){
           editor.setSettings(settingsData.data);
+          // editor.setSettings({
+          //   ...settingsData.data,
+          //   settingsData: temp,
+          // });
           editor.setMode(settingsData.data.mode)
         }
         if(settingsData.code == 201){

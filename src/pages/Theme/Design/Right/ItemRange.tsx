@@ -3,18 +3,18 @@ import { useIntl } from "@umijs/max";
 import { Flex, Slider } from "antd"
 import { useMemo, useState } from "react";
 
-function ItemRange({item,data,setData}:{item:any,data:number,setData:(item:any,value:number)=>void}){
+function ItemRange({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     const intl = useIntl();
 
     // 默认数据
     const defaultData = item.default??undefined;
 
-    const [value,setValue] = useState(data??defaultData);
+    const [value,setValue] = useState(data?.value??defaultData);
 
     useMemo(()=>{
-        setValue(data??defaultData)
-    },[data])
+        setValue(data?.value??defaultData)
+    },[data?.value])
 
     return (
         <Flex gap={20}>
@@ -24,7 +24,9 @@ function ItemRange({item,data,setData}:{item:any,data:number,setData:(item:any,v
                 min={item?.min}
                 max={item?.max}
                 onChange={(value:number)=>{
-                    setData(item,value)
+                    setData(item,{
+                        value: value
+                    })
                     setValue(value)
                 }}
             />

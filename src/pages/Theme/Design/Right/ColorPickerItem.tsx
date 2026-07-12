@@ -46,22 +46,24 @@ import { useEffect, useMemo, useState } from "react";
 //     );
 // })
 
-const ColorPickerItem = ({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void})=>{
+const ColorPickerItem = ({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void})=>{
 
     const intl = useIntl();
 
     const defaultColor = item.default || "#FFFFFF";
 
-    const [value,setValue] = useState(data || defaultColor);
+    const [value,setValue] = useState(data?.value || defaultColor);
 
     useMemo(()=>{
-        setValue(data || defaultColor)
-    },[data])
+        setValue(data?.value || defaultColor)
+    },[data?.value])
 
     const handleColorChange = (newColor: any) => {
         const hexColor = newColor.toHexString(); // 转为十六进制字符串
         setValue(hexColor);
-        setData(item,hexColor);
+        setData(item,{
+            value: hexColor
+        });
     };
 
     return (

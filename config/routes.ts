@@ -176,6 +176,36 @@ export default  [
           menu: false,
           component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
         },
+        // 采购订单
+        {
+          path: 'purchase_orders',
+          name: 'purchase',
+          icon:"/icons/menu/cg.svg",
+          component: './Products/PurchaseOrderIndex/Index',
+        },
+        {
+          path: 'purchase_orders/:id',
+          name: 'purchase',
+          component: './Products/PurchaseOrderDetail/Index',
+          menu: false,
+        },
+        {
+          path: 'purchase_orders/new',
+          name: 'purchase',
+          component: './Products/PurchaseOrderNew/Index',
+          menu: false,
+        },
+        // 库存
+        {
+          path: 'inventory',
+          name: 'inventory',
+          component: './Products/Inventory/Index',
+        },
+        {
+          path: 'transfers',
+          name: 'transfers',
+          component: './Products/Transfers/BlankPage',
+        },
         // 礼品卡
         {
           path: 'gift-cards',
@@ -188,11 +218,6 @@ export default  [
           hideInMenu: true,
           parentKeys: ['/products/gift-cards'],
           component: './Products/GiftCardsNew/Index',
-        },
-        {
-          path: 'gift-cards-product',
-          name: 'giftCardsProduct',
-          component: './Products/GiftCardsProduct/Index',
         },
         {
           path: 'gift-cards-product/new',
@@ -338,43 +363,6 @@ export default  [
         hideInMenu: true,
         component:'./Analyse/Batch/Batch'
       }
-    ]
-  },
-  // 采购
-  {
-    path: 'purchase_orders',
-    name: 'purchase',
-    icon:"/icons/menu/cg.svg",
-    component: './Products/PurchaseOrder/Index',
-  },
-  {
-    path: 'purchase_orders/:id',
-    name: 'purchase',
-    component: './Products/PurchaseOrder/old/OldPurchaseOrder',
-    menu: false,
-  },
-  {
-    path: 'purchase_orders/new',
-    name: 'purchase',
-    component: './Products/PurchaseOrder/new/NewPurchaseOrder',
-    menu: false,
-  },
-  // 库存
-  {
-    path: 'warehouse',
-    name: 'warehouse',
-    icon:"/icons/menu/ck.svg",
-    routes:[
-      {
-        path: 'inventory',
-        name: 'inventory',
-        component: './Products/Inventory/Index',
-      },
-      {
-        path: 'transfers',
-        name: 'transfers',
-        component: './Products/Transfers/BlankPage',
-      },
     ]
   },
   {
@@ -841,6 +829,10 @@ export default  [
         component:"./Settings/Settle/Index/Settle"
       },
       {
+        path:"additional/country",
+        component:"./Settings/Additional/Country/Index"
+      },
+      {
         path: 'package',
         component: './Settings/Package'
       },
@@ -872,10 +864,9 @@ export default  [
   },
   // 结账编辑器
   {
-    path:"settings/settle/checkout-editor",
+    path:"settings/settle/checkout-editor/:profileId",
     layout: false,
     component:"./Settings/Settle/CheckoutEditor/CheckoutEditor"
-
   },
   // 通知邮件编辑器
   {
@@ -920,6 +911,117 @@ export default  [
     layout: false,
     component: './404',
   },
+  // stock-page --- 智能库存管理系统
+  {
+    path:"/stock-page",
+    layout: false,
+    component:"./StockPage/App",
+    routes:[
+      {
+        path:"",
+        redirect:"/stock-page/overflow",
+      },
+      {
+        path:"/stock-page/overflow",
+        name:"概览",
+        icon: 'AppstoreOutlined',
+        component:"./StockPage/page/overflow/Index"
+      },
+      {
+        path:"/stock-page/product-list",
+        name:"商品",
+        icon: 'ShoppingOutlined',
+        component:"./StockPage/page/product/Index",
+      },
+      {
+        path:"/stock-page/stock",
+        name:"库存",
+        icon: 'HomeOutlined',
+        routes:[
+          {
+            path:"/stock-page/stock/warning",
+            name:"库存预警",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/stock/taking",
+            name:"库存盘点",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/stock/transfer",
+            name:"库存调拨",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/stock/adjustment",
+            name:"库存调整",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/stock/serial-number",
+            name:"序列号",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/stock/share",
+            name:"库存共享",
+            component:"./StockPage/page/overflow/Index",
+          }
+        ]
+      },
+      {
+        path:"/stock-page/purchase",
+        name:"采购",
+        icon: 'ShoppingCartOutlined',
+        routes:[
+          {
+            path:"/stock-page/purchase/list",
+            name:"采购列表",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/purchase/return-list",
+            name:"采购退货",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/purchase/provider-manage",
+            name:"供应商管理",
+            component:"./StockPage/page/overflow/Index",
+          }
+        ]
+      },
+      {
+        path:"/stock-page/analysis",
+        name:"分析",
+        icon: 'PieChartOutlined',
+        routes:[
+          {
+            path:"/stock-page/analysis/stock",
+            name:"库存分析",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/analysis/layering",
+            name:"ABC分析",
+            component:"./StockPage/page/overflow/Index",
+          },
+          {
+            path:"/stock-page/analysis/out-of-stock",
+            name:"供应商缺货报告",
+            component:"./StockPage/page/overflow/Index",
+          }
+        ]
+      },
+      {
+        path:"/stock-page/config",
+        name:"设置",
+        icon: 'SettingOutlined',
+        component:"./StockPage/page/settings/Index"
+      }
+    ]
+  }
 ];
 
 

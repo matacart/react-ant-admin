@@ -34,7 +34,7 @@ export default function DeleteModal({removeFunc,title,content,tElement,loading}:
                 <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
                     <DefaultButton text={intl.formatMessage({id:'components.modal.deleteModal.cancelText'})} autoInsertSpace={false} onClick={()=>newModal.destroy()} />
                     <DangerButton text={intl.formatMessage({id:'components.modal.deleteModal.okText'})} loading={loading} autoInsertSpace={false} onClick={async ()=>{
-                        removeFunc();
+                        await removeFunc();
                         newModal.destroy();
                     }} />
                 </Flex>

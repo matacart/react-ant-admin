@@ -7,6 +7,8 @@ const enUS = {
         ...user,
         ...settings,
         ...menu,
+        "px": "px",
+        "%": "%",
   "admin.shopTimeDisplay.shopTimeDisplay": "Store timezone time",
   "admin.shopTimeDisplay.afternoon": "Afternoon",
   "admin.shopTimeDisplay.morning": "Morning",

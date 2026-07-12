@@ -34,7 +34,7 @@ export default function LoginForm() {
 
     const Ref = useRef(null);
 
-    const filteredItems  = JSON.parse(sessionStorage.getItem("country") || "[]").filter((item: any) => item.country_name.includes(searchKey));
+    const filteredItems  = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").filter((item: any) => item.country_name.includes(searchKey));
 
     const items = filteredItems
       .map((item: any) => {

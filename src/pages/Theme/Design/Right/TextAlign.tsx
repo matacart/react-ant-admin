@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 // 对齐方式
-function TextAlign({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function TextAlign({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     // 默认数据
     const defaultData = item.default || undefined;
 
-    const [value,setValue] = useState(data || defaultData);
+    const [value,setValue] = useState(data?.value || defaultData);
 
     const options = [
         {
@@ -32,13 +32,13 @@ function TextAlign({item,data,setData}:{item:any,data:string,setData:(item:any,v
     ]
 
     useEffect(()=>{
-        setValue(data || defaultData);
-    },[data])
+        setValue(data?.value || defaultData);
+    },[data?.value])
 
     return (
         <Scoped>
             {options.map(align=><div key={align.id} onClick={()=>{
-                setData(item,align.value);
+                setData(item,{value:align.value});
                 setValue(align.value);
             }} className="item">
                 {align.value == value ? align.aIcon : align.icon}

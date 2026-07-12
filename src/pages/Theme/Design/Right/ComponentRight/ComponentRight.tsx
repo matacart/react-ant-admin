@@ -73,7 +73,7 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                 }
                 // 更新数据
                 await editor.updateComponentSettings(editor.component.id,{
-                    [item.id]:{ value:value }
+                    [item.id]:value
                 })
                 let newSections;
                 if(editor.component?.type == "section"){
@@ -82,8 +82,6 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                 if(editor.component?.type == "template"){
                     newSections = editor.templateData.filter((res:any)=>res.type == "TEMPLATE")
                 }
-
-                console.log(newSections);
                 const operationData = {
                     mode: editor.mode,
                     oseid: editor.oseId,
@@ -236,6 +234,7 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                                                 </Form.Item>
                                             )
                                         }
+                                        // 选择支付图标
                                         case "choose_payment_icons":{
                                             let data = componentConfig.componentsData[item.id]?.value;
                                             return (
@@ -267,7 +266,7 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                                             )
                                         }
                                         case "image_picker":{
-                                            let data = componentConfig.componentsData[item.id]?.value;
+                                            let data = componentConfig.componentsData[item.id];
                                             return (
                                                 <Form.Item key={componentConfig.id+'-'+index} label={<div>
                                                     <div>{intl.formatMessage({id: item.label})}</div>

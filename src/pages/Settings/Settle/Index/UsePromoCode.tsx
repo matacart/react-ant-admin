@@ -1,5 +1,7 @@
-import { Card, Col, Form, InputNumber, Radio } from "antd";
-import { useState } from "react";
+import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
+import settingsInfo from "@/store/settings/settle/settingsInfo";
+import { Card, Col, Form, Radio } from "antd";
+import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 
 const style: React.CSSProperties = {
@@ -8,12 +10,7 @@ const style: React.CSSProperties = {
     gap: 16,
 };
 
-function UsePromoCode() {
-
-    const [loading, setLoading] = useState(false);
-
-    const [accountVersion,setAccountVersion] = useState(1)
-
+const UsePromoCode = () => {
     return (
         <Scoped>
             <Card classNames={{body:"card"}}>
@@ -23,25 +20,32 @@ function UsePromoCode() {
                         <div className="font-w-500" style={{marginTop:"12px"}}>折扣码最大可叠加数量（1-5）</div>
                     </div>}>
                         <Col span={10} style={{marginTop:"4px"}}>
-                            <InputNumber style={{width:"100%"}} min={1} max={5} defaultValue={3} onChange={()=>{}} />
+                            <DefaultInputNumber
+                                style={{width:"200px",height:"36px"}}
+                                min={1}
+                                max={5}
+                                value={settingsInfo.config.maxDiscountCodeCount}
+                                onChange={(value:string)=>{
+                                    settingsInfo.setConfig({...settingsInfo.config,maxDiscountCodeCount:value})
+                                }}
+                            />
                         </Col>
                     </Form.Item>
-
                     <Form.Item>
                         <div style={{marginTop:"4px"}}>
                             <Radio.Group
                                 style={style}
-                                onChange={(e)=>setAccountVersion(e.target.value)}
-                                value={accountVersion}
+                                onChange={(e)=>settingsInfo.setConfig({...settingsInfo.config,whenCanUsePromoCode:e.target.value})}
+                                value={settingsInfo.config.whenCanUsePromoCode}
                                 options={[
                                     {
-                                        value: 2,
+                                        value: "ONLY_SETTLE",
                                         label: (
                                             <div className="color-474F5E">只在结算页可以使用优惠码</div>
                                         ),
                                     },
                                     {
-                                        value: 3,
+                                        value: "ALWAYS",
                                         label: (
                                             <div className="color-474F5E">在购物车、结算页均可使用优惠码</div>
                                         ),
@@ -56,10 +60,9 @@ function UsePromoCode() {
     )
 }
 
-export default UsePromoCode
+export default observer(UsePromoCode)
 
 const Scoped = styled.div`
-    margin-bottom: 20px;
     .card{
         padding-bottom: 4px;
     }

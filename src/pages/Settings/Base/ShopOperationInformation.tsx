@@ -81,7 +81,7 @@ function ShopOperationInformation() {
         setTimeZone(newTimeZone)
 
         setCountryList(
-            JSON.parse(sessionStorage.getItem("country") || "").map(
+            JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "").map(
                 (item:any) => {
                     return {
                         label: item.country_name,

@@ -1,12 +1,10 @@
-import { Button, Flex, Tabs } from 'antd';
-import { ExportOutlined, ImportOutlined } from '@ant-design/icons';
+import { Flex, Tabs } from 'antd';
 import styled from 'styled-components';
-import ProductsSelectCard from '@/components/Card/ProductsSelectCard';
 import { history } from '@umijs/max';
-import SelectCard from './List/SelectCard';
 import purchaseOrderList from '@/store/product/purchaseOrder/purchaseOrderListStore';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import SelectCard from './SelectCard';
 
 
 const TabLabel = styled.div`
@@ -65,7 +63,7 @@ function Index() {
                             <h3>采购订单</h3>
                         </div>
                         <div className='create-title-right'>
-                            <PrimaryButton onClick={() => { history.push('/purchase_orders/new') }} text="创建采购订单" />
+                            <PrimaryButton onClick={() => { history.push('/products/purchase_orders/new') }} text="创建采购订单" />
                         </div>
                     </Flex>
                     <div className='create-content'>

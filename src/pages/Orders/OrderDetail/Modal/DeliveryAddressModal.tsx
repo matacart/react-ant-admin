@@ -59,7 +59,7 @@ function DeliveryAddressModal(){
     };
 
     useEffect(()=>{
-        const newCountry = JSON.parse(sessionStorage.getItem("country") || "[]").map((item:any)=>{
+        const newCountry = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map((item:any)=>{
             return {
                 value: item.country_id,
                 label: item.country_name,

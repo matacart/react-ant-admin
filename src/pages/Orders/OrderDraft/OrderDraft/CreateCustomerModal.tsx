@@ -23,7 +23,7 @@ function CreateCustomerModal(){
 
     const [country,setCountry] = useState("44");
 
-    const countryList = JSON.parse(sessionStorage.getItem("country") || "[]").map((item:any)=>{
+    const countryList = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map((item:any)=>{
         return {
             value:item.country_id,
             label:"+"+item.codes,

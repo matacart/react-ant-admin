@@ -6,6 +6,8 @@ const zhCN = {
         ...user,
         ...settings,
         ...menu,
+        "px": "px",
+        "%": "%",
 "admin.shopTimeDisplay.shopTimeDisplay": "店铺所在时区时间",
   "admin.shopTimeDisplay.afternoon": "下午",
   "admin.shopTimeDisplay.morning": "上午",

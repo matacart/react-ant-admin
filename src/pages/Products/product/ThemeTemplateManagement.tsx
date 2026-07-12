@@ -58,7 +58,7 @@ export default function ThemeTemplateManagement() {
     }
 
     useEffect(()=>{
-        const currencies = JSON.parse(sessionStorage.getItem("currencies")??"[]")
+        const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES")??"[]")
 
         setCurrencyList(currencies.map((item:any)=>{
             return {label:item.title+" ("+item.code+")",value:item.id}

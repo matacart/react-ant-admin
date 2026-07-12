@@ -1,15 +1,21 @@
 import MyCard from "@/components/Card/MyCard"
 import styled from "styled-components"
 import checkoutEditor from "@/store/settings/settle/checkoutEditor"
-import { useEffect } from "react"
-import SelectItem from "./FormItem/SelectItem"
 import ColorPickerItem from "./FormItem/ColorPickerItem"
+import SelectItem from "./FormItem/SelectItem"
+import { setStyleSystemData } from "./CheckoutMainCard"
+import { setPersonalizationsData } from "./BannerCard"
+import { createOptions6 } from "./Left"
+import { useIntl } from "@umijs/max"
 
 function ColorsCard() {
 
+    const intl = useIntl();
+    const options6 = createOptions6(intl);
+
     return (
         <Scoped>
-            <div className="header">颜色</div>
+            <div className="header">{intl.formatMessage({id: "settings.settle.checkoutEditor.Left.colors"})}</div>
             {Object.keys(checkoutEditor.config.styleSystem?.colors).map((key,index) => {
                 switch(key){
                     case 'global':{
@@ -19,43 +25,46 @@ function ColorsCard() {
                                 let globalData = {};
                                 if(key === 'brand'){
                                     globalData = {
-                                        label: "按钮背景",
+                                        label: intl.formatMessage({id: "settings.settle.checkoutEditor.Left.brand"}),
                                         value:data[key],
                                         desc:""
                                     }
                                 }
                                 if(key === 'critical'){
                                     globalData = {
-                                        label: "报错信息",
+                                        label: intl.formatMessage({id: "settings.settle.checkoutEditor.Left.critical"}),
                                         value:data[key],
-                                        desc:"错误信息提示和高亮边框"
+                                        desc: intl.formatMessage({id: "settings.settle.checkoutEditor.Left.criticalDesc"})
                                     }
                                 }
                                 if(key === 'accent'){
                                     globalData = {
-                                        label: "强调信息",
+                                        label: intl.formatMessage({id: "settings.settle.checkoutEditor.Left.accent"}),
                                         value:data[key],
-                                        desc:"链接、复选框、输入框边框和下拉菜单"
+                                        desc: intl.formatMessage({id: "settings.settle.checkoutEditor.Left.accentDesc"})
                                     }
                                 }
-                                return <ColorPickerItem key={key} data={globalData} />
+                                return <ColorPickerItem key={key} data={globalData} setDataValue={(value)=>{
+                                    setStyleSystemData(`colors.global.${key}`,value);
+                                }} />
                             })}
-                        </div>
-                    }
-                    case 'form':{
-                        const data = checkoutEditor.config.styleSystem?.colors?.[key];
-                        return <div key={key}>
-                            <div className="title">表单背景颜色</div>
-                            <SelectItem data={data} />
                         </div>
                     }
                 }
             })}
+            {/* 表单背景 */}
+            <div>
+                <div className="title">{intl.formatMessage({id: "settings.settle.checkoutEditor.Left.formBackgroundColor"})}</div>
+                <SelectItem options={options6} item="form.color" data={checkoutEditor.config.personalizations?.form?.color} setData={setPersonalizationsData}  />
+            </div>
         </Scoped>
     )
 }
 
 const Scoped = styled(MyCard)`
+    .ant-card-body{
+        padding: 16px;
+    }
     .header{
         margin-bottom: 16px;
     }

@@ -1,13 +1,13 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Flex, Form, Row, Select } from "antd";
 import styled from "styled-components";
-import LocationsCard from "../LocationsCard";
-import ShippingDetailsCard from "../ShippingDetailsCard";
-import PurchaseGoodsCard from "../PurchaseGoodsCard";
-import CostSummaryCard from "../CostSummaryCard";
-import RemarkCard from "../RemarkCard";
 import { history } from '@umijs/max';
 import purchaseOrderStore from "@/store/product/purchaseOrder/purchaseOrderStore";
+import LocationsCard from "../PurchaseOrder/LocationsCard";
+import ShippingDetailsCard from "../PurchaseOrder/ShippingDetailsCard";
+import PurchaseGoodsCard from "../PurchaseOrder/PurchaseGoodsCard";
+import CostSummaryCard from "../PurchaseOrder/CostSummaryCard";
+import RemarkCard from "../PurchaseOrder/RemarkCard";
 
 function NewPurchaseOrder(){
 
@@ -18,7 +18,7 @@ function NewPurchaseOrder(){
                     <div className="mc-header">
                         <div className="mc-header-left">
                             <div className="mc-header-left-secondary" onClick={()=>{
-                                history.push("/purchase_orders")
+                                history.push("/products/purchase_orders")
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>

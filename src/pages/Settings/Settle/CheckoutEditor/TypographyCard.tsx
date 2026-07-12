@@ -2,7 +2,6 @@ import MyCard from "@/components/Card/MyCard"
 import styled from "styled-components"
 import FontPicker from "./FormItem/FontPicker"
 import checkoutEditor from "@/store/settings/settle/checkoutEditor"
-import { useEffect } from "react"
 
 function TypographyCard() {
     return (
@@ -31,6 +30,9 @@ function TypographyCard() {
 }
 
 const Scoped = styled(MyCard)`
+    .ant-card-body{
+        padding: 16px;
+    }
     .header{
         margin-bottom: 16px;
     }

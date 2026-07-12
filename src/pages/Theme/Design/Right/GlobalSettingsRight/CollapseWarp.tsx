@@ -18,68 +18,23 @@ import { templateUpdate } from "@/services/y2/api";
 import { debounce } from 'lodash';
 import FaviconPicker from "../FaviconPicker";
 import ColorPickerItem from "../ColorPickerItem";
-
-// const setData = async (value:boolean)=>{
-
-//     const newSettings = {
-//         ...editor.settings,
-//         settingsData:{
-//             ...editor.settings.settingsData,
-//             [item.id]:value
-//         }
-//     };
-
-//     const operationData = {
-//         mode: 'auto',
-//         oseid: editor?.oseId??"",
-//         themeId: editor.templateInfo.themeInfo?.id,
-//         pageName: "",
-//         languagesId: editor.languagesId,
-//         settings: JSON.stringify(newSettings.settingsData)
-//     };
-
-//     // 执行操作
-//     const newData = await templateUpdate(operationData);
-//     if(newData){
-//         // 保存操作到历史记录 -- 执行前的状态
-//         editor.addToOperationHistory({
-//             type: 'templateUpdate',
-//             undoData: {
-//                 ...operationData,
-//                 settings:JSON.stringify(editor.settings.settingsData),
-//                 oseid:newData.oseid,
-//             },
-//             redoData:{
-//                 ...operationData,
-//                 settings:JSON.stringify(newSettings.settingsData),
-//                 oseid:newData.oseid,
-//             },
-//             timestamp: Date.now()
-//         });
-
-//         editor.setOseId(newData.oseid);
-//         editor.setSettings(newSettings);
-//     }
-// }
+import { toJS } from "mobx";
 
 // 提取CollapseItem为独立组件，使其能够响应settingsData变化
 const CollapseWarp = memo(({ items,settingsData }: any) => {
 
     const intl = useIntl();
+
     // 创建防抖setData函数
     const debouncedSetData = useCallback(
         debounce(async (item: any, value: any) => {
-            console.log(item.id, value);
             const newSettings = {
                 ...editor.settings,
                 settingsData: {
-                    ...editor.settings.settingsData,
+                    ...toJS(editor.settings.settingsData),
                     [item.id]: value
                 }
             };
-
-            
-            console.log("newSettings", newSettings);
             const operationData = {
                 mode: editor.mode,
                 oseid: editor?.oseId ?? "",

@@ -25,7 +25,7 @@ function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplier
     const [form] = useForm();
 
     useEffect(()=>{
-        const country = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+        const country = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map(item=>{
             return {
                 label: item.country_name,
                 value: item.country_id

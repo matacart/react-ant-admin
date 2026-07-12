@@ -1,7 +1,6 @@
 import styled from "styled-components"
 import { Flex, Spin } from "antd"
 import { useEffect, useState } from "react"
-import noticeEmail from "@/store/settings/notification/noticeEmail"
 import { useIntl, useParams } from "@umijs/max"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { observer } from "mobx-react-lite"
@@ -9,14 +8,14 @@ import { App } from 'antd';
 import { LoadingOutlined } from "@ant-design/icons"
 import Header from "./Header"
 import Left from "./Left"
-import config from "./config.json"
 import checkoutEditor from "@/store/settings/settle/checkoutEditor"
+import { getCheckoutEditorConfig } from "@/services/y2/apiCheckout"
 
 function CheckoutEditor() {
     
     const intl = useIntl();
     
-    const params = useParams<{key:string}>();
+    const params = useParams<{profileId:string}>();
 
     const [isSkeleton, setIsSkeleton] = useState(true);
     const [spinning, setSpinning] = useState(false);
@@ -29,16 +28,26 @@ function CheckoutEditor() {
         fetchData();
         return () => {
             // 组件卸载时重置
-            noticeEmail.reset();
+            checkoutEditor.reset();
         };
     },[])
     
 
     // 店铺语言变化，重新获取数据
     useEffect(()=>{
-        checkoutEditor.setConfig(config);
-        setIsSkeleton(false);
-    },[noticeEmail.languagesId,noticeEmail.useLanguagesId])
+        // 获取配置
+        getCheckoutEditorConfig({
+            languages_id:checkoutEditor.languagesId,
+            profile_id:params.profileId,
+            is_preview:"1",
+        }).then(res=>{
+            checkoutEditor.setProfileId(res.data.config.profile_id);
+            checkoutEditor.setConfig(res.data.config.config);
+        }).catch(err=>{
+        }).finally(()=>{
+            setIsSkeleton(false);
+        })
+    },[checkoutEditor.languagesId])
     
     return (
         <Scoped>

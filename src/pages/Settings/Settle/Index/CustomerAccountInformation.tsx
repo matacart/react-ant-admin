@@ -1,6 +1,7 @@
-import { Button, Card, Divider, Flex, Radio, Tag } from "antd";
-import { useState } from "react";
+import { Card, Radio } from "antd";
 import styled from "styled-components";
+import settingsInfo from "@/store/settings/settle/settingsInfo";
+import { observer } from "mobx-react-lite";
 
 const style: React.CSSProperties = {
     display: 'flex',
@@ -8,33 +9,23 @@ const style: React.CSSProperties = {
     gap: 12,
 };
 
-export default function CustomerAccountInformation() {
-
-
-    const [accountVersion,setAccountVersion] = useState(1)
-
+const CustomerAccountInformation = () => {
     return(
         <Scoped>
             <Card>
                 <Radio.Group
                     style={style}
-                    onChange={(e)=>setAccountVersion(e.target.value)}
-                    value={accountVersion}
+                    onChange={(e)=>settingsInfo.setConfig({...settingsInfo.config,loginType:e.target.value})}
+                    value={settingsInfo?.config?.loginType}
                     options={[
                         {
-                            value: 1,
+                            value: "LOGIN_OR_GUEST",
                             label: (
                                 <div className="color-474F5E">游客或登录客户均可结账</div>
                             ),
                         },
                         {
-                            value: 2,
-                            label: (
-                                <div className="color-474F5E">仅游客可结账</div>
-                            ),
-                        },
-                        {
-                            value: 3,
+                            value: "ONLY_LOGIN",
                             label: (
                                 <div className="color-474F5E">仅限登录客户结账</div>
                             ),
@@ -45,6 +36,8 @@ export default function CustomerAccountInformation() {
         </Scoped>
     );
 }
+
+export default observer(CustomerAccountInformation)
 
 const Scoped = styled.div`
     .divider{

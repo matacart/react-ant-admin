@@ -1,92 +1,109 @@
 {
     "personalizations": {
+        "form": {
+            "color": "transparent"
+        },
         "header": {
+            "alignment": "left",
             "banner": {
                 "pc": {
                     "image": {
-                        "url": "",
-                        "id": "",
-                        "height": "natural"
+                        "id": "7557005458730143121",
+                        "url": "https://img.myshopline.com/image/store/1770812653997/175e41b429c611b2b09174222d772285-.jpeg?w=1000&h=533",
+                        "height": "high"
                     }
                 },
                 "phone": {
                     "image": {
-                        "url": "",
                         "id": "",
+                        "url": "",
                         "height": "high"
                     }
                 },
+                "fullScreen": true,
                 "image": {
                     "show": "center"
-                },
-                "fullScreen": true
+                }
             },
             "logo": {
+                "size": "medium",
                 "image": {
-                    "url": "",
-                    "id": ""
-                },
-                "size": "medium"
+                    "id": "",
+                    "url": ""
+                }
             },
-            "alignment": "left",
             "position": "content"
         },
         "main": {
             "backgroundImage": {
                 "image": {
-                    "url": "",
-                    "id": ""
+                    "id": "",
+                    "url": ""
                 }
             }
         },
         "orderSummary": {
             "backgroundImage": {
                 "image": {
-                    "url": "",
-                    "id": ""
+                    "id": "",
+                    "url": ""
                 }
             },
             "phoneCollapse": "close"
         },
         "customerHeader": {
             "logo": {
+                "size": "medium",
                 "image": {
-                    "url": "",
-                    "id": ""
-                },
-                "size": "medium"
+                    "id": "",
+                    "url": ""
+                }
             }
         },
         "customerCenter": {
             "backgroundImage": {
                 "image": {
-                    "url": "",
-                    "id": ""
+                    "id": "",
+                    "url": ""
                 }
             }
         }
     },
-    "checkout": {
-        "stepType": "1"
-    },
     "styleSystem": {
         "colors": {
             "global": {
-                "brand": "#082239",
-                "critical": "#F04949",
-                "accent": "#276EAF"
+                "accent": "#276EAF",
+                "brand": "#1184e8",
+                "critical": "#F04949"
             },
-            "form": {
-                "color": "transparent"
+            "palettes": {
+                "palette1": {
+                    "base": {
+                        "background": "#fff"
+                    }
+                },
+                "palette2": {
+                    "base": {
+                        "background": "#f8fafb"
+                    }
+                },
+                "palette3": {
+                    "base": {
+                        "background": "#fff"
+                    }
+                }
             }
         },
         "typography": {
-            "secondary": {
-                "name": "Arial"
-            },
             "primary": {
-                "name": "Arial"
+                "name": "System"
+            },
+            "secondary": {
+                "name": "System"
             }
         }
+    },
+    "checkout": {
+        "stepType": "3"
     }
 }

@@ -2,14 +2,14 @@ import MySelect from "@/components/Select/MySelect"
 import { useIntl } from "@umijs/max";
 import { useMemo, useState } from "react"
 
-function ItemSelect({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function ItemSelect({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     const intl = useIntl();
 
     // 默认数据
     const defaultData = item.default ?? undefined;
 
-    const [value,setValue] = useState(data || defaultData);
+    const [value,setValue] = useState(data?.value || defaultData);
     
     const options = item.options.map((item:any)=>{
         let label = item.label;
@@ -29,12 +29,14 @@ function ItemSelect({item,data,setData}:{item:any,data:string,setData:(item:any,
     })
 
     useMemo(()=>{
-        setValue(data ?? defaultData)
-    },[data])
+        setValue(data?.value ?? defaultData)
+    },[data?.value])
 
     return (
         <MySelect style={{height:"36px"}} options={options} value={value} onChange={async (value:any)=>{
-            setData(item,value);
+            setData(item,{
+                value: value
+            });
             setValue(value);
         }} />
     )

@@ -27,8 +27,8 @@ export default function MyDropdown({tiggerEle,...props}:any) {
                     },
                 }}
             >
-                <Dropdown {...props}  
-                    trigger={['click']} 
+                <Dropdown {...props}
+                    trigger={['click']}
                     popupRender={(menu)=>{
                         return (
                             <div style={contentStyle}>

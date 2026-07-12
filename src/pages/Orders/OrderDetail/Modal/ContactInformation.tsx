@@ -50,7 +50,7 @@ function ContactInformation() {
     }
 
     useEffect(()=>{
-        // const country = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+        // const country = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map(item=>{
         //     return {
         //         value: item.country_id,
         //         label: "+"+item.codes,

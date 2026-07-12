@@ -50,10 +50,13 @@ function ImagePicker({item,data,setData}:{item:any,data:DataType,setData:(item:a
         setLoading(true);
         uploadPic(formData).then((res: any) => {
             if(res.code == 0){
-                // setData(item,{
-                //     url:res.data.data.src,
-                //     alt:info.name
-                // });
+                setImgData({
+                    value:{
+                        url:res.data.data.src,
+                        alt:file.name
+                    },
+                    resource:null
+                });
             }else{
                 message.error("上传失败", 1)
             }
@@ -77,6 +80,7 @@ function ImagePicker({item,data,setData}:{item:any,data:DataType,setData:(item:a
     }
 
     useMemo(()=>{
+        console.log(data);
         setImgData(typeof data === 'object' ? data : defaultData);
     },[data])
 

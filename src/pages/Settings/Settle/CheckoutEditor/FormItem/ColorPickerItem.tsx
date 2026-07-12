@@ -2,7 +2,7 @@ import { ColorPicker, Flex } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 
-function ColorPickerItem({data}:{data:any}) {
+function ColorPickerItem({data,setDataValue}:{data:any,setDataValue:(data:string)=>void}) {
 
     const [value,setValue] = useState();
             
@@ -19,6 +19,7 @@ function ColorPickerItem({data}:{data:any}) {
                     setValue(hexColor);
                }} onChangeComplete={(colorValue:any)=>{
                     const hexColor = colorValue.toHexString();
+                    setDataValue(hexColor);
                }}>
                     <div className="color-picker" style={{backgroundColor:value}}></div>
                 </ColorPicker>

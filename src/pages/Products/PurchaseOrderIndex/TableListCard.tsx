@@ -159,7 +159,7 @@ function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
             scroll={{ x: 1300 }}
             onRow={(record) => ({
             onClick: () => {
-                history.push(`/purchase_orders/${record.id}`)
+                history.push(`/products/purchase_orders/${record.id}`)
                 
                 console.log('Row clicked:', record);
             },

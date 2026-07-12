@@ -28,7 +28,7 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
 
     useEffect(()=>{
         // 国家
-        const country = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+        const country = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map(item=>{
             return {
                 label: item.country_name,
                 value: item.country_id

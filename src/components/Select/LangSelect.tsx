@@ -15,7 +15,7 @@ export default function LangSelect({lang,setLang}:{lang:string,setLang:any}){
         if(languageData.length==0){
             tempList = JSON.parse(sessionStorage["languages"] || "[]").map((item:any)=>{
                 return {
-                    value: item.id,
+                    value: item.id.toString(),
                     label: item.name
                 }
             })

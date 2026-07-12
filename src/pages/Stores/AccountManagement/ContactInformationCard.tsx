@@ -23,7 +23,7 @@ const ContactInformationCard = forwardRef((prop,ref)=>{
 
     useEffect(()=>{
        
-        let newList = JSON.parse(sessionStorage.getItem("country") || "[]").map(item=>{
+        let newList = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map(item=>{
             if(item.codes !== null){
                 return {
                     value: item.codes,

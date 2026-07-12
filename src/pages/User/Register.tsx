@@ -1,6 +1,6 @@
 import { Button, Form, Input, Divider, Checkbox, App, ConfigProvider, Dropdown, Flex } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { FormattedMessage, history, useIntl } from '@umijs/max';
+import { FormattedMessage, history, Link, useIntl } from '@umijs/max';
 import React, { useEffect, useRef, useState } from 'react';
 import { getFakeCaptcha, register } from '@/services/y2/api';
 import {state} from '../../../config/myConfig'
@@ -11,7 +11,6 @@ import googleIcon from '@/../public/icons/logos/google.svg';
 import facebookIcon from '@/../public/icons/logos/facebook.svg';
 import appleIcon from '@/../public/icons/logos/apple.svg';
 import linkieIcon from '@/../public/icons/logos/linkie.svg';
-import { Link } from 'react-router-dom';
 
 interface Props {
     changeForm: (value: number) => void
@@ -47,7 +46,7 @@ export default function Register(props: Props) {
 
     const Ref = useRef(null);
 
-    const filteredItems  = JSON.parse(sessionStorage.getItem("country") || "[]").filter((item: any) => item.country_name.includes(searchKey));
+    const filteredItems  = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").filter((item: any) => item.country_name.includes(searchKey));
 
     const items = filteredItems
         .map((item: any) => {

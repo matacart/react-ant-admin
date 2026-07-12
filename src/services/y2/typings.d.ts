@@ -282,6 +282,14 @@ declare namespace ApiEmail {
   }
 }
 
+declare namespace ApiCheckout {
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
 declare namespace ApiSite {
   type Default = {
     code:number|string, 

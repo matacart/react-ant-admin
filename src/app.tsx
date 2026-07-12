@@ -34,7 +34,7 @@ const CONFIG_REQUESTS = [
   },
   {
     url: '/api/ApiAppstore/country_select',
-    storageKey: 'country',
+    storageKey: 'MC_DATA_COUNTRY',
     retry: 3
   }
 ];
@@ -51,10 +51,10 @@ const fetchWithRetry = (url: string, retries: number): Promise<any> => {
 const safeSessionStorageSet = (key: string, data: unknown) => {
   try {
     if (data && typeof data === 'object') {
-      sessionStorage.setItem(key, JSON.stringify(data));
+      localStorage.setItem(key, JSON.stringify(data));
     }
   } catch (e) {
-    console.error(`SessionStorage 存储失败 [${key}]`, e);
+    console.error(`localStorage 存储失败 [${key}]`, e);
   }
 };
 // 执行请求并处理

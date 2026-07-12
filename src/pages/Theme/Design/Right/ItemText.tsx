@@ -2,7 +2,7 @@ import MyInput from "@/components/Input/MyInput"
 import { useIntl } from "@umijs/max";
 import { useMemo, useState } from "react";
 
-function ItemText({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function ItemText({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     const intl = useIntl();
 
@@ -12,13 +12,15 @@ function ItemText({item,data,setData}:{item:any,data:string,setData:(item:any,va
     const [value,setValue] = useState(data || defaultData);
 
     useMemo(()=>{
-        setValue(data || defaultData)
-    },[data])
+        setValue(data?.value || defaultData)
+    },[data?.value])
 
     return (
         <MyInput style={{ width:"100%",height:"36px" }} value={value} placeholder={item?.placeholder || intl.formatMessage({id: 'theme.design.right.itemText.placeholder'})}
             onChange={(e:any)=>{
-                setData(item,e.target.value);
+                setData(item,{
+                    value: e.target.value
+                });
                 setValue(e.target.value);
             }} 
         />

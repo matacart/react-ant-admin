@@ -2,7 +2,7 @@ import MyInput from "@/components/Input/MyInput"
 import { useIntl } from "@umijs/max";
 import { useMemo, useState } from "react";
 
-function ItemURL({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function ItemURL({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     const intl = useIntl();
 
@@ -24,13 +24,15 @@ function ItemURL({item,data,setData}:{item:any,data:string,setData:(item:any,val
             setError("格式如https://");
         } else {
             setError(null);
-            setData(item, inputValue); // 空值或有效URL都更新父组件数据
+            setData(item,{
+                value: inputValue
+            }); // 空值或有效URL都更新父组件数据
         }
     };
 
     useMemo(()=>{
-        setValue(data || defaultData)
-    },[data])
+        setValue(data?.value || defaultData)
+    },[data?.value])
 
     return (
         <>

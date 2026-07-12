@@ -17,7 +17,7 @@ interface FontsType{
     version:string
 }
 
-function FontFamily({item,data,setData}:{item:any,data:string,setData:(item:any,value:string)=>void}){
+function FontFamily({item,data,setData}:{item:any,data:any,setData:(item:any,value:any)=>void}){
 
     const mRef = useRef(null);
 
@@ -50,7 +50,7 @@ function FontFamily({item,data,setData}:{item:any,data:string,setData:(item:any,
     // 提交
     const submit = ()=>{
         setOpen(false);
-        setData(item,fontFamily+":"+fontStyle);
+        setData(item,{value:fontFamily+":"+fontStyle});
     }
 
     // 取消
@@ -70,12 +70,12 @@ function FontFamily({item,data,setData}:{item:any,data:string,setData:(item:any,
         setFontFamily(fontDataValue);
         const fontDataItem = fontDataValues[1];
         setFontStyle(fontDataItem)
-        setData(item,item.default);
+        setData(item,{value:item.default});
     }
 
     useEffect(()=>{
         setMenu(fonts);
-        const fontData = data || defaultData;
+        const fontData = data?.value || defaultData;
         if(fontData){
             const fontDataValues = fontData.split(":");
             const fontDataValue = fontDataValues[0];
@@ -96,7 +96,7 @@ function FontFamily({item,data,setData}:{item:any,data:string,setData:(item:any,
 
 
     useMemo(()=>{
-        const fontData = data || defaultData;
+        const fontData = data?.value || defaultData;
         if(fontData){
             const fontDataValues = fontData.split(":");
             const fontDataValue = fontDataValues[0];
@@ -113,7 +113,7 @@ function FontFamily({item,data,setData}:{item:any,data:string,setData:(item:any,
                 }
             }))
         }
-    },[data])
+    },[data?.value])
 
     return (
         <Scoped ref={mRef}>  

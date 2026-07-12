@@ -80,7 +80,7 @@ export async function getCurrencies(domainId:string) {
 
 // 国家
 export async function getCountryList(){
-  return await request('/ApiAppstore/country_select',{
+  return await request<ApiAppstore.Default>('/ApiAppstore/country_select',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -88,7 +88,6 @@ export async function getCountryList(){
     },
     data:{
       page:1,
-      limit:100
     }
   })
 }
