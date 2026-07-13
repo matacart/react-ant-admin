@@ -1,11 +1,13 @@
 import user from './zh-CN/user';
 import settings from './zh-CN/settings';
 import menu from './zh-CN/menu';
+import order from './zh-CN/order';
 
 const zhCN = {
         ...user,
         ...settings,
         ...menu,
+        ...order,
         "px": "px",
         "%": "%",
 "admin.shopTimeDisplay.shopTimeDisplay": "店铺所在时区时间",

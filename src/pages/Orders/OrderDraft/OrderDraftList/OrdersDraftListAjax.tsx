@@ -1,11 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
-import { useIntl } from '@umijs/max';
+import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import orderDraftList from '@/store/order/orderDraftList';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderDraftList } from '@/services/y2/api';
@@ -33,7 +32,6 @@ interface TableParams {
 function OrdersDraftListAjax() {
 
   const intl = useIntl();
-  const navigate = useNavigate();
 
   const { createAbortController } = useAbortController();
 
@@ -136,7 +134,7 @@ function OrdersDraftListAjax() {
       onRow={(record) => ({
         onClick: () => {
           // 点击行时调用handleOrderClick
-          navigate(`/orders/draftOrders/edit/${record.id}`);
+          history.push(`/orders/draftOrders/edit/${record.id}`);
         },
       })}
     />

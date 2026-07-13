@@ -112,7 +112,7 @@ function ExportOrderDetailModal(){
 
     return (
         <>
-            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'orderlist.order.report' })}</a>
+            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'order.orderList.exportOrderDetailModal.orderDetail' })}</a>
             <MyModal title="导出订单报表" width={620} open={open} centered onCancel={cancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
                     <>

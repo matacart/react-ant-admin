@@ -3,19 +3,17 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Flex, Modal, Space, Upload } from 'antd';
 import styled from 'styled-components'
 import { ExportOutlined } from '@ant-design/icons';
-import RecallOrderTabs from './RecallOrderTabs';
+import OrderTabs from './OrderTabs';
+import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList';
 
-interface MenuItem {
-  key: string;
-  label: React.ReactNode;
-  onClick?: () => void; // 可选的点击事件处理函数
-}
+export default function Index() {
 
-interface MenuProps {
-  items: MenuItem[];
-}
 
-export default function RecallOrders() {
+  useEffect(() => {
+    return () => {
+      abandonedOrderList.reset();
+    }
+  }, []);
 
   return (
     <Scoped>
@@ -35,16 +33,13 @@ export default function RecallOrders() {
             </Flex>
           </div>
           <div className="create-content">
-            <div>
-              <RecallOrderTabs />
-            </div>
+            <OrderTabs />
           </div>
         </div>
       </div>
     </Scoped>
   );
 }
-
 
 const Scoped = styled.div`
   .create-warp-flex {

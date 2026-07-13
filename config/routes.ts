@@ -69,7 +69,12 @@ export default  [
       {
         path: 'recallOrders',
         name: 'recallOrders',
-        component: './Orders/RecallOrders/RecallOrders',
+        component: './Orders/AbandonedOrdersList/Index',
+      },
+      {
+        path: 'recallOrders/:id',
+        name: 'recallOrders',
+        component: './Orders/AbandonedOrdersDetail/Index',
       },
       {  
         path: ':orderId',  

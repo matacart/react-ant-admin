@@ -117,6 +117,15 @@ declare namespace ApiSearch {
   }
 }
 
+declare namespace ApiAbandonedOrder {
+  type Default = {
+    code:number | string,
+    data:any,
+    msg:string,
+  }
+}
+
+
 declare namespace ApiStore {
   type selectTags = {
     code:number,

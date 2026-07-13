@@ -90,7 +90,7 @@ function ExportPickingModal(){
 
     return (
         <>
-            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'orderlist.picking.list' })}</a>
+            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'order.orderList.exportPickingModal.picking' })}</a>
             <MyModal title="导出拣货单" width={620} open={open} centered onCancel={cancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
                     <>

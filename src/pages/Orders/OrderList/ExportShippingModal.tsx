@@ -90,7 +90,7 @@ function ExportShippingModal(){
 
     return (
         <>
-            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'orderlist.shipping.list' })}</a>
+            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'order.orderList.exportShippingModal.shipping' })}</a>
             <MyModal title="导出出货单" width={620} open={open} centered onCancel={cancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
                     <>

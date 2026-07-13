@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import { data } from '@remix-run/router';
 
 interface orderDraftListType {
     data:any[],
@@ -25,7 +24,6 @@ class orderDraftList{
     setOrderDraftList(value:orderDraftListType){
         this.orderDraftList = value
     }
-    // 重置
 }
 
 export default new orderDraftList();

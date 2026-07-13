@@ -5,10 +5,10 @@ import DropdownSort from '@/components/Dropdown/DropdownSort';
 import MoreSelect from './MoreSelect';
 import EditTableHead from './EditTableHead';
 import LangSelect from '@/components/Select/LangSelect';
-import recallOrdersList from '@/store/order/recallOrders/recallOrdersList';
+import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList';
 import { observer } from 'mobx-react-lite';
 
-function RecallOrdersSelectCard() {
+function SelectCard() {
 
     // 排序
     const items:MenuProps['items'] = [
@@ -110,19 +110,23 @@ function RecallOrdersSelectCard() {
     ];
 
     const setLang = (lang:string)=>{
-      recallOrdersList.setLanguages(lang)
+      abandonedOrderList.setLanguages(lang)
     }
 
     return (
         <>
           <div className="Orders-select">
             <Flex gap={12}>
-              <div style={{flex:1}}><SearchInput placeholder={"搜索订单内容"} /></div>
+              <div style={{flex:1}}>
+                <SearchInput placeholder={"搜索订单内容"} onBlur={(e:any)=>{
+                  abandonedOrderList.setKeyword(e.target.value)
+                }} />
+              </div>
               <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="发送状态" btnStyle={{width:"100px"}} />
               <ButtonDropdownSecondary menu={{items:controlsItems}} trigger={['click']} text="召回状态" btnStyle={{width:"100px"}} />
               <MoreSelect />
               <EditTableHead />
-              <LangSelect setLang={setLang} lang={recallOrdersList.languages} />
+              <LangSelect setLang={setLang} lang={abandonedOrderList.languages} />
               <DropdownSort items={items} styled={{maxHeight:"290px",overflowY:"auto"}} />
             </Flex>
           </div>
@@ -130,4 +134,4 @@ function RecallOrdersSelectCard() {
     );
 }
 
-export default observer(RecallOrdersSelectCard)
+export default observer(SelectCard)

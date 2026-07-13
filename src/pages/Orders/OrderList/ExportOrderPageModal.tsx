@@ -74,7 +74,7 @@ function ExportOrderPageModal(){
 
     return (
         <>
-            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'orderlist.order.detail' })}</a>
+            <a onClick={()=>setOpen(true)}>{intl.formatMessage({ id: 'order.orderList.exportOrderPageModal.orderPage' })}</a>
             <MyModal title="导出订单明细" width={620} open={open} centered onCancel={cancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
                     <>
