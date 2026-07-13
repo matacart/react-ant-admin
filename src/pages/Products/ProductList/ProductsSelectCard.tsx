@@ -1,4 +1,4 @@
-import { Space, Tag, Button, ConfigProvider, Flex } from "antd";
+import { Space, Tag, Flex } from "antd";
 import { useEffect, useRef, useState } from "react"
 import PriceRangeSelector from "@/components/Select/PriceRangeSelector";
 import styled from "styled-components";
@@ -87,7 +87,7 @@ const ProductsSelectCard = ()=>{
                         gap: '12px 12px',
                     }}>
                         {/* 搜索 */}
-                        <Space.Compact style={{width:"420px"}}>
+                        <Space.Compact style={{width:"400px"}}>
                             <MySelect value={searchType} options={[
                                 { value: "SEARCH_TXT", label: '全部' },
                                 { value: "PRODUCT_MODEL", label: '商品型号' },
@@ -98,7 +98,7 @@ const ProductsSelectCard = ()=>{
                                 { value: "BARCODE", label: '商品条码' },
                                 { value: "ATTRIBUTE_VALUE", label: '规格名称' },
                                 { value: "DESCRIPTION", label: '商品描述' },
-                            ]} style={{height:"36px",minWidth:"110px"}} onChange={(value:string)=>{
+                            ]} style={{height:"36px",minWidth:"100px"}} onChange={(value:string)=>{
                                 setSearchType(value)
                             }} />
                             <MySearch placeholder="搜索" value={searchText}

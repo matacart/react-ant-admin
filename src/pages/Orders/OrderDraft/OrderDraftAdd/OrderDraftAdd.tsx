@@ -4,7 +4,6 @@ import { App, Divider } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { useNavigate } from 'react-router-dom';
 import orderDraft from '@/store/order/orderDraft';
 import { addDraftOrder } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
@@ -16,6 +15,7 @@ import MaketCard from '../OrderDraft/MaketCard';
 import OrderNotesLable from '../OrderDraft/OrderNotesLable';
 import OrderDraftLabel from '../OrderDraft/OrderDraftLabel';
 import { convertFlatToNested } from '../OrderDraft/ProductTableModal';
+import { history } from '@umijs/max';
 
   
 function OrderDraftAdd() {
@@ -34,9 +34,6 @@ function OrderDraftAdd() {
     const initialRender = useRef(true);
 
     const [isSkeleton,setIsSkeleton] = useState(true);
-
-    const navigate = useNavigate(); // 使用 useNavigate 钩子
-   
     const handleCreateOrder = async () => {
         console.log({
             order_info:orderDraft.orderInfo,
@@ -70,7 +67,7 @@ function OrderDraftAdd() {
             }).then(res=>{
                 setIsOverlay(false)
                 message.success('您的新建内容已添加成功')
-                navigate('/orders/draftOrders')
+                history.push('/orders/draftOrders')
             }).catch(err=>{
 
             }).finally(()=>{
@@ -137,7 +134,7 @@ function OrderDraftAdd() {
                 </div>
             </div>}
             {isOverlay && <Overlay status={loading} okText="保存" onExit={()=>{
-                navigate(`/orders/draftOrders`)
+                history.push(`/orders/draftOrders`)
             }} onSubmit={submit} />}
         </Scoped>
     )

@@ -74,6 +74,7 @@ export default  [
       {
         path: 'recallOrders/:id',
         name: 'recallOrders',
+        hideInMenu: true,
         component: './Orders/AbandonedOrdersDetail/Index',
       },
       {  

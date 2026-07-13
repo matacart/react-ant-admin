@@ -177,7 +177,7 @@ function OrdersSelectCard() {
                 marginBottom: '10px',
               }}
             >
-              <div style={{flex:1}}>
+              <div style={{flex:1,minWidth:"220px"}}>
                 <SearchInput placeholder={intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.search' })} />
               </div>
               <CheckSelectClear options={paymentstatusOptions} setStatusOptions={setPaymentStatusOptions} text={intl.formatMessage({ id: 'orders.orderList.ordersSelectCard.paymentstatus' })} style={{width:"180px",height:"36px"}}/>

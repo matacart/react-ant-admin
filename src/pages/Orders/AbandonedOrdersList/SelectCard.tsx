@@ -116,8 +116,8 @@ function SelectCard() {
     return (
         <>
           <div className="Orders-select">
-            <Flex gap={12}>
-              <div style={{flex:1}}>
+            <Flex gap={12} wrap>
+              <div style={{flex:1,minWidth:"200px"}}>
                 <SearchInput placeholder={"搜索订单内容"} onBlur={(e:any)=>{
                   abandonedOrderList.setKeyword(e.target.value)
                 }} />

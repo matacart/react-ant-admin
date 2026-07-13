@@ -2,7 +2,12 @@ import { makeAutoObservable } from "mobx";
 import cookie from 'react-cookies';
 
 
-class abandonedOrderList{
+interface AbandonedOrderDataType{
+    abandonedOrderSeq:string
+
+}
+
+class AbandonedOrder{
     constructor() {
         makeAutoObservable(this)
     }
@@ -13,25 +18,16 @@ class abandonedOrderList{
         this.languages = res
     }
 
+    abandonedOrderData:AbandonedOrderDataType|null = null
 
-
-
-    // 搜索关键词
-    keyword = "";
-    setKeyword(res:string){
-        this.keyword = res
-    }
-
-    orderIds:React.Key[] = [];
-    setOrderIds(res:React.Key[]){
-        this.orderIds = res
+    setAbandonedOrderData(value:AbandonedOrderDataType){
+        this.abandonedOrderData = value
     }
 
     // 重置
     reset(){
         this.languages = cookie.load("shop_lang") || '2';
-        this.keyword = ""
     }
 }
 
-export default new abandonedOrderList();
+export default new AbandonedOrder();

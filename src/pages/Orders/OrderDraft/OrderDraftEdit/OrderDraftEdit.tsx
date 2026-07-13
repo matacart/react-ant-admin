@@ -4,7 +4,6 @@ import { App, Divider, Flex, Spin } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { useNavigate, useParams } from 'react-router-dom';
 import { delDraftOrder, editDraftOrder, getDraftDetail } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import DangerButton from '@/components/Button/DangerButton';
@@ -23,13 +22,12 @@ import CustomInformationEdit from '../OrderDraft/CustomInformationEdit';
 import MaketCard from '../OrderDraft/MaketCard';
 import OrderNotesLable from '../OrderDraft/OrderNotesLable';
 import OrderDraftLabel from '../OrderDraft/OrderDraftLabel';
+import { history, useParams } from '@umijs/max';
 
   
 function OrderDraftEdit() {
     
     const { message } = App.useApp();
-
-    const navigate= useNavigate();
 
     const { draftOrderId } = useParams<{draftOrderId:string}>();
 
@@ -202,7 +200,7 @@ function OrderDraftEdit() {
                             <div className="mc-header">
                                 <div className="mc-header-left">
                                     <div className="mc-header-left-secondary" onClick={()=>{
-                                        navigate(`/orders/draftOrders`)
+                                        history.push(`/orders/draftOrders`)
                                     }}>
                                         <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                     </div>
@@ -212,11 +210,11 @@ function OrderDraftEdit() {
                                     <DefaultButton text="分享" />
                                     <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.prevDraftId ?false : true} onClick={()=>{
                                         setIsOverlay(false)
-                                        navigate(`/orders/draftOrders/edit/${orderDraft.prevDraftId}`)
+                                        history.push(`/orders/draftOrders/edit/${orderDraft.prevDraftId}`)
                                     }} />
                                     <ButtonIcon icon={<RightIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.nextDraftId ?false : true} onClick={()=>{
                                         setIsOverlay(false)
-                                        navigate(`/orders/draftOrders/edit/${orderDraft.nextDraftId}`)
+                                        history.push(`/orders/draftOrders/edit/${orderDraft.nextDraftId}`)
                                     }} />
                                 </Flex>
                             </div>
@@ -259,7 +257,7 @@ function OrderDraftEdit() {
                                         setDelLoading(true)
                                         delDraftOrder(orderDraft.orderInfo.id).then(()=>{
                                             message.success("删除成功")
-                                            navigate('/orders/draftOrders')
+                                            history.push('/orders/draftOrders')
                                         }).catch(()=>{
                                         }).finally(()=>{
                                             setDelLoading(false)
@@ -286,7 +284,7 @@ function OrderDraftEdit() {
                 </div>
             </Scoped>}
             {isOverlay && <Overlay status={loading} okText="保存" onExit={()=>{
-                navigate(`/orders/draftOrders`)
+                history.push(`/orders/draftOrders`)
             }} onSubmit={submit} />}
         </>
     )

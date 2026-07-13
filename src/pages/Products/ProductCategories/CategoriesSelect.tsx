@@ -102,11 +102,11 @@ function CategoriesSelect(){
                     marginBottom: '12px'
                 }}>
                     <Flex gap={12}>
-                      <Space.Compact style={{width:"420px"}}>
+                      <Space.Compact style={{width:"400px"}}>
                         <MySelect value={searchType} options={[
                             { value: "SEARCH_NAME", label: '分类名称' },
                             { value: "SEARCH_ID", label: '分类ID' },
-                     ]} style={{height:"36px",minWidth:"110px"}} onChange={(value:string)=>{
+                     ]} style={{height:"36px",minWidth:"100px"}} onChange={(value:string)=>{
                             setSearchType(value)
                         }} />
                         <MySearch placeholder={searchType == "SEARCH_NAME" ? "搜索分类名称" : "搜索分类ID"} value={searchText}
