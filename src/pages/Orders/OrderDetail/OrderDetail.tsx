@@ -1,7 +1,6 @@
 import { ArrowLeftOutlined, LoadingOutlined } from '@ant-design/icons'
 import { App, Flex, MenuProps, Spin, Tooltip } from 'antd'
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import OrdersShippedCard from './OrdersShippedCard';
@@ -29,14 +28,12 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import CancelOrderModal from './Modal/CancelOrderModal';
 import ReturnInProgress from './ReturnInProgress';
 import SuspendDeliveryCard from './SuspendDeliveryCard';
-import { useParams } from '@umijs/max';
+import { useParams,history } from '@umijs/max';
 
 
 function OrderDetail() {
 
   const { message } = App.useApp();
-
-  const navigate = useNavigate();
 
   const { orderId } = useParams<{orderId:string}>();
 
@@ -51,7 +48,7 @@ function OrderDetail() {
 
   const controlsItems: MenuProps['items'] = [
     {
-      label: <a onClick={()=>navigate(`/orders/${orderId}/productsEdit`)}>编辑商品</a>,
+      label: <a onClick={()=>history.push(`/orders/${orderId}/productsEdit`)}>编辑商品</a>,
       key: '1',
     },
     {
@@ -176,7 +173,7 @@ function OrderDetail() {
           // 商家备注
           order.setMerchantNotes(res.data.seller_remarks || [])
           // 
-          navigate(`/orders/${orderId}`)
+          history.push(`/orders/${orderId}`)
           setPrev(res.data.previous_order_id)
           setNext(res.data.next_order_id)
         }
@@ -201,7 +198,7 @@ function OrderDetail() {
                 <div className="mc-header">
                   <div className="mc-header-left">
                     <div className="mc-header-left-secondary" onClick={() => {
-                      navigate('/orders/manages')
+                      history.push('/orders/manages')
                     }}>
                       <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                     </div>
@@ -227,8 +224,8 @@ function OrderDetail() {
                     </div>
                   </div>
                   <Flex className='mc-header-right' gap={12} align='center'>
-                    {order.orderInfo.payment_status !== 0 && <DefaultButton text="退款" onClick={()=>navigate(`/orders/${orderId}/refund`)} />}
-                    {order.shippedProductsGroup.length>0 && <DefaultButton text="退货" onClick={()=>navigate("/orders/afterSales/launch/"+orderId)} />}
+                    {order.orderInfo.payment_status !== 0 && <DefaultButton text="退款" onClick={()=>history.push(`/orders/${orderId}/refund`)} />}
+                    {order.shippedProductsGroup.length>0 && <DefaultButton text="退货" onClick={()=>history.push("/orders/afterSales/launch/"+orderId)} />}
                     <ButtonDropdown menu={{items:controlsItems}} text="更多" />
                     <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={prev == null} onClick={()=>{
                       prev && update(prev)

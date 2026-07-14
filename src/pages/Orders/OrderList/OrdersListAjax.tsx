@@ -210,31 +210,31 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
 
   return (
     <Scoped>
-    <SelectedActions fetchData={fetchData} />
-    {/* 列表 */}
-    <Table
-      columns={columns}
-      rowKey={(record) => record.id}
-      dataSource={data}
-      pagination={tableParams.pagination}
-      loading={loading}
-      onChange={handleTableChange}
-      scroll={{ x: 'max-content' }}
-      onRow={(record) => ({
-        onClick: () => handleOrderClick(record.id), // 点击行时调用handleOrderClick
-      })}
-      rowSelection={{
-        type: 'checkbox',
-        selectedRowKeys:orderList.orderIds, // 使用状态来记录选中的行
-        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-          console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          orderList.setOrderIds(selectedRowKeys);
-        },
-      }}
-      // 隐藏表头
-      showHeader={orderList.orderIds.length === 0}
-    />
-  </Scoped>
+      <SelectedActions fetchData={fetchData} />
+      {/* 列表 */}
+      <Table
+        columns={columns}
+        rowKey={(record) => record.id}
+        dataSource={data}
+        pagination={tableParams.pagination}
+        loading={loading}
+        onChange={handleTableChange}
+        scroll={{ x: 'max-content' }}
+        onRow={(record) => ({
+          onClick: () => handleOrderClick(record.id), // 点击行时调用handleOrderClick
+        })}
+        rowSelection={{
+          type: 'checkbox',
+          selectedRowKeys:orderList.orderIds, // 使用状态来记录选中的行
+          onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            orderList.setOrderIds(selectedRowKeys);
+          },
+        }}
+        // 隐藏表头
+        showHeader={orderList.orderIds.length === 0}
+      />
+    </Scoped>
   );
 };
 

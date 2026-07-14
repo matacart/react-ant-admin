@@ -1,7 +1,7 @@
 
 import { makeAutoObservable } from 'mobx';
 
-class customAppConfigSetting {
+class CustomAppConfigSetting {
 
     constructor() {
         makeAutoObservable(this)
@@ -27,4 +27,4 @@ class customAppConfigSetting {
 
 }
 
-export default new customAppConfigSetting();
+export default new CustomAppConfigSetting();

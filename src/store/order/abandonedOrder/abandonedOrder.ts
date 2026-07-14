@@ -2,9 +2,18 @@ import { makeAutoObservable } from "mobx";
 import cookie from 'react-cookies';
 
 
+interface orderProductItemType{
+    title:string,
+    images:string[],
+    attributes:any[],
+    productPrice:number,
+    productSource:number,
+    finalPrice:number
+}
+
 interface AbandonedOrderDataType{
     abandonedOrderSeq:string
-
+    orderProductItems:orderProductItemType[]
 }
 
 class AbandonedOrder{

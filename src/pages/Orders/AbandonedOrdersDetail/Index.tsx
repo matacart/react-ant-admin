@@ -1,12 +1,20 @@
+import ButtonIcon from "@/components/Button/ButtonSvg";
+import { LeftIcon, RightIcon } from "@/components/Icons/Icons";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { getAbandonedOrderDetail } from "@/services/y2/ApiAbandonedOrder";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
-import { useParams } from "@umijs/max";
+import { useParams,history } from "@umijs/max";
 import { App, Divider, Flex, Spin } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import RecallOfMail from "./RecallOfMail";
+import Remark from "./Remark";
+import Settlement from "./Settlement";
+import Unpaid from "./Unpaid";
+import OrdersTimeline from "./OrdersTimeline";
+import CustomsInformation from "./CustomsInformation";
 
 const Index = () => {
 
@@ -18,7 +26,7 @@ const Index = () => {
 
     const [spinning,setSpinning] = useState(false);
     // 提示
-    const [isOverlay,setIsOverlay] = useState(false)
+    // const [isOverlay,setIsOverlay] = useState(false);
 
     const [loading, setLoading] = useState(false);
     const [delLoading, setDelLoading] = useState(false);
@@ -36,6 +44,10 @@ const Index = () => {
     },[id])
 
 
+    function setIsOverlay(arg0: boolean) {
+        throw new Error("Function not implemented.");
+    }
+
     return (
         <>
             {isSkeleton ? <SkeletonCard /> : <Scoped>
@@ -50,32 +62,28 @@ const Index = () => {
                                     </div>
                                     <div className="mc-header-left-content">#{abandonedOrder.abandonedOrderData?.abandonedOrderSeq }</div>
                                 </div>
-                                {/* <Flex align='center' gap={10}>
-                                    <DefaultButton text="分享" />
-                                    <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.prevDraftId ?false : true} onClick={()=>{
-                                        setIsOverlay(false)
+                                <Flex align='center' gap={10}>
+                                    {/* <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.prevDraftId ?false : true} onClick={()=>{
                                         history.push(`/orders/draftOrders/edit/${orderDraft.prevDraftId}`)
                                     }} />
                                     <ButtonIcon icon={<RightIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.nextDraftId ?false : true} onClick={()=>{
-                                        setIsOverlay(false)
                                         history.push(`/orders/draftOrders/edit/${orderDraft.nextDraftId}`)
-                                    }} />
-                                </Flex> */}
+                                    }} /> */}
+                                </Flex>
                             </div>
                             {/*  */}
                             <div className='mc-layout-main'>
                                 <div className='mc-layout-content'>
-                                    
+                                    <RecallOfMail />
+                                    <Settlement />
+                                    <Unpaid />
+                                    <OrdersTimeline />
                                 </div>
                                 <div className='mc-layout-extra'>
-                                    
+                                    <Remark />
+                                    <CustomsInformation />
                                 </div>
                             </div>
-                            <Divider/>
-                            <Flex justify='space-between'>
-                                
-                               
-                            </Flex>
                         </Spin>
                     </div>
                 </div>

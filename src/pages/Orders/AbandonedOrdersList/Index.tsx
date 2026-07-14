@@ -8,7 +8,6 @@ import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList'
 
 export default function Index() {
 
-
   useEffect(() => {
     return () => {
       abandonedOrderList.reset();

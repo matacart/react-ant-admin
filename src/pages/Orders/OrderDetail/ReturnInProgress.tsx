@@ -10,16 +10,13 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import StatementModalSecondary from "@/components/Modal/StatementModalSecondary";
 import PackageTrackingSecondModal from "./Modal/PackageTrackingSecondModal";
 import { setMarkProductAsRefunded } from "@/services/y2/api";
-import { useNavigate } from "react-router-dom";
-
+import { history } from "@umijs/max";
 
 function ReturnInProgress({groupIndex}:{groupIndex:number}) {
 
   const { message } = App.useApp();
 
   const [loading,setLoading] = useState(false)
-
-  const navigate = useNavigate();
 
   const returnInfo  = order.returnInProductsGroup[groupIndex]
 
@@ -144,7 +141,7 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
                 ),
               });
             }} />}
-            <PrimaryButton text={"退款"} onClick={()=>navigate(`/orders/${order.orderInfo.order_id}/returns/${returnInfo.return.return_id}/refund`)}  />
+            <PrimaryButton text={"退款"} onClick={()=>history.push(`/orders/${order.orderInfo.order_id}/returns/${returnInfo.return.return_id}/refund`)}  />
         </Flex>
         </Flex>}
       </Form>

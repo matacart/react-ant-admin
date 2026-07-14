@@ -1,13 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
-import orderDraftList from '@/store/order/orderDraftList';
 import dayjs from 'dayjs';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
-import { getOrderDraftList } from '@/services/y2/api';
 import { useAbortController } from '@/hooks/customHooks';
 import { searchAbandonedOrder } from '@/services/y2/ApiAbandonedOrder';
 import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList';
@@ -137,7 +135,8 @@ function OrderTable() {
     },
   ];
 
-  useMemo(()=>{
+  useEffect(()=>{
+    setLoading(true);
     searchAbandonedOrder({
       languages_id:abandonedOrderList.languages,
       pageNum:"1",
@@ -147,6 +146,8 @@ function OrderTable() {
       keyword:abandonedOrderList.keyword
     }).then(res=>{
       setData(res.data.list || []);
+    }).finally(()=>{
+      setLoading(false);
     })
   },[])
 
@@ -155,29 +156,28 @@ function OrderTable() {
   };
 
   const handleTableChange = (pagination: TablePaginationConfig, filters: any, sorter: any) => {
-    setTableParams({
-      pagination,
-      filters,
-      ...sorter,
-    });
-    setLoading(true);
-    const signal = createAbortController();
-    getOrderDraftList({
-      page:pagination.current,
-      limit:pagination.pageSize
-    },signal).then(res=>{
-      orderDraftList.setOrderDraftList({
-        data:res.data,
-        total:Number(res.count || 0)
-      });
-    }).catch(err=>{
-      if(err.name === 'AbortError'){
-        console.log(err);
-      }
-    }).finally(()=>{
-      setLoading(false);
-    })
-
+    // setTableParams({
+    //   pagination,
+    //   filters,
+    //   ...sorter,
+    // });
+    // setLoading(true);
+    // const signal = createAbortController();
+    // getOrderDraftList({
+    //   page:pagination.current,
+    //   limit:pagination.pageSize
+    // },signal).then(res=>{
+    //   orderDraftList.setOrderDraftList({
+    //     data:res.data,
+    //     total:Number(res.count || 0)
+    //   });
+    // }).catch(err=>{
+    //   if(err.name === 'AbortError'){
+    //     console.log(err);
+    //   }
+    // }).finally(()=>{
+    //   setLoading(false);
+    // })
   };
 
   return (
