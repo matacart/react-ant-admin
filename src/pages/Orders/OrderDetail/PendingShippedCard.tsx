@@ -9,10 +9,12 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyButton from "@/components/Button/MyButton";
 import SplitPackage from "./Modal/SplitPackage";
 import SuspendDelivery from "./Modal/SuspendDelivery";
+import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 
 
 function PendingShippedCard({groupIndex}:{groupIndex:number}) {
 
+  const symbolLeft = getSymbolLeft();
   const shippedInfo  = order.remainingProductGroup[groupIndex]
 
   return (
@@ -72,12 +74,12 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
                 </Col>
                 <Col span={5}>
                   <Flex style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.product_price}X {item.remaining_quantity}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.product_price)} X {item.remaining_quantity}</span>
                   </Flex>
                 </Col>
                 <Col span={5}>
                   <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>US${(parseInt(item.product_price+"")*parseInt(item.remaining_quantity+"")).toFixed(4)}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.product_price) * parseInt(item.remaining_quantity))}</span>
                   </Flex>
                 </Col>
               </Row>

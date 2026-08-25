@@ -12,11 +12,12 @@ import IPAddressAccessCard from './IPAddressAccessCard';
 import RobotsFileManagementCard from './RobotsFileManagementCard';
 import SitemapFileManagementCard from './SitemapFileManagementCard';
 import { useSleep } from '@/hooks/customHooks';
-import { getHomeSeo, getIPAddressAccessList, getIPRegionBlackList, getProtectionPassWord, getSitemapList, getSitemapStatus, getSocialPicture, updateProtectionPassWord } from '@/services/y2/api';
+import { getHomeSeo, getProtectionPassWord, getSitemapList, getSitemapStatus, getSocialPicture, updateProtectionPassWord } from '@/services/y2/api';
 import cookie from 'react-cookies';
 import preferences from '@/store/channel/preferences/preferences';
 import CustomerPrivacyCard from './CustomerPrivacyCard';
 import BlacklistAreaCard from './BlacklistAreaCard';
+import { getIPAddressAccessList, getIPRegionBlackList } from '@/services/y2/apiAccess';
 
 function Preferences(){
 

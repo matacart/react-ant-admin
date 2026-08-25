@@ -13,6 +13,7 @@ import { useAbortController } from '@/hooks/customHooks';
 import { getPrimaryDomain } from '@/utils/dataStructure';
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -70,6 +71,8 @@ function ProductListAjax(selectProps:any) {
   const { createAbortController } = useAbortController();
 
   const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
+
+  const symbolLeft = getSymbolLeft();
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
@@ -172,9 +175,8 @@ function ProductListAjax(selectProps:any) {
       dataIndex: 'specialprice',
       width: 150,
       render: (value, record, index) =>{
-        let num = Number(value);
         return <>
-          {`${cookie.load("symbolLeft")} ${num.toFixed(2)}`}
+          {`${symbolLeft} ${currencyPrecision(value)}`}
         </>
       } 
     },
@@ -344,10 +346,10 @@ function ProductListAjax(selectProps:any) {
               y: 'calc(100vh - 410px)', // 垂直滚动
               x: 1300
             }}
-            rowKey={(record) => record.product_id}
+            rowKey={(record) => record.id}
             onRow={(record) => ({
               onClick: () => {
-                handleOrderClick(record.product_id,record.languages_id); // 点击行时调用handleOrderClick
+                handleOrderClick(record.id,productList.languagesId); // 点击行时调用handleOrderClick
               },
             })}
             rowSelection={{

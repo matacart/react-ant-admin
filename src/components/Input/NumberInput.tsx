@@ -1,4 +1,3 @@
-import { SearchOutlined } from "@ant-design/icons"
 import { ConfigProvider, InputNumber } from "antd"
 import styled from "styled-components"
 
@@ -13,15 +12,9 @@ function NumberInput({...props}) {
             },
         }}
         >
-        <ScopedNumber {...props} />
+        <InputNumber {...props} />
     </ConfigProvider>
   )
 }
 
 export default NumberInput
-
-const ScopedNumber = styled(InputNumber)`
-  .ant-input-number-input-wrap .ant-input-number-input{
-    height: 36px;
-  }
-`

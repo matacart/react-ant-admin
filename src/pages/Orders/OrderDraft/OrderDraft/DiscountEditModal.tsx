@@ -4,12 +4,15 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
 import orderDraft from "@/store/order/orderDraft";
-import { Checkbox, Flex, Form, Input, Modal } from "antd"
+import { getPrecision, getSymbolLeft } from "@/utils/common";
+import { Checkbox, Flex, Form, Modal } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import { useEffect, useState } from "react";
-import cookie from 'react-cookies';
 
 function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
+
+    const symbolLeft = getSymbolLeft();
+    const {decimals,amountRule} = getPrecision();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -19,10 +22,10 @@ function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
         form.validateFields().then((values)=>{
             orderDraft.setOrderInfo({
                 ...orderDraft.orderInfo,
-                orderDiscount:values.amount?values.amount:0,
+                orderDiscount:values.amount?values.amount*amountRule:0,
                 orderDiscountDesc:values.explanation?values.explanation:"",
                 isDiscountAccumulation:values.isSuperposition?1:0,
-                orderTotal:orderDraft.orderInfo.productTotal-values.amount
+                orderTotal:orderDraft.orderInfo.productTotal-values.amount*amountRule
             })
             setIsModalOpen(false);
         }).catch(error=>{
@@ -32,11 +35,6 @@ function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
     }
 
     const cancel = () => {
-        form.setFieldsValue({
-            amount:orderDraft.orderInfo.orderDiscount,
-            explanation:orderDraft.orderInfo.orderDiscountDesc,
-            isSuperposition:orderDraft.orderInfo.isDiscountAccumulation == 1
-        })
         setIsModalOpen(false);
     };
 
@@ -55,17 +53,16 @@ function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
         setIsModalOpen(false);
     }
 
-    useEffect(()=>{
-        form.setFieldsValue({
-            amount:orderDraft.orderInfo.orderDiscount,
-            explanation:orderDraft.orderInfo.orderDiscountDesc,
-            isSuperposition:orderDraft.orderInfo.isDiscountAccumulation == 1
-        })
-    },[])
-
     return (
         <>
-            <a onClick={()=>setIsModalOpen(true)} style={{width:"20%"}} className={disable?"color-B8BECC":"color-356DFF"}>编辑折扣</a>
+            <a onClick={()=>{
+                setIsModalOpen(true);
+                form.setFieldsValue({
+                    amount:orderDraft.orderInfo.orderDiscount/amountRule,
+                    explanation:orderDraft.orderInfo.orderDiscountDesc,
+                    isSuperposition:orderDraft.orderInfo.isDiscountAccumulation == 1
+                })
+            }} style={{width:"20%"}} className={disable?"color-B8BECC":"color-356DFF"}>编辑折扣</a>
             <Modal title={<div>编辑折扣</div>} centered open={isModalOpen} width={480} onCancel={cancel} 
                 footer = {(_, { OkBtn, CancelBtn }) => (
                     <Flex justify="space-between">
@@ -84,7 +81,7 @@ function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
                                 value && value > pricing ? Promise.reject(new Error(`折扣金额不得大于当前订单商品金额`)) : Promise.resolve()
                         }
                     ]}>
-                        <NumberInput style={{width:"100%"}} min={0} prefix={cookie.load("symbolLeft") || ""} />
+                        <NumberInput style={{width:"100%"}} min={0} prefix={symbolLeft} precision={decimals} />
                     </FormItem>
                     <FormItem label="折扣说明" name="explanation">
                         {/* <Input /> */}

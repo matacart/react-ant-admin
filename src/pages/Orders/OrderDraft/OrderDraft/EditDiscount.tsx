@@ -10,6 +10,7 @@ import cookie from 'react-cookies';
 import NumberInput from "@/components/Input/NumberInput";
 import { toJS } from "mobx";
 import orderDraft from "@/store/order/orderDraft";
+import { currencyPrecision, getPrecision, getSymbolLeft } from "@/utils/common";
 
 function EditDiscount({index}:{index:number}){
 
@@ -21,7 +22,8 @@ function EditDiscount({index}:{index:number}){
 
     const [discountType,setDiscountType] = useState(1);
 
-    const symbolLeft = cookie.load("symbolLeft")??"US$"
+    const symbolLeft = getSymbolLeft();
+    const { decimals,amountRule } = getPrecision();
 
     const product = orderDraft.productInfo[index]
 
@@ -32,7 +34,7 @@ function EditDiscount({index}:{index:number}){
             // 固定折扣
             let finalAmount = 1
             if(discountType == 1){
-                finalAmount = product.product_price - values.discount_amount
+                finalAmount = product.product_price - Number(values.discount_amount)*amountRule
             }
             // 百分比折扣
             if(discountType == 2){
@@ -41,7 +43,7 @@ function EditDiscount({index}:{index:number}){
             }
             const newProductInfo = toJS(orderDraft.productInfo)
             newProductInfo[index].final_price = finalAmount
-            newProductInfo[index].product_discount_amount=values.discount_amount
+            newProductInfo[index].product_discount_amount=(values.discount_amount*amountRule).toString()
             newProductInfo[index].product_discount_type=discountType.toString()
             newProductInfo[index].product_discount_description=values.discount_explanation
             orderDraft.setProductInfo(newProductInfo)
@@ -63,7 +65,7 @@ function EditDiscount({index}:{index:number}){
                     if(product.product_discount_type && product.product_discount_type !== "0"){
                         setDiscountType(parseInt(product.product_discount_type.toString()))
                         form.setFieldsValue({
-                            discount_amount:product.product_discount_amount,
+                            discount_amount:Number(product.product_discount_amount)/amountRule,
                             discount_explanation:product.product_discount_description
                         })
                     }else{
@@ -71,8 +73,8 @@ function EditDiscount({index}:{index:number}){
                         form.resetFields()
                     }
                     setOpen(true)
-                }} className="cursor-pointer color-356DFF">US$ {parseFloat(product.final_price+"").toFixed(2)}</div>
-                {(product.product_discount_type && product.product_discount_type!=="0") && <div style={{marginLeft:"6px",textDecoration:"line-through"}} className="color-7A8499">US$ {parseFloat(product.product_price+"").toFixed(2)}</div>}
+                }} className="cursor-pointer color-356DFF">{symbolLeft}{currencyPrecision(Number(product.final_price))}</div>
+                {(product.product_discount_type && product.product_discount_type!=="0") && <div style={{marginLeft:"6px",textDecoration:"line-through"}} className="color-7A8499">{symbolLeft}{currencyPrecision(Number(product.product_price))}</div>}
             </Flex>
             
             <Modal title={<div>编辑折扣</div>} width={480} centered open={open} onOk={submit} onCancel={cancel} 
@@ -103,10 +105,9 @@ function EditDiscount({index}:{index:number}){
                         </Col>
                         <Col span={12}>
                             <Form.Item label="折扣额度" name="discount_amount">
-                                {discountType == 1 ? <NumberInput style={{height:"36px",width:"100%"}} min={0} max={product.product_price} prefix={symbolLeft} /> : 
-                                <NumberInput style={{height:"36px",width:"100%"}} min={0} max={100} formatter={(value:number) => `${value}%`} />
+                                {discountType == 1 ? <NumberInput precision={decimals} style={{height:"36px",width:"100%"}} min={0} max={product.product_price/amountRule} prefix={symbolLeft} /> : 
+                                    <NumberInput style={{height:"36px",width:"100%"}} min={0} max={100} formatter={(value:number) => `${value}%`} />
                                 }
-                                
                             </Form.Item>
                         </Col>
                     </Row>

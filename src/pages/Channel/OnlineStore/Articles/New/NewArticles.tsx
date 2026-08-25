@@ -30,16 +30,17 @@ function NewArticles(){
 
     const [form] = Form.useForm();
     const setLang = (lang:string)=>{
-        articles.setArticles({
-            ...articles.articles,
-            languages_id:lang
-        })
+        articles.setLanguagesId(lang)
     }
 
     const submit = ()=>{
         form.validateFields().then(async values => {
             setLoading(true);
-            createArticles(articles.articles).then(async res=>{
+            createArticles({
+                ...articles.articles,
+                title:values.title,
+                languages_id:articles.languagesId
+            }).then(async res=>{
                 await sleep(2000)
                 message.success('创建成功')
                 history.push('/website/articles')
@@ -70,7 +71,7 @@ function NewArticles(){
                         </div>
                         <Flex className='mc-header-right' align='center' gap={12}>
                             {/* 语言 */}
-                            <LangSelect lang={articles.articles.languages_id} setLang={setLang} />
+                            <LangSelect lang={articles.languagesId} setLang={setLang} />
                             <DefaultButton text='AI创建博客' />
                         </Flex>
                     </div>

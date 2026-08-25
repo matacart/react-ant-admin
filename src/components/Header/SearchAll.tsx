@@ -1,4 +1,4 @@
-import { globalSearch } from "@/services/y2/api";
+import { globalSearch } from "@/services/y2/apiSearch";
 import { SearchOutlined } from "@ant-design/icons";
 import { history, useIntl } from "@umijs/max";
 import { ConfigProvider, Flex, Input, Select, Spin } from "antd";

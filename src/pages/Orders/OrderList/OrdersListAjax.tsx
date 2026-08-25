@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderList } from '@/services/y2/api';
 import { useAbortController } from '@/hooks/customHooks';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 // 表单项订单数据类型
 interface DataType {
   orderid: string;
@@ -46,6 +47,9 @@ const getRandomuserParams = (params: TableParams) => ({
 function OrdersListAjax({ id,languagesId }: FilterCondition) {
 
   const intl = useIntl();
+
+  const symbolLeft = getSymbolLeft();
+  
 
   const [loading, setLoading] = useState(false);
 
@@ -124,9 +128,8 @@ function OrdersListAjax({ id,languagesId }: FilterCondition) {
     {
       title: intl.formatMessage({ id: 'orders.orderList.ordersListAjax.priceTotal' }),
       dataIndex: 'order_total',
-      render: (value: any, record: any, index: any) => {
-        let num = Number(value);
-        return <>{`US$ ${num.toFixed(2)}`}</>;
+      render: (value: number, record: any, index: any) => {
+        return <span>{symbolLeft}{currencyPrecision(value)}</span>;
       },
     },
   ];

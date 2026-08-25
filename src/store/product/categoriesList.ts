@@ -35,6 +35,16 @@ class CategoriesList {
     setCount = (value: number) => {
         this.count = value;
     }
+
+    // 重置
+    reset(){
+        this.setSortCondition({
+            sortField:"",
+            sortType:""
+        })
+        this.setCount(0);
+        this.setLanguagesId(cookie.load("shop_lang") || '2')
+    }
 }
 export default new CategoriesList();
 

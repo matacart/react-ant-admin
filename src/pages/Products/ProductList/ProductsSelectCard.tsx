@@ -5,7 +5,6 @@ import styled from "styled-components";
 import TagSelector from "./TagSelector";
 import CommodityClassificationSelector from "./CommodityClassificationSelector";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
-import cookie from 'react-cookies';
 import EditTableHead from "./EditTableHead";
 import MySelect from "@/components/Select/MySelect";
 import MySearch from "@/components/Input/MySearch";
@@ -13,10 +12,13 @@ import productList from "@/store/product/productList";
 import { observer } from "mobx-react-lite";
 import MoreSelect from "./MoreSelect";
 import LangSelect from "@/components/Select/LangSelect";
+import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 
 
 // type TagRender = SelectProps['tagRender'];
 const ProductsSelectCard = ()=>{
+
+    const symbolLeft = getSymbolLeft();
 
     const [searchType,setSearchType] = useState("SEARCH_TXT");
     const [searchText,setSearchText] = useState("");
@@ -260,7 +262,7 @@ const ProductsSelectCard = ()=>{
                     setMax(undefined)
                   }}>
                       <span className="color-474F5E font-14">
-                        价格区间：{cookie.load("symbolLeft") || ""}{productList.condition.startPrice} ～ {cookie.load("symbolLeft") || ""}{productList.condition.endPrice}
+                        价格区间：{symbolLeft}{currencyPrecision(productList.condition.startPrice)} ～ {symbolLeft}{currencyPrecision(productList.condition.endPrice)}
                       </span>
                   </Tag>}
             </Flex>

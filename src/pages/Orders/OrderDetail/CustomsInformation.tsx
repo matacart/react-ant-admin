@@ -21,7 +21,7 @@ function CustomsInformation() {
         <Scoped>
             <Card className="card">
                 <Flex justify="space-between" align="center" style={{marginBottom:"16px"}}>
-                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.detail.customer'})}</div>
+                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.orderDetail.customer'})}</div>
                     {!order.orderInfo.customer_id_number && <MyDropdown
                         tiggerEle={
                             <div className="cursor-pointer"><EllipsisOutlined /></div>
@@ -41,17 +41,17 @@ function CustomsInformation() {
                 <Form>
                     <Flex vertical gap={4}>
                         <span style={{fontSize:'14px',color:'#356DFF'}}>{order.customerInfo?.first_name}{order.customerInfo?.last_name}</span>
-                        <span style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.detail.sex'})}：{order.customerInfo?.sex == "1"?"男":order.customerInfo?.sex == "2"?"女":"未知"}</span> 
+                        <span style={{fontSize:'14px',color:'#242833', margin:'0'}}>{intl.formatMessage({ id:'order.orderDetail.sex'})}：{order.customerInfo?.sex == "1"?"男":order.customerInfo?.sex == "2"?"女":"未知"}</span> 
                         <span style={{fontSize:'14px',color:'#242833', margin:'0'}}>{"注册状态："}{order.orderInfo.customer_id?"是":"否"}</span> 
-                        <span style={{fontSize:'14px',color:'#242833', margin:'0'}}>会员优惠：{intl.formatMessage({ id:'order.detail.benefitstext'})}</span>
-                        <span className="font-14 color-242833">{intl.formatMessage({ id:'order.detail.historypurchase'})}：<span className="color-356DFF cursor-pointer" onClick={()=>{}}>{order.customerInfo.order_history_count}{intl.formatMessage({ id:'order.detail.numberpurchase'})}</span></span>
+                        <span style={{fontSize:'14px',color:'#242833', margin:'0'}}>会员优惠：{intl.formatMessage({ id:'order.orderDetail.benefitstext'})}</span>
+                        <span className="font-14 color-242833">{intl.formatMessage({ id:'order.orderDetail.historypurchase'})}：<span className="color-356DFF cursor-pointer" onClick={()=>{}}>{order.customerInfo.order_history_count}{intl.formatMessage({ id:'order.orderDetail.numberpurchase'})}</span></span>
                     </Flex>
                 </Form>
                 <Divider/>
                 <Form>
                     <>
                         <Flex style={{marginBottom:"8px"}} justify="space-between" align="center">
-                            <div className="font-w-600">{intl.formatMessage({ id:'order.detail.contact'})}</div>
+                            <div className="font-w-600">{intl.formatMessage({ id:'order.orderDetail.contact'})}</div>
                             <ContactInformation />
                         </Flex>
                         <Flex align="center" justify="space-between">
@@ -74,7 +74,7 @@ function CustomsInformation() {
                 <Divider/>
                 <Form>
                     <Flex justify="space-between">
-                        <div className="font-w-600" style={{marginBottom:"8px"}}>{intl.formatMessage({ id:'order.detail.deliveryaddress'})}</div>
+                        <div className="font-w-600" style={{marginBottom:"8px"}}>{intl.formatMessage({ id:'order.orderDetail.deliveryaddress'})}</div>
                         {order.shippedProductsGroup.length == 0 && <DeliveryAddressModal />}
                     </Flex>
                     {order.orderInfo.delivery_name == "" ?<>
@@ -120,7 +120,7 @@ function CustomsInformation() {
                 </Form>
                 <Divider/>
                 <Form>
-                    <div className="font-w-600" style={{marginBottom:"8px"}}>{intl.formatMessage({ id:'order.detail.billingaddress'})}</div>
+                    <div className="font-w-600" style={{marginBottom:"8px"}}>{intl.formatMessage({ id:'order.orderDetail.billingaddress'})}</div>
                     {parseInt(order.orderInfo.is_same_delivery) == 1 ? <div className="color-7A8499">与收货地址相同</div>:order.orderInfo.billing_name == "" ? <div className="color-7A8499">暂无账单地址</div> : <>
                         <span className="font-14 color-242833">{order.orderInfo.billing_name}</span>
                     </>}

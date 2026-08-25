@@ -1,14 +1,13 @@
 import { Card, Tooltip } from 'antd';
 import { useEffect, useState } from 'react';
-import { getTodayData } from '@/services/y2/api';
-import { Link } from 'react-router-dom';
+import { getTodayData } from '@/services/y2/apiStore';
 import dayjs from "dayjs";
 import salesRevenue from '@/../public/icons/commons/salesRevenue.svg';
 import orderNumber from '@/../public/icons/commons/orderNumber.svg';
 import visitorCount from '@/../public/icons/commons/visitorCount.svg';
 import { useAbortController } from '@/hooks/customHooks';
 import styled from 'styled-components';
-import { useIntl } from '@umijs/max';
+import { Link, useIntl } from '@umijs/max';
 
 interface todayDataType{
     customerCount:number;

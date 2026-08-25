@@ -17,23 +17,9 @@ export function getPlatformInfo(){
 }
 
 
-
-// 全局搜索
-export function globalSearch(keyword:string) {
-  return request<ApiSearch.Default>('/ApiSearch/globalSearch',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      keyword: keyword,
-    }
-  })
-}
-
 // 店铺查询
 export function domainSelect( options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/ApiAppstore/domain_select', {
+  return request<ApiAppstore.Default>('/ApiAppstore/domain_select', {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -65,8 +51,8 @@ export function currentUser(options?: { [key: string]: any }) {
 }
 
 // 店铺币种汇率
-export async function getCurrencies(domainId:string) {
-  return await request(`/ApiAppstore/currencies`, {
+export function getCurrencies(domainId:string) {
+  return request<ApiAppstore.Default>(`/ApiAppstore/currencies`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -79,8 +65,8 @@ export async function getCurrencies(domainId:string) {
 }
 
 // 国家
-export async function getCountryList(){
-  return await request<ApiAppstore.Default>('/ApiAppstore/country_select',{
+export function getCountryList(){
+  return request<ApiAppstore.Default>('/ApiAppstore/country_select',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -93,8 +79,8 @@ export async function getCountryList(){
 }
 
 // 时区
-export async function getTimeZoneList(){
-  return await request<ApiAppstore.Default>('/ApiAppstore/timezones_select',{
+export function getTimeZoneList(){
+  return request<ApiAppstore.Default>('/ApiAppstore/timezones_select',{
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -104,8 +90,8 @@ export async function getTimeZoneList(){
 }
 
 // 所有币种
-export async function getCurrenciesList(page?: number, limit?: number) {
-  return await request<ApiAppstore.Default>(`/ApiAppstore/currencies_list`, {
+export function getCurrenciesList(page?: number, limit?: number) {
+  return request<ApiAppstore.Default>(`/ApiAppstore/currencies_list`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -120,8 +106,8 @@ export async function getCurrenciesList(page?: number, limit?: number) {
 }
 
 // 获取语言列表 -- 所有：暂用于平台语言
-export async function getLanguagesList() {
-  return await request<ApiAppstore.Default>(`/ApiAppstore/languages_list`, {
+export function getLanguagesList() {
+  return request<ApiAppstore.Default>(`/ApiAppstore/languages_list`, {
     method: 'POST',
     retryOnError: true,
     headers: {
@@ -148,7 +134,7 @@ export function getDomainLanguages(){
 }
 
 // 物流服务商---商户数据
-export async function getShippingcourier() {
+export function getShippingcourier() {
   return request<ApiAppstore.Default>(`/ApiAppstore/shippingcourier_select`, {
     method: 'POST',
     retryOnError: true, // 重试
@@ -158,85 +144,7 @@ export async function getShippingcourier() {
   })
 }
 
-// 基础设置 --- 
-export async function getTodayData(startDate:number,endDate:number,options?: { signal?: AbortSignal }) {
-  return request<ApiStore.Default>('/ApiStore/today_statistics', {
-    method: 'POST',
-    retryOnError: true, // 重试
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domainID: cookie.load("domain")?.id,
-      startDate:startDate,
-      endDate:endDate
-    },
-    signal: options?.signal,
-  })
-}
 
-// 偏好设置 --- 添加IP地址 list_type 白名单/黑名单
-export async function addIPAddressAccess(res:{
-  ip_input:string,
-  list_type:string,
-},signal?:AbortSignal){
-  return request<ApiAccess.Default>(`/ApiAccess/ipBlackAdd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 偏好设置 --- 删除IP地址
-export async function delIPAddressAccess(id:string,signal?:AbortSignal){
-  return request<ApiAccess.Default>(`/ApiAccess/ipBlackDelete`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      rule_id:id,
-      delete_type:"soft",
-    }
-  })
-}
-
-// 偏好设置 --- 添加区域黑名单
-export async function addRegionAddressAccess(res:{
-  rules:string,
-},signal?:AbortSignal){
-  return request<ApiAccess.Default>(`/ApiAccess/regionBlackBatchAdd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 偏好设置 --- 删除区域黑名单
-export async function delRegionAddressAccess(id:string,signal?:AbortSignal){
-  return request<ApiAccess.Default>(`/ApiAccess/regionBlackDelete`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      rule_id:id,
-      delete_type:"soft",
-    }
-  })
-}
 
 // 偏好设置 --- 获取robots.txt配置
 export async function getRobotsTxtConfig(signal?:AbortSignal){
@@ -436,43 +344,6 @@ export async function getSitemapStatus(signal?:AbortSignal){
   })
 }
 
-// 偏好设置 --- IP地址访问名单列表
-export async function getIPAddressAccessList(res:{
-  page:number,
-  limit:number
-},signal?:AbortSignal){
-  return request<ApiAccess.Default>(`/ApiAccess/ipBlackList`, {
-    method: 'POST',
-    retryOnError: true, // 重试
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal,
-  })
-}
-
-// 偏好设置 --- IP地区访问限制名单列表
-export async function getIPRegionBlackList(res:{
-  page:number,
-  limit:number
-},signal?:AbortSignal){
-  return request<ApiAccess.Default>(`/ApiAccess/regionBlackList`, {
-    method: 'POST',
-    retryOnError: true, // 重试
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal,
-  })
-}
 
 // 动态渠道路由
 export async function getWebsiteRoutes(signal?:AbortSignal){
@@ -629,7 +500,7 @@ export async function register(body:any, options?: { [key: string]: any }) {
   });
 }
 
-// // 获取验证码
+// 获取验证码
 export async function getFakeCaptcha(phone:string,InternationalAreaCode:string,queueTyp:string) {
   return request<API.LoginResult>("https://www.matacart.com/h-module-sendSmsCode.html", {
     method: 'GET',
@@ -1156,7 +1027,7 @@ export async function getCategoryList(res:{
 }
 // 详情
 export async function getCategory(id:string,languageId:string){
-  return await request('/ApiStore/category',{
+  return await request<ApiStore.Default>('/ApiStore/category',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1526,7 +1397,7 @@ export async function getAddWarehouse(id:string){
 export async function getStoreInfo(res:{
   languages_id:string
 }){
-  return await request<ApiAppstore.Default>('/ApiAppstore/store',{
+  const response = await request<ApiAppstore.Default>('/ApiAppstore/store',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1536,6 +1407,10 @@ export async function getStoreInfo(res:{
       ...res
     }
   })
+  if(response.code != 0){
+    throw new Error(response.msg)
+  }
+  return response.data 
 }
 
 // 更新店铺信息
@@ -1813,9 +1688,9 @@ export async function delAddonsConfig(id:string,lang:string) {
   })
 }
 
-// 收款 --手动收款方式  -- 所有/详细
-export async function getAddonsConfigs(id?:string) {
-  return request("/ApiAppstore/addons_config_get", {
+// 收款 --手动收款方式 addons_id:23  -- 所有/详细
+export async function getAddonsConfigs(langId:string,id?:string,) {
+  return request<ApiAppstore.Default>("/ApiAppstore/addons_config_get", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1823,13 +1698,13 @@ export async function getAddonsConfigs(id?:string) {
     data:{
       id:id,
       domain_id: cookie.load("domain")?.id,
-      languages_id:"2",
+      languages_id:langId,
       addons_id:"23"
     }
   });
 }
 // 手动收款方式  -- 配置
-export async function getAddonsConfigArray(id?:string,addonsId?:string) {
+export async function getAddonsConfigArray(langId:string,id?:string,addonsId?:string) {
   return request("/ApiAppstore/addons_config_array", {
     method: 'POST',
     headers: {
@@ -2698,7 +2573,7 @@ export async function createCustomer(res:any) {
 }
 
 export async function getCustomer(id:string) {
-  return request(`/ApiAppstore/customer_detail`, {
+  return request<ApiAppstore.Default>(`/ApiAppstore/customer_detail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3195,7 +3070,7 @@ export async function getOrderDraftList(res:any,signal?:AbortSignal) {
 
 // 草稿单信息
 export async function getDraftDetail(draftId:string) {
-  return request(`/ApiStore/getDraftDetail`, {
+  return request<ApiStore.Default>(`/ApiStore/getDraftDetail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

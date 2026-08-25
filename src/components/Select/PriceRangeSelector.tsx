@@ -1,11 +1,10 @@
-import { Button, ConfigProvider, Divider, Dropdown, Flex, Popover, Select } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { Button, ConfigProvider, Divider, Flex, Popover, Select } from 'antd';
+import React, { useRef, useState } from 'react';
 import { styled } from 'styled-components';
-import cookie from 'react-cookies';
 import DefaultInputNumber from '../Input/DefaultInputNumber';
-import PrimaryButton from '../Button/PrimaryButton';
-import MyButton from '../Button/MyButton';
 import productList from '@/store/product/productList';
+import { getPrecision, getSymbolLeft } from '@/utils/common';
+import MyButton from '../Button/MyButton';
 
 
 export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
@@ -13,6 +12,9 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
     const inputRef = useRef<HTMLButtonElement | null>(null)
 
     const [popoverOpen, setPopoverOpen] = useState(false);
+
+    const symbolLeft = getSymbolLeft();
+    const {decimals,amountRule} = getPrecision();
 
     const onSubmit = () => {
         if(min && max){
@@ -36,21 +38,23 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
                     className="input" 
                     placeholder='最小值'
                     min={0}
-                    value={min}
-                    prefix={cookie.load("symbolLeft")}
+                    value={min?min/amountRule:null}
+                    prefix={symbolLeft}
+                    precision={decimals}
                     onChange={(value:number)=>{
-                        setMin(value)
+                        value?setMin(Math.round(value*amountRule)):setMin(null)
                     }}
                 />
                 <div className='divider-warp'><Divider className='divider'></Divider></div>
                 <DefaultInputNumber 
                     className="input"
                     placeholder='最大值'
-                    prefix={cookie.load("symbolLeft")}
+                    prefix={symbolLeft}
+                    precision={decimals}
                     min={0}
-                    value={max}
+                    value={max?max/amountRule:null}
                     onChange={(value:number)=>{
-                        setMax(value)
+                        value?setMax(Math.round(value*amountRule)):setMax(null)
                     }}
                 />
             </Flex>

@@ -2,14 +2,13 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { setOrderIdNumber } from "@/services/y2/api";
-import { Checkbox, Col, Flex, Form, Input, Modal, Row, Space } from "antd"
-import { useEffect, useRef, useState } from "react";
+import { Col, Flex, Form, Input, Modal, Row, Space } from "antd"
+import { useState } from "react";
 import { styled } from 'styled-components';
-import cookie from 'react-cookies';
 import NumberInput from "@/components/Input/NumberInput";
 import orderProductEdit from "@/store/order/orderProductEdit";
 import { toJS } from "mobx";
+import { getSymbolLeft } from "@/utils/common";
 
 function EditDiscount({item}:{item:any}){
 
@@ -21,7 +20,7 @@ function EditDiscount({item}:{item:any}){
 
     const [discountType,setDiscountType] = useState(1);
 
-    const symbolLeft = cookie.load("symbolLeft")??"US$"
+    const symbolLeft = getSymbolLeft();
 
     const product = orderProductEdit.remainingProductGroup[0].product.filter((product:any)=>item.id == "" ? product.vid == item.vid : product.id===item.id)[0]
     // console.log(product.product_price)
@@ -108,9 +107,8 @@ function EditDiscount({item}:{item:any}){
                         <Col span={12}>
                             <Form.Item label="折扣额度" name="discount_amount">
                                 {discountType == 1 ? <NumberInput style={{height:"36px",width:"100%"}} min={0} max={product.product_price} prefix={symbolLeft} /> : 
-                                <NumberInput style={{height:"36px",width:"100%"}} min={0} max={100} formatter={(value:number) => `${value}%`} />
+                                    <NumberInput style={{height:"36px",width:"100%"}} min={0} max={100} formatter={(value:number) => `${value}%`} />
                                 }
-                                
                             </Form.Item>
                         </Col>
                     </Row>

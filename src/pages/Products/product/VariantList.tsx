@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { App, Card, Table, Upload, Checkbox, Image, Radio, Flex, Tooltip } from 'antd';
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import product, { variantsType } from '@/store/product/product';
+import product, { VariantType } from '@/store/product/product';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
 import { ColumnsType } from 'antd/lib/table';
@@ -12,16 +12,36 @@ import { DeleteIcon, EditIcon, ImageUploadIcon } from '@/components/Icons/Icons'
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { uploadPic } from '@/services/y2/api';
+import { getPrecision, getSymbolLeft } from '@/utils/common';
+
+
+
+// 检查两个字符串是否包含相同的元素
+function areOptionIdsEqual(ids1: string, ids2: string): boolean {
+  const parse = (s: string) => new Set(s.split(',').filter(Boolean));
+  const set1 = parse(ids1);
+  const set2 = parse(ids2);
+  if (set1.size !== set2.size) return false;
+  for (const id of set1) {
+    if (!set2.has(id)) return false;
+  }
+  return true;
+}
 
 function VariantList(){
   
   const { message } = App.useApp();
 
+  const symbolLeft = getSymbolLeft();
+  const {decimals,amountRule} = getPrecision();
+
   const [loading, setLoading] = useState(false);
 
   const [isHovering,setIsHovering] = useState<boolean[]>([]);
 
-  const [variantList, setVariantList] = useState<variantsType[]>([]);
+  const [variantList, setVariantList] = useState<VariantType[]>([]);
+
+  const isFirstRef = useRef(true);
 
   const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
   
@@ -58,32 +78,17 @@ function VariantList(){
       });
       skus = t
     }
-    // 将结果存储起来
+    // 将结果存储起来VariantType
     return skus
   }
 
-  const handleChangePrice = (value: string, record: variantsType, index: number) => {
+  const handleChangePrice = (value: number,field:"price"|"original_price"|"cost_price",record: VariantType, index: number,) => {
     const newVariantList = _.cloneDeep(variantList);
-    newVariantList[index].price = value;
+    newVariantList[index][field] = (value*amountRule).toString();
     setVariantList(newVariantList);
     product.setVariantList(newVariantList);
   }
-
-  const handleChangeOriginalPrice = (value: string, record: variantsType, index: number) => {
-    const newVariantList = _.cloneDeep(variantList);
-    newVariantList[index].original_price = value;
-    setVariantList(newVariantList);
-    product.setVariantList(newVariantList);
-  }
-
-  const handleChangeCostPrice = (value: string, record: variantsType, index: number) => {
-    const newVariantList = _.cloneDeep(variantList);
-    newVariantList[index].cost_price = value;
-    setVariantList(newVariantList);
-    product.setVariantList(newVariantList);
-  }
-  
-  const handleChangeQuantity = (value: string, record: variantsType, index: number) => {
+  const handleChangeQuantity = (value: string, record: VariantType, index: number) => {
     const newVariantList = _.cloneDeep(variantList);
     newVariantList[index].quantity = value;
     setVariantList(newVariantList);
@@ -91,7 +96,7 @@ function VariantList(){
   }
 
   // 删除
-  const handleRemove = (record: variantsType,index: number) => {
+  const handleRemove = (record: VariantType,index: number) => {
     const myModal = modal.confirm({
       title: '确认删除',
       icon: <ExclamationCircleOutlined />,
@@ -116,7 +121,6 @@ function VariantList(){
       </Flex>
     });
   }
-
 
   // 上传图片
   const handleImgUpload = (file: any,index: number) => {
@@ -149,7 +153,7 @@ function VariantList(){
   };
 
   useEffect(() => {
-    const generateStyles = async (sku:variantsType[]) => {
+    const generateStyles = async (sku:VariantType[]) => {
       // 生成变体
       let newVariantList:any = [];
       const newStyles = sku.map((item, index) => ({
@@ -169,7 +173,7 @@ function VariantList(){
       }));
       // 与状态同步
       newStyles.map((item) => {
-        const variant = product.variants.find((variant) => variant.option_values_ids == item.option_values_ids);
+        const variant = product.variants.find((variant) => areOptionIdsEqual(variant.option_values_ids, item.option_values_ids));
         if(variant && variant.status !== "9"){
           newVariantList.push({
             ...variant,
@@ -182,7 +186,7 @@ function VariantList(){
       })
       // 原始变体
       const newVariants = toJS(product.variants).map((variant) => {
-        if(variant.status !== "9" && !newVariantList.some((item:variantsType) => item.id == variant.id)){
+        if(variant.status !== "9" && !newVariantList.some((item:VariantType) => item.id == variant.id)){
           return {
             ...variant,
             status:"9",
@@ -219,13 +223,13 @@ function VariantList(){
     }
   }, [product.attributesMap]);
 
-  const columns: ColumnsType<variantsType> = [
+  const columns: ColumnsType<VariantType> = [
     {
       title: '图片',
       dataIndex: 'image',
       fixed: 'left', // 固定左侧
       width: 60, // 设置宽度以适应图片
-      render: (value: string, record: variantsType,index:number) => (
+      render: (value: string, record: VariantType,index:number) => (
         <>  
           {(record.image == null || record.image == "") ? <Upload
               showUploadList={false} 
@@ -277,44 +281,44 @@ function VariantList(){
       title: '款式',
       fixed: 'left', // 固定左侧
       dataIndex: 'option_values_names',
-      width: 100, // 设置宽度以适应文字
+      width: 80, // 设置宽度以适应文字
     },
     {
       title: '售价',
       dataIndex: 'price',
       width: 80, // 设置宽度以适应文字
-      render: (value: string, record: variantsType,index: number) => (
-        <NumberInput style={{width:'100%'}} value={value} onChange={(value:string) => handleChangePrice(value,record,index)}  />
+      render: (value: number, record: VariantType,index: number) => (
+        <NumberInput prefix={symbolLeft} style={{width:'100%'}} precision={decimals} value={value/amountRule} onChange={(value:number) => handleChangePrice(value,"price",record,index)}  />
       ),
     },
     {
       title: '原价',
       dataIndex: 'original_price',
       width: 80, // 设置宽度以适应文字
-      render: (value: string, record: variantsType,index: number) => (
-        <NumberInput style={{width:'100%'}} value={value} onChange={(value:string) => handleChangeOriginalPrice(value,record,index)} />
+      render: (value: number, record: VariantType,index: number) => (
+        <NumberInput prefix={symbolLeft} style={{width:'100%'}} precision={decimals} value={value/amountRule} onChange={(value:number) => handleChangePrice(value,"original_price",record,index)} />
       ),
     },
     {
       title: '成本价',
       dataIndex: 'cost_price',
       width: 80, // 设置宽度以适应文字
-      render: (value: string, record: variantsType,index: number) => (
-        <NumberInput style={{width:'100%'}} value={value} onChange={(value:string) => handleChangeCostPrice(value,record,index)}  />
+      render: (value: number, record: VariantType,index: number) => (
+        <NumberInput prefix={symbolLeft} style={{width:'100%'}} precision={decimals} value={value/amountRule} onChange={(value:number) => handleChangePrice(value,"cost_price",record,index)}  />
       ),
     },
     {
       title: '库存',
       dataIndex: 'quantity',
       width: 80, // 设置宽度以适应文字
-      render: (value: string, record: variantsType,index: number) => (
+      render: (value: string, record: VariantType,index: number) => (
         <NumberInput style={{width:'100%'}} value={value} onChange={(value:string) => handleChangeQuantity(value,record,index)}  />
       ),
     },
     {
       title: '元字段',
       dataIndex: 'metaFields',
-      render: (metaFields: string, record: variantsType) => (
+      render: (metaFields: string, record: VariantType) => (
         <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
           {metaFields}
           <EditIcon className="font-20" />
@@ -327,7 +331,7 @@ function VariantList(){
       dataIndex: 'delete',
       width: 28,
       fixed: 'right', // 将列固定在右侧
-      render: (metaFields: string,record: variantsType,index:number) => (
+      render: (metaFields: string,record: VariantType,index:number) => (
         <Flex justify="center">
           <Tooltip title="删除">
             <DeleteIcon className='font-20 color-D33612 cursor-pointer' onClick={()=> handleRemove(record,index)} />

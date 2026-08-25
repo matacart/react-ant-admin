@@ -60,7 +60,7 @@ function OrdersLabelCard() {
         <Scoped>
             <Card className="card">
                 <Flex style={{marginBottom:"16px"}} justify="space-between" align="center">
-                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.detail.orderlabel'})}</div>
+                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.orderDetail.orderlabel'})}</div>
                     <ManagementLabelModal />
                 </Flex>
                 <Form>

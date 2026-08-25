@@ -2,7 +2,7 @@ import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { App, Divider,Flex,Form,MenuProps } from 'antd';
 import { useEffect, useState } from 'react';
 import TradingRecords from './TradingRecords';
-import { deleteProduct, getProductDetail, upDateProduct, upDateProductStatus } from '@/services/y2/api';
+import { deleteProduct, getProductDetail, getProductStyleValueList, upDateProduct, upDateProductStatus } from '@/services/y2/api';
 import React from 'react';
 import { styled } from 'styled-components';
 import { observer } from 'mobx-react-lite';
@@ -36,7 +36,7 @@ import StockCard from '../Product/StockCard';
 import SEOCard from '../Product/SEOCard';
 import { getPrimaryDomain } from '@/utils/dataStructure';
 import VariantList from '../Product/VariantList';
-import AttributesMapList from '../Product/AttributesMapList';
+import AttributesMapList, { transformAttributes } from '../Product/AttributesMapList';
 import { toJS } from 'mobx';
 
 
@@ -44,14 +44,11 @@ function ProductDetail() {
 
     const { modal,message } = App.useApp();  // 获取带有上下文的 modal 对象
 
-    const {productId,languageId} = useParams();
+    const {productId,languageId = "2"} = useParams();
     // 域名信息
     const domainCookie = cookie.load("domain");
     // 预览域名
     const previewDomain = getPrimaryDomain();
-
-    const [languagesId,setLanguagesId] = useState<string>(languageId??"2");
-
     // 分享链接
     const items: MenuProps['items'] = [
         {
@@ -126,6 +123,13 @@ function ProductDetail() {
     // 提示
     const [isSkeleton,setIsSkeleton] = useState(true)
     const [loading,setLoading] = useState(false)
+
+    // 获取所有款式的选项
+    const fetchOptions = (optionId: string) => {
+        return getProductStyleValueList(optionId,product.languageId).then(res=>{
+        return res?.data || []
+        })
+    }
     
     // 删除
     async function productDel(id:any){
@@ -201,7 +205,7 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是第一个商品")
         }else{
-            history.push(`/products/edit/${id}/${product.productInfo.languages_id}`)
+            history.push(`/products/edit/${id}/${product.languageId}`)
         }
     }
     // 下一个商品
@@ -209,7 +213,7 @@ function ProductDetail() {
         if(id==="" || id===null){
             message.error("这是最后一个商品")
         }else{
-            history.push(`/products/edit/${id}/${product.productInfo.languages_id}`)
+            history.push(`/products/edit/${id}/${product.languageId}`)
         }
     }
 
@@ -244,12 +248,16 @@ function ProductDetail() {
                     additional_image:[res.data.product_image,...newAdditonalImage]
                 })
             }
+            product.setLanguageId(langId);
             // 第三方数据
             product.setDiversion(diversion || {})
             // 属性
             product.setAttributes(attributes || [])
             // 变体
             product.setVariants(variants || [])
+            // 属性映射 -- 收集所有输入值后调用父组件提供的回调函数
+            const attributesMap = await transformAttributes(product.attributes,fetchOptions);
+            product.setAttributesMap(attributesMap);
         }else{
             message.error("商品不存在");
         }
@@ -290,6 +298,7 @@ function ProductDetail() {
                 // 过滤要删除的属性
                 await upDateProduct({
                     ...product.productInfo,
+                    languages_id:product.languageId,
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
                     diversion:JSON.stringify([product.diversion || {}]),
@@ -307,8 +316,8 @@ function ProductDetail() {
     }
     // 在组件加载时调用 fetchProductDetail
     useEffect(() => {
-        fetchProductDetail(productId || "",languagesId);
-    },[productId,languagesId]);
+        fetchProductDetail(productId || "",languageId);
+    },[productId,languageId]);
 
     // 保存提示
     const [isOverlay,setIsOverlay] = useState<boolean>();
@@ -333,7 +342,7 @@ function ProductDetail() {
                                 <div className="mc-header-left-content">{productTitle}</div>
                             </div>
                             <Flex className='mc-header-right' align='center' gap={8}>
-                                <LangSelect lang={languagesId} setLang={(value:string)=>setLanguagesId(value)} />
+                                <LangSelect lang={languageId} setLang={(value:string)=>history.push(`/products/edit/${productId}/${value}`)} />
                                 <ButtonIcon icon={<LeftIcon className='font-20' />} onClick={()=>{
                                     prevProduct(product.productInfo.prevProductId)
                                 }} />

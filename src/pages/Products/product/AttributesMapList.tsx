@@ -1,5 +1,5 @@
 import {addProductOptionValues, getOptionType, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
-import product, { attributeType } from "@/store/product/product";
+import product, { AttributeType } from "@/store/product/product";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
 import { App, Card, Checkbox, Tooltip, AutoCompleteProps, Flex } from "antd";
 import { observer } from "mobx-react-lite";
@@ -23,7 +23,7 @@ import { DeleteIcon } from "@/components/Icons/Icons";
  * @param {Function} fetchOptions - 外部接口函数，接收 option_id，返回 Promise<Array> 该属性的所有可选值
  * @returns {Promise<Array>} 转换后的数组，每个元素为 { label, value, options, optionValue }
  */
-async function transformAttributes(attributes:attributeType[], fetchOptions:any) {
+export async function transformAttributes(attributes:AttributeType[], fetchOptions:any) {
   const groupMap = new Map(); // key: option_id, value: { label, optionValueSet: Set }
 
   // 1. 按 option_id 分组，收集原始 option_values_name（去重）
@@ -135,26 +135,11 @@ function AttributesMapList() {
           },
       });
     };
-  
-    // 获取所有款式的选项
-    const fetchOptions = (optionId: string) => {
-        return getProductStyleValueList(optionId,product.productInfo.languages_id).then(res=>{
-        return res?.data || []
-        })
-    }
-    // 收集所有输入值后调用父组件提供的回调函数
-    useEffect(() => {
-        const fetchData = async () => {
-            const attributesMap = await transformAttributes(product.attributes,fetchOptions);
-            setAttributesMap(attributesMap);
-            product.setAttributesMap(attributesMap);
-        }
-        fetchData();
-    }, []);
+    
     // 获取所有属性
     useEffect(()=>{
       getProductOptionSelect(product.productInfo.languages_id).then(res=>{
-          res?.data && setOptionList(res.data)
+        res?.data && setOptionList(res.data)
       })
       getOptionType().then(res=>{
         setAttributesOptionType(res.data.map((item:any)=>({
@@ -168,6 +153,8 @@ function AttributesMapList() {
     useEffect(()=>{
       if(firstRef.current){
         firstRef.current = false
+        // 同步属性映射
+        setAttributesMap(product.attributesMap || []);
         return;
       }
       // 提交时 有则替换修改 无则将状态改为9

@@ -104,8 +104,8 @@ function OrdersShippedCard({index}:{index:number}) {
     >
       <Form>
         <div className="font-w-400">
-          <div style={{ fontSize: "14px", color: "#7A8499",marginBottom:"4px" }} >{intl.formatMessage({ id: "order.detail.location" })}</div>
-          <div style={{ fontSize: "14px", color: "#242833",marginBottom:"16px" }} >{intl.formatMessage({ id: "order.detail.defaultlocation" })}</div>
+          <div style={{ fontSize: "14px", color: "#7A8499",marginBottom:"4px" }} >{intl.formatMessage({ id: "order.orderDetail.location" })}</div>
+          <div style={{ fontSize: "14px", color: "#242833",marginBottom:"16px" }} >{intl.formatMessage({ id: "order.orderDetail.defaultlocation" })}</div>
           <div style={{ fontSize: "14px", color: "#7A8499",marginBottom:"4px" }} >{"已发货"}</div>
           <div style={{ fontSize: "14px", color: "#242833",marginBottom:"20px" }} >{""+dayjs(shippedInfo.shipment.shipment_time*1000).format("YYYY-MM-DD")}</div>
           {/* 处理 productinfo 为 undefined 的情况 */}

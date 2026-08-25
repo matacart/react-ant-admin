@@ -43,13 +43,9 @@ function Base() {
     }
 
     useEffect(()=>{
-
         const lang = cookie.load("shop_lang") || '2'
-
         getStoreInfo({languages_id:lang}).then(res=>{
-            if(res.code == 0){
-                baseInfoStore.setStoreInfo(res.data)
-            }
+            baseInfoStore.setStoreInfo(res)
         }).catch(err=>{
             message.error(err.message)
         }).finally(()=>{

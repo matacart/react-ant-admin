@@ -72,7 +72,7 @@ export default  [
         component: './Orders/AbandonedOrdersList/Index',
       },
       {
-        path: 'recallOrders/:id',
+        path: 'recallOrders/:id/:languagesId',
         name: 'recallOrders',
         hideInMenu: true,
         component: './Orders/AbandonedOrdersDetail/Index',
@@ -168,19 +168,19 @@ export default  [
         {
           path: 'categories',
           name: 'categories',
-          component: './Products/ProductCategories/Index',
+          component: './Products/ProductCategoriesList/Index',
         },
         {
           path: 'categories/new',
           name: 'categories',
           menu: false,
-          component: './Products/ProductCategories/ProductCategoriesAdd/ProductCategoriesAdd',
+          component: './Products/ProductCategoriesAdd/ProductCategoriesAdd',
         },
         {
           path: 'categories/edit/:id/:languageId',
           name: 'categories',
           menu: false,
-          component: './Products/ProductCategories/ProductCategoriesEdit/ProductCategoriesEdit',
+          component: './Products/ProductCategoriesEdit/ProductCategoriesEdit',
         },
         // 采购订单
         {
@@ -708,53 +708,53 @@ export default  [
       },
       {
         path:"payments",
-        component:"./Settings/Collection/Collection"
+        component:"./Settings/Payments/Index/Index"
       },
       // matacart账户
       {
         path:"payments/mcpayment",
         menuRender: false,
         headerRender: false,
-        component:"./Settings/Collection/OpenService/OpenService"
+        component:"./Settings/Payments/OpenService/OpenService"
       },
       // matacart账户管理系统
       {
         path:"payments/mcpayment/main",
         menuRender: false,
-        component:"./Settings/Collection/AccountManagement/AccountManagement"
+        component:"./Settings/Payments/AccountManagement/AccountManagement"
       },
       // -------------------
       {
         path:"payments/thirdCreditCard",
-        component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollection"
+        component:"./Settings/Payments/ThirdCreditCollection/ThirdCreditCollection"
       },
       {
         path:"payments/thirdCreditCard/add",
-        component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollectionAdd/ThirdCreditCollectionAdd"
+        component:"./Settings/Payments/ThirdCreditCollection/ThirdCreditCollectionAdd/ThirdCreditCollectionAdd"
       },
       {
         path:"payments/thirdCreditCard/detail",
-        component:"./Settings/Collection/ThirdCreditCollection/ThirdCreditCollectionDetail/ThirdCreditCollectionDetail"
+        component:"./Settings/Payments/ThirdCreditCollection/ThirdCreditCollectionDetail/ThirdCreditCollectionDetail"
       },
       {
         path:"payments/edit",
-        component:"./Settings/Collection/AddManualCollection/AddManualCollection"
+        component:"./Settings/Payments/AddManualCollection/AddManualCollection"
       },
       {
         path:"payments/edit/:id",
-        component:"./Settings/Collection/ManualCollectionDetail/ManualCollectionDetail"
+        component:"./Settings/Payments/ManualCollectionDetail/ManualCollectionDetail"
       },
       {
         path:"payments/other",
-        component:"./Settings/Collection/OtherCollection/OtherCollection"
+        component:"./Settings/Payments/OtherCollection/OtherCollection"
       },
       {
         path:"payments/other/add",
-        component:"./Settings/Collection/OtherCollection/OtherCollectionAdd/OtherCollectionAdd"
+        component:"./Settings/Payments/OtherCollection/OtherCollectionAdd/OtherCollectionAdd"
       },
       {
         path:"payments/other/detail",
-        component:"./Settings/Collection/OtherCollection/OtherCollectionDetail/OtherCollectionDetail"
+        component:"./Settings/Payments/OtherCollection/OtherCollectionDetail/OtherCollectionDetail"
       },
       // 发货与配送
       {
@@ -783,7 +783,11 @@ export default  [
       // 税费
       {
         path:"taxes",
-        component:"./Settings/Taxes/Taxes"
+        component:"./Settings/Taxes/Index/Taxes"
+      },
+      {
+        path:"taxes/:countryId/:langId",
+        component:"./Settings/Taxes/Edit/Edit"
       },
       // 语言
       {

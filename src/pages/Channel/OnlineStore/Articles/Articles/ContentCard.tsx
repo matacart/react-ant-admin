@@ -7,6 +7,7 @@ import styled from "styled-components"
 
 
 const ContentCard = ()=>{
+    
     const setContent = (content: string) => {
         articles.setArticles({...articles.articles, content})
     }

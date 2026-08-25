@@ -3,11 +3,11 @@ import { updataBatchUpdatePrice } from "@/services/y2/api";
 import { App, Flex, Modal, Radio } from "antd"
 import { useRef, useState } from "react"
 import styled from "styled-components";
-import cookie from 'react-cookies';
 import NumberInput from "@/components/Input/NumberInput";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import productList from "@/store/product/productList";
+import { getSymbolLeft } from "@/utils/common";
 
 
 const style: React.CSSProperties = {
@@ -19,6 +19,8 @@ const style: React.CSSProperties = {
 function ModifyPriceModal({type,onFetchData}:{type:string,onFetchData:any}){
     
     const { message } = App.useApp();
+
+    const symbolLeft = getSymbolLeft();
 
     const text = (type=='specls'?'售价':'原价')
 
@@ -111,13 +113,13 @@ function ModifyPriceModal({type,onFetchData}:{type:string,onFetchData:any}){
                     <MySelect value={operator} onChange={(value:number)=>{
                         setOperator(value)
                     }} options={options} style={{width:"160px",height:"36px"}} />
-                    <NumberInput prefix={cookie.load("symbolLeft") || ""} value={price} onChange={(value:number|undefined)=>{
+                    <NumberInput prefix={symbolLeft} value={price} onChange={(value:number|undefined)=>{
                         setPrice(value)
                     }}  />
                 </Flex>}
                 {priceType == 1 && <div>
                     <div style={{marginBottom:"8px"}} className="font-w-600 color-242833">{text}</div>
-                    <NumberInput prefix={cookie.load("symbolLeft") || ""} value={price} onChange={(value:number|undefined)=>{
+                    <NumberInput prefix={symbolLeft} value={price} onChange={(value:number|undefined)=>{
                         setPrice(value)
                     }}  />
                 </div>}

@@ -12,13 +12,13 @@ function OrdersNotesCard() {
       <Scoped>
           <Card className="card">
             <Flex justify="space-between" style={{ marginBottom: '20px' }}>
-                <div className="font-16 color-242833 font-w-600">{intl.formatMessage({ id:'order.detail.notes'})}</div>
+                <div className="font-16 color-242833 font-w-600">{intl.formatMessage({ id:'order.orderDetail.notes'})}</div>
                 <MerchantNotes />
             </Flex>
             {order.merchantNotes.length>0 ? <>
                 <div style={{marginBottom:"6px"}} className="font-14 color-242833 font-w-500">商家备注</div>
                 <div className="color-474F5E">{order.merchantNotes[0].actionDetails?.sellerRemark}</div>
-            </>:<div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.detail.empitynotes'})}</div>}
+            </>:<div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.orderDetail.empitynotes'})}</div>}
           </Card>
       </Scoped>
   )

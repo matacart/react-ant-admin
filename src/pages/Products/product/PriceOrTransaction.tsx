@@ -10,6 +10,7 @@ import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
 import MyRangePicker from "@/components/DatePicker/MyRangePicker";
 import { FormInstance } from "antd/lib";
 import localeValues from "antd/es/locale/en_US";
+import { currencyPrecision, getPrecision, getSymbolLeft } from "@/utils/common";
 
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
@@ -20,13 +21,24 @@ const { Text } = Typography;
 
 function PriceOrTransaction({form}:{form: FormInstance}) {
 
+    const symbolLeft = getSymbolLeft();
+    // 精度
+    const {decimals,amountRule} = getPrecision();
+
+    const priceChange = (field:string,value:number)=>{
+        product.setProductInfo({
+            ...product.productInfo,
+            [field]:Math.round(value*amountRule).toString()
+        })
+    }
+
     useEffect(()=>{
         form.setFieldsValue({       
-            specialprice:parseInt(product.productInfo.specialprice || "0"),
-            costPrice:parseInt(product.productInfo.cost_price || "0"),
-            price:parseInt(product.productInfo.price || "0"),
-            originalPrice:parseInt(product.productInfo.original_price || "0"),
-            needTax:product.productInfo.needTax == 1?true:false,
+            specialprice:parseInt(product.productInfo.specialprice || "0")/amountRule,
+            costPrice:parseInt(product.productInfo.cost_price || "0")/amountRule,
+            price:parseInt(product.productInfo.price || "0")/amountRule,
+            originalPrice:parseInt(product.productInfo.original_price || "0")/amountRule,
+            needTax:product.productInfo.product_taxable == "1"?true:false,
             inquiryStatus:product.productInfo.inquiry_status == 1?true:false,
             specialTime:[
                 product.productInfo.start_time!==""?dayjs(product.productInfo.start_time):"",
@@ -57,16 +69,10 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                             >
                                 <DefaultInputNumber
                                     min={0}
-                                    prefix={cookie.load("symbolLeft")}
-                                    precision={2}
-                                    stringMode
-                                    className="ant-input"
-                                    onChange={(value:number)=>{
-                                        product.setProductInfo({
-                                            ...product.productInfo,
-                                            specialprice:value?.toString() || ""
-                                        })
-                                    }}
+                                    prefix={symbolLeft}
+                                    precision={decimals}
+                                    style={{width: "100%",height: "36px"}}
+                                    onChange={(value:number)=>priceChange("specialprice",value)}
                                 />
                             </Form.Item>
                         </Col>
@@ -125,17 +131,12 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                 </>
                             } className="price-item">
                                 <DefaultInputNumber
-                                    className="ant-input"
+                                    style={{width: "100%",height: "36px"}}
                                     min={0}
-                                    prefix={cookie.load("symbolLeft")}
-                                    precision={2}
+                                    prefix={symbolLeft}
                                     stringMode
-                                    onChange={(value:number)=>{
-                                        product.setProductInfo({
-                                            ...product.productInfo,
-                                            price:value?.toString() || ""
-                                        })
-                                    }}
+                                    precision={decimals}
+                                    onChange={(value:number)=>priceChange("price",value)}
                                 />
                             </Form.Item>
                         </Col>
@@ -153,17 +154,12 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                 </>
                             } className="price-item">
                                 <DefaultInputNumber
-                                    className="ant-input"
+                                    style={{width: "100%",height: "36px"}}
                                     min={0}
-                                    prefix={cookie.load("symbolLeft")}
-                                    precision={2}
+                                    prefix={symbolLeft}
                                     stringMode
-                                    onChange={(value:number)=>{
-                                        product.setProductInfo({
-                                            ...product.productInfo,
-                                            original_price:value?.toString() || ""
-                                        })
-                                    }}
+                                    precision={decimals}
+                                    onChange={(value:number)=>priceChange("original_price",value)}
                                 />
                             </Form.Item>
                         </Col>
@@ -181,17 +177,12 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                 </>
                             } className="price-item">
                                 <DefaultInputNumber
-                                    className="ant-input"
+                                    style={{width: "100%",height: "36px"}}
                                     min={0}
-                                    prefix={cookie.load("symbolLeft")}
-                                    precision={2}
+                                    prefix={symbolLeft}
                                     stringMode
-                                    onChange={(value:number)=>{
-                                        product.setProductInfo({
-                                            ...product.productInfo,
-                                            cost_price:value?.toString() || ""
-                                        })
-                                    }}
+                                    precision={decimals}
+                                    onChange={(value:number)=>priceChange("cost_price",value)}
                                 />
                             </Form.Item>
                         </Col>
@@ -207,10 +198,10 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                 </>
                             } className="price-item">
                                 <DefaultInputNumber
-                                    prefix={cookie.load("symbolLeft")}
+                                    prefix={symbolLeft}
                                     defaultValue={'--'}
-                                    value={Number(product.productInfo.specialprice) - Number(product.productInfo.cost_price)}
-                                    className="ant-input"
+                                    value={(Number(product.productInfo.specialprice) - Number(product.productInfo.cost_price))/amountRule}
+                                    style={{width: "100%",height: "36px"}}
                                     disabled
                                 />
                             </Form.Item>
@@ -231,7 +222,7 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                                     suffix="%"
                                     defaultValue={'--'}
                                     value={((Number(product.productInfo.specialprice) - Number(product.productInfo.cost_price)) / Number(product.productInfo.specialprice) * 100).toFixed(2)}
-                                    className="ant-input"
+                                    style={{width: "100%",height: "36px"}}
                                     disabled
                                 />
                             </Form.Item>
@@ -247,7 +238,7 @@ function PriceOrTransaction({form}:{form: FormInstance}) {
                         <Checkbox onChange={(e)=>{
                             product.setProductInfo({
                                 ...product.productInfo,
-                                needTax:e.target.checked?1:0
+                                product_taxable:e.target.checked?"1":"0"
                             })
                         }}>是否需要税费</Checkbox>
                     </Form.Item>
@@ -287,20 +278,5 @@ const Scoped = styled.div`
             font-weight: 400;
         }
     }
-    &-input{
-        width: 100%;
-        height: 36px;
-        &-number-input-wrap{
-            height:36px;
-            display:flex;
-            align-content: center;
-        }
-        &-number-input{
-            position:relative;
-            top: -1px;
-        }
-    }
-}
-
-`
+}`
 

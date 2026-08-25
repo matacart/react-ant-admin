@@ -7,7 +7,7 @@ import { forEach } from "lodash";
 import { getLocale } from "@umijs/max";
 import { languageMap } from "@/locales/langMap";
 import { CaretRightOutlined, DeleteOutlined } from "@ant-design/icons";
-import { addRegionAddressAccess, delRegionAddressAccess, getIPRegionBlackList } from "@/services/y2/api";
+import { addRegionAddressAccess, delRegionAddressAccess, getIPRegionBlackList } from "@/services/y2/apiAccess";
 import preferences, { IPBlack } from "@/store/channel/preferences/preferences";
 import DeleteModal from "@/components/Modal/DeleteModal";
 

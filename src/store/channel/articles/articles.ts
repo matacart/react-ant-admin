@@ -3,7 +3,6 @@ import cookie from 'react-cookies';
 
 type ArticlesType = {
     id:string;
-    languages_id:string,
     title:string,
     content:string,
     excerpt:string,
@@ -28,10 +27,15 @@ class Articles {
         makeAutoObservable(this)
     }
 
+    // 语言
+    languagesId = cookie.load("shop_lang") || '2'
+    setLanguagesId(value:string){
+        this.languagesId = value;
+    }
+
     // 初始
     defaultArticles = {
         id: "",
-        languages_id: "",
         title: "",
         content: "",
         excerpt: "",
@@ -60,8 +64,8 @@ class Articles {
     reset(){
         this.articles = {
             ...this.defaultArticles,
-            languages_id:cookie.load("shop_lang") || '2'
         };
+        this.setLanguagesId(cookie.load("shop_lang") || '2')
     }
 
 }

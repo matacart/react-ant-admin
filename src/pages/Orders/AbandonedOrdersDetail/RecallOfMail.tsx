@@ -1,12 +1,34 @@
-import PrimaryButton from "@/components/Button/PrimaryButton";
 import { CopyIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
-import { StarOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Space } from "antd";
+import { App, Button, Card, Flex, Space } from "antd";
 import styled from "styled-components";
+import copy from "copy-to-clipboard";
+import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
+import RecallEmailModal from "./RecallEmailModal";
+import { useEffect, useState } from "react";
+import cookie from 'react-cookies';
+import { getPrimaryDomain } from "@/utils/dataStructure";
+
 
 const RecallOfMail = () => {
 
+    const { message } = App.useApp();
+
+    const [paymentUrl,setPaymentUrl] = useState("");
+
+
+    const copyHandle = ()=>{
+        copy(abandonedOrder.abandonedOrderData?.abandonedOrderPaymentUrl || "")
+        message.success("复制成功")
+    }
+
+    useEffect(()=>{
+        const domain = cookie.load("domain") || {};
+        if(domain){
+            const primaryDomain = getPrimaryDomain();
+            setPaymentUrl(`${primaryDomain}/${domain?.id || ""}/checkouts/${abandonedOrder.abandonedOrderData?.checkoutsToken || ""}`);
+        }
+    },[])
 
     return (
         <MyCard>
@@ -15,10 +37,10 @@ const RecallOfMail = () => {
             </div>
             <Flex gap={12}>
                 <Space.Compact block className="input-space">
-                    <MyInput style={{ width: '100%' }} disabled defaultValue="https://ant.design" />
-                    <Button className="input-space-icon" icon={<CopyIcon />} />
+                    <MyInput style={{ width: '100%' }} disabled value={paymentUrl} />
+                    <Button className="input-space-icon" icon={<CopyIcon />} onClick={copyHandle} />
                 </Space.Compact>
-                <PrimaryButton  text="发送召回邮件" />
+                <RecallEmailModal />
             </Flex>
         </MyCard>
     )

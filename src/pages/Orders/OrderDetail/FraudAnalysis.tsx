@@ -8,9 +8,9 @@ function FraudAnalysis() {
         <Scoped>
             <Card className="card">
                 <Flex style={{marginBottom:"16px"}}>
-                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.detail.fraudanalysis'})}</div> 
+                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.orderDetail.fraudanalysis'})}</div> 
                 </Flex>
-                <div style={{color:'#474F5E'}}>{intl.formatMessage({ id:'order.detail.fraudtext'})}</div>
+                <div style={{color:'#474F5E'}}>{intl.formatMessage({ id:'order.orderDetail.fraudtext'})}</div>
             </Card>  
         </Scoped>
     );

@@ -11,7 +11,7 @@ function AbstractCard() {
         <Scoped>
             <Card className="card">
                 <Flex style={{marginBottom:"16px"}}>
-                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.detail.convertedabstract'})}</div> 
+                    <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.orderDetail.convertedabstract'})}</div> 
                 </Flex>
                 <div style={{color:'#474F5E'}}>{"暂无此订单的任何转化详细信息。"}</div>
             </Card>  

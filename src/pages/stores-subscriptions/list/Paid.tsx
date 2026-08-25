@@ -108,7 +108,7 @@ const layerText = [
             title: '费率',
             desc: [
                 'MataCart Payments费率：该版本不支持 MataCart Payments',
-                '不使用MataCart Payments时，第三方交易费率：2%',
+                '不使用MataCart Payments时，第三方交易费率：1.6%',
             ],
         }, {
             title: '功能',
@@ -159,14 +159,14 @@ const layerText = [
 
 const priceMonth = {
     icon: '￥',
-    start: 299,
+    start: 199,
     base: 499,
     flagship: 999,
     text: '月'
 }
 const priceYear = {
     icon: '￥',
-    start: 2999,
+    start: 1999,
     base: 4999,
     flagship: 9999,
     text: '年',
@@ -201,7 +201,6 @@ export default function Paid() {
                     {/* 提醒 */}
                     <div className="text-box">
                         {/* info-icon */}
-
                         <div className="box">
                             店铺已无法使用，如果需要处理您的店内信息资产（如域名、账单等），请
                             {/* <Dropdown/> */}

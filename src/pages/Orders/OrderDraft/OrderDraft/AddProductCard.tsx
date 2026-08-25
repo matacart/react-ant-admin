@@ -5,15 +5,17 @@ import styled from 'styled-components';
 import { WarningIcon } from '@/components/Icons/Icons';
 import SimpleCard from '@/components/Card/SimpleCard';
 import { observer } from 'mobx-react-lite';
-import cookie from 'react-cookies';
 import orderDraft from '@/store/order/orderDraft';
 import ProductTableModal from './ProductTableModal';
 import EditDiscount from './EditDiscount';
 import AddCustomProducts from './AddCustomProducts';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 
 const AddProductCard = ()=> {
 
   const [form] = Form.useForm();
+
+  const symbolLeft = getSymbolLeft();
 
   return (
     <Scoped>
@@ -50,7 +52,7 @@ const AddProductCard = ()=> {
                     <Flex vertical style={{marginLeft:"12px"}} gap={6}>
                       <div className='font-w-600'>{item.product_name}</div>
                       {item?.variants && item.variants[0]?.option_values_names && <div className='color-242833'>{item.variants[0]?.option_values_names}</div>}
-                      <div className='color-242833'>成本价：{cookie.load("symbolLeft") || ""}{Number(item.product_cost_price).toFixed(2)}</div>
+                      <div className='color-242833'>成本价：{symbolLeft}{currencyPrecision(item.product_cost_price)}</div>
                       <EditDiscount index={index} />
                     </Flex>
                   </Flex>
@@ -90,7 +92,7 @@ const AddProductCard = ()=> {
                       }}
                     />
                   </Form.Item>
-                  <Flex style={{width:"120px",marginRight:"20px"}} justify='end'>{cookie.load("symbolLeft") || ""}{Number(item.final_price * item.product_quantity).toFixed(2)}</Flex>
+                  <Flex style={{width:"120px",marginRight:"20px"}} justify='end'>{symbolLeft}{currencyPrecision(item.final_price * item.product_quantity)}</Flex>
                   <Flex gap={20} style={{width:"90px"}} justify='center' align='flex-start'>
                     <ClockCircleOutlined className='font-18 color-B8BECC' />
                     <Popconfirm

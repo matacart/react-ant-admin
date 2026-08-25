@@ -15,12 +15,12 @@ function OrdersIdCard() {
             <Card className="card">
                 <Form>
                     <Flex style={{marginBottom:"16px"}}>
-                        <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.detail.orderid'})}</div> 
+                        <div className="font-w-600 font-16">{intl.formatMessage({ id:'order.orderDetail.orderid'})}</div> 
                     </Flex>
                     <div style={{marginBottom:"4px"}}>{order.orderInfo.order_id}</div>
                     <Tooltip title="复制">
                         <Flex align="center" style={{display:"inline-block"}} className="cursor-pointer color-7A8499">
-                            <span style={{marginRight:"6px"}}>{intl.formatMessage({ id:'order.detail.copy'})}</span>
+                            <span style={{marginRight:"6px"}}>{intl.formatMessage({ id:'order.orderDetail.copy'})}</span>
                             <CopyIcon className=''/>
                         </Flex>
                     </Tooltip>

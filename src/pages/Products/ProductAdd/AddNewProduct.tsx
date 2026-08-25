@@ -76,10 +76,7 @@ function AddNewProduct(){
 
     // 选择语言
     const setLang = (lang:string)=>{
-        product.setProductInfo({
-            ...product.productInfo,
-            languages_id:lang
-        })
+        product.setLanguageId(lang)
     }
     // 表单验证
     const formValidation = ()=>{
@@ -114,6 +111,7 @@ function AddNewProduct(){
                 const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
                 await upDateProduct({
                     ...product.productInfo,
+                    languages_id:product.languageId,
                     handle:product.productInfo.handle || product.productInfo.title.replace(/\s+/g, '-').toLowerCase(),
                     product_image:product.productInfo.additional_image[0] || "",
                     additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
@@ -171,7 +169,7 @@ function AddNewProduct(){
                             <div className="mc-header-left-content">添加商品</div>
                         </div>
                         <Flex className='mc-header-right' align='center' gap={12}>
-                            <LangSelect lang={product.productInfo.languages_id} setLang={setLang} />
+                            <LangSelect lang={product.languageId} setLang={setLang} />
                         </Flex>
                     </div>
                     <Form form={form} className='mc-layout-main'>

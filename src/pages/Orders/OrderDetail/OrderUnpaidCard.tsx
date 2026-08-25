@@ -8,10 +8,12 @@ import AddPaymentPeriod from "./Modal/AddPaymentPeriod";
 import DefaultButton from "@/components/Button/DefaultButton";
 import { setOrderPaid } from "@/services/y2/api";
 import { useState } from "react";
+import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 
 function OrderUnpaidCard() {
 
     const intl = useIntl();
+    const symbolLeft = getSymbolLeft();
 
     const [loading,setLoading] = useState(false);
 
@@ -27,30 +29,31 @@ function OrderUnpaidCard() {
                 {/* 小计 */}
                 <Row>
                     <Col span={5}>
-                        <div style={{ fontSize: '14px', color: '#474F5E' }}>{intl.formatMessage({ id:'order.detail.subtotal'})}</div>
+                        <div style={{ fontSize: '14px', color: '#474F5E' }}>{intl.formatMessage({ id:'order.orderDetail.subtotal'})}</div>
                     </Col>
                     <Col span={19}>
                         <Flex justify="space-between">
-                            <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.productInfo.length}{intl.formatMessage({ id:'order.detail.commodity'})}</div>
-                            <div style={{ fontSize: '14px', color: '#474F5E' }}>US${order.orderTotal[0].value}</div>
+                            <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.productInfo.length}{intl.formatMessage({ id:'order.orderDetail.commodity'})}</div>
+                            <div style={{ fontSize: '14px', color: '#474F5E' }}>{symbolLeft}{currencyPrecision(order.orderTotal[0].value)}</div>
                         </Flex>
                     </Col>
                 </Row>
                 {/* 运费 */}
                 <Row style={{ marginTop: '8px' }}>
                     <Col span={5}>
-                        <div style={{ fontSize: '14px', color: '#474F5E' }}>{intl.formatMessage({ id:'order.detail.shiping'})}</div>
+                        <div style={{ fontSize: '14px', color: '#474F5E' }}>{intl.formatMessage({ id:'order.orderDetail.shipping'})}</div>
                     </Col>
                     <Col span={19}>
                         <Flex justify="space-between">
-                            <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.orderTotal[1].title}</div>
-                            <div style={{ fontSize: '14px', color: '#474F5E'}}>US${order.orderTotal[1].value}</div>
+                            <div style={{ fontSize: '14px', color: '#474F5E'}}></div>
+                            {/* {order.orderTotal[1].title} */}
+                            <div style={{ fontSize: '14px', color: '#474F5E' }}>{symbolLeft}{currencyPrecision(order.orderTotal[1].value)}</div>
                         </Flex>
                     </Col>
                 </Row>
                 {/* 合计 */}
                 <Row style={{ marginTop: '20px' }}>
-                    <Col span={5}><span className="font-w-600 color-242833">{intl.formatMessage({ id:'order.detail.total'})}</span></Col>
+                    <Col span={5}><span className="font-w-600 color-242833">{intl.formatMessage({ id:'order.orderDetail.total'})}</span></Col>
                     <Col span={19}><div className="font-w-600 color-242833" style={{textAlign:"right"}}>US${order.orderTotal[2].value}</div></Col>
                 </Row>
             </Form>
@@ -58,7 +61,7 @@ function OrderUnpaidCard() {
             <Form>
                 <Row>
                     <Col span={5}>
-                        <div className="font-w-600 color-242833">{intl.formatMessage({ id:'order.detail.customerpay'})}</div>
+                        <div className="font-w-600 color-242833">{intl.formatMessage({ id:'order.orderDetail.customerpay'})}</div>
                     </Col>
                     <Col span={19}>
                         <Flex justify="space-between">
@@ -72,7 +75,7 @@ function OrderUnpaidCard() {
             <Form>
                 <Row>
                     <Col span={5}>
-                        <div className="font-w-600 color-242833">{intl.formatMessage({ id:'order.detail.realpayment'})}</div>
+                        <div className="font-w-600 color-242833">{intl.formatMessage({ id:'order.orderDetail.realpayment'})}</div>
                     </Col>
                     <Col span={19}>
                         <div className="color-242833 font-w-500" style={{textAlign:"right"}}>US$0.0000</div>

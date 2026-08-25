@@ -5,11 +5,14 @@ import { useIntl } from "@umijs/max";
 import { PendingSecondIcon } from "@/components/Icons/Icons";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import styled from "styled-components";
+import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 
 
 function Settlement() {
   
   const { message } = App.useApp();
+
+  const symbolLeft = getSymbolLeft();
 
   const intl = useIntl();
 
@@ -23,7 +26,7 @@ function Settlement() {
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
           <Flex align="center" gap={10}>
             <PendingSecondIcon className="font-28" />
-            <span className="font-w-500">{"待结算"}（）</span>
+            <span className="font-w-500">{"待结算"}（{abandonedOrder.abandonedOrderData?.priceSetInfo?.subtotalInfo.productNum}）</span>
           </Flex>
         </Flex>
       }
@@ -44,12 +47,12 @@ function Settlement() {
           </Col>
           <Col span={5}>
             <Flex style={{height:"100%"}}>
-              <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.productPrice} X {item.productSource}</span>
+              <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice)} X {item.productNum}</span>
             </Flex>
           </Col>
           <Col span={5}>
             <Flex justify="end" style={{height:"100%"}}>
-              <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.finalPrice}</span>
+              <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.finalPrice*item.productNum)}</span>
             </Flex>
           </Col>
         </Row>

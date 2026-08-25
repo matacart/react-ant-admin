@@ -3,11 +3,10 @@ import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { Flex, message, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useIntl } from '@umijs/max';
+import { history, useIntl } from '@umijs/max';
 import cookie from 'react-cookies';
 import SuccessTag from "../Tag/SuccessTag";
 import DefaultTag from "../Tag/DefaultTag";
-import { useNavigate } from "react-router-dom";
 import DefaultInput from "../Input/DefaultInput";
 import PrimaryButton from "../Button/PrimaryButton";
 import channels from "@/store/menu/channels";
@@ -28,7 +27,6 @@ export default function SelectDomain() {
 
     const intl = useIntl();// 多语言
     const mRef = useRef(null);
-    const navigate = useNavigate();
 
     // 店铺列表
     const [storeList, setStoreList] = useState<storeType[]>([]);
@@ -87,17 +85,6 @@ export default function SelectDomain() {
           console.error('Invalid URL:', error);
           return null;
         }
-    }
-    // 默认货币符号 -- 店铺
-    const setCurrencys = (store:storeType | null)=>{
-        const currencies = JSON.parse(localStorage.getItem('MC_DATA_CURRENCIES') || '[]');
-        let currency = null;
-        if(store?.default_currency && currencies.length > 0){
-            currency = currencies.filter((item:any)=>item.code == store.default_currency)[0].symbol_left;
-        }else{
-            currency = 'US$'
-        }
-        cookie.save('symbolLeft', currency, { path: '/' })
     }
     // 默认时区对象
     const setTimeZone = (store:storeType | null)=>{
@@ -176,8 +163,8 @@ export default function SelectDomain() {
         }, 300);
     };
 
-     // 滚动事件处理函数
-     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    // 滚动事件处理函数
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         // 如果应该忽略滚动事件，则直接返回
         if (ignoreScrollEvents) return;
         const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
@@ -229,7 +216,6 @@ export default function SelectDomain() {
             }
         }
         setTimeZone(store);
-        setCurrencys(store);
         setLanguage(store);
         setStore(store);
 
@@ -383,7 +369,7 @@ export default function SelectDomain() {
                 <PrimaryButton text={intl.formatMessage({
                     id:'components.header.selectDomain.storesManage'
                 })} onClick={()=>{
-                    navigate('/stores/list')
+                    history.push('/stores/list')
                 }} size='large' block />
             </div>
         </ContentWrap>

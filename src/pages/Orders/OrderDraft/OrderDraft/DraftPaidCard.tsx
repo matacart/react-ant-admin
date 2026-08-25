@@ -16,6 +16,7 @@ import MySelectIcon from '@/components/Select/MySelectIcon';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import MyDatePicker from '@/components/DatePicker/MyDatePicker';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 function DraftPaidCard() {
 
   const [open,setOpen] = useState(false)
@@ -67,15 +68,10 @@ function DraftPaidCard() {
   // 支付方式
   const [paymentList,setPaymentList] = useState()
 
-  const symbolLeft = cookie.load("symbolLeft") || ""
-
+  const symbolLeft = getSymbolLeft();
 
   const isFirstRender = useRef(true);
   useMemo(()=>{
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
 
     let newCostPrice = 0;
     let newPricing = 0;
@@ -83,7 +79,12 @@ function DraftPaidCard() {
       newCostPrice = newCostPrice + element.product_cost_price * element.product_quantity
       newPricing = newPricing + element.final_price * element.product_quantity
     });
+    // 成本价
     setCostPrice(newCostPrice)
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     // 如果产品折扣大于小计，则修改折扣
     if(newPricing<orderDraft.orderInfo.orderDiscount){
       orderDraft.setOrderInfo({
@@ -105,7 +106,7 @@ function DraftPaidCard() {
 
   useEffect(()=>{
     // 手动收款方式
-    getAddonsConfigs().then(res=>{
+    getAddonsConfigs("2").then(res=>{
       const newPaymentList = res.data.map(item=>{
         return {
           value: item.id,
@@ -113,7 +114,6 @@ function DraftPaidCard() {
         }
       })
       setPaymentList(newPaymentList)
-
     }).catch(err=>{
     })
 
@@ -135,7 +135,7 @@ function DraftPaidCard() {
               </Tooltip>
             </div>
             <div>
-              {symbolLeft}{costPrice.toFixed(2)}
+              {symbolLeft}{currencyPrecision(costPrice)}
               {/* <Tooltip title="成本价信息不会展示给消费者">
                   <span style={{ color: '#999', marginLeft: '4px', cursor: 'pointer' }}>
                       <QuestionCircleOutlined />
@@ -145,17 +145,17 @@ function DraftPaidCard() {
           </Flex>
           <Flex justify="space-between">
             <div>小计</div>
-            <div>{symbolLeft}{Number(orderDraft.orderInfo.productTotal).toFixed(2)}</div>
+            <div>{symbolLeft}{currencyPrecision(orderDraft.orderInfo.productTotal)}</div>
           </Flex>
           <Flex justify="space-between" style={orderDraft.productInfo.length>0 ? {}:{ pointerEvents: "none",opacity: 0.6 }}>
             <DiscountEditModal pricing={orderDraft.orderInfo.productTotal} disable={ orderDraft.productInfo.length>0 ? false : true} />
             <div style={{flex:1}}>{orderDraft.orderInfo.orderDiscountDesc==""?"-":orderDraft.orderInfo.orderDiscountDesc}</div>
-            <div>-{symbolLeft}{orderDraft.orderInfo.orderDiscount?Number(orderDraft.orderInfo.orderDiscount).toFixed(2):Number(0).toFixed(2)}</div>
+            <div>-{symbolLeft}{currencyPrecision(orderDraft.orderInfo.orderDiscount?orderDraft.orderInfo.orderDiscount:0)}</div>
           </Flex>
           <Flex justify="space-between">
             <ShippingFeeEditingModal />
             <div style={{flex:1}}>{orderDraft.orderInfo.shippingId ? orderDraft.orderInfo.shippingMethod : "-"}</div>
-            <div>{symbolLeft}{Number(orderDraft.orderInfo.shippingTotal).toFixed(2)}</div>
+            <div>{symbolLeft}{currencyPrecision(orderDraft.orderInfo.shippingTotal)}</div>
           </Flex>
           <Flex justify="space-between">
             <Popover 
@@ -193,7 +193,7 @@ function DraftPaidCard() {
           </Flex>
           <Flex justify="space-between">
             <div className='font-w-600'>合计</div>
-            <div className='font-w-600'>{symbolLeft}{Number(orderDraft.orderInfo.orderTotal).toFixed(2)}</div>
+            <div className='font-w-600'>{symbolLeft}{currencyPrecision(orderDraft.orderInfo.orderTotal)}</div>
           </Flex>
         </Flex>
         <Divider />

@@ -1,7 +1,7 @@
 import ButtonIcon from "@/components/Button/ButtonSvg";
 import { LeftIcon, RightIcon } from "@/components/Icons/Icons";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import { getAbandonedOrderDetail } from "@/services/y2/ApiAbandonedOrder";
+import { getAbandonedOrderDetail, searchScrollAbandonedOrder } from "@/services/y2/ApiAbandonedOrder";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useParams,history } from "@umijs/max";
@@ -15,14 +15,17 @@ import Settlement from "./Settlement";
 import Unpaid from "./Unpaid";
 import OrdersTimeline from "./OrdersTimeline";
 import CustomsInformation from "./CustomsInformation";
+import dayjs from 'dayjs';
+import { getStoreInfo } from "@/services/y2/api";
+import LangSelect from "@/components/Select/LangSelect";
 
 const Index = () => {
 
-    const { id } = useParams();
+    const { id,languagesId } = useParams();
 
     const { message } = App.useApp();
 
-    const [isSkeleton,setIsSkeleton] = useState<boolean>(false);
+    const [isSkeleton,setIsSkeleton] = useState<boolean>(true);
 
     const [spinning,setSpinning] = useState(false);
     // 提示
@@ -34,14 +37,35 @@ const Index = () => {
     // 验证提示
     const [isAlert,setIsAlert] = useState<{isProduct:boolean,isCustomer:boolean} | null>(null);
 
-    useEffect(()=>{
-        getAbandonedOrderDetail({
-            languages_id:"2",
-            seq:id,
-        }).then(res=>{
-            abandonedOrder.setAbandonedOrderData(res.data)
+    const fetch = (id:string,languagesId:string)=>{
+        Promise.all([
+            getAbandonedOrderDetail({
+                languages_id:languagesId || "",
+                seq:id || "",
+            }),
+            searchScrollAbandonedOrder({
+                languages_id:languagesId || "",
+                abandonedOrderSeq:id || "",
+                sortBy:"1",
+            }),
+             getStoreInfo({
+                languages_id:languagesId || "",
+            })
+        ]).then(res=>{
+            abandonedOrder.setAbandonedOrderData(res[0].data)
+            abandonedOrder.setScrollData(res[1].data)
+            abandonedOrder.setServiceEmail(res[2].service_email || "")
+            abandonedOrder.setLanguages(languagesId)
+        }).catch(err=>{
+            message.error(err.message)
+        }).finally(()=>{
+            setIsSkeleton(false)
         })
-    },[id])
+    }
+
+    useEffect(()=>{
+        fetch(id||"",languagesId || "");
+    },[id,languagesId])
 
 
     function setIsOverlay(arg0: boolean) {
@@ -54,22 +78,29 @@ const Index = () => {
                 <div className='mc-layout-wrap'>
                     <div className="mc-layout">
                         <Spin indicator={<LoadingOutlined spin />} spinning={spinning} >
-                            <div className="mc-header">
-                                <div className="mc-header-left">
-                                    <div className="mc-header-left-secondary" onClick={()=>{
-                                    }}>
-                                        <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                            <div style={{marginBottom:"16px"}}>
+                                <Flex className="mc-header" justify='space-between' align='center'>
+                                    <div className="mc-header-left">
+                                        <div className="mc-header-left-secondary" onClick={()=>history.push("/orders/recallOrders")}>
+                                            <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                                        </div>
+                                        <div className="mc-header-left-content">#{abandonedOrder.abandonedOrderData?.abandonedOrderSeq }</div>
                                     </div>
-                                    <div className="mc-header-left-content">#{abandonedOrder.abandonedOrderData?.abandonedOrderSeq }</div>
-                                </div>
-                                <Flex align='center' gap={10}>
-                                    {/* <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.prevDraftId ?false : true} onClick={()=>{
-                                        history.push(`/orders/draftOrders/edit/${orderDraft.prevDraftId}`)
-                                    }} />
-                                    <ButtonIcon icon={<RightIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={orderDraft.nextDraftId ?false : true} onClick={()=>{
-                                        history.push(`/orders/draftOrders/edit/${orderDraft.nextDraftId}`)
-                                    }} /> */}
+                                    <Flex align='center' gap={10}>
+                                        <LangSelect lang={abandonedOrder.languages || ""} setLang={(value:string)=>{
+                                            history.push(`/orders/recallOrders/${id}/${value}`)
+                                        }} />
+                                        <ButtonIcon icon={<LeftIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={abandonedOrder.scrollData.previousDataList.length == 0} onClick={()=>{
+                                            const prev = abandonedOrder.scrollData.previousDataList[0]
+                                            prev?.abandonedOrderSeq && history.push(`/orders/recallOrders/${prev.abandonedOrderSeq}/${abandonedOrder.languages || "2"}`)
+                                        }} />
+                                        <ButtonIcon icon={<RightIcon className='font-20' />} style={{backgroundColor:"#FFF",color:"#242833"}} disabled={abandonedOrder.scrollData.nextDataList.length == 0} onClick={()=>{
+                                            const next = abandonedOrder.scrollData.nextDataList[0]
+                                            next?.abandonedOrderSeq && history.push(`/orders/recallOrders/${next.abandonedOrderSeq}/${abandonedOrder.languages || "2"}`)
+                                        }} />
+                                    </Flex>
                                 </Flex>
+                                <div style={{marginLeft:"44px"}}>创建时间：{dayjs(parseInt(abandonedOrder.abandonedOrderData?.createTime || "")).format("YYYY-MM-DD HH:mm:ss") || ""}</div>
                             </div>
                             {/*  */}
                             <div className='mc-layout-main'>
@@ -111,11 +142,6 @@ const Scoped = styled.div`
             font-size: 30px;
             height: 42px;
             font-weight: bold;
-            margin: 8px 0px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-content: center;
-    
             &-left {
                 display: flex;
                 flex-direction: row;

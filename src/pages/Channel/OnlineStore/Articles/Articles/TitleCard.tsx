@@ -12,7 +12,7 @@ const TitleCard = (props: { form: FormInstance }) => {
         form.setFieldsValue({
             title: articles.articles.title
         })
-    }, [articles.articles.title])
+    }, [articles.languagesId])
 
     return (
         <Scoped>
@@ -26,15 +26,7 @@ const TitleCard = (props: { form: FormInstance }) => {
                             { max:280, message: '字符数不能超过280个字符' },
                         ]}
                     >
-                        <DefaultInput
-                            onChange={(e:any) => {
-                                articles.setArticles({
-                                    ...articles.articles,
-                                    title: e.target.value
-                                })
-                            }}
-                            placeholder="例如：可发部关于新产品的博客"
-                        />
+                        <DefaultInput placeholder="例如：可发部关于新产品的博客" />
                     </Form.Item>
                 </Form>
             </Card>

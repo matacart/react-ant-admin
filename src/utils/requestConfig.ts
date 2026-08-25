@@ -1,23 +1,14 @@
 import { history, RequestConfig } from "@umijs/max";
 import axios from "axios";
 import cookie from 'react-cookies';
-import { getAccessToken } from '@/services/y2/api';
 import { message } from "antd";
 // 进度条提示
 import NProgress from "nprogress";
 import { clearAllCookies } from "./common";
+import { handleTokenExpired } from "./refreshToken";
 // 配置NProgress
 NProgress.configure({ showSpinner: false }) // 是否显示右上角螺旋加载提示
-
 const loginPath = '/user/signIn';
-
-// 与后端约定的响应数据格式
-// interface ResponseStructure {
-//     code: number;
-//     data: any;
-//     errorCode?: number;
-//     errorMessage?: string;
-// }
   
 // 全局计数器
 let requestCount = 0;
@@ -36,6 +27,7 @@ const endProgress = () => {
     }
 };
 
+// 
 let isMessageShown = false;
 const showErrorMessage = () => {
     if (!isMessageShown) {
@@ -112,21 +104,7 @@ export const requestConfig: RequestConfig = {
             let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
             // access_token过期
             if(res.data.code==40013){
-                return getAccessToken().then((tokenRes:any) => {
-                    if(window.location.hostname.startsWith("localhost")){
-                        cookie.save("access_token",tokenRes.access_token,{path:"/"})
-                    }else{
-                        cookie.save('access_token', tokenRes.access_token, { domain:test,path: '/' });
-                    }
-                    // 重试原始请求
-                    const originalRequest = res.config;
-                    originalRequest.headers['Authorization'] = 'Bearer ' + tokenRes.access_token;
-                    return axios(originalRequest);
-                }).catch((err) => { 
-                    // 重新获取access_token失败
-                    clearAllCookies();
-                    history.push(loginPath);
-                });
+                return handleTokenExpired(res.config);
             }
             // token过期 清除token 重新登录
             if(res.data.code==1001){
@@ -135,10 +113,11 @@ export const requestConfig: RequestConfig = {
                 clearAllCookies();
                 // 使用请求拦截器中保存的页面URL，登录成功后返回原页面
                 const redirectPath = encodeURIComponent(res.config._originalPageUrl || "");
+                // 终断其它请求
                 history.push(`${loginPath}?${redirectPath ? `redirect=${redirectPath}` : ""}`);
             }
+            // 业务数据异常
             if(res.data.code>2000){
-                // 数据异常
                 message.error(res.data.msg);
             }
             return res;

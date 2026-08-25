@@ -102,7 +102,6 @@ function OrderDetail() {
         order.setRemainingProductGroup(remainingList || [])
         // 已发货商品
         order.setShippedProductsGroup(res.data.shipped_list || [])
-
         // 退货中商品
         order.setReturnInProductsGroup(res.data.return_list || [])
 
@@ -159,7 +158,6 @@ function OrderDetail() {
           order.setRemainingProductGroup(remainingList)
           // 已发货商品
           order.setShippedProductsGroup(res.data.shipped_list || [])
-
           // 退货中商品
           order.setReturnInProductsGroup(res.data.return_list || [])
 
@@ -251,6 +249,7 @@ function OrderDetail() {
                         <ReturnInProgress key={index} groupIndex={index} />
                       )
                     })}
+                    {/* 未付款/已付款 */}
                     {order.orderInfo.payment_status == 0 ?<OrderUnpaidCard />:<OrdersPaidCard />}
                     <OrdersTimeline />
                   </Flex>

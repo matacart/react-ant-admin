@@ -10,6 +10,7 @@ import { useAbortController } from '@/hooks/customHooks';
 import { searchAbandonedOrder } from '@/services/y2/ApiAbandonedOrder';
 import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList';
 import DefaultButton from '@/components/Button/DefaultButton';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 
 // 表单项订单数据类型
 interface DataType {
@@ -31,6 +32,8 @@ interface TableParams {
 function OrderTable() {
 
   const intl = useIntl();
+
+  const symbolLeft = getSymbolLeft();
 
   const { createAbortController } = useAbortController();
 
@@ -92,8 +95,8 @@ function OrderTable() {
       title: "合计",
       width: 120,
       dataIndex: 'totalAmount',
-      render: (text: string,record:any) => (
-        <div>{record.currency}{text}</div>
+      render: (value: number,record:any) => (
+        <div>{symbolLeft}{currencyPrecision(value)}</div>
       ),
     },
     {
@@ -141,15 +144,15 @@ function OrderTable() {
       languages_id:abandonedOrderList.languages,
       pageNum:"1",
       pageSize:"10",
-      sortBy:"",
-      status:"1",
+      sortBy:"1",
+      status:"0",
       keyword:abandonedOrderList.keyword
     }).then(res=>{
       setData(res.data.list || []);
     }).finally(()=>{
       setLoading(false);
     })
-  },[])
+  },[abandonedOrderList.languages])
 
   const translateStatus = (statusKey: string, intl: any): string => {
     return intl.formatMessage({ id: statusKey });
@@ -203,7 +206,7 @@ function OrderTable() {
         onRow={(record) => ({
           onClick: () => {
             // 点击行时执行的操作
-            history.push(`/orders/recallOrders/${record.abandonedOrderSeq}`);
+            history.push(`/orders/recallOrders/${record.abandonedOrderSeq}/${abandonedOrderList.languages}`);
           },
         })}
       />

@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
 
 interface CategoriesType {
   meta_keyword: string;
@@ -13,7 +14,6 @@ interface CategoriesType {
   is_home: number;
   pid: string;
   id: string,
-  languages_id:string;
   title: string,
   content1: string,
   content: string,
@@ -33,7 +33,6 @@ class Categories{
     getInit() {
       return {
         id: "",
-        languages_id:"2",
         pid:"0",
         title: "",
         content1: "",
@@ -55,6 +54,11 @@ class Categories{
       } as CategoriesType;
     }
 
+    languagesId = cookie.load("shop_lang") || '2'
+    setLanguagesId(value:string){
+        this.languagesId = value;
+    }
+
     // 分类
     categoriesInfo:CategoriesType = this.getInit();
 
@@ -72,6 +76,7 @@ class Categories{
     reset() {
       this.categoriesInfo = {...this.getInit()};
       this.method = 0;
+      this.languagesId = cookie.load("shop_lang") || '2'
     }
     
 }

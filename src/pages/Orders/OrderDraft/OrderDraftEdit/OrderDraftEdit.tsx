@@ -91,12 +91,10 @@ function OrderDraftEdit() {
             // 扁平化 -- 数据结构转化
             let newProductList = res.data.products.reduce((acc: any[], item: any) => {
                 if (item.variants?.length > 0) {
-                    
                     // 如果有variants，为每个variant创建一个独立的商品项
                     const variantItems = item.variants.map(variant => {
                         // 如果没有variants，直接使用原商品
                         let finalAmount = item.specialprice + Number(variant.price);
-
                         if(variant.product_discount_type == "1"){
                             finalAmount = finalAmount - variant.product_discount_amount
                         }
@@ -105,7 +103,6 @@ function OrderDraftEdit() {
                             // console.log(product.product_price)
                             finalAmount = finalAmount * (100 - variant.product_discount_amount)/100
                         }
-
                         return {
                             attributes: item.attributes,
                             variants: [variant],

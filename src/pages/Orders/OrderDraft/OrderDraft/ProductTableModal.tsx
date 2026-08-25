@@ -7,6 +7,7 @@ import CommodityClassificationSelector from "@/pages/Products/ProductList/Commod
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
 import { getProductList } from "@/services/y2/api";
 import orderDraft from "@/store/order/orderDraft";
+import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 import {Flex, Form, Input, Modal, Row, Select, Space, Table, TableProps } from "antd"
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -90,7 +91,9 @@ function ProductTableModal(){
 
     const [productList,setProductList] = useState<any>([]);
 
-    const Ref = useRef(null)
+    const symbolLeft = getSymbolLeft();
+
+    const Ref = useRef(null);
 
     // 管理所有选中的项（包括父项和子项）
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[][]>([[],[]]);
@@ -129,9 +132,7 @@ function ProductTableModal(){
           dataIndex: 'specialprice',
           key: 'specialprice',
           width: 150,
-          render: (value,record) => <div>
-            {value}
-          </div>,
+          render: (value,record) => <div>{symbolLeft}{currencyPrecision(Number(value))}</div>,
         }
     ];
     // table
@@ -250,7 +251,6 @@ function ProductTableModal(){
 
         if(!selected && allChildrenSelected){
             // 取消选中父项 → 移除父项 + 所有子项
-            console.log("取消选中父项")
             let hasChildKeys = false;
             if (record.variants?.length > 0) {
                 record.variants.forEach(variant => {
@@ -307,6 +307,7 @@ function ProductTableModal(){
           title: '价格',
           dataIndex: 'price',
           key: 'price',
+          render: (value:number,record:DataType) => <div>{symbolLeft}{currencyPrecision(Number(value))}</div>,
           onCell: () => ({ style: { flex: 1 } }), // 设置比例为 2
           width:150
         },
@@ -419,7 +420,6 @@ function ProductTableModal(){
             <DefaultButtonSecondary type="primary" text="添加商品" onClick={()=>{
                 // 将扁平化数据转为原数据结构
                 const nestedData = convertFlatToNested(orderDraft.productInfo);
-                console.log(nestedData)
                 setProductList(nestedData);
 
                 const parentKeys = orderDraft.productInfo.map(item => item.product_id);

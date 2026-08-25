@@ -3,12 +3,12 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
-import { Flex, Form, Input, Modal, Radio } from "antd"
+import { Flex, Form, Modal, Radio } from "antd"
 import FormItem from "antd/es/form/FormItem";
-import cookie from 'react-cookies';
 import { useEffect, useState } from "react";
 import orderDraft from "@/store/order/orderDraft";
 import { getDeliveryList } from "@/services/y2/api";
+import { getPrecision, getSymbolLeft } from "@/utils/common";
 
 
 const style: React.CSSProperties = {
@@ -23,6 +23,9 @@ const style: React.CSSProperties = {
 function ShippingFeeEditingModal(){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    const symbolLeft = getSymbolLeft();
+    const {decimals,amountRule} = getPrecision();
 
     const [loading,setLoading] = useState(false);
 
@@ -50,8 +53,8 @@ function ShippingFeeEditingModal(){
                     shippingId:"0",
                     shippingMethod:values.name,
                     shippingModuleCode:null,
-                    shippingTotal:values.cost,
-                    orderTotal:orderDraft.orderInfo.productTotal - orderDraft.orderInfo.orderDiscount + values.cost,
+                    shippingTotal:values.cost*amountRule,
+                    orderTotal:orderDraft.orderInfo.productTotal - orderDraft.orderInfo.orderDiscount + values.cost*amountRule,
                 })
             }else{
                 const shipping = options.find(item=>item.id==freight)
@@ -78,7 +81,7 @@ function ShippingFeeEditingModal(){
         }
         form.setFieldsValue({
             name:orderDraft.orderInfo.shippingMethod,
-            cost:orderDraft.orderInfo.shippingTotal
+            cost:orderDraft.orderInfo.shippingTotal/amountRule
         })
         setIsModalOpen(false);
     };
@@ -161,7 +164,7 @@ function ShippingFeeEditingModal(){
                         <DefaultInput placeholder="物流名称" />
                     </FormItem>
                     <FormItem label="费用" name="cost">
-                        <NumberInput style={{width:"100%"}} min={0} prefix={cookie.load("symbolLeft") || ""} />
+                        <NumberInput style={{width:"100%"}} min={0} prefix={symbolLeft} precision={decimals} />
                     </FormItem>
                 </Form>}
             </Modal>

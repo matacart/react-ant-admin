@@ -6,8 +6,8 @@ import { useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import DefaultButton from '@/components/Button/DefaultButton';
 import NumberInput from '@/components/Input/NumberInput';
-import cookie from 'react-cookies';
 import CheckSelectSubmit from '@/components/Select/CheckSelectSubmit';
+import { getPrecision, getSymbolLeft } from '@/utils/common';
 
 // 修改第20行状态声明
 interface OptionType {
@@ -20,11 +20,15 @@ export default function MoreSelect(){
 
   const Ref = React.useRef(null);
   const intl = useIntl();
+
+  const symbolLeft = getSymbolLeft();
+  const {decimals,amountRule} = getPrecision();
+
   const [open, setOpen] = useState(false);
 
-  const [min,setMin] = useState<number | undefined>(undefined);
+  const [min,setMin] = useState<number | null>(null);
 
-  const [max,setMax] = useState<number | undefined>(undefined);
+  const [max,setMax] = useState<number | null>(null);
 
   const [productTypeOption,setProductTypeOption] = useState<OptionType[]>([])
 
@@ -39,27 +43,29 @@ export default function MoreSelect(){
                 className="input" 
                 placeholder='最小值'
                 min={0}
-                value={min}
-                prefix={cookie.load("symbolLeft")}
-                onChange={(value:number | undefined)=>{
-                    setMin(value)
+                value={min?min/amountRule:null}
+                prefix={symbolLeft}
+                precision={decimals}
+                onChange={(value:number)=>{
+                    value?setMin(Math.round(value*amountRule)):setMin(null)
                 }}
             />
             <div className='divider-warp'><Divider className='divider'></Divider></div>
             <NumberInput 
                 className="input"
                 placeholder='最大值'
-                prefix={cookie.load("symbolLeft")}
+                prefix={symbolLeft}
+                precision={decimals}
                 min={0}
-                value={max}
-                onChange={(value:number | undefined)=>{
-                    setMax(value)
+                value={max?max/amountRule:null}
+                onChange={(value:number)=>{
+                  value?setMax(Math.round(value*amountRule)):setMax(null)
                 }}
             />
           </Flex>
           <div className={'cleanText'} onClick={()=>{
-            setMin(undefined)
-            setMax(undefined)
+            setMin(null)
+            setMax(null)
           }}>清除</div>
         </div>
       ),

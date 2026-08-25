@@ -13,9 +13,6 @@ class AbandonedOrderList{
         this.languages = res
     }
 
-
-
-
     // 搜索关键词
     keyword = "";
     setKeyword(res:string){

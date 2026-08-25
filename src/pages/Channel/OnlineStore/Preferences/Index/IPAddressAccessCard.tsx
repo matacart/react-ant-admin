@@ -3,7 +3,7 @@ import MyInput from "@/components/Input/MyInput";
 import { App, Card, Flex, Form, Modal, Radio, Table, Tooltip} from "antd";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { addIPAddressAccess, delIPAddressAccess, getIPAddressAccessList } from "@/services/y2/api";
+import { addIPAddressAccess, delIPAddressAccess, getIPAddressAccessList } from "@/services/y2/apiAccess";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined } from "@ant-design/icons";
 import preferences, { IPAddressAccess } from "@/store/channel/preferences/preferences";

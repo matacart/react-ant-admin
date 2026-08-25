@@ -38,7 +38,6 @@ interface ProductType {
   platform_category_id: string;
   productCategories: string;
   tag: string;
-  languages_id: string;
   manufactuer: string;
   weight: number;
   spu: string;
@@ -52,7 +51,7 @@ interface ProductType {
   barcode: string;
   model: string;
   inquiry_status: number;
-  needTax: number | undefined;
+  product_taxable: string;
   id: string;
   title: string;
   end_time: string | undefined;
@@ -106,6 +105,12 @@ class Product{
       makeAutoObservable(this)
     }
 
+    // 语言
+    languageId = cookie.load("shop_lang") || '2'
+    setLanguageId(value:string){
+        this.languageId = value;
+    }
+
     // 初始化产品数据结构
     getInitProduct() {
       return {
@@ -121,7 +126,7 @@ class Product{
         price: "1000",
         original_price: "1000",
         cost_price: "1000",
-        needTax: 0,
+        product_taxable: "1",
         inquiry_status: 0,
         model: "",
         barcode: "",
@@ -135,7 +140,6 @@ class Product{
         // 
         tag: "",
         weight: 0,
-        languages_id: cookie.load("shop_lang") || '2',
         manufactuer: "",
         spu: "",
         weight_class_id: 1,

@@ -5,9 +5,9 @@ import { InfoCircleFilled } from '@ant-design/icons';
 import { getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
-import cookie from 'react-cookies';
 import productList from '@/store/product/productList';
 import { observer } from 'mobx-react-lite';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -62,6 +62,8 @@ const getRandomuserParams = (params: TableParams) => ({
 function ProductListAjax(selectProps:any) {
 
   const { message } = App.useApp();
+  
+  const symbolLeft = getSymbolLeft();
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
@@ -168,7 +170,7 @@ function ProductListAjax(selectProps:any) {
       render: (value, record, index) =>{
         let num = Number(value);
         return <>
-          {`${cookie.load("symbolLeft")} ${num.toFixed(2)}`}
+          {`${symbolLeft} ${currencyPrecision(num)}`}
         </>
       } 
     },

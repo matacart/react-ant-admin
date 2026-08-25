@@ -10,7 +10,7 @@ function ReturnInformation({form}:{form:any}){
 
     const [logistics,setLogistics] = useState<any[]>([])
 
-    const [logisticsValue,setLogisticsValue] = useState(undefined);
+    const [logisticsValue,setLogisticsValue] = useState("");
 
     useEffect(()=>{
         const newLogistics = JSON.parse(localStorage["MC_DATA_SHIPPING_COURIER"] || "[]").map((item:any)=>{

@@ -31,24 +31,22 @@ function EditArticles(){
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const {id,languagesId} = useParams();
+    const {id,languagesId = "2"} = useParams();
 
     const [loading,setLoading] = useState(false);
 
     const [form] = Form.useForm();
 
-    const [language,setLanguage] = useState<string>(languagesId??"2");
-
     const sleep = useSleep();
 
-    const setLang = (value:string)=>{
-        setLanguage(value)
-    }
-
     const submit = ()=>{
-        form.validateFields().then(async values => {
+        form.validateFields().then(values => {
             setLoading(true);
-            upDateArticles(articles.articles).then(res=>{
+            upDateArticles({
+                ...articles.articles,
+                title:values.title,
+                languages_id:languagesId
+            }).then(res=>{
                 message.success('已更新')
             }).catch(err=>{
                 console.log(err)
@@ -60,16 +58,17 @@ function EditArticles(){
     }
 
     useEffect(()=>{
-        getArticle(id,language).then((res:any)=>{
+        getArticle(id,languagesId).then((res:any)=>{
             if(res.code == 0){
                 articles.setArticles(res.data)
             }
+            articles.setLanguagesId(languagesId)
         }).catch(err=>{
             console.log(err)
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[language])
+    },[languagesId])
 
     return (
         <Scoped>
@@ -86,7 +85,7 @@ function EditArticles(){
                         </div>
                         <Flex className='mc-header-right' align='center' gap={12}>
                             {/* 语言 */}
-                            <LangSelect lang={language} setLang={setLang} />
+                            <LangSelect lang={languagesId} setLang={(value:string)=>history.push(`/website/articles/edit/${id}/${value}`)} />
                             <DefaultButton text='AI创建博客' />
                             <DefaultButton text='预览' onClick={()=>{
                                 if(cookie.load("domain").domain_name && cookie.load("domain").domain_name!==""){

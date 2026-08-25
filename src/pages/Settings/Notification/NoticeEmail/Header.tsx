@@ -61,10 +61,8 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
         await getStoreInfo({
             languages_id:noticeEmail.languagesId,
         }).then(res=>{
-            if(res.code == 0){
-                serviceEmail = res.data.service_email;
-                storeName = res.data.store_name;
-            }
+            serviceEmail = res.service_email;
+            storeName = res.store_name;
         }).catch(err=>{
             message.error(intl.formatMessage({ id: 'components.message.error' }));
         }).finally(()=>{

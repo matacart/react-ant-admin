@@ -9,6 +9,7 @@ import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderDraftList } from '@/services/y2/api';
 import { useAbortController } from '@/hooks/customHooks';
+import { currencyPrecision, getSymbolLeft } from '@/utils/common';
 
 // 表单项订单数据类型
 interface DataType {
@@ -32,6 +33,8 @@ interface TableParams {
 function OrdersDraftListAjax() {
 
   const intl = useIntl();
+
+  const symbolLeft = getSymbolLeft();
 
   const { createAbortController } = useAbortController();
 
@@ -79,8 +82,8 @@ function OrdersDraftListAjax() {
     {
       title: intl.formatMessage({ id: 'orders.orderDraft.orderDraftList.orderDraftListAjax.total' }),
       dataIndex: 'order_total',
-      render: (text: string,record:any) => (
-        <div>{record.currency}{text}</div>
+      render: (value: number,record:any) => (
+        <div>{symbolLeft}{currencyPrecision(value)}</div>
       ),
     },
   ];

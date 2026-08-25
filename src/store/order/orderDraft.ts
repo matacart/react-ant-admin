@@ -4,7 +4,7 @@ interface Productinfo {
     variants: any;
     vid?: string;
     sku_id?:string;
-    cost_price: number;
+    product_cost_price: number;
     // group_id: "0",
     product_id:string;
     proudct_imgage:string;

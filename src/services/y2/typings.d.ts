@@ -117,6 +117,15 @@ declare namespace ApiSearch {
   }
 }
 
+declare namespace ApiTax {
+  type Default = {
+    code:number | string,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+}
+
 declare namespace ApiAbandonedOrder {
   type Default = {
     code:number | string,

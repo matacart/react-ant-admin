@@ -41,13 +41,10 @@ class GiftCard{
         this.customer = customer
     }
 
-    symbolLeft = cookie.load('symbolLeft') || 'US$';
-
     // 重置
     reset(){
         this.giftCardInfo = this.getInitProduct();
         this.customer = null;
-        this.symbolLeft = cookie.load('symbolLeft') || 'US$';
     }
 }
 
