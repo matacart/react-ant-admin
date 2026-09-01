@@ -670,7 +670,7 @@ export async function upDateProduct(res:any){
 // 获取订单
 export async function getOrderDetail(id:string){
   // return
-  return request('/ApiStore/getOrderDetail', {
+  return request<ApiStore.Default>('/ApiStore/getOrderDetailNew', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

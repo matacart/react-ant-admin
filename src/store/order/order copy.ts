@@ -15,14 +15,38 @@ interface Productinfo {
   product_image: string;
 }
 
-interface RemarkType{
-  
-}
-
 interface OrderInfoType{
-  orderSeq: string;
-  appOrderSeq: string;
-  orderRemarks:RemarkType[];
+  delivery_country_code_2: string;
+  delivery_country_code_3: string;
+  delivery_city_id: string;
+  delivery_state_id: string;
+  delivery_country_id: string;
+  tags: string[];
+  customer_id_number: string;
+  payment_start_date: string | undefined;
+  payment_term: string;
+  languages_id: string;
+  is_same_delivery: string;
+  delivery_telephone: string;
+  delivery_country: string;
+  delivery_postcode: string;
+  delivery_state: string;
+  delivery_city: string;
+  delivery_street_address: string;
+  delivery_suburb: string;
+  delivery_company: string;
+  delivery_firstname: string;
+  delivery_lastname: string;
+  billing_name: string;
+  delivery_name: string;
+  order_id: string;
+  customer_id: string;
+  customer_telephone: string;
+  customer_email_address: string;
+  payment_method: string;
+  shipping_status: number;
+  payment_status: number;
+  order_sn: string;
 }
 
 interface CustomerInfo{
@@ -84,9 +108,37 @@ class Order{
 
     // 订单信息
     orderInfo:OrderInfoType = {
-      orderSeq: "",
-      appOrderSeq: "",
-      orderRemarks: []
+      order_sn: "",
+      delivery_country_code_2: "",
+      delivery_country_code_3: "",
+      delivery_city_id: "",
+      delivery_state_id: "",
+      delivery_country_id: "",
+      tags: [],
+      customer_id_number: "",
+      payment_start_date: undefined,
+      payment_term: "",
+      languages_id: "",
+      is_same_delivery: "",
+      delivery_telephone: "",
+      delivery_country: "",
+      delivery_postcode: "",
+      delivery_state: "",
+      delivery_city: "",
+      delivery_street_address: "",
+      delivery_suburb: "",
+      delivery_company: "",
+      delivery_firstname: "",
+      delivery_lastname: "",
+      billing_name: "",
+      delivery_name: "",
+      order_id: "",
+      customer_id: "",
+      customer_telephone: "",
+      customer_email_address: "",
+      payment_method: "",
+      shipping_status: 0,
+      payment_status: 0
     }
 
 

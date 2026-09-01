@@ -1,9 +1,10 @@
 import { useIntl } from "@umijs/max";
-import { Card, Divider, Flex, Switch, Tooltip } from "antd";
+import { Card, Divider, Flex } from "antd";
 import styled from "styled-components";
 import MerchantNotes from "./Modal/MerchantNotes";
 import order from "@/store/order/order";
 import { observer } from "mobx-react-lite";
+import dayjs from 'dayjs';
 
 function OrdersNotesCard() {
   const intl = useIntl();
@@ -15,10 +16,16 @@ function OrdersNotesCard() {
                 <div className="font-16 color-242833 font-w-600">{intl.formatMessage({ id:'order.orderDetail.notes'})}</div>
                 <MerchantNotes />
             </Flex>
-            {order.merchantNotes.length>0 ? <>
-                <div style={{marginBottom:"6px"}} className="font-14 color-242833 font-w-500">商家备注</div>
-                <div className="color-474F5E">{order.merchantNotes[0].actionDetails?.sellerRemark}</div>
-            </>:<div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.orderDetail.empitynotes'})}</div>}
+            {order.orderInfo.orderRemarks.length>0 ? <Flex gap={8} vertical>
+                {order.orderInfo.orderRemarks.map((item:any)=>{
+                    return(
+                        <div key={item.id}>
+                            <div className="font-14 color-242833 font-w-500">{item.remark}</div>
+                            <div className="font-12 color-62708D font-w-500">{dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss')}</div>
+                        </div>
+                    )
+                })}
+            </Flex>:<div style={{ fontSize: '14px', color: '#7A8499' }}>{intl.formatMessage({ id:'order.orderDetail.empitynotes'})}</div>}
           </Card>
       </Scoped>
   )
@@ -31,8 +38,4 @@ const Scoped = styled.div`
     .card{
         background-color: #F7F8FB;
     }
-    .item{
-        margin-bottom: 20px;
-    }
- 
 `

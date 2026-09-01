@@ -75,48 +75,7 @@ function OrderDetail() {
 
   useEffect(() => {
     getOrderDetail(orderId || "").then(res=>{
-      if(res.data && JSON.stringify(res.data) != "[]"){
-        // 未发货商品
-        const remainingProductObj = (res.data.order_products??[]).filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
-          const groupId = item.group_id;
-          if (!acc[groupId]) {
-            acc[groupId] = [];
-          }
-          acc[groupId].push({...item,num:item.remaining_quantity});
-          return acc;
-        }, {});
-        let remainingList:any = []
-        for(let i in remainingProductObj){
-          let count = 0
-          remainingProductObj[i].forEach((item:any)=>{
-            count += item.remaining_quantity
-          })
-          remainingList.push({
-            product:remainingProductObj[i],
-            shipment:{
-              remaining_quantity_count:count
-            },
-            fulfillment:remainingProductObj[i][0].fulfillment
-          })
-        }
-        order.setRemainingProductGroup(remainingList || [])
-        // 已发货商品
-        order.setShippedProductsGroup(res.data.shipped_list || [])
-        // 退货中商品
-        order.setReturnInProductsGroup(res.data.return_list || [])
-
-        order.setOrderInfo(res.data.order_info || {})
-        order.setCustomerInfo(res.data.customer_info || {})
-        order.setOrderTotal(res.data.order_total || [])
-        order.setOrderLogCount(res.data.order_logs_count || 0)
-        // order.setHistoryStatus(res.data.status_history || [])
-        order.setOrderLog(res.data.order_logs || [])
-        // 商家备注
-        order.setMerchantNotes(res.data.seller_remarks || [])
-
-        setPrev(res.data.previous_order_id)
-        setNext(res.data.next_order_id)
-      }
+      order.setOrderInfo(res.data)
     }).catch(err=>{
       console.log(err);
     }).finally(()=>{
@@ -131,50 +90,7 @@ function OrderDetail() {
       setLoading(true)
       await sleep(1000)
       getOrderDetail(orderId).then(res=>{
-        if(res.data && JSON.stringify(res.data) != "[]"){
-          // 未发货商品 --- 
-          const remainingProductObj = res.data.order_products?.filter((item: any) => parseInt(item.remaining_quantity) > 0).reduce((acc: any, item: any) => {
-            const groupId = item.group_id;
-            if (!acc[groupId]) {
-              acc[groupId] = [];
-            }
-            acc[groupId].push({...item,num:item.remaining_quantity});
-            return acc;
-          }, {});
-          let remainingList:any = []
-          for(let i in remainingProductObj){
-            let count = 0
-            remainingProductObj[i].forEach((item:any)=>{
-              count += item.remaining_quantity
-            })
-            remainingList.push({
-              product:remainingProductObj[i],
-              shipment:{
-                remaining_quantity_count:count
-              },
-              fulfillment:remainingProductObj[i][0].fulfillment
-            })
-          }
-          order.setRemainingProductGroup(remainingList)
-          // 已发货商品
-          order.setShippedProductsGroup(res.data.shipped_list || [])
-          // 退货中商品
-          order.setReturnInProductsGroup(res.data.return_list || [])
-
-          order.setOrderInfo(res.data.order_info || {})
-          order.setCustomerInfo(res.data.customer_info || {})
-          order.setOrderTotal(res.data.order_total || [])
-
-          order.setOrderLogCount(res.data.order_logs_count || 0)
-          // order.setHistoryStatus(res.data.status_history || [])
-          order.setOrderLog(res.data.order_logs || [])
-          // 商家备注
-          order.setMerchantNotes(res.data.seller_remarks || [])
-          // 
-          history.push(`/orders/${orderId}`)
-          setPrev(res.data.previous_order_id)
-          setNext(res.data.next_order_id)
-        }
+        order.setOrderInfo(res.data)
       }).catch(err=>{
         console.log(err);
       }).finally(()=>{
@@ -202,10 +118,10 @@ function OrderDetail() {
                     </div>
                     <div className="mc-header-left-content">
                       <Flex style={{fontSize: '20px',marginBottom:"6px"}} gap={12} align='center'>
-                        <span className='font-w-500'>{order.orderInfo.order_sn}</span>
+                        <span className='font-w-500'>{order.orderInfo.appOrderSeq}</span>
                         <Tooltip title="复制">
                           <span style={{cursor:"pointer"}} onClick={()=>{
-                            copy(order.orderInfo.order_sn)
+                            copy(order.orderInfo.appOrderSeq)
                             message.success('复制成功')
                           }}><CopyIcon className='color-7A8499 font-20 cursor-pointer' /></span>
                         </Tooltip>
