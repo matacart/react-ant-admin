@@ -2,13 +2,13 @@ import { Badge, Button, Card, Divider, Flex, Form, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { useEffect } from "react";
-import orderDelivery from "@/store/order/orderDelivery";
+import orderManualDelivery from "@/store/order/orderManualDelivery";
 import DeliveryAddressModal from "./DeliveryAddressModal";
 
 function DeliveryAddress() {
 
     useEffect(()=>{
-        console.log(orderDelivery.deliveryAddress)
+        // console.log(orderDelivery.deliveryAddress)
     },[])
 
     return (

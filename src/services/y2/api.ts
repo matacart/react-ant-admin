@@ -667,22 +667,6 @@ export async function upDateProduct(res:any){
   })
 }
 
-// 获取订单
-export async function getOrderDetail(id:string){
-  // return
-  return request<ApiStore.Default>('/ApiStore/getOrderDetailNew', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      "domain_id": cookie.load("domain")?.id,
-      // 旧属性
-      order_id:id
-    }
-  })
-}
-
 // completed
 export async function getTaskList(page:number,limit:number,taskStatus:string){
   // return
@@ -1204,31 +1188,6 @@ export async function delPurchaseOrders(id:string){
     data:{
       // 订单号
       id:id,
-    }
-  })
-}
-
-// 省
-export async function getProvinceList(countryId:string){
-  return await request('/ApiAppstore/state_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      country_id:countryId
-    }
-  })
-}
-// 市
-export async function getCityList(cityId:string){
-  return await request('/ApiAppstore/city_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      state_id:cityId
     }
   })
 }
@@ -2697,20 +2656,6 @@ export async function getOrderLogs(res:any) {
   })
 }
 
-// 联系信息
-export async function setOrderContact(res:any) {
-  return request(`/ApiStore/setOrderContact`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
 // 标记付款
 export async function setOrderPaid(res:any) {
   return request(`/ApiStore/setOrderPaid`, {
@@ -2835,19 +2780,7 @@ export async function removeOrderTag(res:{orderId:string,tagName:string}) {
     }
   })
 }
-// 获取标签列表
-export async function getOrderTagList(orderId:string) {
-  return request(`/ApiStore/getOrderTagList`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      orderId:orderId
-    }
-  })
-}
+
 // 批量添加标签列表
 export async function batchAddOrderTags(res:{orderIds:string,tagNames:string}) {
   return request(`/ApiStore/batchAddOrderTags`, {
@@ -2958,20 +2891,6 @@ export async function editOrderProducts(res:any) {
 // 退款
 export async function setOrderRefunded(res:any) {
   return request(`/ApiStore/setOrderRefunded`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 暂停发货
-export async function pauseOrderShipping(res:any) {
-  return request(`/ApiStore/pauseOrderShipping`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

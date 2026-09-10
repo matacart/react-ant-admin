@@ -1,4 +1,5 @@
-import { addWarehouse, getCityList, getCountryList, getProvinceList } from "@/services/y2/api";
+import { addWarehouse, getCountryList  } from "@/services/y2/api";
+import { getCityList,getProvinceList } from "@/services/y2/apiAppstore";
 import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select } from "antd"
 import { set } from "lodash";
 import { useEffect, useState } from "react"

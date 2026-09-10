@@ -2,17 +2,25 @@ import { Card, Checkbox, Col, Divider, Flex, Form, Row, Tooltip, Typography } fr
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import dayjs from 'dayjs';
-import orderReturnGoods from "@/store/order/orderReturnGoods";
 import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
 import { toJS } from "mobx";
 import MySelect from "@/components/Select/MySelect";
 import styled from "styled-components";
 import MyInput from "@/components/Input/MyInput";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
+import orderAfterSales from "@/store/order/orderAfterSales";
+import { SuccessSecondIcon } from "@/components/Icons/Icons";
 
-function ReturnGoods({groupIndex}:{groupIndex:number}) {
+function AfterSalesGoods({groupIndex}:{groupIndex:number}) {
 
-  const shippedInfo  = orderReturnGoods.shippedProductGroup[groupIndex]
+  const ordersPackage  = orderAfterSales.ordersPackageList[groupIndex];
+
+  // 计算该包裹内所有商品的实际总件数
+  const totalQuantity = ordersPackage.itemGroupList.reduce(
+    (acc, group) =>
+      acc + group.itemList.reduce((sum, item) => sum + (item.productNum || 0), 0),
+    0
+  );
 
   // const refundOptions = [
   //   {
@@ -88,22 +96,22 @@ function ReturnGoods({groupIndex}:{groupIndex:number}) {
   ]
 
   useEffect(()=>{
-    console.log(orderReturnGoods.shippedProductGroup[groupIndex])
   },[])
 
   return (
     <MyCard
       title={
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
-          <div>
-            <span className="font-w-500">{"已发货"}（{shippedInfo.shipment.shipped_quantity}）#{orderReturnGoods.orderInfo.order_sn}-F{groupIndex+1}</span>
-          </div>
+          <Flex align="center" gap={10}>
+            <SuccessSecondIcon className="font-28" />
+            <span className="font-w-500">{"已发货"}（{totalQuantity}）#{ordersPackage.appPackageSeq}</span>
+          </Flex>
         </Flex>
       }
     >
     <Form>
         <div className="font-w-400">
-          {shippedInfo.product?.map((item,index)=>{
+          {ordersPackage.product?.map((item,index)=>{
             return(
               <div key={index} className="item">
                 <Row>
@@ -189,7 +197,6 @@ function ReturnGoods({groupIndex}:{groupIndex:number}) {
           })}
         </div>
       </Form>
-      {/* <Divider /> */}
     </MyCard>
   );
 }
@@ -205,4 +212,4 @@ const MyCard = styled(Card)`
 
 `;
 
-export default observer(ReturnGoods);
+export default observer(AfterSalesGoods);

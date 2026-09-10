@@ -2,7 +2,8 @@
 import { App, Col, Form, Input, Modal, Row, Select } from 'antd';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { editSupplier, getCityList, getProvinceList, getSupplier } from '@/services/y2/api';
+import { editSupplier, getSupplier } from '@/services/y2/api';
+import { getCityList, getProvinceList } from '@/services/y2/apiAppstore';
 import { useForm } from 'antd/es/form/Form';
 
 function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:any,getSupplierList:any,editSupplierRef:any}) {

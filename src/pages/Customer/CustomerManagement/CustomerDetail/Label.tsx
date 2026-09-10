@@ -5,7 +5,6 @@ import { useIntl } from "@umijs/max";
 import TagAutoComplete from "@/components/AutoComplete/TagAutoComplete";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "@/components/Icons/Icons";
-import { addOrderTag, removeOrderTag } from "@/services/y2/api";
 import ManagementLabelModal from "./Modal/ManagementLabelModal";
 
 function Label() {

@@ -78,17 +78,17 @@ export default  [
         component: './Orders/AbandonedOrdersDetail/Index',
       },
       {  
-        path: ':orderId',  
+        path: ':orderId/:languagesId',  
         hideInMenu: true,
-        component: './Orders/OrderDetail/OrderDetail', 
+        component: './Orders/OrderDetail/Index/Index', 
       },
       {  
-        path: ':orderId/delivery', 
+        path: 'delivery/:orderId/:fulfillmentId/:languagesId',
         hideInMenu: true,
         component: './Orders/OrderDetail/ManualDelivery/ManualDelivery', 
       },
       {  
-        path: 'afterSales/launch/:orderId', 
+        path: 'afterSales/launch/:orderId/:languagesId', 
         hideInMenu: true,
         component: './Orders/OrderDetail/AfterSales/AfterSales', 
       },
@@ -301,7 +301,7 @@ export default  [
     routes:[
       {
         path: '/discount',
-        redirect: '/discount/index'
+        redirect: '/discount/Index'
       },
       {
         path: 'index',

@@ -1,5 +1,4 @@
 import { Badge, Button, Card, Col, Divider, Flex, Form, Input, Row, Tooltip } from "antd";
-import { CheckCircleTwoTone, ConsoleSqlOutlined, CopyOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useIntl } from "@umijs/max";
 import { SuccessSecondIcon } from "@/components/Icons/Icons";

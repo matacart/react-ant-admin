@@ -6,7 +6,6 @@ import { Checkbox, Flex, Form, Input, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-
 const { TextArea } = Input;
 
 function CancelOrderModal(){
@@ -27,7 +26,7 @@ function CancelOrderModal(){
         form.validateFields().then(values=>{
             setLoading(true)
             setCancelOrder({
-                orderId:order.orderInfo.order_id,
+                orderId:order.orderInfo.orderSeq,
                 restoreInventory:values.inventory ? 1 : 0,
                 cancelReason:values.remarks
             }).then(res=>{
@@ -53,7 +52,7 @@ function CancelOrderModal(){
                     </Flex>
                 )}
             >
-               <Form form={form} layout="vertical" style={{marginTop:"24px",marginBottom:"40px"}}>
+               {/* <Form form={form} layout="vertical" style={{marginTop:"24px",marginBottom:"40px"}}>
                     {order.orderInfo.payment_status == 1 ? <Form.Item className="item" label={<div className="font-w-500 color-242833">退款</div>}>
                             <Radio.Group className="radio-group" onChange={(e)=>{
                                 setIsRefund(e.target.value)
@@ -87,7 +86,7 @@ function CancelOrderModal(){
                             style={{ height: "90px", resize: 'none' }}
                         />
                     </Form.Item>
-               </Form>
+               </Form> */}
             </MyModal>
         </>
     );

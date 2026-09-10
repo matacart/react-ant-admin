@@ -8,10 +8,11 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import ReturnDetails from './ReturnDetails';
 import ReturnInformation from './ReturnInformation';
-import ReturnGoods from './ReturnGoods';
-import { getOrderDetail, setOrderReturned } from '@/services/y2/api';
-import orderReturnGoods from '@/store/order/orderReturnGoods';
-import { useParams,useNavigate } from 'react-router-dom';
+import { setOrderReturned } from '@/services/y2/api';
+import { getOrderDetail } from '@/services/y2/apiStore';
+import { history, useParams } from '@umijs/max';
+import orderAfterSales from '@/store/order/orderAfterSales';
+import AfterSalesGoods from './AfterSalesGoods';
 
 function AfterSales() {
 
@@ -21,84 +22,61 @@ function AfterSales() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const [returnReasonsOptions,setReturnReasonsOptions] = useState<any[]>([]);
-
-    const { orderId } = useParams();
-
-    const navigate = useNavigate();
+    const { orderId="",languagesId="" } = useParams();
 
     const [form] = Form.useForm();
 
     // 验证通过 -- 
     const submit = async () => {
-      if(orderReturnGoods.returnGoodsInfo.returnedGoodsNum > 0){
-        setLoading(true)
-        let newReturnProducts:any[] = [];
-        orderReturnGoods.shippedProductGroup.forEach((item:any)=>{
-          console.log(item)
-          item.product?.forEach((product:any)=>{
-            if(product.num>0){
-              newReturnProducts.push({
-                ordersProductId:product.id,
-                quantityReturned:product.num,
-                opened:product.opened,
-                returnActionId:product.returnActionId,
-                returnReasonId:product.returnReasonId,
-                returnReason:product.returnReason,
-                shipmentId:item.shipment.shipment_id,
-              })
-            }
-          })
-        })
-        let res = {
-          orderId:orderReturnGoods.orderInfo.order_id,
-          customerId:orderReturnGoods.orderInfo.customer_id,
-          comment:"",
-          firstname:orderReturnGoods.orderInfo.customer_firstname,
-          lastname:orderReturnGoods.orderInfo.customer_lastname,
-          email:orderReturnGoods.orderInfo.customer_email_address,
-          telephone:orderReturnGoods.orderInfo.customer_telephone,
-          shippingNo:orderReturnGoods.returnGoodsInfo.shippingNo,
-          shippingId:orderReturnGoods.returnGoodsInfo.shippingId,
-          shippingName:"",
-          returnProducts:JSON.stringify(newReturnProducts),
-          returnStatusId:"1"
-        }
-        setOrderReturned(res).then(res=>{
-          navigate(`/orders/${orderId}`)
-        }).catch(err=>{
-          console.log(err)
-        }).finally(()=>{
-          setLoading(false)
-        })
-      }else{
-        message.error("请至少退一件商品")
-      }
+      // if(orderReturnGoods.returnGoodsInfo.returnedGoodsNum > 0){
+      //   setLoading(true)
+      //   let newReturnProducts:any[] = [];
+      //   orderReturnGoods.shippedProductGroup.forEach((item:any)=>{
+      //     console.log(item)
+      //     item.product?.forEach((product:any)=>{
+      //       if(product.num>0){
+      //         newReturnProducts.push({
+      //           ordersProductId:product.id,
+      //           quantityReturned:product.num,
+      //           opened:product.opened,
+      //           returnActionId:product.returnActionId,
+      //           returnReasonId:product.returnReasonId,
+      //           returnReason:product.returnReason,
+      //           shipmentId:item.shipment.shipment_id,
+      //         })
+      //       }
+      //     })
+      //   })
+      //   let res = {
+      //     orderId:orderReturnGoods.orderInfo.order_id,
+      //     customerId:orderReturnGoods.orderInfo.customer_id,
+      //     comment:"",
+      //     firstname:orderReturnGoods.orderInfo.customer_firstname,
+      //     lastname:orderReturnGoods.orderInfo.customer_lastname,
+      //     email:orderReturnGoods.orderInfo.customer_email_address,
+      //     telephone:orderReturnGoods.orderInfo.customer_telephone,
+      //     shippingNo:orderReturnGoods.returnGoodsInfo.shippingNo,
+      //     shippingId:orderReturnGoods.returnGoodsInfo.shippingId,
+      //     shippingName:"",
+      //     returnProducts:JSON.stringify(newReturnProducts),
+      //     returnStatusId:"1"
+      //   }
+      //   setOrderReturned(res).then(res=>{
+      //     navigate(`/orders/${orderId}`)
+      //   }).catch(err=>{
+      //     console.log(err)
+      //   }).finally(()=>{
+      //     setLoading(false)
+      //   })
+      // }else{
+      //   message.error("请至少退一件商品")
+      // }
     }
 
     useEffect(() => {
-      getOrderDetail(orderId??"").then(res=>{
-        if(res.data && JSON.stringify(res.data) != "[]"){
-          // 格式
-          const shipList = res.data.shipped_list.map((item:any)=>{
-            return {
-              ...item,
-              product:item.product.map((product:any)=>{
-                return {
-                  ...product,
-                  num:0,
-                  returnActionId:"",
-                  returnReasonId:"",
-                  returnReason:"",
-                  opened:0,
-                }
-              })
-            }
-          })
-          // 已发货商品
-          orderReturnGoods.setShippedProductGroup(shipList || [])
-          orderReturnGoods.setOrderInfo(res.data.order_info || {})
-        }
+      getOrderDetail({order_id:orderId,languages_id:languagesId}).then(res=>{
+        orderAfterSales.setOrderInfo(res.data || {})
+        orderAfterSales.setOrdersPackageList(res.data?.ordersPackageList || [])
       }).catch(err=>{
         console.log(err);
       }).finally(()=>{
@@ -124,30 +102,26 @@ function AfterSales() {
             <div className="mc-layout">
                 <div className='mc-layout-warp'>
                     <div className="mc-header">
-                    <div className="mc-header-left">
-                        <div className="mc-header-left-secondary" onClick={() => {
-                          navigate("/orders/"+orderId)
-                        }}>
-                        <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
-                        </div>
-                        <div className="mc-header-left-content">
-                        <Flex style={{fontSize: '20px'}} gap={12} align='center'>
-                            <div className='font-w-600'>退货</div>
-                        </Flex>
-                        </div>
-                    </div>
+                      <div className="mc-header-left">
+                          <div className="mc-header-left-secondary" onClick={()=>history.push(`/orders/${orderId}/${languagesId}`)}>
+                          <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                          </div>
+                          <div className="mc-header-left-content">
+                          <Flex style={{fontSize: '20px'}} gap={12} align='center'>
+                              <div className='font-w-600'>退货</div>
+                          </Flex>
+                          </div>
+                      </div>
                     </div>
                     <Flex gap={20}>
                     <Flex className='mc-layout-content' vertical gap={20}>
-                      {orderReturnGoods.shippedProductGroup.map((item,index)=>{
-                        return(
-                          <ReturnGoods groupIndex={index} />
-                        )
+                      {orderAfterSales.ordersPackageList.map((item,index)=>{
+                        return <AfterSalesGoods groupIndex={index} />
                       })}
-                      <ReturnInformation form={form} />
+                      {/* <ReturnInformation form={form} /> */}
                     </Flex>
                     <Flex className='mc-layout-extra' vertical gap={20}>
-                      <ReturnDetails />
+                      {/* <ReturnDetails /> */}
                     </Flex>
                     </Flex>
                     <Divider />
@@ -158,7 +132,6 @@ function AfterSales() {
             </div>
             </Scoped>}
         </>
-        
     );
 }
 

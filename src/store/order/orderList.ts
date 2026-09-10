@@ -55,7 +55,7 @@ class OrderList{
 
     // 条件
     condition = {
-        
+        saleStoreHandles:1
     }
 
     setCondition(res:any){
@@ -92,6 +92,9 @@ class OrderList{
         this.languages = cookie.load("shop_lang") || '2';
         this.orderIds = [];
         this.tagsStatusList = [];
+        this.condition = {
+            saleStoreHandles:1
+        }
     }
 
 }

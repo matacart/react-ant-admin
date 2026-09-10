@@ -25,6 +25,20 @@ export default defineConfig({
   hash: true,
 
   /**
+   * @name 修复 pro-utils getVersion 读取 SSR_MANIFEST 崩溃
+   * @description Umi 的 DefinePlugin 将 process.env 替换为含运行时自引用
+   * `process.env.SSR_MANIFEST` 的对象字面量，浏览器端无 process.env 导致
+   * ProLayout 渲染时抛 TypeError。此处显式覆盖为编译期内联的 undefined。
+   * 触发条件：
+   * 项目中使用了 @umijs/max 4.7.10 库 
+   * 修复方式2：
+   * 降级到 @umijs/max 4.5.1
+   */
+  define: {
+    'process.env.SSR_MANIFEST': 'undefined',
+  },
+
+  /**
    * @name 兼容性设置
    * @description 设置 ie11 不一定完美兼容，需要检查自己使用的所有依赖
    * @doc https://umijs.org/docs/api/config#targets

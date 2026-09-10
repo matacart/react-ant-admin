@@ -3,11 +3,12 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { getCityList, getProvinceList, setOrderShippingAddress } from "@/services/y2/api";
+import { setOrderShippingAddress } from "@/services/y2/api";
+import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
 import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react";
 import { styled } from 'styled-components';
-import orderDelivery from "@/store/order/orderDelivery";
+import orderManualDelivery from "@/store/order/orderManualDelivery";
 
 
 type AddressOption = {
@@ -37,40 +38,40 @@ function DeliveryAddressModal(){
     const [form] = Form.useForm();
 
     const submit = ()=>{
-        form.validateFields().then((values)=>{
-            setLoading(true)
-            setOrderShippingAddress({
-                orderId:orderDelivery.deliveryAddress.order_id,
-                ...values,
-                deliveryName:values.deliveryFirstname+values.deliveryLastname
-            }).then(res=>{
-                // 更新订单数据
-                orderDelivery.setDeliveryAddress({
-                    ...orderDelivery.deliveryAddress,
-                    delivery_telephone: values.deliveryTelephone,
-                    delivery_firstname: values.deliveryFirstname,
-                    delivery_lastname: values.deliveryLastname,
-                    delivery_company: values.deliveryCompany,
-                    delivery_street_address: values.deliveryStreetAddress,
-                    delivery_suburb: values.deliverySuburb,
-                    delivery_postcode: values.deliveryPostcode,
-                    delivery_city: values.deliveryCity,
-                    delivery_city_id: values.deliveryCityId,
-                    delivery_state: values.deliveryState,
-                    delivery_state_id: values.deliveryStateId,
-                    delivery_country_code_3: values.deliveryCountryCode3,
-                    delivery_country_code_2: values.deliveryCountryCode2,
-                    delivery_country: values.deliveryCountry,
-                    delivery_country_id: values.deliveryCountryId,
-                    delivery_name: values.deliveryFirstname + values.deliveryLastname,
-                })
-                setOpen(false);
-            }).catch(error=>{
-                console.log(error)
-            }).finally(()=>{
-                setLoading(false)
-            })
-        })
+        // form.validateFields().then((values)=>{
+        //     setLoading(true)
+        //     setOrderShippingAddress({
+        //         orderId:orderDelivery.deliveryAddress.order_id,
+        //         ...values,
+        //         deliveryName:values.deliveryFirstname+values.deliveryLastname
+        //     }).then(res=>{
+        //         // 更新订单数据
+        //         orderDelivery.setDeliveryAddress({
+        //             ...orderDelivery.deliveryAddress,
+        //             delivery_telephone: values.deliveryTelephone,
+        //             delivery_firstname: values.deliveryFirstname,
+        //             delivery_lastname: values.deliveryLastname,
+        //             delivery_company: values.deliveryCompany,
+        //             delivery_street_address: values.deliveryStreetAddress,
+        //             delivery_suburb: values.deliverySuburb,
+        //             delivery_postcode: values.deliveryPostcode,
+        //             delivery_city: values.deliveryCity,
+        //             delivery_city_id: values.deliveryCityId,
+        //             delivery_state: values.deliveryState,
+        //             delivery_state_id: values.deliveryStateId,
+        //             delivery_country_code_3: values.deliveryCountryCode3,
+        //             delivery_country_code_2: values.deliveryCountryCode2,
+        //             delivery_country: values.deliveryCountry,
+        //             delivery_country_id: values.deliveryCountryId,
+        //             delivery_name: values.deliveryFirstname + values.deliveryLastname,
+        //         })
+        //         setOpen(false);
+        //     }).catch(error=>{
+        //         console.log(error)
+        //     }).finally(()=>{
+        //         setLoading(false)
+        //     })
+        // })
     }
     const cancel = () => {
         setOpen(false);
@@ -85,23 +86,23 @@ function DeliveryAddressModal(){
                 iso_code_3:item.iso_code_3,
             }
         })
-        orderDelivery.deliveryAddress.delivery_country_id && getProvinceList(orderDelivery.deliveryAddress.delivery_country_id).then(res=>{
-            setProvinceOptions(res.data.map((item:any)=>{
-                return {
-                    value: item.id,
-                    label: item.name,
-                }
-            }))
-        })
-        orderDelivery.deliveryAddress.delivery_state_id && getCityList(orderDelivery.deliveryAddress.delivery_state_id).then(res=>{
-            setCityOptions(res.data.map((item:any)=>{
-                return {
-                    value: item.id,
-                    label: item.name,
-                }
-            }))
-        })
-        setCountryOptions(newCountry)
+        // orderDelivery.deliveryAddress.delivery_country_id && getProvinceList(orderDelivery.deliveryAddress.delivery_country_id).then(res=>{
+        //     setProvinceOptions(res.data.map((item:any)=>{
+        //         return {
+        //             value: item.id,
+        //             label: item.name,
+        //         }
+        //     }))
+        // })
+        // orderDelivery.deliveryAddress.delivery_state_id && getCityList(orderDelivery.deliveryAddress.delivery_state_id).then(res=>{
+        //     setCityOptions(res.data.map((item:any)=>{
+        //         return {
+        //             value: item.id,
+        //             label: item.name,
+        //         }
+        //     }))
+        // })
+        // setCountryOptions(newCountry)
     },[])
 
     return (
@@ -126,21 +127,21 @@ function DeliveryAddressModal(){
                 )}
             >
                 <Form form={form} layout="vertical" className="my-form" initialValues={{
-                    deliveryTelephone:orderDelivery.deliveryAddress.delivery_telephone,
-                    deliveryFirstname:orderDelivery.deliveryAddress.delivery_firstname,
-                    deliveryLastname:orderDelivery.deliveryAddress.delivery_lastname,
-                    deliveryCompany:orderDelivery.deliveryAddress.delivery_company,
-                    deliveryStreetAddress:orderDelivery.deliveryAddress.delivery_street_address,
-                    deliverySuburb:orderDelivery.deliveryAddress.delivery_suburb,
-                    deliveryPostcode:orderDelivery.deliveryAddress.delivery_postcode,
-                    deliveryCity:orderDelivery.deliveryAddress.delivery_city,
-                    deliveryCityId:orderDelivery.deliveryAddress.delivery_city_id,
-                    deliveryState:orderDelivery.deliveryAddress.delivery_state,
-                    deliveryStateId:orderDelivery.deliveryAddress.delivery_state_id,
-                    deliveryCountryCode3:orderDelivery.deliveryAddress.delivery_country_code_3,
-                    deliveryCountryCode2:orderDelivery.deliveryAddress.delivery_country_code_2,
-                    deliveryCountry:orderDelivery.deliveryAddress.delivery_country,
-                    deliveryCountryId:orderDelivery.deliveryAddress.delivery_country_id
+                    // deliveryTelephone:orderDelivery.deliveryAddress.delivery_telephone,
+                    // deliveryFirstname:orderDelivery.deliveryAddress.delivery_firstname,
+                    // deliveryLastname:orderDelivery.deliveryAddress.delivery_lastname,
+                    // deliveryCompany:orderDelivery.deliveryAddress.delivery_company,
+                    // deliveryStreetAddress:orderDelivery.deliveryAddress.delivery_street_address,
+                    // deliverySuburb:orderDelivery.deliveryAddress.delivery_suburb,
+                    // deliveryPostcode:orderDelivery.deliveryAddress.delivery_postcode,
+                    // deliveryCity:orderDelivery.deliveryAddress.delivery_city,
+                    // deliveryCityId:orderDelivery.deliveryAddress.delivery_city_id,
+                    // deliveryState:orderDelivery.deliveryAddress.delivery_state,
+                    // deliveryStateId:orderDelivery.deliveryAddress.delivery_state_id,
+                    // deliveryCountryCode3:orderDelivery.deliveryAddress.delivery_country_code_3,
+                    // deliveryCountryCode2:orderDelivery.deliveryAddress.delivery_country_code_2,
+                    // deliveryCountry:orderDelivery.deliveryAddress.delivery_country,
+                    // deliveryCountryId:orderDelivery.deliveryAddress.delivery_country_id
                 }}>
                     <Form.Item
                         label="收货人电话号码"

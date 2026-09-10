@@ -1,7 +1,7 @@
 import { Card, Checkbox, Divider, Flex, Form, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import orderDelivery from "@/store/order/orderDelivery";
+import orderManualDelivery from "@/store/order/orderManualDelivery";
 
 function Abstract() {
 
@@ -23,10 +23,10 @@ function Abstract() {
                 <Form>
                     <div className="font-w-500" style={{marginBottom:"8px"}}>通知</div>
                     <Checkbox onChange={(e)=>{
-                        orderDelivery.setDelivery({
-                            ...orderDelivery.delivery,
-                            customerNotified:e.target.checked?"1":"0"
-                        })
+                        // orderDelivery.setDelivery({
+                        //     ...orderDelivery.delivery,
+                        //     customerNotified:e.target.checked?"1":"0"
+                        // })
                     }}>向客户发送通知</Checkbox>
                 </Form>
             </Card>

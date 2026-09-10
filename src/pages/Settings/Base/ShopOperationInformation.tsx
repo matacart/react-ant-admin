@@ -1,14 +1,11 @@
 import InputSearch from "@/components/Search/InputSearch";
-import { getCityList, getProvinceList } from "@/services/y2/api";
+import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
 import baseInfoStore from "@/store/setUp/baseInfoStore";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { parse } from 'url';
-import { set } from 'lodash';
-import { select } from "react-cookies";
 import { useForm } from "antd/es/form/Form";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import DefaultButton from "@/components/Button/DefaultButton";

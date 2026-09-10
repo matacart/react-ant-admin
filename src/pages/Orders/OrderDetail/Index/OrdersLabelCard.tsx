@@ -5,7 +5,7 @@ import { useIntl } from "@umijs/max";
 import TagAutoComplete from "@/components/AutoComplete/TagAutoComplete";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "@/components/Icons/Icons";
-import ManagementLabelModal from "./Modal/ManagementLabelModal";
+import ManagementLabelModal from "../Modal/ManagementLabelModal";
 import { addOrderTag, removeOrderTag } from "@/services/y2/api";
 import order from "@/store/order/order";
 
@@ -22,7 +22,7 @@ function OrdersLabelCard() {
     // 添加标签
     const addTag = (value:string)=>{
         addOrderTag({
-            orderId:order.orderInfo.order_id,
+            orderId:order.orderInfo.orderSeq,
             tagName:value
         }).then(res=>{
             setTags([...tags,{
@@ -38,7 +38,7 @@ function OrdersLabelCard() {
         const prevTags = [...tags]; // 保存当前状态用于回滚
         await setTags(prevTags.filter(tag => tag.value !== value)); // 先乐观更新
         removeOrderTag({
-            orderId:order.orderInfo.order_id,
+            orderId:order.orderInfo.orderSeq,
             tagName:value
         }).then(res=>{
         }).catch(error=>{
@@ -54,7 +54,7 @@ function OrdersLabelCard() {
             }
         })
         setTags(newTags ?? [])
-    },[])
+    },[order.orderInfo.tags])
 
     return (
         <Scoped>
@@ -105,4 +105,4 @@ const Scoped = styled.div`
     }
 `
 
-export default observer( OrdersLabelCard);
+export default observer(OrdersLabelCard);

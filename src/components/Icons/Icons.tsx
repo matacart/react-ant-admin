@@ -230,7 +230,7 @@ const SuccessSvg = () => (
 )
 
 const SuccessSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" strokeWidth="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" strokeOpacity="0.3" strokeWidth="2"></circle><path d="M9.5 13L13 17L20 11" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10608" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
 )
 
 const ImageUploadSvg = () => (
@@ -239,17 +239,17 @@ const ImageUploadSvg = () => (
 
 
 const PauseSecondSvg = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" strokeOpacity="0.3" strokeWidth="2"></circle><rect x="10.5" y="9" width="2" height="10" fill="#FFCA3D"></rect><rect x="15.5" y="9" width="2" height="10" fill="#FFCA3D"></rect></svg>
 )
 
 const PendingSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle><circle cx="14" cy="14" r="7.1" stroke="#FE9E0F" strokeWidth="1.8"></circle><path d="M14.1818 10.0908V14.1817L17.5909 16.2272" stroke="#FE9E0F" strokeWidth="1.8"></path></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><circle cx="14" cy="14" r="11" stroke="#FE9E0F" strokeOpacity="0.3" strokeWidth="2"></circle><circle cx="14" cy="14" r="7.1" stroke="#FE9E0F" strokeWidth="1.8"></circle><path d="M14.1818 10.0908V14.1817L17.5909 16.2272" stroke="#FE9E0F" strokeWidth="1.8"></path></svg>
 )
 const ReturnSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><path d="M14.5 14L9 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M18 14L16 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M21.5 14L19.5 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#FE9E0F" strokeWidth="2"></path><circle cx="14" cy="14" r="11" stroke="#FE9E0F" stroke-opacity="0.3" strokeWidth="2"></circle></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#FFEDC9"></circle><path d="M14.5 14L9 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M18 14L16 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M21.5 14L19.5 14" stroke="#FE9E0F" strokeWidth="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#FE9E0F" strokeWidth="2"></path><circle cx="14" cy="14" r="11" stroke="#FE9E0F" strokeOpacity="0.3" strokeWidth="2"></circle></svg>
 )
 const ReturnCompletedSecondSvg = () => (
-  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" stroke-opacity="0.3" strokeWidth="2"></circle><path d="M20 14L9 14" stroke="#369F87" strokeWidth="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10802" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
+  <svg width="1em" height="1em" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="14" fill="#D9F7EC"></circle><circle cx="14" cy="14" r="12" fill="url(#paint0_linear)"></circle><circle cx="14" cy="14" r="11" stroke="#369F87" strokeOpacity="0.3" strokeWidth="2"></circle><path d="M20 14L9 14" stroke="#369F87" strokeWidth="2"></path><path d="M13.2426 9.75736L9 14L13.2426 18.2426" stroke="#369F87" strokeWidth="2"></path><defs><linearGradient id="paint0_linear_11975_10802" x1="20.8182" y1="24.0909" x2="5.81818" y2="5.27273" gradientUnits="userSpaceOnUse"><stop stopColor="#46917F" stopOpacity="0.08"></stop><stop offset="1" stopColor="#46917F" stopOpacity="0"></stop></linearGradient></defs></svg>
 )
 
 const BackSvg = () => (

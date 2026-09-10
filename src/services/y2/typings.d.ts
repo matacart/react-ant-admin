@@ -134,6 +134,15 @@ declare namespace ApiAbandonedOrder {
   }
 }
 
+declare namespace ApiAppstore {
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+}
+
 
 declare namespace ApiStore {
   type selectTags = {

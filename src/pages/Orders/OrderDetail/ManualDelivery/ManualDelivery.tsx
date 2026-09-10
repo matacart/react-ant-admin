@@ -11,8 +11,9 @@ import DeliveryAddress from './DeliveryAddress';
 import Abstract from './Abstract';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LogisticsTrackingInformation from './LogisticsTrackingInformation';
-import { getOrderDetail, setOrderShipped } from '@/services/y2/api';
-import orderDelivery from '@/store/order/orderDelivery';
+import { setOrderShipped } from '@/services/y2/api';
+import { getOrderDetail } from '@/services/y2/apiStore';
+import orderManualDelivery from '@/store/order/orderManualDelivery';
 
 function ManualDelivery() {
 
@@ -22,7 +23,7 @@ function ManualDelivery() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const { orderId } = useParams();
+    const { orderId="",fulfillmentId="",languagesId="" } = useParams();
 
     const [form] = Form.useForm();
 
@@ -40,59 +41,54 @@ function ManualDelivery() {
 
     // 验证通过 -- 
     const submit = async () => {
-        if(await formValidation()){
-            setLoading(true)
-            const ordersProductList = orderDelivery.deliveryProductList.map(item=>{
-                return {
-                    ordersProductId:item.id,
-                    quantityShipped:item.quantity
-                }
-            })
+        // if(await formValidation()){
+        //     setLoading(true)
+        //     const ordersProductList = orderDelivery.deliveryProductList.map(item=>{
+        //         return {
+        //             ordersProductId:item.id,
+        //             quantityShipped:item.quantity
+        //         }
+        //     })
 
-            setOrderShipped({
-                orderId:orderId,
-                groupId:orderDelivery.deliveryProductList[0].group_id,
-                ordersProductList:JSON.stringify(ordersProductList),
-                ...orderDelivery.delivery,
-                deliveryAddressId:orderDelivery.deliveryAddress.delivery_address_id,
-                deliveryName:orderDelivery.deliveryAddress.delivery_name,
-                deliveryFirstname:orderDelivery.deliveryAddress.delivery_firstname,
-                deliveryLastname:orderDelivery.deliveryAddress.delivery_lastname,
-                deliveryCompany:orderDelivery.deliveryAddress.delivery_company,
-                deliveryStreetAddress:orderDelivery.deliveryAddress.delivery_street_address,
-                deliverySuburb:orderDelivery.deliveryAddress.delivery_suburb,
-                deliveryPostcode:orderDelivery.deliveryAddress.delivery_postcode,
-                deliveryCity:orderDelivery.deliveryAddress.delivery_city,
-                deliveryCityId:orderDelivery.deliveryAddress.delivery_city_id,
-                deliveryState:orderDelivery.deliveryAddress.delivery_state,
-                deliveryStateId:orderDelivery.deliveryAddress.delivery_state_id,
-
-                deliveryCountry:orderDelivery.deliveryAddress.delivery_country,
-                deliveryCountryId:orderDelivery.deliveryAddress.delivery_country_id,
-
-                deliveryCountryCode2:orderDelivery.deliveryAddress.delivery_country_code_2,
-                deliveryCountryCode3:orderDelivery.deliveryAddress.delivery_country_code_3,
-                deliveryAddressFormatId:orderDelivery.deliveryAddress.delivery_address_format_id,
-            }).then(res=>{
-                history.push(`/orders/${orderId}`)
-            }).catch(err=>{
-            }).finally(()=>{
-                setLoading(false)
-            })
-        }
+            // setOrderShipped({
+            //     orderId:orderId,
+            //     groupId:orderDelivery.deliveryProductList[0].group_id,
+            //     ordersProductList:JSON.stringify(ordersProductList),
+            //     ...orderDelivery.delivery,
+            //     deliveryAddressId:orderDelivery.deliveryAddress.delivery_address_id,
+            //     deliveryName:orderDelivery.deliveryAddress.delivery_name,
+            //     deliveryFirstname:orderDelivery.deliveryAddress.delivery_firstname,
+            //     deliveryLastname:orderDelivery.deliveryAddress.delivery_lastname,
+            //     deliveryCompany:orderDelivery.deliveryAddress.delivery_company,
+            //     deliveryStreetAddress:orderDelivery.deliveryAddress.delivery_street_address,
+            //     deliverySuburb:orderDelivery.deliveryAddress.delivery_suburb,
+            //     deliveryPostcode:orderDelivery.deliveryAddress.delivery_postcode,
+            //     deliveryCity:orderDelivery.deliveryAddress.delivery_city,
+            //     deliveryCityId:orderDelivery.deliveryAddress.delivery_city_id,
+            //     deliveryState:orderDelivery.deliveryAddress.delivery_state,
+            //     deliveryStateId:orderDelivery.deliveryAddress.delivery_state_id,
+            //     deliveryCountry:orderDelivery.deliveryAddress.delivery_country,
+            //     deliveryCountryId:orderDelivery.deliveryAddress.delivery_country_id,
+            //     deliveryCountryCode2:orderDelivery.deliveryAddress.delivery_country_code_2,
+            //     deliveryCountryCode3:orderDelivery.deliveryAddress.delivery_country_code_3,
+            //     deliveryAddressFormatId:orderDelivery.deliveryAddress.delivery_address_format_id,
+            // }).then(res=>{
+            //     history.push(`/orders/${orderId}`)
+            // }).catch(err=>{
+            // }).finally(()=>{
+            //     setLoading(false)
+            // })
+        // }
     }
 
     useEffect(() => {
-        // 清空状态
-        orderDelivery.reset()
-        getOrderDetail(orderId).then(res=>{
-            if(res.data && JSON.stringify(res.data) != "[]"){
-                orderDelivery.setDeliveryAddress(res.data.order_info)
-                const newDeliveryProduct = res.data.order_products.filter((item:any)=>item.remaining_quantity > 0).map((item:any) => ({
-                    ...item,
-                    quantity: item.remaining_quantity
-                }))
-                orderDelivery.setDeliveryProductList(newDeliveryProduct)
+        getOrderDetail({
+            order_id:orderId,
+            languages_id:languagesId,
+        }).then(res=>{
+            if(res.code == 0){
+                const fulfillmentItem = res.data.fulfillmentOrderList.find((item:any)=>item.fulfillmentOrder?.fulfillmentOrderSeq == fulfillmentId)
+                orderManualDelivery.setFulfillmentItem(fulfillmentItem)
             }
         }).catch(err=>{
             console.log(err);
@@ -107,18 +103,16 @@ function ManualDelivery() {
             <div className="mc-layout">
                 <div className='mc-layout-warp'>
                     <div className="mc-header">
-                    <div className="mc-header-left">
-                        <div className="mc-header-left-secondary" onClick={() => {
-                        history.go(-1)
-                        }}>
-                        <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                        <div className="mc-header-left">
+                            <div className="mc-header-left-secondary" onClick={() => history.push(`/orders/${orderId}/${languagesId}`)}>
+                                <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                            </div>
+                            <div className="mc-header-left-content">
+                                <Flex style={{fontSize: '20px'}} gap={12} align='center'>
+                                    <div className='font-w-600'>手动发货</div>
+                                </Flex>
+                            </div>
                         </div>
-                        <div className="mc-header-left-content">
-                        <Flex style={{fontSize: '20px'}} gap={12} align='center'>
-                            <div className='font-w-600'>手动发货</div>
-                        </Flex>
-                        </div>
-                    </div>
                     </div>
                     <Flex gap={20}>
                         <Flex className='mc-layout-content' vertical gap={20}>
@@ -126,8 +120,8 @@ function ManualDelivery() {
                             <LogisticsTrackingInformation form={form} />
                         </Flex>
                         <Flex className='mc-layout-extra' vertical gap={20}>
-                            <DeliveryAddress />
-                            <Abstract />
+                            {/* <DeliveryAddress />
+                            <Abstract /> */}
                         </Flex>
                     </Flex>
                     <Divider />

@@ -8,7 +8,7 @@ import MyDropdown from "@/components/Dropdown/MyDropdown";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import StatementModalSecondary from "@/components/Modal/StatementModalSecondary";
-import PackageTrackingSecondModal from "./Modal/PackageTrackingSecondModal";
+import PackageTrackingSecondModal from "../Modal/PackageTrackingSecondModal";
 import { setMarkProductAsRefunded } from "@/services/y2/api";
 import { history } from "@umijs/max";
 

@@ -1,4 +1,5 @@
 export default {
+    'order.orderDetail.copySuccess': '复制成功',
     'order.orderDetail.location': '发货地址',
     'order.orderDetail.defaultlocation': '默认发货地址',
     'order.orderDetail.subtotal': '小计',

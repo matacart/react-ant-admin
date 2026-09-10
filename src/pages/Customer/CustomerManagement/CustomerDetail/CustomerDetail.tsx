@@ -7,8 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { getCustomer, getOrderDetail } from '@/services/y2/api';
-import orderReturnGoods from '@/store/order/orderReturnGoods';
+import { getCustomer } from '@/services/y2/api';
 import { useParams,useNavigate } from 'react-router-dom';
 import DefaultButton from '@/components/Button/DefaultButton';
 import ButtonIcon from '@/components/Button/ButtonSvg';
@@ -85,7 +84,7 @@ function CustomerDetail() {
                         </div>
                         <div className="mc-header-left-content">
                             <Flex style={{fontSize: '20px'}} gap={12} align='center'>
-                                <div className='font-w-600'>{cousomer.cousomerInfo.id}</div>
+                                {/* <div className='font-w-600'>{cousomer.cousomerInfo.id}</div> */}
                             </Flex>
                         </div>
                     </div>

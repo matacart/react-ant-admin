@@ -1,7 +1,7 @@
 import SimpleCard from "@/components/Card/SimpleCard";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import orderDelivery from "@/store/order/orderDelivery";
+import orderManualDelivery from "@/store/order/orderManualDelivery";
 import { Form, Row, Col, Flex, Card } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -19,11 +19,10 @@ function LogisticsTrackingInformation({form}:{form:any}){
                 label:item.courier_name
             }
         })
-
-        setLogistics([...newLogistics,{
-            value:'0',
-            label:"其它"
-        }])
+        // setLogistics([...newLogistics,{
+        //     value:'0',
+        //     label:"其它"
+        // }])
     },[])
 
     return (
@@ -37,10 +36,10 @@ function LogisticsTrackingInformation({form}:{form:any}){
                             <Col span={12}>
                                 <Form.Item label="运单号">
                                     <MyInput style={{height:"36px"}} placeholder="运单号" suffix={<div className="color-356DFF">匹配</div>} onChange={(e:any)=>{
-                                        orderDelivery.setDelivery({
-                                            ...orderDelivery.delivery,
-                                            shippingNo:e.target.value,
-                                        })
+                                        // orderDelivery.setDelivery({
+                                        //     ...orderDelivery.delivery,
+                                        //     shippingNo:e.target.value,
+                                        // })
                                     }} />
                                 </Form.Item>
                             </Col>
@@ -50,10 +49,10 @@ function LogisticsTrackingInformation({form}:{form:any}){
                                     value={logisticsValue}
                                     options={logistics} style={{height:"36px"}} onChange={(value:any)=>{
                                         setLogisticsValue(value)
-                                        orderDelivery.setDelivery({
-                                            ...orderDelivery.delivery,
-                                            shippingId:value,
-                                        })
+                                        // orderDelivery.setDelivery({
+                                        //     ...orderDelivery.delivery,
+                                        //     shippingId:value,
+                                        // })
                                     }} />
                                     {logisticsValue !== "0" && <div style={{marginTop:"8px"}} className="font-12 color-7A8499">没有找到服务商？<span className="color-356DFF cursor-pointer" onClick={()=>{
                                         setLogisticsValue("0")
@@ -65,10 +64,10 @@ function LogisticsTrackingInformation({form}:{form:any}){
                             <Col span={12}>
                                 <Form.Item label="公司名称" name="shippingName">
                                     <MyInput style={{height:"36px"}} placeholder="请输入公司名称" onChange={(e:any)=>{
-                                        orderDelivery.setDelivery({
-                                            ...orderDelivery.delivery,
-                                            shippingName:e.target.value,
-                                        })
+                                        // orderDelivery.setDelivery({
+                                        //     ...orderDelivery.delivery,
+                                        //     shippingName:e.target.value,
+                                        // })
                                     }} />
                                 </Form.Item>
                             </Col>
@@ -80,10 +79,10 @@ function LogisticsTrackingInformation({form}:{form:any}){
                                     }
                                 ]}>
                                     <MyInput style={{height:"36px"}} placeholder="http://" onChange={(e:any)=>{
-                                        orderDelivery.setDelivery({
-                                            ...orderDelivery.delivery,
-                                            shippingUrl:e.target.value,
-                                        })
+                                        // orderDelivery.setDelivery({
+                                        //     ...orderDelivery.delivery,
+                                        //     shippingUrl:e.target.value,
+                                        // })
                                     }} />
                                 </Form.Item>
                             </Col>

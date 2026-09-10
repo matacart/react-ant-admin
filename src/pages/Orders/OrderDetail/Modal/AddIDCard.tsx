@@ -21,7 +21,7 @@ function AddIDCard(){
         form.validateFields().then((values)=>{
             setLoading(true)
             setOrderIdNumber({
-                orderId: order.orderInfo.order_id,
+                orderId: order.orderInfo.orderSeq,
                 idNumber: values.IDCard
             }).then(()=>{
                 order.triggerRefresh()
@@ -40,10 +40,13 @@ function AddIDCard(){
 
     return (
         <>
-            {order.orderInfo.customer_id_number ? <span onClick={()=>{
+            {order.orderInfo.receiverInfo?.receiverCertificatesNo ? <span onClick={()=>{
+                form.setFieldsValue({
+                    IDCard: order.orderInfo.receiverInfo?.receiverCertificatesNo
+                })
                 setOpen(true)
             }} className="color-356DFF cursor-pointer">编辑</span>:<a onClick={()=>setOpen(true)} className="color-356DFF">添加护照号/身份证号</a>}
-            <Modal title={<div>{order.orderInfo.customer_id_number ? "编辑":"添加"}护照号/身份证号</div>} width={620} centered open={open} onOk={submit} onCancel={cancel} 
+            <Modal title={<div>{order.orderInfo.receiverInfo?.receiverCertificatesNo ? "编辑":"添加"}护照号/身份证号</div>} width={620} centered open={open} onOk={submit} onCancel={cancel} 
                 footer = {(_, { OkBtn, CancelBtn }) => (
                     <Flex justify="end">
                         <Flex gap={12}>
@@ -55,7 +58,8 @@ function AddIDCard(){
             >
                 <Form form={form} layout="vertical" style={{margin:"20px 0 40px"}}>
                     <Form.Item required={false} label="护照号/身份证号" name="IDCard" rules={[
-                        { required: true, message: '请输入护照号/身份证号' }
+                        { required: true, message: '请输入护照号/身份证号' },
+                        { pattern: /^[a-zA-Z0-9]{6,18}$/, message: '请输入有效的护照号或身份证号'}
                     ]}>
                         <MyInput style={{height:"36px"}} placeholder="请输入护照号/身份证号" />
                     </Form.Item>

@@ -12,12 +12,7 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
 
   const intl = useIntl();
 
-  const [filterCondition,setFilterCondition] = useState(
-    {
-      id:id,
-      languagesId: '2',
-    }
-  )
+  const [filterCondition,setFilterCondition] = useState({id:id})
 
   // const handleRemoveCondition = (conditionId: string) => {
   //   const updatedConditions = filterCondition.filter(condition => condition.id !== conditionId);
@@ -41,10 +36,7 @@ const FilteredOrdersComponent = observer(({ id, activeKey }: { id: string; activ
   };
 
   useEffect(()=>{
-    setFilterCondition({
-      id:id,
-      languagesId: orderList.languages
-    })
+    setFilterCondition({id:id,})
   },[orderList.tagsStatusList,orderList.languages])
 
   return (

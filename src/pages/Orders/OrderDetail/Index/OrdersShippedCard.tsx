@@ -1,5 +1,5 @@
 import { App, Card, Col, Divider, Flex, Form, notification, Row, Tooltip, Typography } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { ClockCircleOutlined, EllipsisOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useIntl } from "@umijs/max";
@@ -8,11 +8,12 @@ import copy from "copy-to-clipboard";
 import order from "@/store/order/order";
 import dayjs from 'dayjs';
 import MyDropdown from "@/components/Dropdown/MyDropdown";
-import PackageTrackingModal from "./PackageTrackingModal";
+import PackageTrackingModal from "../Modal/PackageTrackingModal";
 import StatementModalSecondary from "@/components/Modal/StatementModalSecondary";
-import CancelShippingModal from "./Modal/CancelShippingModal";
+import CancelShippingModal from "../Modal/CancelShippingModal";
 import { exportOrderTask } from "@/services/y2/api";
 import { history } from "@umijs/max";
+import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 
 const { Text,Link } = Typography;
 
@@ -21,21 +22,23 @@ function OrdersShippedCard({index}:{index:number}) {
   const { message } = App.useApp();
 
   const intl = useIntl();
+  
+  const symbolLeft = getSymbolLeft();
 
-  const shippedInfo  = order.shippedProductsGroup[index]
+  const ordersPackage  = order.orderInfo.ordersPackageList[index]
 
-  const address = [
-    shippedInfo.shipment.delivery_company,
-    shippedInfo.shipment.delivery_suburb,
-    shippedInfo.shipment.delivery_street_address,
-    shippedInfo.shipment.delivery_city,
-    shippedInfo.shipment.delivery_state,
-    shippedInfo.shipment.delivery_postcode,
-    shippedInfo.shipment.delivery_country
-  ]
+  // const address = [
+  //   shippedInfo.shipment.delivery_company,
+  //   shippedInfo.shipment.delivery_suburb,
+  //   shippedInfo.shipment.delivery_street_address,
+  //   shippedInfo.shipment.delivery_city,
+  //   shippedInfo.shipment.delivery_state,
+  //   shippedInfo.shipment.delivery_postcode,
+  //   shippedInfo.shipment.delivery_country
+  // ]
 
   useEffect(()=>{
-    console.log(order.shippedProductsGroup[index]);
+    // console.log(order.shippedProductsGroup[index]);
   },[])
 
 
@@ -45,10 +48,10 @@ function OrdersShippedCard({index}:{index:number}) {
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
           <Flex align="center" gap={10}>
             <SuccessSecondIcon className="font-28" />
-            <span className="font-w-500">{"已发货"}（{shippedInfo.shipment.shipped_quantity}）#{order.orderInfo.order_sn}-F{index+1}</span>
+            <span className="font-w-500">{"已发货"}（{ ordersPackage.itemGroupList[0]?.itemList.reduce((acc,cur)=>Number(acc)+Number(cur.productNum),0)}）#{ordersPackage.appPackageSeq}</span>
             <Tooltip title="复制">
                 <span style={{cursor:"pointer"}} onClick={()=>{
-                  copy(order.orderInfo.order_sn+`-F1`)
+                  copy(ordersPackage.appPackageSeq)
                   message.success('复制成功')
                 }}><CopyIcon className='color-7A8499 cursor-pointer' /></span>
             </Tooltip>
@@ -61,42 +64,42 @@ function OrdersShippedCard({index}:{index:number}) {
             menu={{
               items:[
                 // 编辑跟踪信息
-                shippedInfo.shipment.shipping_no !== "" && {
-                  key: "3", label: (
-                    <PackageTrackingModal shipping={shippedInfo} />
-                  )
-                },
-                {
-                    key: "1", label: (
-                        <div onClick={()=>{
-                          exportOrderTask({
-                            languages_id:order.orderInfo.languages_id,
-                            taskType:'shipping_slips',
-                            orderList:JSON.stringify([order.orderInfo.order_id]),
-                            range_type:3,
-                            condition:JSON.stringify({
-                              shipping_sn:shippedInfo.shipment.shipping_no
-                            }),
-                          }).then(res=>{
-                            notification.info({
-                              style:{width:"400px",marginBottom:"12px"},
-                              message: '正在导出',
-                              description: <div className='color-474F5E'>导出可能需要较长时间，请耐心等待，您亦可前往<Text underline className="color-356DFF cursor-pointer" onClick={()=>{
-                                  history.push("/analyse/batch")
-                              }}><span>批量处理进度</span></Text>页面查看进度。</div>,
-                            })
-                            console.log(res)
-                          }).catch(err=>{
-                            console.log(err)
-                          })
-                        }}>打印出货单</div>
-                    )
-                },
-                {
-                    key: "2", label: (
-                      <CancelShippingModal shipment={shippedInfo.shipment} />
-                    )
-                },
+                // shippedInfo.shipment.shipping_no !== "" && {
+                //   key: "3", label: (
+                //     <PackageTrackingModal shipping={shippedInfo} />
+                //   )
+                // },
+                // {
+                //     key: "1", label: (
+                //         <div onClick={()=>{
+                //           exportOrderTask({
+                //             languages_id:order.orderInfo.languages_id,
+                //             taskType:'shipping_slips',
+                //             orderList:JSON.stringify([order.orderInfo.order_id]),
+                //             range_type:3,
+                //             condition:JSON.stringify({
+                //               shipping_sn:shippedInfo.shipment.shipping_no
+                //             }),
+                //           }).then(res=>{
+                //             notification.info({
+                //               style:{width:"400px",marginBottom:"12px"},
+                //               message: '正在导出',
+                //               description: <div className='color-474F5E'>导出可能需要较长时间，请耐心等待，您亦可前往<Text underline className="color-356DFF cursor-pointer" onClick={()=>{
+                //                   history.push("/analyse/batch")
+                //               }}><span>批量处理进度</span></Text>页面查看进度。</div>,
+                //             })
+                //             console.log(res)
+                //           }).catch(err=>{
+                //             console.log(err)
+                //           })
+                //         }}>打印出货单</div>
+                //     )
+                // },
+                // {
+                //     key: "2", label: (
+                //       <CancelShippingModal shipment={shippedInfo.shipment} />
+                //     )
+                // },
               ]
             }} />
         </Flex>
@@ -104,36 +107,43 @@ function OrdersShippedCard({index}:{index:number}) {
     >
       <Form>
         <div className="font-w-400">
-          <div style={{ fontSize: "14px", color: "#7A8499",marginBottom:"4px" }} >{intl.formatMessage({ id: "order.orderDetail.location" })}</div>
-          <div style={{ fontSize: "14px", color: "#242833",marginBottom:"16px" }} >{intl.formatMessage({ id: "order.orderDetail.defaultlocation" })}</div>
-          <div style={{ fontSize: "14px", color: "#7A8499",marginBottom:"4px" }} >{"已发货"}</div>
-          <div style={{ fontSize: "14px", color: "#242833",marginBottom:"20px" }} >{""+dayjs(shippedInfo.shipment.shipment_time*1000).format("YYYY-MM-DD")}</div>
-          {/* 处理 productinfo 为 undefined 的情况 */}
-          {shippedInfo.product?.map((item,index)=>{
-
-            console.log(item)
+          <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
+            <Flex gap={6}>
+              <EnvironmentOutlined className="color-7A8499" />
+              <div className="color-7A8499">{"地点"}</div>
+            </Flex>
+            <div className="color-242833">{"默认地点"}</div>
+          </Flex>
+          <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
+            <Flex gap={6}>
+              <ClockCircleOutlined className="color-7A8499" />
+              <div className="color-7A8499">{"已发货"}</div>
+            </Flex>
+            <div className="color-242833">{dayjs(ordersPackage.sendTime).format("YYYY-MM-DD")}</div>
+          </Flex>
+          {ordersPackage.itemGroupList[0]?.itemList?.map((item,index)=>{
             return(
               <Row key={index} style={{ marginBottom: "20px" }}>
                 <Col span={14}>
                   <Flex style={{paddingRight:"40px"}}>
-                    <img src={item.product_image?item.product_image+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.product_name} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
+                    <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
                     <Flex vertical align="flex-start" justify="flex-start">
-                      <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px" }} className="font-w-500">{item.product_name}</div>
+                      <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px" }} className="font-w-500">{item.title}</div>
                       <div style={{ fontSize: "14px", color: "#474F5E" }}>{
-                        item.attributes?.map((item:any)=>item.product_option+" · "+item.product_option_values).join("/")
+                        item.attributes?.map((item:any)=>item.attributeValue??"").join("/")
                       }</div>
-                      <div style={{ fontSize: "14px", color: "#474F5E" }}>model : {item.product_model}</div>
+                      <div style={{ fontSize: "14px", color: "#474F5E" }}>model : {}</div>
                     </Flex>
                   </Flex>
                 </Col>
                 <Col span={5}>
                   <Flex style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>US${item.product_price} X {item.quantity_shipped}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice)} X {item.productNum}</span>
                   </Flex>
                 </Col>
                 <Col span={5}>
                   <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>US${(parseInt(item.product_price+"")*parseInt(item.quantity_shipped+"")).toFixed(4)}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount))}</span>
                   </Flex>
                 </Col>
               </Row>
@@ -144,7 +154,7 @@ function OrdersShippedCard({index}:{index:number}) {
       <Divider />
       <Form>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          {shippedInfo.shipment.shipping_no == "" ?<>
+          {/* {shippedInfo.shipment.shipping_no == "" ?<>
             <div style={{ fontSize: "14px", color: "#7A8499" }}>{intl.formatMessage({ id: "order.detail.tracking" })}: 无</div>
             <PackageTrackingModal shipping={shippedInfo} />
           </>:<Flex>
@@ -178,7 +188,7 @@ function OrdersShippedCard({index}:{index:number}) {
                   </Flex>
                 </>
               } />
-          </Flex>}
+          </Flex>} */}
         </div>
       </Form>
     </Card>

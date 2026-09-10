@@ -2,7 +2,8 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { addAddress, getCityList, getProvinceList, setAddressEdit } from "@/services/y2/api";
+import { addAddress,  setAddressEdit } from "@/services/y2/api";
+import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
 import orderDraft from "@/store/order/orderDraft";
 import { Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react";

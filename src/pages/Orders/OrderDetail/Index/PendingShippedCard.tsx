@@ -1,21 +1,22 @@
 import { Card, Col, Divider, Flex, Form, Row } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { EllipsisOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { PendingSecondIcon, RiseIcon, SuccessSecondIcon, UnfoldIcon } from "@/components/Icons/Icons";
 import { history } from '@umijs/max';
-import order from "@/store/order/order";
+import order, { FulfillmentItemType } from "@/store/order/order";
 import MyDropdown from "@/components/Dropdown/MyDropdown";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyButton from "@/components/Button/MyButton";
-import SplitPackage from "./Modal/SplitPackage";
-import SuspendDelivery from "./Modal/SuspendDelivery";
+import SplitPackage from "../Modal/SplitPackage";
+import SuspendDelivery from "../Modal/SuspendDelivery";
 import { currencyPrecision, getSymbolLeft } from "@/utils/common";
 
 
 function PendingShippedCard({groupIndex}:{groupIndex:number}) {
 
   const symbolLeft = getSymbolLeft();
-  const shippedInfo  = order.remainingProductGroup[groupIndex]
+
+  const fulfillment  = order.fulfillmentOrderList[groupIndex];
 
   return (
     <Card
@@ -23,7 +24,7 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
           <Flex align="center" gap={10}>
             <PendingSecondIcon className="font-28" />
-            <span className="font-w-500">{"未发货"}（{shippedInfo.shipment.remaining_quantity_count}）</span>
+            <span className="font-w-500">{"未发货"}（{fulfillment.fulfillmentItemList.reduce((pre:number,cur:FulfillmentItemType)=>Number(pre)+Number(cur.productNum),0)}）</span>
           </Flex>
           <MyDropdown
             tiggerEle={
@@ -42,11 +43,11 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
                     <SuspendDelivery groupIndex={groupIndex} />
                   )
                 },
-                {
-                  key: "3", label: (
-                    <SplitPackage groupIndex={groupIndex} />
-                  )
-                },
+                // {
+                //   key: "3", label: (
+                //     <SplitPackage groupIndex={groupIndex} />
+                //   )
+                // },
               ]
             }} />
         </Flex>
@@ -54,32 +55,36 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
     >
       <Form>
         <div className="font-w-400">
-          <div style={{ fontSize: "14px", color: "#7A8499",marginBottom:"4px" }} >{"地点"}</div>
-          <div style={{ fontSize: "14px", color: "#242833",marginBottom:"20px" }} >{"默认地点"}</div>
-          {/* 处理 productinfo 为 undefined 的情况 */}
-          {shippedInfo.product.map((item:any,index:number)=>{
+          <Flex gap={12} className="font-14" style={{marginBottom:"20px"}}>
+            <Flex gap={6}>
+              <EnvironmentOutlined className="color-7A8499" />
+              <div className="color-7A8499">{"地点"}</div>
+            </Flex>
+            <div className="color-242833">{"默认地点"}</div>
+          </Flex>
+          {fulfillment.fulfillmentItemList.map((item:FulfillmentItemType,index:number)=>{
             return(
               <Row key={index} style={{marginBottom:"20px"}}>
                 <Col span={14}>
                   <Flex style={{paddingRight:"40px"}}>
-                    <img src={item.product_image?item.product_image+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.product_name} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
+                    <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
                     <Flex vertical align="flex-start" justify="flex-start">
-                      <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px"}} className="font-w-500">{item.product_name}</div>
+                      <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px"}} className="font-w-500">{item.title}</div>
                       <div style={{ fontSize: "14px", color: "#474F5E" }}>{
-                        item.attributes?.map((item:any)=>item.product_option+" · "+item.product_option_values).join("/")
+                        item.attributes?.map((item:any)=>item.attributeValue??"").join("/")
                       }</div>
-                      <div style={{ fontSize: "14px", color: "#474F5E" }}>model : {item.product_model}</div>
+                      <div style={{ fontSize: "14px", color: "#474F5E" }}>model : </div>
                     </Flex>
                   </Flex>
                 </Col>
                 <Col span={5}>
                   <Flex style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.product_price)} X {item.remaining_quantity}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice)} X {item.productNum}</span>
                   </Flex>
                 </Col>
                 <Col span={5}>
                   <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.product_price) * parseInt(item.remaining_quantity))}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount))}</span>
                   </Flex>
                 </Col>
               </Row>
@@ -103,7 +108,7 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
                     }
                 ]
             }} />
-            <PrimaryButton text={"标记为已发货"} onClick={()=>history.push(`/orders/${order.orderInfo.order_id}/delivery`)}  />
+            <PrimaryButton text={"标记为已发货"} onClick={()=>history.push(`/orders/delivery/${order.orderInfo.orderSeq}/${fulfillment.fulfillmentOrder.fulfillmentOrderSeq}/${order.languages}`)}  />
         </Flex>
       </Form>
     </Card>

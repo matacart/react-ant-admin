@@ -2,7 +2,8 @@ import MyAlert from "@/components/Alert/MyAlert";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
-import { setOrderContact } from "@/services/y2/api";
+import MySelect from "@/components/Select/MySelect";
+import { setOrderContact } from "@/services/y2/apiStore";
 import order from "@/store/order/order";
 import { Flex, Form, Modal, Space } from "antd";
 import { useEffect, useState } from "react";
@@ -12,9 +13,7 @@ function ContactInformation() {
 
     const [open,setOpen] = useState(false);
 
-    const [codes,setCodes] = useState("+86");
-
-    const [countryList,setCountryList] = useState([]);
+    const [countryList,setCountryList] = useState<any[]>([]);
 
     const [loading,setLoading] = useState(false);
 
@@ -33,8 +32,10 @@ function ContactInformation() {
                 return;
             }else{
                 setLoading(true);
+                const areaCodeValue = countryList.find(item=>item.value == values.areaCodeValue)?.country?.codes || "44";
                 setOrderContact({
-                    orderId:order.orderInfo.order_id,
+                    orderId:order.orderInfo.orderSeq,
+                    customerTelephoneAreaCode:areaCodeValue,
                     customerTelephone:values.phone,
                     customerEmail:values.email
                 }).then(()=>{
@@ -50,22 +51,24 @@ function ContactInformation() {
     }
 
     useEffect(()=>{
-        // const country = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map(item=>{
-        //     return {
-        //         value: item.country_id,
-        //         label: "+"+item.codes,
-        //         country:item
-        //     }
-        // })
-        // setCountryList(country)
+        const country = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map((item:any)=>{
+            return {
+                value: item.country_id,
+                label: "+"+item.codes,
+                country:item
+            }
+        })
+        setCountryList(country)
     },[])
 
     return (
         <>
             <span className="color-356DFF cursor-pointer" onClick={() => {
+                const areaCodeValue = countryList.find(item=>item.label == "+"+order.orderInfo.buyerInfo?.buyerPhoneAreaCode)?.value || "44";
                 form.setFieldsValue({
-                    email: order.orderInfo.customer_email_address,
-                    phone: order.orderInfo.customer_telephone
+                    areaCodeValue: areaCodeValue,
+                    email: order.orderInfo.buyerInfo?.buyerEmail || "",
+                    phone: order.orderInfo.buyerInfo?.buyerPhone || "",
                 })
                 setOpen(true)
             }}>编辑</span>
@@ -96,16 +99,16 @@ function ContactInformation() {
                     </Form.Item>
                     <Form.Item label="手机号码" className="phone-number">
                         <Space.Compact style={{width:"100%"}}>
-                            {/* <MySelect value={codes} options={countryList} style={{height:"36px",width:"120px"}}
-                            popupMatchSelectWidth={false}
-                            optionRender={(option) => {
-                                return <Space>
-                                    {option.data.country.country_name}{"("+option.data.label+")"}
-                                </Space>
-                            }}
-                            onChange={(value:string)=>{
-                                setCodes(value)
-                            }} /> */}
+                            <Form.Item name="areaCodeValue" validateFirst={true}>
+                                <MySelect options={countryList} style={{height:"36px",width:"120px"}}
+                                    popupMatchSelectWidth={false}
+                                    optionRender={(option) => {
+                                        return <Space>
+                                            {option.data.country.country_name}{"("+option.data.label+")"}
+                                        </Space>
+                                    }}
+                                />
+                            </Form.Item>
                             <Form.Item 
                                 name="phone"
                                 validateFirst={true}
@@ -130,7 +133,6 @@ function ContactInformation() {
                             </Form.Item>
                         </Space.Compact> 
                     </Form.Item>
-                           
                 </Form>
             </MyModal>
         </>
@@ -138,12 +140,7 @@ function ContactInformation() {
 }
 
 const MyModal = styled(Modal)`
-    .phone-number{
-        /* .ant-form-item-explain-error{
-            position: relative;
-            left: -120px;
-        } */
-    }
+    
 `
 
 export default ContactInformation;

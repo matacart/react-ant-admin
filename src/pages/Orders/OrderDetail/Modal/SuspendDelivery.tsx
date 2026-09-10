@@ -2,14 +2,15 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { pauseOrderShipping } from "@/services/y2/api";
+import { pauseOrderShipping } from "@/services/y2/apiStore";
 import order from "@/store/order/order";
 import { Flex, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 
-const reasonOptions = [
+// 暂停发货原因对应的映射
+export const reasonOptions = [
     {
         label:"缺货",
         value:"1",
@@ -32,13 +33,11 @@ const reasonOptions = [
     }
 ]
 
-function SplitPackage({groupIndex}:{groupIndex:number}){
-
-    const [form] = Form.useForm();
+function SuspendDelivery({groupIndex}:{groupIndex:number}){
 
     const [open,setOpen] = useState(false);
 
-    const remainingInfo = order.remainingProductGroup[groupIndex]
+    const fulfillment = order.fulfillmentOrderList[groupIndex];
 
     const [loading,setLoading] = useState(false);
 
@@ -56,8 +55,8 @@ function SplitPackage({groupIndex}:{groupIndex:number}){
     const submit = ()=>{
         setLoading(true);
         pauseOrderShipping({
-            orderId:order.orderInfo.order_id,
-            fulfillmentId:remainingInfo.fulfillment.fulfillment_id,
+            orderId:order.orderInfo.orderSeq,
+            fulfillmentId:fulfillment.fulfillmentOrder.fulfillmentOrderSeq,
             pauseReason:reasonValue??"",
             ...(reasonValue == "0" && {pauseReasonDetail:reasonDetail})
         }).then((res)=>{
@@ -69,10 +68,6 @@ function SplitPackage({groupIndex}:{groupIndex:number}){
         })
     }
 
-    useEffect(()=>{
-      
-    },[])
-
     return (
         <>
             <a className="cursor-pointer" onClick={() => setOpen(true)}><span>暂停发货</span></a>
@@ -81,7 +76,7 @@ function SplitPackage({groupIndex}:{groupIndex:number}){
                     <Flex justify="end">
                         <Flex gap={12}>
                             <DefaultButton text={"取消"} onClick={cancel} />
-                            <PrimaryButton text={"暂停发货"} onClick={submit} loading={loading} />
+                            <PrimaryButton disabled={reasonValue == undefined}  text={"暂停发货"} onClick={submit} loading={loading} />
                         </Flex>
                     </Flex>
                 )}
@@ -115,4 +110,4 @@ const MyModal = styled(Modal)`
    }
 `
 
-export default SplitPackage;
+export default SuspendDelivery;

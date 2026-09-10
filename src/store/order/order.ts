@@ -1,42 +1,107 @@
 import { makeAutoObservable } from "mobx";
+import cookie from 'react-cookies';
 
-interface Productinfo {
-  shipping_courier_name: string;
-  shipping_no: string;
-  quantity_shipped: number;
-  remaining_quantity: number;
-  attributes: any;
-  final_price: number;
-  product_quantity: number;
-  shipped_quantity:number;
-  product_price: number;
-  product_id: string;
-  product_name: string;
-  product_image: string;
+export interface RemarkType{
+  id: string;
+  remark: string;
+  createTime: number;
+  updateTime: number;
 }
 
-interface RemarkType{
-  
+interface LocationAddressType{
 }
 
-interface OrderInfoType{
+interface BuyerInfoType{
+  buyerId: string;
+  activated: boolean;
+  loginStatus: boolean;
+  buyerNick: string;
+  gender: string;
+  buyerPhoneAreaCode: string;
+  buyerPhone: string;
+  buyerEmail: string;
+}
+
+export interface ItemGroupType{
+  itemList: FulfillmentItemType[];
+  locationAddress:LocationAddressType;
+}
+
+
+
+export interface OrdersPackageType{
+  packageSeq: string;
+  appPackageSeq: string;
+  sendTime:number;
+  itemGroupList:ItemGroupType[];
+}
+
+
+export interface OrderInfoType{
   orderSeq: string;
   appOrderSeq: string;
+  bizOrderStatus:number;
+  ordersPackageList:OrdersPackageType[];
+  bizPayStatus:number;
+  bizDeliveryStatus:number;
   orderRemarks:RemarkType[];
+  buyerInfo:BuyerInfoType | null;
+  payBillInfo:PayBillInfoType | null;
+  receiverInfo:ReceiverInfoType | null;
+  tags:string[];
 }
 
-interface CustomerInfo{
-    order_history_count: string;
-    tel?: string;
-    email?: string;
-    sex?: string;
-    last_name?: string;
-    first_name?: string;
+interface ReceiverInfoType{
+  deliveryType:string;
+  receiverCertificatesType:string;
+  receiverCertificatesNo: string;
+  receiverFirstName: string;
+  receiverLastName: string;
+  receiverCompany: string;
+  receiverAddress: string;
+  receiverAddressAdd: string;
+  receiverArea: string;
+  receiverCity: string;
+  receiverCityCode: string;
+  receiverProvince: string;
+  receiverProvinceCode: string;
+  receiverCountry: string;
+  receiverCountryCode: string;
+  receiverPostcode: string;
+  receiverMobile: string;
 }
 
-interface ShippedProductsGroup{
-  product: any[];
-  shipment: any;
+interface PayBillInfoType{
+  sameAsReceiver: boolean;
+  billingFirstName: string;
+  billingLastName: string;
+  billingCompany: string;
+  billingAddress: string;
+  billingAddressAdd: string;
+  billingArea: string;
+  billingCity: string;
+  billingProvince: string;
+  billingPostcode: string;
+  billingCountry: string;
+  billingMobile: string;
+}
+
+export interface FulfillmentItemType{
+  groupId: string;
+  title: string;
+  productSku: string;
+  productNum: number;
+  firstImage: string;
+  productPrice:number;
+  productAmount:number;
+  attributes:any[];
+}
+
+
+export interface FulfillmentListType{
+  fulfillmentOrder:any;
+  fulfillmentItemList:FulfillmentItemType[];
+  locationAddress:LocationAddressType;
 }
 
 interface RemainingProductsGroup{
@@ -52,10 +117,16 @@ interface ReturnInProductsGroup{
 
 class Order{
     constructor() {
-        makeAutoObservable(this)
+      makeAutoObservable(this)
     }
     // 状态
-    refreshKey = 0
+    refreshKey = 0;
+
+    // 语言id
+    languages = cookie.load("shop_lang") || '2';
+    setLanguages(value:string){
+      this.languages = value
+    }
     // 状态更新
     triggerRefresh() {
       this.refreshKey += 1;
@@ -84,59 +155,35 @@ class Order{
 
     // 订单信息
     orderInfo:OrderInfoType = {
+      bizOrderStatus:100,
+      bizPayStatus:0,
+      bizDeliveryStatus:0,
       orderSeq: "",
       appOrderSeq: "",
-      orderRemarks: []
+      ordersPackageList:[],
+      orderRemarks: [],
+      receiverInfo:null,
+      payBillInfo:null,
+      buyerInfo:null,
+      tags:[]
     }
-
 
     setOrderInfo(value:OrderInfoType){
       this.orderInfo = value
     }
 
-    // 商品信息
-    productInfo:Productinfo[] = []
-    setProductInfo(value:Productinfo[]){
-      this.productInfo = value
+    // 履约单列表
+    fulfillmentOrderList:FulfillmentListType[] = []
+    setFulfillmentOrderList(value:FulfillmentListType[]){
+      this.fulfillmentOrderList = value
     }
 
-    // 已发货信息
-    shippedProductsGroup:ShippedProductsGroup[] = []
-    setShippedProductsGroup(value:ShippedProductsGroup[]){
-      this.shippedProductsGroup = value
-    }
-    // 未发货产品
-    remainingProductGroup:RemainingProductsGroup[] = []
-    setRemainingProductGroup(value:RemainingProductsGroup[]){
-      this.remainingProductGroup = value
+    // 发货单列表
+    ordersPackageList:OrdersPackageType[] = []
+    setOrdersPackageList(value:OrdersPackageType[]){
+      this.ordersPackageList = value
     }
 
-    // 退货中商品
-    returnInProductsGroup:ReturnInProductsGroup[] = []
-    setReturnInProductsGroup(value:ReturnInProductsGroup[]){
-      this.returnInProductsGroup = value
-    }
-
-    // 客户信息
-    customerInfo:CustomerInfo = {
-      order_history_count: ""
-    }
-    setCustomerInfo(value:CustomerInfo){
-      this.customerInfo = value
-    }
-
-
-    // 订单总计
-    orderTotal = []
-    setOrderTotal(res:any){
-      this.orderTotal = res
-    }
-
-    // 商家备注
-    merchantNotes = []
-    setMerchantNotes(res:any){
-      this.merchantNotes = res
-    }
 
     // 历史记录
     orderLog = []
@@ -153,11 +200,8 @@ class Order{
     // 状态初始化
     reset(){
       // this.setOrderInfo(this.getInitOrder())
-      this.productInfo = []
       // this.customerInfo = {}
     }
-
-
 
 }
 

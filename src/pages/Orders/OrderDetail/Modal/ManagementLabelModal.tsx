@@ -2,7 +2,8 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import SearchInput from "@/components/Input/SearchInput";
 import MySelectIcon from "@/components/Select/MySelectIcon";
-import { batchAddOrderTags, getOrderTagList } from "@/services/y2/api";
+import { batchAddOrderTags } from "@/services/y2/api";
+import { getOrderTagList } from "@/services/y2/apiStore";
 import order from "@/store/order/order";
 import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useRef, useState } from "react";
@@ -39,12 +40,15 @@ function ManagementLabelModal(){
     ];
 
     const submit = ()=>{
-        // console.log(selectedTags.map(item=>item.tagName))
+        const tagNames = selectedTags.map(item=>item.tagName)
         batchAddOrderTags({
-            orderIds:JSON.stringify([order.orderInfo.order_id]),
-            tagNames:JSON.stringify(selectedTags.map(item=>item.tagName))
-        }).then(res=>{
-            console.log(res)
+            orderIds:JSON.stringify([order.orderInfo.orderSeq]),
+            tagNames:JSON.stringify(tagNames)
+        }).then((res:any)=>{
+            res.code == 0 && order.setOrderInfo({
+                ...order.orderInfo,
+                tags:tagNames
+            })
         }).catch(err=>{
             console.log(err)
         }).finally(()=>{
@@ -58,16 +62,11 @@ function ManagementLabelModal(){
         setIsModalOpen(false);
     };
 
-
-    useEffect(()=>{
-        // 获取标签列表
-    },[])
-
     return (
         <Scoped ref={Ref}>
             <div className="font-14 color-356DFF font-w-500 cursor-pointer" onClick={()=>{
                 setIsModalOpen(true)
-                getOrderTagList(order.orderInfo.order_id).then(res=>{
+                getOrderTagList(order.orderInfo.orderSeq).then(res=>{
                     setOptionalTags(res.data.optionalOrderTagList)
                     setSelectedTags(res.data.selectedOrderTagList)
                 }).catch(err=>{
@@ -94,9 +93,9 @@ function ManagementLabelModal(){
                         <div style={{marginBottom:"8px"}}>已选</div>
                             
                         <Row gutter={[0,8]}>
-                        {selectedTags.map((item:any)=>{
+                        {selectedTags.map((item:any,index:number)=>{
                             return(
-                                <Col span={24}>
+                                <Col span={24} key={index}>
                                     <Checkbox style={{width:"100%"}} checked={true} onClick={()=>{
                                         setOptionalTags([...optionalTags,item])
                                         setSelectedTags(selectedTags.filter((tag:any)=>tag.tagName !== item.tagName))
@@ -110,9 +109,9 @@ function ManagementLabelModal(){
                     <div>
                         <div style={{marginBottom:"8px",marginTop:"20px"}}>可选</div>
                         <Row gutter={[0,8]}>
-                            {optionalTags.map((item:any)=>{
+                            {optionalTags.map((item:any,index:number)=>{
                                 return(
-                                    <Col span={24}>
+                                    <Col span={24} key={index}>
                                         <Checkbox style={{width:"100%"}} checked={false} onClick={()=>{
                                             setSelectedTags([...selectedTags,item])
                                             setOptionalTags(optionalTags.filter((tag:any)=>tag.tagName !== item.tagName))

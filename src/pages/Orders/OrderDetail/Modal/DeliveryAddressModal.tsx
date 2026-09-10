@@ -3,7 +3,8 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { getCityList, getProvinceList, setOrderShippingAddress } from "@/services/y2/api";
+import { setOrderShippingAddress } from "@/services/y2/api";
+import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
 import order from "@/store/order/order";
 import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react";
@@ -40,7 +41,7 @@ function DeliveryAddressModal(){
         form.validateFields().then((values)=>{
             setLoading(true)
             setOrderShippingAddress({
-                orderId:order.orderInfo.order_id,
+                orderId:order.orderInfo.orderSeq,
                 ...values,
                 deliveryName:values.deliveryFirstname+values.deliveryLastname
             }).then(res=>{
@@ -58,6 +59,28 @@ function DeliveryAddressModal(){
         setOpen(false);
     };
 
+    const init = ()=>{
+        // 初始化省份
+        order.orderInfo.receiverInfo?.receiverCountryCode && getProvinceList(order.orderInfo.receiverInfo.receiverCountryCode).then(res=>{
+            setProvinceOptions(res.data.map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: item.name,
+                }
+            }))
+        })
+        // 初始化城市
+        order.orderInfo.receiverInfo?.receiverProvinceCode && getCityList(order.orderInfo.receiverInfo.receiverProvinceCode).then(res=>{
+            setCityOptions(res.data.map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: item.name,
+                }
+            }))
+        })
+
+    }
+
     useEffect(()=>{
         const newCountry = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map((item:any)=>{
             return {
@@ -67,29 +90,13 @@ function DeliveryAddressModal(){
                 iso_code_3:item.iso_code_3,
             }
         })
-        order.orderInfo.delivery_country_id && getProvinceList(order.orderInfo.delivery_country_id).then(res=>{
-            setProvinceOptions(res.data.map((item:any)=>{
-                return {
-                    value: item.id,
-                    label: item.name,
-                }
-            }))
-        })
-        order.orderInfo.delivery_state_id && getCityList(order.orderInfo.delivery_state_id).then(res=>{
-            setCityOptions(res.data.map((item:any)=>{
-                return {
-                    value: item.id,
-                    label: item.name,
-                }
-            }))
-        })
+        
         setCountryOptions(newCountry)
     },[])
 
     return (
         <>
             <div className='color-356DFF cursor-pointer' onClick={()=>{
-                form.resetFields()
                 setOpen(true)
             }}>编辑</div>
             <MyModal
@@ -107,23 +114,7 @@ function DeliveryAddressModal(){
                     </Flex>
                 )}
             >
-                <Form form={form} layout="vertical" className="my-form" initialValues={{
-                    deliveryTelephone:order.orderInfo.delivery_telephone,
-                    deliveryFirstname:order.orderInfo.delivery_firstname,
-                    deliveryLastname:order.orderInfo.delivery_lastname,
-                    deliveryCompany:order.orderInfo.delivery_company,
-                    deliveryStreetAddress:order.orderInfo.delivery_street_address,
-                    deliverySuburb:order.orderInfo.delivery_suburb,
-                    deliveryPostcode:order.orderInfo.delivery_postcode,
-                    deliveryCity:order.orderInfo.delivery_city,
-                    deliveryCityId:order.orderInfo.delivery_city_id,
-                    deliveryState:order.orderInfo.delivery_state,
-                    deliveryStateId:order.orderInfo.delivery_state_id,
-                    deliveryCountryCode3:order.orderInfo.delivery_country_code_3,
-                    deliveryCountryCode2:order.orderInfo.delivery_country_code_2,
-                    deliveryCountry:order.orderInfo.delivery_country,
-                    deliveryCountryId:order.orderInfo.delivery_country_id
-                }}>
+                <Form form={form} layout="vertical" className="my-form">
                     <Form.Item
                         label="收货人电话号码"
                         name="deliveryTelephone"
