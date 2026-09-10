@@ -1,10 +1,29 @@
 import { makeAutoObservable } from "mobx";
-import { FulfillmentListType } from "./order";
+import { FulfillmentListType, OrderInfoType } from "./order";
 
 class OrderManualDelivery{
 
     constructor() {
         makeAutoObservable(this)
+    }
+
+    orderInfo:OrderInfoType = {
+        bizOrderStatus:100,
+        bizPayStatus:0,
+        bizDeliveryStatus:0,
+        orderSeq: "",
+        appOrderSeq: "",
+        ordersPackageList:[],
+        orderRemarks: [],
+        receiverInfo:null,
+        payBillInfo:null,
+        buyerInfo:null,
+        priceSetInfo:null,
+        tags:[]
+    }
+    
+    setOrderInfo(value:OrderInfoType){
+        this.orderInfo = value
     }
 
     // 发货产品

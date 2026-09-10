@@ -36,6 +36,18 @@ export interface OrdersPackageType{
   itemGroupList:ItemGroupType[];
 }
 
+export interface PriceSetInfoType{
+  expressFeeInfo: {
+    amountSet: {
+      settleMoney: {
+        amount: number;
+        currencyCode: string;
+      };
+    };
+  };
+}
+
+
 
 export interface OrderInfoType{
   orderSeq: string;
@@ -48,6 +60,7 @@ export interface OrderInfoType{
   buyerInfo:BuyerInfoType | null;
   payBillInfo:PayBillInfoType | null;
   receiverInfo:ReceiverInfoType | null;
+  priceSetInfo:PriceSetInfoType | null;
   tags:string[];
 }
 
@@ -155,17 +168,18 @@ class Order{
 
     // 订单信息
     orderInfo:OrderInfoType = {
-      bizOrderStatus:100,
-      bizPayStatus:0,
-      bizDeliveryStatus:0,
+      bizOrderStatus: 100,
+      bizPayStatus: 0,
+      bizDeliveryStatus: 0,
       orderSeq: "",
       appOrderSeq: "",
-      ordersPackageList:[],
+      ordersPackageList: [],
       orderRemarks: [],
-      receiverInfo:null,
-      payBillInfo:null,
-      buyerInfo:null,
-      tags:[]
+      receiverInfo: null,
+      payBillInfo: null,
+      buyerInfo: null,
+      tags: [],
+      priceSetInfo: null
     }
 
     setOrderInfo(value:OrderInfoType){

@@ -152,12 +152,12 @@ function OrdersListAjax({ id }: FilterCondition) {
     getOrderList({
       page:page,
       limit:limit,
-      orders_status_id:orderStatus?.toString(),
+      // orders_status_id:id?.toString(),
       languages_id:languagesId?.toString(),
-      order_type:"",
+      // order_type:"",
       condition:JSON.stringify(orderList.condition),
-      shipping_status_id:"150",
-      bizOrderStatuses:JSON.stringify(orderList.bizOrderStatuses),
+      // shipping_status_id:"150",
+      // bizOrderStatuses:JSON.stringify(orderList.bizOrderStatuses),
     },signal).then((res) => {
         const newData: DataType[] = res.data?.map((item: any) => ({
           ...item,

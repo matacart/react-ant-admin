@@ -55,13 +55,20 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
     >
       <Form>
         <div className="font-w-400">
-          <Flex gap={12} className="font-14" style={{marginBottom:"20px"}}>
+          <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
             <Flex gap={6}>
               <EnvironmentOutlined className="color-7A8499" />
               <div className="color-7A8499">{"地点"}</div>
             </Flex>
             <div className="color-242833">{"默认地点"}</div>
           </Flex>
+          {fulfillment.fulfillmentOrder?.deliveryMethod?.deliveryName && <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
+            <Flex gap={6}>
+              <EnvironmentOutlined className="color-7A8499" />
+              <div className="color-7A8499">{"配送方案"}</div>
+            </Flex>
+            <div className="color-242833">{fulfillment.fulfillmentOrder.deliveryMethod.deliveryName}</div>
+          </Flex>}
           {fulfillment.fulfillmentItemList.map((item:FulfillmentItemType,index:number)=>{
             return(
               <Row key={index} style={{marginBottom:"20px"}}>

@@ -87,6 +87,7 @@ function ManualDelivery() {
             languages_id:languagesId,
         }).then(res=>{
             if(res.code == 0){
+                orderManualDelivery.setOrderInfo(res.data)
                 const fulfillmentItem = res.data.fulfillmentOrderList.find((item:any)=>item.fulfillmentOrder?.fulfillmentOrderSeq == fulfillmentId)
                 orderManualDelivery.setFulfillmentItem(fulfillmentItem)
             }
@@ -120,8 +121,8 @@ function ManualDelivery() {
                             <LogisticsTrackingInformation form={form} />
                         </Flex>
                         <Flex className='mc-layout-extra' vertical gap={20}>
-                            {/* <DeliveryAddress />
-                            <Abstract /> */}
+                            <DeliveryAddress />
+                            {/* <Abstract /> */}
                         </Flex>
                     </Flex>
                     <Divider />
