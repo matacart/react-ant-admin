@@ -143,3 +143,27 @@ export async function pauseOrderShipping(res:{
     }
   })
 }
+
+// 发货
+export async function sendOrderPackage(res:{
+  languageId:string,
+  orderSeq:string,
+  fulfillmentOrderSeq:string,
+  logisticsType:string,
+  multiExpressInfo:string,
+  sendNotify:string,
+  senderInfo:string,
+  extInfo:{},
+  productInfoList:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/sendOrderPackage`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}

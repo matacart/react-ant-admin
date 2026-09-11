@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Flex, Form } from 'antd'
+import { App, Flex, Form } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useIntl, useParams } from '@umijs/max';
@@ -12,12 +12,39 @@ import Abstract from './Abstract';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LogisticsTrackingInformation from './LogisticsTrackingInformation';
 import { setOrderShipped } from '@/services/y2/api';
-import { getOrderDetail } from '@/services/y2/apiStore';
+import { getOrderDetail, sendOrderPackage } from '@/services/y2/apiStore';
 import orderManualDelivery from '@/store/order/orderManualDelivery';
+import { FulfillmentItemType, FulfillmentListType } from '@/store/order/order';
+
+export interface ProductInfo{
+    groupId:string,
+    parentSkuId:string,
+    productNum:number,
+    productSeq:string,
+    productSku:string,
+    productSource:string,
+    version:string,
+}
+
+
+// const temp = {
+//                 languageId:languagesId,
+//                 orderSeq:orderManualDelivery.orderInfo.orderSeq,
+//                 fulfillmentOrderSeq:orderManualDelivery.fulfillmentItem.fulfillmentOrder.fulfillmentOrderSeq,
+//                 logisticsType:"2",
+//                 multiExpressInfo:JSON.stringify(res.multiExpressInfo),
+//                 sendNotify:res.sendNotify,
+//                 senderInfo:JSON.stringify({consigneeIdNo: null, consigneeIdType: null}),
+//                 extInfo:{},
+//                 productInfoList:JSON.stringify(productInfoList),
+//             }
+
 
 function ManualDelivery() {
 
     const intl = useIntl();
+
+    const { message } = App.useApp();
 
     const [loading,setLoading] = useState(false)
 
@@ -27,20 +54,44 @@ function ManualDelivery() {
 
     const [form] = Form.useForm();
 
-    // 表单验证
-    const formValidation = ()=>{
-        return form.validateFields().then(res=>{
-            return true
-        }).catch(e=>{
-            if (e.errorFields.length > 0) {
-                form.scrollToField(e.errorFields[0].name[0],{ block:"center" });
-            }
-            return false
-        })
-    }
-
     // 验证通过 -- 
     const submit = async () => {
+        form.validateFields().then(res=>{
+            const productInfoList = orderManualDelivery.fulfillmentItem.fulfillmentItemList.map((item:FulfillmentItemType)=>{
+                return {
+                    groupId:item.groupId,
+                    parentSkuId:item.parentSkuId,
+                    productNum:item?.productModifyNum || 0,
+                    productSeq:item.productSeq,
+                    productSku:item.productSku,
+                    productSource:item.productSource,
+                    version:item.version,
+                }
+            })
+            if(productInfoList.reduce((pre:number,cur:any)=>Number(pre)+Number(cur.productNum),0) <= 0){
+                return message.error("发货数量不能为空")
+            }
+            setLoading(true)
+            sendOrderPackage({
+                languageId:languagesId,
+                orderSeq:orderManualDelivery.orderInfo.orderSeq,
+                fulfillmentOrderSeq:orderManualDelivery.fulfillmentItem.fulfillmentOrder.fulfillmentOrderSeq,
+                logisticsType:"2",
+                multiExpressInfo:JSON.stringify(res.multiExpressInfo),
+                sendNotify:res.sendNotify,
+                senderInfo:JSON.stringify({consigneeIdNo: null, consigneeIdType: null}),
+                extInfo:{},
+                productInfoList:JSON.stringify(productInfoList),
+            }).then(()=>{
+                if(res.code == 0){
+                    message.success("发货成功")
+                    history.push(`/orders/${orderId}/${languagesId}`)
+                }
+            }).catch(()=>{
+            }).finally(()=>{
+                setLoading(false)
+            })
+        })
         // if(await formValidation()){
         //     setLoading(true)
         //     const ordersProductList = orderDelivery.deliveryProductList.map(item=>{
@@ -89,7 +140,16 @@ function ManualDelivery() {
             if(res.code == 0){
                 orderManualDelivery.setOrderInfo(res.data)
                 const fulfillmentItem = res.data.fulfillmentOrderList.find((item:any)=>item.fulfillmentOrder?.fulfillmentOrderSeq == fulfillmentId)
-                orderManualDelivery.setFulfillmentItem(fulfillmentItem)
+                const newFulfillmentItemList = fulfillmentItem.fulfillmentItemList.map((item:FulfillmentItemType)=>{
+                    return{
+                        ...item,
+                        productModifyNum:item.productNum,
+                    }
+                })
+                orderManualDelivery.setFulfillmentItem({
+                    ...fulfillmentItem,
+                    fulfillmentItemList:newFulfillmentItemList,
+                })
             }
         }).catch(err=>{
             console.log(err);
@@ -122,7 +182,7 @@ function ManualDelivery() {
                         </Flex>
                         <Flex className='mc-layout-extra' vertical gap={20}>
                             <DeliveryAddress />
-                            {/* <Abstract /> */}
+                            <Abstract form={form} />
                         </Flex>
                     </Flex>
                     <Divider />

@@ -3,17 +3,11 @@ import { PendingSecondIcon } from "@/components/Icons/Icons";
 import NumberInput from "@/components/Input/NumberInput";
 import orderManualDelivery from "@/store/order/orderManualDelivery";
 import { EnvironmentOutlined } from "@ant-design/icons";
-import { Form, Row, Col, Flex, Card } from "antd";
+import { Form, Flex } from "antd";
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import styled from "styled-components";
 
 function UndispatchedGoods(){
-
-    useEffect(()=>{
-
-    },[])
-
     return (
         <Scoped>
             <SimpleCard title={<Flex justify="space-between">
@@ -40,15 +34,25 @@ function UndispatchedGoods(){
                                 <div style={{ fontSize: "14px", color: "#474F5E" }}>sku:{item.productSku}</div>
                             </Flex>
                             <Flex justify="end" vertical style={{height:"100%"}}>
-                                <NumberInput style={{width:"128px"}} min={0} max={item.productNum} value={1} onChange={(value:number)=>{
-                                    // const newDeliveryProductList = toJS(orderDelivery.deliveryProductList)
-                                    // orderDelivery.setDeliveryProductList(newDeliveryProductList.map((product,index)=>{
-                                    //     if(product.id===item.id){
-                                    //         product.quantity=value
-                                    //     }
-                                    //     return product
-                                    // }))
-                                }} />
+                                <NumberInput style={{width:"128px",height:"36px"}} 
+                                    min={0} 
+                                    max={item.productNum}
+                                    value={item?.productModifyNum || 0}
+                                    onChange={(value:number)=>{
+                                        orderManualDelivery.setFulfillmentItem({
+                                            ...orderManualDelivery.fulfillmentItem,
+                                            fulfillmentItemList:orderManualDelivery.fulfillmentItem?.fulfillmentItemList.map((fulItemItem:any)=>{
+                                                if(fulItemItem.productSeq === item.productSeq){
+                                                    return {
+                                                        ...fulItemItem,
+                                                        productModifyNum:value
+                                                    }
+                                                }
+                                                return fulItemItem
+                                            })
+                                        })
+                                    }}
+                                />
                                 <div className="color-242833" style={{textAlign:"right",marginTop:"8px"}}>最大数量为{item.productNum}</div>
                             </Flex>
                         </Flex>

@@ -28,7 +28,6 @@ export async function setLocalStorageCountryList() {
   }
 }
 
-
 // 获取币种符号
 export function getSymbolLeft() {
   let symbolLeft = "";

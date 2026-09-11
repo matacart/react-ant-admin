@@ -66,7 +66,7 @@ function DeliveryAddress() {
                         </Tooltip>:<div className="color-7A8499">暂无收货地址</div>}
                     </>
                 </Form>
-                <Divider/>
+                <Divider />
                 <Form>
                     <div className="font-w-500" style={{marginBottom:"8px"}}>客户结账时选择的物流方式</div>
                     <div className="color-474F5E">{orderManualDelivery.fulfillmentItem?.fulfillmentOrder?.deliveryMethod?.deliveryName}</div>

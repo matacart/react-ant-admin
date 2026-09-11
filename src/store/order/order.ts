@@ -101,13 +101,20 @@ interface PayBillInfoType{
 
 export interface FulfillmentItemType{
   groupId: string;
-  title: string;
+  parentSkuId: string;
+  productSeq: string;
   productSku: string;
   productNum: number;
+  productSource: string;
+  title: string;
   firstImage: string;
   productPrice:number;
   productAmount:number;
+  version:string;
   attributes:any[];
+
+  // 修改数量
+  productModifyNum?:number;
 }
 
 

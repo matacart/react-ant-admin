@@ -1,6 +1,11 @@
 import { makeAutoObservable } from "mobx";
 import { FulfillmentListType, OrderInfoType } from "./order";
 
+
+interface DeliveryType {
+}
+
+
 class OrderManualDelivery{
 
     constructor() {

@@ -2,8 +2,9 @@ import { Card, Checkbox, Divider, Flex, Form, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import orderManualDelivery from "@/store/order/orderManualDelivery";
+import { FulfillmentItemType } from "@/store/order/order";
 
-function Abstract() {
+function Abstract({form}:{form:any}){
 
     return (
         <Scoped>
@@ -11,23 +12,15 @@ function Abstract() {
                 <Flex justify="space-between" align="center" style={{marginBottom:"16px"}}>
                     <div className="font-w-500 font-16">摘要</div>
                 </Flex>
-                <Form>
-                    <>
-                        <Flex style={{marginBottom:"8px"}} justify="space-between" align="center">
-                            <div className="font-w-500">商品数量</div>
-                            <div>1/{123213}</div>
-                        </Flex>
-                    </>
-                </Form>
-                <Divider/>
-                <Form>
-                    <div className="font-w-500" style={{marginBottom:"8px"}}>通知</div>
-                    <Checkbox onChange={(e)=>{
-                        // orderDelivery.setDelivery({
-                        //     ...orderDelivery.delivery,
-                        //     customerNotified:e.target.checked?"1":"0"
-                        // })
-                    }}>向客户发送通知</Checkbox>
+                <Flex style={{marginBottom:"8px"}} justify="space-between" align="center">
+                    <div className="font-w-500">商品数量</div>
+                    <div>{orderManualDelivery.fulfillmentItem.fulfillmentItemList.reduce((pre:number,cur:FulfillmentItemType)=>Number(pre)+Number(cur.productModifyNum),0)}/{orderManualDelivery.fulfillmentItem.fulfillmentItemList.reduce((pre:number,cur:FulfillmentItemType)=>Number(pre)+Number(cur.productNum),0)}</div>
+                </Flex>
+                <Divider />
+                <Form form={form} layout="vertical">
+                    <Form.Item label="通知" name="sendNotify" valuePropName="checked" style={{marginBottom:"0"}}>
+                        <Checkbox>向客户发送通知</Checkbox>
+                    </Form.Item>
                 </Form>
             </Card>
         </Scoped>
@@ -35,9 +28,7 @@ function Abstract() {
 }
 
 const Scoped = styled.div`
-    .card{
-        background-color: #F7F8FB;
-    }
+    
 `
 
 export default observer(Abstract);

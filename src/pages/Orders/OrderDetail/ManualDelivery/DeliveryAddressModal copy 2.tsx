@@ -9,7 +9,7 @@ import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "ant
 import { useEffect, useMemo, useState } from "react";
 import { styled } from 'styled-components';
 import orderManualDelivery from "@/store/order/orderManualDelivery";
-import { CountryCodeToStringTemplateMap,StringTemplateMap,templates } from "@/../public/json/template.json";
+import { CountryCodeToStringTemplateMap,StringTemplateMap } from "@/../public/json/template.json";
 
 
 type AddressOption = {
@@ -29,8 +29,6 @@ function parseSchema(schema:string) {
 }
 
 
-
-
 function DeliveryAddressModal(){
 
     const [open, setOpen] = useState(false);
@@ -44,8 +42,6 @@ function DeliveryAddressModal(){
     const [cityOptions, setCityOptions] = useState<AddressOption[]>([]);
 
     const [templateSchema,setTemplateSchema] = useState<string[][]>([]);
-
-    const templateForm = templates["en"];
 
     // 区
     const [isZone,setIsZone] = useState(false);
@@ -111,25 +107,21 @@ function DeliveryAddressModal(){
                     {templateSchema.map((fields, rowIdx) => {
                         // 单字段：独占一行
                         if (fields.length === 1) {
-                            const item = templateForm.find((item:any)=>item.propKey === fields[0])
                             return (
-                                <Form.Item label={item?.title || fields[0]}>
+                                <Form.Item>
                                     <MyInput style={{height:"36px"}} placeholder={""} />
                                 </Form.Item>
                             );
                         }
-                        // 多字段：并排显示
-                        return (<Flex style={{width:"100%"}} gap={20}>
-                            {fields.map((name, colIdx) => {
-                                const item = templateForm.find((item:any)=>item.propKey === name)
-                                return(
-                                    <Form.Item key={rowIdx} label={item?.title || name} style={{flex:1}}>
-                                        <MyInput style={{height:"36px"}} placeholder={""} />
-                                    </Form.Item>
-                                )
-                            })}
-                        </Flex>)
                     })}
+                    <Form.Item
+                        label="收货人电话号码"
+                        name="deliveryTelephone"
+                        required={false}
+                        rules={[{required: true,message: <span className="">请输入收货人电话号码</span> }]}
+                    >
+                        <MyInput style={{height:"36px"}} placeholder="请输入收货人电话号码" />
+                    </Form.Item>
                     <Form.Item
                         label="国家/地区"
                         name="deliveryCountryId"
@@ -142,6 +134,25 @@ function DeliveryAddressModal(){
                             const template = StringTemplateMap[templateId.toString() as keyof typeof StringTemplateMap]
                             setTemplateSchema(parseSchema(template))
                         }} />
+                    </Form.Item>
+                    <Form.Item label={false} name="isSendNotification" valuePropName="checked">
+                        <Checkbox>向客户发送通知</Checkbox>
+                    </Form.Item>
+                    {/* 隐藏表单项 */}
+                    <Form.Item name="deliveryCity" hidden>
+                        <Input type="hidden" />
+                    </Form.Item>
+                    <Form.Item name="deliveryState" hidden>
+                        <Input type="hidden" />
+                    </Form.Item>
+                    <Form.Item name="deliveryCountryCode3" hidden>
+                        <Input type="hidden" />
+                    </Form.Item>
+                    <Form.Item name="deliveryCountryCode2" hidden>
+                        <Input type="hidden" />
+                    </Form.Item>
+                    <Form.Item name="deliveryCountry" hidden>
+                        <Input type="hidden" />
                     </Form.Item>
                 </Form>
             </MyModal>
