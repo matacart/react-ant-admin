@@ -15,12 +15,16 @@ function LogisticsTrackingInformation({form}:{form:any}){
         const newLogistics = JSON.parse(localStorage["MC_DATA_SHIPPING_COURIER"] || "[]").map((item:any)=>{
             return{
                 value:item.id,
-                label:item.courier_name
+                label:item.courier_name,
+                expressCompany:item.courier_name,
+                expressUrl:item.courier_url,
             }
         })
         setLogistics([...newLogistics,{
             value:'0',
-            label:"其它"
+            label:"其它",
+            expressCompany:"",
+            expressUrl:""
         }])
     },[])
 
@@ -59,29 +63,37 @@ function LogisticsTrackingInformation({form}:{form:any}){
                                                         showSearch 
                                                         style={{height:"36px"}}
                                                         options={logistics}
+                                                        onChange={(value,options)=>{
+                                                            if(value == '0'){
+                                                                form.setFieldValue(["multiExpressInfo", name, "expressCompany"], "");
+                                                                form.setFieldValue(["multiExpressInfo", name, "expressUrl"], "");
+                                                                return;
+                                                            }
+                                                            const target = logistics.find((item) => item.value == value);
+                                                            form.setFieldValue(["multiExpressInfo", name, "expressCompany"], target?.expressCompany || "");
+                                                            form.setFieldValue(["multiExpressInfo", name, "expressUrl"], target?.expressUrl || "");
+                                                        }}
                                                     />
                                                 </Form.Item>
                                             </Col>
                                         </Row>
-                                        {listData?.[name]?.expressCompanyCode === '0' && (
-                                            <Row gutter={20}>
-                                                <Col span={12}>
-                                                    <Form.Item label="公司名称" name={[name,"expressCompany"]}>
-                                                        <MyInput style={{height:"36px"}} placeholder="请输入公司名称"/>
-                                                    </Form.Item>
-                                                </Col>
-                                                <Col span={12}>
-                                                    <Form.Item label="货件追踪链接URL" name={[name,"expressUrl"]} rules={[
-                                                        {
-                                                            message: '请输入正确的网页链接格式',
-                                                            pattern: /^https?:\/\/.+/
-                                                        }
-                                                    ]}>
-                                                        <MyInput style={{height:"36px"}} placeholder="http://" />
-                                                    </Form.Item>
-                                                </Col>
-                                            </Row>
-                                        )}
+                                        <Row gutter={20} style={{ display: listData?.[name]?.expressCompanyCode === "0" ? "flex" : "none" }}>
+                                            <Col span={12}>
+                                                <Form.Item label="公司名称" name={[name,"expressCompany"]}>
+                                                    <MyInput style={{height:"36px"}} placeholder="请输入公司名称"/>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col span={12}>
+                                                <Form.Item label="货件追踪链接URL" name={[name,"expressUrl"]} rules={[
+                                                    {
+                                                        message: '请输入正确的网页链接格式',
+                                                        pattern: /^https?:\/\/.+/
+                                                    }
+                                                ]}>
+                                                    <MyInput style={{height:"36px"}} placeholder="http://" />
+                                                </Form.Item>
+                                            </Col>
+                                        </Row>
                                     </div>
                                 ))}
                                 <div onClick={()=>add()} className="cursor-pointer color-356DFF font-12">添加多个运单</div>

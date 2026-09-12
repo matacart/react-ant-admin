@@ -25,8 +25,16 @@ interface BuyerInfoType{
 export interface ItemGroupType{
   itemList: FulfillmentItemType[];
   locationAddress:LocationAddressType;
+  requireShipping: boolean;
 }
 
+
+export interface MultiExpressInfoType{
+  expressCode: string;
+  expressCompany: string;
+  expressCompanyCode: string;
+  expressUrl: string;
+}
 
 
 export interface OrdersPackageType{
@@ -34,6 +42,7 @@ export interface OrdersPackageType{
   appPackageSeq: string;
   sendTime:number;
   itemGroupList:ItemGroupType[];
+  multiExpressInfo:MultiExpressInfoType[];
 }
 
 export interface PriceSetInfoType{

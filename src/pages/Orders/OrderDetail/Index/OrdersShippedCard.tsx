@@ -1,5 +1,5 @@
 import { App, Card, Col, Divider, Flex, Form, notification, Row, Tooltip, Typography } from "antd";
-import { ClockCircleOutlined, EllipsisOutlined, EnvironmentOutlined } from "@ant-design/icons";
+import { CalendarOutlined, ClockCircleOutlined, EllipsisOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useIntl } from "@umijs/max";
@@ -25,7 +25,7 @@ function OrdersShippedCard({index}:{index:number}) {
   
   const symbolLeft = getSymbolLeft();
 
-  const ordersPackage  = order.orderInfo.ordersPackageList[index]
+  const ordersPackage  = order.orderInfo.ordersPackageList[index];
 
   // const address = [
   //   shippedInfo.shipment.delivery_company,
@@ -56,21 +56,21 @@ function OrdersShippedCard({index}:{index:number}) {
                 }}><CopyIcon className='color-7A8499 cursor-pointer' /></span>
             </Tooltip>
           </Flex>
-          <MyDropdown
+          {ordersPackage.itemGroupList[0]?.requireShipping && (
+            <MyDropdown
             tiggerEle={
               <div className="cursor-pointer"><EllipsisOutlined /></div>
             }
             placement="bottomRight"
             menu={{
               items:[
-                // 编辑跟踪信息
-                // shippedInfo.shipment.shipping_no !== "" && {
-                //   key: "3", label: (
-                //     <PackageTrackingModal shipping={shippedInfo} />
-                //   )
-                // },
+                {
+                  key: "1", label: (
+                    <PackageTrackingModal />
+                  )
+                },
                 // {
-                //     key: "1", label: (
+                //     key: "2", label: (
                 //         <div onClick={()=>{
                 //           exportOrderTask({
                 //             languages_id:order.orderInfo.languages_id,
@@ -95,6 +95,8 @@ function OrdersShippedCard({index}:{index:number}) {
                 //         }}>打印出货单</div>
                 //     )
                 // },
+                
+                
                 // {
                 //     key: "2", label: (
                 //       <CancelShippingModal shipment={shippedInfo.shipment} />
@@ -102,6 +104,7 @@ function OrdersShippedCard({index}:{index:number}) {
                 // },
               ]
             }} />
+          )}
         </Flex>
       }
     >
@@ -121,6 +124,20 @@ function OrdersShippedCard({index}:{index:number}) {
             </Flex>
             <div className="color-242833">{dayjs(ordersPackage.sendTime).format("YYYY-MM-DD")}</div>
           </Flex>
+          {ordersPackage.multiExpressInfo.map((item,index)=>{
+            if(!item.expressCompany || !item.expressCode){
+              return null
+            }
+            return(
+              <Flex key={index} gap={12} className="font-14" style={{marginBottom:"8px"}}>
+                <Flex gap={6}>
+                  <CalendarOutlined className="color-7A8499" />
+                  <div className="color-7A8499">{item.expressCompany}</div>
+                </Flex>
+                <div className="color-242833">{item.expressCode}</div>
+              </Flex>
+            )
+          })}
           {ordersPackage.itemGroupList[0]?.itemList?.map((item,index)=>{
             return(
               <Row key={index} style={{ marginBottom: "20px" }}>

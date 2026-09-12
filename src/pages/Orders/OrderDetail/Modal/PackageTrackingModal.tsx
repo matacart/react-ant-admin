@@ -8,7 +8,7 @@ import { useIntl } from "@umijs/max";
 import { Checkbox, Flex, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
 
-function PackageTrackingModal({shipping}:{shipping:any}){
+function PackageTrackingModal(){
     
     const intl = useIntl();
 
@@ -25,25 +25,25 @@ function PackageTrackingModal({shipping}:{shipping:any}){
 
     const [logisticsValue,setLogisticsValue] = useState('');
 
-    const shippingInfo = shipping.shipment
+    // const shippingInfo = shipping.shipment
     const submit = () => {
-        form.validateFields().then((values)=>{
-            setLoading(true)
-            setOrderNumber({
-                orderId:order.orderInfo.order_id,
-                shippingSn:shipping.groupKey,
-                shippingId:logisticsValue,
-                shipmentId:shippingInfo.shipment_id,
-                ...values,
-            }).then(()=>{
-                order.triggerRefresh();
-            }).catch(()=>{
+        // form.validateFields().then((values)=>{
+        //     setLoading(true)
+        //     setOrderNumber({
+        //         orderId:order.orderInfo.order_id,
+        //         shippingSn:shipping.groupKey,
+        //         shippingId:logisticsValue,
+        //         shipmentId:shippingInfo.shipment_id,
+        //         ...values,
+        //     }).then(()=>{
+        //         order.triggerRefresh();
+        //     }).catch(()=>{
 
-            }).finally(()=>{
-                setOpen(false);
-                setLoading(false)
-            })
-        })
+        //     }).finally(()=>{
+        //         setOpen(false);
+        //         setLoading(false)
+        //     })
+        // })
     }
 
     const cancel = () => {
@@ -66,7 +66,8 @@ function PackageTrackingModal({shipping}:{shipping:any}){
 
     return(
         <>
-            {(shippingInfo?.shipping_no && shippingInfo?.shipping_no !== "") ? <>
+            <div>123</div>
+            {/* {(shippingInfo?.shipping_no && shippingInfo?.shipping_no !== "") ? <>
                 <a onClick={()=>{
                     form.setFieldsValue({
                         shippingNo:shippingInfo.shipping_no,
@@ -76,7 +77,7 @@ function PackageTrackingModal({shipping}:{shipping:any}){
                     setLogisticsValue(shippingInfo.shipping_courier_id)
                     setOpen(true)
                 }}>编辑跟踪信息</a>            
-            </>:<PrimaryButton text={intl.formatMessage({ id: "order.detail.addtracking" })} onClick={()=>setOpen(true)} />}
+            </>:<PrimaryButton text={intl.formatMessage({ id: "order.detail.addtracking" })} onClick={()=>setOpen(true)} />} */}
             <Modal open={open} width={520} title="更新运单号" centered onCancel={cancel}
                 footer={(_, { OkBtn, CancelBtn }) => (
                     <>
