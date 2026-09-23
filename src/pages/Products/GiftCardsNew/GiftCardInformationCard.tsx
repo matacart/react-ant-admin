@@ -1,12 +1,12 @@
 import DefaultInput from "@/components/Input/DefaultInput";
 import giftCard from "@/store/product/giftCard";
-import { getSymbolLeft } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 import { Card, Form } from "antd";
 import { useEffect, useState } from "react";
 
 function GiftCardInformationCard() {
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
   
     useEffect(()=>{
        

@@ -12,13 +12,14 @@ import productList from "@/store/product/productList";
 import { observer } from "mobx-react-lite";
 import MoreSelect from "./MoreSelect";
 import LangSelect from "@/components/Select/LangSelect";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 
 // type TagRender = SelectProps['tagRender'];
 const ProductsSelectCard = ()=>{
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const [searchType,setSearchType] = useState("SEARCH_TXT");
     const [searchText,setSearchText] = useState("");

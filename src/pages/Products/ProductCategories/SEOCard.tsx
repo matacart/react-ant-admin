@@ -4,11 +4,11 @@ import styled from "styled-components"
 import cookie from 'react-cookies';
 import categories from "@/store/product/categories";
 import SEOEdit from "@/pages/Components/SEOEdit";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
  function SEOCard(){
 
-    const parmainDomain = getPrimaryDomain();
+    const parmainDomain = usePrimaryDomain();
     
     const previewPrefix = parmainDomain ? `${parmainDomain}/collections/`: "";
 

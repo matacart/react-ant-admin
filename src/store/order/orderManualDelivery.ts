@@ -12,6 +12,13 @@ class OrderManualDelivery{
         makeAutoObservable(this)
     }
 
+    // 刷新状态
+    refreshKey = 0;
+    // 状态更新
+    triggerRefresh() {
+      this.refreshKey += 1;
+    }
+
     orderInfo:OrderInfoType = {
         bizOrderStatus:100,
         bizPayStatus:0,

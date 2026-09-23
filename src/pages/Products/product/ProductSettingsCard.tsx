@@ -253,7 +253,6 @@ function ProductSettingsCard() {
                 </div>
                 <Form form={form} layout="vertical">
                     <Form.Item
-                        name="SPU"
                         style={{ fontWeight: 600 }} label={
                             <>
                                 SPU
@@ -274,7 +273,7 @@ function ProductSettingsCard() {
                             }}
                         />
                     </Form.Item>
-                    <Form.Item name="weight" label={<>重量</>} >
+                    <Form.Item label={<>重量</>} >
                         <Space.Compact>
                             <DefaultInputNumber
                                 style={{width:"100%"}}
@@ -304,11 +303,10 @@ function ProductSettingsCard() {
                     {/* 标签问题 */}
                     <Form.Item
                         className="moreLink"
-                        name="tags"
                         label={
                             <div className="label-content between">
                                 <span>标签</span>
-                                <TagsModal language={product.productInfo.languages_id} tags={tags} updatetag={(value:any)=>{
+                                <TagsModal language={product.languageId} tags={tags} updatetag={(value:any)=>{
                                     setTags([...value])
                                     product.setProductInfo({
                                         ...product.productInfo,

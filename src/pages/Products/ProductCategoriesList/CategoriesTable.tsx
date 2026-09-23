@@ -7,7 +7,7 @@ import { history } from '@umijs/max';
 import styled from 'styled-components';
 import categoriesList from '@/store/product/categoriesList';
 import { useAbortController } from '@/hooks/customHooks';
-import { getPrimaryDomain } from '@/utils/dataStructure';
+import { usePrimaryDomain } from '@/hooks/customHooks';
 import DeleteModal from '@/components/Modal/DeleteModal';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -33,9 +33,6 @@ interface TableParams {
 function CategoriesTable() {
 
   const { message } = App.useApp();
-
-  // 预览域名默认
-  const previewDomain = getPrimaryDomain();
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
@@ -145,7 +142,7 @@ function CategoriesTable() {
             <ButtonIcon>
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation();
-                    const primaryDomain = getPrimaryDomain();
+                    const primaryDomain = usePrimaryDomain();
                     primaryDomain && window.open(`${primaryDomain}/collections/${record.handle}`)
                   }}>
                   <Tooltip title="预览">

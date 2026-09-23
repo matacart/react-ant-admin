@@ -1,4 +1,4 @@
-import { Col, Flex, Form, Input, Modal, Radio, Select, Switch } from "antd";
+import { Col, Flex, Form, Modal } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import DefaultSelect from "../Select/DefaultSelect";
@@ -35,18 +35,19 @@ export default function ProductDefenseModal(props:any) {
         });
     }
 
-    useEffect(()=>{
+    const init = ()=>{
+        setIsOpen(true)
         form.setFieldsValue({
             defenseSort:props.data.productInfo.group_id,
             defenseStatus:props.data.productInfo.ad_waf_status,
             productId:props.data.productInfo.ad_product_id,
             productUrl:props.data.productInfo.ad_product_url
         });
-    },[props.status])
+    }
 
     return(
         <>
-            <a onClick={()=>{setIsOpen(true)}}>编辑</a>
+            <a onClick={()=>init()}>编辑</a>
             <Modal destroyOnHidden width="650px" title="防护信息" centered open={isOpen}
                 footer={() => (
                     <Flex justify="end">

@@ -12,6 +12,7 @@ import ExportShippingModal from './ExportShippingModal';
 import orderList from '@/store/order/orderList';
 import ExportOrderPageModal from './ExportOrderPageModal';
 import ExportOrderDetailModal from './ExportOrderDetailModal';
+import BatchDeliveryModal from './BatchDeliveryModal';
 
 
 export default function Orders() {
@@ -20,21 +21,7 @@ export default function Orders() {
 
   const intl = useIntl();
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [updateTrackingModalVisible, setUpdateTrackingModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-    message.success(intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' }));
-  };
 
   const showUpdateTrackingModal = () => {
     setUpdateTrackingModalVisible(true);
@@ -106,7 +93,7 @@ export default function Orders() {
               </div>
             </Flex>
             <Flex gap={12}>
-              <DefaultButton onClick={showModal} text={intl.formatMessage({ id: 'orders.orderList.index.batchDelivery' })} />
+              <BatchDeliveryModal />
               <DefaultButton onClick={showUpdateTrackingModal} text={intl.formatMessage({ id: 'orders.orderList.index.updateTrackingNumber' })} />
               <PrimaryButton text={intl.formatMessage({ id: 'orders.orderList.index.createOrder' })} onClick={() => { history.push('/orders/draftOrders/add') }} />
             </Flex>
@@ -118,50 +105,6 @@ export default function Orders() {
             </div>
           </div>
         </div>
-        {/* 模态框：批量发货 */}
-        <Modal
-          title={intl.formatMessage({ id: 'orders.orderList.index.bulkDelivery' })}
-          open={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          okText={intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })}
-          cancelText={intl.formatMessage({ id: 'orders.orderList.index.cancel' })}
-          footer={[
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Button key="import-record" onClick={handleCancel}>
-                {intl.formatMessage({ id: 'orders.orderList.index.importRecord' })}
-              </Button>,
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <Button key="cancel" onClick={handleCancel}>
-                  {intl.formatMessage({ id: 'orders.orderList.index.cancel' })}
-                </Button>,
-                <Button key="ok" type="primary" onClick={handleOk}>
-                  {intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })}
-                </Button>,
-              </div>
-            </div>
-          ]}
-          width={600} // 设置 Modal 宽度
-        >
-          <p>
-            {intl.formatMessage({ id: 'orders.orderList.index.downloadTemplate' })}
-          </p>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <Upload
-              name="file"
-              multiple
-              action="your-upload-endpoint"
-              listType="picture-card"
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
-              style={{ width: '90%' }} // 尝试设置为模态框内容区域的 90%
-            >
-              <div>
-                {intl.formatMessage({ id: 'orders.orderList.index.uploadFile' })}                
-              </div>
-            </Upload>
-          </div>
-        </Modal>
         {/* 模态框：更新订单追踪编号 */}
         <Modal
           title={intl.formatMessage({ id: 'orders.orderList.index.updateTrackingNumberModalTitle' })}

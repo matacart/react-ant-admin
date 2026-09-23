@@ -11,7 +11,6 @@ import EventTraceCard from './EventTraceCard';
 import IPAddressAccessCard from './IPAddressAccessCard';
 import RobotsFileManagementCard from './RobotsFileManagementCard';
 import SitemapFileManagementCard from './SitemapFileManagementCard';
-import { useSleep } from '@/hooks/customHooks';
 import { getHomeSeo, getProtectionPassWord, getSitemapList, getSitemapStatus, getSocialPicture, updateProtectionPassWord } from '@/services/y2/api';
 import cookie from 'react-cookies';
 import preferences from '@/store/channel/preferences/preferences';

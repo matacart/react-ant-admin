@@ -44,7 +44,6 @@ function Articles(){
                 </div>
             </div>}
         </Scoped>
-        
     );
 }
 

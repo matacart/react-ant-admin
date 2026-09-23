@@ -20,8 +20,7 @@ import VersionAddModal from "./VersionAddModal";
 import VersionRepairModal from "./VersionRepairModal";
 import modal from "antd/lib/modal";
 import DangerButton from "@/components/Button/DangerButton";
-import { getPrimaryDomain } from "@/utils/dataStructure";
-
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 interface MyStylesCardProps {
   onSwitchToStore: () => void;
@@ -30,6 +29,8 @@ interface MyStylesCardProps {
 function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     
   const { message } = App.useApp();
+
+  const previewDomain = usePrimaryDomain();
 
   const [loading,setLoading] = useState(false);
 
@@ -66,9 +67,6 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     }).finally(()=>{
     })
   }
-
-  // 预览域名
-  const previewDomain = getPrimaryDomain();
 
   const themeItems: MenuProps['items'] = [
     {
@@ -182,7 +180,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '2',
                           },
                           {
-                            label: <VersionRepairModal template={shopSetting.templateInstanceUsing || null} />,
+                            label: <VersionRepairModal template={ctemplateInstanceUsing || null} />,
                             key: '3',
                           }
                         ]}} trigger={['click']} text="版本" />

@@ -7,7 +7,8 @@ import CommodityClassificationSelector from "@/pages/Products/ProductList/Commod
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
 import { getProductList } from "@/services/y2/api";
 import orderDraft from "@/store/order/orderDraft";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 import {Flex, Form, Input, Modal, Row, Select, Space, Table, TableProps } from "antd"
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -91,7 +92,7 @@ function ProductTableModal(){
 
     const [productList,setProductList] = useState<any>([]);
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const Ref = useRef(null);
 

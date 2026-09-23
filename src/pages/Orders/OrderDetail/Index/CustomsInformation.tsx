@@ -9,9 +9,9 @@ import ContactInformation from "../Modal/ContactInformation";
 import MyDropdown from "@/components/Dropdown/MyDropdown";
 import AddIDCard from "../Modal/AddIDCard";
 import copy from "copy-to-clipboard";
-import DeliveryAddressModal from "../Modal/DeliveryAddressModal";
 import { useEffect, useState } from "react";
 import { getUseOrderHistory } from "@/services/y2/apiStore";
+import DeliveryAddressModal from "../Modal/DeliveryAddressModal";
 
 function CustomsInformation() {
 
@@ -20,6 +20,10 @@ function CustomsInformation() {
     const intl = useIntl();
 
     const [historyCount, setHistoryCount] = useState(0);
+
+    const onSuccess = () => {
+        order.triggerRefresh();
+    }
 
     const copyAddress = () => {
         if(!order.orderInfo.receiverInfo){
@@ -108,7 +112,7 @@ function CustomsInformation() {
                 <Form>
                     <Flex justify="space-between" style={{marginBottom:"8px"}}>
                         <div className="font-w-600">{intl.formatMessage({ id:'order.orderDetail.deliveryaddress'})}</div>
-                        <DeliveryAddressModal />
+                        <DeliveryAddressModal orderSeq={order.orderInfo?.orderSeq} languagesId={order.languages} receiverInfo={order.orderInfo?.receiverInfo} success={onSuccess} />
                     </Flex>
                     {order.orderInfo?.receiverInfo?.deliveryType ? <Tooltip title="复制地址与邮编">
                         <div className="cursor-pointer" onClick={()=>copyAddress()}>

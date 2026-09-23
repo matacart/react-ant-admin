@@ -7,7 +7,7 @@ import NumberInput from "@/components/Input/NumberInput";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import productList from "@/store/product/productList";
-import { getSymbolLeft } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 
 const style: React.CSSProperties = {
@@ -20,7 +20,7 @@ function ModifyPriceModal({type,onFetchData}:{type:string,onFetchData:any}){
     
     const { message } = App.useApp();
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const text = (type=='specls'?'售价':'原价')
 

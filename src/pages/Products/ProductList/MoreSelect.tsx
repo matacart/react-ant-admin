@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import DefaultButton from '@/components/Button/DefaultButton';
 import NumberInput from '@/components/Input/NumberInput';
 import CheckSelectSubmit from '@/components/Select/CheckSelectSubmit';
-import { getPrecision, getSymbolLeft } from '@/utils/common';
+import { getPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 // 修改第20行状态声明
 interface OptionType {
@@ -21,7 +22,7 @@ export default function MoreSelect(){
   const Ref = React.useRef(null);
   const intl = useIntl();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
   const {decimals,amountRule} = getPrecision();
 
   const [open, setOpen] = useState(false);

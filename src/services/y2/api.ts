@@ -133,18 +133,6 @@ export function getDomainLanguages(){
   })
 }
 
-// 物流服务商---商户数据
-export function getShippingcourier() {
-  return request<ApiAppstore.Default>(`/ApiAppstore/shippingcourier_select`, {
-    method: 'POST',
-    retryOnError: true, // 重试
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-}
-
-
 
 // 偏好设置 --- 获取robots.txt配置
 export async function getRobotsTxtConfig(signal?:AbortSignal){
@@ -2558,65 +2546,9 @@ export async function carateAddress(res:any) {
   })
 }
 
-// 设置订单收货地址
-export async function setOrderShippingAddress(res:any) {
-  return request(`/ApiStore/setOrderShippingAddress`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 设置物流单号
-export async function setOrderNumber(res:any) {
-  return request(`/ApiStore/setShippingNo`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 设置退货单号
-export async function setOrderNumberReturn(res:any) {
-  return request(`/ApiStore/setReturnShippingNo`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
 // 设置订单发货
 export async function setOrderShipped(res:any) {
   return request(`/ApiStore/setOrderShipped`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 取消订单发货
-export async function cancelOrderShipment(res:{orderId:string,shippingSn:string,shipmentId:string}) {
-  return request(`/ApiStore/cancelOrderShipment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2837,18 +2769,6 @@ export async function splitOrderProducts(res:{orderProducts:string}) {
   })
 }
 
-export async function getReturnReasons(languagesId:string) {
-  return request(`/ApiStore/getReturnReasons`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      languagesId:languagesId
-    }
-  })
-}
 export async function getReturnActions(languagesId:string) {
   return request(`/ApiStore/getReturnActions`, {
     method: 'POST',

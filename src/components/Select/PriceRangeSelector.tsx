@@ -3,8 +3,9 @@ import React, { useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import DefaultInputNumber from '../Input/DefaultInputNumber';
 import productList from '@/store/product/productList';
-import { getPrecision, getSymbolLeft } from '@/utils/common';
+import { getPrecision } from '@/utils/common';
 import MyButton from '../Button/MyButton';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 
 export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
@@ -13,7 +14,8 @@ export default function PriceRangeSelector({min,setMin,max,setMax}:any) {
 
     const [popoverOpen, setPopoverOpen] = useState(false);
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
+    
     const {decimals,amountRule} = getPrecision();
 
     const onSubmit = () => {

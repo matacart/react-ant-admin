@@ -12,49 +12,42 @@ import PackageTrackingSecondModal from "../Modal/PackageTrackingSecondModal";
 import { setMarkProductAsRefunded } from "@/services/y2/api";
 import { history } from "@umijs/max";
 
-function ReturnInProgress({groupIndex}:{groupIndex:number}) {
+function OrderReturning({groupIndex}:{groupIndex:number}) {
 
   const { message } = App.useApp();
 
   const [loading,setLoading] = useState(false)
 
-  const returnInfo  = order.returnInProductsGroup[groupIndex]
+  const afterSaleOrder  = order.afterSaleOrderList[groupIndex];
 
   return (
     <Card
       title={
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
-          {returnInfo.return.return_status_id == "3" ? <>
-            <Flex align="center" gap={10}>
-              <ReturnCompletedSecondIcon className="font-28" />
-              <span className="font-w-500">{"已退货"}（{returnInfo.return.returned_quantity}）</span>
-            </Flex>
-          </>:<>
-            <Flex align="center" gap={10}>
-              <ReturnSecondIcon className="font-28" />
-              <span className="font-w-500">{"退货中"}（{returnInfo.return.returned_quantity}）</span>
-            </Flex>
-          </>}
+          <Flex align="center" gap={10}>
+            <ReturnSecondIcon className="font-28" />
+            {/* <span className="font-w-500">{"退货中"}（{returnInfo.return.returned_quantity}）</span> */}
+          </Flex>
           <MyDropdown
             tiggerEle={
               <div className="cursor-pointer"><EllipsisOutlined /></div>
             }
             placement="bottomRight"
             menu={{
-              items:[
-                {
-                    key: "1", label: (
-                      <PackageTrackingSecondModal shipping={returnInfo} />
-                    )
-                },
-              ]
+              // items:[
+              //   {
+              //       key: "1", label: (
+              //         <PackageTrackingSecondModal shipping={returnInfo} />
+              //       )
+              //   },
+              // ]
             }} />
         </Flex>
       }
     >
       <Form>
         <div className="font-w-400">
-          {returnInfo.product.map((item:any,index:number)=>{
+          {/* {returnInfo.product.map((item:any,index:number)=>{
             return(
               <Row key={index} style={{marginBottom:"20px"}}>
                 <Col span={14}>
@@ -82,14 +75,13 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
                 </Col>
               </Row>
             )
-          })}
+          })} */}
         </div>
       </Form>
       <Divider />
       <Form>
         {returnInfo.return.shipping_no == "" ?<>
         <div style={{ fontSize: "14px", color: "#7A8499" }}>{"包裹跟踪信息"}: 无</div>
-        {/* <PackageTrackingModal shipping={shippedInfo} /> */}
         </>:<Flex justify="space-between" align="center">
         <Flex>
             <div className="color-7A8499">{returnInfo.return.shipping_courier_name == ""?"包裹跟踪信息":returnInfo.return.shipping_courier_name}：</div>
@@ -107,7 +99,7 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
             } />
         </Flex>
         <Flex justify="flex-end" gap={12}>
-            {returnInfo.return.return_status_id !== "3" && <DefaultButton text={"标记为已退货"} onClick={()=>{
+            {/* {returnInfo.return.return_status_id !== "3" && <DefaultButton text={"标记为已退货"} onClick={()=>{
               const modal = Modal.confirm({
                 title: <div className="font-w-600">确认将商品状态标记为已退货？</div>,
                 icon: <ExclamationCircleFilled style={{color:"#1677ff"}} />,
@@ -122,25 +114,14 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
                               <DefaultButton text={"取消"} onClick={()=>modal.destroy()} />
                               <PrimaryButton text={"确定"} onClick={()=>{
                                 setLoading(true)
-                                setMarkProductAsRefunded({
-                                  orderId: order.orderInfo.order_id,
-                                  returnId: returnInfo.return.return_id
-                                }).then(res=>{
-                                  modal.destroy()
-                                  message.success("商品状态已标记为已退货")
-                                  order.triggerRefresh()
-                                }).catch(err=>{
-                                  console.log(err)
-                                }).finally(()=>{
-                                  setLoading(false)
-                                })
+                                
                               }} loading={loading} />
                           </Flex>
                       </Flex>
                   </>
                 ),
               });
-            }} />}
+            }} />} */}
             <PrimaryButton text={"退款"} onClick={()=>history.push(`/orders/${order.orderInfo.order_id}/returns/${returnInfo.return.return_id}/refund`)}  />
         </Flex>
         </Flex>}
@@ -149,4 +130,4 @@ function ReturnInProgress({groupIndex}:{groupIndex:number}) {
   );
 }
 
-export default observer(ReturnInProgress);
+export default observer(OrderReturning);

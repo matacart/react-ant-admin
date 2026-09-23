@@ -14,7 +14,6 @@ export default function UserCard(props:any) {
      */
     const loginOut = async () => {
         // 清除缓存
-        sessionStorage.removeItem("domain");
         await logout();
         let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
         clearAllCookies();

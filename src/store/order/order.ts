@@ -8,6 +8,11 @@ export interface RemarkType{
   updateTime: number;
 }
 
+export interface ReturnReasonType{
+  label:string;
+  value:string;
+}
+
 interface LocationAddressType{
 }
 
@@ -27,7 +32,6 @@ export interface ItemGroupType{
   locationAddress:LocationAddressType;
   requireShipping: boolean;
 }
-
 
 export interface MultiExpressInfoType{
   expressCode: string;
@@ -55,8 +59,6 @@ export interface PriceSetInfoType{
     };
   };
 }
-
-
 
 export interface OrderInfoType{
   orderSeq: string;
@@ -110,6 +112,7 @@ interface PayBillInfoType{
 
 export interface FulfillmentItemType{
   groupId: string;
+  fulfillmentOrderSeq: string;
   parentSkuId: string;
   productSeq: string;
   productSku: string;
@@ -121,11 +124,11 @@ export interface FulfillmentItemType{
   productAmount:number;
   version:string;
   attributes:any[];
+  images:any[];
 
   // 修改数量
   productModifyNum?:number;
 }
-
 
 export interface FulfillmentListType{
   fulfillmentOrder:any;
@@ -133,16 +136,34 @@ export interface FulfillmentListType{
   locationAddress:LocationAddressType;
 }
 
-interface RemainingProductsGroup{
-  shipment: any;
-  product: any;
-  fulfillment:any;
+export interface OrderRefundDetailInfoType{
+  groupId:string;
+  skuNum:string;
+  orderItem:FulfillmentItemType;
+  itemRefundReason:{
+    returnReason:string;
+    returnReasonNote:string;
+  };
 }
 
-interface ReturnInProductsGroup{
-  return: any;
-  product: any;
+export interface OrderRefundType{
+  refundSeq:string;
+  refundGoodsStatus:string;
+  expressCode:string;
+  expressCompany:string;
+  expressCompanyCode:string;
+  expressUrl?:string;
+  orderRefundDetailInfoList:OrderRefundDetailInfoType[];
 }
+
+export interface AfterSaleOrderType{
+  afterSaleOrderSeq: string;
+  afterSaleType: string;
+  canCancelRefund: boolean;
+  canRefundAgain: boolean;
+  orderRefund:OrderRefundType;
+}
+
 
 class Order{
     constructor() {
@@ -207,11 +228,15 @@ class Order{
     setFulfillmentOrderList(value:FulfillmentListType[]){
       this.fulfillmentOrderList = value
     }
-
     // 发货单列表
     ordersPackageList:OrdersPackageType[] = []
     setOrdersPackageList(value:OrdersPackageType[]){
       this.ordersPackageList = value
+    }
+    // 退货单列表
+    afterSaleOrderList:AfterSaleOrderType[] = []
+    setAfterSaleOrderList(value:AfterSaleOrderType[]){
+      this.afterSaleOrderList = value
     }
 
 
@@ -229,6 +254,7 @@ class Order{
 
     // 状态初始化
     reset(){
+      this.refreshKey = 0;
       // this.setOrderInfo(this.getInitOrder())
       // this.customerInfo = {}
     }

@@ -1,7 +1,7 @@
 import { SettingOutlined } from '@ant-design/icons';
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,setLocale,useIntl } from '@umijs/max';
-import { getAccessToken, getCurrenciesList, getPlatformInfo, getShippingcourier, getTimeZoneList, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { getAccessToken, getCurrenciesList, getPlatformInfo, getTimeZoneList, currentUser as queryCurrentUser } from '@/services/y2/api';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { App, ConfigProvider, Flex, message } from 'antd';
@@ -16,6 +16,7 @@ import "nprogress/nprogress.css";
 import channels from './store/menu/channels';
 import { reaction } from 'mobx';
 import { i18n } from './components/Lang/Lang';
+import { getShippingCourier } from './services/y2/apiLogistics';
 // 懒加载组件
 const LazyHeader = lazy(() => import('./components/Header/Header'));
 const LazyMCPaymentHead = lazy(() => import('./components/Header/MCPaymentHead'));
@@ -24,6 +25,21 @@ const LazySalesChannel = lazy(() => import('./components/Menu/SalesChannel'));
 // import Header from './components/Header/Header';
 // import MCPaymentHead from './components/Header/MCPaymentHead';
 // 流程参考 https://www.bilibili.com/video/BV1yH4y1T7NW
+
+
+// 让静态 message/notification/Modal 能读到 Context
+ConfigProvider.config({
+  holderRender: (children) => (
+    <ConfigProvider
+      // 这里传的 theme 要和应用主体的 theme 保持一致
+      theme={{
+        token: { colorPrimary: '#1677FF' },
+      }}
+    >
+      <App>{children}</App>
+    </ConfigProvider>
+  ),
+});
 
 // 配置化请求参数
 const CONFIG_REQUESTS = [
@@ -48,7 +64,7 @@ const fetchWithRetry = (url: string, retries: number): Promise<any> => {
   });
 };
 // 安全存储方法
-const safeSessionStorageSet = (key: string, data: unknown) => {
+const safeLocalStorageSet = (key: string, data: unknown) => {
   try {
     if (data && typeof data === 'object') {
       localStorage.setItem(key, JSON.stringify(data));
@@ -62,7 +78,7 @@ Promise.allSettled(
   CONFIG_REQUESTS.map(({ url, storageKey, retry }) => 
     fetchWithRetry(url, retry).then(response => {
       if (response?.data?.code === 0 && response.data.data) {
-        safeSessionStorageSet(storageKey, response.data.data);
+        safeLocalStorageSet(storageKey, response.data.data);
       }
       return response;
     }).catch(err => {
@@ -100,10 +116,7 @@ export async function getInitialState(): Promise<{
       // 获取平台信息
       const platformInfo = await getPlatformInfo();
       platformInfo?.code == 0 && localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(platformInfo.data));
-      // 获取物流服务
-      getShippingcourier().then(res=>{
-        res.code == 0 && localStorage.setItem("MC_DATA_SHIPPING_COURIER",JSON.stringify(res.data??[]));
-      })
+      
       // 获取时区列表
       getTimeZoneList().then(res=>{
         res.code == 0 && localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res?.data??[]));

@@ -5,14 +5,16 @@ import { useIntl } from "@umijs/max";
 import { PendingSecondIcon } from "@/components/Icons/Icons";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import styled from "styled-components";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
+
 
 
 function Settlement() {
   
   const { message } = App.useApp();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const intl = useIntl();
 

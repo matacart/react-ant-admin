@@ -34,17 +34,16 @@ export default function Create() {
     const [currencieList,setCurrencieList] = useState<SelectListType[]>();
 
     useEffect(()=>{
-        const countrys = JSON.parse(sessionStorage["country"]).map(
-            (item:any)=>{
-                return {
-                    label: item.country_name,
-                    value: item.country_id
-                }
+        const newCountry = JSON.parse(localStorage.getItem("MC_DATA_COUNTRY") || "[]").map((item:any)=>{
+            return {
+                value: item.country_id,
+                label: item.country_name,
+                iso_code_2:item.iso_code_2,
+                iso_code_3:item.iso_code_3,
             }
-        )
-        setCountryList(countrys)
-        
-        const currencies = JSON.parse(sessionStorage["currencies"]).map(
+        })
+        setCountryList(newCountry)
+        const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || "[]").map(
             (item:any)=>{
                 return {
                     label: item.title,

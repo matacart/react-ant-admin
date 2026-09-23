@@ -9,10 +9,11 @@ import product from "@/store/product/product";
 import { App, Flex, Form, Input, Modal } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import _ from "lodash";
+import { toJS } from "mobx";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function AttributesModal({optionsList,attributesOptionType,setOptionList,attributes,attributesMap,setAttributesMap}: {optionsList:any,setOptionList:any,attributesOptionType:any,attributes:any,attributesMap:any,setAttributesMap:any}){
+function AttributesModal({optionsList,attributesOptionType,setOptionList,attributes}: {optionsList:any,setOptionList:any,attributesOptionType:any,attributes:any}){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,7 +38,7 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
             addStyleName(values.id,values.languageID,values.option_name,values.option_type).then(res=>{
                 if(res?.code == 0){
                     if(isCreate){
-                        setAttributesMap(attributesMap.map((item:any)=>item.value == attributes.value?{
+                        product.setAttributesMap(product.attributesMap.map((item:any)=>item.value == attributes.value?{
                             label:values.option_name,
                             value:res?.id.toString(),
                             options:[],
@@ -51,7 +52,7 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
                             }
                         ])
                     }else{
-                        setAttributesMap(attributesMap.map((item:any)=>item.value == attributes.value?{
+                        product.setAttributesMap(product.attributesMap.map((item:any)=>item.value == attributes.value?{
                             ...item,
                             label:values.option_name,
                         }:item));
@@ -80,7 +81,7 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
     const addAttributes = ()=>{
         form.setFieldsValue({
             id:"",
-            languageID:product.productInfo.languages_id,
+            languageID:product.languageId,
             option_name:"",
             option_type:"0",
             status:"1",
@@ -92,11 +93,11 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
     // 编辑
     const editAttributes = ()=>{
         // 获取属性详情
-        getProductOption(attributes.value,product.productInfo.languages_id).then(res=>{
+        getProductOption(attributes.value,product.languageId).then(res=>{
             if(res?.code == 0){
                 form.setFieldsValue({
                     id:res?.data?.option_id.toString(),
-                    languageID:product.productInfo.languages_id,
+                    languageID:product.languageId,
                     option_name:res?.data?.option_name,
                     option_type:res?.data?.option_type_id,
                     status:"1",
@@ -145,18 +146,18 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
                 onSelect={async (value,option)=>{
                     if(attributes.value == option.value) return;
                     // 是否存在重复值
-                    if(attributesMap.some((item:any)=>item.value == option.value)){
+                    if(product.attributesMap.some((item:any)=>item.value == option.value)){
                         message.error("不能选择重复的属性")
                         return;
                     }
-                    const newOptions = await getProductStyleValueList(option.value as string,product.productInfo.languages_id).then(res=>{return res?.data || []})
-                    const newAttributesMap = _.cloneDeep(attributesMap).map((item:any)=>item.value == attributes.value?{
+                    const newOptions = await getProductStyleValueList(option.value as string,product.productInfo.cod_languages_id).then(res=>{return res?.data || []})
+                    const newAttributesMap = toJS(product.attributesMap).map((item:any)=>item.value == attributes.value?{
                         label:option.label,
                         value:option.value,
                         options:newOptions || [],
                         optionValue:[]
                     }:item)
-                    setAttributesMap(newAttributesMap)
+                    product.setAttributesMap(newAttributesMap)
                 }} 
                 placeholder="搜索或创建属性" 
                 options={options} 

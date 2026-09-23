@@ -9,7 +9,6 @@ import shopSetting from '@/store/channel/shopSetting/shopSetting';
 import LangSelect from '@/components/Select/LangSelect';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
-import cookies from 'react-cookies';
 
 function ShopSetting(){
 

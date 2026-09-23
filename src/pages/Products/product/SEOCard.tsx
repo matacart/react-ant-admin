@@ -3,11 +3,11 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import SEOEdit from "@/pages/Components/SEOEdit";
 import product from "@/store/product/product";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
  function SEOCard(){
 
-    const parmainDomain = getPrimaryDomain();
+    const parmainDomain = usePrimaryDomain();
 
     const previewPrefix = parmainDomain ? `${parmainDomain}/products/`: "";
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{

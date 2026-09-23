@@ -9,13 +9,14 @@ import orderDraft from '@/store/order/orderDraft';
 import ProductTableModal from './ProductTableModal';
 import EditDiscount from './EditDiscount';
 import AddCustomProducts from './AddCustomProducts';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 const AddProductCard = ()=> {
 
   const [form] = Form.useForm();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   return (
     <Scoped>

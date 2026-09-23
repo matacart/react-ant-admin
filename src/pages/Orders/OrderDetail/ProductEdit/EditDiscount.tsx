@@ -8,7 +8,7 @@ import { styled } from 'styled-components';
 import NumberInput from "@/components/Input/NumberInput";
 import orderProductEdit from "@/store/order/orderProductEdit";
 import { toJS } from "mobx";
-import { getSymbolLeft } from "@/utils/common";
+import { useSymbolLeft } from "@/utils/common";
 
 function EditDiscount({item}:{item:any}){
 
@@ -20,7 +20,7 @@ function EditDiscount({item}:{item:any}){
 
     const [discountType,setDiscountType] = useState(1);
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const product = orderProductEdit.remainingProductGroup[0].product.filter((product:any)=>item.id == "" ? product.vid == item.vid : product.id===item.id)[0]
     // console.log(product.product_price)

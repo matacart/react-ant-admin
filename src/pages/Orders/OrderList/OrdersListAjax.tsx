@@ -9,7 +9,8 @@ import { observer } from 'mobx-react-lite';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderList } from '@/services/y2/api';
 import { useAbortController } from '@/hooks/customHooks';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 import OrderEmptyTag from '@/components/Tag/OrderEmptyTag';
 // 表单项订单数据类型
 interface DataType {
@@ -53,7 +54,7 @@ function OrdersListAjax({ id }: FilterCondition) {
 
   const intl = useIntl();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const [loading, setLoading] = useState(false);
 

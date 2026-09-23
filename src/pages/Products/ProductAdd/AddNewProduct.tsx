@@ -131,7 +131,6 @@ function AddNewProduct(){
     useEffect(()=>{
         // 清空状态
         const init = async () => {
-            await product.reset(); // 如果 reset 是异步操作
             // 随机初始化型号
             const randomModal = "m"+new Date().getTime()
             await product.setProductInfo({
@@ -141,6 +140,12 @@ function AddNewProduct(){
             setIsSkeleton(false)
         };
         init();
+    },[])
+
+    useEffect(()=>{
+        return()=>{
+            product.reset()
+        }
     },[])
 
     // 保存提示

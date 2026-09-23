@@ -6,7 +6,8 @@ import { getProductList, upDateProductStatus } from '@/services/y2/api';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import productList from '@/store/product/productList';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -62,7 +63,7 @@ function GiftCardsTableCard(selectProps:any) {
   
   const { message } = App.useApp();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立

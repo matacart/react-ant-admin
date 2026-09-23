@@ -14,15 +14,14 @@ import GlobalSettingsRight from '../Right/GlobalSettingsRight/GlobalSettingsRigh
 import ApplicationRight from '../Right/ApplicationRight';
 import { usePreviewCommunication } from '@/components/Communication/ParentWindowCommunicationManager';
 import { v4 as uuidv4 } from 'uuid';
-import { getPrimaryDomain } from '@/utils/dataStructure';
 import { i18n } from '@/components/Lang/Lang';
+import { usePrimaryDomain } from '@/hooks/customHooks';
 
 function Editor() {
     
     const { message } = App.useApp();
-
-    // 预览域名
-    const previewDomain = getPrimaryDomain();
+    
+    const previewDomain = usePrimaryDomain();
     
     const { templateId = '',versionId ='',languageId = "2",mode = 'mapping' }  = useParams();
 
@@ -362,7 +361,7 @@ function Editor() {
     return <Scoped>
       {/* header */}
       {isSkeleton?<SkeletonCard />:<Spin spinning={isLoading}>
-        <Header templateId={templateId??""} previewDomain={previewDomain} nvData={navigationData} />
+        <Header templateId={templateId??""} nvData={navigationData} />
         <Flex>
           {/* left */}
           <div className="left">

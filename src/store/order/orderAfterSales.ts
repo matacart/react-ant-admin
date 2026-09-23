@@ -8,19 +8,26 @@ class OrderAfterSales{
       makeAutoObservable(this)
     }
 
+    // 退货产品数量
+    returnedProductNum:number = 0
+    setReturnedProductNum(value:number){
+      this.returnedProductNum = value
+    }
+
     // 订单信息
     orderInfo:OrderInfoType = {
-      bizOrderStatus:100,
-      bizPayStatus:0,
-      bizDeliveryStatus:0,
+      bizOrderStatus: 100,
+      bizPayStatus: 0,
+      bizDeliveryStatus: 0,
       orderSeq: "",
       appOrderSeq: "",
-      ordersPackageList:[],
+      ordersPackageList: [],
       orderRemarks: [],
-      receiverInfo:null,
-      payBillInfo:null,
-      buyerInfo:null,
-      tags:[]
+      receiverInfo: null,
+      payBillInfo: null,
+      buyerInfo: null,
+      tags: [],
+      priceSetInfo: null
     }
 
     setOrderInfo(value:OrderInfoType){

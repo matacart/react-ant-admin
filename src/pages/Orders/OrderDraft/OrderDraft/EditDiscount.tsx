@@ -10,7 +10,8 @@ import cookie from 'react-cookies';
 import NumberInput from "@/components/Input/NumberInput";
 import { toJS } from "mobx";
 import orderDraft from "@/store/order/orderDraft";
-import { currencyPrecision, getPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision, getPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 function EditDiscount({index}:{index:number}){
 
@@ -22,7 +23,7 @@ function EditDiscount({index}:{index:number}){
 
     const [discountType,setDiscountType] = useState(1);
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
     const { decimals,amountRule } = getPrecision();
 
     const product = orderDraft.productInfo[index]

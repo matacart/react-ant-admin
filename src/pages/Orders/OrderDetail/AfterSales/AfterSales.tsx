@@ -8,11 +8,11 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import ReturnDetails from './ReturnDetails';
 import ReturnInformation from './ReturnInformation';
-import { setOrderReturned } from '@/services/y2/api';
-import { getOrderDetail } from '@/services/y2/apiStore';
+import { createReturnOrder, getOrderDetail, getReturnReasonList } from '@/services/y2/apiStore';
 import { history, useParams } from '@umijs/max';
 import orderAfterSales from '@/store/order/orderAfterSales';
 import AfterSalesGoods from './AfterSalesGoods';
+import { FulfillmentItemType, ItemGroupType, OrdersPackageType, ReturnReasonType } from '@/store/order/order';
 
 function AfterSales() {
 
@@ -26,74 +26,63 @@ function AfterSales() {
 
     const [form] = Form.useForm();
 
+    const [returnReasonList,setReturnReasonList] = useState<ReturnReasonType[]>([]);
+
     // 验证通过 -- 
     const submit = async () => {
-      // if(orderReturnGoods.returnGoodsInfo.returnedGoodsNum > 0){
-      //   setLoading(true)
-      //   let newReturnProducts:any[] = [];
-      //   orderReturnGoods.shippedProductGroup.forEach((item:any)=>{
-      //     console.log(item)
-      //     item.product?.forEach((product:any)=>{
-      //       if(product.num>0){
-      //         newReturnProducts.push({
-      //           ordersProductId:product.id,
-      //           quantityReturned:product.num,
-      //           opened:product.opened,
-      //           returnActionId:product.returnActionId,
-      //           returnReasonId:product.returnReasonId,
-      //           returnReason:product.returnReason,
-      //           shipmentId:item.shipment.shipment_id,
-      //         })
-      //       }
-      //     })
-      //   })
-      //   let res = {
-      //     orderId:orderReturnGoods.orderInfo.order_id,
-      //     customerId:orderReturnGoods.orderInfo.customer_id,
-      //     comment:"",
-      //     firstname:orderReturnGoods.orderInfo.customer_firstname,
-      //     lastname:orderReturnGoods.orderInfo.customer_lastname,
-      //     email:orderReturnGoods.orderInfo.customer_email_address,
-      //     telephone:orderReturnGoods.orderInfo.customer_telephone,
-      //     shippingNo:orderReturnGoods.returnGoodsInfo.shippingNo,
-      //     shippingId:orderReturnGoods.returnGoodsInfo.shippingId,
-      //     shippingName:"",
-      //     returnProducts:JSON.stringify(newReturnProducts),
-      //     returnStatusId:"1"
-      //   }
-      //   setOrderReturned(res).then(res=>{
-      //     navigate(`/orders/${orderId}`)
-      //   }).catch(err=>{
-      //     console.log(err)
-      //   }).finally(()=>{
-      //     setLoading(false)
-      //   })
-      // }else{
-      //   message.error("请至少退一件商品")
-      // }
+      if(orderAfterSales.returnedProductNum === 0){
+        message.error("退货商品不能为空")
+        return
+      }
+      const values = form.getFieldsValue(true);
+      setLoading(true);
+      createReturnOrder({
+        ...values,
+        skuInfos:JSON.stringify(values.skuInfos.flat()),
+        languages_id:languagesId,
+        fromType:"2",
+        orderSeq:orderId,
+        storeId:values.storeId,
+      }).then((res)=>{
+        res.code == 0 && history.push(`/orders/${orderId}/${languagesId}`)
+      }).catch(()=>{
+        message.error("退货失败")
+      }).finally(()=>{
+        setLoading(false)
+      })
     }
 
     useEffect(() => {
       getOrderDetail({order_id:orderId,languages_id:languagesId}).then(res=>{
         orderAfterSales.setOrderInfo(res.data || {})
-        orderAfterSales.setOrdersPackageList(res.data?.ordersPackageList || [])
+        const newOrdersPackageList = res.data?.ordersPackageList.map((item:OrdersPackageType)=>{
+          return{
+            ...item,
+            itemGroupList:item.itemGroupList.map((item:ItemGroupType)=>{
+              return{
+                ...item,
+                itemList:item.itemList.map((item:FulfillmentItemType)=>{
+                  return{
+                    ...item,
+                    productModifyNum:0,
+                  }
+                })
+              }
+            })
+          }
+        })
+        orderAfterSales.setOrdersPackageList(newOrdersPackageList || [])
       }).catch(err=>{
         console.log(err);
       }).finally(()=>{
         setIsSkeleton(false)
       })
-
-      // getReturnReasons("1").then(res=>{
-      //   console.log(res)
-
-      // })
-      // getReturnActions("1").then(res=>{
-      //   console.log(res)
-      // })
-      // getReturnStatuses("1").then(res=>{
-      //   console.log(res)
-      // })
-
+      // 获取退货原因
+      getReturnReasonList(languagesId).then(res=>{
+        setReturnReasonList(res.data || [])
+      }).catch((e)=>{
+        message.error('err')
+      })
     },[]);
 
     return (
@@ -114,15 +103,15 @@ function AfterSales() {
                       </div>
                     </div>
                     <Flex gap={20}>
-                    <Flex className='mc-layout-content' vertical gap={20}>
-                      {orderAfterSales.ordersPackageList.map((item,index)=>{
-                        return <AfterSalesGoods groupIndex={index} />
-                      })}
-                      {/* <ReturnInformation form={form} /> */}
-                    </Flex>
-                    <Flex className='mc-layout-extra' vertical gap={20}>
-                      {/* <ReturnDetails /> */}
-                    </Flex>
+                      <Flex className='mc-layout-content' vertical gap={20}>
+                        {orderAfterSales.ordersPackageList.map((item,index)=>{
+                          return <AfterSalesGoods key={index} groupIndex={index} returnReasonList={returnReasonList} form={form} />
+                        })}
+                        <ReturnInformation form={form} />
+                      </Flex>
+                      <Flex className='mc-layout-extra' vertical gap={20}>
+                        <ReturnDetails form={form} />
+                      </Flex>
                     </Flex>
                     <Divider />
                     <Flex className='mc-footer' justify='flex-end'>

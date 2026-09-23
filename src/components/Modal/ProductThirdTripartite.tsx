@@ -150,8 +150,8 @@ export default function ProductThirdTripartite(props:any) {
         }
     };
 
-    useEffect(()=>{
-        // 排序
+    const init = ()=>{
+        setIsOpen(true)
         form.setFieldsValue({
             Amazon:props.diversion.url_amazon,
             eBay:props.diversion.url_ebay,
@@ -161,11 +161,11 @@ export default function ProductThirdTripartite(props:any) {
         })
         setItems(items.sort((a, b) => a.sort - b.sort))
         setTripartiteStatus(props.diversion.status == "1"?true:false)
-    },[props.diversion])
+    }
     
     return(
         <>
-            <a onClick={()=>{setIsOpen(true)}}>管理</a>
+            <a onClick={()=>init()}>管理</a>
             <Modal 
                 width="666px" 
                 title={<div style={{display:'flex'}}>

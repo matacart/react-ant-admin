@@ -1,39 +1,68 @@
 import SimpleCard from "@/components/Card/SimpleCard";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
+import globalStore from "@/store/globalStore";
 import { Form, Row, Col, Flex } from "antd";
-import { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { useEffect, useMemo, useRef } from "react";
 import styled from "styled-components";
+import { Logistic } from "../AfterSales/ReturnInformation";
+import { FavoriteIcon } from "@/components/Icons/Icons";
 
 function LogisticsTrackingInformation({form}:{form:any}){
 
-    const [logistics,setLogistics] = useState<any[]>([]);
-
     const listData = Form.useWatch("multiExpressInfo", form);
 
-    useEffect(()=>{
-        const newLogistics = JSON.parse(localStorage["MC_DATA_SHIPPING_COURIER"] || "[]").map((item:any)=>{
-            return{
-                value:item.id,
-                label:item.courier_name,
-                expressCompany:item.courier_name,
-                expressUrl:item.courier_url,
+    const scopedRef = useRef<any>(null);
+    // 收藏
+    const toggleFavorite = (courierId:string)=>{
+        globalStore.toggleFavorite(courierId);
+    }
+    // 挂载时触发加载
+    useEffect(() => {
+        globalStore.getShippingCourierList();
+    }, []);
+
+    const logisticsOptions = useMemo(() => {
+        let favoriteLogistics:Logistic[] = [];
+        let otherLogistics:Logistic[] = [];
+
+        globalStore.shippingCourierList.forEach((item)=>{
+            if(item.favorite){
+                favoriteLogistics.push({
+                    value: item.courierId,
+                    label: item.name,
+                    info: item,
+                });
+            }else{
+                otherLogistics.push({
+                    value: item.courierId,
+                    label: item.name,
+                    info: item,
+                });
             }
         })
-        setLogistics([...newLogistics,{
-            value:'0',
-            label:"其它",
-            expressCompany:"",
-            expressUrl:""
-        }])
-    },[])
+
+        return [
+            ...(favoriteLogistics.length > 0 ? [{
+                label: "我的收藏",
+                title: "我的收藏",
+                options: favoriteLogistics,
+            }] : []),
+            {
+                label:"全部服务商",
+                title: '全部服务商',
+                options: [...otherLogistics,{ value: "0", label: "其它", info: undefined as any }]
+            }
+        ];
+    }, [globalStore.shippingCourierList]);
 
 
     useEffect(()=>{
         form.setFieldsValue({
             multiExpressInfo:[{
                 expressCode:"",
-                expressCompanyCode:"",
+                expressCompanyCode:undefined,
                 expressCompany:"",
                 expressUrl:""
             }]
@@ -41,7 +70,7 @@ function LogisticsTrackingInformation({form}:{form:any}){
     },[])
 
     return (
-        <Scoped>
+        <Scoped ref={scopedRef}>
             <SimpleCard title={<Flex justify="space-between">
                 <div className="font-w-500">物流和跟踪信息</div>
             </Flex>} content={<div>
@@ -59,19 +88,48 @@ function LogisticsTrackingInformation({form}:{form:any}){
                                             </Col>
                                             <Col span={12}>
                                                 <Form.Item label="物流服务商" name={[name,"expressCompanyCode"]}>
-                                                    <MySelect placeholder="请填写快递公司名称" 
-                                                        showSearch 
-                                                        style={{height:"36px"}}
-                                                        options={logistics}
+                                                    <MySelect 
+                                                        placeholder="请填写快递公司名称"
+                                                        getPopupContainer={()=>scopedRef.current}
+                                                        classNames={{
+                                                            popup: {
+                                                                root: 'my-classname'
+                                                            }
+                                                        }}
+                                                        styles={{
+                                                            root: {
+                                                                height: '36px'
+                                                            },
+                                                            popup: {
+                                                                root: {
+                                                                    padding: "8px 0"
+                                                                }
+                                                            }
+                                                        }}
+                                                        options={logisticsOptions}
+                                                        optionRender={(option)=><Flex justify="space-between">
+                                                            <div>{option.label}</div>
+                                                            {option.value === '0' ? null : option.data?.info?.favorite ? (
+                                                                <div className="color-FFBC11" onClick={(e)=>{
+                                                                    e.stopPropagation();
+                                                                    toggleFavorite((option?.value || "") as string)
+                                                                }}><FavoriteIcon /></div>
+                                                            ) : (
+                                                                <div className="color-D7DBE7 option-favorite" onClick={(e)=>{
+                                                                    e.stopPropagation();
+                                                                    toggleFavorite((option?.value || "") as string)
+                                                                }}><FavoriteIcon /></div>
+                                                            )}
+                                                        </Flex>}
                                                         onChange={(value,options)=>{
                                                             if(value == '0'){
-                                                                form.setFieldValue(["multiExpressInfo", name, "expressCompany"], "");
-                                                                form.setFieldValue(["multiExpressInfo", name, "expressUrl"], "");
+                                                                form.setFieldValue(["multiExpressInfo",name,"expressCompany"], "");
+                                                                form.setFieldValue(["multiExpressInfo",name,"expressUrl"], "");
                                                                 return;
                                                             }
-                                                            const target = logistics.find((item) => item.value == value);
-                                                            form.setFieldValue(["multiExpressInfo", name, "expressCompany"], target?.expressCompany || "");
-                                                            form.setFieldValue(["multiExpressInfo", name, "expressUrl"], target?.expressUrl || "");
+                                                            const target = logisticsOptions.flatMap((group) => group.options).find((item) => item.value === value);
+                                                            form.setFieldValue(["multiExpressInfo",name,"expressCompany"], target?.label || "");
+                                                            form.setFieldValue(["multiExpressInfo",name,"expressUrl"], target?.info?.webUrl || "");
                                                         }}
                                                     />
                                                 </Form.Item>
@@ -118,4 +176,4 @@ const Scoped = styled.div`
 
 `
 
-export default LogisticsTrackingInformation;
+export default observer(LogisticsTrackingInformation);

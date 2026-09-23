@@ -10,7 +10,8 @@ import { useAbortController } from '@/hooks/customHooks';
 import { searchAbandonedOrder } from '@/services/y2/ApiAbandonedOrder';
 import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList';
 import DefaultButton from '@/components/Button/DefaultButton';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 // 表单项订单数据类型
 interface DataType {
@@ -33,7 +34,7 @@ function OrderTable() {
 
   const intl = useIntl();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const { createAbortController } = useAbortController();
 
@@ -148,7 +149,7 @@ function OrderTable() {
       status:"0",
       keyword:abandonedOrderList.keyword
     }).then(res=>{
-      setData(res.data.list || []);
+      setData(res?.data?.list || []);
     }).finally(()=>{
       setLoading(false);
     })

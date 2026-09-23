@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 // 使用 @monaco-editor/react 组件
 import MonacoEditor from '@monaco-editor/react';
-import { getPrimaryDomain } from '@/utils/dataStructure';
+import { usePrimaryDomain } from '@/hooks/customHooks';
 import DefaultButton from '@/components/Button/DefaultButton';
 import { getRobotsTxtConfig, resetRobotsTxtConfig, updateRobotsTxtConfig } from '@/services/y2/api';
 
@@ -16,7 +16,7 @@ function Index(){
     
     const { message } = App.useApp();
 
-    const previewDomain = getPrimaryDomain();
+    const previewDomain = usePrimaryDomain();
 
     const [loading,setLoading] = useState(false);
 
@@ -55,6 +55,8 @@ function Index(){
         getRobotsTxtConfig().then((res)=>{
             res.code == 0 && setCode(res.data || "")
         })
+
+        
     },[])
 
     return (

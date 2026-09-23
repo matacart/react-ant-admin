@@ -16,7 +16,8 @@ import MySelectIcon from '@/components/Select/MySelectIcon';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import MyDatePicker from '@/components/DatePicker/MyDatePicker';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 function DraftPaidCard() {
 
   const [open,setOpen] = useState(false)
@@ -68,7 +69,7 @@ function DraftPaidCard() {
   // 支付方式
   const [paymentList,setPaymentList] = useState()
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const isFirstRender = useRef(true);
   useMemo(()=>{

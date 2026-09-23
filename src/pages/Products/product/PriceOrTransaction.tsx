@@ -10,7 +10,8 @@ import DefaultInputNumber from "@/components/Input/DefaultInputNumber";
 import MyRangePicker from "@/components/DatePicker/MyRangePicker";
 import { FormInstance } from "antd/lib";
 import localeValues from "antd/es/locale/en_US";
-import { currencyPrecision, getPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision, getPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 const utc = require('dayjs/plugin/utc')
 const timezone = require('dayjs/plugin/timezone') // dependent on utc plugin
@@ -21,7 +22,7 @@ const { Text } = Typography;
 
 function PriceOrTransaction({form}:{form: FormInstance}) {
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
     // 精度
     const {decimals,amountRule} = getPrecision();
 

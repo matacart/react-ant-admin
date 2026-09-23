@@ -110,7 +110,7 @@ function ImportProductModal() {
             )}
           >
             <div style={{padding:"10px 0px"}}>
-              <div style={{margin:"8px 0px"}}>
+                <div style={{margin:"8px 0px"}}>
                 {productList.task?.status=="done"?
                     <>正在将商品导入商店，完成此过程可能需要一段时间</>
                 :productList.task?.status=="success"?
@@ -118,16 +118,16 @@ function ImportProductModal() {
                 :<>
                     请<a href='/templateFile/template_product_matacart.csv' download={'template_product_matacart.csv'}>下载模板<DownloadIcon /></a>并按规范填写商品信息，若表格出现乱码，可查看<a>如何解决 <ExportIcon className='font-14' /> </a>
                 </>}
-              </div>
+                </div>
                 <div>
                     <ProductUploadImport size={40} file={file} setFile={setFile} />
                 </div>
                 <div style={{margin:"8px 0px"}}>支持 .xlsx，.xls，.csv 格式文件，大小不能超过40M</div>
                 <div style={{margin:"8px 0px"}}>
-                    <Checkbox checked={coverHandle} disabled={productList.task?.status=="done"?true:false} onChange={(e)=>{
-                        setCoverHandle(e.target.checked)
-                    }}>覆盖相同v_products_model商品（表格无v_products_model列将会新增商品）</Checkbox>
-                    {coverHandle && <Checkbox disabled={productList.task.status=="done"?true:false} style={{marginTop:"8px",marginLeft:"24px"}}>忽略空白字段 （未勾选时清除原有数据）</Checkbox>}
+                <Checkbox checked={coverHandle} disabled={productList.task?.status=="done"?true:false} onChange={(e)=>{
+                    setCoverHandle(e.target.checked)
+                }}>覆盖相同v_products_model商品（表格无v_products_model列将会新增商品）</Checkbox>
+                {coverHandle && <Checkbox disabled={productList.task.status=="done"?true:false} style={{marginTop:"8px",marginLeft:"24px"}}>忽略空白字段 （未勾选时清除原有数据）</Checkbox>}
                 </div>
             </div>
         </Modal>

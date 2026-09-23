@@ -38,9 +38,7 @@ function BillDetails() {
 }
 
 const Scoped = styled.div`
-    .card{
-        background-color: #F7F8FB;
-    }
+    
 `
 
 export default observer(BillDetails);

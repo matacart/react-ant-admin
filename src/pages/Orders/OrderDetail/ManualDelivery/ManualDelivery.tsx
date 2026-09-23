@@ -11,7 +11,6 @@ import DeliveryAddress from './DeliveryAddress';
 import Abstract from './Abstract';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LogisticsTrackingInformation from './LogisticsTrackingInformation';
-import { setOrderShipped } from '@/services/y2/api';
 import { getOrderDetail, sendOrderPackage } from '@/services/y2/apiStore';
 import orderManualDelivery from '@/store/order/orderManualDelivery';
 import { FulfillmentItemType, FulfillmentListType } from '@/store/order/order';
@@ -25,20 +24,6 @@ export interface ProductInfo{
     productSource:string,
     version:string,
 }
-
-
-// const temp = {
-//                 languageId:languagesId,
-//                 orderSeq:orderManualDelivery.orderInfo.orderSeq,
-//                 fulfillmentOrderSeq:orderManualDelivery.fulfillmentItem.fulfillmentOrder.fulfillmentOrderSeq,
-//                 logisticsType:"2",
-//                 multiExpressInfo:JSON.stringify(res.multiExpressInfo),
-//                 sendNotify:res.sendNotify,
-//                 senderInfo:JSON.stringify({consigneeIdNo: null, consigneeIdType: null}),
-//                 extInfo:{},
-//                 productInfoList:JSON.stringify(productInfoList),
-//             }
-
 
 function ManualDelivery() {
 
@@ -78,11 +63,11 @@ function ManualDelivery() {
                 fulfillmentOrderSeq:orderManualDelivery.fulfillmentItem.fulfillmentOrder.fulfillmentOrderSeq,
                 logisticsType:"2",
                 multiExpressInfo:JSON.stringify(res.multiExpressInfo),
-                sendNotify:res.sendNotify,
+                sendNotify:res?.sendNotify || false,
                 senderInfo:JSON.stringify({consigneeIdNo: null, consigneeIdType: null}),
                 extInfo:{},
                 productInfoList:JSON.stringify(productInfoList),
-            }).then(()=>{
+            }).then((res)=>{
                 if(res.code == 0){
                     message.success("发货成功")
                     history.push(`/orders/${orderId}/${languagesId}`)
@@ -118,7 +103,7 @@ function ManualDelivery() {
         }).finally(()=>{
             setIsSkeleton(false)
         })
-    },[]);
+    },[orderManualDelivery.refreshKey]);
 
     return (
         <>
@@ -143,7 +128,7 @@ function ManualDelivery() {
                             <LogisticsTrackingInformation form={form} />
                         </Flex>
                         <Flex className='mc-layout-extra' vertical gap={20}>
-                            <DeliveryAddress />
+                            <DeliveryAddress languagesId={languagesId} />
                             <Abstract form={form} />
                         </Flex>
                     </Flex>

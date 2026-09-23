@@ -167,3 +167,166 @@ export async function sendOrderPackage(res:{
     }
   })
 }
+
+// 取消订单发货
+export async function cancelOrderShipment(res:{
+  orderId:string,
+  packageSeq:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/cancelOrderShipment`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 更新物流单号
+export async function updatePackageExpress(res:{
+  languages_id:string,
+  orderId:string,
+  packageSeq:string,
+  sendNotify:boolean,
+  sellerCountryCode:string,
+  multiExpressInfo:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/updatePackageExpress`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 设置收货地址
+export async function updateOrderReceiverInfo(res:{
+  languages_id:string,
+  addressSource:string,
+  deliveryDescription:string,
+  deliveryType:string,
+  localShipping:string,
+  orderSeq:string,
+  receiverAddress:string,
+  receiverAddressAdd:string,
+  receiverArea:string,
+  receiverAreaCode:string,
+  receiverCertificatesNo:string,
+  receiverCertificatesType:string,
+  receiverCity:string,
+  receiverCityCode:string,
+  receiverCompany:string,
+  receiverCountry:string,
+  receiverCountryId:string,
+  receiverCountryCode:string,
+  receiverFirstName:string,
+  receiverLastName:string,
+  receiverName:string,
+  receiverMobile:string,
+  receiverNeighborhood:string,
+  receiverPostcode:string,
+  receiverProvince:string,
+  receiverProvinceCode:string,
+  receiverStoreCode:string,
+  receiverStoreId:string,
+  receiverStoreName:string,
+  receiverUniqueKey:string,
+  shippingType:string,
+  taxNum:string,
+  taxType:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/updateOrderReceiverInfo`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 创建退货订单
+export async function createReturnOrder(res:{
+  languages_id:string,
+  fromType:string,
+  orderSeq:string,
+  returnGoodsType:string,
+  sendEmail:boolean,
+  skuInfos:string,
+  storeId:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/createReturnOrder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 退货原因
+export async function getReturnReasonList(languagesId:string) {
+  return request<ApiStore.Default>(`/ApiStore/getReturnReasonList`, {
+    method: 'POST',
+    retryOnError: true,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      languagesId:languagesId
+    }
+  })
+}
+
+// 取消退货订单
+export async function cancelReturnOrder(res:{
+  languages_id:string,
+  orderSeq:string,
+  afterSaleOrderSeq:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/cancelReturnOrder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}
+
+// 更新退货订单物流单号
+export async function updateReturnExpressInfo(res:{
+  languages_id:string,
+  afterSaleOrderSeq:string,
+  appScene:string,
+  expressCode:string,
+  expressCompany:string,
+  expressCompanyCode:string,
+  expressUrl:string,
+}) {
+  return request<ApiStore.Default>(`/ApiStore/updateReturnExpressInfo`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...res
+    }
+  })
+}

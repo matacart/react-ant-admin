@@ -44,7 +44,7 @@ interface DataType {
 }
 
 
-function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attributes:any,attributesMap:any,setAttributesMap:any}){
+function AttributesTagModal({attributes}:{attributes:any}){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -67,7 +67,7 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
             dataIndex: 'name',
             key: 'name',
             width:180,
-            render: (text,record,index) => <MyInput style={{ width:"100%",height:"36px" }} value={record.option_values_name} onChange={(e)=>{
+            render: (text,record,index) => <MyInput style={{ width:"100%",height:"36px" }} value={record.option_values_name} onChange={(e:any)=>{
                 let newData = [...data]
                 newData[index].option_values_name = e.target.value
                 setData(newData)
@@ -175,12 +175,11 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
 
     // 提交表单
     const submit = ()=>{
-        // 更新
         const newAtt = {
             ...attributes,
             options:replaceOptionNames(attributes.options,data)
         }
-        setAttributesMap(attributesMap.map((item:any) => {
+        product.setAttributesMap(product.attributesMap.map((item:any) => {
             return item.value == newAtt.value ? newAtt : item
         }))
         setIsModalOpen(false)
@@ -194,7 +193,7 @@ function AttributesTagModal({attributes,attributesMap,setAttributesMap}: {attrib
     // 编辑
     const handleEdit = ()=>{
         setIsModalOpen(true);
-        setLangs(product.productInfo.languages_id);
+        setLangs(product.languageId);
     }
 
     const setLangs = (lang:string)=>{

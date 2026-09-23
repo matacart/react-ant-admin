@@ -7,7 +7,7 @@ import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import RecallEmailModal from "./RecallEmailModal";
 import { useEffect, useState } from "react";
 import cookie from 'react-cookies';
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 
 const RecallOfMail = () => {
@@ -25,7 +25,7 @@ const RecallOfMail = () => {
     useEffect(()=>{
         const domain = cookie.load("domain") || {};
         if(domain){
-            const primaryDomain = getPrimaryDomain();
+            const primaryDomain = usePrimaryDomain();
             setPaymentUrl(`${primaryDomain}/${domain?.id || ""}/checkouts/${abandonedOrder.abandonedOrderData?.checkoutsToken || ""}`);
         }
     },[])

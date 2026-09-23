@@ -70,19 +70,15 @@ export default function TagSelector() {
                         </div>
                         {/* 任意标签 */}
                        <div className='any-tag-list'>
-                            {
-                                options.map((item,index)=>{
-                                    return (
-                                        <Checkbox disabled={tagType == 1 && item.label=="无标签商品"} checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
-                                            let newOption = [...options]
-                                            newOption[index].checked = e.target.checked
-                                            // e.target.checked?checkedList.push(item):checkedList.splice(checkedList.indexOf(item),1)
-                                            // setCheckedStatus(checkedList)
-                                            setOptions(newOption)
-                                        }}>{item.label}</Checkbox>
-                                    )
-                                })
-                            }
+                            {options.map((item,index)=>{
+                                return (
+                                    <Checkbox key={index} disabled={tagType == 1 && item.label=="无标签商品"} checked={item.checked} className="item" style={{padding:"8px 12px",width:"100%"}} onChange={(e)=>{
+                                        let newOption = [...options]
+                                        newOption[index].checked = e.target.checked
+                                        setOptions(newOption)
+                                    }}>{item.label}</Checkbox>
+                                )
+                            })}
                         </div>
                         
                         {/* 全部标签 */}

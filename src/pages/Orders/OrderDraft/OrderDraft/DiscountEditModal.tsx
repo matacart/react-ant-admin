@@ -4,14 +4,15 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
 import orderDraft from "@/store/order/orderDraft";
-import { getPrecision, getSymbolLeft } from "@/utils/common";
+import { getPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 import { Checkbox, Flex, Form, Modal } from "antd"
 import FormItem from "antd/es/form/FormItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function DiscountEditModal({pricing,disable}:{pricing:number,disable:boolean}){
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
     const {decimals,amountRule} = getPrecision();
 
     const [isModalOpen, setIsModalOpen] = useState(false);

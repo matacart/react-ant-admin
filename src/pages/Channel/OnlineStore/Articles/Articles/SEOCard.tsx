@@ -3,11 +3,11 @@ import styled from "styled-components"
 import cookie from 'react-cookies';
 import articles from "@/store/channel/articles/articles";
 import SEOEdit from "./SEOEdit";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 function SEOCard(){
 
-    const parmainDomain = getPrimaryDomain();
+    const parmainDomain = usePrimaryDomain();
     
     const previewPrefix = parmainDomain ? `${parmainDomain}/blogs/`: "";
     const setSEO = (title:string,description:string,keyword:string,handle:string,url:string)=>{

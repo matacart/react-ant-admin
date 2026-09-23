@@ -15,7 +15,7 @@ import shop from "@/store/shops/shop";
 import { observer } from "mobx-react-lite";
 import articlesList from "@/store/channel/articles/articlesList";
 import LangSelect from "@/components/Select/LangSelect";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 
 interface DataType {
@@ -99,7 +99,7 @@ function ArticlesListCard() {
             <Space size="middle">
               <div className='wrap' onClick={(e) => {
                   e.stopPropagation()
-                  const primaryDomain = getPrimaryDomain();
+                  const primaryDomain = usePrimaryDomain();
                   primaryDomain && window.open(`${primaryDomain}/blogs/${record.id}`)
                 }}>
                 <Tooltip title="预览">

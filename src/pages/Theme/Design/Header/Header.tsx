@@ -19,6 +19,7 @@ import DangerButton from '@/components/Button/DangerButton';
 import RenameTemplateModal from '../Index/RenameTemplateModal';
 import NewTemplateModal from '../Index/NewTemplateModal';
 import VersionSelect from './VersionSelect';
+import { usePrimaryDomain } from '@/hooks/customHooks';
 
 const { confirm } = Modal;
 
@@ -50,9 +51,11 @@ function escapeRegExp(string:string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function Header({templateId,previewDomain,nvData}:{templateId:string,previewDomain:string,nvData:any[]}) {
+function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
     
     const { message } = App.useApp();
+
+    const previewDomain = usePrimaryDomain();
 
     const intl = useIntl();
 

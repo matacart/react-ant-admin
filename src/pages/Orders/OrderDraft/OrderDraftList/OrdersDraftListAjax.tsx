@@ -9,7 +9,8 @@ import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { getOrderDraftList } from '@/services/y2/api';
 import { useAbortController } from '@/hooks/customHooks';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 // 表单项订单数据类型
 interface DataType {
@@ -34,7 +35,7 @@ function OrdersDraftListAjax() {
 
   const intl = useIntl();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const { createAbortController } = useAbortController();
 

@@ -6,8 +6,7 @@ import { setHomeSeo } from "@/services/y2/api";
 import { Card, Drawer, Flex, Form} from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getPrimaryDomain } from "@/utils/dataStructure";
-import SkeletonCard from "@/components/Skeleton/SkeletonCard";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 import cookie from 'react-cookies';
 import preferences from "@/store/channel/preferences/preferences";
 import { observer } from "mobx-react-lite";
@@ -18,7 +17,7 @@ function SEOSetupCard() {
 
     const [open, setOpen] = useState(false);
 
-    const parmainDomain = getPrimaryDomain();
+    const parmainDomain = usePrimaryDomain();
 
     const [form] = Form.useForm();
     

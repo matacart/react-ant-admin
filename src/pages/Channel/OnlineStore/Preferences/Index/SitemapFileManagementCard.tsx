@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { delSitemapFile, getSitemapList, switchSitemap, uploadSitemap } from "@/services/y2/api";
 import preferences, { SitemapFile } from "@/store/channel/preferences/preferences";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 import { DeleteOutlined, PlusOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { App, Card, Flex, Modal, Switch, Table, Tooltip, Upload} from "antd";
 import Dragger from "antd/lib/upload/Dragger";
@@ -13,9 +13,9 @@ import styled from "styled-components";
 
 function SitemapFileManagementCard() {
 
-    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
+    const previewDomain = usePrimaryDomain();
 
-    const previewDomain = getPrimaryDomain();
+    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const [switchLoading,setSwitchLoading] = useState(false);
 
@@ -190,7 +190,7 @@ function SitemapFileManagementCard() {
                                 </span>
                             </Tooltip>
                         </Flex>
-                        <div className="font-12">当前地址：<span className="color-356DFF cursor-pointer" onClick={()=>window.open(`${previewDomain}/sitemap.xml`)}>{previewDomain}/sitemap.xml</span></div>
+                        <div className="font-12">当前地址：<span className="color-356DFF cursor-pointer" onClick={()=>window.open(`${previewDomain}/sitemap.xml`)}>{`${previewDomain}/sitemap.xml`}</span></div>
                     </div>
                     <div>
                         <Switch loading={switchLoading} checked={preferences.sitemapStatus.active == "on"} onChange={sitemapSwitch} />

@@ -57,7 +57,6 @@ function LoginDevice() {
           cancelText: '取消',
           async onOk() {
             // 退出登录 -- 清除缓存
-            sessionStorage.removeItem("domain");
             await logout();
             let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
             cookie.remove("token",{domain:test,path:"/"})

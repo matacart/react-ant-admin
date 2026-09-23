@@ -11,7 +11,7 @@ import { delCustomerPage, getCustomerPageList } from "@/services/y2/api";
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import LangSelect from "@/components/Select/LangSelect";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 
 interface DataType {
@@ -72,7 +72,7 @@ export default function CustomPageListCard({list,count}) {
             <Space size="middle">
               <div className='wrap' onClick={(e) => {
                   e.stopPropagation();
-                  const primaryDomain = getPrimaryDomain();
+                  const primaryDomain = usePrimaryDomain();
                   primaryDomain && window.open(`${primaryDomain}/pages/${record.handle}`)
                 }}>
                 <Tooltip title="预览">

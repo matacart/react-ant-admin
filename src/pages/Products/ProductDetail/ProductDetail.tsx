@@ -34,10 +34,10 @@ import ProtectionInformation from '../Product/ProtectionInformation';
 import ThirdPartyInfoCard from '../Product/ThirdPartyInfoCard';
 import StockCard from '../Product/StockCard';
 import SEOCard from '../Product/SEOCard';
-import { getPrimaryDomain } from '@/utils/dataStructure';
 import VariantList from '../Product/VariantList';
 import AttributesMapList, { transformAttributes } from '../Product/AttributesMapList';
 import { toJS } from 'mobx';
+import { usePrimaryDomain } from '@/hooks/customHooks';
 
 
 function ProductDetail() {
@@ -45,10 +45,12 @@ function ProductDetail() {
     const { modal,message } = App.useApp();  // 获取带有上下文的 modal 对象
 
     const {productId,languageId = "2"} = useParams();
+
+    const previewDomain = usePrimaryDomain();
+    
     // 域名信息
     const domainCookie = cookie.load("domain");
-    // 预览域名
-    const previewDomain = getPrimaryDomain();
+    
     // 分享链接
     const items: MenuProps['items'] = [
         {
@@ -116,7 +118,6 @@ function ProductDetail() {
             ),
         },
     ];
-
     const [productTitle,setProductTitle] = useState(""); //标题
 
     const [form] = Form.useForm();
@@ -321,11 +322,18 @@ function ProductDetail() {
 
     // 保存提示
     const [isOverlay,setIsOverlay] = useState<boolean>();
+
     useEffect(()=>{
         setIsOverlay(isSkeleton ? false : true);
     },[product.productInfo])
-    
-    
+
+    // 组件销毁状态重置
+    useEffect(()=>{
+        return()=>{
+            product.reset()
+        }
+    },[])
+
     return (
         <div>
             {isSkeleton?<SkeletonCard />:<Scoped>

@@ -10,10 +10,10 @@ import cookie from 'react-cookies';
 import productList from '@/store/product/productList';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
-import { getPrimaryDomain } from '@/utils/dataStructure';
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft,usePrimaryDomain } from '@/hooks/customHooks';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -72,7 +72,7 @@ function ProductListAjax(selectProps:any) {
 
   const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const [loading, setLoading] = useState(false);
   // 控制开关加载防止重复点击  --- 开关之间独立
@@ -230,7 +230,7 @@ function ProductListAjax(selectProps:any) {
             <ButtonIcon>
                 <div className='wrap' onClick={(e) => {
                     e.stopPropagation()
-                    const primaryDomain = getPrimaryDomain();
+                    const primaryDomain = usePrimaryDomain();
                     primaryDomain && window.open(`${primaryDomain}/products/${record.handle}`)
                   }}>
                   <Tooltip title="预览">

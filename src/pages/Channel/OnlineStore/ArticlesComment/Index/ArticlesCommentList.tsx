@@ -9,7 +9,7 @@ import LangSelect from "@/components/Select/LangSelect";
 import { useAbortController } from "@/hooks/customHooks";
 import { getArticleComments } from "@/services/y2/api";
 import { ExportIcon } from "@/components/Icons/Icons";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 
 interface DataType {
@@ -61,7 +61,7 @@ function ArticlesCommentList({comments,langId}:{comments:any,langId:string}) {
               <Flex className="color-7A8499 font-12">
                 来自博客：
                 <Flex className="color-356DFF cursor-pointer" gap={6} onClick={()=>{
-                  const primaryDomain = getPrimaryDomain();
+                  const primaryDomain = usePrimaryDomain();
                   primaryDomain && window.open(`${primaryDomain}/blogs/${record.handle}`)
                 }}>
                   {record.article_title}

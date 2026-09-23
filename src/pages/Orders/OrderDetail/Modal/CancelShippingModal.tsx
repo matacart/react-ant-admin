@@ -1,12 +1,12 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { cancelOrderShipment } from "@/services/y2/api";
+import { cancelOrderShipment } from "@/services/y2/apiStore";
 import order from "@/store/order/order";
 import { Flex, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function CancelShippingModal({shipment}:{shipment:any}){
+function CancelShippingModal({packageSeq}:{packageSeq:string}){
 
     const [open,setOpen] = useState(false);
 
@@ -19,17 +19,19 @@ function CancelShippingModal({shipment}:{shipment:any}){
     const submit = ()=>{
         setLoading(true)
         cancelOrderShipment({
-            orderId:order.orderInfo.order_id,
-            shippingSn:shipment.shipping_sn,
-            shipmentId:shipment.shipment_id
+            orderId:order.orderInfo.orderSeq,
+            packageSeq:packageSeq,
         }).then(res=>{
+            if(res.code != 0){
+                throw new Error(res.msg)
+            }
             notification.success({
                 message: <div className="font-14 font-w-500">已取消发货</div>,
             })
             order.triggerRefresh()
-        }).catch(error=>{
+        }).catch(err=>{
             notification.error({
-                message: <div className="font-14 font-w-500">取消发货失败</div>,
+                message: <div className="font-14 font-w-500">{err.message || "取消发货失败"}</div>,
             })
         }).finally(()=>{
             setLoading(false)
@@ -50,7 +52,7 @@ function CancelShippingModal({shipment}:{shipment:any}){
                     </Flex>
                 )}
             >
-               <div style={{marginTop:"24px",marginBottom:"24px"}}>
+               <div style={{marginTop:"20px",marginBottom:"24px"}}>
                     <div>取消发货后将向物流商发起取消寄件申请，请在[配送状态] 查看结果。</div>
                     <div>- 若成功取消，状态会转为[取消寄件]，你可以自由编辑订单</div>
                     <div>- 若取消失败，取消寄件按钮不会展示，代表物流商已不接受取消</div>

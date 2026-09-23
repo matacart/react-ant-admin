@@ -1,4 +1,6 @@
+import { App } from "antd";
 import { useEffect, useRef } from "react";
+import cookie from 'react-cookies';
 
 // 自定义 Hook：对数组进行分组 -- 根据obj.group
 export const useGroupArray = (arr:any,group:string) => {
@@ -143,5 +145,49 @@ export const useAbortController = () => {
 //   };
 // };
 
+  // 获取币种符号左侧位置
+export function useSymbolLeft() {
+  const { message } = App.useApp();
+  let symbolLeft = "";
+  const defaultCurrency = cookie.load("domain")?.default_currency;
+  const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || '[]');
+  // 查找默认币种
+  const defaultCurrencyObj = currencies.find((item: any) => item.code === defaultCurrency);
+  if(defaultCurrencyObj){
+    symbolLeft = defaultCurrencyObj.symbol_left
+  }
+  // 副作用：当 symbolLeft 为空时弹警告
+  useEffect(() => {
+    if(!symbolLeft){
+      message.warning({
+        content: '未配置默认币种',
+        key: 'currency-warning', // 防止 StrictMode 下重复弹出
+      });
+    }
+  },[symbolLeft]);
+  return symbolLeft;
+}
 
+// 获取主域名
+export function usePrimaryDomain() {
+  const { message } = App.useApp();
+  // 预览域名
+  const previewDomain = '.'+(JSON.parse(localStorage.getItem("MC_DATA_PLATFORM_INFO") || '{}')?.preview_domain || '');
+  let primaryDomain = "";
+  if(cookie.load("domain")?.domain_primary && cookie.load("domain").domain_primary!==""){
+    primaryDomain = `https://${cookie.load("domain").domain_primary}`
+  }else if(cookie.load("domain")?.handle){
+    primaryDomain = `https://${cookie.load("domain").handle}${previewDomain}`
+  }
+  // 副作用：当 primaryDomain 为空时弹警告
+  useEffect(() => {
+    if(!primaryDomain){
+      message.warning({
+        content: '未配置店铺handle,当前域名将不可用',
+        key: 'domain-warning', // 防止 StrictMode 下重复弹出
+      });
+    }
+  },[primaryDomain]);
+  return primaryDomain;
+}
 

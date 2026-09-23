@@ -1,7 +1,7 @@
 import { action, makeAutoObservable } from "mobx";
 import cookie from 'react-cookies';
 
-interface ProductType {
+export interface ProductType {
   product_video: string;
   meta_description: string;
   meta_title: string;
@@ -66,6 +66,7 @@ interface ProductType {
   content1: string;
   handle:string;
   has_variant:string;
+  variants:VariantType[];
 }
 
 
@@ -108,7 +109,7 @@ class Product{
     // 语言
     languageId = cookie.load("shop_lang") || '2'
     setLanguageId(value:string){
-        this.languageId = value;
+      this.languageId = value;
     }
 
     // 初始化产品数据结构
@@ -177,6 +178,7 @@ class Product{
         product_video: "",
         handle:"",
         has_variant:"0",
+        variants: [],
       };
     }
 
@@ -205,13 +207,19 @@ class Product{
       this.attributesMap = res;
     }
 
-    // 变体
+    // 首次加载变体
+    firstLoadVariants: boolean = true;
+    setFirstLoadVariants(value: boolean) {
+      this.firstLoadVariants = value;
+    }
+
+    // 原始变体 数据源 用于删除无效变体
     variants: VariantType[] = []
     setVariants(res: VariantType[]) {
       this.variants = res
     }
 
-    // 格式化后的变体
+    // 格式化后的变体（用于渲染）
     variantList:any[] = []
     setVariantList(res:any){
       this.variantList = res
@@ -224,6 +232,7 @@ class Product{
       this.diversion = {};
       this.attributes = [];
       this.attributesMap = [];
+      this.firstLoadVariants = true;
       this.variants = [];
       this.variantList = [];
     }

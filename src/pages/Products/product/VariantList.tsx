@@ -12,8 +12,8 @@ import { DeleteIcon, EditIcon, ImageUploadIcon } from '@/components/Icons/Icons'
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { uploadPic } from '@/services/y2/api';
-import { getPrecision, getSymbolLeft } from '@/utils/common';
-
+import { getPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 
 // 检查两个字符串是否包含相同的元素
@@ -32,7 +32,8 @@ function VariantList(){
   
   const { message } = App.useApp();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
+
   const {decimals,amountRule} = getPrecision();
 
   const [loading, setLoading] = useState(false);
@@ -41,9 +42,9 @@ function VariantList(){
 
   const [variantList, setVariantList] = useState<VariantType[]>([]);
 
-  const isFirstRef = useRef(true);
-
   const { modal } = App.useApp();  // 获取带有上下文的 modal 对象
+
+  const [selectedValue, setSelectedValue] = useState('or');
   
   function generateSku(attrValue:any[]){
     // 开始构建sku 
@@ -52,8 +53,8 @@ function VariantList(){
     skus = attrValue.reduce((col: any[], set) => {
       let res: any[] = []
       // 对于每个属性值集合，依次与当前已有的结果集做笛卡尔积
-      col.forEach((c) => {
-        set.forEach((s) => {
+      col.forEach((c:any) => {
+        set.forEach((s:any) => {
           // 将两个属性值合并为一个字符串，并存入结果集中
           let t = c.option_values_name + ',' + s.option_values_name
           let ids = c.option_values_id + ',' + s.option_values_id
@@ -69,8 +70,8 @@ function VariantList(){
       return res
     })
     if(attrValue.length == 1){
-      let t = [];
-      attrValue[0].forEach(element => {
+      let t:any[] = [];
+      attrValue[0].forEach((element:any) => {
         t.push({
           option_values_names:element.option_values_name,
           option_values_ids:element.option_values_id,
@@ -82,12 +83,20 @@ function VariantList(){
     return skus
   }
 
+  // 处理单选框变化
+  const handleRadioChange = (e: any) => {
+    setSelectedValue(e.target.value);
+  };
+
+  // 处理价格变化
   const handleChangePrice = (value: number,field:"price"|"original_price"|"cost_price",record: VariantType, index: number,) => {
     const newVariantList = _.cloneDeep(variantList);
     newVariantList[index][field] = (value*amountRule).toString();
     setVariantList(newVariantList);
     product.setVariantList(newVariantList);
   }
+
+  // 处理数量变化
   const handleChangeQuantity = (value: string, record: VariantType, index: number) => {
     const newVariantList = _.cloneDeep(variantList);
     newVariantList[index].quantity = value;
@@ -136,92 +145,21 @@ function VariantList(){
       formData.append("file", file)
       setLoading(true);
       uploadPic(formData).then((res: any) => {
-          if(res.code == 0){
-              const newImg = res.data.src;
-              const newVariantList = [...variantList];
-              newVariantList[index].image = newImg
-              setVariantList(newVariantList)
-              product.setVariantList(newVariantList)
-          }else{
-              message.error(res.msg || "err", 1)
-          }
+        if(res.code == 0){
+          const newImg = res.data.src;
+          const newVariantList = [...variantList];
+          newVariantList[index].image = newImg
+          setVariantList(newVariantList)
+          product.setVariantList(newVariantList)
+        }else{
+          message.error(res.msg || "err", 1)
+        }
       }).catch((err: any) => {
       }).finally(() => {
           setLoading(false);
       })
       return false;
   };
-
-  useEffect(() => {
-    const generateStyles = async (sku:VariantType[]) => {
-      // 生成变体
-      let newVariantList:any = [];
-      const newStyles = sku.map((item, index) => ({
-          key:"uuid"+index,
-          status:"1",
-          image: '',
-          option_values_ids:item.option_values_ids,
-          option_values_names:item.option_values_names,
-          price:"",
-          original_price:"",
-          cost_price:"",
-          quantity:"",
-          sku: '',
-          sort:"1",
-          hs_code: '',
-          weight: "0",
-      }));
-      // 与状态同步
-      newStyles.map((item) => {
-        const variant = product.variants.find((variant) => areOptionIdsEqual(variant.option_values_ids, item.option_values_ids));
-        if(variant && variant.status !== "9"){
-          newVariantList.push({
-            ...variant,
-            option_values_ids:item.option_values_ids,
-            option_values_names:item.option_values_names,
-          })
-        }else{
-          newVariantList.push(item);
-        }
-      })
-      // 原始变体
-      const newVariants = toJS(product.variants).map((variant) => {
-        if(variant.status !== "9" && !newVariantList.some((item:VariantType) => item.id == variant.id)){
-          return {
-            ...variant,
-            status:"9",
-          }
-        }
-        return variant;
-      })
-      // 格式化后的变体
-      setVariantList(newVariantList)
-      product.setVariantList(newVariantList)
-      product.setVariants(newVariants)
-    };
-    if(product.attributesMap.length>0) {
-      const attrValue = toJS(product.attributesMap).map((attribute:any) => {
-        return [
-          ...attribute.optionValue.map((value:any) => attribute.options.find((item:any) => item.option_values_id == value))
-        ]
-      })
-      const sku = generateSku(attrValue)
-      generateStyles(sku)
-    }else{
-      setVariantList([])
-      product.setVariantList([])
-      const newVariants = toJS(product.variants).map((variant) => {
-        if(variant.status !== "9"){
-          return {
-            ...variant,
-            status:"9",
-          }
-        }
-        return variant;
-      })
-      product.setVariants(newVariants)
-    }
-  }, [product.attributesMap]);
 
   const columns: ColumnsType<VariantType> = [
     {
@@ -341,19 +279,87 @@ function VariantList(){
     },
   ];
 
-  const [selectedValue, setSelectedValue] = useState('or');
-
-  const handleRadioChange = (e: any) => {
-    setSelectedValue(e.target.value);
-  };
+  useEffect(() => {
+    const generateStyles = async (sku:VariantType[]) => {
+      // 生成变体
+      let newVariantList:any = [];
+      const newStyles = sku.map((item, index) => ({
+          key:"uuid"+index,
+          status:"1",
+          image: '',
+          option_values_ids:item.option_values_ids,
+          option_values_names:item.option_values_names,
+          price:"",
+          original_price:"",
+          cost_price:"",
+          quantity:"",
+          sku: '',
+          sort:"1",
+          hs_code: '',
+          weight: "0",
+      }));
+      // 与状态同步
+      newStyles.map((item) => {
+        const variant = product.variants.find((variant) => areOptionIdsEqual(variant.option_values_ids, item.option_values_ids));
+        if(variant && variant.status !== "9"){
+          newVariantList.push({
+            ...variant,
+            option_values_ids:item.option_values_ids,
+            option_values_names:item.option_values_names,
+          })
+        }else{
+          newVariantList.push(item);
+        }
+      })
+      // 原始变体
+      const newVariants = toJS(product.variants).map((variant) => {
+        if(variant.status !== "9" && !newVariantList.some((item:VariantType) => item.id == variant.id)){
+          return {
+            ...variant,
+            status:"9",
+          }
+        }
+        return variant;
+      })
+      // 格式化后的变体
+      setVariantList(newVariantList)
+      product.setVariantList(newVariantList)
+      product.setVariants(newVariants)
+    };
+    // 首次加载变体
+    if(product.firstLoadVariants){
+      product.setFirstLoadVariants(false)
+      setVariantList(product.variants || [])
+      return;
+    }
+    // 根据属性组合变体
+    if(product.attributesMap.length>0) {
+      const attrValue = toJS(product.attributesMap).map((attribute:any) => {
+        return [
+          ...attribute.optionValue.map((value:any) => attribute.options.find((item:any) => item.option_values_id == value))
+        ]
+      })
+      const sku = generateSku(attrValue)
+      generateStyles(sku)
+    }else{
+      setVariantList([])
+      product.setVariantList([])
+      const newVariants = toJS(product.variants).map((variant) => {
+        if(variant.status !== "9"){
+          return {
+            ...variant,
+            status:"9",
+          }
+        }
+        return variant;
+      })
+      product.setVariants(newVariants)
+    }
+  }, [product.attributesMap]);
 
   return (
     <Card
-      title={
-        <>
-          款式列表
-        </>
-      }
+      title={<>款式列表</>}
     >
       <Scoped>
         <div style={{ overflowX: 'auto', maxHeight: 'calc(100vh - 200px)', display: 'flex', flexDirection: 'column' }}>
@@ -373,7 +379,7 @@ function VariantList(){
           </Checkbox.Group>
           <Table
             loading={loading}
-            rowKey={(record,index)=>record?.id || record?.key || ""}
+            rowKey={(record)=>record?.id || record?.key || ""}
             columns={columns}
             dataSource={variantList}
             scroll={{ x: 1360 }}

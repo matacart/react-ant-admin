@@ -22,15 +22,14 @@ import CategoriesSettings from '../ProductCategories/CategoriesSettings';
 import CategoriesBanner from '../ProductCategories/CategoriesBanner';
 import ThemeTemplateCard from '../ProductCategories/ThemeTemplateCard';
 import Recommendation from '../ProductCategories/Recommendation';
-import { getPrimaryDomain } from '@/utils/dataStructure';
+import { usePrimaryDomain } from '@/hooks/customHooks';
 // 表单项商品数据类型
 
 function EditProductCategories(){
     
     const { message } = App.useApp();
 
-    // 预览域名
-    const previewDomain = getPrimaryDomain();
+    const previewDomain = usePrimaryDomain();
 
     const {id,languageId="2"} = useParams();
 

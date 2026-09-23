@@ -5,14 +5,15 @@ import { PendingSecondIcon } from "@/components/Icons/Icons";
 import { useState } from "react";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 
 function Unpaid() {
 
     const intl = useIntl();
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const [loading,setLoading] = useState(false);
 

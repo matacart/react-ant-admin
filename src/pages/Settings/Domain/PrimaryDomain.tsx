@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { history } from 'umi';
 import domain from "@/store/settings/domain"
 import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 
 function PrimaryDomain() {

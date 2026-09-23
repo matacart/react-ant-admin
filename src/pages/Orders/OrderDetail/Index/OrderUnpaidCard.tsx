@@ -8,12 +8,13 @@ import AddPaymentPeriod from "../Modal/AddPaymentPeriod";
 import DefaultButton from "@/components/Button/DefaultButton";
 import { setOrderPaid } from "@/services/y2/api";
 import { useState } from "react";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 function OrderUnpaidCard() {
 
     const intl = useIntl();
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const [loading,setLoading] = useState(false);
 

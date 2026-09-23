@@ -6,14 +6,16 @@ import { PauseSecondIcon, PendingSecondIcon, RiseIcon, SuccessSecondIcon, Unfold
 import order, { FulfillmentItemType } from "@/store/order/order";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { resumeOrderShipping } from "@/services/y2/api";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
+
 
 
 function PausedShippedCard({groupIndex}:{groupIndex:number}) {
     
     const { message } = App.useApp();
 
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
 
     const fulfillment = order.fulfillmentOrderList[groupIndex];
 
@@ -83,7 +85,7 @@ function PausedShippedCard({groupIndex}:{groupIndex:number}) {
                         </Col>
                         <Col span={5}>
                             <Flex justify="end" style={{height:"100%"}}>
-                            <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount))}</span>
+                            <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount || 0))}</span>
                             </Flex>
                         </Col>
                     </Row>

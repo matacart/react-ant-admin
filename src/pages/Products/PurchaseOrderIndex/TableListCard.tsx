@@ -3,7 +3,8 @@ import { Table, Tag } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
-import { currencyPrecision, getSymbolLeft } from '@/utils/common';
+import { currencyPrecision } from '@/utils/common';
+import { useSymbolLeft } from '@/hooks/customHooks';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -22,7 +23,7 @@ interface TableParams {
 
 function TableListCard({purchaseorderData}:{purchaseorderData:any}) {
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const [loading, setLoading] = useState(false);
   

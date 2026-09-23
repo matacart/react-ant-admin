@@ -8,7 +8,8 @@ import FormItem from "antd/es/form/FormItem";
 import { useEffect, useState } from "react";
 import orderDraft from "@/store/order/orderDraft";
 import { getDeliveryList } from "@/services/y2/api";
-import { getPrecision, getSymbolLeft } from "@/utils/common";
+import { getPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 
 const style: React.CSSProperties = {
@@ -24,7 +25,7 @@ function ShippingFeeEditingModal(){
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     
-    const symbolLeft = getSymbolLeft();
+    const symbolLeft = useSymbolLeft();
     const {decimals,amountRule} = getPrecision();
 
     const [loading,setLoading] = useState(false);

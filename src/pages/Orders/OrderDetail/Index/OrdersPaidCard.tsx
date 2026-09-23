@@ -3,13 +3,14 @@ import { observer } from "mobx-react-lite";
 import { useIntl } from "@umijs/max";
 import { SuccessSecondIcon } from "@/components/Icons/Icons";
 import order from "@/store/order/order";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 function OrdersPaidCard() {
 
   const intl = useIntl();
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   // const translateStatus = (key: string) => {
   //   return intl.formatMessage({ id: key });

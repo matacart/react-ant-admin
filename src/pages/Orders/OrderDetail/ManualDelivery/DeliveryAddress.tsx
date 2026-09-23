@@ -3,11 +3,11 @@ import { observer } from "mobx-react-lite";
 import styled from "styled-components";
 import { useEffect } from "react";
 import orderManualDelivery from "@/store/order/orderManualDelivery";
-import DeliveryAddressModal from "./DeliveryAddressModal";
+import DeliveryAddressModal from "@/pages/Orders/OrderDetail/Modal/DeliveryAddressModal";
 import copy from "copy-to-clipboard";
 import { currencyPrecision } from "@/utils/common";
 
-function DeliveryAddress() {
+function DeliveryAddress({languagesId}:{languagesId:string}) {
 
     const { message } = App.useApp();
 
@@ -30,6 +30,10 @@ function DeliveryAddress() {
         message.success("复制成功")
     }
 
+    const success = () => {
+        orderManualDelivery.triggerRefresh();
+    }
+
     useEffect(()=>{
     },[])
 
@@ -43,7 +47,7 @@ function DeliveryAddress() {
                     <>
                         <Flex style={{marginBottom:"8px"}} justify="space-between" align="center">
                             <div className="font-w-500">收货地址</div>
-                            <DeliveryAddressModal />
+                            <DeliveryAddressModal orderSeq={orderManualDelivery.orderInfo?.orderSeq} languagesId={languagesId} receiverInfo={orderManualDelivery.orderInfo?.receiverInfo} success={success} />
                         </Flex>
                         {orderManualDelivery.orderInfo?.receiverInfo?.deliveryType ? <Tooltip title="复制地址与邮编">
                             <div className="cursor-pointer" onClick={()=>copyAddress()}>

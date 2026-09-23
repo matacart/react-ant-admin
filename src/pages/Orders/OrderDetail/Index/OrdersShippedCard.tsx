@@ -9,13 +9,11 @@ import order from "@/store/order/order";
 import dayjs from 'dayjs';
 import MyDropdown from "@/components/Dropdown/MyDropdown";
 import PackageTrackingModal from "../Modal/PackageTrackingModal";
-import StatementModalSecondary from "@/components/Modal/StatementModalSecondary";
 import CancelShippingModal from "../Modal/CancelShippingModal";
 import { exportOrderTask } from "@/services/y2/api";
 import { history } from "@umijs/max";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
-
-const { Text,Link } = Typography;
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 function OrdersShippedCard({index}:{index:number}) {
   
@@ -23,22 +21,11 @@ function OrdersShippedCard({index}:{index:number}) {
 
   const intl = useIntl();
   
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const ordersPackage  = order.orderInfo.ordersPackageList[index];
 
-  // const address = [
-  //   shippedInfo.shipment.delivery_company,
-  //   shippedInfo.shipment.delivery_suburb,
-  //   shippedInfo.shipment.delivery_street_address,
-  //   shippedInfo.shipment.delivery_city,
-  //   shippedInfo.shipment.delivery_state,
-  //   shippedInfo.shipment.delivery_postcode,
-  //   shippedInfo.shipment.delivery_country
-  // ]
-
   useEffect(()=>{
-    // console.log(order.shippedProductsGroup[index]);
   },[])
 
 
@@ -66,7 +53,7 @@ function OrdersShippedCard({index}:{index:number}) {
               items:[
                 {
                   key: "1", label: (
-                    <PackageTrackingModal />
+                    <PackageTrackingModal ordersPackage={ordersPackage} />
                   )
                 },
                 // {
@@ -95,13 +82,11 @@ function OrdersShippedCard({index}:{index:number}) {
                 //         }}>打印出货单</div>
                 //     )
                 // },
-                
-                
-                // {
-                //     key: "2", label: (
-                //       <CancelShippingModal shipment={shippedInfo.shipment} />
-                //     )
-                // },
+                {
+                  key: "3", label: (
+                    <CancelShippingModal packageSeq={ordersPackage.packageSeq} />
+                  )
+                },
               ]
             }} />
           )}
@@ -124,7 +109,7 @@ function OrdersShippedCard({index}:{index:number}) {
             </Flex>
             <div className="color-242833">{dayjs(ordersPackage.sendTime).format("YYYY-MM-DD")}</div>
           </Flex>
-          {ordersPackage.multiExpressInfo.map((item,index)=>{
+          {ordersPackage.multiExpressInfo?.map((item,index)=>{
             if(!item.expressCompany || !item.expressCode){
               return null
             }
@@ -160,7 +145,7 @@ function OrdersShippedCard({index}:{index:number}) {
                 </Col>
                 <Col span={5}>
                   <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount))}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount || 0))}</span>
                   </Flex>
                 </Col>
               </Row>

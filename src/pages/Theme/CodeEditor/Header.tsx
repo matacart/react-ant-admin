@@ -10,7 +10,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import VersionSelect from "./VersionSelect";
-import { getPrimaryDomain } from "@/utils/dataStructure";
+import { usePrimaryDomain } from "@/hooks/customHooks";
 
 interface ItemType{
     title: React.ReactNode,
@@ -21,8 +21,7 @@ function Header({templateId}:{templateId:string}){
     
     const { message } = App.useApp();
 
-    // 预览域名
-    const previewDomain = getPrimaryDomain();
+    const previewDomain = usePrimaryDomain();
 
     const [autoToken,setAutoToken] = useState();
 

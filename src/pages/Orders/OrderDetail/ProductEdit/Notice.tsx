@@ -17,8 +17,7 @@ function Notice() {
                     <div className="font-w-500 font-16">账单通知</div>
                 </Flex>
                 <div>
-                    <Checkbox checked={orderProductEdit.billNotification == 1} onChange={(e)=>{
-                        orderProductEdit.setBillNotification(e.target.checked?1:0)
+                    <Checkbox onChange={(e)=>{
                     }}>给客户发送账单通知</Checkbox>
                 </div>
             </Card>

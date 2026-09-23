@@ -9,12 +9,13 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyButton from "@/components/Button/MyButton";
 import SplitPackage from "../Modal/SplitPackage";
 import SuspendDelivery from "../Modal/SuspendDelivery";
-import { currencyPrecision, getSymbolLeft } from "@/utils/common";
+import { currencyPrecision } from "@/utils/common";
+import { useSymbolLeft } from "@/hooks/customHooks";
 
 
 function PendingShippedCard({groupIndex}:{groupIndex:number}) {
 
-  const symbolLeft = getSymbolLeft();
+  const symbolLeft = useSymbolLeft();
 
   const fulfillment  = order.fulfillmentOrderList[groupIndex];
 
@@ -91,7 +92,7 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
                 </Col>
                 <Col span={5}>
                   <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount))}</span>
+                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount || 0))}</span>
                   </Flex>
                 </Col>
               </Row>

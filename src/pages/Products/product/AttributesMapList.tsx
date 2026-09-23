@@ -1,4 +1,4 @@
-import {addProductOptionValues, getOptionType, getProductOptionSelect, getProductStyleList, getProductStyleValueList } from "@/services/y2/api";
+import {addProductOptionValues, getOptionType, getProductOptionSelect } from "@/services/y2/api";
 import product, { AttributeType } from "@/store/product/product";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
 import { App, Card, Checkbox, Tooltip, AutoCompleteProps, Flex } from "antd";
@@ -104,8 +104,6 @@ function AttributesMapList() {
             label: "Style",
         }
     ])
-    // 属性集合
-    const [attributesMap, setAttributesMap] = useState<any[]>([]);
 
     const [values, setValues] = useState<string[]>([]);
 
@@ -138,7 +136,7 @@ function AttributesMapList() {
     
     // 获取所有属性
     useEffect(()=>{
-      getProductOptionSelect(product.productInfo.languages_id).then(res=>{
+      getProductOptionSelect(product.languageId).then(res=>{
         res?.data && setOptionList(res.data)
       })
       getOptionType().then(res=>{
@@ -149,33 +147,22 @@ function AttributesMapList() {
       })
     },[])
 
-    const firstRef = useRef(true);
-    useEffect(()=>{
-      if(firstRef.current){
-        firstRef.current = false
-        // 同步属性映射
-        setAttributesMap(product.attributesMap || []);
-        return;
-      }
-      // 提交时 有则替换修改 无则将状态改为9
-      product.setAttributesMap([...attributesMap])
-    },[attributesMap])
 
     // 添加 useRef 来保存输入框的引用
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
     inputRefs.current = Array(values.length).fill(null);
     // 删除整个规格组
     function handleRemove(attributes:any) {
-      setAttributesMap(attributesMap.filter((item:any)=>item.value != attributes.value))
+      product.setAttributesMap(product.attributesMap.filter((item:any)=>item.value != attributes.value))
     }
     // 添加新的规格组
     function handleAdd(){
-      if(attributesMap.some(item=>item.value == "")){
+      if(product.attributesMap.some((item:any)=>item.value == "")){
         message.error("请勿添加多个无效款式")
         return;
       }
-      setAttributesMap([
-        ...attributesMap,
+      product.setAttributesMap([
+        ...product.attributesMap,
         {
           label:"",
           value:"",
@@ -193,10 +180,10 @@ function AttributesMapList() {
       </div>}>
         {(
             <>
-            {attributesMap.map((attributes, index) => {
+            {product.attributesMap.map((attributes:any,index:number) => {
                 return (
                     <Flex key={index} align="center" gap={12} style={{marginBottom:"20px"}}>
-                        <AttributesModal optionsList={optionList} attributesOptionType={attributesOptionType} setOptionList={setOptionList} attributes={attributes} attributesMap={attributesMap} setAttributesMap={setAttributesMap} />
+                        <AttributesModal optionsList={optionList} attributesOptionType={attributesOptionType} setOptionList={setOptionList} attributes={attributes} />
                         <MySelect 
                             mode="tags"
                             style={{height:"42px",flex:"1"}} 
@@ -225,27 +212,24 @@ function AttributesMapList() {
                                 // 如果在 attributes.options 中存在 value 对应的 option_values_id 则更新 optionValue
                                 // 同时把该项的options对应的数据更新
                                 if(areAllIdsPresent(value,attributes.options)){
-                                    const newAttributesMap = [
-                                      ...attributesMap.map((item:any)=>{
-                                        if(item.value === attributes.value){
-                                            return {
-                                              ...item,
-                                              options:newOptions.length > 0?newOptions:item.options,
-                                              optionValue:value
-                                            }
-                                        }
-                                        return item
-                                      })
-                                    ]
-                                    console.log(newAttributesMap)
-                                    setAttributesMap(newAttributesMap)
+                                    const newAttributesMap = product.attributesMap.map((item:any)=>{
+                                      if(item.value === attributes.value){
+                                          return {
+                                            ...item,
+                                            options:newOptions.length > 0?newOptions:item.options,
+                                            optionValue:value
+                                          }
+                                      }
+                                      return item
+                                    })
+                                    product.setAttributesMap(newAttributesMap)
                                 }else{
                                     // 创建 新的 option_values_id 并更新 attributes.options
                                     const newTag = value.filter((v:string) => !attributes.optionValue.includes(v));
-                                    const res = await addProductOptionValues("",product.productInfo.id,product.productInfo.languages_id,newTag[0])
+                                    const res = await addProductOptionValues("",product.productInfo.id,product.languageId,newTag[0])
                                     // 更新成功后，刷新 attributesMap
                                     if(res?.code == 0 && res?.id){
-                                        const newAttributesMap = [...attributesMap.map((item:any)=>{
+                                        const newAttributesMap = product.attributesMap.map((item:any)=>{
                                             if(item.value === attributes.value){
                                                 return {
                                                     ...item,
@@ -260,13 +244,13 @@ function AttributesMapList() {
                                                 }
                                             }
                                             return item
-                                        })]
-                                        setAttributesMap(newAttributesMap)
+                                        })
+                                        product.setAttributesMap(newAttributesMap)
                                     }
                                 }
                             }}
                         />
-                        <AttributesTagModal attributes={attributes} attributesMap={attributesMap} setAttributesMap={setAttributesMap}  />
+                        <AttributesTagModal attributes={attributes} />
                         <span style={{cursor: "pointer"}} onClick={() => handleRemove(attributes)}>
                             <Tooltip title="删除">
                               <DeleteIcon className="font-20 color-F86140" />
@@ -275,7 +259,7 @@ function AttributesMapList() {
                     </Flex>
                 );
             })}
-            {attributesMap.length < 5 && ( // 限制最多添加四个规格组
+            {product.attributesMap.length < 5 && ( // 限制最多添加四个规格组
                 <span style={{marginRight: "20px"}}>
                     <MyButton
                         className="add-specification-button"

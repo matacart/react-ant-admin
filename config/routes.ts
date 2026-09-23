@@ -103,9 +103,9 @@ export default  [
         component: './Orders/OrderDetail/Refund/Refund', 
       },
       {  
-        path: ':orderId/productsEdit', 
+        path: 'productsEdit/:orderId/:languagesId', 
         hideInMenu: true,
-        component: './Orders/OrderDetail/EditProduct/EditProduct', 
+        component: './Orders/OrderDetail/ProductEdit/ProductEdit', 
       },
       {
         path: 'draftOrders',
@@ -158,11 +158,6 @@ export default  [
           hideInMenu: true,
           parentKeys: ['/products/index'],
           component: './Products/ProductDetail/ProductDetail', 
-        },
-        // 变体
-        {  
-          path: 'edit/:productId/:languageId/variants/:variantId',
-          component: './Products/ProductDetail/Variants/Index', 
         },
         // 分类
         {

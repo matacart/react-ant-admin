@@ -1,8 +1,6 @@
-import { getCountryList, getStoreInfo } from "@/services/y2/api";
-import { message } from 'antd';
+import { getCountryList } from "@/services/y2/api";
 import cookie from 'react-cookies';
 import currencyList from "@/../public/json/currency.json";
-
 
 // 清除当前域名下的cookie
 export function clearAllCookies() {
@@ -28,20 +26,6 @@ export async function setLocalStorageCountryList() {
   }
 }
 
-// 获取币种符号
-export function getSymbolLeft() {
-  let symbolLeft = "";
-  const defaultCurrency = cookie.load("domain")?.default_currency;
-  const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || '[]');
-  // 查找默认币种
-  const defaultCurrencyObj = currencies.find((item: any) => item.code === defaultCurrency);
-  if(defaultCurrencyObj){
-    symbolLeft = defaultCurrencyObj.symbol_left
-  }else{
-    message.error("未找到店铺币种")
-  }
-  return symbolLeft;
-}
 
 // 货币精度格式化 --- 显示金额
 export function currencyPrecision(amount: number) {
@@ -63,3 +47,4 @@ export function getPrecision() {
   let amountRule = defaultCurrencyObj ? defaultCurrencyObj.amount_rule : 100;
   return {decimals,amountRule};
 }
+
