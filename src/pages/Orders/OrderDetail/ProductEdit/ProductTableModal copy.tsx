@@ -15,7 +15,7 @@ import styled from "styled-components";
 
 
 const isParent = (record:any) => {
-    return Object.hasOwn(record,'variants');
+    return (record?.variants?.length || 0) > 0;
 };
 
 function ProductTableModal(){
@@ -39,20 +39,15 @@ function ProductTableModal(){
 
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-    // 获取可选择的key
-    const getSelectableKeys = (record: any): React.Key[] => {
-        // 有款式 → 用各款式 id
-        if (isParent(record) && record.variants?.length > 0) {
-            return record.variants.map((v: any) => v.id);
-        }
-        // 无款式的父级 / 款式行 → 用自己 id
-        return [record.id];
-    };
-
     // 当前页所有行 key（父 + 子）
     const currentPageKeys = useMemo(() => {
         const keys: React.Key[] = [];
-        data.forEach((item: any) => keys.push(...getSelectableKeys(item)));
+        data.forEach((item: any) => {
+            keys.push(item.id);
+            if (isParent(item)) {
+                item.variants?.forEach((v: any) => keys.push(v.id));
+            }
+        });
         return keys;
     }, [data]);
 
@@ -68,9 +63,12 @@ function ProductTableModal(){
         }
     };
 
-    // 单行选中
+    // 选择行（父 + 子）
     const selectRow = (checked: boolean, record: any) => {
-        const keys = getSelectableKeys(record);
+        const keys: React.Key[] = isParent(record)
+            ? [record.id, ...(record.variants?.map((v: any) => v.id) || [])]
+            : [record.id];
+
         if (checked) {
             setSelectedRowKeys((prev) => Array.from(new Set([...prev, ...keys])));
         } else {
@@ -78,15 +76,20 @@ function ProductTableModal(){
         }
     };
 
-    // 勾选状态
     const getRowCheckState = (record: any) => {
-        const keys = getSelectableKeys(record);
-        const checkedCount = keys.filter((k) => selectedRowKeys.includes(k)).length;
-        return {
-            checked: keys.length > 0 && checkedCount === keys.length,
-            indeterminate: checkedCount > 0 && checkedCount < keys.length,
-        };
+        if (isParent(record)) {
+            const allKeys = [record.id, ...(record.variants?.map((v: any) => v.id) || [])];
+            const checkedCount = allKeys.filter((k) => selectedRowKeys.includes(k)).length;
+            return {
+                checked: checkedCount === allKeys.length,
+                indeterminate: checkedCount > 0 && checkedCount < allKeys.length,
+            };
+        }
+        return { checked: selectedRowKeys.includes(record.id), indeterminate: false };
     };
+    
+
+    
 
     const columns: TableProps<ProductType>['columns'] = [
         {
@@ -132,8 +135,7 @@ function ProductTableModal(){
         setOpen(false);
     };
 
-    const submit = () => {
-        
+    const handleOk = () => {
         // console.log(productList)
         // console.log(orderProductEdit.remainingProductGroup[0].product)
         // const newProduct = productList.map((item,index:number)=>{
@@ -219,7 +221,7 @@ function ProductTableModal(){
                     <Flex justify="end">
                         <Flex gap={12}>
                             <DefaultButton text={"取消"} onClick={cancel} />
-                            <PrimaryButton text={"保存"} onClick={submit} />
+                            <PrimaryButton text={"保存"} onClick={handleOk} />
                         </Flex>
                     </Flex>
                 )}
