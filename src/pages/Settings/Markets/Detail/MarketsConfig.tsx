@@ -1,13 +1,14 @@
 import DefaultButton from '@/components/Button/DefaultButton';
 import { DomainLangIcon, InventoryIcon, NavShippingIcon, PayIcon, ProductIcon, ReceiveGoodsIcon } from '@/components/Icons/Icons';
 import marketsInfo from '@/store/settings/markets/marketsInfo';
+import { history } from '@umijs/max';
 import { Card, Flex } from 'antd';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 function MarketsConfig() {
 
-    const [list, setList] = useState<{title:string, icon:any, info:string}[]>([])
+    const [list, setList] = useState<{title:string, icon:any, info:string, url:string}[]>([])
     
     useEffect(() => {
 
@@ -18,26 +19,31 @@ function MarketsConfig() {
                 title: '域名和语言',
                 icon: DomainLangIcon,
                 info: marketsInfo.marketsInfo.domainLanguage.mainDomain,
+                url: `/settings/markets/domainAndLang/${marketsInfo.marketsInfo.marketId}/${marketsInfo.languagesId}`,
             },
             {
                 title: '商品与定价',
                 icon: ProductIcon,
                 info: currencies?.name || "货币",
+                url: ``,
             },
             {
                 title: '库存',
                 icon: InventoryIcon,
                 info: "管理你的多市场库存",
+                url: ``,
             },
             {
                 title: '发货',
                 icon: NavShippingIcon,
                 info: marketsInfo.marketsInfo.deliveryStatistic.deliveryPlanNum == 0 ? "暂无发货方案" : `${marketsInfo.marketsInfo.deliveryStatistic.deliveryPlanNum}组方案`,
+                url: ``,
             },
             {
                 title: '支付',
                 icon: PayIcon,
                 info: "管理客户在该市场下可用的支付方式",
+                url: ``,
             }
         ]
 
@@ -50,7 +56,7 @@ function MarketsConfig() {
             <div className='font-12 color-7A8499'>仅管理你的商店在此市场中的客户体验</div>
             <div>
                 {list.map((item, index) => (
-                    <Flex className='item' justify='space-between' align='center'>
+                    <Flex key={index} className='item' justify='space-between' align='center' onClick={() => item?.url && history.push(item.url)}>
                         <Flex align='center'>
                             <Flex className='item-img-box' align='center' justify='center'>
                                 <item.icon />

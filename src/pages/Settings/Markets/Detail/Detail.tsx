@@ -11,6 +11,7 @@ import MarketData from "./MarketData";
 import marketsInfo from "@/store/settings/markets/marketsInfo";
 import DomainConfig from "./DomainConfig";
 import MarketsPreview from "./MarketsPreview";
+import MarketsEdit from "./MarketsEdit";
 
 function Detail() {
 
@@ -43,7 +44,7 @@ function Detail() {
                             <div className="mc-header-left-content">{marketsInfo.marketsInfo.marketName || "市场"}</div>
                         </Flex>
                         <Flex gap={12}>
-                            <DefaultButton onClick={() => {}} text="编辑" />
+                            <MarketsEdit />
                             <MarketsPreview />
                         </Flex>
                     </div>

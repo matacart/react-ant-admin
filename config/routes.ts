@@ -869,6 +869,10 @@ export default  [
         path:"markets/:marketId/:langId",
         component:"./Settings/Markets/Detail/Detail",
       },
+      {
+        path:"markets/domainAndLang/:marketId/:langId",
+        component:"./Settings/Markets/DomainAndLang/DomainAndLang",
+      },
     ]
   },
   // 结账编辑器

@@ -59,3 +59,22 @@ export async function getMarketStatistic(options:{
   if (res.code != 0) errHandle(res);
   return res;
 }
+
+// 获取市场域名和语言配置
+export async function getMarketConfigV2(options:{
+  marketId:string,
+  languages_id:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/getMarketConfigV2`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
