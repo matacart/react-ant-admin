@@ -9,6 +9,8 @@ import styled from "styled-components";
 import MarketsConfig from "./MarketsConfig";
 import MarketData from "./MarketData";
 import marketsInfo from "@/store/settings/markets/marketsInfo";
+import DomainConfig from "./DomainConfig";
+import MarketsPreview from "./MarketsPreview";
 
 function Detail() {
 
@@ -42,12 +44,14 @@ function Detail() {
                         </Flex>
                         <Flex gap={12}>
                             <DefaultButton onClick={() => {}} text="编辑" />
+                            <MarketsPreview />
                         </Flex>
                     </div>
                     {/* 主要内容 */}
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
                             <MarketsConfig />
+                            <DomainConfig />
                         </div>
                         <div className='mc-layout-extra'>
                             <MarketData />

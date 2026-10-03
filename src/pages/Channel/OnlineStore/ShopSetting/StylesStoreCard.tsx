@@ -2,7 +2,6 @@ import { CompilationIcon, EyeIcon, TiledIcon } from "@/components/Icons/Icons"
 import shopSetting, { TemplateMall } from "@/store/channel/shopSetting/shopSetting"
 import { Row, Col, Tooltip, Flex } from "antd"
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 
 
@@ -10,14 +9,16 @@ import styled from "styled-components"
 
 function StylesStoreCard() {
 
-  const navigator = useNavigate();
-
   // 模板列表
   const [tempList,setTempList] = useState<TemplateMall[]>([]);
 
   const [groupedByTheme,setGroupedByTheme] = useState<TemplateMall[]>([]);
 
   useEffect(()=>{
+
+
+    console.log(shopSetting)
+
     setTempList(shopSetting.templateMallList)
 
     // 分组
@@ -31,8 +32,6 @@ function StylesStoreCard() {
     // }, {} as Record<string, typeof tempList>);
 
     setGroupedByTheme(shopSetting.templateMallList)
-
-
   },[])
   // 按类型 
   // business_id
@@ -219,7 +218,6 @@ function StylesStoreCard() {
             ))}
           </Row>}
         </div>
-        
       </Scoped>
     )
 }

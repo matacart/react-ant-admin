@@ -8,6 +8,11 @@ interface DomainLanguageType{
     marketLanguageList:any[],
 }
 
+interface UrlType{
+    iso:string,
+    url:string,
+}
+
 export interface MarketsInfoType {
     marketId:string,
     marketName:string,
@@ -17,6 +22,7 @@ export interface MarketsInfoType {
     deliveryStatistic:{
         deliveryPlanNum:number,
     }
+    urlPreview:UrlType[]
 }
 
 
@@ -32,7 +38,8 @@ const defaultMarketsInfo = (): MarketsInfoType => ({
     },
     deliveryStatistic:{
         deliveryPlanNum:0,
-    }
+    },
+    urlPreview:[]
 });
 
 class MarketsInfo {

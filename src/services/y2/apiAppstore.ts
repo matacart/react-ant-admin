@@ -27,23 +27,23 @@ export async function getPlatformInfo(){
 }
 
 // 国家
-// export async function getCountryList(){
-//   const res = await request<ApiAppstore.Default>('/ApiAppstore/country_select',{
-//     method: 'POST',
-//     retryOnError: true,
-//     headers: {
-//       'Content-Type': 'multipart/form-data',
-//     },
-//     data:{
-//       page:1,
-//     }
-//   })
-//   if (res.code != 0) errHandle(res);
-//   return res;
-// }
+export async function getCountryList(){
+  const res = await request<ApiAppstore.Default>('/ApiAppstore/country_select',{
+    method: 'POST',
+    retryOnError: true,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      page:1,
+    }
+  })
+  if (res.code != 0) errHandle(res);
+  return res;
+}
 
 // 国家v2
-export async function getCountryList(){
+export async function getCountryListV2(){
   const res = await request<ApiAppstore.Default>('/ApiAppstore/country_select_v2',{
     method: 'POST',
     retryOnError: true,

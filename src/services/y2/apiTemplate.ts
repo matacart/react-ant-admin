@@ -24,7 +24,7 @@ export async function addVersion(options:{
     signal:signal,
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // mode == 智能 用户 开发
@@ -50,7 +50,7 @@ export async function getThemeFileList(options:{
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 // 获取文件详情
@@ -74,7 +74,7 @@ export async function getThemeFileDetail(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 版本
@@ -97,7 +97,7 @@ export async function getFileVersion(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 文件内容修改
@@ -121,7 +121,7 @@ export async function setFileSave(options:{
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 // 文件重命名
@@ -143,7 +143,7 @@ export async function RenameFile(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 主题文件删除
@@ -167,7 +167,7 @@ export async function deleteTemplateFile(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 主题文件添加
@@ -192,7 +192,7 @@ export async function addTemplateFile(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 文件上传
@@ -215,7 +215,7 @@ export async function templateFileUpload(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 客户使用模板
@@ -231,7 +231,7 @@ export async function getTemplateInstanceUsing(languagesId:string){
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 客户模板实例
@@ -247,7 +247,7 @@ export async function getTemplateInstanceList(options:any){
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 模板商城实例
@@ -264,7 +264,7 @@ export async function getTemplateMallList(options:any,signal?:AbortSignal){
     signal:signal,
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 模板发布
@@ -284,7 +284,7 @@ export async function setInstanceStatus(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 模板重命名
@@ -304,7 +304,7 @@ export async function templateRename(options:{
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 上传压缩文件 -- 模板
@@ -320,7 +320,7 @@ export async function uploadTemplate(file:any){
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 下载压缩文件 -- 模板
@@ -336,7 +336,7 @@ export async function downloadTemplate(historyId:string){
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 模板安装
@@ -352,7 +352,7 @@ export async function installTemplate(templateId:string){
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 模板信息
@@ -369,7 +369,7 @@ export async function getTemplateInfo(templateId:string,languagesId:string){
     }
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 版本替换
@@ -393,7 +393,7 @@ export async function updateVersion(options:{
     signal:signal,
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 版本切换
@@ -417,7 +417,7 @@ export async function setTemplateVersion(options:{
     signal:signal
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }
 
 // 主题版本
@@ -458,5 +458,5 @@ export async function deleteVersion(options:{
     signal:signal
   })
   if (res.code != 0) errHandle(res);
-  return res.data
+  return res
 }

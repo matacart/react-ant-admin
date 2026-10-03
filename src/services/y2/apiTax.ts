@@ -17,7 +17,7 @@ export async function getCountryList(options:{langId:string,pageSize:number,curr
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 export async function getTaxDisplayConfig(options:{langId:string}) {
@@ -32,7 +32,7 @@ export async function getTaxDisplayConfig(options:{langId:string}) {
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 export async function saveTaxDisplayConfig(options:{languages_id:string,is_enabled:boolean}) {
@@ -47,7 +47,7 @@ export async function saveTaxDisplayConfig(options:{languages_id:string,is_enabl
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 export async function updateCountryTaxStatus(options:{langId:string,countryId:string,status:string}) {
@@ -64,7 +64,7 @@ export async function updateCountryTaxStatus(options:{langId:string,countryId:st
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 // 获取区域列表
@@ -83,7 +83,7 @@ export async function getZoneList(options:{langId:string,countryId:string}) {
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 // 获取税率
@@ -102,7 +102,7 @@ export async function getTaxList(options:{
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 export async function getTaxDetail(options:{langId:string,countryId:string}) {
@@ -118,7 +118,7 @@ export async function getTaxDetail(options:{langId:string,countryId:string}) {
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }
 
 export async function updateTaxDetail(options:{
@@ -136,5 +136,5 @@ export async function updateTaxDetail(options:{
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
-  return res.data
+  return res
 }

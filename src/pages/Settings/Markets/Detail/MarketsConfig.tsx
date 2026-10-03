@@ -9,9 +9,7 @@ function MarketsConfig() {
 
     const [list, setList] = useState<{title:string, icon:any, info:string}[]>([])
     
-
     useEffect(() => {
-        console.log(marketsInfo.marketsInfo)
 
         const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || "[]").find((item: any) => item.code == marketsInfo.marketsInfo.storeCurrency)
 
@@ -50,7 +48,6 @@ function MarketsConfig() {
         <MyCard>
             <div className='font-w-500'>市场设置</div>
             <div className='font-12 color-7A8499'>仅管理你的商店在此市场中的客户体验</div>
-
             <div>
                 {list.map((item, index) => (
                     <Flex className='item' justify='space-between' align='center'>
@@ -66,18 +63,6 @@ function MarketsConfig() {
                         <DefaultButton text='编辑' />
                     </Flex>
                 ))}
-                {/* <Flex className='item' justify='space-between' align='center'>
-                    <Flex align='center'>
-                        <Flex className='item-img-box' align='center' justify='center'>
-                            <DomainLangIcon />
-                        </Flex>
-                        <Flex justify='center' gap={8} vertical>
-                            <div className='font-w-500'>域名和语言</div>
-                            <div className='font-12 color-474F5E'>{marketsInfo.marketsInfo.domainLanguage.mainDomain}</div>
-                        </Flex>
-                    </Flex>
-                    <DefaultButton text='编辑' />
-                </Flex> */}
             </div>
         </MyCard>
     )
