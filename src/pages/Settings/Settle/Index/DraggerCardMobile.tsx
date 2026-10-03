@@ -1,4 +1,4 @@
-import { uploadPic } from "@/services/y2/api";
+import { uploadPic } from "@/services/y2/apiAppstore";
 import settingsInfo from "@/store/settings/settle/settingsInfo";
 import { DeleteOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { App, GetProp, Spin, Upload, UploadProps } from "antd";
@@ -34,14 +34,11 @@ const DraggerCardMobile = () => {
         formData.append('file', file);
         setLoading(true);
         uploadPic(formData).then((res:any)=>{
-            if(res.code == 0){
-                settingsInfo.setPaymentSecurity({
-                    ...settingsInfo.paymentSecurity,
-                    paymentSecurityMobileImages: [res.data.src],
-                })
-            }
+            settingsInfo.setPaymentSecurity({
+                ...settingsInfo.paymentSecurity,
+                paymentSecurityMobileImages: [res.data.src],
+            })
         }).catch(()=>{
-            console.log('err');
         }).finally(()=>{
             setLoading(false);
         })

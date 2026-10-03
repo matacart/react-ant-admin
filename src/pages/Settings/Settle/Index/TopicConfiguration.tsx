@@ -29,11 +29,9 @@ const TopicConfiguration = () => {
             languages_id:settingsInfo?.languagesId || "",
             profile_id:config.profile_id || "",
         }).then(async res=>{
-            if(res.code == 0){
-                message.success("删除成功");
-                await reloadDraft();
-            }
-        }).finally(()=>{
+            message.success("删除成功");
+            await reloadDraft();
+        }).catch(()=>{}).finally(()=>{
             setDeleteLoading(false)
         })
     }
@@ -45,11 +43,9 @@ const TopicConfiguration = () => {
             languages_id:settingsInfo?.languagesId || "",
             source_profile_id:config.profile_id || "",
         }).then(res=>{
-            if(res.code == 0){
-                message.success("复制成功");
-                reloadDraft();
-            }
-        })
+            message.success("复制成功");
+            reloadDraft();
+        }).catch(()=>{});
     }
 
     // 发布
@@ -59,30 +55,24 @@ const TopicConfiguration = () => {
             languages_id:settingsInfo?.languagesId || "",
             profile_id:config.profile_id || "",
         }).then(res=>{
-            if(res.code == 0){
-                message.success("发布成功");
-                reloadDraft();
-                reloadLive();
-            }
-        })
+            message.success("发布成功");
+            reloadDraft();
+            reloadLive();
+        }).catch(()=>{});
     }
 
     // 重新加载草稿
     const reloadDraft = ()=>{
         getCheckoutConfigDrafts({ languages_id: settingsInfo?.languagesId || "", type: "draft" }).then(res=>{
-            if(res.code == 0){
-                settingsInfo.setCheckoutConfigDraft(res.data.list || [])
-            }
-        })
+            settingsInfo.setCheckoutConfigDraft(res.data.list || [])
+        }).catch(()=>{});
     }
 
     // 重新加载实时
     const reloadLive = ()=>{
         getCheckoutConfigLive({ languages_id: settingsInfo?.languagesId || "2"}).then(res=>{
-            if(res.code == 0){
-                settingsInfo.setCheckoutConfigLive(res.data.config || null)
-            }
-        })
+            settingsInfo.setCheckoutConfigLive(res.data.config || null)
+        }).catch(()=>{});
     }
 
     return(

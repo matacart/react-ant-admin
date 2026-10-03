@@ -1,8 +1,9 @@
 import request from '@/utils/request';
+import { errHandle } from './apiAppstore';
 
 // 全局搜索
-export function globalSearch(keyword:string) {
-  return request<ApiSearch.Default>('/ApiSearch/globalSearch',{
+export async function globalSearch(keyword:string) {
+  const res = await request<ApiSearch.Default>('/ApiSearch/globalSearch',{
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -11,4 +12,6 @@ export function globalSearch(keyword:string) {
       keyword: keyword,
     }
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }

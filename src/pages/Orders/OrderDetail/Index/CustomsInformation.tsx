@@ -10,7 +10,7 @@ import MyDropdown from "@/components/Dropdown/MyDropdown";
 import AddIDCard from "../Modal/AddIDCard";
 import copy from "copy-to-clipboard";
 import { useEffect, useState } from "react";
-import { getUseOrderHistory } from "@/services/y2/apiStore";
+import { getUseOrderHistory } from "@/services/y2/apiOrders";
 import DeliveryAddressModal from "../Modal/DeliveryAddressModal";
 
 function CustomsInformation() {
@@ -46,8 +46,8 @@ function CustomsInformation() {
 
     useEffect(()=>{
         getUseOrderHistory({uids:JSON.stringify([order.orderInfo.orderSeq || ""]),languages_id:order.languages}).then(res=>{
-            res.code == 0 && setHistoryCount(res?.data?.list?.[0]?.dealOrderCntTotal || 0)
-        })
+            setHistoryCount(res?.data?.list?.[0]?.dealOrderCntTotal || 0)
+        }).catch(()=>{})
     },[order.orderInfo.orderSeq])
 
 

@@ -80,7 +80,6 @@ export default function TableCard({navData}:{navData:any}) {
           total: res.data.total,
         });
       }).catch(error => {
-        // console.error('Error fetching data:', error);
       }).finally(() => {
         setLoading(false);
       });

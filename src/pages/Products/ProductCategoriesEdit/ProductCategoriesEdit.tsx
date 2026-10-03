@@ -5,7 +5,7 @@ import { Divider } from 'antd';
 import { history, useParams } from '@umijs/max';
 import { useEffect, useState } from 'react';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { getCategory, setCategory } from '@/services/y2/api';
+import { getCategory, setCategory } from '@/services/y2/apiStore';
 import DefaultButton from '@/components/Button/DefaultButton';
 import categories from '@/store/product/categories';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -44,7 +44,7 @@ function EditProductCategories(){
         getCategory(id??"",languageId).then(res=>{
             categories.setLanguagesId(languageId);
             categories.setCategoriesInfo({...res.data});
-        }).catch(err=>{
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })
@@ -98,8 +98,7 @@ function EditProductCategories(){
                                 languages_id:categories.languagesId
                             }).then(res=>{
                                 message.success("修改内容已更新")
-                            }).catch(err=>{
-                                console.log(err)
+                            }).catch(()=>{
                             }).finally(()=>{
                                 setLoading(false)
                             })

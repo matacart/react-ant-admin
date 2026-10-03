@@ -2,8 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { addAddress,  setAddressEdit } from "@/services/y2/api";
-import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
+import { addAddress, setAddressEdit, getCityList, getProvinceList } from "@/services/y2/apiAppstore";
 import orderDraft from "@/store/order/orderDraft";
 import { Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react";
@@ -122,7 +121,7 @@ function BillingAddressModal(){
                             is_same_delivery:"0",
                         })
                         setOpen(false);
-                    }).catch(err=>{
+                    }).catch(()=>{
                     }).finally(()=>{
                         setLoading(false)
                     })

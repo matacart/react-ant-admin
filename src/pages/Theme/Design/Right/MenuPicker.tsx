@@ -80,12 +80,9 @@ function MenuPicker({item,data,setData}:{item:any,data:DataType,setData:(item:an
             languages_id:languagesId,
             pid:"0",
         },signal).then(res=>{
-            if(res.code == 0){
-                setMenu(res.data.list);
-                setPagination({ total: res.data.total, currentPage: page });
-            }
+            setMenu(res.data.list);
+            setPagination({ total: res.data.total, currentPage: page });
         }).catch((err)=>{
-
         }).finally(()=>{
             setLoading(false);
         })

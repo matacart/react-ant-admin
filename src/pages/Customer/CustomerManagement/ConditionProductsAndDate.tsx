@@ -7,9 +7,9 @@ import MySearch from "@/components/Input/MySearch";
 import MySelect from "@/components/Select/MySelect";
 import CommodityClassificationSelector from "@/pages/Products/ProductList/CommodityClassificationSelector";
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
-import { getProductList } from "@/services/y2/api";
+import { getProductList } from "@/services/y2/apiStore";
 import cousomerManagement from "@/store/customer/cousomerManagement";
-import { Checkbox, DatePicker, Divider, Flex, Input, Modal, Popover, Space, Table, TableProps, Tooltip } from "antd"
+import { DatePicker, Divider, Flex, Input, Modal, Popover, Space, Table, TableProps, Tooltip } from "antd"
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -188,27 +188,24 @@ function ConditionProductsAndDate({condition,index}:propsType){
     const fetchData = async (page:number,limit:number) => {
         if (loading) return; // 如果正在加载中，则直接返回
         setLoading(true);
-        try{
-            const res = {
-                page:page,
-                limit:limit,
-                languagesId:"2",
-            }
-            const response = await getProductList(res);
-            setPagination(prev => ({
+        getProductList({
+            page:page,
+            limit:limit,
+            languagesId:"2",
+        }).then((res)=>{
+            setPagination((prev:any) => ({
                 ...prev,
                 current: page,
                 pageSize: limit,
-                total: response.count,
-                hasMore: response.data.length >= limit // 判断是否还有更多数据
+                total: res.count,
+                hasMore: res.data.length >= limit // 判断是否还有更多数据
             }));
-            
             // 如果是第一页就直接设置，否则追加数据
-            setData(prev => page === 1 ? response.data : [...prev, ...response.data]);
-        }catch(err){
-        }finally{
+            setData(prev => page === 1 ? res.data : [...prev, ...res.data]);
+        }).catch(err=>{
+        }).finally(()=>{
             setLoading(false);
-        }
+        })
     };
 
 

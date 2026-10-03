@@ -30,24 +30,21 @@ function ShopOperationInformation() {
 
     const selectedCountry = (value:string)=>{
         getProvinceList(value).then(res=>{
-            console.log(res)
-            res.code == 0 && setProvinceList(
-                res.data.map(
-                    (item:any) => {
-                        return {
-                            label: item.name,
-                            value: item.id
-                        }
+            setProvinceList(res.data.map(
+                (item:any) => {
+                    return {
+                        label: item.name,
+                        value: item.id
                     }
-                )
-            )
+                }
+            ))
             setCityList([])
         })
     }
 
     const selectedProvince = (value:string)=>{
         getCityList(value).then(res=>{
-            res.code == 0 && setCityList(
+            setCityList(
                 res.data.map(
                     (item:any) => {
                         return {

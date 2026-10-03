@@ -1,4 +1,4 @@
-import { login } from '@/services/y2/api';
+import { login } from '@/services/y2/apiAppstore';
 import { App, Button, Form, Input, Divider,Checkbox, Flex, Dropdown, ConfigProvider } from 'antd';
 import { LockOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { FormattedMessage, history, useIntl, useModel } from '@umijs/max';
@@ -78,49 +78,41 @@ export default function Login() {
     };
 
     const onFinish = async (values: API.LoginParams) => {
-      console.log(new Date().getTime());
-      try {
-        // 登录
-        // 过滤所有输入字段的前后空格
-        const trimmedValues = {
-          ...values,
-          username: values.username?.trim(),
-          clientid:new Date().getTime(),
-          area_code:phoneCode,
-          // password: values.password?.trim()
-        };
-        const msg = await login({ ...trimmedValues, type });
-        if (msg.code === 0) {
-          let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
-          const token = msg.token;
-          if(window.location.hostname.startsWith("localhost")){
-            cookie.save("token",token || "",{path:"/"})
-          }else{
-            cookie.save("token",token || "",{domain:test,path:"/"})
-          }
-          
-          const defaultLoginSuccessMessage = intl.formatMessage({
-            id: 'user.login.success',
-            defaultMessage: '登录成功！',
-          });
-          message.success(defaultLoginSuccessMessage);
-          // 获取用户信息
-          // console.log(cookie.load("token"));
-          await fetchUserInfo();
-          const urlParams = new URL(window.location.href).searchParams;
-          // 获取重定向URL
-          const redirectUrl = urlParams.get('redirect');
-          console.log(redirectUrl);
-          // 是否是商户
-          // history.push("/stores/merchantApplication")
-          // 是否有店铺
-          history.push(redirectUrl || '/');
-          return;
+      // 登录
+      // 过滤所有输入字段的前后空格
+      const trimmedValues = {
+        ...values,
+        username: values.username?.trim(),
+        clientid:new Date().getTime(),
+        area_code:phoneCode,
+        // password: values.password?.trim()
+      };
+      login({ ...trimmedValues, type }).then(async res=>{
+        let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
+        const token = res.token;
+        if(window.location.hostname.startsWith("localhost")){
+          cookie.save("token",token || "",{path:"/"})
+        }else{
+          cookie.save("token",token || "",{domain:test,path:"/"})
         }
-        throw new Error(msg.msg);
-      } catch (error:any) {
-        message.error(error.message);
-      }
+        const defaultLoginSuccessMessage = intl.formatMessage({
+          id: 'user.login.success',
+          defaultMessage: '登录成功！',
+        });
+        message.success(defaultLoginSuccessMessage);
+        // 获取用户信息
+        // console.log(cookie.load("token"));
+        await fetchUserInfo();
+        const urlParams = new URL(window.location.href).searchParams;
+        // 获取重定向URL
+        const redirectUrl = urlParams.get('redirect');
+        console.log(redirectUrl);
+        // 是否是商户
+        // history.push("/stores/merchantApplication")
+        // 是否有店铺
+        history.push(redirectUrl || '/');
+        return;
+      }).catch(()=>{});
     };
     
     

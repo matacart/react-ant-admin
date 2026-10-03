@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { cancelOrderShipment } from "@/services/y2/apiStore";
+import { cancelOrderShipment } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 import { Flex, Modal, notification } from "antd";
 import { useEffect, useState } from "react";
@@ -22,17 +22,11 @@ function CancelShippingModal({packageSeq}:{packageSeq:string}){
             orderId:order.orderInfo.orderSeq,
             packageSeq:packageSeq,
         }).then(res=>{
-            if(res.code != 0){
-                throw new Error(res.msg)
-            }
             notification.success({
                 message: <div className="font-14 font-w-500">已取消发货</div>,
             })
             order.triggerRefresh()
         }).catch(err=>{
-            notification.error({
-                message: <div className="font-14 font-w-500">{err.message || "取消发货失败"}</div>,
-            })
         }).finally(()=>{
             setLoading(false)
             setOpen(false)

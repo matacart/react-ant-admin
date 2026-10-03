@@ -1,12 +1,11 @@
 import DefaultButton from "@/components/Button/DefaultButton"
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import ProductCategoriesSelect from "@/components/Select/ProductCategoriesSelect";
-import { getCategoryList } from "@/services/y2/api";
+import { getCategoryList } from "@/services/y2/apiStore";
 import taxes from "@/store/settings/taxes/taxes";
 import { EditOutlined } from "@ant-design/icons";
 import { Flex, Form, Modal, Radio, Select } from "antd"
-import { debounce } from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import cookie from 'react-cookies';
 
 function CustomTaxEdit({index}:{index:number}) {
@@ -39,20 +38,16 @@ function CustomTaxEdit({index}:{index:number}) {
             page: nextPage.toString(),
             limit: "10",
         }).then((res: any) => {
-            if (res.code == 0) {
-                if (res.data.length > 0) {
-                    setCategoryList((prev:any[]) => [...prev, ...res.data.map((item:any)=>({
-                        label:item.delimiter + item.title,
-                        value:item.id,
-                    }))]);
-                    setPage(nextPage);
-                } else {
-                    setHasMore(false); // 没有更多数据了
-                }
+            if (res.data.length > 0) {
+                setCategoryList((prev:any[]) => [...prev, ...res.data.map((item:any)=>({
+                    label:item.delimiter + item.title,
+                    value:item.id,
+                }))]);
+                setPage(nextPage);
+            } else {
+                setHasMore(false); // 没有更多数据了
             }
-        }).catch(() => {
-            // message.error('加载更多失败');
-        }).finally(() => {
+        }).catch(()=>{}).finally(() => {
             setLoadingMore(false);
         });
     };
@@ -107,7 +102,7 @@ function CustomTaxEdit({index}:{index:number}) {
                         value:item.id,
                     }));
                     setCategoryList(categoryList || []);
-                });
+                }).catch(()=>{});
             }} />
             <Modal
                 title="编辑自定义税率"

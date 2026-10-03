@@ -1,13 +1,13 @@
-import { addProductOptionValues, getProductStyleValueList } from '@/services/y2/api';
+import { addProductOptionValues, getProductStyleValueList } from '@/services/y2/apiStore';
 import product from '@/store/product/product';
-import { DeleteOutlined, InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, InboxOutlined, PlusOutlined } from '@ant-design/icons';
 import { GetProp, Input, Modal, Table, TableProps, Image, Upload, UploadProps, UploadFile, message, Spin, TabsProps, Tabs, Select } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+
 const _ = require('lodash');
- 
 
 interface DataType {
     key: string;
@@ -172,46 +172,45 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
 
     // 切换语言
     const handlLanguageClick = async (value:string)=>{
-        let updatedArray;
         setLoading(true)
         if(tagData.length>0){
-            await getProductStyleValueList(tagData[0].option_id,value).then(res=>{
-                if(res.code == 0){
-                    updatedArray = replaceOptionValuesNames(data,res.data)
-                }
+            getProductStyleValueList({option_id:tagData[0].option_id,languages_id:value}).then(res=>{
+                const updatedArray = replaceOptionValuesNames(data,res.data)
                 setData(updatedArray)
+            }).catch(err=>{
+            }).finally(()=>{
+                setLoading(false)
             })
         }
-        setLoading(false)
     }
-    // // 提交表格
+    // 提交表格
     const submit = async ()=>{
         if(hasDuplicateOptionValuesName(data)){
             return message.error('规格名称不能重复')
         }
         let success = false;
         setLoading(true)
-        const promises = data.map(async item=>{
-            await addProductOptionValues(item.option_values_id,language,item.option_id,item.option_values_name).then(res=>{
-                if(res.code == 0){
-                    success = true
-                }
+        const promises = data.map(async (item:any)=>{
+            addProductOptionValues({
+                id:item.option_values_id,
+                languages_id:language,
+                option_id:item.option_id,
+                option_values_name:item.option_values_name,
+            }).then(res=>{
+                success = true
             })
         })
-       Promise.all(promises).then(()=>{
+        Promise.all(promises).then(()=>{
             if(success){
                 message.success('产品款式值更新成功');
-            }else{
-                message.error('产品款式值更新失败');
             }
-            if(product.productInfo.languages_id == language){
-                // setAttributesModal(false)
-                // setAttributes(false)
-                console.log(data)
+            if(product.languageId == language){
                 editTagData([...data],flag)
             }
+        }).catch(()=>{
+        }).finally(()=>{
             setLoading(false)
-       })
+        })
     }
     // 重置表格
     const reset = ()=>{

@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import product from '@/store/product/product';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { upDateProduct } from '@/services/y2/api';
+import { upDateProduct } from '@/services/y2/apiStore';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
 import ProductData from '../Product/ProductData';
@@ -94,37 +94,36 @@ function AddNewProduct(){
     const onFinish = async () => {
         if(await formValidation()){
             setLoading(true)
-            try {
-                const remove = product.variants.filter((item:any)=>!product.variantList.some(variant => variant.id === item.id))
-                // 转换格式
-                let newAttributesOptions:any = [];
-                toJS(product.attributesMap).forEach((attributes:any)=>{
-                    attributes.optionValue.forEach((item:string)=>{
-                        const option = attributes.options.find((option:any)=>option.option_values_id == item);
-                        option && newAttributesOptions.push({
-                            option_id:attributes.value,
-                            option_name:attributes.label,
-                            ...option,
-                        })
+            const remove = product.variants.filter((item:any)=>!product.variantList.some(variant => variant.id === item.id))
+            // 转换格式
+            let newAttributesOptions:any = [];
+            toJS(product.attributesMap).forEach((attributes:any)=>{
+                attributes.optionValue.forEach((item:string)=>{
+                    const option = attributes.options.find((option:any)=>option.option_values_id == item);
+                    option && newAttributesOptions.push({
+                        option_id:attributes.value,
+                        option_name:attributes.label,
+                        ...option,
                     })
                 })
-                const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
-                await upDateProduct({
-                    ...product.productInfo,
-                    languages_id:product.languageId,
-                    handle:product.productInfo.handle || product.productInfo.title.replace(/\s+/g, '-').toLowerCase(),
-                    product_image:product.productInfo.additional_image[0] || "",
-                    additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
-                    diversion:JSON.stringify([product.diversion || {}]),
-                    attributes:JSON.stringify([...newAttributesOptions,...removeAttributes]),
-                    variants:JSON.stringify([...product.variantList,...remove])
-                })
+            })
+            const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
+            upDateProduct({
+                ...product.productInfo,
+                languages_id:product.languageId,
+                handle:product.productInfo.handle || product.productInfo.title.replace(/\s+/g, '-').toLowerCase(),
+                product_image:product.productInfo.additional_image[0] || "",
+                additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
+                diversion:JSON.stringify([product.diversion || {}]),
+                attributes:JSON.stringify([...newAttributesOptions,...removeAttributes]),
+                variants:JSON.stringify([...product.variantList,...remove])
+            }).then(()=>{
                 message.success('创建成功')
-            }catch(err){
-            }finally{
-                setLoading(false)
                 history.push('/products/index')
-            }
+            }).catch(()=>{
+            }).finally(()=>{
+                setLoading(false)
+            })
         }   
     };
 

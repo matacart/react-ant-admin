@@ -3,8 +3,7 @@ import { App, Col, Form, Input, Modal, Row, Select } from 'antd';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { AddSupplier } from '@/services/y2/api';
-import { getCityList, getProvinceList } from '@/services/y2/apiAppstore';
+import { getCityList, getProvinceList,AddSupplier } from '@/services/y2/apiAppstore';
 import { useForm } from 'antd/es/form/Form';
 
 function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplierList:any}) {
@@ -102,17 +101,10 @@ function AddSupplierModal({selectRef,getSupplierList}:{selectRef:any,getSupplier
 
     // 验证成功 -- 创建供应商
     const createSupplier = ()=>{
-        // console.log({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber})
         AddSupplier({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber}).then(res=>{
-            console.log(res.code)
-            if(res.code == 0){
-                setAddSupplierOpen(false)
-                getSupplierList()
-                message.success("创建成功")
-            }else{
-                message.error("创建失败")
-            }
-        })
+            setAddSupplierOpen(false)
+            getSupplierList()
+        }).catch(()=>{})
     }
 
     return(

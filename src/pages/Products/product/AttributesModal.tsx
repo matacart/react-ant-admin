@@ -4,7 +4,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import { EditIcon } from "@/components/Icons/Icons";
 import DefaultInput from "@/components/Input/DefaultInput";
 import MySelect from "@/components/Select/MySelect";
-import { addStyleName, getProductOption, getProductStyleValueList } from "@/services/y2/api";
+import { addStyleName, getProductOption, getProductStyleValueList } from "@/services/y2/apiStore";
 import product from "@/store/product/product";
 import { App, Flex, Form, Input, Modal } from "antd"
 import FormItem from "antd/es/form/FormItem";
@@ -35,37 +35,42 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
     const submit = ()=>{
         form.validateFields().then((values)=>{
             setLoading(true)
-            addStyleName(values.id,values.languageID,values.option_name,values.option_type).then(res=>{
-                if(res?.code == 0){
-                    if(isCreate){
-                        product.setAttributesMap(product.attributesMap.map((item:any)=>item.value == attributes.value?{
-                            label:values.option_name,
-                            value:res?.id.toString(),
-                            options:[],
-                            optionValue:[],
-                        }:item));
-                        setOptionList([
-                            ...optionsList,
-                            {
-                                option_id:res?.id.toString(),
-                                option_name:values.option_name,
-                            }
-                        ])
-                    }else{
-                        product.setAttributesMap(product.attributesMap.map((item:any)=>item.value == attributes.value?{
-                            ...item,
-                            label:values.option_name,
-                        }:item));
-                        setOptionList(optionsList.map((item:any)=>item.option_id == values.id ? {
-                            ...item,
-                            option_name:values.option_name
-                        }:item))
-                    }
+            addStyleName({
+                id:values.id,
+                languages_id:values.languageID,
+                product_option_name:values.option_name,
+                sort:"1",
+                product_option_type_id:values.option_type_id,
+                status:"1",
+            }).then(res=>{
+                if(isCreate){
+                    product.setAttributesMap(product.attributesMap.map((item:any)=>item.value == attributes.value?{
+                        label:values.option_name,
+                        value:res?.id.toString(),
+                        options:[],
+                        optionValue:[],
+                    }:item));
+                    setOptionList([
+                        ...optionsList,
+                        {
+                            option_id:res?.id.toString(),
+                            option_name:values.option_name,
+                        }
+                    ])
+                }else{
+                    product.setAttributesMap(product.attributesMap.map((item:any)=>item.value == attributes.value?{
+                        ...item,
+                        label:values.option_name,
+                    }:item));
+                    setOptionList(optionsList.map((item:any)=>item.option_id == values.id ? {
+                        ...item,
+                        option_name:values.option_name
+                    }:item))
                 }
+            }).catch(() => {
             })
             // 提交表单数据
         }).catch((errorInfo) => {
-            console.log(errorInfo)
         }).finally(()=>{
             setIsModalOpen(false);
             setLoading(false)
@@ -93,22 +98,21 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
     // 编辑
     const editAttributes = ()=>{
         // 获取属性详情
-        getProductOption(attributes.value,product.languageId).then(res=>{
-            if(res?.code == 0){
-                form.setFieldsValue({
-                    id:res?.data?.option_id.toString(),
-                    languageID:product.languageId,
-                    option_name:res?.data?.option_name,
-                    option_type:res?.data?.option_type_id,
-                    status:"1",
-                })
-                setIsCreate(false)
-                setIsModalOpen(true)
-            }
-        }).catch((errorInfo) => {
-            console.log(errorInfo)
+        getProductOption({
+            id:attributes.value,
+            languages_id:product.languageId,
+        }).then(res=>{
+            form.setFieldsValue({
+                id:res?.data?.option_id.toString(),
+                languageID:product.languageId,
+                option_name:res?.data?.option_name,
+                option_type:res?.data?.option_type_id,
+                status:"1",
+            })
+            setIsCreate(false)
+            setIsModalOpen(true)
+        }).catch(() => {
         }).finally(()=>{
-            
         })
     }
 
@@ -150,14 +154,16 @@ function AttributesModal({optionsList,attributesOptionType,setOptionList,attribu
                         message.error("不能选择重复的属性")
                         return;
                     }
-                    const newOptions = await getProductStyleValueList(option.value as string,product.productInfo.cod_languages_id).then(res=>{return res?.data || []})
-                    const newAttributesMap = toJS(product.attributesMap).map((item:any)=>item.value == attributes.value?{
-                        label:option.label,
-                        value:option.value,
-                        options:newOptions || [],
-                        optionValue:[]
-                    }:item)
-                    product.setAttributesMap(newAttributesMap)
+                    getProductStyleValueList({option_id:option.value as string,languages_id:product.productInfo.cod_languages_id}).then(res=>{
+                        const newAttributesMap = toJS(product.attributesMap).map((item:any)=>item.value == attributes.value?{
+                            label:option.label,
+                            value:option.value,
+                            options:res?.data || [],
+                            optionValue:[]
+                        }:item)
+                        product.setAttributesMap(newAttributesMap)
+                    }).catch(err=>{
+                    })
                 }} 
                 placeholder="搜索或创建属性" 
                 options={options} 

@@ -1,7 +1,8 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MySelect from "@/components/Select/MySelect";
-import { getProductStyleValueList, uploadPic } from "@/services/y2/api";
+import { getProductStyleValueList } from "@/services/y2/apiStore";
+import { uploadPic } from "@/services/y2/apiAppstore";
 import product from "@/store/product/product";
 import { App, Flex, Modal, Table, TableProps, Tooltip, Upload, Image } from "antd"
 import _ from "lodash";
@@ -151,14 +152,10 @@ function AttributesTagModal({attributes}:{attributes:any}){
         formData.append("file", file)
         setLoading(true);
         uploadPic(formData).then((res: any) => {
-            if(res.code == 0){
-                const newImg = res.data.src;
-                const newData = [...data];
-                newData[index].attribute_image = newImg
-                setData(newData)
-            }else{
-                message.error(res.msg || "err", 1)
-            }
+            const newImg = res.data.src;
+            const newData = [...data];
+            newData[index].attribute_image = newImg
+            setData(newData)
         }).catch((err: any) => {
         }).finally(() => {
             setLoading(false);
@@ -198,7 +195,10 @@ function AttributesTagModal({attributes}:{attributes:any}){
 
     const setLangs = (lang:string)=>{
         setLoading(true)
-        getProductStyleValueList(attributes.value,lang).then(res=>{
+        getProductStyleValueList({
+            option_id: attributes.value,
+            languages_id:lang
+        }).then(res=>{
             // 先过滤出需要的数据 补充
             const newOptions = attributes.optionValue.map((option:string) => {
                 const item = attributes.options.find((i:any) => i.option_values_id == option)
@@ -214,8 +214,7 @@ function AttributesTagModal({attributes}:{attributes:any}){
             })
             setLang(lang)
             setData(newAttributesOptions)
-        }).catch(err=>{
-            message.error("err");
+        }).catch(()=>{
         }).finally(()=>{
             setLoading(false)
         });

@@ -38,9 +38,6 @@ function TaxDistrict({loading}:{loading:boolean}) {
               countryId:record.country_id,
               status:checked?"1":"0",
             }).then((res)=>{
-              if(res.code != "SUCCESS"){
-                return
-              }
               const newCountry = taxesList.taxCountryList.map(item=>{
                 if(item.country_id == record.country_id){
                     return {...item,status:checked}
@@ -48,6 +45,7 @@ function TaxDistrict({loading}:{loading:boolean}) {
                 return item
               })
               taxesList.setTaxCountryList(newCountry)
+            }).catch(()=>{
             }).finally(()=>{
               setSwitching({...switching,[record.country_id]:false})
             })

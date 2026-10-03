@@ -1,9 +1,8 @@
 import DefaultButton from "@/components/Button/DefaultButton"
 import MyButton from "@/components/Button/MyButton"
-import { EditorAddBtnIcon, SearchSecondIcon, TickIcon } from "@/components/Icons/Icons"
+import { EditorAddBtnIcon, SearchSecondIcon } from "@/components/Icons/Icons"
 import MyInput from "@/components/Input/MyInput"
-import { useAbortController } from "@/hooks/customHooks"
-import { getCategoryList } from "@/services/y2/api"
+import { getCategoryList } from "@/services/y2/apiStore"
 import editor from "@/store/theme/editor"
 import { CheckCircleFilled } from "@ant-design/icons"
 import { history } from "@umijs/max"
@@ -64,7 +63,7 @@ function CollectionPicker({item,data,setData}:{item:any,data:DataType,setData:(i
             limit: '10',
         }).then((res)=>{
             setMenu(res.data || []);
-        })
+        }).catch(()=>{});
     }
 
     useMemo(()=>{

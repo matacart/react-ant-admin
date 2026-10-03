@@ -126,6 +126,15 @@ declare namespace ApiOrders {
   }
 }
 
+declare namespace ApiShipment {
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+}
+
 declare namespace ApiTax {
   type Default = {
     code:number | string,
@@ -145,7 +154,7 @@ declare namespace ApiAbandonedOrder {
 
 declare namespace ApiAppstore {
   type Default = {
-    code:number,
+    code:number|string,
     count?:string,
     data:any,
     msg:string,
@@ -234,6 +243,15 @@ declare namespace ApiNav {
   }
 }
 
+declare namespace ApiSaleMarket {
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
+}
+
 declare namespace ApiAppstore {
 
   type Default = {
@@ -296,7 +314,7 @@ declare namespace ApiAccess {
 
 declare namespace ApiRobot {
   type Default = {
-    code:number|string, 
+    code:number, 
     data:any,
     msg:string,
   }
@@ -334,9 +352,17 @@ declare namespace ApiCheckout {
   }
 }
 
-declare namespace ApiSite {
+declare namespace ApiTask {
   type Default = {
     code:number|string, 
+    data:any,
+    msg:string,
+  }
+}
+
+declare namespace ApiSite {
+  type Default = {
+    code:number | string, 
     data:any,
     msg:string,
   }
@@ -384,6 +410,12 @@ declare namespace ApiTemplate {
 }
 
 declare namespace ApiEditor{
+  type Default = {
+    code:number|string, 
+    data:any,
+    msg:string,
+    success?:boolean,
+  }
   type languageSchema = {
     code:number|string, 
     data:any,
@@ -409,7 +441,7 @@ declare namespace ApiEditor{
     success?:boolean,
   }
   type jsonTemplates = {
-    code:number, 
+    code:string, 
     data:any,
     msg:string,
     success?:boolean,
@@ -432,6 +464,12 @@ declare namespace ApiEditor{
 }
 
 declare namespace ApiResource{
+  type Default = {
+    code:number,
+    count?:string,
+    data:any,
+    msg:string,
+  }
   type File = {
     code:number,
     count:string,

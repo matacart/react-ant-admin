@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { downloadTemplate } from "@/services/y2/api";
+import { downloadTemplate } from "@/services/y2/apiTemplate";
 import { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { App, Flex } from "antd";
@@ -24,10 +24,8 @@ function DownloadModal({template}:{template:TemplateInstance | null}){
                         <DefaultButton onClick={() => modalInstance.destroy()} text={"取消"} />
                         <PrimaryButton type="primary" onClick={()=>{
                             downloadTemplate(template?.id ?? "").then(res=>{
-                                console.log(res)
-                            }).catch((err)=>{
-                                console.log(err)
-                                message.error("下载失败")
+                                message.success("下载成功", 1)
+                            }).catch(()=>{
                             }).finally(()=>{
                                 modalInstance.destroy()
                             })

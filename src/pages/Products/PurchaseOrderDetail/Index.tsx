@@ -11,6 +11,7 @@ import PurchaseGoodsCard from "../PurchaseOrder/PurchaseGoodsCard";
 import CostSummaryCard from "../PurchaseOrder/CostSummaryCard";
 import ShippingDetailsCard from "../PurchaseOrder/ShippingDetailsCard";
 import RemarkCard from "../PurchaseOrder/RemarkCard";
+import { delPurchaseOrders } from "@/services/y2/apiStore";
 
 function Index(){
 
@@ -19,8 +20,6 @@ function Index(){
     const sleep = useSleep();
 
     const PurchaseOrderId = history.location.pathname.substring(history.location.pathname.lastIndexOf('/')+1)
-
-    // const [purchaseOrder,setPurchaseOrder] = useState({})
 
     useEffect(()=>{
         // 获取采购订单
@@ -80,12 +79,11 @@ function Index(){
 
     // 删除采购订单
     const deletePurchaseOrder = async () => {
-        purchaseOrderEdit.deletePurchaseOrder().then(async (res:any)=>{
-            if(res.code == 0){
-                message.success("删除成功");
-                await sleep(2000);
-                history.push("/products/purchase_orders")
-            }
+        delPurchaseOrders(purchaseOrderEdit.id).then(async (res:any)=>{
+            message.success("删除成功");
+            await sleep(2000);
+            history.push("/products/purchase_orders")
+        }).catch(()=>{
         })
     }
 

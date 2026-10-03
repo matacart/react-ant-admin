@@ -1,7 +1,6 @@
-import { addWarehouse, getCountryList  } from "@/services/y2/api";
+import { addWarehouse } from "@/services/y2/apiStore";
 import { getCityList,getProvinceList } from "@/services/y2/apiAppstore";
-import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select } from "antd"
-import { set } from "lodash";
+import { Button, Col, Flex, Form, Input, Modal, Row, Select } from "antd"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
@@ -36,8 +35,8 @@ function AddWarehouseAddressModal() {
 
     // 创建仓库地址
     const createWarehouseLocation = ()=>{
-        console.log({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber})
-        addWarehouse({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber})
+        addWarehouse({...form.getFieldsValue(),countryLaber,provinceLaber,cityLaber}).then(res=>{
+        }).catch(()=>{})
     }
 
     // 国家

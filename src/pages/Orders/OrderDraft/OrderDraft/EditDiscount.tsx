@@ -2,11 +2,9 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { setOrderIdNumber } from "@/services/y2/api";
-import { Checkbox, Col, Flex, Form, Input, Modal, Row, Space } from "antd"
-import { useEffect, useRef, useState } from "react";
+import { Col, Flex, Form, Input, Modal, Row, Space } from "antd"
+import { useState } from "react";
 import { styled } from 'styled-components';
-import cookie from 'react-cookies';
 import NumberInput from "@/components/Input/NumberInput";
 import { toJS } from "mobx";
 import orderDraft from "@/store/order/orderDraft";

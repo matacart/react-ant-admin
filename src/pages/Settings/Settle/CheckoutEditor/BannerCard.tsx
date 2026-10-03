@@ -21,19 +21,15 @@ export const setPersonalizationsData = (item:string,data:any) =>{
         config:JSON.stringify(newConfig),
         is_preview:"0",
     }).then((res)=>{
-        if(res.code == "0"){
-            // 添加操作到历史记录
-            checkoutEditor.addToOperationHistory({
-                type: "templateUpdate",
-                undoData: checkoutEditor.config,
-                redoData: newConfig,
-                timestamp: Date.now(),
-            });
-            checkoutEditor.setConfig(newConfig);
-        }else{
-            console.log("更新失败");
-        }
-    })
+        // 添加操作到历史记录
+        checkoutEditor.addToOperationHistory({
+            type: "templateUpdate",
+            undoData: checkoutEditor.config,
+            redoData: newConfig,
+            timestamp: Date.now(),
+        });
+        checkoutEditor.setConfig(newConfig);
+    }).catch(()=>{});
 }
 
 const BannerCard = ()=>{

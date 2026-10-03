@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { addTemplateFile, templateFileUpload } from "@/services/y2/api";
+import { addTemplateFile, templateFileUpload } from "@/services/y2/apiTemplate";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
 import { UploadOutlined } from "@ant-design/icons";
@@ -125,57 +125,53 @@ function AssetsModal({filePath,treeData,setTreeData}:LayoutModalType){
                     templateId:codeEditor.templateInfo?.id??"", 
                     languagesId:codeEditor.languageId??"2",
                 }).then(async res=>{
-                    if(res.code == 0){
-                        // 在树中插入文件
-                        const newTreeData = treeData.map(item=>{
-                            if(item.title == filePath){
-                                return {
-                                    ...item,
-                                    children:[
-                                        ...item.children,
-                                        {
-                                            title: file.name,
-                                            key: filePath + "/" + file.name + "-1",
-                                            children: undefined,
-                                            level: 1,
-                                            fileType: fileType,
-                                        }
-                                    ]
-                                }
+                    // 在树中插入文件
+                    const newTreeData = treeData.map(item=>{
+                        if(item.title == filePath){
+                            return {
+                                ...item,
+                                children:[
+                                    ...item.children,
+                                    {
+                                        title: file.name,
+                                        key: filePath + "/" + file.name + "-1",
+                                        children: undefined,
+                                        level: 1,
+                                        fileType: fileType,
+                                    }
+                                ]
                             }
-                            return item;
-                        })
-                        setTreeData(newTreeData);
-                        await codeEditor.setOpenFileList([
-                            ...codeEditor.openFileList,
-                            {
-                                active: false,
-                                checked: false,
-                                children: undefined,
-                                dragOver: false,
-                                dragOverGapBottom: false,
-                                dragOverGapTop: false,
-                                expanded: false,
-                                fileType: fileType,
-                                halfChecked: false,
-                                key: filePath+"/"+file.name+"-"+level,
-                                languagesId: codeEditor.languageId??"2",
-                                loaded: false,
-                                loading: false,
-                                mode: codeEditor.mode,
-                                pos: "0-0-"+codeEditor.openFileList.length,
-                                selected: false,
-                                title: file.name,
-                                url: filePath+"/"+file.name,
-                            }
-                        ])
-                        // 激活文件
-                        codeEditor.setActiveFileKey(filePath+"/"+file.name+"-"+level);
-                        setOpen(false);
-                        setFileList([]);
-                    }else{
-                        message.error(res.msg)
-                    }
+                        }
+                        return item;
+                    })
+                    setTreeData(newTreeData);
+                    await codeEditor.setOpenFileList([
+                        ...codeEditor.openFileList,
+                        {
+                            active: false,
+                            checked: false,
+                            children: undefined,
+                            dragOver: false,
+                            dragOverGapBottom: false,
+                            dragOverGapTop: false,
+                            expanded: false,
+                            fileType: fileType,
+                            halfChecked: false,
+                            key: filePath+"/"+file.name+"-"+level,
+                            languagesId: codeEditor.languageId??"2",
+                            loaded: false,
+                            loading: false,
+                            mode: codeEditor.mode,
+                            pos: "0-0-"+codeEditor.openFileList.length,
+                            selected: false,
+                            title: file.name,
+                            url: filePath+"/"+file.name,
+                        }
+                    ])
+                    // 激活文件
+                    codeEditor.setActiveFileKey(filePath+"/"+file.name+"-"+level);
+                    setOpen(false);
+                    setFileList([]);
                 }).catch(err=>{
                 }).finally(()=>{
                     setLoading(false);
@@ -195,40 +191,36 @@ function AssetsModal({filePath,treeData,setTreeData}:LayoutModalType){
                     fileContent:"",
                     versionId: codeEditor.versionId??"",
                 }).then(async res=>{
-                    if(res.code == 0){
-                        // 在树中插入文件
-                        const {newTreeData,level} = insertFileInTree(treeData, values.name, fileType, values.name,filePath);
-                        await setTreeData(newTreeData);
-                        await codeEditor.setOpenFileList([
-                            ...codeEditor.openFileList,
-                            {
-                                active: false,
-                                checked: false,
-                                children: undefined,
-                                dragOver: false,
-                                dragOverGapBottom: false,
-                                dragOverGapTop: false,
-                                expanded: false,
-                                fileType: fileType,
-                                halfChecked: false,
-                                key: filePath+"/"+values.name+"."+fileType+"-"+level,
-                                languagesId: codeEditor.languageId??"2",
-                                loaded: false,
-                                loading: false,
-                                mode: codeEditor.mode,
-                                pos: "0-0-"+codeEditor.openFileList.length,
-                                selected: false,
-                                title: values.name.split("/").pop()+"."+fileType,
-                                url: filePath+"/"+values.name+"."+fileType,
-                            }
-                        ])
-                        // 激活文件
-                        codeEditor.setActiveFileKey(filePath+"/"+values.name+"."+fileType+"-"+level);
-                        setOpen(false);
-                        form.resetFields();
-                    }else{
-                        message.error(res.msg);
-                    }
+                    // 在树中插入文件
+                    const {newTreeData,level} = insertFileInTree(treeData, values.name, fileType, values.name,filePath);
+                    await setTreeData(newTreeData);
+                    await codeEditor.setOpenFileList([
+                        ...codeEditor.openFileList,
+                        {
+                            active: false,
+                            checked: false,
+                            children: undefined,
+                            dragOver: false,
+                            dragOverGapBottom: false,
+                            dragOverGapTop: false,
+                            expanded: false,
+                            fileType: fileType,
+                            halfChecked: false,
+                            key: filePath+"/"+values.name+"."+fileType+"-"+level,
+                            languagesId: codeEditor.languageId??"2",
+                            loaded: false,
+                            loading: false,
+                            mode: codeEditor.mode,
+                            pos: "0-0-"+codeEditor.openFileList.length,
+                            selected: false,
+                            title: values.name.split("/").pop()+"."+fileType,
+                            url: filePath+"/"+values.name+"."+fileType,
+                        }
+                    ])
+                    // 激活文件
+                    codeEditor.setActiveFileKey(filePath+"/"+values.name+"."+fileType+"-"+level);
+                    setOpen(false);
+                    form.resetFields();
                 }).catch(()=>{
                 }).finally(()=>{
                     setLoading(false); 

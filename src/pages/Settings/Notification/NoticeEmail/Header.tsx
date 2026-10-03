@@ -1,6 +1,6 @@
 
 import { BackIcon, DesktopIcon, EditorRedoIcon, EditorRevokeIcon, MobileIcon } from '@/components/Icons/Icons';
-import { getStoreInfo } from '@/services/y2/api';
+import { getStoreInfo } from '@/services/y2/apiAppstore';
 import { Flex, App, Tooltip, Modal } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -54,30 +54,27 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
     // 发送测试邮件
     const sendTestEmail = async () => {
         // 获取客服邮件
-        let serviceEmail = "";
-        let storeName = "";
-        let storeLogo = "";
         setLoading(true);
-        await getStoreInfo({
+        getStoreInfo({
             languages_id:noticeEmail.languagesId,
         }).then(res=>{
-            serviceEmail = res.service_email;
-            storeName = res.store_name;
-        }).catch(err=>{
-            message.error(intl.formatMessage({ id: 'components.message.error' }));
+            const serviceEmail = res.data.service_email;
+            const storeName = res.data.store_name;
+            const storeLogo = res.data.store_logo;
+            if(!serviceEmail){
+                message.error(intl.formatMessage({ id: 'settings.notification.noticeEmail.header.error' }));
+                return;
+            }
+            setTextEmailInfo({
+                serviceEmail:serviceEmail,
+                storeName:storeName,
+                storeLogo:storeLogo,
+            });
+            setOpen(true);
+        }).catch(()=>{
         }).finally(()=>{
             setLoading(false);
         })
-        if(!serviceEmail){
-            message.error(intl.formatMessage({ id: 'settings.notification.noticeEmail.header.error' }));
-            return;
-        }
-        setTextEmailInfo({
-            serviceEmail:serviceEmail,
-            storeName:storeName,
-            storeLogo:storeLogo,
-        });
-        setOpen(true);
     }
 
     // 保存模板
@@ -89,11 +86,8 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
             user_languages_id:noticeEmail.useLanguagesId,
             oseid:noticeEmail.oseId,
         }).then(res=>{
-            if(res.code == 0){
-                message.success(intl.formatMessage({ id: 'components.message.success' }));
-            }
+            message.success(intl.formatMessage({ id: 'components.message.success' }));
         }).catch(err=>{
-            message.error(intl.formatMessage({ id: 'components.message.error' }));
         }).finally(()=>{
             setSpinning(false);
         })
@@ -202,12 +196,9 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
                                     invite_customer_discount_value:'20% OFF',
                                 },
                             }).then((res)=>{
-                                if(res.code == 0){
-                                    message.success("发送成功");
-                                    setOpen(false);
-                                }
+                                message.success("发送成功");
+                                setOpen(false);
                             }).catch((err)=>{
-                                message.error("发送失败");
                             }).finally(()=>{
                                 setSendLoading(false);
                             })

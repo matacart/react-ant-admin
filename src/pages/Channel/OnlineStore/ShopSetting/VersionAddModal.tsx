@@ -4,7 +4,7 @@ import { useState } from "react";
 import UploadCompressedFile from "./UploadCompressedFile";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { addVersion, updateVersion, uploadTemplate } from "@/services/y2/api";
+import { addVersion } from "@/services/y2/apiTemplate";
 import MyInput from "@/components/Input/MyInput";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 
@@ -26,30 +26,29 @@ function VersionAddModal({template}:{template: TemplateInstance | null}) {
 
     // 上传并导入--轮询查询进度
     const submit = ()=>{
-        form.validateFields().then((values) => {
-            if(file){
-              setLoading(true)
-              setStatus("inProgress")
-              addVersion({
-                theme_id: template?.template_id || "",
-                languages_id: template?.languages_id || "",
-                mode:"original",
-                theme_package:file,
-                version_name: values.version,
-              }).then((res: any) => {
-                message.success("上传成功", 1)
-              }).catch((err: any) => {
-
-              }).finally(() => {
-                setStatus("");
-                setFile(null);
-                setLoading(false);
-                setIsOpen(false)
-              })
-            }else{
-              message.info("请选择文件");
-            }
+      form.validateFields().then((values) => {
+        if(!file){
+          message.info("文件不能为空");
+          return;
+        }
+        setLoading(true)
+        setStatus("inProgress")
+        addVersion({
+          theme_id: template?.template_id || "",
+          languages_id: template?.languages_id || "",
+          mode:"original",
+          theme_package:file,
+          version_name: values.version,
+        }).then((res: any) => {
+          message.success("上传成功", 1)
+        }).catch((err: any) => {
+        }).finally(() => {
+          setStatus("");
+          setFile(null);
+          setLoading(false);
+          setIsOpen(false)
         })
+      })
     }
 
     const closeModal = ()=>{

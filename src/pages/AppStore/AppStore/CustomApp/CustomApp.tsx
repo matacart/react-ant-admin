@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import dayjs from 'dayjs';
 import AppList from "./AppList"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
-import { getDevAppStores } from "@/services/y2/api"
+import { getDevAppStores } from "@/services/y2/apiAppstore"
 
 interface DataType {
     key: string;
@@ -26,14 +26,12 @@ function CustomApp() {
 
     // 获取应用列表
     const fetchAppList = async ()=>{
-        try {
-            const appList = await getDevAppStores()
-            setData(appList.data)
-        }catch(err){
-            console.log(err)
-        }finally{
+        getDevAppStores().then(res=>{
+            setData(res.data)
+        }).catch(()=>{
+        }).finally(()=>{
             setIsSkeleton(false)
-        }
+        })
     }
 
     useEffect(()=>{

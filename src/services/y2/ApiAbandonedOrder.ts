@@ -1,10 +1,8 @@
 import request from '@/utils/request';
 import cookie from 'react-cookies';
+import { errHandle } from './apiAppstore';
 
-
-
-
-export function searchAbandonedOrder(res:{
+export async function searchAbandonedOrder(options:{
     languages_id:string,
     pageNum:string,
     pageSize:string,
@@ -12,69 +10,77 @@ export function searchAbandonedOrder(res:{
     status:string,
     keyword:string,
 },signal?:AbortSignal){
-  return request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/search`, {
+  const res = await request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/search`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-export function getAbandonedOrderDetail(res:{
+export async function getAbandonedOrderDetail(options:{
     languages_id:string,
     seq:string,
 },signal?:AbortSignal){
-  return request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/detail`, {
+  const res = await request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/detail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-export function searchScrollAbandonedOrder(res:{
+export async function searchScrollAbandonedOrder(options:{
     languages_id:string,
     abandonedOrderSeq:string,
     sortBy:string,
 },signal?:AbortSignal){
-  return request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/searchScroll`, {
+  const res = await request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/searchScroll`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-export function setAbandonedOrderRemark(res:{
+export async function setAbandonedOrderRemark(options:{
     languages_id:string,
     abandonedOrderSeq:string,
     remark:string,
 },signal?:AbortSignal){
-  return request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/modifyRemark`, {
+  const res = await request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/modifyRemark`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-export async function sendRecallEmail(res:{
+export async function sendRecallEmail(options:{
   abandonedOrderSeqList:string,
   mToken:string,
   languages_id:string,
@@ -83,18 +89,16 @@ export async function sendRecallEmail(res:{
   senderName:string,
   hasChange:boolean,
 },signal?:AbortSignal){
-  const response = await request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/sendRecallEmail`, {
+  const res = await request<ApiAbandonedOrder.Default>(`/ApiAbandonedOrder/sendRecallEmail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
-  if(response.code != 0){
-    throw new Error(response.msg)
-  }
-  return response 
+  if (res.code != 0) errHandle(res);
+  return res;
 }

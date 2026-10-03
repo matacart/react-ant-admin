@@ -1,4 +1,4 @@
-import {addProductOptionValues, getOptionType, getProductOptionSelect } from "@/services/y2/api";
+import {addProductOptionValues, getOptionType, getProductOptionSelect } from "@/services/y2/apiStore";
 import product, { AttributeType } from "@/store/product/product";
 import { ExclamationCircleFilled, PlusOutlined } from "@ant-design/icons";
 import { App, Card, Checkbox, Tooltip, AutoCompleteProps, Flex } from "antd";
@@ -138,13 +138,13 @@ function AttributesMapList() {
     useEffect(()=>{
       getProductOptionSelect(product.languageId).then(res=>{
         res?.data && setOptionList(res.data)
-      })
+      }).catch(()=>{})
       getOptionType().then(res=>{
         setAttributesOptionType(res.data.map((item:any)=>({
             label:item.product_option_type_name,
             value:item.product_option_type_id
         })))
-      })
+      }).catch(()=>{})
     },[])
 
 
@@ -224,29 +224,33 @@ function AttributesMapList() {
                                     })
                                     product.setAttributesMap(newAttributesMap)
                                 }else{
-                                    // 创建 新的 option_values_id 并更新 attributes.options
-                                    const newTag = value.filter((v:string) => !attributes.optionValue.includes(v));
-                                    const res = await addProductOptionValues("",product.productInfo.id,product.languageId,newTag[0])
-                                    // 更新成功后，刷新 attributesMap
-                                    if(res?.code == 0 && res?.id){
-                                        const newAttributesMap = product.attributesMap.map((item:any)=>{
-                                            if(item.value === attributes.value){
-                                                return {
-                                                    ...item,
-                                                    options:[
-                                                        ...item.options,
-                                                        {
-                                                            option_values_id:res?.id.toString(),
-                                                            option_values_name:newTag[0]
-                                                        }
-                                                    ],                                    
-                                                    optionValue:value.map((v:string)=>v == newTag[0]?res?.id.toString():v)
-                                                }
-                                            }
-                                            return item
-                                        })
-                                        product.setAttributesMap(newAttributesMap)
-                                    }
+                                  // 创建 新的 option_values_id 并更新 attributes.options
+                                  const newTag = value.filter((v:string) => !attributes.optionValue.includes(v));
+                                  addProductOptionValues({
+                                    id:"",
+                                    languages_id:product.languageId,
+                                    option_id:attributes.value,
+                                    option_values_name:newTag[0]
+                                  }).then((res:any)=>{
+                                    const newAttributesMap = product.attributesMap.map((item:any)=>{
+                                          if(item.value === attributes.value){
+                                              return {
+                                                  ...item,
+                                                  options:[
+                                                      ...item.options,
+                                                      {
+                                                          option_values_id:res?.id.toString(),
+                                                          option_values_name:newTag[0]
+                                                      }
+                                                  ],                                    
+                                                  optionValue:value.map((v:string)=>v == newTag[0]?res?.id.toString():v)
+                                              }
+                                          }
+                                          return item
+                                    })
+                                    product.setAttributesMap(newAttributesMap)
+                                  }).catch(() => {
+                                  })
                                 }
                             }}
                         />

@@ -3,7 +3,7 @@ import { App, Card, Flex, Form, Input, Radio, Select } from "antd"
 import { history, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
+import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DeleteModal from "@/components/Modal/DeleteModal";
@@ -68,8 +68,7 @@ function ThirdCreditCollectionDetail() {
                 await payments.clearNewOtherCollection()
                 history.push("/settings/payments/thirdCreditCard/add?addonsId="+searchParams.get("addonsId")+"&lang="+langId)
             }
-        }).catch((err)=>{
-            console.log(err)
+        }).catch(()=>{
         }).finally(()=>{
         })
     }
@@ -120,8 +119,7 @@ function ThirdCreditCollectionDetail() {
                     ["config["+key+"]"]:value
                 })
             });
-        }).catch((err)=>{
-            console.log(err)
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })

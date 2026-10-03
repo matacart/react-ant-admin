@@ -66,12 +66,9 @@ function SitemapFileManagementCard() {
                     removeFunc={()=>{
                         setLoading(true);
                         delSitemapFile(record.id).then(res=>{
-                            if(res.code == 0){
-                                message.success("删除成功");
-                                setData(data.filter(item => item.id !== record.id))
-                            }
+                            message.success("删除成功");
+                            setData(data.filter(item => item.id !== record.id))
                         }).catch(()=>{
-                            console.log("删除失败")
                         }).finally(()=>{
                             setLoading(false);
                         })
@@ -90,14 +87,11 @@ function SitemapFileManagementCard() {
         confirmPromise && confirmPromise.destroy();
         setSwitchLoading(true);
         switchSitemap(status).then(res=>{
-            if(res.code == 0){
-                message.success("成功");
-                preferences.setSitemapStatus({
-                    active: status,
-                })
-            }
+            message.success("成功");
+            preferences.setSitemapStatus({
+                active: status,
+            })
         }).catch(err=>{
-            message.error('失败');
         }).finally(()=>{
             setSwitchLoading(false);
         })
@@ -153,17 +147,15 @@ function SitemapFileManagementCard() {
         uploadSitemap({
             sitemap_file:file,
         }).then(res=>{
-            if(res.code == 0){
-                message.success('上传成功');
-                setTableLoading(true);
-                getSitemapList().then(res=>{
-                    res.code == 0 && setData(res.data.list);
-                }).finally(()=>{
-                    setTableLoading(false)
-                });
-            }
+            message.success('上传成功');
+            setTableLoading(true);
+            getSitemapList().then(res=>{
+                setData(res.data.list);
+            }).catch(()=>{
+            }).finally(()=>{
+                setTableLoading(false)
+            });
         }).catch(err=>{
-            message.error('上传失败');
         }).finally(()=>{
             setFile(undefined);
             setLoading(false);

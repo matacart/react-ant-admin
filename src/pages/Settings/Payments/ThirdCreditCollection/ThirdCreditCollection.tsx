@@ -4,7 +4,7 @@ import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import { getAddonsList } from "@/services/y2/api";
+import { getAddonsList } from "@/services/y2/apiAppstore";
 import cookie from 'react-cookies';
 import LangSelect from "@/components/Select/LangSelect";
 
@@ -23,8 +23,7 @@ function ThirdCreditCollection() {
     useEffect(()=>{
         getAddonsList(language,"1","1").then(res=>{
             setSupportPayments(res.data)
-        }).catch(err=>{
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false)
         })
     },[language])

@@ -1,10 +1,9 @@
-import { PlusOutlined } from "@ant-design/icons";
 import { Card, Col, Flex, Form, Modal, Popover, Row, Select } from "antd";
 import styled from "styled-components";
 import AddSupplierModal from "./AddSupplierModal";
-import { SetStateAction, useEffect, useRef, useState } from "react";
-import { getAddWarehouseList, getPurchaseCurrencyList, getSupplier, selectSupplier } from "@/services/y2/api";
-import { set } from 'lodash';
+import { useEffect, useRef, useState } from "react";
+import { getAddWarehouseList } from "@/services/y2/apiStore";
+import { getPurchaseCurrencyList,selectSupplier } from "@/services/y2/apiAppstore";
 import EditSupplierModal from "./EditSupplierModal";
 import purchaseOrderStore from "@/store/product/purchaseOrder/purchaseOrderStore";
 
@@ -35,33 +34,29 @@ function LocationsCard() {
     function getSupplierList(){
         selectSupplier().then(res=>{
             let options:supplierOptions[] = []
-            if(res.code == 0){
-                setSupplierList(res.data);
-                res.data.forEach((e:any) => {
-                    options.push({
-                        label:e.name,
-                        value:e.id
-                    })
-                });
-            }
+            setSupplierList(res.data);
+            res.data.forEach((e:any) => {
+                options.push({
+                    label:e.name,
+                    value:e.id
+                })
+            });
             setSupplierOptions(options)
-        })
+        }).catch(()=>{})
     }
     // 目的地
     function getWarehouseAddressList(){
         getAddWarehouseList().then(res=>{
-            if(res.code == 0){
-                setWarehouseAddressListCopy(res.data)
-                let newList:any = []
-                res.data.forEach((e:any) => {
-                    newList.push({
-                        label:e.name,
-                        value:e.id
-                    })
-                });
-                setWarehouseAddressList(newList);
-            }
-        })
+            setWarehouseAddressListCopy(res.data)
+            let newList:any = []
+            res.data.forEach((e:any) => {
+                newList.push({
+                    label:e.name,
+                    value:e.id
+                })
+            });
+            setWarehouseAddressList(newList);
+        }).catch(()=>{})
     }
 
     
@@ -125,11 +120,8 @@ function LocationsCard() {
     useEffect(()=>{
         getSupplierList()
         getWarehouseAddressList()
-
-
         // 供应商货币
-    getPurchaseCurrencyList().then(res=>{
-        if(res.code == 0){
+        getPurchaseCurrencyList().then(res=>{
             let newList:any = []
             res.data.forEach((e:any) => {
                 console.log(e)
@@ -139,8 +131,7 @@ function LocationsCard() {
                 })
             });
             setPurchaseCurrencyList(newList)
-        }
-    })
+        }).catch(()=>{})
     },[])
 
     return(

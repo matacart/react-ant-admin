@@ -196,10 +196,9 @@ function GroupCardTable({dataSource,paginationConfig,loading}:{dataSource:DataTy
     // 文件删除
     const removeFile = (id:string)=>{
       deleteFile(id).then(res=>{
-        if(res.code == 0){
-          setData(data.filter((item) => item.id !== id))
-          message.success('删除成功')
-        }
+        setData(data.filter((item) => item.id !== id))
+        message.success('删除成功')
+      }).catch((err)=>{
       })
     }
 

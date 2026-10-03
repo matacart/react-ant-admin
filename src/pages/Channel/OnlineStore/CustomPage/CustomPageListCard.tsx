@@ -7,7 +7,7 @@ import SearchInput from "@/components/Input/SearchInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { delCustomerPage, getCustomerPageList } from "@/services/y2/api";
+import { delCustomerPage, getCustomerPageList } from "@/services/y2/apiAppstore";
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import LangSelect from "@/components/Select/LangSelect";
@@ -93,11 +93,9 @@ export default function CustomPageListCard({list,count}) {
                     removeFunc={()=>{
                         // UninstallApp(record.id)
                         delCustomerPage(record.id).then(()=>{
-                          // getArticleList()
                           setData(data.filter(item => item.id !== record.id))
                           message.success("删除成功")
                         }).catch(()=>{
-                          console.log("删除失败")
                         })
                     }} 
                     title="自定义页面删除后无法恢复，确认是否继续？" 
@@ -126,8 +124,7 @@ export default function CustomPageListCard({list,count}) {
           current: page,
           pageSize: limit,
         })
-      }).catch(err=>{
-  
+      }).catch(()=>{
       }).finally(()=>{
         setLoading(false)
       })

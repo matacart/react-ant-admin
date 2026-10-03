@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import orderDraftList from '@/store/order/orderDraftList';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import BlankPage from './BlankPage';
-import { getOrderDraftList } from '@/services/y2/api';
+import { getOrderDraftList } from '@/services/y2/apiStore';
 import { useAbortController } from '@/hooks/customHooks';
 import OrderDraftList from './OrderDraftList';
   
@@ -17,7 +17,6 @@ export default function OrderDraft() {
   const { createAbortController } = useAbortController();
 
   useEffect(()=>{
-
     const signal = createAbortController();
     getOrderDraftList({
       page:1,
@@ -29,9 +28,6 @@ export default function OrderDraft() {
       });
       (res.data.length && res.data.length) > 0 ? setIsBlank(false) : setIsBlank(true);
     }).catch(err=>{
-      if(err.name === 'AbortError'){
-        console.log(err);
-      }
     }).finally(()=>{
       setIsSkeleton(false)
     })

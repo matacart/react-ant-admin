@@ -15,8 +15,9 @@ class Payments {
     }
 
     languagesId:string = cookie.load("shop_lang") || '2'
+    
     setLanguagesId(value:string){
-        this.languagesId = value
+      this.languagesId = value
     }
 
     // 手动支付

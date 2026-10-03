@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { Flex, App } from 'antd';
-import { getWithdrawList } from '@/services/y2/api';
+import { getWithdrawList } from '@/services/y2/apiAppstore';
 import WithdrawalList from './WithdrawalList';
 import WithdrawalModal from './WithdrawalModal';
 
@@ -19,13 +19,11 @@ function Withdrawal(){
             page:"1",
             limit:"10",
         }).then(res=>{
-            res.code == 0 && setWithdrawal({
+            setWithdrawal({
                 data:res.data,
                 count:res.count
             });
-        }).catch((err)=>{
-            message.error(err?.msg);
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false)
         })
     },[])

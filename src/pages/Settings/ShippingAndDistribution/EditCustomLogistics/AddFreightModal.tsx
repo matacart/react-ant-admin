@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton"
 import { AddIcon } from "@/components/Icons/Icons";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import { useSleep } from "@/hooks/customHooks";
-import { getDeliveryList, setAddonsConfigs } from "@/services/y2/api";
+import { getDeliveryList, setAddonsConfigs } from "@/services/y2/apiAppstore";
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight";
 import { MinusCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { App, Button, Col, ConfigProvider, Flex, Form, Input, InputNumber, Modal, Row, Select, Spin, Tooltip } from "antd"
@@ -93,12 +93,9 @@ export default function AddFreightModal({type}:{type:string}){
                 await sleep(2000)
                 getDeliveryList(generalFreight.deliverysLanguage).then(res=>{
                     generalFreight.setDeliverys(res.data)
-                }).catch(err=>{
-                    message.error("刷新数据")
-                }).finally(()=>{
+                }).catch(()=>{}).finally(()=>{
                 })
-            }).catch(err=>{
-                message.error("失败")
+            }).catch(()=>{
             }).finally(()=>{
                 formFreight.resetFields()
                 setBillingMethod(1)

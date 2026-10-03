@@ -3,7 +3,6 @@ import { Flex, App, Modal, Table, Tooltip } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { getDomainList } from '@/services/y2/api';
 import shopsManagement from "@/store/shops/shopsManagementStore";
 import SuccessTag from '@/components/Tag/SuccessTag';
 import DefaultTag from '@/components/Tag/DefaultTag';
@@ -12,6 +11,7 @@ import WarningTag from '@/components/Tag/WarningTag';
 import MyButton from '@/components/Button/MyButton';
 import { useAbortController } from '@/hooks/customHooks';
 import UpdataShop from './UpdataShop';
+import { getDomainList } from '@/services/y2/apiAppstore';
 
 type ColumnsType<T> = TableProps<T>['columns'];
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
@@ -291,9 +291,6 @@ function StoresTable() {
         }
       });
     }).catch(err=>{
-      if(err.name !== "AbortError"){
-        console.log(err)
-      }
     }).finally(()=>{
       setLoading(false)
     })

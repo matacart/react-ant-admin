@@ -3,140 +3,12 @@
 import request from '@/utils/request';
 import { Oauth2 } from '../../../config/myConfig'
 import cookie from 'react-cookies';
-
-// --重试--
-// 平台信息
-export function getPlatformInfo(){
-  return request<ApiAppstore.Default>('/ApiAppstore/platform_info',{
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  })
-}
-
-
-// 店铺查询
-export function domainSelect( options?: { [key: string]: any }) {
-  return request<ApiAppstore.Default>('/ApiAppstore/domain_select', {
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    ...(options || {}),
-  });
-}
-
-// 店铺列表
-export function getDomainList( options?: { [key: string]: any }) {
-  return request<ApiAppstore.domainList>('/ApiAppstore/domain_list', {
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    ...(options || {}),
-  });
-}
-
-/** 获取当前的用户 GET /currentUser */
-export function currentUser(options?: { [key: string]: any }) {
-  return request<ApiAppstore.CurrentUser>('/ApiAppstore/currentUser', {
-    method: 'POST',
-    retryOnError: true,
-    ...(options || {}),
-  });
-}
-
-// 店铺币种汇率
-export function getCurrencies(domainId:string) {
-  return request<ApiAppstore.Default>(`/ApiAppstore/currencies`, {
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:domainId
-    }
-  })
-}
-
-// 国家
-export function getCountryList(){
-  return request<ApiAppstore.Default>('/ApiAppstore/country_select',{
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      page:1,
-    }
-  })
-}
-
-// 时区
-export function getTimeZoneList(){
-  return request<ApiAppstore.Default>('/ApiAppstore/timezones_select',{
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  })
-}
-
-// 所有币种
-export function getCurrenciesList(page?: number, limit?: number) {
-  return request<ApiAppstore.Default>(`/ApiAppstore/currencies_list`, {
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      page:page,
-      limit:limit
-    }
-  })
-}
-
-// 获取语言列表 -- 所有：暂用于平台语言
-export function getLanguagesList() {
-  return request<ApiAppstore.Default>(`/ApiAppstore/languages_list`, {
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id
-    }
-  })
-}
-
-// 店铺语言列表 -- 绑定定到店铺的语言
-export function getDomainLanguages(){
-  return request<ApiAppstore.Default>('/ApiAppstore/languages_select',{
-    method: 'POST',
-    retryOnError: true,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id
-    }
-  })
-}
-
+import { message } from 'antd';
+import { errHandle } from './apiAppstore';
 
 // 偏好设置 --- 获取robots.txt配置
 export async function getRobotsTxtConfig(signal?:AbortSignal){
-  return request<ApiRobot.Default>(`/ApiRobots/getRobotsTxtConfig`, {
+  const res = await request<ApiRobot.Default>(`/ApiRobots/getRobotsTxtConfig`, {
     method: 'POST',
     // retryOnError: true, // 重试
     headers: {
@@ -146,27 +18,31 @@ export async function getRobotsTxtConfig(signal?:AbortSignal){
       domain_id:cookie.load("domain")?.id,
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 更新robots.txt配置
-export async function updateRobotsTxtConfig(res:{
+export async function updateRobotsTxtConfig(options:{
   robots_content:string,
 },signal?:AbortSignal){
-  return request<ApiRobot.Default>(`/ApiRobots/updateRobotsTxtConfig`, {
+  const res = await request<ApiRobot.Default>(`/ApiRobots/updateRobotsTxtConfig`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 重置robots.txt配置
 export async function resetRobotsTxtConfig(signal?:AbortSignal){
-  return request<ApiRobot.Default>(`/ApiRobots/resetRobotsTxtConfig`, {
+  const res = await request<ApiRobot.Default>(`/ApiRobots/resetRobotsTxtConfig`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -175,27 +51,31 @@ export async function resetRobotsTxtConfig(signal?:AbortSignal){
       domain_id:cookie.load("domain")?.id,
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 上传社交分享图片 
-export async function uploadSocialPicture(res:{
+export async function uploadSocialPicture(options:{
   social_image:File,
 }){
-  return request<ApiSite.Default>(`/ApiSite/uploadAndUpdateSocialPicture`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/uploadAndUpdateSocialPicture`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 获取社交分享图片
 export async function getSocialPicture(){
-  return request<ApiSite.Default>(`/ApiSite/getSocialPicture`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/getSocialPicture`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -204,11 +84,13 @@ export async function getSocialPicture(){
       domain_id:cookie.load("domain")?.id,
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 删除社交分享图片
 export async function deleteSocialPicture(){
-  return request<ApiSite.Default>(`/ApiSite/deleteSocialPicture`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/deleteSocialPicture`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -217,10 +99,12 @@ export async function deleteSocialPicture(){
       domain_id:cookie.load("domain")?.id,
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 页面 sections 列表
-export async function installedSections(res:{
+export async function installedSections(options:{
   mode:string,
   oseid:string,
   themeId:string,
@@ -228,7 +112,7 @@ export async function installedSections(res:{
   languages_id:string,
   versionId:string
 },signal?:AbortSignal){
-  return request<ApiEditor.installedSections>(`/ApiEditor/installed_sections`, {
+  const res = await request<ApiEditor.installedSections>(`/ApiEditor/installed_sections`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -236,18 +120,20 @@ export async function installedSections(res:{
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 // 主题信息
-export async function templateInfo(res:{
+export async function templateInfo(options:{
   template_id:string,
   languages_id:string,
 },signal:AbortSignal){
-  return request<ApiEditor.templateInfo>(`/ApiEditor/template_info`, {
+  const res = await request<ApiEditor.templateInfo>(`/ApiEditor/template_info`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -255,20 +141,22 @@ export async function templateInfo(res:{
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 // theme 多语言 对象
-export async function languageSchema(res:{
+export async function languageSchema(options:{
   mode:string,
   themeId:string,
   language:string,
   versionId:string,
 },signal?:AbortSignal){
-  return request<ApiEditor.languageSchema>(`/ApiEditor/languageSchema`, {
+  const res = await request<ApiEditor.languageSchema>(`/ApiEditor/languageSchema`, {
     method: 'POST',
     retryOnError: true, // 重试
     timeout: 30000,
@@ -277,15 +165,17 @@ export async function languageSchema(res:{
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 密码
 export async function getProtectionPassWord(signal?:AbortSignal){
-  return request<ApiSite.Default>(`/ApiSite/get_password_protection`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/get_password_protection`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -296,30 +186,34 @@ export async function getProtectionPassWord(signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 // 偏好设置 --- 更新密码设置
-export async function updateProtectionPassWord(res:{
+export async function updateProtectionPassWord(options:{
   gdprState:string,
   switchEnable:boolean,
   password:string
 },signal?:AbortSignal){
-  return request<ApiSite.Default>(`/ApiSite/update_password_protection`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/update_password_protection`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 
 // 偏好设置 --- 站点地图
 export async function getSitemapStatus(signal?:AbortSignal){
-  return request<ApiSitemap.Default>(`/ApiSitemap/sitemap_status`, {
+  const res = await request<ApiSitemap.Default>(`/ApiSitemap/sitemap_status`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -330,12 +224,14 @@ export async function getSitemapStatus(signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 
 // 动态渠道路由
 export async function getWebsiteRoutes(signal?:AbortSignal){
-  return request<ApiChannel.Default>(`/ApiChannel/get_pinned_sale_channels`, {
+  const res = await request<ApiChannel.Default>(`/ApiChannel/get_pinned_sale_channels`, {
     method: 'POST',
     retryOnError: true, // 重试
     headers: {
@@ -348,16 +244,11 @@ export async function getWebsiteRoutes(signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0 && res.code != 1002) errHandle(res);
+  return res;
 }
 
-
-
-
-
-
-
 // -----------不重试--------------
-
 
 // 获取用户状态---商户数据
 export async function currentUserStatus(options?: { [key: string]: any }) {
@@ -369,91 +260,70 @@ export async function currentUserStatus(options?: { [key: string]: any }) {
   });
 }
 
-
-/** 退出登录接口 POST /ApiAppstore/logout */
-export async function logout(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/ApiAppstore/logout', {
-    method: 'POST',
-    ...(options || {}),
-  });
-}
-
-/** 登录接口 POST /login/account  /y2/ApiAppstore/newlogin */
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/ApiAppstore/newlogin', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-    ...(options || {}),
-  });
-}
-
 /** 此处后端没有提供注释 GET /notices */
-export async function getNotices(options?: { [key: string]: any }) {
-  return request<API.NoticeIconList>('/notices', {
-    method: 'GET',
-    ...(options || {}),
-  });
-}
+// export async function getNotices(options?: { [key: string]: any }) {
+//   return request<API.NoticeIconList>('/notices', {
+//     method: 'GET',
+//     ...(options || {}),
+//   });
+// }
 
 /** 获取规则列表 GET /rule */
-export async function rule(
-  params: {
-    // query
-    /** 当前的页码 */
-    current?: number;
-    /** 页面的容量 */
-    pageSize?: number;
-  },
-  options?: { [key: string]: any },
-) {
-  return request<API.RuleList>('/rule', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
+// export async function rule(
+//   params: {
+//     // query
+//     /** 当前的页码 */
+//     current?: number;
+//     /** 页面的容量 */
+//     pageSize?: number;
+//   },
+//   options?: { [key: string]: any },
+// ) {
+//   return request<API.RuleList>('/rule', {
+//     method: 'GET',
+//     params: {
+//       ...params,
+//     },
+//     ...(options || {}),
+//   });
+// }
 
 /** 更新规则 PUT /rule */
-export async function updateRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/rule', {
-    method: 'POST',
-    data: {
-      method: 'update',
-      ...(options || {}),
-    }
-  });
-}
+// export async function updateRule(options?: { [key: string]: any }) {
+//   return request<API.RuleListItem>('/rule', {
+//     method: 'POST',
+//     data: {
+//       method: 'update',
+//       ...(options || {}),
+//     }
+//   });
+// }
 
 /** 新建规则 POST /rule */
-export async function addRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/rule', {
-    method: 'POST',
-    data: {
-      method: 'post',
-      ...(options || {}),
-    }
-  });
-}
+// export async function addRule(options?: { [key: string]: any }) {
+//   return request<API.RuleListItem>('/rule', {
+//     method: 'POST',
+//     data: {
+//       method: 'post',
+//       ...(options || {}),
+//     }
+//   });
+// }
 
 /** 删除规则 DELETE /rule */
-export async function removeRule(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/rule', {
-    method: 'POST',
-    data: {
-      method: 'delete',
-      ...(options || {}),
-    }
-  });
-}
+// export async function removeRule(options?: { [key: string]: any }) {
+//   return request<Record<string, any>>('/rule', {
+//     method: 'POST',
+//     data: {
+//       method: 'delete',
+//       ...(options || {}),
+//     }
+//   });
+// }
 
 /** 重设密码 */
 export async function resetPassword(body:any, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('https://www.matacart.com/h-module-UForgetPassword.html', {
+  const res = await request<API.LoginResult>('https://www.matacart.com/h-module-UForgetPassword.html', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -468,6 +338,11 @@ export async function resetPassword(body:any, options?: { [key: string]: any }) 
       from:"matacart"
     },
   });
+  if (res.code != 0){
+    message.error(res.msg || '失败');
+    throw new Error(res.msg || '失败');
+  };
+  return res;
 }
 
 /** 注册 */
@@ -506,27 +381,6 @@ export async function getFakeCaptcha(phone:string,InternationalAreaCode:string,q
 }
 
 /** 获取access_token */
-// export async function getAccessToken() {
-//   let AccessToken = '';
-//   await axios.post(
-//     Oauth2.hdyUrl,
-//     {
-//       grant_type: Oauth2.grant_type,
-//       accessKeyId: Oauth2.accessKeyId,
-//       accessKeySecret: Oauth2.accessKeySecret
-//     }, {
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//     },
-//   }).then((res:any) => {
-//     AccessToken = res.data.access_token;
-//   }).catch((error:any) => {
-//     console.log('error', error);
-//   });
-//   return AccessToken;
-// }
-
-/** 获取access_token */
 export async function getAccessToken() {
   return request(Oauth2.hdyUrl, {
     method: 'POST',
@@ -542,123 +396,13 @@ export async function getAccessToken() {
   });
 }
 
-
-// 账号认证
-export async function accountAuthentication(res:{
-  name:string,
-  phone:string,
-  qq:string,
-  email:string,
-  mid:string,
-  apply_type:string,
-  apply_remark:string,
-}) {
-  return request<ApiAppstore.Default>("/ApiAppstore/apply_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:res,
-  });
-}
-
-
-
-// 图片上传
-export async function uploadPic(formData:FormData){
-  return request('/ApiAppstore/doUploadPic', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:formData
-  })
-}
-
-// 视频上传
-export async function doUploadVideo(formData:FormData){
-  return request<ApiAppstore.Default>('/ApiAppstore/doUploadVideo', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:formData
-  })
-}
-
-// 删除产品 ----- 产品
-export async function deleteProduct(id: string) {
-  return request<ApiStore.Default>('/ApiStore/product_del', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      id: id,
-      access_token: localStorage.getItem('access_token')
-    },
-  })
-}
-
-// 产品列表
-// export async function getProductList(page: any, limit: any) {
-//   return request(`/ApiStore/product_list?page=${page}&limit=${limit}`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   })
-// }
-// /ApiStore/product_detail?page=${page}&limit=${limit}  测试
-// 改用product_list
-// 根据id & languages_id获取产品详情
-export function getProductDetail(id: string,languagesId: string) {
-  return request<ApiStore.Default>('/ApiStore/product', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id: cookie.load("domain").id,
-      id: id,
-      languages_id: languagesId
-    },
-  })
-}
-
-// 选项类型
-export async function getOptionType() {
-  return request<ApiStore.Default>('/ApiStore/product_option_type_select', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      "domain_id": cookie.load("domain")?.id,
-    }
-  })
-}
-
-//创建 --- 更新商品 
-export async function upDateProduct(res:any){
-  // return
-  return request('/ApiStore/product_add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      "domain_id": cookie.load("domain")?.id,
-      // 旧属性
-      ...res
-    }
-  })
-}
-
 // completed
-export async function getTaskList(page:number,limit:number,taskStatus:string){
-  // return
-  return request('/ApiTask/task_list', {
+export async function getTaskList(options:{
+  page:number,
+  limit:number,
+  taskStatus:string
+}){
+  const res = await request<ApiTask.Default>('/ApiTask/task_list', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -667,921 +411,84 @@ export async function getTaskList(page:number,limit:number,taskStatus:string){
       domain_id: cookie.load("domain")?.id,
       // 旧属性
       languages_id:"1",
-      task_status:taskStatus,
-      page:page,
-      limit:limit
+      ...options,
     }
   })
-}
-
-
-// 文件库
-// export async function getFileList(page: any, limit: any) {
-//   return request(`/ApiStore/file_list?page=${page}&limit=${limit}`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//   })
-// }
-
-// 查询  ----产品列表
-// page: 1
-// limit: 10
-// domain_id: 
-// languages_id: 
-// model: 1
-// title: 
-// tags
-export async function getProductList(res:any,signal?: AbortSignal) {
-  return await request<ApiStore.ProductList>(`/ApiStore/product_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      "domain_id": cookie.load("domain")?.id,
-      ...res
-    },
-    signal
-  })
-}
-
-// 修改产品的状态 0：下架 1：上架 2:存档
-export async function upDateProductStatus(productId: string, status: string) {
-  return await request<ApiStore.Default>('/ApiStore/product_status_update', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      id: productId,
-      status: status
-    }
-  })
-}
-
-// 批量删除
-export async function deleteProductList(ids:string) {
-  return await request<ApiStore.Default>('/ApiStore/product_batchdel', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      "ids": ids
-    }
-  })
-}
-
-// 批量更新价格
-export async function updataBatchUpdatePrice(res:any) {
-  return await request('/ApiStore/batchUpdatePrice', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: res
-  })
-}
-
-
-// 创建款式名称 languages_id product_option_name sort product_option_type_id status
-export async function addStyleName(id:string,languagesId:string,productStyleName:string,productOptionType:string){
-  return await request<ApiStore.ProductOption>('/ApiStore/product_option_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":id,
-      "languages_id":languagesId,
-      "product_option_name":productStyleName,
-      "sort":"1",
-      "product_option_type_id":productOptionType,
-      "status":"1"
-    }
-  })
-}
-
-// 将款式添加到对应的产品id
-// option_id: 1363158285484
-// optionvaluesIds: 1363166745810
-// productIds: 1363152740171
-// status: 1
-export async function addStyle(styleNameId:number,styleContentId:number,productId:string){
-  return await request('/ApiStore/attribute_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "option_id":styleNameId,
-      "optionvaluesIds":styleContentId,
-      "productIds":productId,
-      "status":1
-    }
-  })
-}
-// 通过模型获取该模型下的所有款式
-// model: 12332222111   languages_id
-// ApiStore/attribute_list
-export async function getProductStyleList(model:string,languagesId:string){
-  return await request('/ApiStore/attribute_list',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "model":model,
-      "languages_id":languagesId
-    }
-  })
-}
-
-export async function getProductOption(id:string,languagesId:string){
-  return await request<ApiStore.Default>('/ApiStore/product_option',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":id,
-      "languages_id":languagesId
-    }
-  })
-}
-
-
-// 获取所有款式选项
-export async function getProductOptionSelect(languagesId:string){
-  return await request<ApiStore.Default>('/ApiStore/product_option_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "domain_id": cookie.load("domain")?.id,
-      "languages_id":languagesId
-    }
-  })
-}
-
-
-    
-
-// id: 1363171657457
-// attributes_image: []
-// price_prefix: +
-// option_values_price: 0.0000
-// product_attribute_weight: 011
-// sort: 657457
-// status: 1
-// 修改产品款式
-export async function updateProductStyle(id:number,price:string,weight:string){
-  return await request('/ApiStore/attribute_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":id,
-      "attributes_image":"[]",
-      "option_values_price":price,
-      "product_attribute_weight":weight,
-      "sort":1,
-      "status":1
-    }
-  })
-}
-
-// 删除款式
-export async function deleteProductStyle(id:number){
-  return await request('/ApiStore/attribute_del',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":id
-    }
-  })
-}
-
-// 获取所有款式
-export function getProductStyleValueList(optionId:string,language:string){
-  return request<ApiStore.Default>('/ApiStore/product_option_values_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "option_id":optionId,
-      "languages_id":language,
-      "page":1,
-      "limit":100
-    }
-  })
-}
-
-// 添加款式选项
-export async function addProductOptionValues(id:string,language:string,optionId:string,optionValuesName:string){
-  return request<ApiStore.ProductOption>('/ApiStore/product_option_values_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":id,
-      "languages_id":language,
-      "status":"1",
-      "option_id":optionId,
-      "option_values_name":optionValuesName
-    }
-  })
-}
-
-// 添加标签
-export async function addTags(languagesId:string,tag:string){
-  return await request<ApiStore.addTags>('/ApiStore/tags_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      languages_id:languagesId,
-      tags:tag
-    }
-  })
-}
-// 删除标签
-export async function removeTags(res:{
-  languages_id:string,
-  tag:string
-}){
-  return await request<ApiStore.removeTags>('/ApiStore/tags_del',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res
-    }
-  })
-}
-// 查询标签
-export async function selectTags(res:{
-  languages_id:string,
-  tagName:string,
-  order_field?:string,
-  order_direction?:string,
-}){
-  return await request<ApiStore.selectTags>('/ApiStore/tags_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res,
-    }
-  })
-}
-
-// 平台分类
-export async function getPlatformCategorySelect(language:string){
-  return await request('/ApiStore/platform_category_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      language_id:language,
-      // page:1,
-      // limit:100,
-    }
-  })
-}
-
-// ------------商品分类
-// 查询
-export async function getCategorySelect(res:{
-  page?:number,
-  limit?:number
-},signal?:AbortSignal){
-  return await request<ApiStore.Category>('/ApiStore/category_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res,
-    },
-    signal: signal
-  })
-}
-// 分类列表
-export async function getCategoryList(res:{
-  languages_id:string,
-  page:string,
-  limit:string,
-},signal?:AbortSignal){
-  return await request<ApiStore.Category>('/ApiStore/category_list',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "domain_id": cookie.load("domain")?.id,
-      ...res
-    },
-    signal: signal
-  })
-}
-// 详情
-export async function getCategory(id:string,languageId:string){
-  return await request<ApiStore.Default>('/ApiStore/category',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "domain_id": cookie.load("domain")?.id,
-      "id":id,
-      "languages_id": languageId,
-    }
-  })
-}
-// 更新分类 无id时创建
-export async function setCategory(res:any){
-  return await request('/ApiStore/category_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "domain_id": cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-// 删除分类
-export async function deleteCategory(id:string){
-  return await request<ApiStore.Default>('/ApiStore/category_del',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id
-    }
-  })
-}
-// 采购订单------
-
-
-// 供应商货币
-export async function getPurchaseCurrencyList(){
-  return await request('/ApiAppstore/currencies_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  })
-}
-
-// 采购订单列表
-export async function getPurchaseList(orderNumber?:string,status?:string,supplier?:string,warehouse?:string,px?:any){
-  return await request('/ApiStore/purchase_orders_list',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      order_number:orderNumber,
-      orders_status_id:status,
-      supplier_id:supplier,
-      warehouse_id:warehouse
-    }
-  })
-}
-
-// 采购订单详情
-export async function getPurchase(id:string){
-  return await request('/ApiStore/purchase_orders',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id
-    }
-  })
-}
-
-// 添加采购订单
-export async function addPurchaseOrders(res:any){
-  return await request('/ApiStore/purchase_orders_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      // 订单号
-      order_number:res.orderNumber,
-      supplier_id:res.supplierId,
-      supplier_name:res.supplierName,
-      warehouse_id:res.warehouseId,
-      warehouse_name:res.warehouseName,
-      currency:res.currency,
-      // 汇率
-      currency_value:res.currencyRate,
-      payment_terms_id:res.paymentTermsId,
-      payment_terms:res.paymentTerms,
-      shipping_firstname:res.firstName,
-      shipping_lastname:res.lastName,
-      shipping_company:"",
-      shipping_street_address:res.address,
-      shipping_detailed_address:res.detailedAddress,
-      shipping_district:res.district,
-      shipping_country:res.country,
-      shipping_country_id:res.countryId,
-      shipping_state:res.state,
-      shipping_state_id:res.stateId,
-      shipping_city:res.city,
-      shipping_city_id:res.cityId,
-      // 运输商
-      shipments:JSON.stringify(res.shippings),
-
-      orders_status_id:"1",
-      order_tax:"",
-      order_total:res.orderTotal,
-      remark:res.remark,
-      comments:"",
-      send_email:"0",
-      status:"1"
-    }
-  })
-}
-// 编辑采购订单
-export async function editPurchaseOrders(res:any){
-  return await request('/ApiStore/purchase_orders_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      // 订单号
-      id:res.id,
-      order_number:res.orderNumber,
-      supplier_id:res.supplierId,
-      supplier_name:res.supplierName,
-      warehouse_id:res.warehouseId,
-      warehouse_name:res.warehouseName,
-      currency:res.currency,
-      currency_value:res.currencyId,
-      payment_terms_id:res.paymentTermsId,
-      payment_terms:res.paymentTerms,
-      shipping_firstname:res.firstName,
-      shipping_lastname:res.lastName,
-      shipping_company:"",
-      shipping_street_address:res.address,
-      shipping_detailed_address:res.detailedAddress,
-      shipping_district:res.district,
-      shipping_country:res.country,
-      shipping_country_id:res.countryId,
-      shipping_state:res.state,
-      shipping_state_id:res.stateId,
-      shipping_city:res.city,
-      shipping_city_id:res.cityId,
-      // 运输商
-      shipments:JSON.stringify(res.shippings),
-
-      orders_status_id:"1",
-      order_tax:"",
-      order_total:res.orderTotal,
-      remark:res.remark,
-      comments:"",
-      send_email:"0",
-      status:"1"
-    }
-  })
-}
-// 删除采购单
-export async function delPurchaseOrders(id:string){
-  return await request('/ApiStore/purchase_orders_del',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      // 订单号
-      id:id,
-    }
-  })
-}
-
-// 添加供应商
-export async function AddSupplier(res:any){
-  return await request('/ApiAppstore/supplier_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "name":res.supplierName,
-      "country_id":res.nation,
-      "country":res.countryLaber,
-      "state_id":res.province??="",
-      "state":res.provinceLaber??="",
-      "city_id":res.city,
-      "city":res.cityLaber??="",
-      // 单号
-      "code":"1",
-      'image':"",	
-      "type_id":"",
-      "category_id":"",
-      "district":res.district??="",
-      "postcode":res.postcode,
-      "address":res.address,
-      "detailed_address":res.detailedAddress,
-      'bank_name':"",
-      'bank_number':"",
-      "firstname":res.firstName,
-      "lastname":res.lastName,
-      "telephone":res.phone,
-      "email_address":res.email,
-      // 备注
-      'remark':"",
-      "approved":"1",
-    }
-  })
-}
-
-// 查询供应商列表
-export async function selectSupplier(){
-  return await request('/ApiAppstore/supplier_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
-}
-
-// 获取供应商
-export async function getSupplier(id:string){
-  return await request('/ApiAppstore/supplier',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":id
-    }
-  })
-}
-
-// 编辑供应商
-export async function editSupplier(res:any){
-  return await request('/ApiAppstore/supplier_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      "id":res.id,
-      "name":res.supplierName,
-      "country_id":res.nation,
-      "city":res.city,
-      // 单号
-      "code":res.code,
-      'image':"",	
-      "type_id":"",
-      "category_id":"",
-      "state":res.province??="",
-      "district":res.district??="",
-      "postcode":res.postcode,
-      "address":res.address,
-      "detailed_address":res.detailedAddress,
-      'bank_name':"",
-      'bank_number':"",
-      "linkman":res.name,
-      "telephone":res.phone,
-      "email_address":res.email,
-      // 备注
-      'remark':"",
-      "approved":"1",
-    }
-  })
-}
-
-// 设置
-
-// 添加仓库地址
-export async function addWarehouse(res:any){
-  return await request('/ApiStore/warehouse_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      id:"",
-      code:res.warehouseLocationCode,
-      name:res.warehouseLocationName,
-      // 邮箱
-      capacity:res.capacity,
-      occupied_space:"",
-      country:res.countryLaber,
-      country_id:res.nation,
-      state:res.provinceLaber,
-      state_id:res.province,
-      city:res.cityLaber,
-      city_id:res.city,
-      district:res.district,
-      postcode:res.postcode,
-      address:res.address,
-      detailed_address:res.detailedAddress,
-      // 姓氏
-      lastname:res.lastName,
-      // 名称
-      firstname:res.name,
-      telephone:res.phone,
-      email_address:res.email,
-      status:"1",
-      is_default:"0"
-    }
-  })
-}
-
-
-// 仓库地址列表
-export async function getAddWarehouseList(){
-  return await request('/ApiStore/warehouse_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-    }
-  })
-}
-
-// 仓库地址详情
-export async function getAddWarehouse(id:string){
-  return await request('/ApiStore/warehouse_select',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-    }
-  })
-}
-
-// 店铺信息
-export async function getStoreInfo(res:{
-  languages_id:string
-}){
-  const response = await request<ApiAppstore.Default>('/ApiAppstore/store',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-  if(response.code != 0){
-    throw new Error(response.msg)
-  }
-  return response.data 
-}
-
-// 更新店铺信息
-export async function setStoreInfo(res:any){
-  return await request<ApiAppstore.Default>('/ApiAppstore/store_set',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res
-    }
-  })
-}
-
-// 创建店铺
-export async function createStore(res:{
-  languages_id:string,
-  country_name:string,
-  store_name:string,
-  handle:string,
-  domain_primary:string,
-  default_lang:string,
-  default_currency:string,
-  merchant_email:string,
-}){
-  return await request<ApiAppstore.Default>('/ApiAppstore/store_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:res
-  })
-}
-
-// 充值记录
-export async function getRechargeList(res:{
-  page:string,
-  limit:string
-},signal?:AbortSignal){
-  return await request<ApiAppstore.Default>('/ApiAppstore/merchant_recharge_list',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 提款记录
-export async function getWithdrawList(res:{
-  page:string,
-  limit:string
-},signal?:AbortSignal){
-  return await request<ApiAppstore.Default>('/ApiAppstore/merchant_withdraw_list',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 获取账户余额
-export async function getMerchentBalance(signal?:AbortSignal){
-  return await request<ApiAppstore.Default>('/ApiAppstore/merchent_balance',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    signal:signal
-  })
-}
-
-// 获取支付链接
-export async function getMerchantRechargeLink(res:{
-  amount:string
-  method:string
-},signal?:AbortSignal){
-  return await request<ApiAppstore.MerchantRechargeAdd>('/ApiAppstore/merchant_recharge_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 发起提现
-export async function getMerchantWithdrawAdd(res:{
-  method:string,
-  currency_code:string,
-  amount:string,
-  account_info:string,
-  status:string,
-},signal?:AbortSignal){
-  return await request<ApiAppstore.Default>('/ApiAppstore/merchant_withdraw_add',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 更新币种
-export async function setCurrenciesList(currenciesList:any) {
-  return await request(`/ApiAppstore/domain_currencies_batchadd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      currencies:JSON.stringify(currenciesList)
-    }
-  })
-}
-
-// 语言
-// 添加语言
-export async function addLanguages(languages:any) {
-  return await request<ApiAppstore.Default>(`/ApiAppstore/domain_languages_batchadd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      languages:JSON.stringify(languages)
-    }
-  })
-}
-
-// 删除语言
-export async function delLanguages(languagesId:string) {
-  return await request<ApiAppstore.Default>(`/ApiAppstore/domain_languages_del`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      languages_id:languagesId
-    }
-  })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 文件库 文件列表---
 // groupId?:string,extType?:number,pageNumber?:number,pageSize?:number,title?:string,
 // groupId： 分组id 0 所有 extType：类型 0 所有 1 图片 2 视频 3 其他
-export async function getFileList(res:{
+export async function getFileList(options:{
   groupId:string,
   extType:number,
   pageNum:number,
   pageSize:number,
   title?:string,
 },signal?:AbortSignal){
-  return request<ApiResource.FileList>("/ApiResource/file_list", {
+  const res = await request<ApiResource.FileList>("/ApiResource/file_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      ...res,
+      ...options,
     },
     signal:signal
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 分组
 export async function getGroupList(signal?:AbortSignal) {
-  return request<ApiResource.GroupList>("/ApiResource/group_list", {
+  const res = await request<ApiResource.GroupList>("/ApiResource/group_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     signal:signal
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 // 新增分组
-export async function getGroupAdd(groupName: string,groupId:string) {
-  return request("/ApiResource/group_add", {
+export async function getGroupAdd(options:{
+  groupName: string,
+  groupId:string
+}) {
+  const res = await request<ApiResource.Default>("/ApiResource/group_add", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      "groupId":groupId,
-      "groupNames": groupName,
-      // access_token: localStorage.getItem('access_token')
+      ...options,
     }
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 删除分组
 export async function deleteGroup(groupId: string) {
-  return request("/ApiResource/group_del", {
+  const res = await request<ApiResource.Default>("/ApiResource/group_del", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       groupId: groupId,
-      // access_token: localStorage.getItem('access_token')
     }
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 // 删除文件
 export async function deleteFile(id: string) {
-  return request<ApiResource.File>('/ApiResource/file_del', {
+  const res = await request<ApiResource.File>('/ApiResource/file_del', {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -1589,759 +496,49 @@ export async function deleteFile(id: string) {
     data: {
       id:id
     },
-  })
+  });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-// 域名
-export async function getDomainNameList(signal?:AbortSignal) {
-  return request<ApiAppstore.Default>("/ApiAppstore/domain", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id: cookie.load("domain")?.id,
-    },
-    signal:signal
-  });
-}
-
-// 添加域名
-export async function addDomainName(primaryName:string,otherDomain:string) {
-  return request<ApiAppstore.Default>("/ApiAppstore/domain_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id: cookie.load("domain")?.id,
-      domain_primary:primaryName,
-      other_domain:otherDomain || "",
-    }
-  });
-}
-
-// 删除插件
-export async function delAddonsConfig(id:string,lang:string) {
-  return request('/ApiAppstore/addons_config_del', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      id:id,
-      languages_id:lang
-    },
-  })
-}
-
-// 收款 --手动收款方式 addons_id:23  -- 所有/详细
-export async function getAddonsConfigs(langId:string,id?:string,) {
-  return request<ApiAppstore.Default>("/ApiAppstore/addons_config_get", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id,
-      domain_id: cookie.load("domain")?.id,
-      languages_id:langId,
-      addons_id:"23"
-    }
-  });
-}
-// 手动收款方式  -- 配置
-export async function getAddonsConfigArray(langId:string,id?:string,addonsId?:string) {
-  return request("/ApiAppstore/addons_config_array", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id,
-      domain_id: cookie.load("domain")?.id,
-      languages_id:"2",
-      addons_id:addonsId,
-      user_languages_id:"1"
-    }
-  });
-}
-// 更新
-export async function upDataAddonsConfig(res:any) {
-  return request("/ApiAppstore/addons_config_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      // 配置
-      // "config["+res.config.isAddressRequired+"]":"123",
-      "config[isAddressRequired]":res.config.isAddressRequired,
-      "config[isUploadCredentials]":res.config.isUploadCredentials,
-      "config[credentialsText]":res.config.credentialsText,
-      "config[credentialsImg]":res.config.credentialsImg,
-      "config[cod_debugging]":res.config.cod_debugging,
-      "config[cod_order_status_id]":res.config.cod_order_status_id,
-      "config[cod_zone]":res.config.cod_zone,
-      // "cod_debugging"
-      id:res.id,
-      languages_id:res.languages_id,
-      addons_id:res.addons_id,
-      title:res.title,
-      summary:res.summary,
-      description:res.description,
-      is_sys:res.is_sys,
-      remark:res.remark,
-      status:res.status
-    }
-  });
-}
-
-// 添加
-export async function setAddonsConfig(res:any) {
-  return request("/ApiAppstore/addons_config_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      languages_id:"2",
-      addons_id:"23",
-      title:res.title,
-      "config[isAddressRequired]":res.config.isAddressRequired,
-      "config[isUploadCredentials]":res.config.isUploadCredentials,
-      "config[credentialsText]":res.config.credentialsText,
-      "config[credentialsImg]":res.config.credentialsImg,
-      summary:res.summary,
-      description:"",
-      is_sys:0,
-      remark:'',
-      status:1
-      // addons_id:"23"
-      // addons_id:"23"
-    }
-  });
-}
-
-// 支付插件 group_id  1:信用卡 2：其它 type_id 插件类型1:支付 2配送
-export async function getAddonsList(lang:string,type:string,group_id?:string) {
-  return request("/ApiAppstore/addons_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      languages_id:lang,
-      group_id:group_id,
-      type_id:type,
-      limit:"100"
-    }
-  });
-}
-
-// 支付服务  -- 配置
-export async function getAddonsConfigCreditCard(id:string,addonsId?:string,languagesId?:string) {
-  return request("/ApiAppstore/addons_config_array", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id,
-      domain_id: cookie.load("domain")?.id,
-      languages_id:languagesId,
-      addons_id:addonsId,
-      user_languages_id:"1"
-    }
-  });
-}
-// 支付服务  -- 更新
-export async function setAddonsConfigs(res:any) {
-  return request("/ApiAppstore/addons_config_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      ...res
-    }
-  });
-}
-
-// 配送插件
-export async function getDeliveryList(lang:string) {
-  return request("/ApiAppstore/delivery_list", {
+// 跳转链接
+export async function getLinkList(options:any){
+  const res = await request<ApiNav.Default>(`/ApiNav/getLinkList`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      languages_id:lang,
-      group_id:0,
-      page:1,
-      limit:100
+      ...options
     }
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-// 规则
-export async function getRule(id:string,type:string) {
-  return request("/ApiAppstore/rule", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      id:id,
-      languages_id:"2",
-      page_type:type
-    }
-  });
-}
-
-export async function getRuleList(id:string,languagesId:string) {
-  return request("/ApiAppstore/rule_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      id:id,
-      app_id:"19",
-      languages_id:languagesId,
-    }
-  });
-}
-
-// 
-export async function setRuleList(res:any,languagesId:string) {
-  return request("/ApiAppstore/rule_batchadd", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id: cookie.load("domain")?.id,
-      rules:res,
-      languages_id:languagesId
-    }
-  });
-}
-
-
-// 账号信息
-export async function getUserInfo() {
-  return request("/ApiAppstore/user_info", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      // domain_id: cookie.load("domain")?.id
-    }
-  });
-}
-
-// 更新账号信息
-export async function setUserInfo(res:any) {
-  return request<ApiAppstore.Default>("/ApiAppstore/user_contact_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      contact_email:res.contact_email,
-      contact_code:res.contact_code,
-      contact_phone:res.contact_phone,
-      languages_id:res.languages_id
-    }
-  });
-}
-// 修改密码
-export async function upDatePassword(oldPassword:string,newPassword:string) {
-  return request("/ApiAppstore/change_password", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      old_password:oldPassword,
-      password:newPassword
-    }
-  });
-}
-
-// 移除登录设备
-export async function delLoginRecord(id:string) {
-  return request("/ApiAppstore/login_record_del", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id
-    }
-  });
-}
-
-// 更新共享数据状态
-export async function setUserSharing(res:string) {
-  return request<ApiAppstore.Default>("/ApiAppstore/data_sharing_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      data_sharing:res
-    }
-  });
-}
-
-// 获取用户账号语言
-export async function getUserLanguages() {
-  return request("/ApiAppstore/user_languages_get", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  });
-}
-
-// 设置用户账号语言
-export async function setUserLanguages(languagesId:string) {
-  return request("/ApiAppstore/user_languages_set", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      languages_id:languagesId
-    }
-  });
-}
-
-// 员工查询
-export async function getEmployeeList() {
-  return request("/ApiAppstore/employee_select", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      // languages_id:languagesId
-    }
-  });
-}
-
-// 创建应用 -- 更新
-export async function creatAppStore(res:any) {
-  return request<ApiAppstore.Default>("/ApiAppstore/app_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      app_name:res.name,
-      developer_id:res.developer,
-      developer_email:res.email,
-      app_description:'',
-      languages_id:"2",
-      meta_title:'',
-      meta_keyword:'',
-      meta_description:'',
-    }
-  });
-}
-
-// 获取应用列表--开发
-export async function getDevAppStores() {
-  return request("/ApiAppstore/app_list", {
+// 搜索链接节点
+export async function getSearchLink(options:{
+  node_types:string,
+  ids:string,
+  languages_id:string,
+}){
+  const res = await request<ApiNav.Default>(`/ApiNav/getLinkInfo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      languages_id:"2",
-      page:"1",
-      limit:"100",
-
-    }
-  })
-}
-
-export async function getAppStores() {
-  return request("/ApiAppstore/app_store_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      // domain_id:cookie.load("domain")?.id,
-      languages_id:"2",
-      page:"1",
-      limit:"100",
-    }
-  })
-}
-// 店铺已安装应用
-export async function getDomainAppStores() {
-  return request("/ApiAppstore/app_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      languages_id:"2",
-      page:"1",
-      limit:"100",
-    }
-  })
-}
-
-
-// 开发应用操作记录
-export async function getAppActionlogs() {
-  return request("/ApiAppstore/app_actionlog_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-    // data:{
-    //   languages_id:"2",
-    //   page:"1",
-    //   limit:"100",
-    // }
-  });
-}
-
-// 开发应用信息
-export async function getAppInfo({id,langId}:{id:string,langId:string}) {
-  return request("/ApiAppstore/app_info", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id,
-      domain_id:cookie.load("domain")?.id,
-      languages_id:langId,
+      ...options
     }
   });
-}
-// API权限范围 permission_level 1 2
-export async function getPermissionsList(appId:string,type:string,langId:string) {
-  return request("/ApiAppstore/permissions_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      app_id:appId,
-      // domain_id:cookie.load("domain")?.id,
-      permission_type:type,
-      languages_id:langId,
-      permission_level:"1"
-    }
-  });
-}
-// 更新权限信息
-export async function upDatePermissionsList(appId:string,permissions:any) {
-  return request("/ApiAppstore/app_permissions_batchadd", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      app_id:appId,
-      permissions:permissions
-      // domain_id:cookie.load("domain")?.id,
-    }
-  });
-}
-
-// 上线应用状态设置 1安装  0卸载 -1删除
-export async function setAppStatus(appId:string,status:string) {
-  return request("/ApiAppstore/domain_app_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      app_id:appId,
-      status:status,
-      is_nav:"0",
-    }
-  });
-}
-
-// 开发应用--删除
-export async function delDevApp(appId:string) {
-  return request("/ApiAppstore/app_del", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:appId,
-    }
-  });
-}
-// 开发应用--卸载
-export async function unInstallDevApp(appId:string) {
-  return request("/ApiAppstore/app_uninstall", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:appId,
-    }
-  });
-}
-
-// 创建博客
-export async function createArticles(res:any) {
-  return request<ApiArticle.Default>("/ApiArticle/article_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res
-    }
-  });
-}
-// 更新博客
-export async function upDateArticles(res:any) {
-  return request<ApiArticle.Default>("/ApiArticle/article_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res,
-    }
-  });
-}
-
-// 删除博客 -- 将状态更改为0
-export async function delArticles(id:string) {
-  return request<ApiArticle.Default>("/ApiArticle/article_del", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id
-    }
-  });
-}
-
-// 博客列表
-export async function getArticleList(page:string,limit:string,languages:string) {
-  return request<ApiArticle.Default>("/ApiArticle/article_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      page:page,
-      limit:limit,
-      languages_id:languages,
-    }
-  });
-}
-
-// 博客详情
-export async function getArticle(id?:string,languagesId?:string) {
-  return request<ApiArticle.Default>("/ApiArticle/article_info", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id,
-      languages_id:languagesId,
-    }
-  });
-}
-
-// 博客集合列表
-export async function getArticleCategorys(res:{
-  page:string,
-  limit:string,
-  languages_id:string
-},signal?:AbortSignal) {
-  return request<ApiArticle.Default>("/ApiArticle/article_category_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  });
-}
-
-// 博客集合详情
-export async function getArticleCategorysDetail(res:{
-  id:string,
-  languages_id:string
-},signal?:AbortSignal) {
-  return request<ApiArticle.Default>("/ApiArticle/article_category_detail", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 博客集合 -- 创建 更新
-export async function setArticleCategorys(res:any) {
-  return request<ApiArticle.Default>("/ApiArticle/article_category_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 博客集合
-export async function getArticleCollection() {
-  return request<ApiArticle.Default>("/ApiArticle/article_category_select", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    }
-  });
-}
-
-// 添加博客集合
-export async function addArticleCollection(res:any) {
-  return request<ApiArticle.Default>("/ApiArticle/article_category_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      languages_id:res.lang,
-      category_name:res.name,
-      category_pid:res.parentId,
-      sort:res.sort,
-      is_share:'0',
-      group_id:res.groupId,
-      category_description:'',
-      meta_title:res.seoTitle,
-      meta_keywords:res.seoKeywords,
-      meta_description:res.seoDescription,
-      status:"1"
-    }
-  });
-}
-
-// 博客评论列表
-export async function getArticleComments(res:{
-  page?:string,
-  limit?:string,
-  languages_id:string
-},signal?:AbortSignal) {
-  return request<ApiArticle.Default>("/ApiArticle/article_comment_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  });
-}
-
-
-// 创建自定义页面
-export async function addCustomerPage(res:any) {
-  return request<ApiAppstore.Default>("/ApiAppstore/ezpage_add", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      ...res,
-      page_type:"custom_page"
-    }
-  });
-}
-
-// 删除自定义页面
-export async function delCustomerPage(id:string) {
-  return request("/ApiAppstore/ezpage_del", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id
-    }
-  });
-}
-
-// 获取自定义页面详情
-export async function getCustomerPage(id:string,languages_id:string) {
-  return request<ApiAppstore.Default>("/ApiAppstore/ezpage", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      id:id,
-      languages_id:languages_id
-    }
-  });
-}
-
-
-// 自定义页面列表 is_url:0 page_type:custom_page
-export async function getCustomerPageList(page:string,limit:string,languagesId:string) {
-  return request<ApiAppstore.Default>("/ApiAppstore/ezpage_list", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      page:page,
-      limit:limit,
-      languages_id:languagesId,
-      is_url:0,
-      page_type:'custom_page'
-    }
-  });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 菜单导航 pid:0 一级 is_sys:0 自定义 1 系统
-export async function getNavList(res:{
+export async function getNavList(options:{
   languages_id:string,
   id?:string,
   page?:string,
@@ -2349,86 +546,61 @@ export async function getNavList(res:{
   pid?:string,
   group_by_sys?:string,
 },signal?:AbortSignal) {
-  return request<ApiAppstore.Default>("/ApiNav/ezpage_tree_list", {
+  const res = await request<ApiAppstore.Default>("/ApiNav/ezpage_tree_list", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 批量添加导航
-export async function batchAddNavgate(res:any){
-  return request<ApiAppstore.roleList>(`/ApiNav/ezpage_batch_operate`, {
+export async function batchAddNavgate(options:any){
+  const res = await request<ApiAppstore.roleList>(`/ApiNav/ezpage_batch_operate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
-  })
-}
-
-// 跳转链接
-export async function getLinkList(res:any){
-  return request<ApiNav.Default>(`/ApiNav/getLinkList`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 搜索链接节点
-export async function getSearchLink(res:{
-  node_types:string,
-  ids:string,
-  languages_id:string,
-}){
-  return request<ApiNav.Default>(`/ApiNav/getLinkInfo`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
+  });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 批量导入上传
-export async function importProductTask(file:any,type:string,handle:boolean) {
-  return request("/ApiTask/importProductTask", {
+export async function importProductTask(options:{
+  file:any,
+  type:string,
+  handle:boolean
+}) {
+  const res = await request<ApiTask.Default>("/ApiTask/importProductTask", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      task_type:type,
-      is_overwrite:handle?"1":"0",
-      file:file
+      task_type:options.type,
+      is_overwrite:options.handle?"1":"0",
+      file:options.file
     }
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 // 下载处理进度Batch processing progress download
 export async function JobExecResult(id:string) {
-  // const searchParams = new URLSearchParams();
-  // if (id) searchParams.set('id', id.toString());
-  // ?${searchParams.toString()
-  return request(`/ApiTask/jobExecResult`, {
+  const res = await request<ApiTask.Default>(`/ApiTask/jobExecResult`, {
     method: 'POST',
     responseType: 'blob',
     headers: {
@@ -2438,11 +610,12 @@ export async function JobExecResult(id:string) {
       id:id,
     }
   });
+  return res;
 }
 
 // 获取上传任务
 export async function getTaskStatus(id :any) {
-  return request("/ApiTask/getTaskStatus", {
+  const res = await request<ApiTask.Default>("/ApiTask/getTaskStatus", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -2453,858 +626,43 @@ export async function getTaskStatus(id :any) {
     },
     skipAuthRefresh: true,
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 导出产品
-export async function exportProductTask(res:any) {
-  return request("/ApiTask/exportProductTask", {
+export async function exportProductTask(options:any) {
+  const res = await request<ApiTask.Default>("/ApiTask/exportProductTask", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
-      // rangeType:rangeType,
-      // email:email,
-
-
-      // task_type:taskType,
-      // conditions:"",
-      // // notify_emails:email,
-      // is_email_sent:0,
-    },
+      ...options
+    }
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 // 导出订单
-export async function exportOrderTask(res:any) {
-  return request("/ApiTask/exportOrderTask", {
+export async function exportOrderTask(options:any) {
+  const res = await request<ApiTask.Default>("/ApiTask/exportOrderTask", {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
   });
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-// 客户列表
-export async function getCustomerList(page: any, limit: any) {
-  return request<ApiAppstore.Default>(`/ApiAppstore/customers_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      page: page,
-      limit: limit,
-    }
-  })
-}
-
-// 创建客户
-export async function createCustomer(res:any) {
-  return request(`/ApiAppstore/customer_add`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-export async function getCustomer(id:string) {
-  return request<ApiAppstore.Default>(`/ApiAppstore/customer_detail`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      id:id
-    }
-  })
-}
-
-// 创建收货地址
-export async function carateAddress(res:any) {
-  return request(`/ApiAppstore/addressAdd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 设置订单发货
-export async function setOrderShipped(res:any) {
-  return request(`/ApiStore/setOrderShipped`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 商家备注
-export async function addOrderRemark(res:{orderId:string,remark:string}) {
-  return request(`/ApiStore/addOrderRemark`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 订单日志
-export async function getOrderLogs(res:any) {
-  return request(`/ApiStore/getOrderLogs`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 标记付款
-export async function setOrderPaid(res:any) {
-  return request(`/ApiStore/setOrderPaid`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 设置付款期限
-export async function setOrderPaymentTerm(res:{orderId:string,paymentTerm:string,startDate:number}) {
-  return request(`/ApiStore/setOrderPaymentTerm`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 设置护照号/身份证号
-export async function setOrderIdNumber(res:{orderId:string,idNumber:string}) {
-  return request(`/ApiStore/setOrderIdNumber`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 删除付款期限
-export async function delOrderPaymentTerm(res:{orderId:string}) {
-  return request(`/ApiStore/delOrderPaymentTerm`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 订单退货
-export async function setOrderReturned(res:any) {
-  return request(`/ApiStore/setOrderReturned`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 标记已退货
-export async function setMarkProductAsRefunded(res:any) {
-  return request(`/ApiStore/markProductAsRefunded`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 订单取消
-export async function setCancelOrder(res:any) {
-  return request(`/ApiStore/cancelOrder`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 添加标签
-export async function addOrderTag(res:{orderId:string,tagName:string}) {
-  return request(`/ApiStore/addOrderTag`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-// 删除标签
-export async function removeOrderTag(res:{orderId:string,tagName:string}) {
-  return request(`/ApiStore/removeOrderTag`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 批量添加标签列表
-export async function batchAddOrderTags(res:{orderIds:string,tagNames:string}) {
-  return request(`/ApiStore/batchAddOrderTags`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 获取草稿单标签
-export async function getDraftOrderTagList(draftId:string) {
-  return request(`/ApiStore/getDraftOrderTagList`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      draftId:draftId
-    }
-  })
-}
-
-// 草稿单添加标签
-export async function batchAddDraftOrderTags(res:{draftIds:string,tagNames:string}) {
-  return request(`/ApiStore/batchAddDraftOrderTags`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 拆分发货
-export async function splitOrderProducts(res:{orderProducts:string}) {
-  return request(`/ApiStore/splitOrderProducts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-export async function getReturnActions(languagesId:string) {
-  return request(`/ApiStore/getReturnActions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      languagesId:languagesId
-    }
-  })
-}
-export async function getReturnStatuses(languagesId:string) {
-  return request(`/ApiStore/getReturnStatuses`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      languagesId:languagesId
-    }
-  })
-}
-
-// 编辑订单产品
-export async function editOrderProducts(res:any) {
-  return request(`/ApiStore/editOrderProducts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 退款
-export async function setOrderRefunded(res:any) {
-  return request(`/ApiStore/setOrderRefunded`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 开始发货
-export async function resumeOrderShipping(res:{orderId:string,fulfillmentId:string}) {
-  return request(`/ApiStore/resumeOrderShipping`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 添加草稿单
-export async function addDraftOrder(res:any) {
-  return request(`/ApiStore/createOrder`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 客户地址列表
-export async function getAddressList(res:any) {
-  return request(`/ApiAppstore/addressList`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 修改客户历史地址
-export async function setAddressEdit(res:any) {
-  return request(`/ApiAppstore/addressEdit`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-// 新增客户历史地址
-export async function addAddress(res:any) {
-  return request(`/ApiAppstore/addressAdd`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-
-// 草稿单列表
-export async function getOrderDraftList(res:any,signal?:AbortSignal) {
-  return request<ApiStore.Order>(`/ApiStore/order_draft_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 草稿单信息
-export async function getDraftDetail(draftId:string) {
-  return request<ApiStore.Default>(`/ApiStore/getDraftDetail`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      draftId:draftId
-    }
-  })
-}
-
-// 草稿单
-export async function editDraftOrder(res:any) {
-  return request(`/ApiStore/editDraftOrder`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 删除草稿单
-export async function delDraftOrder(id:any) {
-  return request(`/ApiStore/delDraftOrder`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      draftId:id
-    }
-  })
-}
-
-// 订单归档
-export async function batchArcOrder(ids:string) {
-  return request(`/ApiStore/batchArcOrder`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      orderIds:ids
-    }
-  })
-}
-
-// 订单取消归档
-export async function batchUnarcOrder(ids:string) {
-  return request(`/ApiStore/batchUnarcOrder`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      orderIds:ids
-    }
-  })
-}
-
-// 获取订单列表
-export async function getOrderList(res:any,signal?:AbortSignal){
-  return request<ApiStore.OrderList>(`/ApiStore/order_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-
-// mode == 智能 用户 开发
-// theme id
-// 获取模板文件列表 ApiTemplate/file_list
-export async function getThemeFileList(res:{
-  id:string,
-  templateId:string,
-  mode:string,
-  languages_id:string;
-  version_id:string;
-  versionId:string;
-}){
-  return request(`/ApiTemplate/file_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    timeout: 300000,
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 获取文件详情
-export async function getThemeFileDetail(res:{
-  id:string,
-  templateId:string,
-  languagesId:string,
-  fileName:string,
-  versionId:string,
-  mode:string,
-  fileVersionId:string,
-}){
-  return request(`/ApiTemplate/file_detail`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 版本
-export async function getFileVersion(res:{
-  id:string,
-  templateId:string,
-  languagesId:string,
-  fileName:string,
-  mode:string,
-  versionId:string,
-}){
-  return request<ApiTemplate.Default>(`/ApiTemplate/file_version`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-// 文件内容修改
-export async function setFileSave(res:{
-  id:string,
-  templateId:string,
-  languagesId:string,
-  fileName:string,
-  fileContent:string,
-  mode:string,
-  versionId:string,
-}){
-  return request(`/ApiTemplate/file_save`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 文件重命名
-export async function RenameFile(res:{
-  templateId:string, 
-  languagesId:string,
-  mode:string, 
-  oldFileName:string, 
-  newFileName:string, 
-}){
-  return request<ApiTemplate.RenameFile>(`/ApiTemplate/file_rename`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 主题文件删除
-export async function deleteTemplateFile(res:{
-  templateId:string, 
-  languagesId:string,
-  mode:string,
-  fileName:string,
-  versionId:string,
-  // 是否强制删除物理文件
-  forceDelete:boolean,
-}){
-  return request<ApiTemplate.deleteTemplateFile>(`/ApiTemplate/file_del`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 主题文件添加
-export async function addTemplateFile(res:{
-  templateId:string, 
-  languagesId:string,
-  mode:string,
-  fileName:string,
-  fileContent:string,
-  versionId:string,
-  sourceFileName?:string,
-  duplicateFlag?:boolean,
-}){
-  return request<ApiTemplate.addTemplateFile>(`/ApiTemplate/file_add`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 文件上传
-export async function templateFileUpload(res:{
-  fileId:string, 
-  fileName:string,
-  file:any,
-  mode:string,
-  templateId:string, 
-  languagesId:string,
-}){
-  return request<ApiTemplate.templateFileUpload>(`/ApiTemplate/file_upload`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-
-
-// 客户使用模板
-export async function getTemplateInstanceUsing(languagesId:string){
-  return request(`/ApiTemplate/instance_using`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      languages_id:languagesId
-    }
-  })
-}
-
-// 客户模板实例
-export async function getTemplateInstanceList(res:any){
-  return request(`/ApiTemplate/instance_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 模板商城实例
-export async function getTemplateMallList(res:any,signal?:AbortSignal){
-  return request(`/ApiTemplate/templatemall_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal,
-  })
-}
-
-// 模板发布
-export async function setInstanceStatus(res:{
-  id:string,
-  status:number,
-  languages_id:string
-}){
-  return request(`/ApiTemplate/instance_status`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-// 模板重命名
-export async function templateRename(res:{
-  id:string,
-  new_name:string,
-  languages_id:string
-}){
-  return request(`/ApiTemplate/template_rename`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-// instance_status
-// 上传压缩文件 -- 模板
-export async function uploadTemplate(file:any){
-  return request(`/ApiTemplate/template_upload`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: {
-      domain_id:cookie.load("domain")?.id,
-      zip_file:file
-    }
-  })
-}
-// 下载压缩文件 -- 模板
-export async function downloadTemplate(historyId:string){
-  return request(`/ApiTemplate/template_download`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      history_id:historyId
-    }
-  })
-}
-
-// 模板安装
-export async function installTemplate(templateId:string){
-  return request(`/ApiTemplate/template_install`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      template_id:templateId
-    }
-  })
-}
-
-// 模板信息
-export async function getTemplateInfo(templateId:string,languagesId:string){
-  return request(`/ApiTemplate/template_info`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      template_id:templateId,
-      languages_id:languagesId
-    }
-  })
-}
-
-// 模板设计--更新---
-export async function templateUpdate(res:{
+// 模板设计--更新
+export async function templateUpdate(options:{
   mode:string,
   oseid:string,
   themeId:string,
@@ -3314,21 +672,22 @@ export async function templateUpdate(res:{
   sections?:any,
   settings?:string,
 }){
-  const result = await request(`/ApiEditor/template_update`, {
+  const res = await request<ApiEditor.Default>(`/ApiEditor/template_update`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
-  return ((result as any)?.code == "SUCCESS" || (result as any)?.code == '0') ? (result as any)?.data : null
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 全局 sections 对象
-export async function settingsSections(res:{
+export async function settingsSections(options:{
   mode:string,
   themeId:string,
   action:string,
@@ -3336,64 +695,66 @@ export async function settingsSections(res:{
   versionId:string,
   oseid?:string,
 },signal?:AbortSignal){
-  return request<ApiEditor.settingsSections>(`/ApiEditor/settings`, {
+  const res = await request<ApiEditor.settingsSections>(`/ApiEditor/settings`, {
     method: 'POST',
-    retryOnError: res.action == 'get' ? true : false, // 重试
+    retryOnError: options.action == 'get' ? true : false, // 重试
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
-
-
-
-
 // 导航
-export async function getTemplatePage(res:{
+export async function getTemplatePage(options:{
   themeId:string,
   languages_id:string
 },signal?:AbortSignal){
-  return request<ApiEditor.page>(`/ApiEditor/page`, {
+  const res = await request<ApiEditor.page>(`/ApiEditor/page`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 模板列表
-export async function getJsonTemplates(res:{
+export async function getJsonTemplates(options:{
   template_id:string,
   languages_id:string
   layout_code:string,
   version:string,
   mode:string,
 }){
-  return request<ApiEditor.jsonTemplates>(`/ApiEditor/json_templates`, {
+  const res = await request<ApiEditor.jsonTemplates>(`/ApiEditor/json_templates`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 // 创建模板文件
-export async function createTemplateFile(res:{
+export async function createTemplateFile(options:{
   template_id:string,
   template_name:string,
   page_name:string,
@@ -3402,361 +763,151 @@ export async function createTemplateFile(res:{
   mode:string,
   duplicate_flag:string,
   languages_id:string
-
 }){
-  return request<ApiEditor.jsonTemplates>(`/ApiEditor/file_create`, {
+  const res = await request<ApiEditor.Default>(`/ApiEditor/file_create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 删除模板文件
-export async function delTemplateFile(res:{
+export async function delTemplateFile(options:{
   template_id:string,
   template_name:string,
   mode:string,
   languages_id:string,
 }){
-  return request<ApiEditor.jsonTemplates>(`/ApiEditor/delete_template`, {
+  const res = await request<ApiEditor.Default>(`/ApiEditor/delete_template`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 重命名模板文件
-export async function renameTemplateFile(res:{
+export async function renameTemplateFile(options:{
   templateId:string, 
   mode:string, 
   languagesId:string,
   oldFileName:string, 
   newFileName:string, 
 }){
-  return request<ApiEditor.jsonTemplates>(`/ApiEditor/file_rename`, {
+  const res = await request<ApiEditor.Default>(`/ApiEditor/file_rename`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 模板文件语言
-export async function getJsonTemplatesLocale(res:{
+export async function getJsonTemplatesLocale(options:{
   themeId:string
   mode:string,
   locale:string,
   languages_id:string,
   version_id:string,
 },signal?:AbortSignal){
-  return request<ApiEditor.Locale>(`/ApiEditor/locale`, {
+  const res = await request<ApiEditor.Locale>(`/ApiEditor/locale`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal
   })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
 }
 
 // 修改模板文件语言
-export async function updateLocale(res:{
+export async function updateLocale(options:{
   themeId:string
   mode:string,
   locale:string,
   locale_data:string,
 }){
-  return request<ApiEditor.Locale>(`/ApiEditor/locale_update`, {
+  const res = await request<ApiEditor.Locale>(`/ApiEditor/locale_update`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
-
-
-// 子账号
-export async function employeeSelect(signal?:AbortSignal){
-  return request<ApiAppstore.employeeSelect>(`/ApiAppstore/employee_select`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      app_id:19,
-    },
-    signal:signal
-  })
-}
-
-// 角色
-export async function getRoleList(signal?:AbortSignal){
-  return request<ApiAppstore.roleList>(`/ApiAppstore/role_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    signal:signal
-  })
-}
-
-// 消息
-export async function getUserMessage(res:{
-  page:number,
-  limit:number,
-  msg_type:string,
-  is_read:string,
-},signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiAppstore/user_message`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 新消息数量
-export async function getNewUserMessage(signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiAppstore/user_message_new`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    signal:signal
-  })
-}
-
-// 标记已读
-export async function readUserMessage(res:{
-  ids:string,
-},signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiAppstore/user_message_readed`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 删除消息
-export async function delUserMessage(res:{
-  ids:string,
-},signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiAppstore/user_message_deled`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 全部已读
-export async function readAllMessage(signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiAppstore/user_message_allreaded`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      msg_type: 'all'
-    },
-    signal:signal,
-  })
-}
-
-// 获取autotoken
-export async function getGenerateAuthToken(signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiAppstore/generateAuthToken`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    signal:signal
-  })
-}
-
-// 版本切换
-export async function setTemplateVersion(res:{
-  id:string,
-  template_id:string,
-  languages_id:string,
-  version_id:string,
-  mode:string,
-  target_type:string,
-},signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiTemplateVersion/switch_template_version`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-// 主题版本
-export async function getThemeVersions(res:{
-  templateId:string,
-  page:number,
-  limit:number,
-  target_type?:string,
-},signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiTemplateVersion/template_version_list`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal,
-  })
-}
-
-// 删除主题版本
-export async function deleteVersion(res:{
-  id:string,
-},signal?:AbortSignal){
-  return request<ApiAppstore.Default>(`/ApiTemplate/instance_delete`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal
-  })
-}
-
-
-// 版本替换
-export async function updateVersion(res:{
-  theme_id:string,
-  languages_id:string,
-  mode:string,
-  theme_package:File,
-  version_id:string
-},signal?:AbortSignal){
-  return request<ApiTemplate.Default>(`/ApiTemplate/update_template_version`, {
-    method: 'POST',
-    timeout: 120000,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal,
-  })
-}
-
-// 版本添加
-export async function addVersion(res:{
-  theme_id:string,
-  languages_id:string,
-  mode:string,
-  theme_package:File,
-  version_name:string,
-  version_remark?:string,
-},signal?:AbortSignal){
-  return request<ApiTemplate.Default>(`/ApiTemplate/add_template_version`, {
-    method: 'POST',
-    timeout: 120000,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    },
-    signal:signal,
-  })
-}
-
 
 // 获取首页seo
-export async function getHomeSeo(res:{
+export async function getHomeSeo(options:{
   languages_id:string,
 },signal?:AbortSignal){
-  return request<ApiSite.Default>(`/ApiSite/get_home_seo`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/get_home_seo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 // 设置首页seo
-export async function setHomeSeo(res:{
+export async function setHomeSeo(options:{
   languages_id:string,
   meta_title:string,
   meta_description:string,
   meta_keywords:string,
 },signal?:AbortSignal){
-  return request<ApiSite.Default>(`/ApiSite/set_home_seo`, {
+  const res = await request<ApiSite.Default>(`/ApiSite/set_home_seo`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 上传站点地图文件
-export async function uploadSitemap(res:{
+export async function uploadSitemap(options:{
   sitemap_file:File,
 },signal?:AbortSignal){
-  return request<ApiSitemap.Default>(`/ApiSitemap/sitemap_upload`, {
+  const res = await request<ApiSitemap.Default>(`/ApiSitemap/sitemap_upload`, {
     method: 'POST',
     timeout: 120000,
     headers: {
@@ -3764,32 +915,17 @@ export async function uploadSitemap(res:{
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
-
-// 删除站点地图文件
-export async function deleteSitemapFile(res:{
-  id:string,
-}){
-  return request<ApiSitemap.Default>(`/ApiSitemap/sitemap_delete`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
 
 // 切换站点地图文件状态
 export async function switchSitemap(action:"on"|"off",signal?:AbortSignal){
-  return request<ApiSitemap.Default>(`/ApiSitemap/sitemap_switch`, {
+  const res = await request<ApiSitemap.Default>(`/ApiSitemap/sitemap_switch`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3800,11 +936,13 @@ export async function switchSitemap(action:"on"|"off",signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 获取站点地图文件列表
 export async function getSitemapList(signal?:AbortSignal){
-  return request<ApiSitemap.Default>(`/ApiSitemap/sitemap_list`, {
+  const res = await request<ApiSitemap.Default>(`/ApiSitemap/sitemap_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3814,12 +952,13 @@ export async function getSitemapList(signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
-
 
 // ApiSitemap/sitemap_delete 删除站点地图文件
 export async function delSitemapFile(id:string,signal?:AbortSignal){
-  return request<ApiSitemap.Default>(`/ApiSitemap/sitemap_delete`, {
+  const res = await request<ApiSitemap.Default>(`/ApiSitemap/sitemap_delete`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3830,11 +969,13 @@ export async function delSitemapFile(id:string,signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 渠道应用 install
 export async function installSaleChannel(id:string,signal?:AbortSignal){
-  return request<ApiChannel.Default>(`/ApiChannel/install_sale_channel`, {
+  const res = await request<ApiChannel.Default>(`/ApiChannel/install_sale_channel`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3845,11 +986,13 @@ export async function installSaleChannel(id:string,signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 渠道应用 uninstall
 export async function uninstallSaleChannel(id:string,signal?:AbortSignal){
-  return request<ApiChannel.Default>(`/ApiChannel/uninstall_sale_channel`, {
+  const res = await request<ApiChannel.Default>(`/ApiChannel/uninstall_sale_channel`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3860,33 +1003,33 @@ export async function uninstallSaleChannel(id:string,signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
-
-
-
-
 // 渠道应用 -- 订到导航
-export async function pinSaleChannel(res:{
+export async function pinSaleChannel(options:{
   domain_app_id:string,
   is_pinned:string,
 },signal?:AbortSignal){
-  return request<ApiChannel.Default>(`/ApiChannel/pin_sale_channel`, {
+  const res = await request<ApiChannel.Default>(`/ApiChannel/pin_sale_channel`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 渠道列表
 export async function getSaleChannelList(signal?:AbortSignal){
-  return request<ApiChannel.Default>(`/ApiChannel/sale_channel_list`, {
+  const res = await request<ApiChannel.Default>(`/ApiChannel/sale_channel_list`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -3898,88 +1041,45 @@ export async function getSaleChannelList(signal?:AbortSignal){
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 邮件通知 ApiMessage/custom_template_config
-export async function getCustomTemplateConfig(res:{
+export async function getCustomTemplateConfig(options:{
   languages_id:string,
 },signal?:AbortSignal){
-  return request<ApiMessage.Default>(`/ApiMessage/custom_template_config`, {
+  const res = await request<ApiMessage.Default>(`/ApiMessage/custom_template_config`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     },
     signal:signal,
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
 
 // 邮件通知 配置
-export async function setCustomTemplateConfig(res:{
+export async function setCustomTemplateConfig(options:{
   languages_id:string,
   config_key:string,
   config_value:boolean,
 },signal?:AbortSignal){
-  return request<ApiMessage.Default>(`/ApiMessage/custom_template_config_save`, {
+  const res = await request<ApiMessage.Default>(`/ApiMessage/custom_template_config_save`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
     },
     data:{
       domain_id:cookie.load("domain")?.id,
-      ...res
+      ...options
     }
   })
+  if (res.code != 0) errHandle(res);
+  return res;
 }
-
-
-// 邮件通知 客服邮箱验证
-export async function sendServiceVerifyEmail(res:{
-  languages_id:string,
-  email:string,
-},signal?:AbortSignal){
-  return request<ApiEmail.Default>(`/ApiEmailVerify/sendVerifyEmail`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-
-// 客服邮箱验证状态
-export function getVerifyEmailStatus(signal?:AbortSignal){
-  return request<ApiEmail.Default>(`/ApiMerchant/customerEmailStatus`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-    }
-  })
-}
-
-// 激活客服邮箱
-export function activateServiceVerifyEmail(res:{
-  lang:string,
-  token:string,
-},signal?:AbortSignal){
-  return request<ApiEmail.Default>(`/ApiEmailVerify/activateVerify`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data:{
-      domain_id:cookie.load("domain")?.id,
-      ...res
-    }
-  })
-}
-

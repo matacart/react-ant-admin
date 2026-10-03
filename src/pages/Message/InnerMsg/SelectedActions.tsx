@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { observer } from "mobx-react-lite";
 import innerMsg from "@/store/message/innerMsg/innerMsg";
 import DefaultButton from "@/components/Button/DefaultButton";
-import { delUserMessage, readAllMessage, readUserMessage } from "@/services/y2/api";
+import { delUserMessage, readAllMessage, readUserMessage } from "@/services/y2/apiAppstore";
 import DangerButton from "@/components/Button/DangerButton";
 import { useState } from "react";
 import { useIntl } from '@umijs/max';
@@ -46,14 +46,11 @@ function SelectedActions({fetchMessageList}: {fetchMessageList: () => void}) {
                         <DangerButton loading={loading} text={intl.formatMessage({ id: 'innerMsg.selectedActions.actions.delete' })} onClick={() => {
                             setLoading(true);
                             delUserMessage({ ids: innerMsg.selectedRowKeys.join(",") }).then((res) => {
-                                if(res.code == 0){
-                                    message.success(intl.formatMessage({ id: 'innerMsg.selectedActions.messages.success' }));
-                                    innerMsg.setSelectedRowKeys([]);
-                                    // 重新加载数据
-                                    fetchMessageList();
-                                }
-                            }).catch((err) => {
-                                console.error("Error");
+                                message.success(intl.formatMessage({ id: 'innerMsg.selectedActions.messages.success' }));
+                                innerMsg.setSelectedRowKeys([]);
+                                // 重新加载数据
+                                fetchMessageList();
+                            }).catch(() => {
                             }).finally(()=>{
                                 setLoading(false);
                                 confirm.destroy();
@@ -65,23 +62,19 @@ function SelectedActions({fetchMessageList}: {fetchMessageList: () => void}) {
             }} />
             <DefaultButton text={intl.formatMessage({ id: 'innerMsg.selectedActions.actions.markRead' })} onClick={() => {
                 readUserMessage({ ids: innerMsg.selectedRowKeys.join(",")}).then((res) => {
-                    if(res.code == 0){
-                        message.success(intl.formatMessage({ id: 'innerMsg.selectedActions.messages.success' }));
-                        innerMsg.setSelectedRowKeys([]);
-                    } 
+                    message.success(intl.formatMessage({ id: 'innerMsg.selectedActions.messages.success' }));
+                    innerMsg.setSelectedRowKeys([]);
                 }).catch((err) => {
-                    console.error("Error");
+                    console.error(err);
                 }).finally(()=>{
                 });
             }} />
             <DefaultButton text={intl.formatMessage({ id: 'innerMsg.selectedActions.actions.markAllRead' })} onClick={() => {
                 readAllMessage().then((res) => {
-                    if(res.code == 0){
-                        message.success(intl.formatMessage({ id: 'innerMsg.selectedActions.messages.success' }));
-                        innerMsg.setSelectedRowKeys([]);
-                    }
+                    message.success(intl.formatMessage({ id: 'innerMsg.selectedActions.messages.success' }));
+                    innerMsg.setSelectedRowKeys([]);
                 }).catch((err) => {
-                    console.error("Error");
+                    console.error(err);
                 }).finally(()=>{
                 });
             }} />

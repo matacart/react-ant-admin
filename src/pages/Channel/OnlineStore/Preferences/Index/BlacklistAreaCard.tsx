@@ -49,12 +49,9 @@ function BlacklistAreaCard() {
                     removeFunc={()=>{
                         setLoading(true);
                         delRegionAddressAccess(record.id).then(res=>{
-                            if(res.code == 0){
-                                message.success("删除成功");
-                                setData(data.filter(item => item.id !== record.id))
-                            }
+                            message.success("删除成功");
+                            setData(data.filter(item => item.id !== record.id))
                         }).catch(()=>{
-                            console.log("删除失败")
                         }).finally(()=>{
                             setLoading(false);
                         })
@@ -94,15 +91,11 @@ function BlacklistAreaCard() {
         addRegionAddressAccess({
             rules:JSON.stringify(rules),
         }).then(res => {
-            if(res.code == 0){
-                // 刷新数据
-                getIPBlackList({
-                    page:1,
-                    limit:10,
-                })
-            }
+            getIPBlackList({
+                page:1,
+                limit:10,
+            })
         }).catch(()=>{
-            message.error("失败");
         }).finally(()=>{
             setLoading(false);
             cancel();
@@ -115,15 +108,13 @@ function BlacklistAreaCard() {
             page:page,
             limit: limit,
         }).then((res)=>{
-            if(res.code == 0){
-                setData(res.data.list);
-                setPagination({
-                    ...pagination,
-                    current: page,
-                    pageSize: limit,
-                    total: res.data.total,
-                })
-            }
+            setData(res.data.list);
+            setPagination({
+                ...pagination,
+                current: page,
+                pageSize: limit,
+                total: res.data.total,
+            })
         }).catch(()=>{
         }).finally(()=>{
             setTableLoading(false);

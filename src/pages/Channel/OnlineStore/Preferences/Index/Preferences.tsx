@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Divider, Flex, Form } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { App, Divider, Flex } from 'antd';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
@@ -24,6 +24,8 @@ function Preferences(){
 
     const [isRenewal,setIsRenewal] = useState(false);
 
+    const { message } = App.useApp();
+
     const lang = cookie.load("shop_lang");
 
     // 获取首页SEO
@@ -31,15 +33,13 @@ function Preferences(){
         return getHomeSeo({
             languages_id:lang,
         }).then(res=>{
-            res.code == 0 && preferences.setHomeSEO(res.data);
-        })
+            preferences.setHomeSEO(res.data);
+        }).catch(()=>{});
     }
 
     // 密码保护
     const getPassWord = ()=>{
-        return getProtectionPassWord().then(res=>{
-            res.code == "SUCCESS" && preferences.setPassWord(res.data);
-        })
+        return getProtectionPassWord().then(res=>{preferences.setPassWord(res.data)}).catch(()=>{});
     }
 
     // IP地址访问名单列表
@@ -48,11 +48,11 @@ function Preferences(){
             page:1,
             limit:10,
         }).then(res=>{
-            res.code == 0 && preferences.setIPAddressAccessList({
+            preferences.setIPAddressAccessList({
                 data:res.data.list,
                 total:res.data.total,
             });
-        })
+        }).catch(()=>{});
     }
 
     // IP区域访问限制名单列表
@@ -61,36 +61,32 @@ function Preferences(){
             page:1,
             limit:10,
         }).then(res=>{
-            res.code == 0 && preferences.setIPBlackList({
+            preferences.setIPBlackList({
                 data:res.data.list,
                 total:res.data.total,
             });
-        })
+        }).catch(()=>{});
     }
     
-
     // 站点地图
     const getSitemap = ()=>{
         return getSitemapStatus().then(res=>{
-            res.code == 0 && preferences.setSitemapStatus({
+            preferences.setSitemapStatus({
                 active: res.data.sitemap_enabled == "1" ? "on" : "off",
             });
-        })
+        }).catch(()=>{});
     }
 
     // 站点地图文件管理
     const getSitemapFileList = ()=>{
         return getSitemapList().then(res=>{
-            res.code == 0 && preferences.setSitemapFileList(res.data.list);
-        })
+            preferences.setSitemapFileList(res.data.list);
+        }).catch(()=>{});
     }
 
     // 社交图片
     const getSocialPictures = ()=>{
-        return getSocialPicture().then(res=>{
-            // console.log(res);
-            res.code == 0 && preferences.setSocialPicture(res.data.picture_url);
-        })
+        return getSocialPicture().then(res=>{preferences.setSocialPicture(res.data.picture_url)}).catch(()=>{});
     }
 
     const updatePassWord = ()=>{
@@ -99,8 +95,8 @@ function Preferences(){
             gdprState:preferences.passWord.gdprState,
             switchEnable:preferences.passWord.switchEnable,
             password:preferences.passWord.password
-        }).then(res=>{
-            console.log(res);
+        }).then(()=>{
+            message.success("成功");
         }).catch(()=>{
         }).finally(()=>{
             setIsRenewal(false)

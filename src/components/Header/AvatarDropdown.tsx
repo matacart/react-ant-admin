@@ -1,5 +1,5 @@
-import { logout } from '@/services/y2/api';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { logout } from '@/services/y2/apiAppstore';
+import { LogoutOutlined } from '@ant-design/icons';
 import { history, useModel,useIntl } from '@umijs/max';
 import { Popover, Spin } from 'antd';
 import { createStyles } from 'antd-style';
@@ -47,24 +47,24 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
    * 清除token
    * 清除cookie
    */
-  const loginOut = async () => {
-    await logout();
-    // cookie.remove("token",{path:"/"})
-    // clearAllCookies();
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-    /** 此方法会跳转到 redirect 参数所在的位置 */
-    const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/signIn' && !redirect) {
-      history.replace({
-        pathname: '/user/signIn',
-        search: stringify({
-          redirect: pathname + search,
-        }),
-      });
-    }
+  const loginOut = () => {
+    logout().then(res=>{
+      const urlParams = new URL(window.location.href).searchParams;
+      /** 此方法会跳转到 redirect 参数所在的位置 */
+      const redirect = urlParams.get('redirect');
+      // Note: There may be security issues, please note
+      if (window.location.pathname !== '/user/signIn' && !redirect) {
+        history.replace({
+          pathname: '/user/signIn',
+          search: stringify({
+            redirect: pathname + search,
+          }),
+        });
+      }
+    }).catch(err=>{
+    })
   };
+
   const { styles } = useStyles();
 
   const { initialState, setInitialState } = useModel('@@initialState');

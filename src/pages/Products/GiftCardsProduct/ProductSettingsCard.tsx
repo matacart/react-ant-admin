@@ -3,10 +3,9 @@ import { App, Card, Checkbox, Flex, Form, InputRef, Modal, Select, SelectProps, 
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { upDateProductStatus } from "@/services/y2/api";
+import { upDateProductStatus } from "@/services/y2/apiStore";
 import TagsModal from "@/components/Modal/TagsModal";
 import { observer } from "mobx-react-lite";
-import { useForm } from "antd/es/form/Form";
 import product from "@/store/product/product";
 import SearchRemote from "@/components/Search/SearchRemote";
 import DefaultInput from "@/components/Input/DefaultInput";
@@ -140,7 +139,6 @@ function ProductSettingsCard({form}:{form:any}) {
                             status:"0"
                         })
                     }).catch(err=>{
-                        message.error("失败")
                     }).finally(()=>{
                         setIsModalOpen(false)
                     })

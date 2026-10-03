@@ -1,8 +1,8 @@
 import { useAbortController } from '@/hooks/customHooks';
-import { getCategorySelect } from '@/services/y2/api';
+import { getCategorySelect } from '@/services/y2/apiStore';
 import productList from '@/store/product/productList';
-import { Button, ConfigProvider, Divider, Dropdown, Flex, Popover, Select } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { ConfigProvider, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 
@@ -29,10 +29,7 @@ export default function CommodityClassificationSelector() {
                 }
             })
             newOption && setOptions(newOption)
-        }).catch(error=>{
-            if (error.name !== 'CanceledError') {
-                console.log(error)
-            }
+        }).catch(()=>{
         })
     },[])
 

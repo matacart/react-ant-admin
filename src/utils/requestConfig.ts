@@ -27,7 +27,7 @@ const endProgress = () => {
     }
 };
 
-// 
+// 错误提示
 let isMessageShown = false;
 const showErrorMessage = () => {
     if (!isMessageShown) {
@@ -39,6 +39,9 @@ const showErrorMessage = () => {
         }, 5000);
     }
 };
+
+// token 过期处理
+let isTokenExpiredHandling = false;
 
 // 请求封装
 export const requestConfig: RequestConfig = {
@@ -88,39 +91,43 @@ export const requestConfig: RequestConfig = {
             // access_token 过期
             // 成功响应数据
             (res:any) =>{
-            endProgress();
-            // 确保res存在
-            if (!res) {
-                return Promise.reject(new Error('Response is undefined'));
-            }
-            // 如果res存在但是没有data属性，直接返回res
-            if(!res.data){
+                endProgress();
+                // 确保res存在
+                if (!res) {
+                    return Promise.reject(new Error('Response is undefined'));
+                }
+                // 如果res存在但是没有data属性，直接返回res
+                if(!res.data){
+                    return res;
+                }
+                // 过滤获取授权信息接口 getAccessToken
+                if(res.config.url == "/Oauth2/gettoken"){
+                    return res
+                }
+                let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
+                // access_token过期
+                if(res.data.code==40013){
+                    return handleTokenExpired(res.config);
+                }
+                // token过期 清除token 重新登录
+                if(res.data.code==1001){
+                    // 清除token
+                    cookie.remove("token",{ domain:test,path: '/' })
+                    // 清除cookie
+                    clearAllCookies();
+                    // 使用请求拦截器中保存的页面URL，登录成功后返回原页面
+                    const redirectPath = encodeURIComponent(res.config._originalPageUrl || "");
+                    // 终断其它请求
+                    history.push(`${loginPath}?${redirectPath ? `redirect=${redirectPath}` : ""}`);
+                    // 抛出错误
+                    return Promise.reject(new Error(res.data.msg || '登录已过期'));
+                }
+                // 业务数据异常
+                if(res.data.code>2000){
+                    message.error(res.data.msg);
+                    throw new Error(res.data.msg);
+                }
                 return res;
-            }
-            // 过滤获取授权信息接口 getAccessToken
-            if(res.config.url == "/Oauth2/gettoken"){
-                return res
-            }
-            let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
-            // access_token过期
-            if(res.data.code==40013){
-                return handleTokenExpired(res.config);
-            }
-            // token过期 清除token 重新登录
-            if(res.data.code==1001){
-                cookie.remove("token",{ domain:test,path: '/' })
-                // 清除cookie
-                clearAllCookies();
-                // 使用请求拦截器中保存的页面URL，登录成功后返回原页面
-                const redirectPath = encodeURIComponent(res.config._originalPageUrl || "");
-                // 终断其它请求
-                history.push(`${loginPath}?${redirectPath ? `redirect=${redirectPath}` : ""}`);
-            }
-            // 业务数据异常
-            if(res.data.code>2000){
-                message.error(res.data.msg);
-            }
-            return res;
             },
             // 错误接收及处理
             (error:any) => {

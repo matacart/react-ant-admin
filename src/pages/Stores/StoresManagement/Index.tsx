@@ -8,7 +8,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { useNavigate } from "react-router-dom";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { employeeSelect, getRoleList } from "@/services/y2/api";
+import { employeeSelect, getRoleList } from "@/services/y2/apiAppstore";
 import { useAbortController } from "@/hooks/customHooks";
 
 const onChange = (key: string) => {
@@ -75,33 +75,24 @@ function Index(){
     useEffect(()=>{
         const fetch = async ()=>{
             // 子账号
-            try {
-                const employee = await employeeSelect();
-                if(employee.code == 0){
-                    setEmployeeList(employee.data.map((item:any)=>{
-                        return {
-                            label:item.id,
-                            value:item.id
-                        }
-                    }))
-                }
-            } catch (error) {
-            }
-
-            try {
-                const roleList = await getRoleList();
-                if(roleList.code == 0){
-                    setRolesList(roleList.data.map((item:any)=>{
-                        return {
-                            label:item.title,
-                            value:item.id
-                        }
-                    }))
-                }
-            } catch (error) {
-            }
+            await employeeSelect().then(res=>{
+                setEmployeeList(res.data.map((item:any)=>{
+                    return {
+                        label:item.id,
+                        value:item.id
+                    }
+                }))
+            }).catch(()=>{});
+            // 角色
+            await getRoleList().then(res=>{
+                setRolesList(res.data.map((item:any)=>{
+                    return {
+                        label:item.title,
+                        value:item.id
+                    }
+                }))
+            }).catch(()=>{});
             setIsSkeleton(false)
-
         }
         fetch();
         shopsManagement.reset();

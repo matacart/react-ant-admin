@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { useEffect, useState } from 'react';
-import { setCategory } from '@/services/y2/api';
+import { setCategory } from '@/services/y2/apiStore';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import categories from '@/store/product/categories';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
@@ -61,9 +61,7 @@ function NewProductCategories(){
             }).then(res=>{
                 message.success("已添加成功")
                 history.push("/products/categories")
-            }).catch(err=>{
-                console.log(err)
-            }).finally(()=>{
+            }).catch(()=>{}).finally(()=>{
                 setLoading(false)
             })
         }).catch(e=>{

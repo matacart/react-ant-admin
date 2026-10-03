@@ -20,6 +20,7 @@ class OrderAfterSales{
       bizPayStatus: 0,
       bizDeliveryStatus: 0,
       orderSeq: "",
+      mainOrderSeq: "",
       appOrderSeq: "",
       ordersPackageList: [],
       orderRemarks: [],
@@ -27,7 +28,7 @@ class OrderAfterSales{
       payBillInfo: null,
       buyerInfo: null,
       tags: [],
-      priceSetInfo: null
+      priceSetInfo: null,
     }
 
     setOrderInfo(value:OrderInfoType){

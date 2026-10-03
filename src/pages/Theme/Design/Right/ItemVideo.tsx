@@ -47,16 +47,14 @@ function ItemVideo({item,data,setData}:{item:any,data:DataType,setData:(item:any
             pageNum:1,
             pageSize:10,
         }).then(res=>{
-            if(res.code == 0){
-                const newVideoList = res.data.list.map((item:any)=>{
-                    return {
-                        id:item.id,
-                        url:item.url,
-                        type:item.nameSuffix
-                    }
-                })
-                setVideoList(newVideoList);
-            }
+            const newVideoList = res.data.list.map((item:any)=>{
+                return {
+                    id:item.id,
+                    url:item.url,
+                    type:item.nameSuffix
+                }
+            })
+            setVideoList(newVideoList);
         }).catch(err=>{
             console.log(err);
         }).finally(()=>{

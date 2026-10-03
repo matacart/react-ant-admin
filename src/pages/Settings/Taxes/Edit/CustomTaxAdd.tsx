@@ -1,12 +1,10 @@
 import DefaultButton from "@/components/Button/DefaultButton"
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import DefaultSelect from "@/components/Select/DefaultSelect";
 import ProductCategoriesSelect from "@/components/Select/ProductCategoriesSelect";
-import { getCategoryList } from "@/services/y2/api";
+import { getCategoryList } from "@/services/y2/apiStore";
 import taxes from "@/store/settings/taxes/taxes";
 import { Flex, Form, Modal, Radio, Select } from "antd"
-import { debounce } from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {useState } from "react";
 import cookie from 'react-cookies';
 
 function CustomTaxAdd() {
@@ -39,20 +37,16 @@ function CustomTaxAdd() {
             page: nextPage.toString(),
             limit: "10",
         }).then((res: any) => {
-            if (res.code == 0) {
-                if (res.data.length > 0) {
-                    setCategoryList((prev:any[]) => [...prev, ...res.data.map((item:any)=>({
-                        label:item.delimiter + item.title,
-                        value:item.id,
-                    }))]);
-                    setPage(nextPage);
-                } else {
-                    setHasMore(false); // 没有更多数据了
-                }
+            if (res.data.length > 0) {
+                setCategoryList((prev:any[]) => [...prev, ...res.data.map((item:any)=>({
+                    label:item.delimiter + item.title,
+                    value:item.id,
+                }))]);
+                setPage(nextPage);
+            } else {
+                setHasMore(false); // 没有更多数据了
             }
-        }).catch(() => {
-            // message.error('加载更多失败');
-        }).finally(() => {
+        }).catch(()=>{}).finally(() => {
             setLoadingMore(false);
         });
     };
@@ -111,7 +105,7 @@ function CustomTaxAdd() {
                         value:item.id,
                     }));
                     setCategoryList(categoryList || []);
-                });
+                }).catch(()=>{});
             }} />
             <Modal
                 title="添加自定义税率"

@@ -51,48 +51,47 @@ function NavgateDetail(){
             pid:id??"0",
             group_by_sys:"0"
         }).then(res=>{
-            if(res.code == 0){
-                titleCardRef.current?.setFieldsValue({
-                    title:res.data.list[0]?.name[languagesId || "2"] || res.data.list[0]?.name?.default
-                });
-                HandleCardRef.current?.setFieldsValue({
-                    handle:res.data.list[0]?.handle || ""
-                });
-                const newTree = transformFields(res.data.list[0]?.nodeTree, {
-                    childNodes: "children",
-                    is_sys:"isSys",
-                    is_share:"isShare",
-                    is_bind:"isBind",
-                    languages_id:"languagesId",
-                });
-                navgate.setLanguagesId(languagesId || "2");
-                navgate.setIsSys(res.data.list[0]?.is_sys.toString());
-                navgate.setIsShare(res.data.list[0]?.is_share.toString());
-                navgate.setIsBind(res.data.list[0]?.is_bind.toString());
-                navgate.setInitialItems([...newTree]);
-                navgate.setId(id || "");
-                // 全部项 -- 用于删除
-                navgate.setItemList(res.data.list.map((item:any)=>{
-                    return {
-                        id:item.id,
-                        languages_id:item.languages_id || "2",
-                        title:item?.title,
-                        image:item?.image?.src,
-                        page_link:item?.pageLink,
-                        node_type:item?.nodeType,
-                        open_mode:item?.openMode,
-                        handle:item.handle,
-                        pid:item.pid,
-                        content:"",
-                        sort:"1000",
-                        is_url:"1",
-                        is_sys:item.is_sys,
-                        is_share:item.is_share,
-                        is_bind:item.is_bind,
-                        status:"-1",
-                    }
-                }));
-            }
+            titleCardRef.current?.setFieldsValue({
+                title:res.data.list[0]?.name[languagesId || "2"] || res.data.list[0]?.name?.default
+            });
+            HandleCardRef.current?.setFieldsValue({
+                handle:res.data.list[0]?.handle || ""
+            });
+            const newTree = transformFields(res.data.list[0]?.nodeTree, {
+                childNodes: "children",
+                is_sys:"isSys",
+                is_share:"isShare",
+                is_bind:"isBind",
+                languages_id:"languagesId",
+            });
+            navgate.setLanguagesId(languagesId || "2");
+            navgate.setIsSys(res.data.list[0]?.is_sys.toString());
+            navgate.setIsShare(res.data.list[0]?.is_share.toString());
+            navgate.setIsBind(res.data.list[0]?.is_bind.toString());
+            navgate.setInitialItems([...newTree]);
+            navgate.setId(id || "");
+            // 全部项 -- 用于删除
+            navgate.setItemList(res.data.list.map((item:any)=>{
+                return {
+                    id:item.id,
+                    languages_id:item.languages_id || "2",
+                    title:item?.title,
+                    image:item?.image?.src,
+                    page_link:item?.pageLink,
+                    node_type:item?.nodeType,
+                    open_mode:item?.openMode,
+                    handle:item.handle,
+                    pid:item.pid,
+                    content:"",
+                    sort:"1000",
+                    is_url:"1",
+                    is_sys:item.is_sys,
+                    is_share:item.is_share,
+                    is_bind:item.is_bind,
+                    status:"-1",
+                }
+            }));
+        }).catch((err)=>{
         })
     }
 
@@ -104,99 +103,83 @@ function NavgateDetail(){
 
     // 统一校验方法
     const validateAll = async () => {
-
         let sort = 1000;
-        
-        try {
-            // 校验标题卡
-            await titleCardRef.current?.validateFields();
-            // 校验handle卡
-            await HandleCardRef.current?.validateFields();
-            
-            const title = titleCardRef.current?.getFieldsValue().title;
-            const handle = HandleCardRef.current?.getFieldsValue().handle || title.replace(/\s+/g, '-').toLowerCase();
-
-            let data:any[] = [{
-                id:navgate.isSys == "1"?"":navgate.id,
-                languages_id:languagesId,
-                title:title,
-                handle:handle,
+        // 校验标题卡
+        await titleCardRef.current?.validateFields();
+        // 校验handle卡
+        await HandleCardRef.current?.validateFields();
+        const title = titleCardRef.current?.getFieldsValue().title;
+        const handle = HandleCardRef.current?.getFieldsValue().handle || title.replace(/\s+/g, '-').toLowerCase();
+        let data:any[] = [{
+            id:navgate.isSys == "1"?"":navgate.id,
+            languages_id:languagesId,
+            title:title,
+            handle:handle,
+            content:"",
+            pid:"0",
+            status:"1",
+            sort:navgate.isSys?"100":sort+"",
+            is_url:"0",
+            is_sys:navgate.isSys,
+            is_share:navgate.isShare,
+            is_bind:navgate.isBind,
+        }];
+        let removeData:any[] = [];
+        flattenTree(navgate.initialItems).forEach((item:any,index:number)=>{
+            data.push({
+                id:item.isNew?"":item.id,
+                languages_id:item.languagesId,
+                title:item?.title,
+                image:item?.img,
+                page_link:item?.pageLink,
+                node_type:item.nodeType,
+                handle:(item.id).replace(/\s+/g, '-').toLowerCase(),
+                pid:(item?.parentId??(item.depth == 0?navgate.id:handle)).replace(/\s+/g, '-').toLowerCase(),
                 content:"",
-                pid:"0",
                 status:"1",
-                sort:navgate.isSys?"100":sort+"",
-                is_url:"0",
-                is_sys:navgate.isSys,
-                is_share:navgate.isShare,
-                is_bind:navgate.isBind,
-            }];
-            let removeData:any[] = [];
-            try {
-                flattenTree(navgate.initialItems).forEach((item:any,index:number)=>{
-                    data.push({
-                        id:item.isNew?"":item.id,
-                        languages_id:item.languagesId,
-                        title:item?.title,
-                        image:item?.img,
-                        page_link:item?.pageLink,
-                        node_type:item.nodeType,
-                        handle:(item.id).replace(/\s+/g, '-').toLowerCase(),
-                        pid:(item?.parentId??(item.depth == 0?navgate.id:handle)).replace(/\s+/g, '-').toLowerCase(),
-                        content:"",
-                        status:"1",
-                        sort:sort+index+1+"",
-                        is_url:"1",
-                        is_sys:item.isSys || "0",
-                        is_share:item.isShare || "0",
-                        is_bind:item.isBind,
-                        open_mode:item.openMode || "0",
-                    })
-                });
-                flattenTree(navgate.removeItems).forEach((item:any)=>{
-                    removeData.push({
-                        id:item.id,
-                        languages_id:item.languagesId,
-                        title:item?.title,
-                        image:item?.img,
-                        page_link:item?.pageLink,
-                        node_type:item.nodeType,
-                        handle:item.handle,
-                        pid:item?.pid,
-                        content:"",
-                        sort:"1000",
-                        is_url:"1",
-                        is_sys:item?.isSys,
-                        is_share:item.isShare,
-                        is_bind:item.isBind,
-                        open_mode:item.openMode,
-                        status:"-1",
-                    })
-                });
-            } catch (error) {
-                console.error(error);
-            }
-            console.log([...data,...removeData]);
-            setLoading(true);
-            // 提交数据
-            batchAddNavgate({
-                languages_id:navgate.languagesId,
-                pages:JSON.stringify([...data,...removeData])
-            }).then(res=>{
-                if(res.code == 0){
-                    // 清空状态
-                    navgate.clear();
-                    sleep(2000);
-                    message.success('success');
-                    history.push('/website/navList');
-                }
-            }).catch(err=>{
-                message.error(err?.msg);
-            }).finally(()=>{
-                setLoading(false);
-            });
-        } catch (error) {
-            // console.error('Validation failed:', "表单验证未通过");
-        }
+                sort:sort+index+1+"",
+                is_url:"1",
+                is_sys:item.isSys || "0",
+                is_share:item.isShare || "0",
+                is_bind:item.isBind,
+                open_mode:item.openMode || "0",
+            })
+        });
+        flattenTree(navgate.removeItems).forEach((item:any)=>{
+            removeData.push({
+                id:item.id,
+                languages_id:item.languagesId,
+                title:item?.title,
+                image:item?.img,
+                page_link:item?.pageLink,
+                node_type:item.nodeType,
+                handle:item.handle,
+                pid:item?.pid,
+                content:"",
+                sort:"1000",
+                is_url:"1",
+                is_sys:item?.isSys,
+                is_share:item.isShare,
+                is_bind:item.isBind,
+                open_mode:item.openMode,
+                status:"-1",
+            })
+        });
+        setLoading(true);
+        // 提交数据
+        batchAddNavgate({
+            languages_id:navgate.languagesId,
+            pages:JSON.stringify([...data,...removeData])
+        }).then(res=>{
+            // 清空状态
+            navgate.clear();
+            sleep(2000);
+            message.success('success');
+            history.push('/website/navList');
+        }).catch(err=>{
+        }).finally(()=>{
+            setLoading(false);
+        });
     };
 
     // 删除菜单
@@ -205,14 +188,11 @@ function NavgateDetail(){
         batchAddNavgate({
             pages:JSON.stringify(navgate.itemList)
         }).then(async res=>{
-            if(res.code == 0){
-                navgate.clear();
-                await sleep(2000);
-                message.success('success');
-                history.push('/website/navList');
-            }
+            navgate.clear();
+            await sleep(2000);
+            message.success('success');
+            history.push('/website/navList');
         }).catch(err=>{
-            message.error(err?.msg || 'error');
         }).finally(()=>{
             setLoading(false);
         });

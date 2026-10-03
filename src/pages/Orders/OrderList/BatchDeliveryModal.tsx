@@ -1,13 +1,15 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { useIntl } from "@umijs/max";
-import { App, Flex, Modal, Upload } from "antd";
+import { history, useIntl } from "@umijs/max";
+import { App, Flex, Modal, notification, Typography, Upload } from "antd";
 import { useState } from "react";
 import BatchDeliveryUpload from "./BatchDeliveryUpload";
 import { importShipmentTask } from "@/services/y2/apiShipment";
 import { useSleep } from "@/hooks/customHooks";
+import { clearTimerId, startPolling } from "./timerService";
 
-{/* 模态框：批量发货 */}
+
+const { Text } = Typography;
 
 function BatchDeliveryModal() {
 
@@ -15,9 +17,9 @@ function BatchDeliveryModal() {
 
     const { message } = App.useApp();
 
-    const intl = useIntl();
-
     const [loading, setLoading] = useState(false);
+
+    const intl = useIntl();
 
     const sleep = useSleep();
 
@@ -37,64 +39,50 @@ function BatchDeliveryModal() {
             message.error("请选择文件");
             return
         }
-        // setLoading(true)
-        await setTask({
-            ...task,
-            status:"done",
-        })
-
-        await sleep(3000)
-
-        await setTask({
-            ...task,
-            status:"success",
-        })
-
-        // importShipmentTask({
-        //     languages_id:"1",
-        //     file:file,
-        //     send_notify:false
-        // }).then(async res=>{
-        //     console.log(res)
-            
-        //     // let taskId = res.taskId
-           
-        //     // startPolling(taskId, (data) => {
-        //     //     if (data.task_status === "completed" || data.task_status === "failed") {
-        //     //         clearTimerId();
-        //     //         if(productList.task.isBackstage){
-        //     //             notification.success({
-        //     //                 message: '导入商品已完成',
-        //     //                 description: <div className='color-474F5E'>本次导入{data.total_count}个商品，成功{data.success_count}个，失败{data.failed_count}个，请刷新商品列表查看</div>,
-        //     //             })
-        //     //             productList.setTask({
-        //     //                 status:"",
-        //     //                 isBackstage:false,
-        //     //             })
-        //     //         }else{
-        //     //             productList.setTask({
-        //     //                 status:"success",
-        //     //                 isBackstage:false,
-        //     //                 failed_count: data.failed_count,
-        //     //                 success_count: data.success_count,
-        //     //                 total_count: data.total_count
-        //     //             })
-        //     //         }
-        //     //     }else{
-        //     //         productList.setTask({
-        //     //             ...productList.task,
-        //     //             status:"done",
-        //     //         })
-        //     //     }
-        //     // });
-        // }).catch(err=>{
-        //     // message.error("上传失败，请重试")
-        // }).finally(()=>{
-        //     setLoading(false)
-        // })
+        setLoading(true);
+        importShipmentTask({languages_id:"1",file:file,send_notify:false}).then(res=>{
+            const taskId = res.data.taskId;
+            if(!taskId){
+                message.error("失败");
+                return
+            }
+            // 轮询查询进度
+            startPolling(taskId, "1", (data) => {
+                if (data.task_status === "completed") {
+                    clearTimerId();
+                    notification.success({
+                        message: '导入完成',
+                        description: <div className='color-474F5E'>成功{data.success_count}个，失败{data.failed_count}个</div>,
+                    })
+                    handleCancel();
+                }else if(data.task_status === "failed"){
+                    clearTimerId();
+                    notification.error({
+                        message: '导入失败',
+                        description: <div className='color-474F5E'>失败{data.failed_count}个</div>,
+                    })
+                    handleCancel();
+                }else{
+                    setTask({
+                        ...task,
+                        status:"done",
+                    })
+                }
+            });
+        }).catch(()=>{
+            console.log("导入失败");
+        }).finally(()=>{
+            setTask({
+                ...task,
+                status:"done",
+            })
+            setLoading(false);
+        });
     };
 
     const handleCancel = () => {
+        // 关闭弹窗后，清空文件，清除计时器
+        clearTimerId();
         setFile(undefined);
         setTask({
             status:"",
@@ -117,15 +105,33 @@ function BatchDeliveryModal() {
                 onCancel={handleCancel}
                 centered={true}
                 footer={()=>{
-
                     if(task.status === "success"){
                         return <Flex justify='end' align='center' gap={12}>
                         <DefaultButton text={intl.formatMessage({ id: 'orders.orderList.index.importRecord' })} onClick={handleCancel} />
                     </Flex>
                     }
+                    if(task.status === "done"){
+                        return (
+                            <Flex justify='end' align='center' gap={12}>
+                                <DefaultButton text={"关闭"} onClick={()=>{
+                                    // 关闭弹窗后，清空文件，清除计时器
+                                    clearTimerId();
+                                    // 清空任务状态
+                                    setTask({
+                                        ...task,
+                                        status:"",
+                                        isBackstage:false,
+                                    })
+                                    setFile(undefined)
+                                    setOpen(false)
+                                }} />
+                                <PrimaryButton text={"导入中"} loading={true} />
+                            </Flex>
+                        )
+                    }
                     return <Flex justify='end' align='center' gap={12}>
                         <DefaultButton text={intl.formatMessage({ id: 'orders.orderList.index.cancel' })} onClick={handleCancel} />
-                        <PrimaryButton text={intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })} onClick={() => handleOk()} />
+                        <PrimaryButton loading={loading} text={intl.formatMessage({ id: 'orders.orderList.index.uploadAndImport' })} onClick={() => handleOk()} />
                     </Flex>
                 }}
             >

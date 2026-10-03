@@ -2,8 +2,7 @@
 import { App, Col, Form, Input, Modal, Row, Select } from 'antd';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { editSupplier, getSupplier } from '@/services/y2/api';
-import { getCityList, getProvinceList } from '@/services/y2/apiAppstore';
+import { getCityList, getProvinceList, editSupplier, getSupplier} from '@/services/y2/apiAppstore';
 import { useForm } from 'antd/es/form/Form';
 
 function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:any,getSupplierList:any,editSupplierRef:any}) {
@@ -15,7 +14,7 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
     const [countryList,setCountryList] = useState();
 
     // 供应商信息
-    const [supplierInfo,setSupplierInfo] = useState();
+    const [supplierInfo,setSupplierInfo] = useState<any>({});
 
     // 中国地区
     const [isChina,setIsChina] = useState(false);
@@ -40,22 +39,17 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
         upplierInfoFun()
     },[supplier])
 
-    // 
+    // 供应商信息
     const upplierInfoFun = async ()=>{
-        console.log(supplier)
-        const data = await getSupplier(supplier.id).then(async res=>{
-            if(res.code == 0){
-                setSupplierInfo(res.data)
-                if(res.data.country_id == "44"){
-                    getProvinceLists(res.data.country_id)
-                    selectProvince(res.data.state)
-                    setIsChina(true)
-                }
-                return res.data
+        getSupplier(supplier.id).then(async res=>{
+            setSupplierInfo(res.data)
+            if(res.data.country_id == "44"){
+                getProvinceLists(res.data.country_id)
+                selectProvince(res.data.state)
+                setIsChina(true)
             }
-        })
-        console.log(provinceList)
-        formInit(data)
+            formInit(res.data)
+        }).catch(()=>{})
     }
 
     // 表单初始化
@@ -91,33 +85,29 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
     // 获取省份
     const getProvinceLists = (countryId:string)=>{
         getProvinceList(countryId).then(res=>{
-            if(res.code == 0){
-                let newProvinceList:any = [];
-                res.data.forEach((item:any)=>{
-                    newProvinceList.push({
-                        label:item.name,
-                        value:item.id
-                    })
+            let newProvinceList:any = [];
+            res.data.forEach((item:any)=>{
+                newProvinceList.push({
+                    label:item.name,
+                    value:item.id
                 })
-                form.setFieldValue("province",'')
-                setProvinceList(newProvinceList)
-            }
+            })
+            form.setFieldValue("province",'')
+            setProvinceList(newProvinceList)
         })
     }
     // 选择省份
     const selectProvince = (value:string)=>{
         getCityList(value).then(res=>{
-            if(res.code == 0){
-                let newCityList:any = [];
-                res.data.forEach((item:any)=>{
-                    newCityList.push({
-                        label:item.name,
-                        value:item.id
-                    })
+            let newCityList:any = [];
+            res.data.forEach((item:any)=>{
+                newCityList.push({
+                    label:item.name,
+                    value:item.id
                 })
-                form.setFieldValue("city",'')
-                setCityList(newCityList)
-            }
+            })
+            form.setFieldValue("city",'')
+            setCityList(newCityList)
         })
     }
 
@@ -128,17 +118,15 @@ function EditSupplierModal({supplier,getSupplierList,editSupplierRef}:{supplier:
 
     // 验证成功
     const createSupplier = ()=>{
-        console.log(form.getFieldsValue())
-        editSupplier({...form.getFieldsValue(),id:supplierInfo.id,code:supplierInfo.code}).then(res=>{
-            console.log(res.code)
-            if(res.code == 0){
-                setSupplierOpen(false)
-                getSupplierList()
-                message.success("创建成功")
-            }else{
-                message.error("创建失败")
-            }
-            
+        editSupplier({
+            ...form.getFieldsValue(),
+            id:supplierInfo?.id || "",
+            code:supplierInfo?.code || ""
+        }).then(res=>{
+            setSupplierOpen(false)
+            getSupplierList()
+            message.success("成功")
+        }).catch(()=>{
         })
     }
 

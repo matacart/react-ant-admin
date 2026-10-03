@@ -3,10 +3,9 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import NumberInput from "@/components/Input/NumberInput";
 import InputSearch from "@/components/Search/InputSearch";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import MySelect from "@/components/Select/MySelect";
-import { getCurrenciesList, setCurrenciesList } from "@/services/y2/api";
+import { getCurrenciesList,setCurrenciesList } from "@/services/y2/apiAppstore";
 import { CheckOutlined, CloseOutlined, ExportOutlined } from "@ant-design/icons";
-import { App, Card, Flex, Form, InputNumber, Modal, Switch, Table, TableProps } from "antd";
+import { App, Card, Flex, Form, Modal, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import cookie from 'react-cookies';
@@ -156,12 +155,7 @@ function SettlementCurrencyCard() {
     // 获取币种
     const getCurrencies = ()=>{
         setLoading(true)
-        getCurrenciesList(1,100).then(res=>{
-            if(res.code == 0){
-                setData(res.data)
-            }
-            setLoading(false)
-        })
+        getCurrenciesList(1,100).then(res=>setData(res.data)).catch(()=>{}).finally(()=>setLoading(false))
     }
 
     // 提交
@@ -190,7 +184,7 @@ function SettlementCurrencyCard() {
                 cookie.save('domain', newDomain, { path: '/' });
                 setCurrency(newDomain.default_currency)
             }
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setBtnLoading(false)
         })
     }

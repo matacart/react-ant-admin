@@ -45,8 +45,7 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                 settings: JSON.stringify(newSettings.settingsData)
             };
             // 执行操作
-            const newData = await templateUpdate(operationData);
-            if (newData) {
+            templateUpdate(operationData).then(res=>{
                 // 保存操作到历史记录 -- 执行前的状态
                 editor.addToOperationHistory({
                     type: 'templateUpdate',
@@ -63,7 +62,8 @@ const CollapseWarp = memo(({ items,settingsData }: any) => {
                     timestamp: Date.now()
                 });
                 editor.setSettings(newSettings);
-            }
+            }).catch(err=>{
+            })
             editor.setIsSaveData(true);
         }, 500), []
     );

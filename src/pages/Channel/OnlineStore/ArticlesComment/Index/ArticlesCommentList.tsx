@@ -7,7 +7,7 @@ import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined } from "@ant-design/icons";
 import LangSelect from "@/components/Select/LangSelect";
 import { useAbortController } from "@/hooks/customHooks";
-import { getArticleComments } from "@/services/y2/api";
+import { getArticleComments } from "@/services/y2/apiArticle";
 import { ExportIcon } from "@/components/Icons/Icons";
 import { usePrimaryDomain } from "@/hooks/customHooks";
 
@@ -147,7 +147,6 @@ function ArticlesCommentList({comments,langId}:{comments:any,langId:string}) {
           total: res.data.total,
         });
       }).catch(error => {
-        message.error(error?.msg)
       }).finally(() => {
         setLoading(false);
       });

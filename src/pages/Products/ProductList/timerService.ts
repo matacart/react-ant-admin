@@ -8,7 +8,7 @@ export function startPolling(taskId: string, callback: (status: any) => void) {
         clearInterval(timerId);
     }
     timerId = setInterval(() => {
-        getTaskStatus(taskId).then((req) => {
+        getTaskStatus(taskId).then((req:any) => {
             callback(req.data);
         }).catch((err) => {
             console.error("Error fetching task status:", err);

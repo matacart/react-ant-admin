@@ -6,7 +6,7 @@ import order from "@/store/order/order";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import AddPaymentPeriod from "../Modal/AddPaymentPeriod";
 import DefaultButton from "@/components/Button/DefaultButton";
-import { setOrderPaid } from "@/services/y2/api";
+import { setOrderPaid } from "@/services/y2/apiOrders";
 import { useState } from "react";
 import { currencyPrecision } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";

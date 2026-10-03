@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { App, Avatar, Checkbox, Input, Modal, Table, Tooltip } from 'antd';
 import type { GetProp, TableColumnsType, TableProps } from 'antd';
 import { CopyOutlined, DeleteOutlined, EyeOutlined, QuestionCircleOutlined} from '@ant-design/icons';
-import { deleteCategory, getCategoryList } from '@/services/y2/api';
+import { deleteCategory, getCategoryList } from '@/services/y2/apiStore';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import categoriesList from '@/store/product/categoriesList';
@@ -72,13 +72,11 @@ function CategoriesTable() {
   const deleteCategoryItem = (record:any) => {
     setLoading(true);
     deleteCategory(record.id).then(res=>{
-      if(res.code == 0){
-        message.success("删除成功")
-        const newData = data.filter((item) => item.id !== record.id);
-        setData(newData);
-        setLoading(false);
-      }
-    })
+      message.success("删除成功")
+      const newData = data.filter((item) => item.id !== record.id);
+      setData(newData);
+      setLoading(false);
+    }).catch(()=>{})
   };
 
   // 表头
@@ -214,11 +212,7 @@ function CategoriesTable() {
           total: Number(res.count),
         }
       });
-    }).catch((error) => {
-      if (error.name !== 'CanceledError') {
-        console.log(error)
-      }
-    }).finally(()=>{
+    }).catch(()=>{}).finally(()=>{
       setLoading(false);
     })
   }

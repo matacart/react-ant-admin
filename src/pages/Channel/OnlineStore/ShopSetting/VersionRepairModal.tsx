@@ -4,7 +4,7 @@ import { useState } from "react";
 import UploadCompressedFile from "./UploadCompressedFile";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { updateVersion } from "@/services/y2/api";
+import { updateVersion } from "@/services/y2/apiTemplate";
 
 function VersionRepairModal({template}:{template: TemplateInstance | null}) {
   
@@ -32,8 +32,7 @@ function VersionRepairModal({template}:{template: TemplateInstance | null}) {
         version_id: template?.template_version_id || "",
       }).then((res: any) => {
         message.success("上传成功", 1)
-      }).catch((err: any) => {
-
+      }).catch(() => {
       }).finally(() => {
         setStatus("");
         setFile(null);

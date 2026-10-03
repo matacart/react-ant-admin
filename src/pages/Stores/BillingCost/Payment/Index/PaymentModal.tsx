@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import { getMerchantRechargeLink, getMerchentBalance } from "@/services/y2/api";
+import { getMerchantRechargeLink, getMerchentBalance } from "@/services/y2/apiAppstore";
 import { InfoCircleFilled } from "@ant-design/icons";
 import { Checkbox, Flex, Form, Modal, Spin, Tag } from "antd";
 import { useState } from "react";
@@ -60,18 +60,14 @@ function PaymentModal(){
                 amount: values.amount,
                 method: values.method
             }).then(res=>{
-                if(res.code == 0){
-                    window.open(res.redirect_url);
-                    form.resetFields();
-                    setOpen(false)
-                }
-            }).catch(err=>{
-                console.log(err)
+                window.open(res?.redirect_url);
+                form.resetFields();
+                setOpen(false)
+            }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
             })
-        }).catch(err=>{
-            console.log(err)
+        }).catch(()=>{
         })
     }
     
@@ -82,9 +78,8 @@ function PaymentModal(){
                 setOpen(true);
                 setFormLoading(true);
                 getMerchentBalance().then(res=>{
-                    res.code == 0 && setMerchentBalance(res.data)
-                }).catch(err=>{
-                    console.log(err)
+                    setMerchentBalance(res.data)
+                }).catch(()=>{
                 }).finally(()=>{
                     setFormLoading(false)
                 })

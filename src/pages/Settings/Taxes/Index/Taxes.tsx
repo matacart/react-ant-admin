@@ -30,7 +30,7 @@ function Taxes() {
             languages_id:taxesList.languagesId,
             is_enabled:taxesList.taxDisplayConfig.is_enabled,
         }).then((res)=>{
-            res.code == "SUCCESS" && message.success("已更新")
+            message.success("已更新")
         }).catch(()=>{
         }).finally(()=>{
             setIsRenewal(false)

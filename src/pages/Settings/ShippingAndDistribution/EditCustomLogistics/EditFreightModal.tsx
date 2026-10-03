@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import { AddIcon, EditIcon } from "@/components/Icons/Icons";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
+import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/apiAppstore";
 import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight";
 import { MinusCircleOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { App, Button, Col, ConfigProvider, Flex, Form, Input, InputNumber, Modal, Row, Select, Spin, Tooltip } from "antd"
@@ -109,8 +109,7 @@ export default function EditFreightModal({record}:{record:any}){
                 generalFreight.setDeliverys(newData)
                 message.success("成功")
                 setOpen(false)
-            }).catch(err=>{
-                message.error("失败")
+            }).catch(()=>{
             }).finally(()=>{
                 setBtnLoading(false)
                 setIsLoading(false)
@@ -157,12 +156,10 @@ export default function EditFreightModal({record}:{record:any}){
                 billingMethod:config.MODULE_SHIPPING_FREESHIPPER_METHOD
             })
             setBillingMethod(parseInt(config.MODULE_SHIPPING_FREESHIPPER_METHOD))
-            // settings[`config[MODULE_SHIPPING_FREESHIPPER_COUNTRIES_${i}]`] = config[`MODULE_SHIPPING_FREESHIPPER_COUNTRIES_${i}`]
         }).catch(err=>{
             console.log(err)
-            message.error("请求失败")
-            setOpen(false)
         }).finally(()=>{
+            setOpen(false)
             setIsLoading(false)
         })
     }

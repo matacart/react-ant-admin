@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { PauseSecondIcon, PendingSecondIcon, RiseIcon, SuccessSecondIcon, UnfoldIcon } from "@/components/Icons/Icons";
 import order, { FulfillmentItemType } from "@/store/order/order";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { resumeOrderShipping } from "@/services/y2/api";
+import { resumeOrderShipping } from "@/services/y2/apiOrders";
 import { currencyPrecision } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
+import styled from "styled-components";
 
 
 
@@ -37,17 +38,16 @@ function PausedShippedCard({groupIndex}:{groupIndex:number}) {
     }
 
     return (
-        <Card
-        title={
-            <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
-            <Flex align="center" gap={10}>
-                <PauseSecondIcon className="font-28" />
-                <span className="font-w-500">{"待处理"}</span>
-            </Flex>
-            </Flex>
-        }
+        <MyCard
+            title={
+                <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
+                    <Flex align="center" gap={10}>
+                        <PauseSecondIcon className="font-28" />
+                        <span className="font-w-500">{"待处理"}</span>
+                    </Flex>
+                </Flex>
+            }
         >
-        <Form>
             <div className="font-w-400">
                 <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
                     <Flex gap={6}>
@@ -70,17 +70,17 @@ function PausedShippedCard({groupIndex}:{groupIndex:number}) {
                         <Flex style={{paddingRight:"40px"}}>
                             <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
                             <Flex vertical align="flex-start" justify="flex-start">
-                            <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px"}} className="font-w-500">{item.title}</div>
-                            <div style={{ fontSize: "14px", color: "#474F5E" }}>{
+                            <div className="font-w-500 color-474F5E font-14 title">{ item.title }</div>
+                            <div className="color-474F5E font-14">{
                                 item.attributes?.map((item:any)=>item.attributeValue??"").join("/")
                             }</div>
-                            <div style={{ fontSize: "14px", color: "#474F5E" }}>model : </div>
+                            <div className="color-474F5E font-14">model : </div>
                             </Flex>
                         </Flex>
                         </Col>
                         <Col span={5}>
                             <Flex style={{height:"100%"}}>
-                            <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice)} X {item.productNum}</span>
+                            <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productPrice || 0))} X {item.productNum}</span>
                             </Flex>
                         </Col>
                         <Col span={5}>
@@ -92,15 +92,24 @@ function PausedShippedCard({groupIndex}:{groupIndex:number}) {
                     )
                 })}
             </div>
-        </Form>
-        <Divider />
-        <Form>
+            <Divider />
             <Flex justify="flex-end" gap={12}>
                 <PrimaryButton text={"开始发货"} loading={loading} onClick={startShipping}  />
             </Flex>
-        </Form>
-        </Card>
+        </MyCard>
     );
 }
 
 export default observer(PausedShippedCard);
+
+const MyCard = styled(Card)`
+  .title{
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
+`

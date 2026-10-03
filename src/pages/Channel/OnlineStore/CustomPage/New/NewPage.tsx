@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import { addCustomerPage } from '@/services/y2/api';
+import { addCustomerPage } from '@/services/y2/apiAppstore';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useState } from 'react';
 import customPage from '@/store/channel/customPage/customPage';
@@ -36,13 +36,10 @@ function NewPage(){
         form.validateFields().then(values => {
             setLoading(true);
             addCustomerPage(customPage.customPage).then(async res=>{
-                if(res.code == 0){
-                    await sleep(2000);
-                    message.success('成功');
-                    history.push(`/website/page`);
-                }
-            }).catch(err=>{
-                message.error(err?.msg)
+                await sleep(2000);
+                message.success('成功');
+                history.push(`/website/page`);
+            }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
             })

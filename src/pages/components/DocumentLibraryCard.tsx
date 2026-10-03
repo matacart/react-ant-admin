@@ -43,19 +43,15 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
             pageSize: pageSize,
             title:searchText
         }).then(res=>{
-            console.log(res)
-            if(res.code == 0){
-                setFileImgList(res.data.list??=[])
-                setCount(res.data.total)
-                setLoading(false)
-
-                // 状态重置 --- 存状态
-                res.data.list.forEach((item:any)=>{
-                    fileListStatus[item.id]??=false
-                })
-            }else{
-                console.log("请求失败")
-            }
+            setFileImgList(res.data.list??=[])
+            setCount(res.data.total)
+            // 状态重置 --- 存状态
+            res.data.list.forEach((item:any)=>{
+                fileListStatus[item.id]??=false
+            })
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false)
         })
     };
     // 搜索
@@ -69,13 +65,13 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
             pageSize: pageSize,
             title:value
         }).then(res=>{
-            if(res.code == 0){
-                setLoading(false)
-                setCurrentPage(res.data.pageNum);
-                setPageSize(pageSize);
-                setCount(res.data.total)
-                setFileImgList(res.data.list??=[])
-            }
+            setCurrentPage(res.data.pageNum);
+            setPageSize(pageSize);
+            setCount(res.data.total)
+            setFileImgList(res.data.list??=[])
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false)
         })
     };
 
@@ -88,17 +84,15 @@ function DocumentLibraryCard({groupId}:{groupId:string}) {
             pageNum: currentPage,
             pageSize: pageSize,
         }).then(res=>{
-            if(res.code == 0){
-                setFileImgList(res.data.list??=[])
-                setCount(res.data.total)
-                // 存状态
-                res.data.list.forEach((item:any)=>{
-                    fileListStatus[item.id]??=false
-                })
-                setLoading(false)
-            }else{
-                console.log("请求失败")
-            }
+            setFileImgList(res.data.list??=[])
+            setCount(res.data.total)
+            // 存状态
+            res.data.list.forEach((item:any)=>{
+                fileListStatus[item.id]??=false
+            })
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false)
         })
     },[groupId])
 

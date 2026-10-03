@@ -1,4 +1,4 @@
-import { domainSelect, getDomainLanguages, getLanguagesList, getWebsiteRoutes } from "@/services/y2/api";
+import { getWebsiteRoutes } from "@/services/y2/api";
 import { DownOutlined, SearchOutlined } from "@ant-design/icons";
 import { Flex, message, Popover, Spin } from "antd";
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +10,7 @@ import DefaultTag from "../Tag/DefaultTag";
 import DefaultInput from "../Input/DefaultInput";
 import PrimaryButton from "../Button/PrimaryButton";
 import channels from "@/store/menu/channels";
+import { domainSelect, getLanguagesList } from "@/services/y2/apiAppstore";
 
 interface storeType{
     id:string;
@@ -113,15 +114,14 @@ export default function SelectDomain() {
     }
 
     // 店铺语言
-    const setLanguage = async (store:storeType | null)=>{
+    const setLanguage = (store:storeType | null)=>{
         // 根据code 查找对应的id -- shop_lang 店铺默认语言
-        const domainLanguages = await getLanguagesList();
-        if(domainLanguages?.code == 0){
-            const languages = domainLanguages?.data || [];
+        getLanguagesList().then(res=>{
+            const languages = res?.data || [];
             sessionStorage.setItem('languages', JSON.stringify(languages));
             const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
             cookie.save('shop_lang', languagesId, { path: '/' });
-        }
+        }).catch(()=>{});
     }
 
     // 加载更多数据的函数
@@ -136,17 +136,13 @@ export default function SelectDomain() {
                 limit: 10
             }
         }).then((res: any) => {
-            if (res.code == 0) {
-                if (res.data.length > 0) {
-                    setStoreList(prev => [...prev, ...res.data]);
-                    setPage(nextPage);
-                } else {
-                    setHasMore(false); // 没有更多数据了
-                }
+            if (res.data.length > 0) {
+                setStoreList(prev => [...prev, ...res.data]);
+                setPage(nextPage);
+            } else {
+                setHasMore(false); // 没有更多数据了
             }
-        }).catch(() => {
-            message.error('加载更多失败');
-        }).finally(() => {
+        }).catch(()=>{}).finally(() => {
             setLoadingMore(false);
         });
     };
@@ -200,7 +196,7 @@ export default function SelectDomain() {
                         store = res.data[0];
                         cookie.save('domain', res.data[0], { path: '/' });
                     }
-                })
+                }).catch(()=>{});
             }else{
                 // 域名
                 await domainSelect({
@@ -212,7 +208,7 @@ export default function SelectDomain() {
                         store = res.data.filter((item:any)=>(item.handle == domain || item.id == domain))[0];
                         cookie.save('domain', res.data.filter((item:any)=>(item.handle == domain || item.id == domain))[0], { path: '/' });
                     }
-                })
+                }).catch(()=>{});
             }
         }
         setTimeZone(store);
@@ -220,10 +216,9 @@ export default function SelectDomain() {
         setStore(store);
 
         // 侧边导航
-        console.log();
         getWebsiteRoutes().then((res:any) => {
-            res.code == 0 && channels.setChannelList(res.data.list);
-        })
+            channels.setChannelList(res.data.list);
+        }).catch(()=>{});
     }
 
     // 店铺搜索
@@ -236,26 +231,23 @@ export default function SelectDomain() {
                 limit:10,
             }
         }).then((res:any)=>{
-            if(res.code == 0){
-                // 重置无限滚动相关状态
-                setPage(1);
-                setHasMore(true);
-                setLoadingMore(false);
-                // 设置忽略滚动事件标志
-                setIgnoreScrollEvents(true);
-                // 重置滚动条位置
-                if (scrollRef.current) {
-                    scrollRef.current.scrollTop = 0;
-                }
-                // 延迟重置忽略滚动事件标志
-                setTimeout(() => {
-                    setIgnoreScrollEvents(false);
-                }, 100);
-                // 
-                setStoreList(res.data);
+            // 重置无限滚动相关状态
+            setPage(1);
+            setHasMore(true);
+            setLoadingMore(false);
+            // 设置忽略滚动事件标志
+            setIgnoreScrollEvents(true);
+            // 重置滚动条位置
+            if (scrollRef.current) {
+                scrollRef.current.scrollTop = 0;
             }
-        }).catch(() => {
-            message.error('失败')
+            // 延迟重置忽略滚动事件标志
+            setTimeout(() => {
+                setIgnoreScrollEvents(false);
+            }, 100);
+            // 
+            setStoreList(res.data);
+        }).catch(()=>{
         }).finally(() => {
             setLoading(false)
         });
@@ -278,12 +270,10 @@ export default function SelectDomain() {
                         limit: 10
                     }
                 }).then((res: any) => {
-                    if (res.code == 0) {
-                        setPage(1);
-                        setStoreList(res.data);
-                        setHasMore(res.data.length >= 10);
-                    }
-                });
+                    setPage(1);
+                    setStoreList(res.data);
+                    setHasMore(res.data.length >= 10);
+                }).catch(()=>{});
             }
         }, 500); // 500ms防抖延迟
     };

@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import { EditIcon } from "@/components/Icons/Icons";
 import DefaultInput from "@/components/Input/DefaultInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import { editCountry } from "@/services/y2/ApiCheckoutAdditional";
+import { editCountry } from "@/services/y2/apiCheckoutAdditional";
 import country from "@/store/settings/additional/country";
 import { setLocalStorageCountryList } from "@/utils/common";
 import { App, Flex, Form, Modal, Tooltip } from "antd";
@@ -28,20 +28,18 @@ const EditCountry = ({countryInfo,data,setData}:{countryInfo:DataType,data:DataT
                 languages_id: country.languagesId,
                 ...values,
             }).then((res)=>{
-                if(res.code === 0){
-                    const newData = data.map((item:any)=>{
-                        if(item.id === countryInfo.id){
-                            return {
-                                ...item,
-                                ...values,
-                            }
+                const newData = data.map((item:any)=>{
+                    if(item.id === countryInfo.id){
+                        return {
+                            ...item,
+                            ...values,
                         }
-                        return item;
-                    })
-                    setData(newData);
-                    setOpen(false);
-                }
-            }).finally(()=>{
+                    }
+                    return item;
+                })
+                setData(newData);
+                setOpen(false);
+            }).catch(()=>{}).finally(()=>{
                 setLoading(false);
             })
         }).catch((error)=>{

@@ -7,7 +7,7 @@ import { App, Flex } from 'antd';
 import cookie from 'react-cookies';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import BlogsList from './BlogsList';
-import { getArticleCategorys } from '@/services/y2/api';
+import { getArticleCategorys } from '@/services/y2/apiArticle';
 
 
 function Blogs(){
@@ -26,12 +26,11 @@ function Blogs(){
             limit:"10",
             languages_id:languagesId,
         }).then(res=>{
-            res.code == 0 && setBlogs({
+            setBlogs({
                 data:res.data,
                 count:res.count
             });
         }).catch((err)=>{
-            message.error(err?.msg);
         }).finally(()=>{
             setIsSkeleton(false)
         })

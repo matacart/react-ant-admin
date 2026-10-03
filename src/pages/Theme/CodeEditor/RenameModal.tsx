@@ -2,10 +2,10 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { EditIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
-import { RenameFile } from "@/services/y2/api";
+import { RenameFile } from "@/services/y2/apiTemplate";
 import codeEditor from "@/store/theme/codeEditor";
 import { Flex, Form, App, Modal, Tooltip } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 interface RenameModalType{
@@ -77,29 +77,25 @@ function RenameModal({filePath,name,item,treeData,setTreeData}:RenameModalType){
                 oldFileName: filePath+"/"+ (name??""),
                 newFileName: filePath+"/"+ (values.templateName || (name??""))
             }).then(res=>{
-                if(res.code == 0){
-                    // 修改setFileList对应的文件名
-                    const newTreeData = updateTreeNodeByPath(treeData, filePath, item.key, values.templateName);
-                    setTreeData(newTreeData)
-                    const newOpenFileList = codeEditor.openFileList.map((openFileItem:any)=>{
-                        if(openFileItem.key == item.key){
-                            return{
-                                ...openFileItem,
-                                title: values.templateName
-                            }
+                // 修改setFileList对应的文件名
+                const newTreeData = updateTreeNodeByPath(treeData, filePath, item.key, values.templateName);
+                setTreeData(newTreeData)
+                const newOpenFileList = codeEditor.openFileList.map((openFileItem:any)=>{
+                    if(openFileItem.key == item.key){
+                        return{
+                            ...openFileItem,
+                            title: values.templateName
                         }
-                        return openFileItem;
-                    })
-                    codeEditor.setOpenFileList(newOpenFileList)
-                }
+                    }
+                    return openFileItem;
+                })
+                codeEditor.setOpenFileList(newOpenFileList)
                 setOpen(false);
             }).catch(()=>{
-                message.error("error");
             }).finally(()=>{
                 setLoading(false); 
             })
         }).catch(()=>{
-            // 表单未通过
         })
     }
 

@@ -2,7 +2,7 @@ import { Flex, Table, TableProps } from "antd"
 import { useEffect, useState } from "react";
 import styled from "styled-components"
 import dayjs from "dayjs"
-import { getUserMessage } from "@/services/y2/api";
+import { getUserMessage } from "@/services/y2/apiAppstore";
 import { observer } from "mobx-react-lite";
 import innerMsg from "@/store/message/innerMsg/innerMsg";
 import SelectedActions from "./SelectedActions";
@@ -77,8 +77,7 @@ function InnerMsgTable() {
           ...pagination,
           total: res.count
         })
-      }).catch(err=>{
-  
+      }).catch(()=>{
       }).finally(()=>{
         setLoading(false)
       })

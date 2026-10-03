@@ -1,7 +1,8 @@
 import { SettingOutlined } from '@ant-design/icons';
 import { type Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history,Link,RunTimeLayoutConfig,setLocale,useIntl } from '@umijs/max';
-import { getAccessToken, getCurrenciesList, getPlatformInfo, getTimeZoneList, currentUser as queryCurrentUser } from '@/services/y2/api';
+import { getAccessToken,  } from '@/services/y2/api';
+import { currentUser as queryCurrentUser, getTimeZoneList, getCurrenciesList } from '@/services/y2/apiAppstore';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { App, ConfigProvider, Flex, message } from 'antd';
@@ -16,7 +17,7 @@ import "nprogress/nprogress.css";
 import channels from './store/menu/channels';
 import { reaction } from 'mobx';
 import { i18n } from './components/Lang/Lang';
-import { getShippingCourier } from './services/y2/apiLogistics';
+import { getPlatformInfo } from './services/y2/apiAppstore';
 // 懒加载组件
 const LazyHeader = lazy(() => import('./components/Header/Header'));
 const LazyMCPaymentHead = lazy(() => import('./components/Header/MCPaymentHead'));
@@ -45,11 +46,11 @@ ConfigProvider.config({
 const CONFIG_REQUESTS = [
   {
     url: '/api/ApiAppstore/currencies_select',
-    storageKey: 'currencies', 
+    storageKey: 'MC_DATA_CURRENCIES', 
     retry: 3
   },
   {
-    url: '/api/ApiAppstore/country_select',
+    url: '/api/ApiAppstore/country_select_v2',
     storageKey: 'MC_DATA_COUNTRY',
     retry: 3
   }
@@ -106,25 +107,18 @@ export async function getInitialState(): Promise<{
     //调用(mock中的)接口获取用户信息
     try {
       const msg = await queryCurrentUser();
-      if(msg?.code == 0){
-        // platform语言
-        localStorage.setItem("USE_LANG", msg?.data?.languages_id ?? "2");
-        // 设置语言
-        const language = i18n.find(item => item.id == msg?.data?.languages_id)?.lang ?? "en-US";
-        setLocale(language,false);
-      } 
+      // platform语言
+      localStorage.setItem("USE_LANG", msg?.data?.languages_id ?? "2");
+      // 设置语言
+      const language = i18n.find(item => item.id == msg?.data?.languages_id)?.lang ?? "en-US";
+      setLocale(language,false);
+
       // 获取平台信息
-      const platformInfo = await getPlatformInfo();
-      platformInfo?.code == 0 && localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(platformInfo.data));
-      
+      getPlatformInfo().then(res=>localStorage.setItem('MC_DATA_PLATFORM_INFO', JSON.stringify(res.data))).catch(()=>{});
       // 获取时区列表
-      getTimeZoneList().then(res=>{
-        res.code == 0 && localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res?.data??[]));
-      })
+      getTimeZoneList().then(res=>localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res?.data??[]))).catch(()=>{});
       // 获取币种列表
-      getCurrenciesList(1,100).then(res=>{
-        res.code == 0 && localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res.data??[]));
-      })
+      getCurrenciesList(1,100).then(res=>localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res.data??[]))).catch(()=>{});
       return msg.data // 返回用户信息
     } catch (error) {
       // history.push(loginPath);

@@ -1,21 +1,19 @@
 import { ArrowLeftOutlined, CopyOutlined } from '@ant-design/icons'
-import { Flex, Form } from 'antd'
+import { Card, Flex, Form, message } from 'antd'
 import styled from 'styled-components';
 import { Divider } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { editOrderProducts } from '@/services/y2/api';
-import { getOrderDetail } from '@/services/y2/apiStore';
+import { getOrderDetail, previewOrderProducts, updateOrderProducts } from '@/services/y2/apiOrders';
 import orderProductEdit from '@/store/order/orderProductEdit';
-import ShippedCard from './ShippedCard';
 import BillDetails from './BillDetails';
 import Notice from './Notice';
-import { useSleep } from '@/hooks/customHooks';
 import { history, useParams } from '@umijs/max';
 import { FulfillmentItemType, FulfillmentListType } from '@/store/order/order';
 import NotShipped from './NotShipped';
+import { toJS } from 'mobx';
 
 function ProductEdit() {
 
@@ -25,30 +23,40 @@ function ProductEdit() {
 
     const { orderId="",languagesId="" } = useParams();
 
-    // 表单验证
-    const formValidation = ()=>{
-      
-    }
-
     // 验证通过 -- 
     const submit = async () => {
-      // 数量/则扣
-      // const res = {
-      //   orderId:orderProductEdit.orderInfo.order_id,
-      //   products:JSON.stringify(orderProductEdit.remainingProductGroup[0].product),
-      //   // products:orderProductEdit.remainingProductGroup[0].product,
-      //   deleteProductIds:JSON.stringify(orderProductEdit.deleteProductIds),
-      //   sendPaymentEmail:orderProductEdit.billNotification
-      // }
-      // setLoading(true)
-      // editOrderProducts(res).then(async res=>{
-      //   await sleep(1000)
-      //   navigate(`/orders/${orderId}`)
-      // }).catch(err=>{
-      //   console.log(err)
-      // }).finally(()=>{
-      //   setLoading(false)
-      // })
+      const selectedProducts = toJS(orderProductEdit.fulfillmentItemList).map((item:FulfillmentItemType)=>{
+          return {
+              customBusinessFlagInfo:item?.businessFlagInfo || null,
+              groupId:item?.groupId || "",
+              fulfillmentOrderSeq:item?.fulfillmentOrderSeq || "",
+              productSource:item?.productSource || "",
+              version:item?.version || "",
+              productSeq:item?.productSeq || "",
+              productSku:item?.productSku || "",
+              productPrice:item?.productPrice || 0,
+              productNum:item?.productNum || 1,
+              manualDiscount:{
+                discountDesc:item.manualDiscountInfo?.discountDesc || "",
+                discountType:item.manualDiscountInfo?.discountType || "",
+                discountValue:item.manualDiscountInfo?.settleDiscountValue || 0,
+              },
+          }
+      })
+      setLoading(true);
+      updateOrderProducts({
+        languages_id:orderProductEdit.languages,
+        orderSeq:orderProductEdit.orderInfo?.orderSeq || "",
+        mainOrderSeq:orderProductEdit.orderInfo?.mainOrderSeq || "",
+        sendEmail:false,
+        sendPaymentEmail:orderProductEdit.sendPaymentEmail,
+        productInfoList:JSON.stringify(selectedProducts),
+      }).then(res=>{
+        message.success("更新成功");
+      }).catch(err=>{
+      }).finally(()=>{
+        setLoading(false);
+      })
     }
 
     useEffect(() => {
@@ -56,17 +64,65 @@ function ProductEdit() {
         order_id:orderId,
         languages_id:languagesId,
       }).then(res=>{
-        if(res.code == 0){
-          orderProductEdit.setOrderInfo(res.data)
-          const fulfillmentItemList = (res.data?.fulfillmentOrderList || []).map((item:FulfillmentListType)=>item.fulfillmentItemList || []).flat();
-          orderProductEdit.setFulfillmentItemList(fulfillmentItemList)
-        }
+        orderProductEdit.setLanguages(languagesId);
+        orderProductEdit.setOrderInfo(res.data);
+        const fulfillmentItemList = (res.data?.fulfillmentOrderList || []).map((item:FulfillmentListType)=>item.fulfillmentItemList || []).flat();
+        orderProductEdit.setFulfillmentItemList(fulfillmentItemList);
       }).catch(err=>{
         console.log(err);
       }).finally(()=>{
         setIsSkeleton(false)
       })
+      return ()=>{
+        orderProductEdit.reset();
+      }
     },[]);
+    
+    // 自动计价处理
+    useEffect(()=>{
+      // 首屏未加载完，不执行更新
+      if(isSkeleton) return;
+      const selectedProducts = toJS(orderProductEdit.fulfillmentItemList).map((item:FulfillmentItemType)=>{
+          return {
+              customBusinessFlagInfo:item?.businessFlagInfo || null,
+              groupId:item?.groupId || "",
+              productSource:item?.productSource || "",
+              version:item?.version || "",
+              productSeq:item?.productSeq || "",
+              productSku:item?.productSku || "",
+              productPrice:item?.productPrice || 0,
+              productNum:item?.productNum || 1,
+              manualDiscount:{
+                discountDesc:item.manualDiscountInfo?.discountDesc || "",
+                discountType:item.manualDiscountInfo?.discountType || "",
+                discountValue:item.manualDiscountInfo?.settleDiscountValue || 0,
+              },
+          }
+      })
+      setLoading(true);
+      previewOrderProducts({
+        languages_id:orderProductEdit.languages,
+        orderSeq:orderProductEdit.orderInfo?.orderSeq || "",
+        mainOrderSeq:orderProductEdit.orderInfo?.mainOrderSeq || "",
+        productInfoList:JSON.stringify(selectedProducts),
+      }).then((res)=>{
+        orderProductEdit.setBillDetails({
+          totalAmount:res.data?.totalAmount || 0,
+          paidAmount:res.data?.paidAmount || 0,
+          unpaidAmount:res.data?.unpaidAmount || 0,  
+          status:"success",
+        });
+      }).catch(()=>{
+        orderProductEdit.setBillDetails({
+          totalAmount:0,
+          paidAmount:0,
+          unpaidAmount:0,
+          status:"error",
+        });
+      }).finally(()=>{
+          setLoading(false);
+      });
+    },[orderProductEdit.fulfillmentItemList])
 
     return (
         <>
@@ -91,8 +147,18 @@ function ProductEdit() {
                         <NotShipped />
                       </Flex>
                       <Flex className='mc-layout-extra' vertical gap={20}>
-                        <BillDetails />
-                        <Notice />
+                        {orderProductEdit.billDetails?.status == "success"?<>
+                          <BillDetails />
+                          <Notice />
+                        </>:orderProductEdit.billDetails?.status == "error"?<>
+                          <Card title="编辑商品摘要">
+                            <div className='color-7A8499'>金额计算失败,重试</div>
+                          </Card>
+                        </>:<>
+                          <Card title="编辑商品摘要">
+                            <div className='color-7A8499'>暂未进行任何更改</div>
+                          </Card>
+                        </>}
                       </Flex>
                     </Flex>
                     <Divider />

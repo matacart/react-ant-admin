@@ -4,7 +4,7 @@ import { history } from '@umijs/max';
 import styled from 'styled-components';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import BlankPage from './BlankPage';
-import { getCustomerPageList } from '@/services/y2/api';
+import { getCustomerPageList } from '@/services/y2/apiAppstore';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import CustomPageListCard from './CustomPageListCard';
 
@@ -18,11 +18,9 @@ function CustomPage(){
 
     useEffect(()=>{
         getCustomerPageList("1","10","2").then(res=>{
-            if(res.code == 0){
-                setCustomerPageList(res.data)
-                setCount(Number(res?.count))
-            }
-        }).catch((err)=>{
+            setCustomerPageList(res.data)
+            setCount(Number(res?.count))
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })

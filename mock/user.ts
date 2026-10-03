@@ -987,7 +987,6 @@ export default {
   //     id: req?.body?.id,
   //   })
   // },
-  // POST /api/ApiAppstore/doUploadPic
 
   'POST /api/ApiStore/file_list': (req: Request, res: Response) => {
     res.json([

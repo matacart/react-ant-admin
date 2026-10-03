@@ -73,7 +73,6 @@ function AddCustomProducts(){
             reset()
             setOpen(false)
         }).catch(()=>{
-            
         })
     }
 

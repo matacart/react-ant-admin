@@ -10,7 +10,7 @@ import product from "@/store/product/product";
 import DefaultInput from "@/components/Input/DefaultInput";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { doUploadVideo, uploadPic } from "@/services/y2/api";
+import { uploadPic,doUploadVideo } from "@/services/y2/apiAppstore";
 
 const { Dragger } = Upload;
 
@@ -110,22 +110,19 @@ function ProductImg() {
     let formData = new FormData()
     formData.append("file", info)
     uploadPic(formData).then((res: any) => {
-      if(res.code == 0){
-        setFileList([...fileList,{
-          uid:(fileList.length).toString(),
-          name: res.data.src.toString(),
-          status: 'done',
-          url:res.data.src.toString(),
-        }]);
-        product.setProductInfo(
-          {
-            ...product.productInfo,
-            additional_image:[...product.productInfo.additional_image,res.data.src.toString()]
-          }
-        )
-      }
+      setFileList([...fileList,{
+        uid:(fileList.length).toString(),
+        name: res.data.src.toString(),
+        status: 'done',
+        url:res.data.src.toString(),
+      }]);
+      product.setProductInfo(
+        {
+          ...product.productInfo,
+          additional_image:[...product.productInfo.additional_image,res.data.src.toString()]
+        }
+      )
     }).catch((err: any) => {
-      message.error("上传失败", err.msg);
     }).finally(() => {
       setLoading(false);
     })
@@ -201,11 +198,8 @@ function ProductImg() {
       let formData = new FormData();
       formData.append("file", file);
       doUploadVideo(formData).then((res: any) => {
-        if(res.code == 0){
-          form.setFieldValue('youTubeUrl', res.data.src)
-        }
+        form.setFieldValue('youTubeUrl', res.data.src)
       }).catch((err: any) => {
-        message.error("上传失败", err.msg);
       }).finally(() => {
         setVideoLoading(false);
       })

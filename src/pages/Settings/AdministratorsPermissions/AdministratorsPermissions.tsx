@@ -1,7 +1,6 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import StoreManagerAccount from "./StoreManagerAccount"
 import Employee from "./Employee"

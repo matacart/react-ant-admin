@@ -3,7 +3,7 @@ import { App, Card, Flex, Form, Input, Radio, Select } from "antd"
 import { history, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/api";
+import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import payments from "@/store/settings/payments/payments";
@@ -67,7 +67,6 @@ function OtherCollectionAdd() {
                 ...newObj
             })
         }).catch(()=>{
-            // message.error("获取失败")
         }).finally(()=>{
             setIsSkeleton(false)
         })

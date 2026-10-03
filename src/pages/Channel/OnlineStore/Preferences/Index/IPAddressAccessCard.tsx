@@ -48,12 +48,9 @@ function IPAddressAccessCard() {
                     removeFunc={()=>{
                         setLoading(true);
                         delIPAddressAccess(record.id).then(res=>{
-                            if(res.code == 0){
-                                message.success("删除成功");
-                                setData(data.filter(item => item.id !== record.id))
-                            }
+                            message.success("删除成功");
+                            setData(data.filter(item => item.id !== record.id))
                         }).catch(()=>{
-                            console.log("删除失败")
                         }).finally(()=>{
                             setLoading(false);
                         })
@@ -92,14 +89,12 @@ function IPAddressAccessCard() {
                     limit:10,
                 })
             }).catch((res)=>{
-                message.error(res?.msg);
             }).finally(()=>{
                 setLoading(false);
                 setOpen(false);
             })
         }).catch(()=>{
         })
-        // 添加IP地址访问名单
     }
 
     const getIPAccessList = ({page,limit}:{page:number,limit:number})=>{
@@ -107,16 +102,14 @@ function IPAddressAccessCard() {
             page:page,
             limit: limit,
         }).then((res)=>{
-            if(res.code == 0){
-                setData(res.data.list);
-                setPagination({
-                    ...pagination,
-                    current: page,
-                    pageSize: limit,
-                    total: res.data.total,
-                })
-            }
-        })
+            setData(res.data.list);
+            setPagination({
+                ...pagination,
+                current: page,
+                pageSize: limit,
+                total: res.data.total,
+            })
+        }).catch(()=>{})
     }
 
     useEffect(()=>{

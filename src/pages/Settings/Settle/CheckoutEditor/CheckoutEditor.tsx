@@ -38,7 +38,7 @@ function CheckoutEditor() {
         // 获取配置
         getCheckoutEditorConfig({
             languages_id:checkoutEditor.languagesId,
-            profile_id:params.profileId,
+            profile_id:params.profileId || "",
             is_preview:"1",
         }).then(res=>{
             checkoutEditor.setProfileId(res.data.config.profile_id);

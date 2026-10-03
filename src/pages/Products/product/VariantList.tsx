@@ -11,7 +11,7 @@ import _ from 'lodash';
 import { DeleteIcon, EditIcon, ImageUploadIcon } from '@/components/Icons/Icons';
 import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { uploadPic } from '@/services/y2/api';
+import { uploadPic } from '@/services/y2/apiAppstore';
 import { getPrecision } from '@/utils/common';
 import { useSymbolLeft } from '@/hooks/customHooks';
 
@@ -145,15 +145,11 @@ function VariantList(){
       formData.append("file", file)
       setLoading(true);
       uploadPic(formData).then((res: any) => {
-        if(res.code == 0){
-          const newImg = res.data.src;
-          const newVariantList = [...variantList];
-          newVariantList[index].image = newImg
-          setVariantList(newVariantList)
-          product.setVariantList(newVariantList)
-        }else{
-          message.error(res.msg || "err", 1)
-        }
+        const newImg = res.data.src;
+        const newVariantList = [...variantList];
+        newVariantList[index].image = newImg
+        setVariantList(newVariantList)
+        product.setVariantList(newVariantList)
       }).catch((err: any) => {
       }).finally(() => {
           setLoading(false);

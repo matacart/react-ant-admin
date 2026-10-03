@@ -42,9 +42,7 @@ function Left() {
             sections:sections ? JSON.stringify(sections) : '',
             settingsData:JSON.stringify(noticeEmail.settings?.settingsData),
         }).then(res=>{
-            if(res.code == 0){
-                noticeEmail.setLastSavedAt(Date.now());
-            }
+            noticeEmail.setLastSavedAt(Date.now());
         }).catch(err=>{
             console.log(err)
         }).finally(()=>{

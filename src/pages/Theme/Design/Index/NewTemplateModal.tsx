@@ -83,9 +83,7 @@ export default function NewTemplateModal({templateInfo,templateList,isDefault}:{
                 mode: editor.mode,
                 languages_id: editor.languagesId
             }).then((res)=>{
-                if(res.code == 0){
-                    message.success("success");
-                }
+                message.success("success");
             }).catch(error => {
                 console.error('Failed to create template:', error);
             }).finally(()=>{
@@ -94,7 +92,6 @@ export default function NewTemplateModal({templateInfo,templateList,isDefault}:{
                 setLoading(false);
             })
         }).catch(error => {
-            // console.error('Failed to create template:', error);
         });
     };
 

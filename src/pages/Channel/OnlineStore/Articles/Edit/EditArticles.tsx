@@ -6,7 +6,7 @@ import { history, useParams } from '@umijs/max';
 import DefaultButton from '@/components/Button/DefaultButton';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-import { delArticles, getArticle, upDateArticles } from '@/services/y2/api';
+import { delArticles, getArticle, upDateArticles } from '@/services/y2/apiArticle';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import { useSleep } from '@/hooks/customHooks';
@@ -49,7 +49,6 @@ function EditArticles(){
             }).then(res=>{
                 message.success('已更新')
             }).catch(err=>{
-                console.log(err)
             }).finally(()=>{
                 setLoading(false)
             })
@@ -58,13 +57,10 @@ function EditArticles(){
     }
 
     useEffect(()=>{
-        getArticle(id,languagesId).then((res:any)=>{
-            if(res.code == 0){
-                articles.setArticles(res.data)
-            }
+        getArticle({id,languages_id:languagesId}).then((res:any)=>{
+            articles.setArticles(res.data)
             articles.setLanguagesId(languagesId)
         }).catch(err=>{
-            console.log(err)
         }).finally(()=>{
             setIsSkeleton(false)
         })
@@ -122,9 +118,7 @@ function EditArticles(){
                                     message.success('已删除')
                                     await sleep(2000)
                                     history.push('/website/articles')
-                                }).catch(err=>{
-                                    console.log(err)
-                                })
+                                }).catch(()=>{})
                             }}
                             title="确定删除吗？"
                             content="删除后将不能找回，请慎重操作！"

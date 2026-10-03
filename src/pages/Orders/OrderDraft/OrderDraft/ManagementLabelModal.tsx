@@ -2,10 +2,9 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import SearchInput from "@/components/Input/SearchInput";
 import MySelectIcon from "@/components/Select/MySelectIcon";
-import { batchAddDraftOrderTags, batchAddOrderTags, getDraftOrderTagList, getOrderTagList } from "@/services/y2/api";
-import order from "@/store/order/order";
+import { batchAddDraftOrderTags, getDraftOrderTagList } from "@/services/y2/apiStore";
 import orderDraft from "@/store/order/orderDraft";
-import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
+import { Checkbox, Col, Flex, Modal, Row } from "antd"
 import { useEffect, useRef, useState } from "react";
 import { styled } from 'styled-components';
 
@@ -51,11 +50,10 @@ function ManagementLabelModal(){
                 ...orderDraft.orderInfo,
                 tags:selectedTags.map(item=>item.tagName).join(",")
             })
-        }).catch(err=>{
-            console.log(err)
+        }).catch(()=>{
         }).finally(()=>{
-             // 更新订单数据
-             setLoading(false);
+            // 更新订单数据
+            setLoading(false);
             setIsModalOpen(false);
         })
     }
@@ -74,7 +72,6 @@ function ManagementLabelModal(){
             <div className="font-14 color-356DFF font-w-500 cursor-pointer" onClick={()=>{
                 setIsModalOpen(true)
                 getDraftOrderTagList("").then(res=>{
-                    // setOptionalTags(res.data.optionalOrderTagList)
                     const newSelectedOrderTagList =  orderDraft.orderInfo.tags ? orderDraft.orderInfo.tags.split(",").map(item=>{
                         return {
                             referenceCount:1,
@@ -83,11 +80,9 @@ function ManagementLabelModal(){
                         }
                     }):[]
                     const newOptionalOrderTagLis = removeElements(res.data.optionalOrderTagList,newSelectedOrderTagList)
-
                     setSelectedTags(newSelectedOrderTagList)
                     setOptionalTags(newOptionalOrderTagLis)
-                }).catch(err=>{
-                    console.log(err)
+                }).catch(()=>{
                 })
             }}>管理</div>
             <Modal getContainer={()=>Ref.current!} title={<div>管理标签</div>} width={620} centered open={isModalOpen} onOk={submit} onCancel={cancel} 

@@ -1,12 +1,15 @@
 import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons"
-import { App, Button, Card, Checkbox, Flex, Form, Input, Select, Upload } from "antd"
+import { App, Card, Checkbox, Flex, Form, Input, Select, Upload } from "antd"
 import { history, useParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsConfigArray, upDataAddonsConfig } from "@/services/y2/api";
+import { getAddonsConfigArray, upDataAddonsConfig } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import axios from "axios";
 import modal from "antd/es/modal";
+import DangerButton from "@/components/Button/DangerButton";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import DefaultButton from "@/components/Button/DefaultButton";
 
 
 const { TextArea } = Input;
@@ -15,7 +18,7 @@ function ManualCollectionDetail() {
 
     const { message } = App.useApp();
 
-    const params = useParams();
+    const { id = "",languagesId = "2" } = useParams();
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -23,7 +26,7 @@ function ManualCollectionDetail() {
 
     const [isMaskVisible, setIsMaskVisible] = useState(false);
 
-    const [addonConfigForm,setAddonConfigForm] = useState();
+    const [addonConfigForm,setAddonConfigForm] = useState({});
     // 配置信息
     const [config,setConfig] = useState<any>({
         isAddressRequired:"0",
@@ -36,6 +39,7 @@ function ManualCollectionDetail() {
     });
 
     const [manualCollection,setManualCollection] = useState<any>([])
+
     const [manualCollectionData,setManualCollectionData] = useState<any>()
 
     const uploadButton = (
@@ -46,29 +50,40 @@ function ManualCollectionDetail() {
         </button>
     );
 
-    const stop = ()=>{
+    const handleOk = (confirm:any)=>{
+        upDataAddonsConfig({...manualCollectionData,status:0,config:config}).then(res=>{
+            message.success("支付方式已停用")
+        }).catch(()=>{}).finally(()=>{
+            confirm.destroy();
+        });
+    }
 
-        modal.confirm({
+    const handleCancel = (confirm:any)=>{
+        confirm.destroy();
+    }
+
+    const handleStop = ()=>{
+        const confirm = modal.confirm({
             title: '停用服务商？',
             icon: <ExclamationCircleFilled style={{color:"#F86140"}}/>,
             content: '停用后，网店客户将不可使用此服务商结账。',
             centered:true,
-            okText: '确认停用',
             okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
-            cancelText: '取消',
-            onOk:()=>{
-                upDataAddonsConfig({...manualCollectionData,status:0,config:config}).then(res=>{
-                    message.success("支付方式已停用")
-                })
-            }
+            footer:()=><>
+                <Flex justify="flex-end" gap={12}>
+                    <DefaultButton text={"取消"} onClick={()=>handleCancel(confirm)} />
+                    <DangerButton text="确认停用" onClick={()=>handleOk(confirm)} />
+                </Flex>
+            </>
         });
+        
     }
 
-    const upData = ()=>{
-        // console.log({...manualCollection,status:1,config:config})
-        upDataAddonsConfig({...manualCollection,languages_id:languages,status:1,config:config}).then(res=>{
+    // 更新
+    const submit = ()=>{
+        upDataAddonsConfig({...manualCollection,languages_id:languagesId,status:1,config:config}).then(res=>{
             message.success("已更新")
-        })
+        }).catch(()=>{});
     }
 
     // 凭证图片
@@ -96,42 +111,31 @@ function ManualCollectionDetail() {
 
     useEffect(()=>{
         // 多语言
-        let tempList = [];
-        if(languageList.length==0){
-            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
-                return {
-                    value: item.id,
-                    label: item.name
-                }
-            })
-            setLanguageList(tempList)
-        }
-
-        if(params.id=="0"){
-            // 货到付款
-            setManualCollection({
-                id:"0",
-                title:"货到付款",
-                languages_id:"2",
-                addons_id:"23",
-            })
+        // if(id=="0"){
+        //     // 货到付款
+        //     setManualCollection({
+        //         id:"0",
+        //         title:"货到付款",
+        //         languages_id:languagesId,
+        //         addons_id:"23",
+        //     })
+        // }else{
+        getAddonsConfigArray({
+            id:id,
+            languages_id:languagesId,
+            addons_id:"23"
+        }).then(res=>{
+            // 结构
+            setAddonConfigForm(res.data.addon.config)
+            // 配置
+            setConfig(JSON.parse(res.data.addon_config.config))
+            // 数据
+            setManualCollection(res.data.addon_config)
+            // 信息
+        }).catch(()=>{
+        }).finally(()=>{
             setIsSkeleton(false)
-        }else{
-            getAddonsConfigArray(params.id,"23").then(res=>{
-                console.log(res)
-                // 结构
-                setAddonConfigForm(res.data.addon.config)
-                // 配置
-                setConfig(JSON.parse(res.data.addon_config.config))
-                // 数据
-                setManualCollection(res.data.addon_config)
-                // // 信息
-                // setManualCollectionData(res.data.addon_config)
-                setIsSkeleton(false)
-                // // 配置信息
-            })
-        }
-        
+        })
     },[])
 
     return (
@@ -158,9 +162,7 @@ function ManualCollectionDetail() {
                                                 <div className="font-w-600">付款方式简介 (选填)</div>
                                                 <div className="font-12 color-7A8499" style={{marginTop:"8px"}}>* 您可以通过分点罗列、分段换行、控制每段的字符数等方式提升内容清晰度。</div>
                                             </div>
-                                            <div>
-                                                {/* <Select options={languageList} defaultValue={"2"} onChange={(value)=>setLanguages(value)} /> */}
-                                            </div>
+                                            <div></div>
                                         </Flex>
                                         <Form.Item label={null}>
                                             <TextArea value={manualCollection.summary} onChange={(e)=>{setManualCollection({...manualCollection,summary:e.target.value})}} style={{ height: 120, resize: 'none' }} showCount placeholder={`输入简介内容，如有多个内容，建议分段展示，如：\x0A1、需要注意的付款说明... \x0A2、....`} maxLength={500} />
@@ -169,7 +171,6 @@ function ManualCollectionDetail() {
                                         {Object.entries(addonConfigForm).map(([key, value])=>(
                                             <Form.Item key={key} label={<div className="font-w-600">{value.title}</div>}>
                                                 {(()=>{
-                                                    // console.log(config[key])
                                                     switch(value.type){
                                                         case "text":
                                                             return <Input placeholder={value.title} />;
@@ -250,8 +251,8 @@ function ManualCollectionDetail() {
                                 </div>
                             </Card>
                             <Flex justify="space-between">
-                                <Button onClick={stop} type="primary" style={{height:36,backgroundColor:"#F86140",color:"#FFFFFF"}}>停用 货到付款</Button>
-                                <Button onClick={upData} type="primary" style={{height:36}}>更新</Button>
+                                <DangerButton onClick={handleStop} text={"停用"} />
+                                <PrimaryButton onClick={submit} text={"更新"} />
                             </Flex>
                         </div>
                     </div>

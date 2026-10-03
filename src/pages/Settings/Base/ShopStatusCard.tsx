@@ -1,5 +1,3 @@
-import InputSearch from "@/components/Search/InputSearch";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Form, Input, Modal, Select, Switch, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";

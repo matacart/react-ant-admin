@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 import BillingAddressModal from './BillingAddressModal';
 import { DeleteIcon, EmailIcon, TelIcon } from '@/components/Icons/Icons';
 import orderDraft from '@/store/order/orderDraft';
-import { getAddressList } from '@/services/y2/api';
+import { getAddressList } from '@/services/y2/apiAppstore';
 
 // 新增类型定义
 interface ReceiverType {
@@ -71,8 +71,7 @@ function CustomInformationEdit() {
         customer_id:orderDraft.customerInfo.id
       }).then(res=>{
           orderDraft.setCustomerAddressList(res.data)
-      }).catch(err=>{ 
-          console.log(err)
+      }).catch(()=>{ 
       })
     }
   },[])

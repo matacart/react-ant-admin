@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { pauseOrderShipping } from "@/services/y2/apiStore";
+import { pauseOrderShipping } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 import { Flex, Form, Modal } from "antd";
 import { useEffect, useState } from "react";

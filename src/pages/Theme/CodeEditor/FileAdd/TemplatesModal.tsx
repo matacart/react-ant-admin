@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { addTemplateFile } from "@/services/y2/api";
+import { addTemplateFile } from "@/services/y2/apiTemplate";
 import codeEditor from "@/store/theme/codeEditor";
 import { Flex, Form, App, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";
@@ -253,48 +253,44 @@ function TemplatesModal({treeData,setTreeData}:LayoutModalType){
                 sourceFileName:fileSource,
                 duplicateFlag: true
             }).then(async res=>{
-                if(res.code == 0){
-                    // 获取文件信息
-                    const title = fullFileName.slice((fullFileName.lastIndexOf('/')+1));
-                    const newNode = {
-                        title: title,
+                // 获取文件信息
+                const title = fullFileName.slice((fullFileName.lastIndexOf('/')+1));
+                const newNode = {
+                    title: title,
+                    children: undefined,
+                    fileType: fileType,
+                };
+                // 插入新节点到树中
+                const {newTreeData,level} = insertNodeInTree(treeData, fileSource, newNode,fullFileName);
+                setTreeData(newTreeData)
+                codeEditor.setOpenFileList([
+                    ...codeEditor.openFileList,
+                    {
+                        active: false,
+                        checked: false,
                         children: undefined,
+                        dragOver: false,
+                        dragOverGapBottom: false,
+                        dragOverGapTop: false,
+                        expanded: false,
                         fileType: fileType,
-                    };
-                   // 插入新节点到树中
-                    const {newTreeData,level} = insertNodeInTree(treeData, fileSource, newNode,fullFileName);
-                    setTreeData(newTreeData)
-                    codeEditor.setOpenFileList([
-                        ...codeEditor.openFileList,
-                        {
-                            active: false,
-                            checked: false,
-                            children: undefined,
-                            dragOver: false,
-                            dragOverGapBottom: false,
-                            dragOverGapTop: false,
-                            expanded: false,
-                            fileType: fileType,
-                            halfChecked: false,
-                            key: fullFileName+"-"+level,
-                            languagesId: codeEditor.languageId??"2",
-                            loaded: false,
-                            loading: false,
-                            mode: codeEditor.mode,
-                            pos: "0-0-"+codeEditor.openFileList.length,
-                            selected: false,
-                            title: title,
-                            url: fullFileName,
-                        }
-                    ])
-                    await sleep(1000);
-                    // 激活文件
-                    codeEditor.setActiveFileKey(fullFileName+"-"+level);
-                    setOpen(false);
-                    form.resetFields();
-                }else{
-                    message.error(res.msg);
-                }
+                        halfChecked: false,
+                        key: fullFileName+"-"+level,
+                        languagesId: codeEditor.languageId??"2",
+                        loaded: false,
+                        loading: false,
+                        mode: codeEditor.mode,
+                        pos: "0-0-"+codeEditor.openFileList.length,
+                        selected: false,
+                        title: title,
+                        url: fullFileName,
+                    }
+                ])
+                await sleep(1000);
+                // 激活文件
+                codeEditor.setActiveFileKey(fullFileName+"-"+level);
+                setOpen(false);
+                form.resetFields();
             }).catch(()=>{
             }).finally(()=>{
                 setLoading(false); 

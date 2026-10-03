@@ -39,12 +39,8 @@ function ThemeSetting() {
             // sections: JSON.stringify(noticeEmail.sections),
             settingsData: JSON.stringify(settingsData),
         }).then(res => {
-            if (res.code == 0) {
-                // 更新最后保存时间戳
-                noticeEmail.setLastSavedAt(Date.now());
-            }
+            noticeEmail.setLastSavedAt(Date.now());
         }).catch(err => {
-            message.error(intl.formatMessage({ id: 'components.message.error' }));
         })
     }, 600), []);;
 

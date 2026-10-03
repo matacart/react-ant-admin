@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import NumberInput from "@/components/Input/NumberInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import { getMerchantWithdrawAdd, getMerchentBalance } from "@/services/y2/api";
+import { getMerchantWithdrawAdd, getMerchentBalance } from "@/services/y2/apiAppstore";
 import { Col, Flex, Form, App, Modal, Row, Spin, Tag } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
@@ -71,15 +71,10 @@ function WithdrawalModal(){
                 account_info:values.account,
                 status:"0",
             }).then(res=>{
-                if(res.code == 0){
-                    message.success("成功");
-                    form.resetFields();
-                    setOpen(false)
-                }else{
-                    message.error(res.msg);
-                }
-            }).catch(err=>{
-                message.error("失败");
+                message.success("成功");
+                form.resetFields();
+                setOpen(false)
+            }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
             })
@@ -95,9 +90,8 @@ function WithdrawalModal(){
                 setOpen(true);
                 setFormLoading(true);
                 getMerchentBalance().then(res=>{
-                    res.code == 0 && setMerchentBalance(res.data)
-                }).catch(err=>{
-                    console.log(err)
+                    setMerchentBalance(res.data)
+                }).catch(()=>{
                 }).finally(()=>{
                     setFormLoading(false)
                 })

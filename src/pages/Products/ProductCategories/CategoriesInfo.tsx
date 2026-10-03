@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import CategoriesMCE from "@/components/MCE/CategoriesMCE";
 import categories from "@/store/product/categories";
 import DefaultInput from "@/components/Input/DefaultInput";
-import { getCategorySelect } from "@/services/y2/api";
+import { getCategorySelect } from "@/services/y2/apiStore";
 import { useAbortController } from "@/hooks/customHooks";
 import globalStore from "@/store/globalStore";
 
@@ -26,10 +26,7 @@ function CategoriesInfo({form}:{form:any}) {
         },signal).then(res=>{
             const newTreeData = globalStore.buildTree(res.data)
             setTreeData(newTreeData)
-        }).catch(error=>{
-            if (error.name !== 'CanceledError') {
-                console.log(error)
-            }
+        }).catch(()=>{
         })
 
         // 初始化表单值

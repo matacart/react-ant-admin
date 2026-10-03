@@ -44,12 +44,9 @@ const SalesChannel = forwardRef<any, {dom:ReactNode}>(({dom}, ref) => {
     const installChannel = (sales:salesChannelItem)=>{
         setLoading(true);
         installSaleChannel(sales.id).then((res)=>{
-            if(res.code == 0){
-                setIsModalOpen(false);
-                history.push(`/channels/${sales.channelHandle}`);
-            }else{
-                message.error(res.msg);
-            }
+            setIsModalOpen(false);
+            history.push(`/channels/${sales.channelHandle}`);
+        }).catch(()=>{
         }).finally(()=>{
             setLoading(false);
         })
@@ -69,15 +66,12 @@ const SalesChannel = forwardRef<any, {dom:ReactNode}>(({dom}, ref) => {
                     <DangerButton loading={loading} onClick={()=>{
                         setLoading(true);
                         uninstallSaleChannel(sales.domainAppId).then((res)=>{
-                            if(res.code == 0){
-                                confirm.destroy();
-                                channels.setChannelList(channels.channelList.filter((item:any)=>item.appId != sales.id));
-                                if(`/channels/${sales.channelHandle}` == location.pathname){
-                                    history.push(`/`);
-                                }
-                            }else{
-                                message.error(res.msg);
+                            confirm.destroy();
+                            channels.setChannelList(channels.channelList.filter((item:any)=>item.appId != sales.id));
+                            if(`/channels/${sales.channelHandle}` == location.pathname){
+                                history.push(`/`);
                             }
+                        }).catch(()=>{
                         }).finally(()=>{
                             setLoading(false);
                         })
@@ -91,39 +85,32 @@ const SalesChannel = forwardRef<any, {dom:ReactNode}>(({dom}, ref) => {
 
     // 订到导航 is_pinned : 1 订到导航 0 取消订到导航
     const pinChannel = (sales:salesChannelItem)=>{
-        // setLoading(true);
         pinSaleChannel({
             domain_app_id:sales.domainAppId,
             is_pinned:sales.isPinned ? "0" : "1",
         }).then((res)=>{
-            if(res.code == 0){
-                message.success("成功");
-                setSalesChannelList(salesChannelList.map((item)=>item.id == sales.id ? {...item,isPinned:!item.isPinned} : item));
-                // channels
-                sales.isPinned ? channels.setChannelList(channels.channelList.filter((item:any)=>item.appId != sales.id)) : channels.setChannelList([...channels.channelList,{
-                    ...sales,
-                    appId:sales.id
-                }]);
-            }else{
-                message.error(res.msg);
-            }
+            message.success("成功");
+            setSalesChannelList(salesChannelList.map((item)=>item.id == sales.id ? {...item,isPinned:!item.isPinned} : item));
+            // channels
+            sales.isPinned ? channels.setChannelList(channels.channelList.filter((item:any)=>item.appId != sales.id)) : channels.setChannelList([...channels.channelList,{
+                ...sales,
+                appId:sales.id
+            }]);
+        }).catch(()=>{
         }).finally(()=>{
-            // setLoading(false);
         })
     }
 
     const init = ()=>{
         setLoading(true);
         getSaleChannelList().then((res)=>{
-            if(res?.code == 0){
-                let channelList: salesChannelItem[] = [];
-                let noChannelList: salesChannelItem[] = [];
-                res.data?.channels?.map((item:salesChannelItem)=>{
-                    item.isInstalled ? channelList.push(item) : noChannelList.push(item);
-                })
-                setSalesChannelList(channelList);
-                setNotSalesChannelList(noChannelList);
-            }
+            let channelList: salesChannelItem[] = [];
+            let noChannelList: salesChannelItem[] = [];
+            res.data?.channels?.map((item:salesChannelItem)=>{
+                item.isInstalled ? channelList.push(item) : noChannelList.push(item);
+            })
+            setSalesChannelList(channelList);
+            setNotSalesChannelList(noChannelList);
         }).catch(()=>{
         }).finally(()=>{
             setLoading(false);

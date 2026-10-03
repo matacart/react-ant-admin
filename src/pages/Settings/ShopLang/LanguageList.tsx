@@ -15,7 +15,8 @@ import { App, Button, Checkbox, Flex, Modal, Skeleton, Spin, Table, Tag } from '
 import type { TableColumnsType } from 'antd';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
 import styled from 'styled-components';
-import { addLanguages, delLanguages, getLanguagesList } from '@/services/y2/api';
+import { addLanguages, delLanguages } from '@/services/y2/apiAppstore';
+import { getLanguagesList } from '@/services/y2/apiAppstore';
 import _ from 'lodash';
 import cookie from 'react-cookies';
 import DefaultButton from '@/components/Button/DefaultButton';
@@ -152,15 +153,11 @@ export default function LanguageList() {
     const deleteLanguages = (delModel:any,record:any)=>{
         setLoading(true)
         delLanguages(record.language.id).then(res=>{
-            if(res.code == 0){
-                let newDataSource = [...dataSource]
-                newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
-                setDataSource(newDataSource)
-                getLanguages()
-            }
-        }).catch(err=>{
-            message.error("err")
-        }).finally(()=>{
+            let newDataSource = [...dataSource]
+            newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
+            setDataSource(newDataSource)
+            getLanguages()
+        }).catch(()=>{}).finally(()=>{
             delModel.destroy();
             setLoading(false)
         })
@@ -175,11 +172,9 @@ export default function LanguageList() {
             sort:"0",
             checked:"1"
         }]).then(async res=>{
-            if(res.code == 0){
-                await sleep(2000);
-                getLanguages();
-            }
-        })
+            await sleep(2000);
+            getLanguages();
+        }).catch(()=>{});
     }
     const onDragEnd = ({ active, over }: DragEndEvent) => {
         if (active.id !== over?.id) {
@@ -189,7 +184,6 @@ export default function LanguageList() {
             const overIndex = befortDataSource.findIndex((record) => record.key === over?.id);
             afterDataSource = arrayMove(befortDataSource, activeIndex, overIndex);
             setDataSource(afterDataSource);
-
             addLanguages(afterDataSource.map((item:any,index:number)=>{
                 return{
                     domain_id:cookie.load("domain")?.id,
@@ -199,31 +193,9 @@ export default function LanguageList() {
                     sort:index+1
                 }
             })).then(res=>{
-                if(res.code == 0){
-                    message.success("更新失败")
-                    setDataSource(befortDataSource)
-                }else{
-                    message.success("更新成功")
-                }
-            })
-            // setDataSource((prevState) => {
-            //     const activeIndex = prevState.findIndex((record) => record.key === active?.id);
-            //     const overIndex = prevState.findIndex((record) => record.key === over?.id);
-            //     addLanguages(prevState.map((item:any,index:number)=>{
-            //         return{
-            //             domain_id:cookie.load("domain")?.id,
-            //             languages_id:item.language.id,
-            //             is_default:item.language.is_default,
-            //             checked:item.language.checked,
-            //             sort:index+1
-            //         }
-            //     })).then(res=>{
-            //         // return res
-                    
-            //     })
-            //     // 更新排序
-            //     return arrayMove(prevState, activeIndex, overIndex);
-            // });
+                message.success("更新成功")
+                setDataSource(befortDataSource)
+            }).catch(()=>{})
         }
     };
     // 全选
@@ -262,14 +234,11 @@ export default function LanguageList() {
         }).filter(item=>item!==undefined)
         setLoading(true)
         addLanguages(langs).then(async res=>{
-            if(res.code == 0){
-                setIsCheckedAll(false)
-                setIsLangModalOpen(false)
-                await sleep(2000);
-                getLanguages()
-            } 
-        }).catch(err=>{
-            message.error("err")
+            setIsCheckedAll(false)
+            setIsLangModalOpen(false)
+            await sleep(2000);
+            getLanguages()
+        }).catch(()=>{
         }).finally(()=>{
             setLoading(false)
         })
@@ -284,14 +253,12 @@ export default function LanguageList() {
     const getLanguages = ()=>{
         setIsLoading(true)
         getLanguagesList().then(res=>{
-            if(res.code == 0){
-                setLanguages(res.data.filter((item:any)=>item.checked!=="1"))
-                // 已有语言不可添加
-                setHasLanguages(res.data.filter((item:any)=>item.checked=="1"))
-                // 将数据根据sort排序
-                const languages = res.data.filter((item:any)=>item.checked=="1").sort((a:any,b:any)=>a.sort-b.sort)
-                setDataSource(languages.map((item:any)=>({key:item.id.toString(),language:item})))
-            }
+            setLanguages(res.data.filter((item:any)=>item.checked!=="1"))
+            // 已有语言不可添加
+            setHasLanguages(res.data.filter((item:any)=>item.checked=="1"))
+            // 将数据根据sort排序
+            const languages = res.data.filter((item:any)=>item.checked=="1").sort((a:any,b:any)=>a.sort-b.sort)
+            setDataSource(languages.map((item:any)=>({key:item.id.toString(),language:item})))
         }).catch(err=>{
             console.log(err)
         }).finally(()=>{

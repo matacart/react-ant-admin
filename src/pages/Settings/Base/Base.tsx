@@ -12,7 +12,7 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
 import cookie from 'react-cookies'
 import PrimaryButton from "@/components/Button/PrimaryButton"
-import { getStoreInfo, setStoreInfo } from "@/services/y2/api"
+import { getStoreInfo, setStoreInfo } from "@/services/y2/apiAppstore"
 
 function Base() {
 
@@ -25,18 +25,15 @@ function Base() {
     const submit = () => {
         setLoading(true)
         setStoreInfo(baseInfoStore.storeInfo).then(res=>{
-            if(res.code == 0){
-                cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.storeInfo.timezone)[0]), { path: '/' });
-                const newDomain = {
-                    ...cookie.load("domain") || {},
-                    store_name:baseInfoStore.storeInfo.store_name,
-                    store_logo:baseInfoStore.storeInfo.store_logo,
-                }
-                cookie.save("domain", newDomain, { path: '/' });
-                message.success('更新成功');
+            cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.storeInfo.timezone)[0]), { path: '/' });
+            const newDomain = {
+                ...cookie.load("domain") || {},
+                store_name:baseInfoStore.storeInfo.store_name,
+                store_logo:baseInfoStore.storeInfo.store_logo,
             }
-        }).catch(err=>{
-            message.error(err.message);
+            cookie.save("domain", newDomain, { path: '/' });
+            message.success('更新成功');
+        }).catch(()=>{
         }).finally(()=>{
             setLoading(false);
         })
@@ -45,9 +42,8 @@ function Base() {
     useEffect(()=>{
         const lang = cookie.load("shop_lang") || '2'
         getStoreInfo({languages_id:lang}).then(res=>{
-            baseInfoStore.setStoreInfo(res)
-        }).catch(err=>{
-            message.error(err.message)
+            baseInfoStore.setStoreInfo(res.data)
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })

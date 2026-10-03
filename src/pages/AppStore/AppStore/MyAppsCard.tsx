@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { EllipsisOutlined, SearchOutlined } from '@ant-design/icons';
 import { NailIcon } from '@/components/Icons/Icons';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
-import { getAppStores, getDomainAppStores } from '@/services/y2/api';
+import { getAppStores } from '@/services/y2/apiAppstore';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
 export default function MyAppsCard() {
@@ -38,7 +38,6 @@ export default function MyAppsCard() {
 
   useEffect(()=>{
     getAppStores().then(res=>{
-      // console.log(res);
       setAppList(res.data)
     }).catch(err=>{
       console.log(err);

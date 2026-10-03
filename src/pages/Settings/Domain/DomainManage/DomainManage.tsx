@@ -5,7 +5,7 @@ import styled from "styled-components"
 import SuccessTag from "@/components/Tag/SuccessTag";
 import { useEffect, useState } from "react";
 import domain from "@/store/settings/domain"
-import { addDomainName, getDomainNameList } from "@/services/y2/api";
+import { addDomainName, getDomainNameList } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultButton from "@/components/Button/DefaultButton";
@@ -82,7 +82,7 @@ function DomainManage() {
                                 newData.splice(index,1)
                                 setData(newData)
                                 message.success("删除成功")
-                            })
+                            }).catch(()=>{})
                         }} 
                         title="确认要删除该子域名吗？" 
                         content={"删除后，该子域名将无法定向至主域名。"}
@@ -100,18 +100,17 @@ function DomainManage() {
     const handleOk = ()=>{
         form.validateFields().then(values=>{
             addDomainName(values.primaryDoamin,otherDomain).then(res=>{
-                if(res.code == 0){
-                    let newData = [...data]
-                    newData.forEach(element => {
-                        if(element.primaryName == ""){
-                            element.name = values.primaryDoamin
-                        }else{
-                            element.primaryName = values.primaryDoamin
-                        }
-                    });
-                    setData(newData);
-                    cookie.save("domain",{...cookie.load("domain"),domain_primary:values.primaryDoamin},{path:'/'})
-                };
+                let newData = [...data]
+                newData.forEach(element => {
+                    if(element.primaryName == ""){
+                        element.name = values.primaryDoamin
+                    }else{
+                        element.primaryName = values.primaryDoamin
+                    }
+                });
+                setData(newData);
+                cookie.save("domain",{...cookie.load("domain"),domain_primary:values.primaryDoamin},{path:'/'})
+            }).catch(()=>{}).finally(()=>{
                 form.resetFields();
                 setIsModalOpen(false);
             })
@@ -168,7 +167,7 @@ function DomainManage() {
                 })
             });
             setData(newData)
-        })
+        }).catch(()=>{})
     },[])
 
     return (

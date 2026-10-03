@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined } from "@ant-design/icons"
 import { App, Flex, Tabs, TabsProps } from "antd"
 import { history, useParams } from "@umijs/max"
 import styled from "styled-components"
@@ -8,7 +8,7 @@ import PermissionConfigurationCard from "./PermissionConfigurationCard"
 import APICredentialsCard from './APICredentialsCard';
 import AppSettingsCard from "./AppSettingsCard"
 import OperationRecordCard from "./OperationRecordCard"
-import { getAppInfo, unInstallDevApp } from "@/services/y2/api"
+import { getAppInfo, unInstallDevApp } from "@/services/y2/apiAppstore"
 import customAppConfig from "@/store/appStore/customAppConfig"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { observer } from "mobx-react-lite"
@@ -57,18 +57,15 @@ function CustomAppConfig() {
             }).catch((error)=>{
                 console.log(error)
             })
-        }).catch((error)=>{
-            console.log(error)
+        }).catch(()=>{
         })
     }
 
     useEffect(()=>{
         params.id !== undefined && getAppInfo({id:params.id,langId:"1"}).then(res=>{
-            if(res.code == 0){
-                customAppConfig.setAppInfo(res.data)
-                setIsSkeleton(false)
-            }
-        })
+            customAppConfig.setAppInfo(res.data)
+            setIsSkeleton(false)
+        }).catch(()=>{});
     },[])
 
     return (

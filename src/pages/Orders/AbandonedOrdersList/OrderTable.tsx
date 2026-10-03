@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import { useAbortController } from '@/hooks/customHooks';
-import { searchAbandonedOrder } from '@/services/y2/ApiAbandonedOrder';
+import { searchAbandonedOrder } from '@/services/y2/apiAbandonedOrder';
 import abandonedOrderList from '@/store/order/abandonedOrder/abandonedOrderList';
 import DefaultButton from '@/components/Button/DefaultButton';
 import { currencyPrecision } from '@/utils/common';
@@ -150,6 +150,7 @@ function OrderTable() {
       keyword:abandonedOrderList.keyword
     }).then(res=>{
       setData(res?.data?.list || []);
+    }).catch(()=>{
     }).finally(()=>{
       setLoading(false);
     })

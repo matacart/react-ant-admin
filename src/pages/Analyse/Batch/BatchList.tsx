@@ -2,11 +2,10 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import DefaultTag from "@/components/Tag/DefaultTag";
 import WarningTag from "@/components/Tag/WarningTag";
 import { getTaskList, JobExecResult } from "@/services/y2/api";
-import { Card, Flex, Space, Table, TableProps, Tag } from "antd";
+import { Flex, Space, Table, TableProps, Tag } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import dayjs from 'dayjs';
-import { classNames } from 'classnames';
 
 interface DataType {
     failed_count: string;
@@ -17,11 +16,10 @@ interface DataType {
     task_status: string;
     started_time:string;
     total_count:string;
+    file_ext:string;
 }
 
-function BatchList({progressData,status}:{progressData:any,status:string}){
-
-    const initialRef = useRef(true)
+function BatchList({status}:{status:string}){
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -84,8 +82,7 @@ function BatchList({progressData,status}:{progressData:any,status:string}){
             render: (_, record) => (
                 <Flex vertical gap={8}>
                     <DefaultButton text="全部记录" onClick={()=>{
-                        JobExecResult(record.id).then(res=>{
-                            // console.log(res)
+                        JobExecResult(record.id).then((res:any)=>{
                             // 转为blob对象
                             const blob = new Blob([res])
                             // 为blob创建URL
@@ -95,6 +92,8 @@ function BatchList({progressData,status}:{progressData:any,status:string}){
                             link.download = `${record.task_name}.${record.file_ext}`; //文件名字 
                             link.href = csvUrl;
                             link.click();
+                        }).catch(err=>{
+                            console.log(err)
                         })
                     }} />
                     {/* <DefaultButton text="失败记录" /> */}
@@ -105,18 +104,18 @@ function BatchList({progressData,status}:{progressData:any,status:string}){
 
     const [loading,setLoading] = useState(false)
 
-    const [data,setData] = useState(progressData.data)
+    const [data,setData] = useState<DataType[]>([]);
 
     const [pagination,setPagination] = useState({
         page: 1,
         pageSize: 10,
-        total: progressData.count,
+        total: 0,
     })
 
     // 获取批处理进度
     const fetchProgressList = (page:number,limit:number,status:string)=>{
         setLoading(true)
-        getTaskList(page,limit,status).then(res=>{
+        getTaskList({page,limit,taskStatus:status}).then((res:any)=>{
           setData(res.data)
           setPagination({
             ...pagination,
@@ -125,20 +124,14 @@ function BatchList({progressData,status}:{progressData:any,status:string}){
             total: res.count,
           })
         }).catch(err=>{
-    
         }).finally(()=>{
           setLoading(false)
         })
     }
 
+
     useEffect(()=>{
-        // if (initialRef.current) { 
-        //     // 跳过首次加载
-        //     initialRef.current = false
-        // } else {
-        // 执行请求
         fetchProgressList(pagination.page,pagination.pageSize,status)
-        // }
     },[status])
 
     return(

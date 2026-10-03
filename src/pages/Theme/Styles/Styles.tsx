@@ -4,7 +4,7 @@ import { Col, Flex, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Fooder from "./Fooder";
-import { installTemplate } from "@/services/y2/api";
+import { installTemplate } from "@/services/y2/apiTemplate";
 import { useParams } from "react-router-dom";
 
 
@@ -317,10 +317,9 @@ function Styles(){
     }, []);
 
     const install = ()=>{
-
-        // console.log(params)
         installTemplate(params.templateId??"").then((res)=>{
-            console.log(res)
+            // message.success("安装成功", 1)
+        }).catch(()=>{
         })
     }
 

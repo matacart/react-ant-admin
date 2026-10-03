@@ -4,7 +4,7 @@ import { Modal, Flex, App } from "antd"
 import { useState } from "react"
 import UploadCompressedFile from "./UploadCompressedFile"
 import { useSleep } from "@/hooks/customHooks"
-import { uploadTemplate } from "@/services/y2/api"
+import { uploadTemplate } from "@/services/y2/apiTemplate"
 function UploadTemplateModal({pagination,setPagination,getTemplateList}:{pagination:any,setPagination:(pagination:any)=>void,getTemplateList:()=>void}) {
 
     const { message } = App.useApp();
@@ -30,36 +30,13 @@ function UploadTemplateModal({pagination,setPagination,getTemplateList}:{paginat
           ...pagination,
           current: 1,
         })
-      }).catch((err: any) => {
-
+      }).catch(() => {
       }).finally(() => {
         setStatus("");
         setFile(null);
         setLoading(false);
         setIsOpen(false)
       })
-      // axios.post('/api/ApiTemplate/template_upload',formData).then(async (res: any) => {
-      //   if(res.data.code == 0){
-      //     message.success("上传成功", 1)
-      //     // setFileList([...fileList,{
-      //     //   uid:(fileList.length).toString(),
-      //     //   name: res.data.data.src.toString(),
-      //     //   status: 'done',
-      //     //   url:res.data.data.src.toString(),
-      //     // }]);
-      //     // product.setProductInfo(
-      //     //   {
-      //     //     ...product.productInfo,
-      //     //     additional_image:[...product.productInfo.additional_image,res.data.data.src.toString()]
-      //     //   }
-      //     // )
-      //   }else{
-      //     message.error("上传失败", 1)
-      //   }
-      // }).catch((err: any) => {
-      // }).finally(() => {
-       
-      // })
     }
 
     const closeModal = ()=>{

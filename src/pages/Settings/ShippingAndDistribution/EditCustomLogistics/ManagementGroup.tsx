@@ -7,7 +7,7 @@ import generalFreight from "@/store/settings/ShippingAndDistribution/generalFrei
 import DefaultButton from "@/components/Button/DefaultButton";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { transformConfig } from "@/utils/dataStructure";
-import { setAddonsConfigs } from "@/services/y2/api";
+import { setAddonsConfigs } from "@/services/y2/apiAppstore";
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import EditFreightModal from "./EditFreightModal";
@@ -133,7 +133,7 @@ function ManagementGroup() {
             }
             message.success("成功")
         }).catch(err=>{
-            message.error("失败")
+            console.log(err)
         })
     }
 

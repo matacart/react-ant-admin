@@ -2,7 +2,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Card, Col, Flex, Form, Modal, Popover, Row, Select } from "antd";
 import styled from "styled-components";
 import { SetStateAction, useEffect, useRef, useState } from "react";
-import { getAddWarehouseList, getPurchaseCurrencyList, getSupplier, selectSupplier } from "@/services/y2/api";
+import { getAddWarehouseList } from "@/services/y2/apiStore";
+import { getPurchaseCurrencyList,selectSupplier } from "@/services/y2/apiAppstore";
 import AddSupplierModal from "../AddSupplierModal";
 import EditSupplierModal from "../EditSupplierModal";
 import purchaseOrderEdit from "@/store/product/purchaseOrder/purchaseOrderEditStore";
@@ -36,33 +37,29 @@ function LocationsCard() {
     function getSupplierList(){
         selectSupplier().then(res=>{
             let options:supplierOptions[] = []
-            if(res.code == 0){
-                setSupplierList(res.data);
-                res.data.forEach((e:any) => {
-                    options.push({
-                        label:e.name,
-                        value:e.id
-                    })
-                });
-            }
+            setSupplierList(res.data);
+            res.data.forEach((e:any) => {
+                options.push({
+                    label:e.name,
+                    value:e.id
+                })
+            });
             setSupplierOptions(options)
         })
     }
     // 目的地--列表
     function getWarehouseAddressList(){
         getAddWarehouseList().then(res=>{
-            if(res.code == 0){
-                setWarehouseAddressListData(res.data)
-                let newList:any = []
-                res.data.forEach((e:any) => {
-                    newList.push({
-                        label:e.name,
-                        value:e.id
-                    })
-                });
-                setWarehouseAddressList(newList);
-            }
-        })
+            setWarehouseAddressListData(res.data)
+            let newList:any = []
+            res.data.forEach((e:any) => {
+                newList.push({
+                    label:e.name,
+                    value:e.id
+                })
+            });
+            setWarehouseAddressList(newList);
+        }).catch(()=>{})
     }
 
     // 供应商
@@ -127,18 +124,16 @@ function LocationsCard() {
 
         // 供应商货币
         getPurchaseCurrencyList().then(res=>{
-            if(res.code == 0){
-                let newList:any = []
-                console.log(res.data)
-                res.data.forEach((e:any) => {
-                    newList.push({
-                        label:e.title,
-                        value:e.code
-                    })
-                });
-                setPurchaseCurrencyList(newList)
-            }
-        })
+            let newList:any = []
+            console.log(res.data)
+            res.data.forEach((e:any) => {
+                newList.push({
+                    label:e.title,
+                    value:e.code
+                })
+            });
+            setPurchaseCurrencyList(newList)
+        }).catch(()=>{})
     },[])
 
     return(

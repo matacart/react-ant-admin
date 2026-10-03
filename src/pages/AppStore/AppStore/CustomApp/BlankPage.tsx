@@ -3,7 +3,7 @@ import { history } from '@umijs/max';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { creatAppStore, getEmployeeList } from '@/services/y2/api';
+import { creatAppStore, getEmployeeList } from '@/services/y2/apiAppstore';
 import LicensesAndTerms from './LicensesAndTerms';
 
 function BlankPage() {
@@ -22,15 +22,10 @@ function BlankPage() {
             setIsModalOpen(false)
             // 提交表单
             creatAppStore(values).then(res=>{
-                console.log(res)
-                res.code == 0 && message.success("创建应用成功");
-            })
-
+                message.success("创建应用成功");
+            }).catch(()=>{})
         }).catch((errorInfo)=>{
-            // console.log(errorInfo)
         }) 
-       
-        
     }
 
     useEffect(()=>{
@@ -42,7 +37,7 @@ function BlankPage() {
                 }
             })
             setEmployeeList(newEmployeeList)
-        })
+        }).catch(()=>{})
     },[])
 
     return(

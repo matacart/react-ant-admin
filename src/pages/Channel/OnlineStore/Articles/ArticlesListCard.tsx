@@ -7,7 +7,7 @@ import SearchInput from "@/components/Input/SearchInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { delArticles, getArticleList } from "@/services/y2/api";
+import { delArticles, getArticleList } from "@/services/y2/apiArticle";
 import DefaultTag from "@/components/Tag/DefaultTag";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
@@ -121,9 +121,7 @@ function ArticlesListCard() {
                         delArticles(record.id).then(()=>{
                           setData(data.filter((item:DataType) => item.id !== record.id))
                           message.success("删除成功")
-                        }).catch(()=>{
-                          console.log("删除失败")
-                        })
+                        }).catch(()=>{})
                     }} 
                     title="博客删除后无法恢复，确认是否继续？" 
                     content={" "}
@@ -173,7 +171,11 @@ function ArticlesListCard() {
     // 获取文章列表
     const fetchArticleList = (page:number,limit:number,lang:string)=>{
       setLoading(true)
-      getArticleList(page.toString(),limit.toString(),lang).then((res:any)=>{
+      getArticleList({
+        page: page.toString(),
+        limit: limit.toString(),
+        languages_id: lang
+      }).then((res:any)=>{
         setData(res.data)
         setPagination({
           ...pagination,
@@ -182,7 +184,6 @@ function ArticlesListCard() {
           total: res.count
         })
       }).catch(err=>{
-  
       }).finally(()=>{
         setLoading(false)
       })

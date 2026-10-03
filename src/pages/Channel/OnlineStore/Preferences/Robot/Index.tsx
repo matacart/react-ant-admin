@@ -28,9 +28,7 @@ function Index(){
             robots_content:code,
         }).then((res)=>{
             message.success("更新成功");
-        }).catch(()=>{
-            message.error("更新失败");
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setLoading(false);
         })
     }
@@ -38,25 +36,15 @@ function Index(){
     // 重置为默认
     const reset = ()=>{
         resetRobotsTxtConfig().then((res)=>{
-            // 重置成功后，刷新当前页面的robots.txt配置
-            if(res.code == 0){
-                getRobotsTxtConfig().then((res)=>{
-                    res.code == 0 && setCode(res.data || "")
-                })
-            }
+            getRobotsTxtConfig().then((res)=>setCode(res.data || "")).catch(()=>{});
         }).catch(()=>{
-            message.error("重置失败");
         }).finally(()=>{
             setLoading(false);
         })
     }
 
     useEffect(()=>{
-        getRobotsTxtConfig().then((res)=>{
-            res.code == 0 && setCode(res.data || "")
-        })
-
-        
+        getRobotsTxtConfig().then((res)=>setCode(res.data || "")).catch(()=>{});
     },[])
 
     return (

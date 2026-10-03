@@ -5,7 +5,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import DefaultButton from "@/components/Button/DefaultButton";
 import { useEffect, useState } from "react";
-import { deleteVersion, getTemplateInstanceList, getTemplateInstanceUsing, setInstanceStatus } from "@/services/y2/api";
+import { deleteVersion, getTemplateInstanceList, getTemplateInstanceUsing, setInstanceStatus } from "@/services/y2/apiTemplate";
 import { observer } from "mobx-react-lite";
 import shopSetting, { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import dayjs from 'dayjs';
@@ -55,15 +55,12 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
       limit: pagination.pageSize,
       languages_id:shopSetting.languagesId,
     }).then((res:any)=>{
-      if(res?.code == 0){
-        shopSetting.setTemplateInstanceList(res.data);
-        setPagination({
-          ...pagination,
-          total:res.count
-        })
-      }
+      shopSetting.setTemplateInstanceList(res.data);
+      setPagination({
+        ...pagination,
+        total:res.count
+      })
     }).catch(err=>{
-      console.log(err)
     }).finally(()=>{
     })
   }
@@ -93,7 +90,6 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
     getTemplateInstanceUsing(shopSetting.languagesId).then((res:any)=>{
       shopSetting.setTemplateInstanceUsing(res.data)
     }).catch(err=>{
-      console.log(err)
     }).finally(()=>{
       setInstanceUsingLoading(false);
     })
@@ -180,7 +176,7 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                             key: '2',
                           },
                           {
-                            label: <VersionRepairModal template={ctemplateInstanceUsing || null} />,
+                            label: <VersionRepairModal template={shopSetting.templateInstanceUsing || null} />,
                             key: '3',
                           }
                         ]}} trigger={['click']} text="版本" />
@@ -326,21 +322,19 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                       status:1,
                                       languages_id:shopSetting.languagesId
                                     }).then(async res=>{
-                                      const { data } = await getTemplateInstanceUsing(shopSetting.languagesId) as any;
-                                      shopSetting.setTemplateInstanceUsing(data as TemplateInstance ?? null);
+                                      getTemplateInstanceUsing(shopSetting.languagesId).then(res=>{
+                                        shopSetting.setTemplateInstanceUsing(res.data ?? null);
+                                      }).catch(err=>{})
                                       getTemplateInstanceList({
                                         page: pagination.current,
                                         limit: pagination.pageSize
                                       }).then((res:any)=>{
-                                        if(res?.code== 0){
-                                          shopSetting.setTemplateInstanceList(res.data);
-                                          setPagination({
-                                            ...pagination,
-                                            total:res.count
-                                          })
-                                        }
+                                        shopSetting.setTemplateInstanceList(res.data);
+                                        setPagination({
+                                          ...pagination,
+                                          total:res.count
+                                        })
                                       }).catch(err=>{
-                                        console.log(err)
                                       })
                                     })
                                   }}>发布</a>,
@@ -383,14 +377,12 @@ function MyStylesCard({ onSwitchToStore }: MyStylesCardProps) {
                                                 id:template.id
                                               }).then(res=>{
                                                 message.success("删除成功")
-                                                // 
                                                 pagination.current == 1 && getTemplateList();
                                                 setPagination({
                                                   ...pagination,
                                                   current: 1,
                                                 })
-                                              }).catch(err=>{
-                                                message.error("删除失败")
+                                              }).catch(()=>{
                                               }).finally(()=>{
                                                 setLoading(false)
                                                 newModal.destroy()

@@ -11,6 +11,7 @@ import purchaseOrderEdit from "@/store/product/purchaseOrder/purchaseOrderEditSt
 import { observer } from "mobx-react-lite";
 import RemarkCard from "./RemarkCard";
 import { useSleep } from "@/hooks/customHooks";
+import { delPurchaseOrders } from "@/services/y2/apiStore";
 
 function OldPurchaseOrder(){
 
@@ -80,12 +81,11 @@ function OldPurchaseOrder(){
 
     // 删除采购订单
     const deletePurchaseOrder = async () => {
-        purchaseOrderEdit.deletePurchaseOrder().then(async res=>{
-            if(res.code == 0){
-                message.success("删除成功");
-                await sleep(2000);
-                history.push("/products/purchase_orders")
-            }
+        delPurchaseOrders(purchaseOrderEdit.id).then(async res=>{
+            message.success("删除成功");
+            await sleep(2000);
+            history.push("/products/purchase_orders")
+        }).catch(()=>{
         })
     }
 

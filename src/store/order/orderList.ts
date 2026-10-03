@@ -2,6 +2,18 @@ import { makeAutoObservable } from "mobx";
 import cookie from 'react-cookies';
 
 
+export interface MoneyType {
+  amount:number;
+  currencyCode:string;
+}
+
+
+export interface AmountSet {
+  marketMoney:MoneyType;
+  settleMoney:MoneyType;
+  storeMoney:MoneyType;
+}
+
 class OrderList{
     constructor() {
         makeAutoObservable(this)

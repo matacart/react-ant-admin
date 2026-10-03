@@ -105,6 +105,10 @@ class ProductList {
     // 导出状态
     exportTask = {
         status:"",
+        isBackstage:false,
+        failed_count:0,
+        success_count:0,
+        total_count:0
     }
     setExportTask = (value: any) => {
         this.exportTask = value;

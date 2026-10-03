@@ -1,7 +1,7 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
-import { templateRename } from "@/services/y2/api";
+import { templateRename } from "@/services/y2/apiTemplate";
 import shopSetting, { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import { Flex, Form, Modal } from "antd";
 import { useState } from "react";
@@ -14,7 +14,6 @@ function RenameModal({template}:{template:TemplateInstance | null}){
     const [form] = Form.useForm();
 
     const submit = () => {
-
         form.validateFields().then(values=>{
             if(template){
                 templateRename({
@@ -34,12 +33,11 @@ function RenameModal({template}:{template:TemplateInstance | null}){
                     }else{
                         shopSetting.setTemplateInstanceUsing({...template,template_name:values.name})
                     }
+                    setOpen(false)
+                }).catch(()=>{
                 })
             }
-            setOpen(false)
         }).catch(()=>{
-            // 表单未通过
-            console.log("表单未通过")
         })
     }
 

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Divider } from 'antd';
 import { history, useSearchParams } from '@umijs/max';
 import { observer } from 'mobx-react-lite';
-import { addCustomerPage, getCustomerPage } from '@/services/y2/api';
+import { addCustomerPage, getCustomerPage } from '@/services/y2/apiAppstore';
 import { useEffect, useState } from 'react';
 import customPage from '@/store/channel/customPage/customPage';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
@@ -38,11 +38,8 @@ function EditPage(){
 
     useEffect(()=>{
         getCustomerPage(id,langId).then(res=>{
-            if(res.code == 0){
-                customPage.setCustomPage(res.data)
-            }
-        }).catch(err=>{
-            console.log(err)
+            customPage.setCustomPage(res.data)
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })
@@ -53,13 +50,12 @@ function EditPage(){
         form.validateFields().then(values => {
             setLoading(true);
             addCustomerPage(customPage.customPage).then(res=>{
-                res.code == 0 && message.success('修改内容已更新')
-            }).catch(err=>{
-                message.error('更新失败')
+                message.success('修改内容已更新')
+            }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
             })
-        }).catch((errorInfo) => {
+        }).catch(() => {
         });
     }
 

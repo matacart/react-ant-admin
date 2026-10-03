@@ -1,6 +1,6 @@
 
-import { getAppActionlogs } from "@/services/y2/api";
-import { Button, Card, Table, TableProps } from "antd"
+import { getAppActionlogs } from "@/services/y2/apiAppstore";
+import { Card, Table, TableProps } from "antd"
 import { useEffect } from "react";
 import styled from "styled-components"
 
@@ -56,8 +56,7 @@ function OperationRecordCard() {
 
     useEffect(()=>{
         getAppActionlogs().then(res=>{
-            console.log(res)
-        })
+        }).catch(()=>{})
     },[])
 
     return (

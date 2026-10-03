@@ -6,7 +6,7 @@ import TagAutoComplete from "@/components/AutoComplete/TagAutoComplete";
 import { useEffect, useState } from "react";
 import { CloseIcon } from "@/components/Icons/Icons";
 import ManagementLabelModal from "../Modal/ManagementLabelModal";
-import { addOrderTag, removeOrderTag } from "@/services/y2/api";
+import { addOrderTag, removeOrderTag } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 
 function OrdersLabelCard() {
@@ -29,9 +29,7 @@ function OrdersLabelCard() {
                 label:value,
                 value:value
             }])
-        }).catch(error=>{
-
-        })
+        }).catch(error=>{})
     }
     // 删除标签
     const removeTag = async (value:any)=>{

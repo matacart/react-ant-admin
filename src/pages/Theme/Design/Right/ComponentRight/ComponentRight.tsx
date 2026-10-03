@@ -64,7 +64,7 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
             const currentUpdatePromise = (async () => {
                 if(!editor.component) return;
                 // 更新前的状态
-                let oldSections;
+                let oldSections:any[] = [];
                 if(editor.component?.type == "section"){
                     oldSections = editor.templateData.filter((res:any)=>res.type !== "TEMPLATE")
                 }
@@ -75,7 +75,7 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                 await editor.updateComponentSettings(editor.component.id,{
                     [item.id]:value
                 })
-                let newSections;
+                let newSections:any[] = [];
                 if(editor.component?.type == "section"){
                     newSections = editor.templateData.filter((res:any)=>res.type !== "TEMPLATE")
                 }
@@ -92,9 +92,8 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                     sections: JSON.stringify(newSections)
                 };
                 // 执行操作
-                const newData = await templateUpdate(operationData);
-                if(newData){
-                    // 保存操作到历史记录
+                templateUpdate(operationData).then(res=>{
+                   // 保存操作到历史记录
                     editor.addToOperationHistory({
                         type: 'templateUpdate',
                         undoData: {
@@ -107,8 +106,8 @@ function ComponentRight({templateUpdatePromiseRef}:{templateUpdatePromiseRef: Re
                         },
                         timestamp: Date.now()
                     });
-                    // editor.setOseId(newData.oseid);
-                }
+                }).catch(err=>{
+                })
                 editor.setIsSaveData(true);
             })();
             // 将当前操作的 promise 存储起来

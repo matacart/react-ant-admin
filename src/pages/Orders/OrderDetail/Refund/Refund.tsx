@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { getOrderDetail } from '@/services/y2/apiStore';
+import { getOrderDetail } from '@/services/y2/apiOrders';
 import { useParams } from 'react-router-dom';
 import Abstract from './Abstract';
 import RefundAmount from './RefundAmount';
@@ -41,11 +41,9 @@ function Refund() {
     useEffect(() => {
       // 清空状态
       orderRefund.reset()
-      getOrderDetail({order_id:orderId,languages_id:"1"}).then(res=>{
+      getOrderDetail({order_id:orderId || "", languages_id:"1"}).then(res=>{
         if(res.data && JSON.stringify(res.data) != "[]"){
-
           orderRefund.setOrderInfo(res.data.order_info || {})
-          
           if(returnsId){
             // 退货商品
             setTitle("退货商品退款")

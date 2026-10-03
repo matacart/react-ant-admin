@@ -45,9 +45,7 @@ function LangEditor() {
             mode: langEditor.mode,
             locale_data:JSON.stringify(langEditor.jsonEntity),
         }).then((res)=>{
-            if(res.code == 0){
-                message.success("ok");
-            }
+            message.success("ok");
         }).catch(()=>{
         }).finally(()=>{
             setLoading(false);
@@ -66,41 +64,36 @@ function LangEditor() {
             languages_id:languagesId??"",
             version_id:versionId??"",
         },signal).then(async (res)=>{
-            if(res.code == "SUCCESS"){
-                langEditor.setDefaultJsonEntity(res.data.data);
-                langEditor.setJsonEntity(res.data.data);
-                const newItems = Object.entries(res.data.data).map(([key,item]:any)=>{
-                    return {
-                        key: key,
-                        label: <span className="font-w-500 font-16">{formatKey(key)}</span>,
-                        children: <LangContentCard tabKey={key} />
-                    }
-                });
-                // 按照自定义顺序排序
-                newItems.sort((a, b) => {
-                    const indexA = customOrder.indexOf(a.key);
-                    const indexB = customOrder.indexOf(b.key);
-                    // 如果都在自定义顺序中，按自定义顺序排序
-                    if (indexA !== -1 && indexB !== -1) {
-                        return indexA - indexB;
-                    }
-                    // 如果只有 A 在自定义顺序中，A 排在前面
-                    if (indexA !== -1) {
-                        return -1;
-                    }
-                    // 如果只有 B 在自定义顺序中，B 排在前面
-                    if (indexB !== -1) {
-                        return 1;
-                    }
-                    // 如果都不在自定义顺序中，按字母顺序排序
-                    return a.key.localeCompare(b.key);
-                });
-                setItems(newItems);
-            }
+            langEditor.setDefaultJsonEntity(res.data.data);
+            langEditor.setJsonEntity(res.data.data);
+            const newItems = Object.entries(res.data.data).map(([key,item]:any)=>{
+                return {
+                    key: key,
+                    label: <span className="font-w-500 font-16">{formatKey(key)}</span>,
+                    children: <LangContentCard tabKey={key} />
+                }
+            });
+            // 按照自定义顺序排序
+            newItems.sort((a, b) => {
+                const indexA = customOrder.indexOf(a.key);
+                const indexB = customOrder.indexOf(b.key);
+                // 如果都在自定义顺序中，按自定义顺序排序
+                if (indexA !== -1 && indexB !== -1) {
+                    return indexA - indexB;
+                }
+                // 如果只有 A 在自定义顺序中，A 排在前面
+                if (indexA !== -1) {
+                    return -1;
+                }
+                // 如果只有 B 在自定义顺序中，B 排在前面
+                if (indexB !== -1) {
+                    return 1;
+                }
+                // 如果都不在自定义顺序中，按字母顺序排序
+                return a.key.localeCompare(b.key);
+            });
+            setItems(newItems);
         }).catch((err)=>{
-            if (err.name !== 'CanceledError') {
-                console.log(err)
-            } 
         }).finally(()=>{
             setIsSkeleton(false);
         });
@@ -134,7 +127,7 @@ function LangEditor() {
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
                             <div className="mc-header-left-content">编辑语言</div>
-                            <LangOptions templateId={templateId || ""} setItems={setItems} />
+                            {/* <LangOptions templateId={templateId || ""} setItems={setItems} /> */}
                         </div>
                         <Flex className='mc-header-right' align='center' gap={12}>
                             <div className="font-14">模式:</div>

@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import order from '@/store/order/order';
 import dayjs from 'dayjs';
-import { getOrderLogs } from '@/services/y2/api';
+import { getOrderLogs } from '@/services/y2/apiOrders';
 
 const OrdersTimeline = () => {
 
@@ -37,7 +37,7 @@ const OrdersTimeline = () => {
     setLoading(<div className='color-7A8499'>正在加载...</div>)
     const limit = remainingLogNumber >=5 ? 5 : remainingLogNumber;
     getOrderLogs({
-      orderId:order.orderInfo.order_id,
+      orderId:order.orderInfo.orderSeq,
       page:page,
       limit:limit
     }).then(res => {
@@ -48,7 +48,6 @@ const OrdersTimeline = () => {
       setPage(page+1)
       setRemainingLogNumber(remainingLogNumber - limit)
     }).catch(err => {
-      console.log("失败")
     }).finally(() => {
       setLoading(false)
     });

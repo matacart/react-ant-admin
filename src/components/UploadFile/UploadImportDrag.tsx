@@ -1,9 +1,7 @@
-import { InboxOutlined, PlusOutlined } from "@ant-design/icons"
-import { Flex, message, Upload, UploadProps } from "antd";
-import { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons"
+import { Flex, message, Upload } from "antd";
 import styled from "styled-components"
 import DefaultButton from "../Button/DefaultButton";
-import { getTaskStatus, importProductTask } from "@/services/y2/api";
 
 // 文件上传--拖拽
  const { Dragger } = Upload;

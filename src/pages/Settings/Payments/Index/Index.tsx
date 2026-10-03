@@ -1,4 +1,4 @@
-import { getAddonsConfigs } from "@/services/y2/api"
+import { getAddonsConfigs } from "@/services/y2/apiAppstore"
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import styled from "styled-components"
@@ -12,8 +12,8 @@ import ReceivablesEntrySettings from "./ReceivablesEntrySettings"
 import CustomizedSettings from "./CustomizedSettings"
 import payments from "@/store/settings/payments/payments"
 import LangSelect from "@/components/Select/LangSelect"
-import cookie from 'react-cookies';
 import { Flex } from "antd"
+import { observer } from "mobx-react-lite"
 
 
 function Index() {
@@ -24,7 +24,7 @@ function Index() {
         // 获取手动支付配置
         getAddonsConfigs(payments.languagesId).then(res=>{
             payments.setManualCollectionList(res.data)
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false)
         })
     },[payments.languagesId])
@@ -66,7 +66,7 @@ function Index() {
         </Scoped>
     )
 }
-export default Index
+export default observer(Index)
 
 const Scoped = styled.div`
 .mc-layout-wrap{

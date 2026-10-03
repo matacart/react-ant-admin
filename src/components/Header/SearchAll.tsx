@@ -30,13 +30,13 @@ function SearchAll(){
                 return;
             }
             setLoading(true);
-            const res = await globalSearch(value.trim());
-            if(res?.code == "SUCCESS"){
+            globalSearch(value.trim()).then(res=>{
                 setResults(res.data.searchResultList)
-            }else{
+            }).catch(err=>{
                 setResults([]);
-            }
-            setLoading(false);
+            }).finally(()=>{
+                setLoading(false);
+            })
         }, 500);
     },[]);
 

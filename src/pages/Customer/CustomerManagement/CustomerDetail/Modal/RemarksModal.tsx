@@ -2,9 +2,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { AddIcon } from "@/components/Icons/Icons";
-import MyInput from "@/components/Input/MyInput";
-import MySelect from "@/components/Select/MySelect";
-import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
 import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useState } from "react";
 import { styled } from 'styled-components';

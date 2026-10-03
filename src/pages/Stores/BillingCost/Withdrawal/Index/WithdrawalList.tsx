@@ -7,7 +7,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useAbortController } from "@/hooks/customHooks";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import ErrorTag from "@/components/Tag/ErrorTag";
-import { getWithdrawList } from "@/services/y2/api";
+import { getWithdrawList } from "@/services/y2/apiAppstore";
 import ProcessingTag from "@/components/Tag/ProcessingTag";
 
 
@@ -154,9 +154,7 @@ function WithdrawalList({withdrawal}:{withdrawal:any}) {
           pageSize:pageSize,
           total: res.count,
         });
-      }).catch(error => {
-        message.error(error?.msg)
-      }).finally(() => {
+      }).catch(()=>{}).finally(() => {
         setLoading(false);
       });
     }

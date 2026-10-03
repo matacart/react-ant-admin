@@ -4,10 +4,9 @@ import styled from "styled-components"
 import DefaultSelect from "@/components/Select/DefaultSelect";
 import DeleteModal from "@/components/Modal/DeleteModal";
 import { DeleteOutlined } from "@ant-design/icons";
-import { delArticles } from "@/services/y2/api";
 import { observer } from "mobx-react-lite";
 import country from "@/store/settings/additional/country";
-import { changeCountryStatus, delCountry, getList } from "@/services/y2/ApiCheckoutAdditional";
+import { changeCountryStatus, delCountry, getList } from "@/services/y2/apiCheckoutAdditional";
 import MySearch from "@/components/Input/MySearch";
 import AddCountry from "./AddCountry";
 import EditCountry from "./EditCountry";
@@ -85,7 +84,7 @@ function ListCard() {
               })
               setData(newData)
             }).catch(()=>{
-              console.log("修改状态失败")
+              console.log("失败")
             })
           }}
         />
@@ -114,7 +113,6 @@ function ListCard() {
                       message.success("删除成功")
                       fetchCountryList(1,10,country.languagesId)
                     }).catch(()=>{
-                      message.error("删除失败")
                     })
                   }} 
                   title="确定要删除该国家/地区的附加信息？" 
@@ -149,7 +147,6 @@ function ListCard() {
       })
       setData(res.data.list)
     }).catch(err=>{
-
     }).finally(()=>{
         setLoading(false)
     })

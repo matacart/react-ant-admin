@@ -3,7 +3,7 @@ import { App, Card, Flex, Input, List } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { getAddonsList } from "@/services/y2/api";
+import { getAddonsList } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import LangSelect from "@/components/Select/LangSelect";
 import cookie from 'react-cookies';
@@ -30,9 +30,7 @@ function OtherCollection() {
     useEffect(()=>{
         getAddonsList(language,"1","2").then(res=>{
             setSupportPayments(res.data)
-        }).catch(err=>{
-            message.error("error")
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false)
         })
     },[language])

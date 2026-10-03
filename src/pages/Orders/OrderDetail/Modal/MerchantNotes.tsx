@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { addOrderRemark } from "@/services/y2/api";
+import { addOrderRemark } from "@/services/y2/apiOrders";
 import order, { RemarkType } from "@/store/order/order";
 import { App, Flex, Form, Input, Modal } from "antd";
 import { useState } from "react";
@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import styled from "styled-components";
 import { EditOutlined } from "@ant-design/icons";
 import MyButton from "@/components/Button/MyButton";
-import { updateOrderRemark } from "@/services/y2/apiStore";
+import { updateOrderRemark } from "@/services/y2/apiOrders";
 
 const { TextArea } = Input;
 
@@ -42,7 +42,6 @@ function MerchantNotes() {
                 order.triggerRefresh()
                 form.resetFields();
             }).catch(err=>{
-                console.log(err)
             }).finally(()=>{
                 setLoading(false)
                 setOpen(false);

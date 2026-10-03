@@ -1,6 +1,6 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { setCancelOrder } from "@/services/y2/api";
+import { setCancelOrder } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 import { Checkbox, Flex, Form, Input, Modal, Radio } from "antd";
 import { useEffect, useState } from "react";

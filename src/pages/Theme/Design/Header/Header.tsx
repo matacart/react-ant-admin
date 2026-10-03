@@ -84,8 +84,6 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
 
     const [currentMenu, setCurrentMenu] = useState('main'); // 当前显示的菜单 'main' 表示主菜单
 
-    const [navigationData,setNavigationData] = useState<any[]>(nvData); // 导航数据
-
     // 根据当前菜单状态生成菜单项
     const generateMenuItems = () => {
         // 如果是主菜单
@@ -117,14 +115,14 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
     };
 
     // 获取子菜单数据
-    const getTemplates = async (templateName:string)=>{
-        return await getJsonTemplates({
+    const getTemplates = (templateName:string)=>{
+        return getJsonTemplates({
             template_id: templateId,
             languages_id: editor.languagesId,
             layout_code:templateName,
             version:editor.templateInfo.themeInstanceInfo.themeOS,
             mode:editor.mode,
-        })
+        }).catch((err)=>{})
     }
 
     // 根据数据生成菜单项
@@ -192,8 +190,8 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                                     e.stopPropagation();
                                     const templateList = await getTemplates(item.id);
                                     // 是否存在默认模板
-                                    const isDefault = templateList.data.list.some((item:jsonTemplate)=>item.isDefaultTemplate);
-                                    const newSubmenuData = templateList.data.list.map((submenu:jsonTemplate,index:number)=>{
+                                    const isDefault = templateList?.data?.list?.some((item:jsonTemplate)=>item.isDefaultTemplate);
+                                    const newSubmenuData = templateList?.data?.list?.map((submenu:jsonTemplate,index:number)=>{
                                         return {
                                             key: `submenu-${index}`,
                                             label: (
@@ -227,9 +225,7 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                                                                         mode: editor.mode,
                                                                         languages_id: editor.languagesId,
                                                                     }).then((res)=>{
-                                                                        if(res.code == 0){
-                                                                            message.success("success");
-                                                                        }
+                                                                        message.success("success");
                                                                     }).catch((err)=>{
                                                                         // 删除失败
                                                                         console.log(err);
@@ -395,10 +391,10 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
 
     // 当国际语言发生变化时
     useEffect(()=>{
-        const newItems = MainItems(navigationData);
+        const newItems = MainItems(nvData);
         setItems([...newItems]); // 初始显示主菜单
         setParentItems([...newItems]); // 保存原始主菜单
-    },[intl.locale,templateName])
+    },[intl.locale,templateName,nvData])
 
     return(
         <Scoped ref={dropdownContainerRef} className='font-14'>
@@ -487,8 +483,7 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                                 const lastOperation = editor.getLastOperation();
                                 if(lastOperation){
                                     // 执行操作
-                                    const newData = await templateUpdate(lastOperation.undoData);
-                                    if(true){
+                                    templateUpdate(lastOperation.undoData).then(res=>{
                                         // 模板设置
                                         if(lastOperation.undoData.sections){
                                             if(lastOperation.undoData.pageName == ""){
@@ -516,9 +511,8 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                                         }
                                         // 从历史记录中移除该操作（会自动添加到重做历史中）
                                         editor.removeLastOperation();
-                                    }
+                                    }).catch(()=>{})
                                 }
-                                
                             }} />
                         </Tooltip>
                         <Tooltip title={intl.formatMessage({id:'theme.design.header.redo'})} placement="right">
@@ -527,8 +521,7 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                                 const lastRedoOperation = editor.getLastRedoOperation();
                                 if(lastRedoOperation){
                                     // 执行操作
-                                    const newData = await templateUpdate(lastRedoOperation.redoData);
-                                    if(true){
+                                    templateUpdate(lastRedoOperation.redoData).then(res=>{
                                         // 模板设置
                                         if(lastRedoOperation.redoData.sections){
                                             if(lastRedoOperation.redoData.pageName == ""){
@@ -555,7 +548,7 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                                             })
                                         }
                                         editor.removeLastRedoOperation();
-                                    }
+                                    }).catch(()=>{})
                                 }
                             }} />
                         </Tooltip>
@@ -565,7 +558,7 @@ function Header({templateId,nvData}:{templateId:string,nvData:any[]}) {
                         if(editor.isSaveData){
                             console.log(editor.templateData)
                             setLoading(true);
-                            const result = settingsSections({
+                            settingsSections({
                                 mode: editor.mode,
                                 languages_id: "2",
                                 themeId: templateId??"",

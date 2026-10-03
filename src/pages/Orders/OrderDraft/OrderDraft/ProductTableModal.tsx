@@ -5,14 +5,14 @@ import MySearch from "@/components/Input/MySearch";
 import MySelect from "@/components/Select/MySelect";
 import CommodityClassificationSelector from "@/pages/Products/ProductList/CommodityClassificationSelector";
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
-import { getProductList } from "@/services/y2/api";
+import { getProductList } from "@/services/y2/apiStore";
 import orderDraft from "@/store/order/orderDraft";
 import { currencyPrecision } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
-import {Flex, Form, Input, Modal, Row, Select, Space, Table, TableProps } from "antd"
+import {Flex, Modal, Space, Table, TableProps } from "antd"
 import { observable } from "mobx";
 import { observer } from "mobx-react-lite";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 
 
@@ -399,16 +399,13 @@ function ProductTableModal(){
             setPagination({
                 current:page,
                 pageSize:limit,
-                total:res.count
+                total:Number(res.count || 0)
             })
             // 当 data 更新时，自动将所有有 variants 的项的 key 加入 expandedRowKeys
-            const keys = res.data.filter(item => item.variants?.length > 0).map(item => item.id);
-            console.log(keys)
+            const keys = res.data.filter((item:any) => item.variants?.length > 0).map((item:any) => item.id);
             setExpandedRowKeys(keys);
             setData(res.data)
-            console.log(res)
         }).catch(err=>{
-          console.log(err)
         }).finally(()=>{
           setLoading(false)
         })

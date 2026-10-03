@@ -23,6 +23,7 @@ class OrderManualDelivery{
         bizOrderStatus:100,
         bizPayStatus:0,
         bizDeliveryStatus:0,
+        mainOrderSeq: "",
         orderSeq: "",
         appOrderSeq: "",
         ordersPackageList:[],

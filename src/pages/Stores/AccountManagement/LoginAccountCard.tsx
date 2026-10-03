@@ -1,5 +1,5 @@
 import SuccessTag from "@/components/Tag/SuccessTag";
-import { upDatePassword } from "@/services/y2/api";
+import { upDatePassword } from "@/services/y2/apiAppstore";
 import { App, Card, Flex, Form, Input, Modal } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
@@ -47,14 +47,10 @@ function LoginAccountCard() {
             <Modal title="修改登录密码" centered open={isModifyPassword} onOk={()=>{
                 passwordForm.validateFields().then(values => {
                     upDatePassword(values.oldPassword,values.password).then(res=>{
-                        if(res.code == 0) {
-                            passwordForm.resetFields();
-                            message.success("修改成功")
-                            seIsModifyPassword(false)
-                        }else{
-                            message.error("修改失败，请检查密码是否正确")
-                        }
-                    })
+                        passwordForm.resetFields();
+                        message.success("修改成功")
+                        seIsModifyPassword(false)
+                    }).catch(()=>{})
                 })
             }} onCancel={()=>{
                 passwordForm.resetFields();

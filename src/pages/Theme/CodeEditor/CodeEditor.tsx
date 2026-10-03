@@ -5,7 +5,7 @@ import styled from "styled-components"
 import Main from "./Main"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getTemplateInfo, getThemeFileList } from "@/services/y2/api"
+import { getTemplateInfo, getThemeFileList } from "@/services/y2/apiTemplate"
 import codeEditor from "@/store/theme/codeEditor"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { observer } from "mobx-react-lite"
@@ -21,18 +21,17 @@ function CodeEditor(){
     const [loading,setLoading] = useState(false);
 
     const fetch = async ()=>{
-        try {
-            const results = await Promise.allSettled([
-                getThemeFileList({
-                    id:id??"",
-                    templateId:templateId??"",
-                    mode:mode || "mapping",
-                    languages_id:languageId || "2",
-                    version_id:versionId??"",
-                    versionId:versionId??"",
-                }),
-                getTemplateInfo(templateId ?? "",languageId || "2")
-            ])
+        Promise.allSettled([
+            getThemeFileList({
+                id:id??"",
+                templateId:templateId??"",
+                mode:mode || "mapping",
+                languages_id:languageId || "2",
+                version_id:versionId??"",
+                versionId:versionId??"",
+            }),
+            getTemplateInfo(templateId ?? "",languageId || "2")
+        ]).then((results)=>{
             const [fileListResult, templateInfoResult] = results;
             if(fileListResult.status === "fulfilled"){
                 codeEditor.setFileList(fileListResult.value?.data?.files || []);
@@ -44,10 +43,10 @@ function CodeEditor(){
             if(templateInfoResult.status === "fulfilled"){
                 codeEditor.setTemplateInfo(templateInfoResult.value?.data?.templateInstanceInfo || null)
             }
-        }catch (error) { 
-        }finally{ 
+        }).catch(()=>{
+        }).finally(()=>{
             setIsSkeleton(false);
-        }
+        })
     }
     
     useEffect(()=>{

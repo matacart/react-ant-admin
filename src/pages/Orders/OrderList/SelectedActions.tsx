@@ -1,7 +1,7 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import MyDropDownSecondary from "@/components/Dropdown/MyDropDownSecondary";
 import { UnfoldIcon } from "@/components/Icons/Icons";
-import { batchArcOrder, batchUnarcOrder } from "@/services/y2/api";
+import { batchArcOrder, batchUnarcOrder } from "@/services/y2/apiOrders";
 import orderList from "@/store/order/orderList";
 import { history, useIntl } from "@umijs/max";
 import { Checkbox, Flex, theme, notification } from "antd";
@@ -198,8 +198,7 @@ function SelectedActions({fetchData}:{fetchData: () => void}){
                           orderList.setOrderIds([]);
                           // 重新加载数据
                           fetchData();
-                        }).catch(err=>{
-                          console.log(err);
+                        }).catch(()=>{
                         })
                       }}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.archiveOrders' })}</a>
                     )
@@ -207,7 +206,6 @@ function SelectedActions({fetchData}:{fetchData: () => void}){
                   {
                     key: "2", label: (
                       <a onClick={() => {
-                        
                         batchUnarcOrder(JSON.stringify(orderList.orderIds)).then(res=>{
                           notification.success({
                             message: intl.formatMessage({ id: 'orders.orderList.selectedActions.unarchiveOrders' }),
@@ -216,8 +214,7 @@ function SelectedActions({fetchData}:{fetchData: () => void}){
                           orderList.setOrderIds([]);
                           // 重新加载数据
                           fetchData();
-                        }).catch(err=>{
-                          console.log(err);
+                        }).catch(()=>{
                         })
                       }}>{intl.formatMessage({ id: 'orders.orderList.selectedActions.unarchiveOrders' })}</a>
                     )

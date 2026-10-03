@@ -1,17 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
+import { Flex, GetProp, Popover, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { history, useIntl } from '@umijs/max';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
-import orderList from '@/store/order/orderList';
+import orderList, { AmountSet } from '@/store/order/orderList';
 import SelectedActions from './SelectedActions';
 import { observer } from 'mobx-react-lite';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
-import { getOrderList } from '@/services/y2/api';
+import { getOrderList } from '@/services/y2/apiOrders';
 import { useAbortController } from '@/hooks/customHooks';
-import { currencyPrecision } from '@/utils/common';
-import { useSymbolLeft } from '@/hooks/customHooks';
+import { getCurrencyAmount } from '@/utils/common';
 import OrderEmptyTag from '@/components/Tag/OrderEmptyTag';
+import { DownIcon } from '@/components/Icons/Icons';
+
 // 表单项订单数据类型
 interface DataType {
   order_id: string;
@@ -19,7 +20,6 @@ interface DataType {
   biz_order_status: number;
   biz_pay_status: number;
   biz_delivery_status: number;
-
   orderdata: string;
   paymentmethod: string;
   deliveryname: string;
@@ -30,7 +30,8 @@ interface DataType {
   deliverystate: string;
   paymentchannel: string;
   tel: string;
-  [key: string]: string | number;
+  orderAmountSet:AmountSet;
+  // [key: string]: string | number | OrderAmountSet;
 }
 
 interface TableParams {
@@ -54,7 +55,7 @@ function OrdersListAjax({ id }: FilterCondition) {
 
   const intl = useIntl();
 
-  const symbolLeft = useSymbolLeft();
+  const [popoverKey, setPopoverKey] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -72,6 +73,7 @@ function OrdersListAjax({ id }: FilterCondition) {
     {
       title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.orderNo' }),
       dataIndex: 'order_sn',
+      fixed: 'left',
       render: (text: string) => (
         <span style={{ color: '#242833' }}>{text}</span>
       ),
@@ -132,9 +134,33 @@ function OrdersListAjax({ id }: FilterCondition) {
     },
     {
       title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.priceTotal' }),
-      dataIndex: 'order_total',
+      dataIndex: 'store_amount',
+      align: 'right',
       render: (value: number, record: any, index: any) => {
-        return <span>{symbolLeft}{currencyPrecision(value)}</span>;
+        return <>
+          {record.orderAmountSet.storeMoney.currencyCode == record.orderAmountSet.settleMoney.currencyCode?<>
+            {getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}
+          </>:
+            <Popover
+              content={<>
+                <div>店铺币种：{getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}</div>
+                <div>订单币种：{getCurrencyAmount(record.orderAmountSet.settleMoney.currencyCode,record.orderAmountSet.settleMoney.amount)}</div>
+              </>}
+              trigger="click"
+              arrow={false}
+              placement="bottomRight"
+              open={record.order_id == popoverKey}
+              onOpenChange={(open) => {
+                setPopoverKey(open ? record.order_id : null)
+              }}
+            >
+              <Flex className='cursor-pointer' justify='flex-end' gap={6} onClick={(e) => e.stopPropagation()}>
+                {getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}
+                <DownIcon />
+              </Flex>
+            </Popover>
+          }
+        </>;
       },
     },
   ];
@@ -164,7 +190,6 @@ function OrdersListAjax({ id }: FilterCondition) {
           ...item,
         }));
         setData(newData); // 使用过滤后的数据
-        setLoading(false);
         setTableParams({
           ...tableParams,
           pagination: {
@@ -176,7 +201,7 @@ function OrdersListAjax({ id }: FilterCondition) {
         const pageIds = res.data?.map((item:any)=>item.id)
         orderList.setCurrentPageOrderIds(pageIds)
     }).catch(error => {
-      console.error('Error fetching data:', error);
+    }).finally(()=>{
       setLoading(false);
     });
   };

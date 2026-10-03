@@ -1,5 +1,5 @@
 import { cancelFavoriteCourier, getShippingCourier, setFavoriteCourier } from "@/services/y2/apiLogistics";
-import { action, makeAutoObservable, observable, runInAction } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import cookie from 'react-cookies';
 
 // 全局状态
@@ -23,51 +23,40 @@ class GlobalStore {
         if (this.shippingCourierLoading) return;  // ① 正在请求 → 拦
         if (this.shippingCourierLoaded) return;   // ② 已加载过 → 拦
         this.shippingCourierLoading = true;        // ③ 标记「开始请求」
-        try {
-            const res = await getShippingCourier();
+        return getShippingCourier().then((res:any) => {
             runInAction(() => {
-                if (res.code === 0) {
-                    this.shippingCourierList = res.data ?? [];
-                    this.shippingCourierLoaded = true;   // ④ 标记「加载成功」
-                }
+                this.shippingCourierList = res.data ?? [];
+                this.shippingCourierLoaded = true;   // ④ 标记「加载成功」
             });
-        } finally {
+        }).catch(()=>{}).finally(()=>{
             runInAction(() => {
                 this.shippingCourierLoading = false;   // ⑤ 请求结束（无论成败）
             });
-        }
+        });
     }
 
     async toggleFavorite(courierId: string) {
         const target = this.shippingCourierList.find((i) => i.courierId === courierId);
         if (!target) return;
         const isFav = target.favorite;
-        try {
-            const res = isFav ? await cancelFavoriteCourier({ courierId }) : await setFavoriteCourier({ courierId });
-            if (res.code === 0) {
+        if(isFav){
+            cancelFavoriteCourier({ courierId }).then(res=>{
                 runInAction(() => {
                     this.shippingCourierList = this.shippingCourierList.map((item) =>
                         item.courierId === courierId ? { ...item, favorite: !item.favorite }: item
                     );
                 });
-            }
-        } catch {
-            // 失败不改状态
+            }).catch(()=>{});
+        }else{
+            setFavoriteCourier({ courierId }).then(res=>{
+                runInAction(() => {
+                    this.shippingCourierList = this.shippingCourierList.map((item) =>
+                        item.courierId === courierId ? { ...item, favorite: !item.favorite }: item
+                    );
+                });
+            }).catch(()=>{});
         }
     }
-
-
-    // platformCategory = []
-    // getPlatformCategory(){
-    //     getPlatformCategorySelect("1").then((res:any) => {
-    //         this.platformCategory = res.data
-    //         // console.log(res)
-    //     })
-    // }
-    // categorylist = [];
-    // setCategoryList(category:any) {
-    //     this.categorylist = category;
-    // }
     // 转树形结构
     buildTree(data:any, parentId = '0') {
         return data.filter((item:any) => item.pid === parentId).map((item:any) => ({

@@ -4,7 +4,7 @@ import type { SelectProps } from 'antd';
 import debounce from 'lodash/debounce';
 import styled from 'styled-components';
 import { LoadingOutlined } from '@ant-design/icons';
-import { addTags, selectTags } from '@/services/y2/api';
+import { addTags, selectTags } from '@/services/y2/apiStore';
 import product from '@/store/product/product';
 import { AddIcon } from '../Icons/Icons';
 import { set } from 'mobx';
@@ -128,16 +128,12 @@ function DebounceSelect<
               e.stopPropagation()
               // 添加标签
               if(option.data.title){
-                addTags(product.productInfo.languages_id,option.data.title).then(res=>{
-                  if(res.code == 0){
-                    product.setProductInfo({
-                      ...product.productInfo,
-                      tag:product.productInfo.tag + "," + option.data.title
-                    })
-                  }else{
-                    message.error("err")
-                  }
-                }).finally(()=>{
+                addTags(product.languageId,option.data.title).then(res=>{
+                  product.setProductInfo({
+                    ...product.productInfo,
+                    tag:product.productInfo.tag + "," + option.data.title
+                  })
+                }).catch(()=>{}).finally(()=>{
                   selectRef.current.blur();
                 })
               }
@@ -169,23 +165,22 @@ interface UserValue {
 }
 
 async function fetchUserList(username: string,selectedValues:any[]): Promise<UserValue[]> {
-  const results = await selectTags({
-    languages_id:product.productInfo.languages_id,
-    tagName:username
-  }).then(res=>{
-    if(res.code == 0){
-      return res.data.map((item:any)=>{
-        return {
-          label:item.tag,
-          value:item.id,
-          checked:selectedValues.includes(item.tag)
-        }
-      })
-    }
-  }).catch((err)=>{
-  }).finally(()=>{
-  })
-
+  let results = [];
+  try{
+    const res = await selectTags({
+      languages_id:product.languageId,
+      tagName:username
+    })
+    results = res.data.map((item:any)=>{
+      return {
+        label:item.tag,
+        value:item.id,
+        checked:selectedValues.includes(item.tag)
+      }
+    })
+  }catch(err){
+    results = [];
+  }
   if(results?.some((item:any)=>item.label === username) || username == ""){
     return results;
   }else{

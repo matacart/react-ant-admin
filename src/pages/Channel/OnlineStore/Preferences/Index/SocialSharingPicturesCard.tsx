@@ -45,14 +45,8 @@ function SocialSharingPicturesCard() {
         uploadSocialPicture({
             social_image:file,
         }).then((res) => {
-            if(res.code == 0){
-                setCoverImg(res.data.picture_url)
-            }else{
-                message.error(res.msg)
-            }
-        }).catch((err) => {
-            console.log(err)
-        }).finally(() => {
+            setCoverImg(res.data.picture_url)
+        }).catch(()=>{}).finally(() => {
             setLoading(false)
         })
         return false;
@@ -104,15 +98,9 @@ function SocialSharingPicturesCard() {
                                                         <DangerButton text="确认" loading={loading} onClick={()=>{
                                                             setLoading(true)
                                                             deleteSocialPicture().then((res) => {
-                                                                if(res.code == 0){
-                                                                    setCoverImg("")
-                                                                    confirm.destroy()
-                                                                }else{
-                                                                    message.error(res.msg)
-                                                                }
-                                                            }).catch((err) => {
-                                                                console.log(err)
-                                                            }).finally(() => {
+                                                                setCoverImg("")
+                                                                confirm.destroy()
+                                                            }).catch(()=>{}).finally(() => {
                                                                 setLoading(false)
                                                             })
                                                         }} />

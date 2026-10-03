@@ -1,7 +1,6 @@
 import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import InformationCard from "./InformationCard"
 import { useNavigate } from "react-router-dom"

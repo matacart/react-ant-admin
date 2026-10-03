@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import styled from "styled-components";
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { delOrderPaymentTerm, setOrderPaymentTerm } from "@/services/y2/api";
+import { delOrderPaymentTerm, setOrderPaymentTerm } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 import { WarningIcon } from "@/components/Icons/Icons";
 import MyButton from "@/components/Button/MyButton";
@@ -74,7 +74,7 @@ function AddPaymentPeriod() {
         if(paymentTerm){
             setLoading(true)
             setOrderPaymentTerm({
-                orderId:order.orderInfo.order_id,
+                orderId:order.orderInfo.orderSeq,
                 paymentTerm:paymentTerm,
                 startDate:(paymentTerm == "full_payment_on_invoice" || paymentTerm == "full_payment_on_shipment") ? dayjs(new Date()).unix():dayjs(date).unix()
             }).then(res=>{
@@ -89,13 +89,12 @@ function AddPaymentPeriod() {
 
     const remove = ()=>{
         delOrderPaymentTerm({
-            orderId:order.orderInfo.order_id,
+            orderId:order.orderInfo.orderSeq,
         }).then(res=>{
             order.triggerRefresh()
             setOpen(false)
         }).catch(e=>{ 
         }).finally(()=>{
-
         })
     }
 

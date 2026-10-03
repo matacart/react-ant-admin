@@ -39,8 +39,10 @@ export default function DataCard() {
         const endTimer = dayjs().endOf('day').valueOf();
         // 创建 AbortController 信号
         const signal = createAbortController();
-        const res = await getTodayData(startTimer/1000,endTimer/1000,{ signal });
-        res?.code == 0 && setTodayData(res.data);
+        getTodayData(startTimer/1000,endTimer/1000,{ signal }).then(res=>{
+            setTodayData(res.data);
+        }).catch(()=>{
+        })
     }
 
     useEffect(()=>{

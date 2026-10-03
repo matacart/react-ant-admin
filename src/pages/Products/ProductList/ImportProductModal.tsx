@@ -23,7 +23,11 @@ function ImportProductModal() {
     // 上传并导入--轮询查询进度
     const UploadImport = (files:File)=>{
         setLoading(true)
-        importProductTask(files,"product_import",coverHandle).then(async res=>{
+        importProductTask({
+            file:files,
+            type:"product_import",
+            handle:coverHandle
+        }).then(async (res:any)=>{
             let taskId = res.taskId
             await productList.setTask({
                 status:"done",
@@ -58,7 +62,6 @@ function ImportProductModal() {
                 }
             });
         }).catch(err=>{
-            message.error("上传失败，请重试")
         }).finally(()=>{
             setLoading(false)
         })

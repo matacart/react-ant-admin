@@ -2,7 +2,8 @@ import MyAlert from "@/components/Alert/MyAlert";
 import DangerButton from "@/components/Button/DangerButton";
 import DefaultButton from "@/components/Button/DefaultButton";
 import DefaultInput from "@/components/Input/DefaultInput";
-import { sendServiceVerifyEmail, uploadPic } from "@/services/y2/api";
+import { sendServiceVerifyEmail } from "@/services/y2/apiEmail";
+import { uploadPic } from "@/services/y2/apiAppstore";
 import baseInfoStore from "@/store/setUp/baseInfoStore";
 import { DeleteOutlined, ExclamationCircleFilled, ExportOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { App, Card, Flex, Form, GetProp, Upload, UploadProps } from "antd";
@@ -50,16 +51,14 @@ function BaseInfoCard() {
         formData.append("file", file);
         setLoading(true);
         uploadPic(formData).then((res: any) => {
-            if(res.code == 0){
-              baseInfoStore.setStoreInfo({
-                ...baseInfoStore.storeInfo,
-                store_logo:res.data.src
-              })
-              setLoading(false)
-            }else{
-              message.error("上传失败", 1)
-              setLoading(false)
-            }
+            baseInfoStore.setStoreInfo({
+            ...baseInfoStore.storeInfo,
+            store_logo:res.data.src
+            })
+        }).catch((err)=>{
+            console.log(err)
+        }).finally(()=>{
+            setLoading(false)
         })
         // 图片大小无限制
         // const isLt2M = file.size / 1024 / 1024 < 2;
@@ -72,36 +71,30 @@ function BaseInfoCard() {
 
     // 发送验证邮件
     const sendVerifyEmail = async ()=>{
-
         const lang = cookie.load("shop_lang") || '2'
-
         setSendVerifyLoading(true);
         // 发送验证邮件
         sendServiceVerifyEmail({
             languages_id:lang,
             email:baseInfoStore.storeInfo.service_email,
         }).then(res => {
-            if(res.code == 200){
-                setCount(60);
-                timerRef.current = window.setInterval(()=>{
-                    setCount(prevCount => {
-                        const newCount = prevCount - 1;
-                        if(newCount <= 0){
-                            if (timerRef.current) {
-                                clearInterval(timerRef.current);
-                                timerRef.current = null;
-                            }
-                            setIsSendVerify(false);
-                            return 0;
+            setCount(60);
+            timerRef.current = window.setInterval(()=>{
+                setCount(prevCount => {
+                    const newCount = prevCount - 1;
+                    if(newCount <= 0){
+                        if (timerRef.current) {
+                            clearInterval(timerRef.current);
+                            timerRef.current = null;
                         }
-                        return newCount;
-                    });
-                }, 1000);
-            }
+                        setIsSendVerify(false);
+                        return 0;
+                    }
+                    return newCount;
+                });
+            }, 1000);
         }).catch(err => {
             console.log(err)
-        }).catch((err) => {
-            message.error("验证邮件发送失败", 1)
         }).finally(() => {
             setSendVerifyLoading(false);
             setIsSendVerify(true);

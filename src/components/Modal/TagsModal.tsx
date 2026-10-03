@@ -1,7 +1,7 @@
-import { removeTags, selectTags } from "@/services/y2/api";
+import { removeTags, selectTags } from "@/services/y2/apiStore";
 import { useToken } from "@ant-design/pro-components";
-import { Dropdown, Flex, MenuProps, message, Modal, Popover, Select, Space, Spin, Tag } from "antd";
-import React, { useCallback, useMemo, useRef } from "react";
+import { Dropdown, Flex, MenuProps, message, Modal, Spin, Tag } from "antd";
+import React, { useMemo, useRef } from "react";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MyInput from "../Input/MyInput";
@@ -241,16 +241,12 @@ export default function TagsModal(prop:any){
             languages_id:prop.language,
             tag:cleanTags.map((item:any)=> item.label).join(",")
         }).then(res=>{
-            if(res.code == 0){
-                // 删除标签
-                message.success("success");
-                const newCleanTagList = cleanTagList.filter(cTag=> !cleanTags.some((item:any)=> item.label == cTag.label ));
-                setCleanTagList(newCleanTagList)
-                setCleanTags([])
-            }else{
-                message.error(res.msg);
-            }
-        }).finally(()=>{
+            // 删除标签
+            message.success("success");
+            const newCleanTagList = cleanTagList.filter(cTag=> !cleanTags.some((item:any)=> item.label == cTag.label ));
+            setCleanTagList(newCleanTagList)
+            setCleanTags([])
+        }).catch(()=>{}).finally(()=>{
             setDelLogin(false);
         })
     }
@@ -276,17 +272,15 @@ export default function TagsModal(prop:any){
             order_field:orderField,
             order_direction:orderDirection,
         }).then(res=>{
-            if(res.code == 0 || res.code == 201){
-                const newTagsList = res.data?.map((element:any) => {
-                    return {
-                        label: element.tag,
-                        value: element.id,
-                        checked: prop.tags.some((item:any)=>item.label == element.tag)
-                    }
-                });
-                setTagList(newTagsList);
-            }
-        }).catch((err)=>{
+            const newTagsList = res.data?.map((element:any) => {
+                return {
+                    label: element.tag,
+                    value: element.id,
+                    checked: prop.tags.some((item:any)=>item.label == element.tag)
+                }
+            });
+            setTagList(newTagsList);
+        }).catch(()=>{
         }).finally(()=>{
             setIsLoading(false);
         })
@@ -326,16 +320,14 @@ export default function TagsModal(prop:any){
             order_field:orderField,
             order_direction:orderDirection,
         }).then(res=>{
-            if(res.code == 0 || res.code == 201){
-                const newTagsList = res.data.map((element:any) => {
-                    return {
-                        label: element.tag,
-                        value: element.id,
-                        checked: false
-                    }
-                });
-                setCleanTagList(newTagsList);
-            }
+            const newTagsList = res.data.map((element:any) => {
+                return {
+                    label: element.tag,
+                    value: element.id,
+                    checked: false
+                }
+            });
+            setCleanTagList(newTagsList);
         }).catch((err)=>{
         }).finally(()=>{
             setIsLoading(false);

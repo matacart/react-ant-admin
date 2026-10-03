@@ -12,29 +12,28 @@ import { currencyPrecision } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
 import AfterSalesTrackingModal from "../Modal/AfterSalesTrackingModal";
 import DangerButton from "@/components/Button/DangerButton";
-import { cancelReturnOrder } from "@/services/y2/apiStore";
+import { cancelReturnOrder } from "@/services/y2/apiOrders";
 import AfterSalesTrackingQuery from "../Modal/AfterSalesTrackingQuery";
+import styled from "styled-components";
 
 const CancelRefundFooter = ({ onClose, afterSaleOrderSeq }: { onClose: () => void, afterSaleOrderSeq: string }) => {
   const { message } = App.useApp();
   const [loading, setLoading] = useState(false);
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     setLoading(true);
-    try {
-      cancelReturnOrder({
-        languages_id: order.languages,
-        orderSeq: order.orderInfo?.orderSeq,
-        afterSaleOrderSeq: afterSaleOrderSeq,
-      });
+    cancelReturnOrder({
+      languages_id: order.languages,
+      orderSeq: order.orderInfo?.orderSeq,
+      afterSaleOrderSeq: afterSaleOrderSeq,
+    }).then(res=>{
       message.success("取消退货成功");
       order.triggerRefresh();
-    } catch {
-      message.error("取消退货失败");
-    } finally {
+    }).catch(()=>{
+    }).finally(()=>{
       onClose();
       setLoading(false);
-    }
+    })
   };
 
   return (
@@ -72,9 +71,9 @@ function OrderReturning({groupIndex,returnReasonList}:{groupIndex:number,returnR
   ]
 
   return (
-    <Card
+    <MyCard
       title={
-        <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
+        <Flex className="font-16 color-474F5E" align="center" justify="space-between" >
           <Flex align="center" gap={10}>
             <ReturnSecondIcon className="font-28" />
             <span className="font-w-500">{"退货中"}（{afterSaleOrder.orderRefund?.orderRefundDetailInfoList?.reduce((pre:number,cur:any)=>pre+Number(cur.skuNum),0) || 0}）#{afterSaleOrder.afterSaleOrderSeq}</span>
@@ -96,40 +95,38 @@ function OrderReturning({groupIndex,returnReasonList}:{groupIndex:number,returnR
         </Flex>
       }
     >
-      <Form>
-        <div className="font-w-400">
-          {afterSaleOrder.orderRefund?.orderRefundDetailInfoList?.map((orderRefundDetailInfo:OrderRefundDetailInfoType,index:number)=>{
-            return(
-              <Row key={index} style={{marginBottom:"20px"}}>
-                <Col span={14}>
-                  <Flex style={{paddingRight:"40px"}}>
-                    <img src={orderRefundDetailInfo.orderItem?.firstImage?orderRefundDetailInfo.orderItem.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={orderRefundDetailInfo.orderItem?.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
-                    <Flex vertical align="flex-start" justify="flex-start">
-                      <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px"}} className="font-w-500">{orderRefundDetailInfo.orderItem?.title}</div>
-                      <div style={{ fontSize: "14px", color: "#474F5E" }}>{
-                        orderRefundDetailInfo.orderItem?.attributes?.map((item:any)=>item.attributeValue??"").join("/")
-                      }</div>
-                      <div style={{ fontSize: "14px", color: "#474F5E" }}>model : </div>
-                      <div style={{ fontSize: "14px", color: "#474F5E",marginTop:"4px" }}>退货原因 : {returnReasonList.find((item:ReturnReasonType)=>item.value===orderRefundDetailInfo.itemRefundReason?.returnReason)?.label || ""}</div>
-                      {orderRefundDetailInfo.itemRefundReason?.returnReasonNote && <div style={{ fontSize: "14px", color: "#474F5E",marginTop:"4px" }}>备注 : {orderRefundDetailInfo.itemRefundReason.returnReasonNote}</div>}
-                    </Flex>
+      <div className="font-w-400">
+        {afterSaleOrder.orderRefund?.orderRefundDetailInfoList?.map((orderRefundDetailInfo:OrderRefundDetailInfoType,index:number)=>{
+          return(
+            <Row key={index} style={{marginBottom:"20px"}}>
+              <Col span={14}>
+                <Flex style={{paddingRight:"40px"}}>
+                  <img src={orderRefundDetailInfo.orderItem?.firstImage?orderRefundDetailInfo.orderItem.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={orderRefundDetailInfo.orderItem?.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
+                  <Flex vertical align="flex-start" justify="flex-start">
+                    <div className="font-14 color-474F5E font-w-500 title">{orderRefundDetailInfo.orderItem?.title}</div>
+                    <div className="font-14 color-474F5E">{
+                      orderRefundDetailInfo.orderItem?.attributes?.map((item:any)=>item.attributeValue??"").join("/")
+                    }</div>
+                    <div className="font-14 color-474F5E">model : </div>
+                    <div style={{ fontSize: "14px", color: "#474F5E",marginTop:"4px" }}>退货原因 : {returnReasonList.find((item:ReturnReasonType)=>item.value===orderRefundDetailInfo.itemRefundReason?.returnReason)?.label || ""}</div>
+                    {orderRefundDetailInfo.itemRefundReason?.returnReasonNote && <div style={{ fontSize: "14px", color: "#474F5E",marginTop:"4px" }}>备注 : {orderRefundDetailInfo.itemRefundReason.returnReasonNote}</div>}
                   </Flex>
-                </Col>
-                <Col span={5}>
-                  <Flex style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(orderRefundDetailInfo.orderItem?.productPrice)} X {orderRefundDetailInfo.orderItem?.productNum}</span>
-                  </Flex>
-                </Col>
-                <Col span={5}>
-                  <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(orderRefundDetailInfo.orderItem?.productAmount || 0))}</span>
-                  </Flex>
-                </Col>
-              </Row>
-            )
-          })}
-        </div>
-      </Form>
+                </Flex>
+              </Col>
+              <Col span={5}>
+                <Flex style={{height:"100%"}}>
+                  <span className="font-14 color-474F5E">{symbolLeft}{currencyPrecision(Number(orderRefundDetailInfo.orderItem?.productPrice || 0))} X {orderRefundDetailInfo.orderItem?.productNum}</span>
+                </Flex>
+              </Col>
+              <Col span={5}>
+                <Flex justify="end" style={{height:"100%"}}>
+                  <span className="font-14 color-474F5E">{symbolLeft}{currencyPrecision(Number(orderRefundDetailInfo.orderItem?.productAmount || 0))}</span>
+                </Flex>
+              </Col>
+            </Row>
+          )
+        })}
+      </div>
       <Divider />
       <Flex justify="space-between">
         {/* 物流信息 */}
@@ -144,8 +141,20 @@ function OrderReturning({groupIndex,returnReasonList}:{groupIndex:number,returnR
           <PrimaryButton text={"退款"} onClick={()=>{}}  />
         </Flex>
       </Flex>
-    </Card>
+    </MyCard>
   );
 }
 
 export default observer(OrderReturning);
+
+const MyCard = styled(Card)`
+  .title{
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
+`

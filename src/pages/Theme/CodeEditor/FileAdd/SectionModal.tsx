@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import { useSleep } from "@/hooks/customHooks";
-import { addTemplateFile } from "@/services/y2/api";
+import { addTemplateFile } from "@/services/y2/apiTemplate";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
 import { Flex, Form, App, Modal, Radio } from "antd";
@@ -55,41 +55,37 @@ function SectionModal({treeData,setTreeData,filePath}:LayoutModalType){
                 fileContent: fileContent,
                 versionId: codeEditor.versionId??"",
             }).then(async res=>{
-                if(res.code == 0){
-                    // 在树中插入文件
-                    const {newTreeData,level} = insertFileInTree(treeData, values.name, fileType, values.name,filePath);
-                    await setTreeData(newTreeData);
-                    await codeEditor.setOpenFileList([
-                        ...codeEditor.openFileList,
-                        {
-                            active: false,
-                            checked: false,
-                            children: undefined,
-                            dragOver: false,
-                            dragOverGapBottom: false,
-                            dragOverGapTop: false,
-                            expanded: false,
-                            fileType: fileType,
-                            halfChecked: false,
-                            key: filePath+"/"+values.name+"."+fileType+"-"+level,
-                            languagesId: codeEditor.languageId??"2",
-                            loaded: false,
-                            loading: false,
-                            mode: codeEditor.mode,
-                            pos: "0-0-"+codeEditor.openFileList.length,
-                            selected: false,
-                            title: values.name.split("/").pop()+"."+fileType,
-                            url: filePath+"/"+values.name+"."+fileType,
-                        }
-                    ])
-                    // 激活文件
-                    codeEditor.setActiveFileKey(filePath+"/"+values.name+"."+fileType+"-"+level);
-                    setOpen(false);
-                    form.resetFields();
-                    setFileType(1);
-                }else{
-                    message.error(res.msg);
-                }
+                // 在树中插入文件
+                const {newTreeData,level} = insertFileInTree(treeData, values.name, fileType, values.name,filePath);
+                await setTreeData(newTreeData);
+                await codeEditor.setOpenFileList([
+                    ...codeEditor.openFileList,
+                    {
+                        active: false,
+                        checked: false,
+                        children: undefined,
+                        dragOver: false,
+                        dragOverGapBottom: false,
+                        dragOverGapTop: false,
+                        expanded: false,
+                        fileType: fileType,
+                        halfChecked: false,
+                        key: filePath+"/"+values.name+"."+fileType+"-"+level,
+                        languagesId: codeEditor.languageId??"2",
+                        loaded: false,
+                        loading: false,
+                        mode: codeEditor.mode,
+                        pos: "0-0-"+codeEditor.openFileList.length,
+                        selected: false,
+                        title: values.name.split("/").pop()+"."+fileType,
+                        url: filePath+"/"+values.name+"."+fileType,
+                    }
+                ])
+                // 激活文件
+                codeEditor.setActiveFileKey(filePath+"/"+values.name+"."+fileType+"-"+level);
+                setOpen(false);
+                form.resetFields();
+                setFileType(1);
             }).catch(()=>{
             }).finally(()=>{
                 setLoading(false); 

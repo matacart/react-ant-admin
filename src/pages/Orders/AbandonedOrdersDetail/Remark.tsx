@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { UnfoldIcon } from "@/components/Icons/Icons";
 import MyTextArea from "@/components/Input/MyTextArea";
-import { setAbandonedOrderRemark } from "@/services/y2/ApiAbandonedOrder";
+import { setAbandonedOrderRemark } from "@/services/y2/apiAbandonedOrder";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import { App, Badge, Button, Card, Flex, message, Modal } from "antd";
 import { observer } from "mobx-react-lite";

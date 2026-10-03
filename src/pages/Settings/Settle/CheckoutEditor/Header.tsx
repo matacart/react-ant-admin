@@ -56,11 +56,8 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
             config:JSON.stringify(checkoutEditor.config),
             is_preview:"1",
         }).then(res=>{
-            if(res.code == 0){
-                message.success(intl.formatMessage({ id: 'components.message.success' }));
-            }
+            message.success(intl.formatMessage({ id: 'components.message.success' }));
         }).catch(err=>{
-            message.error(intl.formatMessage({ id: 'components.message.error' }));
         }).finally(()=>{
             setSpinning(false);
         })
@@ -169,11 +166,9 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
                                     config:JSON.stringify(lastOperation.undoData),
                                     is_preview:"0",
                                 }).then((res)=>{
-                                    if(res.code == "0"){
-                                        checkoutEditor.setConfig(toJS(lastOperation.undoData));
-                                        checkoutEditor.removeLastOperation();
-                                    }
-                                })
+                                    checkoutEditor.setConfig(toJS(lastOperation.undoData));
+                                    checkoutEditor.removeLastOperation();
+                                }).catch(()=>{});
                             }
                         }} />
                     </Tooltip>
@@ -187,11 +182,9 @@ function Header({spinning,setSpinning}:{spinning:boolean,setSpinning:(value:bool
                                     config:JSON.stringify(lastOperation.redoData),
                                     is_preview:"0",
                                 }).then((res)=>{
-                                    if(res.code == "0"){
-                                        checkoutEditor.setConfig(toJS(lastOperation.redoData));
-                                        checkoutEditor.removeLastRedoOperation();
-                                    }
-                                })
+                                    checkoutEditor.setConfig(toJS(lastOperation.redoData));
+                                    checkoutEditor.removeLastRedoOperation();
+                                }).catch(()=>{});
                             }
                         }} />
                     </Tooltip>

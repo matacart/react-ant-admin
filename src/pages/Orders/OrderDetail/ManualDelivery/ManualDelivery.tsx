@@ -11,7 +11,7 @@ import DeliveryAddress from './DeliveryAddress';
 import Abstract from './Abstract';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import LogisticsTrackingInformation from './LogisticsTrackingInformation';
-import { getOrderDetail, sendOrderPackage } from '@/services/y2/apiStore';
+import { getOrderDetail, sendOrderPackage } from '@/services/y2/apiOrders';
 import orderManualDelivery from '@/store/order/orderManualDelivery';
 import { FulfillmentItemType, FulfillmentListType } from '@/store/order/order';
 
@@ -68,10 +68,8 @@ function ManualDelivery() {
                 extInfo:{},
                 productInfoList:JSON.stringify(productInfoList),
             }).then((res)=>{
-                if(res.code == 0){
-                    message.success("发货成功")
-                    history.push(`/orders/${orderId}/${languagesId}`)
-                }
+                message.success("发货成功")
+                history.push(`/orders/${orderId}/${languagesId}`)
             }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
@@ -84,20 +82,18 @@ function ManualDelivery() {
             order_id:orderId,
             languages_id:languagesId,
         }).then(res=>{
-            if(res.code == 0){
-                orderManualDelivery.setOrderInfo(res.data)
-                const fulfillmentItem = res.data.fulfillmentOrderList.find((item:any)=>item.fulfillmentOrder?.fulfillmentOrderSeq == fulfillmentId)
-                const newFulfillmentItemList = fulfillmentItem.fulfillmentItemList.map((item:FulfillmentItemType)=>{
-                    return{
-                        ...item,
-                        productModifyNum:item.productNum,
-                    }
-                })
-                orderManualDelivery.setFulfillmentItem({
-                    ...fulfillmentItem,
-                    fulfillmentItemList:newFulfillmentItemList,
-                })
-            }
+            orderManualDelivery.setOrderInfo(res.data)
+            const fulfillmentItem = res.data.fulfillmentOrderList.find((item:any)=>item.fulfillmentOrder?.fulfillmentOrderSeq == fulfillmentId)
+            const newFulfillmentItemList = fulfillmentItem.fulfillmentItemList.map((item:FulfillmentItemType)=>{
+                return{
+                    ...item,
+                    productModifyNum:item.productNum,
+                }
+            })
+            orderManualDelivery.setFulfillmentItem({
+                ...fulfillmentItem,
+                fulfillmentItemList:newFulfillmentItemList,
+            })
         }).catch(err=>{
             console.log(err);
         }).finally(()=>{

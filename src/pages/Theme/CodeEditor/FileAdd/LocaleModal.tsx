@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
 import { useSleep } from "@/hooks/customHooks";
-import { addTemplateFile } from "@/services/y2/api";
+import { addTemplateFile } from "@/services/y2/apiTemplate";
 import codeEditor from "@/store/theme/codeEditor";
 import { insertFileInTree } from "@/utils/dataStructure";
 import { Flex, Form, App, Modal } from "antd";
@@ -46,43 +46,39 @@ function LocaleModal({filePath,treeData,setTreeData}:LocaleModalType){
                 versionId: codeEditor.versionId??"",
                 sourceFileName: filePath+"/"+fileSource+"."+fileType,
             }).then(async res=>{
-                if(res.code == 0){
-                    // 确定新文件应该插入的位置
-                    const sourcePath = fileSource.substring(0,fileSource.lastIndexOf('/'))?fileSource.substring(0,fileSource.lastIndexOf('/'))+"/"+values.name:values.name;
-                    // 来源文件树
-                    const {newTreeData,level} = insertFileInTree(treeData,(fileSource+"."+values.name),fileType,(fileSource+'.'+sourcePath),"locales");
-                    setTreeData(newTreeData)
-                    const newTitle = values.name.split("/").length>1 ? values.name.split("/").pop():(fileSource+"."+values.name);
-                    await codeEditor.setOpenFileList([
-                        ...codeEditor.openFileList,
-                        {
-                            active: false,
-                            checked: false,
-                            children: undefined,
-                            dragOver: false,
-                            dragOverGapBottom: false,
-                            dragOverGapTop: false,
-                            expanded: false,
-                            fileType: fileType,
-                            halfChecked: false,
-                            key: filePath+"/"+fileSource+"."+values.name+"."+fileType+"-"+level,
-                            languagesId: codeEditor.languageId??"2",
-                            loaded: false,
-                            loading: false,
-                            mode: codeEditor.mode,
-                            pos: "0-0-"+codeEditor.openFileList.length,
-                            selected: false,
-                            title: newTitle+"."+fileType,
-                            url: filePath+"/"+fileSource+"."+values.name+"."+fileType,
-                        }
-                    ])
-                    // 激活文件
-                    codeEditor.setActiveFileKey(filePath+"/"+fileSource+"."+values.name+"."+fileType+"-"+level);
-                    setOpen(false);
-                    form.resetFields();
-                }else{
-                    message.error(res.msg);
-                }
+                // 确定新文件应该插入的位置
+                const sourcePath = fileSource.substring(0,fileSource.lastIndexOf('/'))?fileSource.substring(0,fileSource.lastIndexOf('/'))+"/"+values.name:values.name;
+                // 来源文件树
+                const {newTreeData,level} = insertFileInTree(treeData,(fileSource+"."+values.name),fileType,(fileSource+'.'+sourcePath),"locales");
+                setTreeData(newTreeData)
+                const newTitle = values.name.split("/").length>1 ? values.name.split("/").pop():(fileSource+"."+values.name);
+                await codeEditor.setOpenFileList([
+                    ...codeEditor.openFileList,
+                    {
+                        active: false,
+                        checked: false,
+                        children: undefined,
+                        dragOver: false,
+                        dragOverGapBottom: false,
+                        dragOverGapTop: false,
+                        expanded: false,
+                        fileType: fileType,
+                        halfChecked: false,
+                        key: filePath+"/"+fileSource+"."+values.name+"."+fileType+"-"+level,
+                        languagesId: codeEditor.languageId??"2",
+                        loaded: false,
+                        loading: false,
+                        mode: codeEditor.mode,
+                        pos: "0-0-"+codeEditor.openFileList.length,
+                        selected: false,
+                        title: newTitle+"."+fileType,
+                        url: filePath+"/"+fileSource+"."+values.name+"."+fileType,
+                    }
+                ])
+                // 激活文件
+                codeEditor.setActiveFileKey(filePath+"/"+fileSource+"."+values.name+"."+fileType+"-"+level);
+                setOpen(false);
+                form.resetFields();
             }).catch(()=>{
             }).finally(()=>{
                 setLoading(false); 

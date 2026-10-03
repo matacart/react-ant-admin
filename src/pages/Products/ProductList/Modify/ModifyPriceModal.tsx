@@ -1,5 +1,5 @@
 import MySelect from "@/components/Select/MySelect"
-import { updataBatchUpdatePrice } from "@/services/y2/api";
+import { updataBatchUpdatePrice } from "@/services/y2/apiStore";
 import { App, Flex, Modal, Radio } from "antd"
 import { useRef, useState } from "react"
 import styled from "styled-components";
@@ -70,9 +70,7 @@ function ModifyPriceModal({type,onFetchData}:{type:string,onFetchData:any}){
             // 重新加载数据
             onFetchData();
             message.success('更新成功');
-        }).catch(err=>{
-            // message.error("")
-            console.log(err)
+        }).catch(()=>{
         }).finally(()=>{
             setOpen(false)
             setLoading(false)

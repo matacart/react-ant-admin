@@ -53,12 +53,11 @@ function Notification() {
     }
 
     useEffect(()=>{
-        const fetchData =  async ()=>{
+        const fetchData = ()=>{
             // 生成临时编号
             const oseId = uuidv4();
             noticeEmail.setOseId(`oseid_${oseId}`);
-            try{
-                const {emailTemplateConfig,emailTemplateDetail,emailTemplateSettings} = await getEmail(`oseid_${oseId}`);
+            getEmail(`oseid_${oseId}`).then(({emailTemplateConfig,emailTemplateDetail,emailTemplateSettings})=>{
                 noticeEmail.setSections(emailTemplateDetail?.data?.sections);
                 noticeEmail.setOrder(emailTemplateDetail?.data?.order);
                 noticeEmail.setDynamicOrder(emailTemplateDetail?.data?.dynamicOrder);
@@ -67,11 +66,9 @@ function Notification() {
                 noticeEmail.setSettings(emailTemplateSettings?.data);
                 // 更新模板动态源
                 noticeEmail.setTemplateConfig(emailTemplateConfig?.data);
-            }catch(err:any){
-                message.error(intl.formatMessage({ id: 'components.message.error' }));
-            }finally{
+            }).catch(()=>{}).finally(()=>{
                 setIsSkeleton(false);
-            }
+            })
         }
         fetchData();
         return () => {
@@ -97,7 +94,6 @@ function Notification() {
             // 更新模板动态源
             noticeEmail.setTemplateConfig(emailTemplateConfig?.data);
         }).catch(err=>{
-            message.error(intl.formatMessage({ id: 'components.message.error' }));
         }).finally(()=>{
             setSpinning(false);
         })

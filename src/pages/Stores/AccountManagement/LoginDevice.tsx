@@ -6,7 +6,8 @@ import dayjs from "dayjs";
 import accountManagement from "@/store/shops/accountManagementStore";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { history } from '@umijs/max';
-import { delLoginRecord, logout } from "@/services/y2/api";
+import { delLoginRecord } from "@/services/y2/apiAppstore";
+import { logout } from "@/services/y2/apiAppstore";
 import cookie from 'react-cookies'
 import { stringify } from "querystring";
 
@@ -33,47 +34,45 @@ function LoginDevice() {
           okText: '确认',
           cancelText: '取消',
           onOk() {
-            console.log(record.id)
             delLoginRecord(record.id).then(res=>{
-                console.log(res)
-                res.code == 0 && message.success("移除成功")
-
+                message.success("移除成功")
                 const newData = [...data]
                 newData.splice(newData.findIndex(item => item.id === record.id), 1);
                 setData(newData)
-            })
+            }).catch(()=>{})
           }
         });
     };
 
     const confirmCurrent = () => {
         modal.confirm({
-          title: '确认要登出当前设备吗？',
-          icon: <ExclamationCircleFilled style={{color:"#F86140"}}/>,
-          content: '登出当前设备后，您需要重新输入账号和密码进行登录。',
-          centered: true,
-          okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
-          okText: '确认',
-          cancelText: '取消',
-          async onOk() {
-            // 退出登录 -- 清除缓存
-            await logout();
-            let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
-            cookie.remove("token",{domain:test,path:"/"})
-            const { search, pathname } = window.location;
-            const urlParams = new URL(window.location.href).searchParams;
-            /** 此方法会跳转到 redirect 参数所在的位置 */
-            const redirect = urlParams.get('redirect');
-            // Note: There may be security issues, please note
-            if (window.location.pathname !== '/user/signIn' && !redirect) {
-                history.replace({
-                    pathname: '/user/signIn',
-                    search: stringify({
-                        redirect: pathname + search,
-                    }),
-                });
-            }
-          },
+            title: '确认要登出当前设备吗？',
+            icon: <ExclamationCircleFilled style={{color:"#F86140"}}/>,
+            content: '登出当前设备后，您需要重新输入账号和密码进行登录。',
+            centered: true,
+            okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
+            okText: '确认',
+            cancelText: '取消',
+            async onOk() {
+                // 退出登录 -- 清除缓存
+                logout().then(res=>{
+                    let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
+                    cookie.remove("token",{domain:test,path:"/"})
+                    const { search, pathname } = window.location;
+                    const urlParams = new URL(window.location.href).searchParams;
+                    /** 此方法会跳转到 redirect 参数所在的位置 */
+                    const redirect = urlParams.get('redirect');
+                    // Note: There may be security issues, please note
+                    if (window.location.pathname !== '/user/signIn' && !redirect) {
+                        history.replace({
+                            pathname: '/user/signIn',
+                            search: stringify({
+                                redirect: pathname + search,
+                            }),
+                        });
+                    }
+                })
+            },
         });
     };
 

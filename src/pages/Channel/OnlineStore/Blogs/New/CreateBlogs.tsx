@@ -13,7 +13,7 @@ import SEOCard from '../Blogs/SEOCard';
 import ThemeTemplate from '../Blogs/ThemeTemplate';
 import CommentCard from '../Blogs/CommentCard';
 import blogs from '@/store/channel/blogs/blogs';
-import { setArticleCategorys } from '@/services/y2/api';
+import { setArticleCategorys } from '@/services/y2/apiArticle';
 
 function CreateBlogs(){
     
@@ -38,13 +38,10 @@ function CreateBlogs(){
         form.validateFields().then((values)=>{
             setLoading(true);
             setArticleCategorys(blogs.blogs).then(async res=>{
-                if(res.code == 0){
-                    await sleep(2000);
-                    message.success(intl.formatMessage({ id: 'components.message.success' }));
-                    history.push('/website/blogs')
-                }
+                await sleep(2000);
+                message.success(intl.formatMessage({ id: 'components.message.success' }));
+                history.push('/website/blogs')
             }).catch(err=>{
-                console.log(err);
             }).finally(()=>{
                 setLoading(false);
             })

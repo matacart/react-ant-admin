@@ -41,10 +41,8 @@ function SectionHtmlEditor({setting,sectionId}:{setting:any,sectionId:string}) {
             oseid: noticeEmail?.oseId || "",
             section_id: sectionId
         }).then(res=>{
-            if(res?.code == 0) {
-                setCode(res?.data?.render_template || "")
-                setCss(res?.data?.render_css || "")
-            };
+            setCode(res?.data?.render_template || "")
+            setCss(res?.data?.render_css || "")
         }).catch(()=>{
         }).finally(()=>{
             setLoading(false);
@@ -67,10 +65,8 @@ function SectionHtmlEditor({setting,sectionId}:{setting:any,sectionId:string}) {
             render_template: code,
             render_css: css,
         }).then(res=>{
-            if(res?.code == 0) {
-                
-            }
-        }).finally(()=>{
+            message.success(intl.formatMessage({ id:'components.message.success' }));
+        }).catch(()=>{}).finally(()=>{
             setLoading(false);
             setOpen(false);
         })
@@ -86,11 +82,8 @@ function SectionHtmlEditor({setting,sectionId}:{setting:any,sectionId:string}) {
             oseid: noticeEmail?.oseId || "",
             section_id: sectionId,
         }).then(res=>{
-            if(res?.code == 0) {
-                message.success(intl.formatMessage({id:'components.message.success'}));
-            }
+            message.success(intl.formatMessage({id:'components.message.success'}));
         }).catch(()=>{
-            message.error(intl.formatMessage({id:'components.message.error'}));
         }).finally(()=>{
             setResetCodeOpen(false);
             setResetCodeLoading(false);

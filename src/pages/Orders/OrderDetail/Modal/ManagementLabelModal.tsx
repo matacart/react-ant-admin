@@ -2,8 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import SearchInput from "@/components/Input/SearchInput";
 import MySelectIcon from "@/components/Select/MySelectIcon";
-import { batchAddOrderTags } from "@/services/y2/api";
-import { getOrderTagList } from "@/services/y2/apiStore";
+import { getOrderTagList,batchAddOrderTags } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 import { Checkbox, Col, Flex, Form, Input, Modal, Row, Select, Space } from "antd"
 import { useEffect, useRef, useState } from "react";
@@ -45,17 +44,15 @@ function ManagementLabelModal(){
             orderIds:JSON.stringify([order.orderInfo.orderSeq]),
             tagNames:JSON.stringify(tagNames)
         }).then((res:any)=>{
-            res.code == 0 && order.setOrderInfo({
+            order.setOrderInfo({
                 ...order.orderInfo,
                 tags:tagNames
             })
+            // 更新订单数据
+            setIsModalOpen(false);
         }).catch(err=>{
-            console.log(err)
         }).finally(()=>{
-
         })
-        // 更新订单数据
-        setIsModalOpen(false);
     }
 
     const cancel = () => {

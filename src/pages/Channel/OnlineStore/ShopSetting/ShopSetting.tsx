@@ -4,7 +4,7 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { TabsProps, Tabs } from 'antd';
 import MyStylesCard from './MyStylesCard';
 import StylesStoreCard from './StylesStoreCard';
-import { getTemplateMallList } from '@/services/y2/api';
+import { getTemplateMallList } from '@/services/y2/apiTemplate';
 import shopSetting from '@/store/channel/shopSetting/shopSetting';
 import LangSelect from '@/components/Select/LangSelect';
 import { observer } from 'mobx-react-lite';
@@ -41,13 +41,8 @@ function ShopSetting(){
       limit:10
       // languages_id:cookies.load("shop_lang"),
     },signal).then((res:any)=>{
-      if(res.code == 0){
-        shopSetting.setTemplateMallList(res.data)
-      }
+      shopSetting.setTemplateMallList(res.data)
     }).catch(err=>{
-      if (err.name !== 'CanceledError') {
-        console.log(err)
-      }
     }).finally(()=>{
       setIsSkeleton(false)
     })

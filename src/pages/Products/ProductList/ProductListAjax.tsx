@@ -2,11 +2,10 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { App, Avatar, Checkbox, Flex, Input, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import { CopyOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
-import { getProductList, upDateProductStatus } from '@/services/y2/api';
+import { getProductList, upDateProductStatus } from '@/services/y2/apiStore';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import SelectedActions from './SelectedActions';
-import cookie from 'react-cookies';
 import productList from '@/store/product/productList';
 import { observer } from 'mobx-react-lite';
 import { useAbortController } from '@/hooks/customHooks';
@@ -115,11 +114,10 @@ function ProductListAjax(selectProps:any) {
           tempModal.destroy();
           // 修改商品状态
           upDateProductStatus(product.product_id,checked?"1":"0").then(res=>{
-            if(res.code == 0){
-              onChangeSwich(index,checked)
-            }else{
-              message.error("修改状态失败")
-            }
+            onChangeSwich(index,checked)
+          }).catch(()=>{
+          }).finally(()=>{
+            // 状态修改完成后，关闭加载状态
             let tempSwitchList = [...onLoadingList];
             tempSwitchList[index] = false;
             setOnLoadingList(tempSwitchList);
@@ -258,9 +256,10 @@ function ProductListAjax(selectProps:any) {
 
   const fetchData = async () => {
     setLoading(true);
+    const signal = createAbortController();
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-    const res = {
+    getProductList({
       page:page,
       limit:limit,
       title:"",
@@ -271,32 +270,29 @@ function ProductListAjax(selectProps:any) {
       hosted_status:productList.isHosted,
       // 条件
       condition:JSON.stringify(productList.condition)
-    }
-    const signal = createAbortController();
-    const result = await getProductList(res,signal);
-    setLoading(false);
-    // 201 空
-    if(result?.code == 0 || result?.code == 201){
+    },signal).then((res)=>{
       let switchList:boolean[] = [];
-      result.data?.forEach((item:any)=>{
+      res.data?.forEach((item:any)=>{
         switchList.push(false)
       })
       // 初始化开关数组
       setOnLoadingList(switchList);
-      setData(result.data);
+      setData(res.data || []);
       setLoading(false)
       setTableParams({
         ...tableParams,
         pagination: {
           ...tableParams.pagination,
-          total: Number(result.count),
+          total: Number(res.count),
         }
       });
-      productList.setCount(Number(result.count))
-      return
-    }
-    setLoading(false);
+      productList.setCount(Number(res.count))
+    }).catch(()=>{
+    }).finally(()=>{
+      setLoading(false);
+    });
   };
+
   useEffect(() => {
     fetchData();
   }, [productList.languagesId,productList.condition,productList.isAlliance,productList.isHosted,productList.flag,tableParams.pagination?.current, tableParams.pagination?.pageSize]);

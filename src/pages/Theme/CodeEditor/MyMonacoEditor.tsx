@@ -16,7 +16,7 @@ loader.config({
 
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { getFileVersion, getThemeFileDetail, setFileSave } from '@/services/y2/api';
+import { getFileVersion, getThemeFileDetail, setFileSave } from '@/services/y2/apiTemplate';
 import { useLocation, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useSleep } from '@/hooks/customHooks';
@@ -95,14 +95,13 @@ function MyMonacoEditor({file}:{file:any}){
                         versionId:codeEditor.versionId,
                     }).then((res)=>{
                         setFileVersionList(res.data)
-                    })
+                    }).catch(()=>{})
                     setVersion("");
                 }
                 // 更新原始代码为当前保存的代码
                 setOriginalCode(content);
                 message.success(res.msg)
             }).catch(err=>{
-                message.error("请求失败")
             }).finally(()=>{
                 setLoading(false)
             })
@@ -130,18 +129,15 @@ function MyMonacoEditor({file}:{file:any}){
                 mode:codeEditor.mode,
                 fileVersionId:"",
             }).then((res:any)=>{
-                if(res.code == 0){
-                    const fileTypeList = res.data?.fileType.split("/");
-                    if(fileTypeList[0] == "image"){
-                        setImageUrl(res.data?.fileUrl);
-                    }else{
-                        setCode(res.data?.fileContent || "");
-                        setOriginalCode(res.data?.fileContent || "");
-                        setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
-                    }
-                } 
+                const fileTypeList = res.data?.fileType.split("/");
+                if(fileTypeList[0] == "image"){
+                    setImageUrl(res.data?.fileUrl);
+                }else{
+                    setCode(res.data?.fileContent || "");
+                    setOriginalCode(res.data?.fileContent || "");
+                    setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
+                }
             }).catch(err=>{
-                message.error("请求失败")
             })
             // 获取文件版本
             getFileVersion({
@@ -153,7 +149,7 @@ function MyMonacoEditor({file}:{file:any}){
                 versionId:codeEditor.versionId,
             }).then((res:any)=>{
                 setFileVersionList(res.data)
-            })
+            }).catch(()=>{})
             // 修改文件信息
             setFileInfo({
                 ...fileInfo,
@@ -185,7 +181,6 @@ function MyMonacoEditor({file}:{file:any}){
                     setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
                 }
             }).catch(err=>{
-                message.error("请求失败")
             })
             // 获取文件版本
             getFileVersion({
@@ -197,7 +192,7 @@ function MyMonacoEditor({file}:{file:any}){
                 versionId:codeEditor.versionId,
             }).then((res:any)=>{
                 setFileVersionList(res.data)
-            })
+            }).catch(()=>{})
         }
         return () => {
             if (editorRef.current) {
@@ -223,14 +218,12 @@ function MyMonacoEditor({file}:{file:any}){
                             mode:codeEditor.mode,
                             fileVersionId:item.id??"",
                         }).then((res:any)=>{
-                            if(res.code == 0){
-                                setVersion(item.id);
-                                setCode(res.data?.fileContent || "");
-                                setOriginalCode(res.data?.fileContent || "");
-                                const fileTypeList = res.data?.fileType.split("/");
-                                setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
-                            }
-                        })
+                            setVersion(item.id);
+                            setCode(res.data?.fileContent || "");
+                            setOriginalCode(res.data?.fileContent || "");
+                            const fileTypeList = res.data?.fileType.split("/");
+                            setLanguage(fileTypeList.length > 1 ? fileTypeList[1] : fileTypeList[0]);
+                        }).catch(()=>{})
                     }}>
                         <div className={version == (item.id??"") ? 'color-356DFF':'color-242833'}>
                             {item.id == null ?<>

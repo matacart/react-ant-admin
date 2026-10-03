@@ -3,7 +3,7 @@ import styled from "styled-components"
 import AccessRangeAllCard from "./AccessRangeAllCard";
 import customAppConfigSetting from "@/store/appStore/customAppConfigSetting";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import { upDatePermissionsList } from "@/services/y2/api";
+import { upDatePermissionsList } from "@/services/y2/apiAppstore";
 import { useSearchParams } from "react-router-dom";
 
 function AccessRangeCard(){
@@ -35,10 +35,8 @@ function AccessRangeCard(){
             }
         })
         upDatePermissionsList(appId,JSON.stringify(newPermissionsList)).then(res=>{
-            console.log(res)
             message.success("修改成功")
-        }).catch(err=>{
-            console.log(err)
+        }).catch(()=>{
         })
     }
 

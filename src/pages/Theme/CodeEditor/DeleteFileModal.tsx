@@ -1,7 +1,7 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { DeleteIcon } from "@/components/Icons/Icons";
-import { deleteTemplateFile } from "@/services/y2/api";
+import { deleteTemplateFile } from "@/services/y2/apiTemplate";
 import codeEditor from "@/store/theme/codeEditor";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import { Flex, App, Tooltip } from "antd";
@@ -67,33 +67,29 @@ function DeleteFileModal({filePath,name,item,treeData,setTreeData}:DelModalType)
                                         versionId: codeEditor.versionId??"",
                                         forceDelete:false,
                                     }).then(res=>{
-                                        if(res.code == 0){
-                                            // 将该节点移除
-                                            const newTreeData = removeNodeFromTree(treeData, item.key);
-                                            setTreeData(newTreeData);
-                                            // 移除激活文件
-                                            const newOpenFileList = codeEditor.openFileList.filter((file: any) => file.key !== item.key);
-                                            // 如果删除的是当前激活的文件，则需要将activeFileKey前移或设置为其他文件
-                                            if (codeEditor.activeFileKey === item.key) {
-                                                // 查找当前删除文件在打开文件列表中的索引
-                                                const currentIndex = codeEditor.openFileList.findIndex((f: any) => f.key === item.key);
-                                                // 如果有前一个文件，则激活前一个文件
-                                                if (newOpenFileList[currentIndex - 1]?.key) {
-                                                    codeEditor.setActiveFileKey(newOpenFileList[currentIndex - 1].key);
-                                                } 
-                                                // 否则激活第一个文件（如果存在）
-                                                else if (newOpenFileList[0]?.key) {
-                                                    codeEditor.setActiveFileKey(newOpenFileList[0].key);
-                                                } 
-                                                // 如果没有打开的文件，则清空activeFileKey
-                                                else {
-                                                    codeEditor.setActiveFileKey("");
-                                                }
+                                        // 将该节点移除
+                                        const newTreeData = removeNodeFromTree(treeData, item.key);
+                                        setTreeData(newTreeData);
+                                        // 移除激活文件
+                                        const newOpenFileList = codeEditor.openFileList.filter((file: any) => file.key !== item.key);
+                                        // 如果删除的是当前激活的文件，则需要将activeFileKey前移或设置为其他文件
+                                        if (codeEditor.activeFileKey === item.key) {
+                                            // 查找当前删除文件在打开文件列表中的索引
+                                            const currentIndex = codeEditor.openFileList.findIndex((f: any) => f.key === item.key);
+                                            // 如果有前一个文件，则激活前一个文件
+                                            if (newOpenFileList[currentIndex - 1]?.key) {
+                                                codeEditor.setActiveFileKey(newOpenFileList[currentIndex - 1].key);
+                                            } 
+                                            // 否则激活第一个文件（如果存在）
+                                            else if (newOpenFileList[0]?.key) {
+                                                codeEditor.setActiveFileKey(newOpenFileList[0].key);
+                                            } 
+                                            // 如果没有打开的文件，则清空activeFileKey
+                                            else {
+                                                codeEditor.setActiveFileKey("");
                                             }
-                                            codeEditor.setOpenFileList(newOpenFileList);
-                                        }else{
-                                            message.error(res.msg);
                                         }
+                                        codeEditor.setOpenFileList(newOpenFileList);
                                     }).catch(()=>{
                                     }).finally(()=>{
                                         myModal.destroy();

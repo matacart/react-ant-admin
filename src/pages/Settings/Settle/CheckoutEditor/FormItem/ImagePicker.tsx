@@ -1,7 +1,8 @@
 import MyButton from "@/components/Button/MyButton";
 import { AddIcon, SearchSecondIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
-import { getFileList, uploadPic } from "@/services/y2/api";
+import { getFileList } from "@/services/y2/api";
+import { uploadPic } from "@/services/y2/apiAppstore";
 import { CheckCircleFilled, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { useIntl } from "@umijs/max";
 import { Col, Drawer, Flex, App, Row, Spin, Upload } from "antd";
@@ -51,11 +52,7 @@ function ImagePicker({item,data,setData}:{item:string,data:DataType,setData:(ite
         formData.append("file", file)
         setLoading(true);
         uploadPic(formData).then((res: any) => {
-            if(res.code == 0){
-                fetchImgList();
-            }else{
-                message.error("上传失败", 1)
-            }
+            fetchImgList();
         }).catch((err: any) => {
         }).finally(() => {
             setLoading(false);
@@ -90,18 +87,15 @@ function ImagePicker({item,data,setData}:{item:string,data:DataType,setData:(ite
             pageNum:1,
             pageSize:10,
         }).then(res=>{
-            if(res.code == 0){
-                const newList = res.data.list.map((item:any)=>{
-                    return {
-                        id:item.id,
-                        url:item.url,
-                        type:item.nameSuffix
-                    }
-                })
-                setImgList(newList);
-            }
+            const newList = res.data.list.map((item:any)=>{
+                return {
+                    id:item.id,
+                    url:item.url,
+                    type:item.nameSuffix
+                }
+            })
+            setImgList(newList);
         }).catch(err=>{
-            console.log(err);
         }).finally(()=>{
             setLoading(false);
         })

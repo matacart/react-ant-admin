@@ -30,9 +30,8 @@ function CustomerMail({orderList}:{orderList:any[]}) {
                                         config_key:item.key,
                                         config_value:checked,
                                     }).then(res=>{
-                                        res.code == 0 && setList(list.map(i=>i.key == item.key ? {...i,check:checked} : i))
+                                        setList(list.map(i=>i.key == item.key ? {...i,check:checked} : i))
                                     }).catch(()=>{
-                                        message.error(intl.formatMessage({ id: 'components.message.error' }))
                                     })
                                 }} />}
                                 <RightIcon className="font-20" />

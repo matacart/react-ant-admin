@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps, Tooltip } from 'antd';
+import { GetProp, Table, TableColumnsType, TablePaginationConfig, TableProps } from 'antd';
 import { history, useIntl } from '@umijs/max';
 import styled from 'styled-components';
 import { observer } from 'mobx-react-lite';
@@ -7,7 +7,7 @@ import orderDraftList from '@/store/order/orderDraftList';
 import dayjs from 'dayjs';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
-import { getOrderDraftList } from '@/services/y2/api';
+import { getOrderDraftList } from '@/services/y2/apiStore';
 import { useAbortController } from '@/hooks/customHooks';
 import { currencyPrecision } from '@/utils/common';
 import { useSymbolLeft } from '@/hooks/customHooks';
@@ -114,9 +114,6 @@ function OrdersDraftListAjax() {
         total:Number(res.count || 0)
       });
     }).catch(err=>{
-      if(err.name === 'AbortError'){
-        console.log(err);
-      }
     }).finally(()=>{
       setLoading(false);
     })

@@ -1,5 +1,5 @@
 import MySelect from "@/components/Select/MySelect";
-import { getThemeVersions } from "@/services/y2/api";
+import { getThemeVersions } from "@/services/y2/apiTemplate";
 import editor from "@/store/theme/editor";
 import { history, useSearchParams } from "@umijs/max";
 import { Flex } from "antd";
@@ -37,6 +37,7 @@ function VersionSelect() {
                 }
             });
             setOptions(newOptions);
+        }).catch(()=>{
         }).finally(() => {
             setLoading(false);
         });

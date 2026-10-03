@@ -3,7 +3,7 @@ import { App, Button, Card, Checkbox, Flex, Form, Input, Upload } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { setAddonsConfig } from "@/services/y2/api";
+import { setAddonsConfig } from "@/services/y2/apiAppstore";
 import modal from "antd/es/modal";
 import axios from "axios";
 import LangSelect from "@/components/Select/LangSelect";
@@ -12,6 +12,7 @@ import DefaultInput from "@/components/Input/DefaultInput";
 import MyTextArea from "@/components/Input/MyTextArea";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import { useSleep } from "@/hooks/customHooks";
+import { observer } from "mobx-react-lite";
 
 
 const { TextArea } = Input;
@@ -74,7 +75,7 @@ function AddManualCollection() {
                 await sleep(1000)
                 message.success("添加成功")
                 history.push("/settings/payments")
-            }).finally(()=>{
+            }).catch(()=>{}).finally(()=>{
                 setLoading(false)
             })
         }).catch(()=>{
@@ -189,7 +190,7 @@ function AddManualCollection() {
     )
 }
 
-export default AddManualCollection
+export default observer(AddManualCollection)
 
 const Scoped = styled.div`
 

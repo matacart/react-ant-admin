@@ -8,7 +8,7 @@ import { App, Flex, Form, Modal } from "antd"
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { styled } from 'styled-components';
 import { CountryCodeToStringTemplateMap,StringTemplateMap,templates } from "@/../public/json/template.json";
-import { updateOrderReceiverInfo } from "@/services/y2/apiStore";
+import { updateOrderReceiverInfo } from "@/services/y2/apiOrders";
 
 
 type AddressOption = {
@@ -52,8 +52,9 @@ function DeliveryAddressModal({orderSeq,languagesId,receiverInfo,success}:{order
             setProvinceOptions([]);
             return;
         }
-        const res = await getProvinceList(countryId);
-        setProvinceOptions((res.data || []).map((it: any) => ({ value: it.id, label: it.name })));
+        getProvinceList(countryId).then((res) => {
+            setProvinceOptions((res.data || []).map((it: any) => ({ value: it.id, label: it.name })));
+        });
     }, []);
 
     // 加载城市
@@ -62,8 +63,9 @@ function DeliveryAddressModal({orderSeq,languagesId,receiverInfo,success}:{order
             setCityOptions([]);
             return;
         }
-        const res = await getCityList(provinceId);
-        setCityOptions((res.data || []).map((it: any) => ({ value: it.id, label: it.name })));
+        getCityList(provinceId).then((res) => {
+            setCityOptions((res.data || []).map((it: any) => ({ value: it.id, label: it.name })));
+        });
     }, []);
 
 
@@ -182,12 +184,9 @@ function DeliveryAddressModal({orderSeq,languagesId,receiverInfo,success}:{order
                 taxNum:"",
                 taxType:"",
             }).then((res)=>{
-                if(res.code == 0){
-                    success();
-                    setOpen(false);
-                }
+                success();
+                setOpen(false);
             }).catch(()=>{
-                message.error("err");
             }).finally(()=>{
                 setLoading(false);
             })

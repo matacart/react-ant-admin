@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { updatePackageExpress } from "@/services/y2/apiStore";
+import { updatePackageExpress } from "@/services/y2/apiOrders";
 import globalStore from "@/store/globalStore";
 import order, { OrdersPackageType } from "@/store/order/order";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -49,12 +49,9 @@ function PackageTrackingModal({ordersPackage}:{ordersPackage:OrdersPackageType})
                 sellerCountryCode:"CN",
                 multiExpressInfo:JSON.stringify(values.multiExpressInfo),
             }).then((res)=>{
-                if(res.code == 0){
-                    order.triggerRefresh();
-                    setOpen(false);
-                }
+                order.triggerRefresh();
+                setOpen(false);
             }).catch(()=>{
-                message.error("更新失败");
             }).finally(()=>{
                 setLoading(false)
             })

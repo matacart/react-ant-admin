@@ -6,7 +6,7 @@ import QuickLoginCard from "./QuickLoginCard";
 import ContactInformationCard from "./ContactInformationCard";
 import AccountLanguage from "./AccountLanguage";
 import LoginDevice from "./LoginDevice";
-import { getUserInfo, setUserInfo } from "@/services/y2/api";
+import { getUserInfo, setUserInfo } from "@/services/y2/apiAppstore";
 import AgreementAndPolicy from "./AgreementAndPolicy";
 import accountManagement from "@/store/shops/accountManagementStore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
@@ -27,12 +27,9 @@ function AccountManagement(){
 
     useEffect(()=>{
         getUserInfo().then((res:any)=>{
-            if(res.code == 0){
-                accountManagement.setLoginRecord(res.data.login_record??[])
-                accountManagement.setUserInfo(res.data.user)
-            }
-        }).catch(err=>{
-            console.log(err)
+            accountManagement.setLoginRecord(res.data.login_record??[])
+            accountManagement.setUserInfo(res.data.user)
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })
@@ -130,22 +127,17 @@ function AccountManagement(){
                                 });
                                 if (isPass) {
                                     setIsRenewal(true);
-                                    try {
-                                        setUserInfo(accountManagement.userInfo).then(res => {
-                                            if(res?.code == "0") {
-                                                const languagesId = accountManagement.userInfo.languages_id
-                                                localStorage.setItem("USE_LANG",languagesId);
-                                                // 设置语言
-                                                const language = i18n.find(item => item.id == languagesId)?.lang ?? "en-US";
-                                                setLocale(language,false);
-                                                message.success("更新成功");
-                                            }
-                                        });
-                                    } catch (error) {
-                                        message.error("失败，请重试");
-                                    } finally {
+                                    setUserInfo(accountManagement.userInfo).then(res => {
+                                        const languagesId = accountManagement.userInfo.languages_id
+                                        localStorage.setItem("USE_LANG",languagesId);
+                                        // 设置语言
+                                        const language = i18n.find(item => item.id == languagesId)?.lang ?? "en-US";
+                                        setLocale(language,false);
+                                        message.success("更新成功");
+                                    }).catch(()=>{
+                                    }).finally(() => {
                                         setIsRenewal(false);
-                                    }
+                                    });
                                 }
                             } } text={"更新"} />
                         </div>

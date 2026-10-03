@@ -37,10 +37,6 @@ function AfterSalesTrackingQuery({afterSaleOrder}:{afterSaleOrder:AfterSaleOrder
             expressCode:afterSaleOrder?.orderRefund?.expressCode,
             expressCompanyCode:afterSaleOrder?.orderRefund?.expressCompanyCode,
         }).then(res=>{
-            if(res.code != 0){
-                message.error(res?.msg || "查询物流轨迹失败");
-                return;
-            }
             const Items = (res?.data?.traces || []).map((item:any,index:number)=>({
                 children: <>
                     <div className="color-62708D">{item?.location || ""} {item?.acceptStation || ""}</div>

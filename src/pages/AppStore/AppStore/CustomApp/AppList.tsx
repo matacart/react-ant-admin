@@ -1,9 +1,9 @@
-import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
-import { App, Button, Card, Divider, Flex, Form, Input, Modal, Select, Table, TableProps, TabsProps } from "antd"
+import { ArrowLeftOutlined } from "@ant-design/icons"
+import { App, Button, Card, Flex, Form, Input, Modal, Select, Table, TableProps, TabsProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import { creatAppStore, delDevApp, getEmployeeList, setAppStatus, unInstallDevApp } from "@/services/y2/api"
+import { creatAppStore, delDevApp, getEmployeeList, unInstallDevApp } from "@/services/y2/apiAppstore"
 
 import dayjs from 'dayjs';
 import LicensesAndTerms from "./LicensesAndTerms"
@@ -43,9 +43,8 @@ function AppList(props) {
             setIsModalOpen(false)
             // 提交表单
             creatAppStore(values).then(res=>{
-                console.log(res);
-                res?.code == 0 && message.success("创建应用成功");
-            })
+                message.success("创建应用成功");
+            }).catch(()=>{})
         }).catch((errorInfo)=>{
         }) 
     }
@@ -66,8 +65,7 @@ function AppList(props) {
                     }
                 })
             });
-        }).catch((error)=>{
-            console.log(error)
+        }).catch(()=>{
         })
     }
     // 删除应用
@@ -75,8 +73,7 @@ function AppList(props) {
         delDevApp(appId).then(res=>{
             message.success("删除应用成功");
             setData((prevData:any) => prevData ? prevData.filter((element:any) => element.id !== appId) : null);
-        }).catch((error)=>{
-            console.log(error)
+        }).catch(()=>{
         })
     }
 
@@ -140,7 +137,6 @@ function AppList(props) {
 
 
     useEffect(()=>{
-        // 
         getEmployeeList().then(res=>{
             const newEmployeeList = res.data.map(item=>{
                 return {
@@ -149,7 +145,7 @@ function AppList(props) {
                 }
             })
             setEmployeeList(newEmployeeList)
-        })
+        }).catch(()=>{})
         // 
         setData(props.data as DataType[])
     },[])

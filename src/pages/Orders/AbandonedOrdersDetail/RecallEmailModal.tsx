@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton"
 import DefaultInput from "@/components/Input/DefaultInput";
 import MyInput from "@/components/Input/MyInput";
 import SecondTinyMce from "@/components/MCE/SecondTinyMce";
-import { sendRecallEmail } from "@/services/y2/ApiAbandonedOrder";
+import { sendRecallEmail } from "@/services/y2/apiAbandonedOrder";
 import { getEmailTemplateConfig, getEmailTemplateDetail } from "@/services/y2/apiEmail";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import { ExclamationCircleFilled } from "@ant-design/icons";
@@ -160,7 +160,7 @@ const RecallEmailModal = () => {
             oseid:`oseid_${oseId}`,
         }).then((res)=>{
             setUsableVariable(res.data.usableVariable || []);
-        })
+        }).catch(()=>{})
     },[])
 
     return (

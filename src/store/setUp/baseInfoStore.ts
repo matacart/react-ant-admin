@@ -1,8 +1,5 @@
-import { setStoreInfo } from "@/services/y2/api";
 import { makeAutoObservable } from "mobx";
 
-
-interface StoreInfoType{}
 
 class BaseInfoStore{
 
@@ -14,7 +11,6 @@ class BaseInfoStore{
 
     id:string = "";
 
-    // storeInfo
     storeInfo:any = {}
 
     setStoreInfo(storeInfo:any){
@@ -43,11 +39,6 @@ class BaseInfoStore{
     //     })
     //     return true;
     // }
-    // 更新
-    async setStore(){
-        const result = await setStoreInfo(this)
-        return result
-    }
 }
 
 export default new BaseInfoStore();

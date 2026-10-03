@@ -4,7 +4,7 @@ import { App, Flex, Modal } from "antd"
 import { useState } from "react"
 import styled from "styled-components";
 import MyButton from "@/components/Button/MyButton";
-import { deleteProductList } from "@/services/y2/api";
+import { deleteProductList } from "@/services/y2/apiStore";
 import productList from "@/store/product/productList";
 
 function ModifyDeteleModal({count,onFetchData}:{count:number,onFetchData:any}){
@@ -18,15 +18,12 @@ function ModifyDeteleModal({count,onFetchData}:{count:number,onFetchData:any}){
     const submit = ()=>{
         setLoading(true)
         deleteProductList(productList.productList.toString()).then(res=>{
-            if(res?.code == 0){
-              // 清除选中状态
-              productList.setProductList([])
-              // 重新加载数据
-              onFetchData();
-              message.success('商品删除成功');
-            }
-        }).catch(err=>{
-            message.error('商品删除失败');
+            // 清除选中状态
+            productList.setProductList([])
+            // 重新加载数据
+            onFetchData();
+            message.success('商品删除成功');
+        }).catch(()=>{
         }).finally(()=>{
             setLoading(false)
             setOpen(false)

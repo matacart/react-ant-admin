@@ -1,5 +1,5 @@
 
-import { uploadPic } from "@/services/y2/api";
+import { uploadPic } from "@/services/y2/apiAppstore";
 import categories from "@/store/product/categories";
 import { PlusOutlined } from "@ant-design/icons";
 import { Card,Image, GetProp, Upload, UploadFile, UploadProps, Spin } from "antd"
@@ -40,15 +40,12 @@ import styled from "styled-components"
         let formData = new FormData();
         formData.append("file", info.file as FileType)
         uploadPic(formData).then((res:any)=>{
-            if(res.code == 0){
-                categories.setCategoriesInfo({
-                    ...categories.categoriesInfo,
-                    category_image: res.data.src
-                })
-                setFileList(info.fileList);
-            }
+            categories.setCategoriesInfo({
+                ...categories.categoriesInfo,
+                category_image: res.data.src
+            })
+            setFileList(info.fileList);
         }).catch((err)=>{
-            // message.error('err')
         }).finally(()=>{
             setIsUpload(false)
         })

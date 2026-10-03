@@ -1,9 +1,5 @@
-import { Button, Checkbox, Flex, Input, MenuProps, Modal, Radio, Select } from "antd";
-const { Option } = Select;
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { deleteProductList, updataBatchUpdatePrice } from "@/services/y2/api";
+import { Checkbox, Flex, Input, MenuProps, Modal, Radio, Select } from "antd";
 import styled from "styled-components";
-import { useState } from "react";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import DefaultButton from "@/components/Button/DefaultButton";
 import productList from "@/store/product/productList";

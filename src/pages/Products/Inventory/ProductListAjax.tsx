@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { App, Avatar, Button, Modal, Table } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-import { getProductList, upDateProductStatus } from '@/services/y2/api';
+import { getProductList, upDateProductStatus } from '@/services/y2/apiStore';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import productList from '@/store/product/productList';
@@ -109,11 +109,10 @@ function ProductListAjax(selectProps:any) {
           tempModal.destroy();
           // 修改商品状态
           upDateProductStatus(productData.productid,checked?"1":"0").then(res=>{
-            if(res.code == 0){
-              onChangeSwich(index,checked)
-            }else{
-              message.error("修改状态失败")
-            }
+            onChangeSwich(index,checked)
+          }).catch(()=>{
+          }).finally(()=>{
+            // 状态修改完成后，关闭加载状态
             let tempSwitchList = [...onLoadingList];
             tempSwitchList[index] = false;
             setOnLoadingList(tempSwitchList);
@@ -217,8 +216,7 @@ function ProductListAjax(selectProps:any) {
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-
-    const res = {
+    getProductList({
       page:page,
       limit:limit,
       title:"",
@@ -229,56 +227,46 @@ function ProductListAjax(selectProps:any) {
       hosted_status:productList.isHosted,
       // 条件
       condition:JSON.stringify(productList.condition)
-    }
-
-    try {
-      const result = await getProductList(res)
-      setLoading(false);
-      // 201 空
-      if(result.code == 0 || result.code == 201){
-        let newData:DataType[] = [];
-        let switchList:boolean[] = [];
-        result.data?.forEach((item:any)=>{
-          newData.push({
-            key:item.id,
-            model: item.model,
-            imgUrl: item.product_image,  //封面
-            product_image: item.additional_image,
-            price: item.price,
-            // specialprice:item.specialprice,
-            costPrice:item.cost_price,
-            title: item.title,
-            content:item.content,
-            state: item.status,
-            inventory: item.quantity,
-            ISBN:item.barcode,
-            HSCode:item.hs_code,
-            notion:item.shipping_country_id,
-            productid:item.id,  //产品id
-            languages_id:item.languages_id,
-            // 获取所有数据
-          })
-        switchList.push(false)
+    }).then(res=>{
+      let newData:DataType[] = [];
+      let switchList:boolean[] = [];
+      res.data?.forEach((item:any)=>{
+        newData.push({
+          key:item.id,
+          model: item.model,
+          imgUrl: item.product_image,  //封面
+          product_image: item.additional_image,
+          price: item.price,
+          // specialprice:item.specialprice,
+          costPrice:item.cost_price,
+          title: item.title,
+          content:item.content,
+          state: item.status,
+          inventory: item.quantity,
+          ISBN:item.barcode,
+          HSCode:item.hs_code,
+          notion:item.shipping_country_id,
+          productid:item.id,  //产品id
+          languages_id:item.languages_id,
+          // 获取所有数据
         })
-        // 初始化开关数组
-        setOnLoadingList(switchList);
-        setData(newData);
-        setLoading(false)
-        setTableParams({
-          ...tableParams,
-          pagination: {
-            ...tableParams.pagination,
-            total: result.count,
-          }
-        });
-        productList.setCount(result.count)
-        return
-      }
-      throw new Error(result);
-    }catch(error){
-      message.error('获取数据失败');
-    }
-    setLoading(false);
+        switchList.push(false)
+      })
+      // 初始化开关数组
+      setOnLoadingList(switchList);
+      setData(newData);
+      setLoading(false)
+      setTableParams({
+        ...tableParams,
+        pagination: {
+          ...tableParams.pagination,
+          total: Number(res.count) || 0,
+        }
+      });
+    }).catch(()=>{
+    }).finally(()=>{
+      setLoading(false);
+    })
   };
   useEffect(() => {
     // fetchData();

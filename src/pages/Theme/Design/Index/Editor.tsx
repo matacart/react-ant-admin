@@ -4,7 +4,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import editor from '@/store/theme/editor';
 import { observer } from 'mobx-react-lite';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
-import { getGenerateAuthToken, getTemplatePage, installedSections, languageSchema, settingsSections, templateInfo } from '@/services/y2/api';
+import { getTemplatePage, installedSections, languageSchema, settingsSections, templateInfo } from '@/services/y2/api';
+import { getGenerateAuthToken } from '@/services/y2/apiAppstore';
 import { addLocale, useIntl, useParams, useSearchParams } from '@umijs/max';
 import { useAbortController } from '@/hooks/customHooks';
 import Header from '../Header/Header';
@@ -71,51 +72,34 @@ function Editor() {
     }
 
     // 页面
-    const getInstalledSections = async (templateName:string,languagesId:string,versionId:string,mode:string)=>{
-      try {
-        const signal = createAbortController();
-        const installData = await installedSections({
-          oseid: "",
-          themeId: templateId??"",
-          pageName: templateName??'templates/index.json',
-          languages_id:languagesId,
-          mode: mode,
-          versionId:versionId
-        },signal);
-        if(installData.code == "SUCCESS"){
-          editor.setIsAuthor(installData.data.isAuthor);
-          editor.setTemplateData(installData.data.sections)
-        }
-      } catch (error) {
-        console.error('Failed to add page:', error);
-      }
+    const getInstalledSections = (templateName:string,languagesId:string,versionId:string,mode:string)=>{
+      const signal = createAbortController();
+      installedSections({
+        oseid: "",
+        themeId: templateId??"",
+        pageName: templateName??'templates/index.json',
+        languages_id:languagesId,
+        mode: mode,
+        versionId:versionId
+      },signal).then((res)=>{
+        editor.setIsAuthor(res.data.isAuthor);
+        editor.setTemplateData(res.data.sections)
+      }).catch((err)=>{})
     }
 
     // 全局设置
-    const getSettingsSections = async (languagesId:string,versionId:string,mode:string)=>{
-      try{
-        const signal = createAbortController();
-        const settingsData = await settingsSections({
-          mode: mode,
-          themeId: templateId??"",
-          action:"get",
-          languages_id:languagesId,
-          versionId:versionId
-        },signal)
-        if(settingsData.code == "SUCCESS"){
-          editor.setSettings(settingsData.data);
-          // editor.setSettings({
-          //   ...settingsData.data,
-          //   settingsData: temp,
-          // });
-          editor.setMode(settingsData.data.mode)
-        }
-        if(settingsData.code == 201){
-          message.error(settingsData.msg);
-        }
-      }catch (error) {
-        console.error('Failed to add settings:', error);
-      }
+    const getSettingsSections = (languagesId:string,versionId:string,mode:string)=>{
+      const signal = createAbortController();
+      settingsSections({
+        mode: mode,
+        themeId: templateId??"",
+        action:"get",
+        languages_id:languagesId,
+        versionId:versionId
+      },signal).then((res)=>{
+        editor.setSettings(res.data);
+        editor.setMode(res.data.mode)
+      }).catch((err)=>{})
     }
 
     // 语言 
@@ -123,81 +107,59 @@ function Editor() {
       setIsLoading(true)
       // 动态加载语言包
       const loadAntdLocale = await import(`antd/es/locale/${intl.locale.replace('-','_')}`);
-      try {
-        const signal = createAbortController();
-        const languageSchemaData = await languageSchema({
+      const signal = createAbortController();
+      languageSchema({
           mode: mode,
           themeId: templateId??"",
           versionId:versionId,
           language: i18n.find((item:any)=>item.lang == intl.locale)?.language_code || "en-us",
-        },signal)
-        if(languageSchemaData.code == "SUCCESS"){
-          // 将嵌套对象扁平化后再添加到语言包中
-          const flattenedSections = flattenObject(languageSchemaData.data.schema);
-          // 添加多语言 使用setTimeout确保在组件完全挂载后执行
-          setTimeout(() => {
-            try {
-              addLocale(intl.locale,flattenedSections,
-              {
-                momentLocale: (intl as any)?.momentLocale,
-                antd: loadAntdLocale,
-              });
-            } catch (error) {
-              console.error('Failed to add locale:', error);
-            }
-          }, 0);
-        }
-      } catch (error) {
-        console.error('Failed to add locale:', error);
-      }finally{
+      },signal).then((res)=>{
+        // 将嵌套对象扁平化后再添加到语言包中
+        const flattenedSections = flattenObject(res.data.schema);
+        // 添加多语言 使用setTimeout确保在组件完全挂载后执行
+        setTimeout(() => {
+          addLocale(intl.locale,flattenedSections,{
+            momentLocale: (intl as any)?.momentLocale,
+            antd: loadAntdLocale,
+          });
+        }, 0);
+      }).catch((err)=>{}).finally(()=>{
         setIsLoading(false)
-      }
+      })
     }
 
     // 模板信息
-    const getTemplateInfo = async (languagesId:string)=>{
-      try{
-        const signal = createAbortController();
-        const templateInfoData = await templateInfo({
-          template_id: templateId??"",
-          languages_id:languagesId,
-        },signal)
-        if(templateInfoData.code == "SUCCESS"){
-          editor.setTemplateInfo({
-            themeName: templateName,
-            ...templateInfoData.data
-          })
-        }
-      }catch (error) {
-        console.error('Failed to add templateInfo:', error);
-      }
+    const getTemplateInfo = (languagesId:string)=>{
+      const signal = createAbortController();
+      templateInfo({
+        template_id: templateId??"",
+        languages_id:languagesId,
+      },signal).then((res)=>{
+        editor.setTemplateInfo({
+          themeName: templateName,
+          ...res.data
+        })
+      }).catch((err)=>{})
     }
     // 导航信息
-    const getNavigationData = async ()=>{
-      try{
-        const signal = createAbortController();
-        const pages = await getTemplatePage({
-          themeId: templateId || "",
-          languages_id: languageId,            
-        },signal);
-        if(pages.code == 0){
-          const newNavigationData = pages.data.list;
-          setNavigationData(newNavigationData);
-        }
-      }catch (error) {
-        console.error('Failed to add templateInfo:', error);
-      }
+    const getNavigationData = ()=>{
+      const signal = createAbortController();
+      getTemplatePage({
+        themeId: templateId || "",
+        languages_id: languageId,            
+      },signal).then((res)=>{
+        const newNavigationData = res.data.list;
+        setNavigationData(newNavigationData);
+      }).catch((err)=>{
+      })
     }
 
     // 作者令牌
     const getAuthorToken = async ()=>{
-      try{
-        const signal = createAbortController();
-        const authorTokenData = await getGenerateAuthToken(signal)
-        authorTokenData.code == 0 && editor.setAuthorToken(authorTokenData.data.auth_token)
-      }catch (error) {
-        console.error('Failed to add templateInfo:', error);
-      }
+      const signal = createAbortController();
+      getGenerateAuthToken(signal).then((res)=>{
+        editor.setAuthorToken(res.data.auth_token)
+      }).catch(()=>{})
     }
 
     // 初始化

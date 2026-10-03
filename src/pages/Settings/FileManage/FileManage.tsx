@@ -38,27 +38,25 @@ function FileManage() {
     const [activeGroupId, setActiveGroupId] = useState("0");
 
     const onChange = (key: string) => {
-        console.log(key);
     };
 
     // 新增分组--保存
     const newGroup = () => {
-        getGroupAdd(groupName,"").then((res)=>{
-            console.log(res);
-            if(res.code == 0){
-                const item = {
-                    groupId:res.data[0].groupId+"",
-                    groupName:res.data[0].groupName
-                }
-                setItems([...items, {key:res.data[0].groupId+"",label: groupName, children: <GroupCard groupItem={item} removeItem={removeGroup} /> }]);
-                fileData.setItemsList([...items, {key:res.data[0].groupId+"",label: groupName, children: <GroupCard groupItem={item} removeItem={removeGroup} /> }]);
-                setActiveKey(res.data[0].groupId+"")
-                setGroupList([...groupList,{groupId:res.data[0].groupId+"", groupName:res.data[0].groupName, resourceCount:"0"}])
-                setIsOpen(false)
-                setGroupName("")
-            }else{
-                console.log("error");
+        getGroupAdd({
+            groupName:groupName,
+            groupId:""
+        }).then((res)=>{
+            const item = {
+                groupId:res.data[0].groupId+"",
+                groupName:res.data[0].groupName
             }
+            setItems([...items, {key:res.data[0].groupId+"",label: groupName, children: <GroupCard groupItem={item} removeItem={removeGroup} /> }]);
+            fileData.setItemsList([...items, {key:res.data[0].groupId+"",label: groupName, children: <GroupCard groupItem={item} removeItem={removeGroup} /> }]);
+            setActiveKey(res.data[0].groupId+"")
+            setGroupList([...groupList,{groupId:res.data[0].groupId+"", groupName:res.data[0].groupName, resourceCount:"0"}])
+            setIsOpen(false)
+            setGroupName("")
+        }).catch((err)=>{
         })
     };
 
@@ -147,22 +145,19 @@ function FileManage() {
     useEffect(()=>{
         const signal = createAbortController();
         getGroupList(signal).then(res=>{
-            if(res.code == 0){
-                setGroupList(res.data.list??=[])
-                let newItems:TabsProps['items'] = [...item]
-                res.data.list.forEach((item:any,index:number)=>{
-                    newItems.push({
-                        label: item.groupName,
-                        children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
-                        destroyOnHidden: true,
-                        key:item.groupId,
-                    })
+            setGroupList(res.data.list??[])
+            let newItems:TabsProps['items'] = [...item]
+            res.data.list.forEach((item:any,index:number)=>{
+                newItems.push({
+                    label: item.groupName,
+                    children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
+                    destroyOnHidden: true,
+                    key:item.groupId,
                 })
-                setItems(newItems)
-                fileData.setItemsList([...newItems])
-            }
+            })
+            setItems(newItems)
+            fileData.setItemsList([...newItems])
         }).catch(error=>{
-            // setIsSkeleton(!res)
         }).finally(()=>{
             setIsSkeleton(false)
         })
@@ -176,19 +171,18 @@ function FileManage() {
         setItems(fileData.itemsList)
         const signal = createAbortController();
         getGroupList(signal).then(res=>{
-            if(res.code == 0){
-                setGroupList(res.data.list??=[])
-                let newItems:TabsProps['items'] = [...item]
-                res.data.list.forEach((item:any,index:number)=>{
-                    newItems.push({
-                        label: item.groupName,
-                        children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
-                        destroyOnHidden: true,
-                        key:item.groupId,
-                    })
+            setGroupList(res.data.list??[])
+            let newItems:TabsProps['items'] = [...item]
+            res.data.list.forEach((item:any,index:number)=>{
+                newItems.push({
+                    label: item.groupName,
+                    children: <GroupCard groupItem={item} removeItem={removeGroup}/>,
+                    destroyOnHidden: true,
+                    key:item.groupId,
                 })
-                setItems(newItems)
-            }
+            })
+            setItems(newItems)
+        }).catch(error=>{
         })
     },[fileData.itemsList])
 

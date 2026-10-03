@@ -1,6 +1,6 @@
 import ButtonIcon from "@/components/Button/ButtonSvg"
 import { LeftIcon, RightIcon } from "@/components/Icons/Icons"
-import { getOrderSubIdScroll } from "@/services/y2/apiStore"
+import { getOrderSubIdScroll } from "@/services/y2/apiOrders"
 import order from "@/store/order/order"
 import { history } from "@umijs/max"
 import { App, Flex } from "antd"
@@ -27,7 +27,6 @@ function LRButton({orderSeq}:{orderSeq:string}) {
         }).then(res=>{
             setOrderSubIdScroll(res.data)
         }).catch(err=>{
-            message.error("失败，请重试")
         })
     },[orderSeq])
 

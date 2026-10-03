@@ -14,7 +14,7 @@ import CommentCard from '../Blogs/CommentCard';
 import blogs from '@/store/channel/blogs/blogs';
 import DeleteModal from '@/components/Modal/DeleteModal';
 import DangerButton from '@/components/Button/DangerButton';
-import { getArticleCategorysDetail, setArticleCategorys } from '@/services/y2/api';
+import { getArticleCategorysDetail, setArticleCategorys } from '@/services/y2/apiArticle';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
 function EditBlogs(){
@@ -38,9 +38,8 @@ function EditBlogs(){
        form.validateFields().then(values=>{
             setLoading(true);
             setArticleCategorys(blogs.blogs).then(res=>{
-                res.code == 0 && message.success(intl.formatMessage({ id: 'components.message.success' }))
+                message.success(intl.formatMessage({ id: 'components.message.success' }))
             }).catch(err=>{
-                console.log(err);
             }).finally(()=>{
                 setLoading(false);
             })
@@ -53,7 +52,7 @@ function EditBlogs(){
             id:id??"",
             languages_id:languagesId??"2"
         }).then(res=>{
-            res.code == 0 && blogs.setBlogs({
+            blogs.setBlogs({
                 id: res.data.id,
                 languages_id:res.data.languages_id,
                 handle:res.data.handle,

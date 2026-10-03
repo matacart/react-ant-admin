@@ -27,11 +27,11 @@ function UndispatchedGoods(){
                                 <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg?x-oss-process=image/resize,w_200"} alt={item.title} style={{ width: "80px", height: "80px", marginRight: "10px" }} />
                             </Flex>
                             <Flex style={{flex:1}} vertical>
-                                <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all" }} className="font-w-500">{item.title}</div>
-                                <div style={{ fontSize: "14px", color: "#474F5E" }}>{
+                                <div className="font-14 color-474F5E font-w-500 title">{item.title}</div>
+                                <div className="font-14 color-474F5E">{
                                     item.attributes?.map((item:any)=>item.attributeValue??"").join("/")
                                 }</div>
-                                <div style={{ fontSize: "14px", color: "#474F5E" }}>sku:{item.productSku}</div>
+                                <div className="font-14 color-474F5E">sku:{item.productSku}</div>
                             </Flex>
                             <Flex justify="end" vertical style={{height:"100%"}}>
                                 <NumberInput style={{width:"128px",height:"36px"}} 
@@ -74,5 +74,14 @@ const Scoped = styled.div`
         .form-item-container:first-child{
             padding-top: 0;
         }
+    }
+    .title{
+        margin-bottom: 4px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
     }
 `

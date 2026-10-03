@@ -79,22 +79,11 @@ export default function LoginForm() {
                     layout="horizontal"
                     // 重设密码
                     onFinish={async (values: API.LoginParams) => {                            
-                        try {
-                            const msg = await resetPassword({ ...values,phoneCode });
-                            if (msg.status) {
-                                message.success(intl.formatMessage({id: 'user.forget.success'}));
-                                // await fetchUserInfo();
-                                // const urlParams = new URL(window.location.href).searchParams;
-                                // history.push(urlParams.get('redirect') || '/');
-                                history.push('/user/signIn');
-                            }else{
-                                message.error(intl.formatMessage({id: 'user.forget.captchaWrong'}));
-                            }
-                        } catch (error) {
-                            message.error(intl.formatMessage({id: 'user.forget.resetFailure'}));
-                        }
-                    }
-                    }
+                        resetPassword({ ...values,phoneCode }).then(res=>{
+                            message.success(intl.formatMessage({id: 'user.forget.success'}));
+                            history.push('/user/signIn');
+                        }).catch(()=>{});
+                    }}
                     size="large"
                 >
                     <Form.Item
@@ -200,7 +189,8 @@ export default function LoginForm() {
                                 setCaptchaIsLoading(true);
                                 const result = await getFakeCaptcha(phone,phoneCode,"forget");
                                 if (!result) {
-                                    message.error('验证码获取失败！');return;
+                                    message.error('验证码获取失败！');
+                                    return;
                                 }else{
                                     if(result.status){
                                         message.success('获取验证码成功！');

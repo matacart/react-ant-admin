@@ -1,4 +1,4 @@
-import { logout } from "@/services/y2/api";
+import { logout } from "@/services/y2/apiAppstore";
 import { RightOutlined, SafetyCertificateOutlined, TrademarkOutlined, WalletOutlined } from "@ant-design/icons";
 import { Flex } from "antd";
 import { history } from '@umijs/max';
@@ -11,23 +11,23 @@ import { clearAllCookies } from "@/utils/common";
 export default function UserCard(props:any) {
     /**
      * 退出登录
+     * 清除缓存
      */
-    const loginOut = async () => {
-        // 清除缓存
-        await logout();
-        let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
-        clearAllCookies();
-        // 清除主域名的公共token
-        cookie.remove("token",{domain:test,path:"/"});
-        if (window.location.pathname !== '/user/signIn') {
-            history.replace({
-                pathname: '/user/signIn'
-            });
-        }
+    const loginOut = () => {
+        logout().then(res=>{
+            let test = window.location.hostname == "localhost" ? "localhost" : window.location.hostname.slice(window.location.hostname.indexOf("."))
+            clearAllCookies();
+            // 清除主域名的公共token
+            cookie.remove("token",{domain:test,path:"/"});
+            if (window.location.pathname !== '/user/signIn') {
+                history.replace({
+                    pathname: '/user/signIn'
+                });
+            }
+        })
     };
 
     useEffect(() => {
-        console.log(props.currentUser)
     }, []);
 
     return (
@@ -40,7 +40,7 @@ export default function UserCard(props:any) {
                             <span style={{fontWeight:600}}>账号</span>
                             <RightOutlined style={{marginLeft:"8px", width:"10px"}} />
                         </div>
-                        <a onClick={loginOut} className="quit">退出登录</a>
+                        <a onClick={()=>loginOut()} className="quit">退出登录</a>
                     </Flex>
                     <Flex style={{marginTop:"12px"}}>
                         <div className="user_img"><img src="https://oss.aliyuncs.com/aliyun_id_photo_bucket/default_handsome.jpg"/></div>

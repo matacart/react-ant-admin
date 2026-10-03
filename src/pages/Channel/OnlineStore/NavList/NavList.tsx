@@ -28,14 +28,11 @@ function NavList(){
             languages_id:"2",
             pid:"0",
         },signal).then(res=>{
-            if(res.code == 0){
-                setNavData({
-                    count:res.data.total || "0",
-                    list:[...res.data.list]
-                });
-            }
+            setNavData({
+                count:res.data.total || "0",
+                list:[...res.data.list]
+            });
         }).catch((err)=>{
-
         }).finally(()=>{
             setIsSkeleton(false)
         })

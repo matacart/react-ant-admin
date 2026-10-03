@@ -1,13 +1,13 @@
 import { Badge, Button, Card, Checkbox, Divider, Flex, Form, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import orderProductEdit from "@/store/order/orderProductEdit";
+import { useSymbolLeft } from "@/hooks/customHooks";
+import { currencyPrecision } from "@/utils/common";
 
 function BillDetails() {
 
-    useEffect(()=>{
-      
-    },[])
+    const symbolLeft = useSymbolLeft();
 
     return (
         <Scoped>
@@ -18,18 +18,18 @@ function BillDetails() {
                 <Flex vertical gap={12}>
                     <Flex className="color-474F5E font-w-400" justify="space-between">
                         <div>更新后的总额</div>
-                        <div>US$1,000.00</div>
+                        <div>{symbolLeft}{currencyPrecision(orderProductEdit.billDetails?.totalAmount || 0)}</div>
                     </Flex>
                     <Flex className="color-474F5E font-w-400" justify="space-between">
                         <div>实际付款</div>
-                        <div>US$0.00</div>
+                        <div>{symbolLeft}{currencyPrecision(orderProductEdit.billDetails?.paidAmount || 0)}</div>
                     </Flex>
                 </Flex>
                 <Divider/>
                 <Form>
                     <Flex className="color-474F5E font-w-500" justify="space-between">
                         <div>待客户支付</div>
-                        <div>US$1,000.00</div>
+                        <div>{symbolLeft}{currencyPrecision(orderProductEdit.billDetails?.unpaidAmount || 0)}</div>
                     </Flex>
                 </Form>
             </Card>

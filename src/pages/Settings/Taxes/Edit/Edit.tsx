@@ -91,6 +91,7 @@ function Edit() {
                 label:item.zone_name,
                 value:item.zone_id,
             })))
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })

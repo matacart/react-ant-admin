@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import cookie from 'react-cookies';
+import { AmountSet } from "./orderList";
 
 export interface RemarkType{
   id: string;
@@ -62,6 +63,7 @@ export interface PriceSetInfoType{
 
 export interface OrderInfoType{
   orderSeq: string;
+  mainOrderSeq: string;
   appOrderSeq: string;
   bizOrderStatus:number;
   ordersPackageList:OrdersPackageType[];
@@ -110,6 +112,13 @@ interface PayBillInfoType{
   billingMobile: string;
 }
 
+export interface ManualDiscountInfoType{
+  discountType:string;
+  discountDesc:number;
+  discountValue:number;
+  settleDiscountValue:number;
+}
+
 export interface FulfillmentItemType{
   groupId: string;
   fulfillmentOrderSeq: string;
@@ -120,12 +129,18 @@ export interface FulfillmentItemType{
   productSource: string;
   title: string;
   firstImage: string;
-  productPrice:number;
-  productAmount:number;
+  productPrice:string;
+  productPriceSet:AmountSet;
+  finalPrice:string;
+  finalPriceSet:AmountSet;
+  productAmount:string;
+  productAmountWithPromotionSet:AmountSet;
   version:string;
   attributes:any[];
   images:any[];
-
+  manualDiscountInfo:ManualDiscountInfoType;
+  businessFlagInfo:any;
+  customLogistics?:any;
   // 修改数量
   productModifyNum?:number;
 }
@@ -208,6 +223,7 @@ class Order{
       bizOrderStatus: 100,
       bizPayStatus: 0,
       bizDeliveryStatus: 0,
+      mainOrderSeq: "",
       orderSeq: "",
       appOrderSeq: "",
       ordersPackageList: [],

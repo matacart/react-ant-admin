@@ -5,7 +5,7 @@ import styled from "styled-components"
 import { useEffect, useState } from "react";
 import SuccessfulTable from "./SuccessfulTable";
 import Analyze from "./Analyze";
-import { addDomainName, getDomainNameList } from "@/services/y2/api";
+import { addDomainName, getDomainNameList } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import DefaultInput from "@/components/Input/DefaultInput";
 import DefaultButton from "@/components/Button/DefaultButton";
@@ -123,6 +123,8 @@ function AddDomain() {
                 primaryDomain:res.data.domain_primary || `${res.data.handle}${previewDomain}`,
                 otherDomain:res.data.other_domain
             })
+        }).catch(()=>{
+        }).finally(()=>{
             setIsSkeleton(false)
         })
     },[])
@@ -164,15 +166,10 @@ function AddDomain() {
                                     <PrimaryButton loading={loading} text="完成" onClick={() => {
                                         setLoading(true);
                                         addDomainName(form.getFieldValue("primaryDomain"),form.getFieldValue("otherDomain")).then(async res=>{
-                                            if(res.code == 0){
-                                                await sleep(2000);
-                                                message.success('Processing complete!')
-                                                history.push("/settings/domain/manage")
-                                            }else{
-                                                message.error(res.msg)
-                                            }
-                                        }).catch(err=>{
-                                            console.log(err);
+                                            await sleep(2000);
+                                            message.success('Processing complete!')
+                                            history.push("/settings/domain/manage")
+                                        }).catch(()=>{
                                         }).finally(()=>{
                                             setLoading(false);
                                         })

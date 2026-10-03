@@ -1,4 +1,4 @@
-import { addPurchaseOrders, delPurchaseOrders } from "@/services/y2/api";
+import { addPurchaseOrders } from "@/services/y2/apiStore";
 import { makeAutoObservable } from "mobx";
 
 
@@ -88,9 +88,9 @@ class PurchaseOrderStore{
         const minutes = currentTime.getMinutes(); // 获取当前分钟数，范围是0 - 59
         const seconds = currentTime.getSeconds(); // 获取当前秒数，范围是0 - 59
         this.purchaseOrder.orderNumber = "PO"+year+(month>9?month:"0"+month)+(day>9?day:"0"+day)+(hours>9?hours:"0"+hours)+(minutes>9?minutes:"0"+minutes)+(seconds>9?seconds:"0"+seconds)+Math.floor(Math.random()*10)
-        
         addPurchaseOrders(this.purchaseOrder).then(res=>{
-            console.log(res);
+            console.log("成功");
+        }).catch(()=>{
         })
     }
 

@@ -135,7 +135,6 @@ function Edit({onEdit,info,...props }: EditProps) {
                 </Flex>
               }
             }).catch(err=>{
-              console.log(err)
             })
           }
           const newOptions = navlistSecondData?.options;

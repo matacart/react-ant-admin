@@ -2,7 +2,7 @@ import { Divider, Input, Row, Col, Tooltip, Form, App } from 'antd'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import { useState } from 'react';
-import { accountAuthentication } from '@/services/y2/api';
+import { accountAuthentication } from '@/services/y2/apiAppstore';
 import DefaultSelect from '@/components/Select/DefaultSelect';
 import DefaultInput from '@/components/Input/DefaultInput';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -40,25 +40,16 @@ export default function MerchantApplication() {
                 mid:values.user.userType == "2"?values.user.merchantId:"",
                 apply_remark:values.user.remark,
             }).then(async res=>{
-                switch (res.code) {
-                    case 201:
-                        message.error('该账号已认证，请勿重复认证！');
-                        break;
-                    case 0:
-                        await sleep(2000);
-                        message.success('账号认证成功！');
-                        // 保存带有过期时间的 cookie
-                        cookies.save('authentication', 'true', { 
-                            path: '/', 
-                            expires: new Date(Date.now() + 3 * 60 * 1000) // 3分钟后过期
-                        });
-                        globalStore.setHeadRefresh(!globalStore.headRefresh);
-                        history.back();
-                        break;
-                }
-            }).catch(err=>{
-                message.error("请求异常")
-            }).finally(()=>{
+                await sleep(2000);
+                message.success('账号认证成功！');
+                // 保存带有过期时间的 cookie
+                cookies.save('authentication', 'true', { 
+                    path: '/', 
+                    expires: new Date(Date.now() + 3 * 60 * 1000) // 3分钟后过期
+                });
+                globalStore.setHeadRefresh(!globalStore.headRefresh);
+                history.back();
+            }).catch(()=>{}).finally(()=>{
                 setLoading(false);
             })
         })

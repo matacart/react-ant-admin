@@ -1,6 +1,6 @@
 import MyButton from '@/components/Button/MyButton';
-import { getVerifyEmailStatus } from '@/services/y2/api';
-import { useIntl, useParams } from '@umijs/max';
+import { getVerifyEmailStatus } from '@/services/y2/apiEmail';
+import { useIntl } from '@umijs/max';
 import { App } from 'antd';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -18,25 +18,19 @@ export default function VerifyEmail() {
     const lang = searchParams.get('lang');
     const token = searchParams.get('token');
 
-    console.log(lang,token);
-
-
-
     const [serverEmail,setServiceEmail] = useState<any>({});
 
     // 激活客服邮箱
     const activateEmail = () => {
-        // activateServiceVerifyEmail().then(res=>{
-        //     setServiceEmail(res.data);
-        // })
+       
     }
     
     useEffect(() => {
         getVerifyEmailStatus().then(res=>{
             setServiceEmail(res.data);
-        })
+        }).catch(()=>{});
     }, []);
-    // serverEmail?.is_verified
+
     return (
         <Scoped>
             {true ? <>

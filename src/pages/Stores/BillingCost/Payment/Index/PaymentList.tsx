@@ -7,7 +7,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { useAbortController } from "@/hooks/customHooks";
 import SuccessTag from "@/components/Tag/SuccessTag";
 import ErrorTag from "@/components/Tag/ErrorTag";
-import { getRechargeList } from "@/services/y2/api";
+import { getRechargeList } from "@/services/y2/apiAppstore";
 import ProcessingTag from "@/components/Tag/ProcessingTag";
 
 
@@ -164,8 +164,7 @@ function PaymentList({payList}:{payList:any}) {
           pageSize:pageSize,
           total: res.count,
         });
-      }).catch(error => {
-        message.error(error?.msg)
+      }).catch(()=>{
       }).finally(() => {
         setLoading(false);
       });

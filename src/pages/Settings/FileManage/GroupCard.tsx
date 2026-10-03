@@ -83,17 +83,12 @@ function GroupCard({groupItem,removeItem}:{groupItem:GroupItem,removeItem:any}) 
             pageNum: pagination.current,
             pageSize: pagination.pageSize,
         },signal).then(res=>{
-            if(res.code == 0){
-                setGroupData(res.data.list)
-                setPagination({
-                    ...pagination,
-                    total: res.data.total 
-                })
-            }else{
-                console.log("请求失败")
-            }
+            setGroupData(res.data.list)
+            setPagination({
+                ...pagination,
+                total: res.data.total 
+            })
         }).catch(error=>{
-            console.log(error)
         }).finally(()=>{
             setLoading(false)
         })
@@ -102,22 +97,16 @@ function GroupCard({groupItem,removeItem}:{groupItem:GroupItem,removeItem:any}) 
 
     // 编辑分组--保存
     const editGroup = () => {
-        // const newActiveKey = ""+newTabIndex.current++;
-        // console.log(newActiveKey);
         let newitemsList = fileData.itemsList.map((item:any)=>{
             if(item.key == groupItem.groupId){
                 item.label = groupName
             }
             return item
         })
-        getGroupAdd(groupName,groupItem.groupId).then((res)=>{
-            if(res.code == 0){
-                fileData.setItemsList(newitemsList)
-            }else{
-                console.log("error");
-            }
+        getGroupAdd({groupName,groupId:groupItem.groupId}).then((res)=>{
+            fileData.setItemsList(newitemsList)
+        }).catch((err)=>{
         })
-        
     };
 
     // 删除分组
@@ -125,13 +114,8 @@ function GroupCard({groupItem,removeItem}:{groupItem:GroupItem,removeItem:any}) 
         setGroupName(groupItem.groupName)
         setIsOpen(false)
         deleteGroup(groupItem.groupId).then(res=>{
-            console.log(res)
-            if(res.code == 0){
-                removeItem(groupItem.groupId)
-                console.log("删除成功")
-            }else{
-                console.log("删除失败")
-            }
+            removeItem(groupItem.groupId)
+        }).catch((err)=>{
         })
     };
 

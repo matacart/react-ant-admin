@@ -1,4 +1,4 @@
-import { getThemeVersions, setTemplateVersion } from "@/services/y2/api";
+import { getThemeVersions, setTemplateVersion } from "@/services/y2/apiTemplate";
 import shopSetting, { TemplateInstance } from "@/store/channel/shopSetting/shopSetting";
 import { Flex, Modal, Switch, Table } from "antd";
 import { useState } from "react";
@@ -62,34 +62,32 @@ function VersionSwitchModal({template,type}:{template:TemplateInstance|null,type
                                 mode:"auto",
                                 target_type:"installation",
                             }).then((res)=>{
-                                if(res.code == 0){
-                                    setData(data.map(item=>{
-                                        if(item.id === record.id){
-                                            return {...item, is_installed:1}
-                                        }
-                                        return {...item, is_installed:0}
-                                    }))
-                                    if(type == "using" && template){
-                                        shopSetting.setTemplateInstanceUsing({
-                                            ...template,
-                                            active_version_id:record.id || "",
-                                            active_version:record.version || "",
-                                        })
+                                setData(data.map(item=>{
+                                    if(item.id === record.id){
+                                        return {...item, is_installed:1}
                                     }
-                                    // ...template,
-                                    // template_version_id:record.id || "",
-                                    // template_version:record.version || "",
-                                    if(type == "instance" && template){
-                                        const newTemplateInstanceList = shopSetting.templateInstanceList.map(item=>{
-                                            if(item.id === template.id){
-                                                return {...item, template_version_id:record.id || "", template_version:record.version || ""}
-                                            }
-                                            return item;
-                                        })
-                                        shopSetting.setTemplateInstanceList(newTemplateInstanceList);
-                                    }
+                                    return {...item, is_installed:0}
+                                }))
+                                if(type == "using" && template){
+                                    shopSetting.setTemplateInstanceUsing({
+                                        ...template,
+                                        active_version_id:record.id || "",
+                                        active_version:record.version || "",
+                                    })
                                 }
-                            }).finally(()=>{
+                                // ...template,
+                                // template_version_id:record.id || "",
+                                // template_version:record.version || "",
+                                if(type == "instance" && template){
+                                    const newTemplateInstanceList = shopSetting.templateInstanceList.map(item=>{
+                                        if(item.id === template.id){
+                                            return {...item, template_version_id:record.id || "", template_version:record.version || ""}
+                                        }
+                                        return item;
+                                    })
+                                    shopSetting.setTemplateInstanceList(newTemplateInstanceList);
+                                }
+                            }).catch(()=>{}).finally(()=>{
                                 setLoading(false);
                             })
                         }}>启用</span>
@@ -110,7 +108,7 @@ function VersionSwitchModal({template,type}:{template:TemplateInstance|null,type
                 ...pagination,
                 total: res.data.total
             });
-        });
+        }).catch(()=>{})
     }
 
     const cancel = ()=>{

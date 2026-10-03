@@ -55,41 +55,38 @@ function Settle() {
                 getCheckoutConfigLive({ languages_id: settingsInfo.languagesId }),
                 getCheckoutConfigDrafts({ languages_id: settingsInfo.languagesId, type: "draft" })
             ]);
-            if(settingsRes.code === 0){
-                const {
-                    checkout_form_config,
-                    stock_lock_config,
-                    payment_security,
-                    after_sale_guarantee,
-                    product_detail_settle_button_config,
-                    cart_settle_button_config,
-                    checkout_settle_button_config,
-                    tip_config_info,
-                    tip_show_config_info,
-                    accept_subscription_by_other_contact, // 特殊字段单独提取
-                    ...config
-                } = settingsRes.data || {};
-                const newConfig = _.mapKeys(config, (value, key) => _.camelCase(key)) as CheckoutConfig;
-                settingsInfo.setConfig({
-                    ...newConfig,
-                    acceptSubscriptionByOtherContactType:accept_subscription_by_other_contact || "0",
-                })
-                formatData(stock_lock_config) && settingsInfo.setStockLockConfig(formatData(stock_lock_config))
-                formatData(payment_security) && settingsInfo.setPaymentSecurity(formatData(payment_security))
-                formatData(after_sale_guarantee) && settingsInfo.setAfterSaleGuarantee(formatData(after_sale_guarantee))
-                formatData(checkout_form_config) && settingsInfo.setCheckoutFormConfig(formatData(checkout_form_config))
-                formatData(product_detail_settle_button_config) && settingsInfo.setProductDetailSettleButtonConfig(formatData(product_detail_settle_button_config))
-                formatData(cart_settle_button_config) && settingsInfo.setCartSettleButtonConfig(formatData(cart_settle_button_config))
-                formatData(checkout_settle_button_config) && settingsInfo.setCheckoutSettleButtonConfig(formatData(checkout_settle_button_config))
-                formatData(tip_config_info) && settingsInfo.setTipConfigInfo(formatData(tip_config_info))
-                formatData(tip_show_config_info) && settingsInfo.setTipShowConfigInfo(formatData(tip_show_config_info))
-            }
-            if(liveRes.code === 0){
-                settingsInfo.setCheckoutConfigLive(liveRes.data.config || null)
-            }
-            if(draftRes.code === 0){
-                settingsInfo.setCheckoutConfigDraft(draftRes.data.list || [])
-            }
+            // 结算配置
+            const {
+                checkout_form_config,
+                stock_lock_config,
+                payment_security,
+                after_sale_guarantee,
+                product_detail_settle_button_config,
+                cart_settle_button_config,
+                checkout_settle_button_config,
+                tip_config_info,
+                tip_show_config_info,
+                accept_subscription_by_other_contact, // 特殊字段单独提取
+                ...config
+            } = settingsRes.data || {};
+            const newConfig = _.mapKeys(config, (value, key) => _.camelCase(key)) as CheckoutConfig;
+            settingsInfo.setConfig({
+                ...newConfig,
+                acceptSubscriptionByOtherContactType:accept_subscription_by_other_contact || "0",
+            })
+            formatData(stock_lock_config) && settingsInfo.setStockLockConfig(formatData(stock_lock_config))
+            formatData(payment_security) && settingsInfo.setPaymentSecurity(formatData(payment_security))
+            formatData(after_sale_guarantee) && settingsInfo.setAfterSaleGuarantee(formatData(after_sale_guarantee))
+            formatData(checkout_form_config) && settingsInfo.setCheckoutFormConfig(formatData(checkout_form_config))
+            formatData(product_detail_settle_button_config) && settingsInfo.setProductDetailSettleButtonConfig(formatData(product_detail_settle_button_config))
+            formatData(cart_settle_button_config) && settingsInfo.setCartSettleButtonConfig(formatData(cart_settle_button_config))
+            formatData(checkout_settle_button_config) && settingsInfo.setCheckoutSettleButtonConfig(formatData(checkout_settle_button_config))
+            formatData(tip_config_info) && settingsInfo.setTipConfigInfo(formatData(tip_config_info))
+            formatData(tip_show_config_info) && settingsInfo.setTipShowConfigInfo(formatData(tip_show_config_info))
+            // 实时配置
+            settingsInfo.setCheckoutConfigLive(liveRes.data.config || null)
+            // 草稿配置
+            settingsInfo.setCheckoutConfigDraft(draftRes.data.list || [])
         }catch(err){
             console.log(err)
         }finally{
@@ -115,7 +112,6 @@ function Settle() {
         }).then(()=>{
             message.success("success")
         }).catch(err=>{
-            message.success("err")
         }).finally(()=>{
             setLoading(false)
         })

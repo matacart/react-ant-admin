@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import { HelpIcon, LeftIcon, PreviewIcon, RemitIcon, TiledIcon } from "@/components/Icons/Icons";
 import LangSelect from "@/components/Select/LangSelect";
 import MySelect from "@/components/Select/MySelect";
-import { getGenerateAuthToken } from "@/services/y2/api";
+import { getGenerateAuthToken } from "@/services/y2/apiAppstore";
 import codeEditor from "@/store/theme/codeEditor";
 import { history } from "@umijs/max";
 import { Flex, App, Modal, Tooltip } from "antd";
@@ -91,8 +91,8 @@ function Header({templateId}:{templateId:string}){
 
     useEffect(()=>{
         getGenerateAuthToken().then(res=>{
-            res.code == 0 && setAutoToken(res.data.auth_token)
-        })
+            setAutoToken(res.data.auth_token)
+        }).catch(()=>{})
     },[])
 
     return (

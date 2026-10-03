@@ -736,7 +736,7 @@ export default  [
         component:"./Settings/Payments/AddManualCollection/AddManualCollection"
       },
       {
-        path:"payments/edit/:id",
+        path:"payments/edit/:id/:languagesId",
         component:"./Settings/Payments/ManualCollectionDetail/ManualCollectionDetail"
       },
       {
@@ -863,7 +863,11 @@ export default  [
       },
       {
         path:"markets",
-        component:"./Settings/Markets/Markets"
+        component:"./Settings/Markets/Index/Index",
+      },
+      {
+        path:"markets/:marketId/:langId",
+        component:"./Settings/Markets/Detail/Detail",
       },
     ]
   },

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import MyInput from '@/components/Input/MyInput'
 import DefaultSelect from '@/components/Select/DefaultSelect'
 import PrimaryButton from '@/components/Button/PrimaryButton'
-import { createStore } from '@/services/y2/api'
+import { createStore } from '@/services/y2/apiAppstore'
 import { history } from '@umijs/max'
 import globalStore from '@/store/globalStore'
 import { useSleep } from '@/hooks/customHooks'
@@ -78,7 +78,7 @@ export default function Create() {
                     break;
             }
             setLoading(false)
-        })
+        }).catch(()=>{})
     }
     return (
         <Scoped>

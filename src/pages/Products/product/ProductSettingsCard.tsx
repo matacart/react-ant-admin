@@ -3,7 +3,7 @@ import { App, Card, Checkbox, Flex, Form, InputRef, Modal, Select, SelectProps, 
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { upDateProductStatus } from "@/services/y2/api";
+import { upDateProductStatus } from "@/services/y2/apiStore";
 import TagsModal from "@/components/Modal/TagsModal";
 import { observer } from "mobx-react-lite";
 import { useForm } from "antd/es/form/Form";
@@ -182,13 +182,12 @@ function ProductSettingsCard() {
                 {/* 取消存档 */}
                 <Modal centered title="取消商品存档" open={isModalOpen} onCancel={()=>setIsModalOpen(false)} onOk={()=>{
                     upDateProductStatus(product.productInfo.id,"0").then(res=>{
-                        message.success("成功")
                         product.setProductInfo({
                             ...product.productInfo,
                             status:"0"
                         })
+                        message.success("成功")
                     }).catch(err=>{
-                        message.error("失败")
                     }).finally(()=>{
                         setIsModalOpen(false)
                     })

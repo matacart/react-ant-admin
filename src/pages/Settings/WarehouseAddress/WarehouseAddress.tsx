@@ -1,4 +1,4 @@
-import { getAddWarehouseList, getFileList } from "@/services/y2/api"
+import { getAddWarehouseList } from "@/services/y2/apiStore"
 import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Flex, Modal, Radio } from "antd"
@@ -35,12 +35,9 @@ function WarehouseAddress() {
 
     useEffect(()=>{
         getAddWarehouseList().then(res=>{
-            if(res.code === 0){
-                setWarehouseAddressList(res.data)
-                setWarehouseAddressCount(res.count)
-            }
-            console.log(res)
-        })
+            setWarehouseAddressList(res.data)
+            setWarehouseAddressCount(Number(res.count) || 0)
+        }).catch(()=>{})
     },[])
  
     return (

@@ -14,7 +14,7 @@ import OrdersPaidCard from './OrdersPaidCard';
 import OrdersTimeline from './OrdersTimeline';
 import PendingShippedCard from './PendingShippedCard';
 import OrderUnpaidCard from './OrderUnpaidCard';
-import { getOrderDetail, getReturnReasonList } from '@/services/y2/apiStore';
+import { getOrderDetail, getReturnReasonList } from '@/services/y2/apiOrders';
 import order, { ReturnReasonType } from '@/store/order/order';
 import OrderDefaultTag from '@/components/Tag/OrderDefaultTag';
 import OrderWarningTag from '@/components/Tag/OrderWarningTag';
@@ -93,7 +93,6 @@ function Index() {
     getReturnReasonList(languagesId || "").then(res=>{
       setReturnReasonList(res.data || []);
     }).catch(err=>{
-      console.log(err);
     })
   }, [languagesId]);
 

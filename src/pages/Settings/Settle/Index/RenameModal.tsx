@@ -27,7 +27,6 @@ function RenameModal({config,success}:{config:CheckoutTemplateConfig | null,succ
                 await success();
                 setOpen(false)
             }).catch(()=>{
-                console.log("重命名失败")
             }).finally(()=>{
                 setLoading(false)
             })

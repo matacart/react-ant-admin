@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { App, Avatar, Button, Modal, Popover, Switch, Table } from 'antd';
 import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-import { getProductList, upDateProductStatus } from '@/services/y2/api';
+import { getProductList, upDateProductStatus } from '@/services/y2/apiStore';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
 import productList from '@/store/product/productList';
@@ -107,11 +107,10 @@ function GiftCardsTableCard(selectProps:any) {
           tempModal.destroy();
           // 修改商品状态
           upDateProductStatus(productData.productid,checked?"1":"0").then(res=>{
-            if(res.code == 0){
-              onChangeSwich(index,checked)
-            }else{
-              message.error("修改状态失败")
-            }
+            onChangeSwich(index,checked)
+          }).catch(()=>{
+          }).finally(()=>{
+            // 状态修改完成后，关闭加载状态
             let tempSwitchList = [...onLoadingList];
             tempSwitchList[index] = false;
             setOnLoadingList(tempSwitchList);
@@ -132,12 +131,6 @@ function GiftCardsTableCard(selectProps:any) {
 
   // 状态
   const onChangeSwich = (index: number,checked:boolean) => {
-    // 改变商品的状态
-    // let oldDataItem = data[index]
-    // let newDataItem = {
-    //   ...oldDataItem,
-    //   state: !oldDataItem.state
-    // }
     let newData = [...data];
     newData[index].state = checked?"1":"0"
     setData(newData);
@@ -221,8 +214,7 @@ function GiftCardsTableCard(selectProps:any) {
     setLoading(true);
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
-
-    const res = {
+    getProductList({
       page:page,
       limit:limit,
       title:selectProps.selectProps.title,
@@ -232,15 +224,10 @@ function GiftCardsTableCard(selectProps:any) {
       status:productList.flag,
       allianceStatus:productList.isAlliance,
       hostedStatus:productList.isHosted
-    }
-    try {
-      const result = await getProductList(res)
-      setLoading(false);
-      // 201 空
-      if(result.code == 0 || result.code == 201){
+    }).then((res)=>{
         let newData:DataType[] = [];
         let switchList:boolean[] = [];
-        result.data?.forEach((item:any)=>{
+        res.data?.forEach((item:any)=>{
           newData.push({
             key:item.id,
             model: item.model,
@@ -259,28 +246,23 @@ function GiftCardsTableCard(selectProps:any) {
             languages_id:item.languages_id,
             // 获取所有数据
           })
-        switchList.push(false)
+          switchList.push(false)
         })
         // 初始化开关数组
         setOnLoadingList(switchList);
-        setData(newData);
+        setData(newData || []);
         setLoading(false)
         setTableParams({
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
-            total: result.count,
-            // 200 is mock data, you should read it from server
-            // total: data.totalCount,
+            total: Number(res.count) || 0,
           }
         });
-        return
-      }
-      throw new Error(result);
-    }catch(error){
-      message.error('获取数据失败');
-    }
-    setLoading(false);
+    }).catch(()=>{
+    }).finally(()=>{
+      setLoading(false);
+    })
   };
   useEffect(() => {
     // 初始化商品

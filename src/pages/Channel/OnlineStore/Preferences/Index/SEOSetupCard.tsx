@@ -34,15 +34,13 @@ function SEOSetupCard() {
                 meta_description:values.desc,
                 meta_keywords:values.keywords,
             }).then(res=>{
-                if(res.code == 0){
-                    preferences.setHomeSEO({
-                        meta_title:values.title,
-                        meta_description:values.desc,
-                        meta_keywords:values.keywords,
-                    })
-                    seoClose();
-                }
-            }).finally(()=>{
+                preferences.setHomeSEO({
+                    meta_title:values.title,
+                    meta_description:values.desc,
+                    meta_keywords:values.keywords,
+                })
+                seoClose();
+            }).catch(()=>{}).finally(()=>{
                 setLoading(false);
             })
         })

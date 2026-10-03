@@ -8,7 +8,7 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import ReturnDetails from './ReturnDetails';
 import ReturnInformation from './ReturnInformation';
-import { createReturnOrder, getOrderDetail, getReturnReasonList } from '@/services/y2/apiStore';
+import { createReturnOrder, getOrderDetail, getReturnReasonList } from '@/services/y2/apiOrders';
 import { history, useParams } from '@umijs/max';
 import orderAfterSales from '@/store/order/orderAfterSales';
 import AfterSalesGoods from './AfterSalesGoods';
@@ -44,10 +44,8 @@ function AfterSales() {
         orderSeq:orderId,
         storeId:values.storeId,
       }).then((res)=>{
-        res.code == 0 && history.push(`/orders/${orderId}/${languagesId}`)
-      }).catch(()=>{
-        message.error("退货失败")
-      }).finally(()=>{
+        history.push(`/orders/${orderId}/${languagesId}`)
+      }).catch(()=>{}).finally(()=>{
         setLoading(false)
       })
     }
@@ -81,7 +79,6 @@ function AfterSales() {
       getReturnReasonList(languagesId).then(res=>{
         setReturnReasonList(res.data || [])
       }).catch((e)=>{
-        message.error('err')
       })
     },[]);
 

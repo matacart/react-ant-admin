@@ -1,7 +1,7 @@
 import { App, Button, Card, Divider, Flex, Form, Input, Modal, Select, Space, TreeSelect } from "antd";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { addArticleCollection, getArticleCollection } from "@/services/y2/api";
+import { addArticleCollection, getArticleCollection } from "@/services/y2/apiArticle";
 import { PlusOutlined } from "@ant-design/icons";
 import { convertToTree } from "@/utils/dataStructure";
 import articles from "@/store/channel/articles/articles";
@@ -44,8 +44,6 @@ export default function TissueCard() {
     useEffect(()=>{
         getArticleCollection().then(res=>{
             const data = convertToTree(res.data);
-            console.log(data)
-            console.log(res.data)
             setGroupList(res.data)
             setTreeGroup(data)
         }).catch(err=>{

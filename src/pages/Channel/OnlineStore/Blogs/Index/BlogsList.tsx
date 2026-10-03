@@ -9,7 +9,7 @@ import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import cookie from 'react-cookies';
 import LangSelect from "@/components/Select/LangSelect";
 import { useAbortController } from "@/hooks/customHooks";
-import { getArticleCategorys } from "@/services/y2/api";
+import { getArticleCategorys } from "@/services/y2/apiArticle";
 
 
 interface DataType {
@@ -137,7 +137,6 @@ function BlogsList({blogs,langId}:{blogs:any,langId:string}) {
           total: res.count,
         });
       }).catch(error => {
-        message.error(error?.msg)
       }).finally(() => {
         setLoading(false);
       });

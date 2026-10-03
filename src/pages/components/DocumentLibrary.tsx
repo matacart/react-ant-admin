@@ -27,20 +27,17 @@ function DocumentLibrary() {
     // 文件分组列表
     useEffect(()=>{
         getGroupList().then(res=>{
-            if(res.code == 0 && res.data.length>0){
-                let newItems:TabsProps['items'] = [...item]
-                res.data.list.forEach((item:any,index:number)=>{
-                    // console.log(item)
-                    newItems.push({
-                        label: item.groupName,
-                        children: <DocumentLibraryCard groupId={item.groupId} />,
-                        destroyOnHidden: false,
-                        key:item.groupId,
-                    })
+            let newItems:TabsProps['items'] = [...item]
+            res.data?.list?.forEach((item:any,index:number)=>{
+                newItems.push({
+                    label: item.groupName,
+                    children: <DocumentLibraryCard groupId={item.groupId} />,
+                    destroyOnHidden: false,
+                    key:item.groupId,
                 })
-                setItems(newItems)
-            }
-        })
+            })
+            setItems(newItems)
+        }).catch(()=>{})
     },[])
 
     const TabBar = (props) => {

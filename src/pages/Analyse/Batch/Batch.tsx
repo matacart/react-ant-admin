@@ -6,88 +6,55 @@ import { observer } from 'mobx-react-lite';
 import { useEffect, useRef, useState } from 'react';
 import type { TabsProps } from 'antd';
 import BatchList from './BatchList';
-import { getTaskList } from '@/services/y2/api';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 
 function NewPage(){
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
-    const [progressData,setProgressData] = useState([]);
-
-    const [status,setStatus] = useState("");
-
     const items: TabsProps['items'] = [
         {
             key: '1',
             label: '全部',
-            children: <BatchList progressData={progressData} status={status} />,
+            children: <BatchList status={""} />,
         },
         {
             key: '2',
             label: '排队中',
-            children: <BatchList progressData={progressData} status={status} />,
+            children: <BatchList status={"pending"} />,
         },
         {
             key: '3',
             label: '执行中',
-            children: <BatchList progressData={progressData} status={status} />,
+            children: <BatchList status={"in_progress"} />,
         },
         {
             key: '4',
             label: '执行失败',
-            children: <BatchList progressData={progressData} status={status}/>,
+            children: <BatchList status={"failed"} />,
         },
         {
             key: '5',
             label: '部分失败',
-            children: <BatchList progressData={progressData} status={status} />,
+            children: <BatchList status={"part_fail"} />,
         },
         {
             key: '6',
             label: '执行异常',
-            children: <BatchList progressData={progressData} status={status} />,
+            children: <BatchList status={"exception"} />,
         },
         {
             key: '7',
             label: '执行完成',
-            children: <BatchList progressData={progressData} status={status} />,
+            children: <BatchList status={"completed"} />,
         },
     ];
 
     const onChange = (key: string)=>{
-        switch(key){
-            case "1":
-                setStatus("")
-                break;
-            case "2":
-                setStatus("pending")
-                break;
-            case "3":
-                setStatus("'in_progress")
-                break;
-            case "4":
-                setStatus("failed")
-                break;
-            case "5":
-                setStatus("part_fail")
-                break;
-            case "6":
-                setStatus("exception")
-                break;
-            case "7":
-                setStatus("completed")
-                break;
-        }
     }
 
     useEffect(()=>{
-        getTaskList(1,10,"").then(res=>{
-            setProgressData(res)
-        }).catch((err)=>{
-        }).finally(()=>{
-            setIsSkeleton(false)
-        })
+        setIsSkeleton(false)
     },[])
 
     return (

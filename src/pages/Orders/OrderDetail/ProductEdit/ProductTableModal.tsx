@@ -5,18 +5,39 @@ import MySelect from "@/components/Select/MySelect";
 import { useSymbolLeft } from "@/hooks/customHooks";
 import CommodityClassificationSelector from "@/pages/Products/ProductList/CommodityClassificationSelector";
 import TagSelector from "@/pages/Products/ProductList/TagSelector";
-import { getProductList } from "@/services/y2/api";
-import { ProductType, VariantType } from "@/store/product/product";
+import { getProductList } from "@/services/y2/apiStore";
+import { FulfillmentItemType } from "@/store/order/order";
+import orderProductEdit from "@/store/order/orderProductEdit";
+import { ProductType } from "@/store/product/product";
 import { currencyPrecision } from "@/utils/common";
-import {Checkbox, Flex, Form, Input, Modal, Row, Select, Space, Table, TableProps } from "antd"
+import {Checkbox, Flex, Modal, Space, Table, TableProps } from "antd"
 import { observer } from "mobx-react-lite";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 
 const isParent = (record:any) => {
     return Object.hasOwn(record,'variants');
 };
+
+const queryAttributes = (text:string,attributes:any[]) => {
+    if(!text){
+        return [];
+    }
+    const textIds = text.split(",");
+    const result = textIds.map((id:string) => {
+        const item = attributes.find((item:any) => item.option_values_id == id);
+        if(item){
+            return {
+                attributeId: item.option_values_id,
+                attributeValue: item.option_values_name,
+                attributeName: item.option_name,
+                attributeType: "SALE"
+            };
+        }
+    }).filter(Boolean);
+    return result;
+}
 
 function ProductTableModal(){
 
@@ -37,7 +58,23 @@ function ProductTableModal(){
         total:10
     })
 
+    // 选中的key
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+    // 保存 key -> 商品/款式对象，跨页保留
+    const selectedRowsMapRef = useRef<Map<React.Key, any>>(new Map());
+
+    // 根据 key 从 record 拿到对应对象
+    const getRowObjectByKey = (record: any, key: React.Key) => {
+        // record 是父商品：从 variants 里取
+        if (isParent(record) && record.variants?.length > 0) {
+            const variant = record.variants.find((v: any) => v.id === key);
+            return variant ? { ...variant, parent: record } : null;
+        }
+        // record 是子款式行：用 product_id 反查父商品
+        const parent = data.find((p: any) => p.id === record.product_id);
+        return parent ? { ...record, parent } : record;
+    };
 
     // 获取可选择的key
     const getSelectableKeys = (record: any): React.Key[] => {
@@ -62,18 +99,29 @@ function ProductTableModal(){
     // 全选 / 取消全选（仅作用于当前页）
     const selectAll = (checked: boolean) => {
         if (checked) {
+            data.forEach((item: any) => {
+                getSelectableKeys(item).forEach((k) => {
+                    const obj = getRowObjectByKey(item, k);
+                    if (obj) selectedRowsMapRef.current.set(k, obj);
+                });
+            });
             setSelectedRowKeys((prev) => Array.from(new Set([...prev, ...currentPageKeys])));
         } else {
+            currentPageKeys.forEach((k) => selectedRowsMapRef.current.delete(k));
             setSelectedRowKeys((prev) => prev.filter((k) => !currentPageKeys.includes(k)));
         }
     };
-
     // 单行选中
     const selectRow = (checked: boolean, record: any) => {
         const keys = getSelectableKeys(record);
         if (checked) {
+            keys.forEach((k) => {
+                const obj = getRowObjectByKey(record, k);
+                if (obj) selectedRowsMapRef.current.set(k, obj);
+            });
             setSelectedRowKeys((prev) => Array.from(new Set([...prev, ...keys])));
         } else {
+            keys.forEach((k) => selectedRowsMapRef.current.delete(k));
             setSelectedRowKeys((prev) => prev.filter((k) => !keys.includes(k)));
         }
     };
@@ -127,59 +175,38 @@ function ProductTableModal(){
         }
     ];
     
-
     const cancel = () => {
+        setSelectedRowKeys([])
+        selectedRowsMapRef.current.clear()
         setOpen(false);
     };
 
     const submit = () => {
-        
-        // console.log(productList)
-        // console.log(orderProductEdit.remainingProductGroup[0].product)
-        // const newProduct = productList.map((item,index:number)=>{
-        //     return {
-        //         attributes:item.attributes,
-        //         final_price:item.specialprice,
-        //         group_id: "0",
-        //         id: "",
-        //         vid:(new Date().getTime()+index).toString(),
-        //         latest_shipment_time:"",
-        //         num: 1,
-        //         product_discount_amount: "0",
-        //         product_discount_description: null,
-        //         product_discount_type: "0",
-        //         product_discount_type_from: null,
-        //         product_id:item.id,
-        //         product_image:item.product_image,
-        //         product_model:item.model,
-        //         product_name:item.title,
-        //         product_price:item.specialprice,
-        //         product_quantity: 1,
-        //         product_source: "1",
-        //         remaining_quantity:1,
-        //         shipped_quantity:0,
-        //     }
-        // })
-        // orderProductEdit.setRemainingProductGroup([
-        //     {
-        //         product:[...orderProductEdit.remainingProductGroup[0].product,...newProduct],
-        //         remaining:orderProductEdit.remainingProductGroup[0].remaining
-        //     }
-        // ])
-        // orderProductEdit.setRemainingProductGroup
-        // setProductList([])
-        // setSelectedRowKeys([])
-        // setOpen(false);
+        // 新
+        const newProducts:FulfillmentItemType[] = selectedRowKeys.map((k) => selectedRowsMapRef.current.get(k)).filter(Boolean)?.map((item)=>{
+            return {
+                groupId:"",
+                fulfillmentOrderSeq: "",
+                parentSkuId: "",
+                productSeq: item.product_id,
+                productSku: item.id,
+                productNum: 1,
+                productSource: "1",
+                title: item?.parent?.title,
+                firstImage: item?.parent?.product_image,
+                productPrice:item?.specialprice || item?.price || 0,
+                productAmount:item?.specialprice || item?.price || 0,
+                version:"",
+                attributes:queryAttributes(item?.option_values_ids || "",item?.parent?.attributes || []),
+                images:item?.parent?.additional_image || [],
+                businessFlagInfo:null
+            }
+        });
+        orderProductEdit.setFulfillmentItemList([...orderProductEdit.fulfillmentItemList,...newProducts])
+        setSelectedRowKeys([])
+        selectedRowsMapRef.current.clear()
+        setOpen(false);
     };
-
-    // const rowSelection: TableProps<ProductType>['rowSelection'] = {
-    //     selectedRowKeys:selectedRowKeys, // 同步选中状态
-    //     onChange: (selectedRowKeys: React.Key[], selectedRows: ProductType[]) => {
-    //         setProductList(selectedRows)
-    //         setSelectedRowKeys(selectedRowKeys)
-    //         // console.log(order.productInfo)
-    //     },
-    // };
 
     const fetchData = async (page:number,limit:number) => {
         setLoading(true);
@@ -198,7 +225,6 @@ function ProductTableModal(){
           })
           setData(res.data)
         }).catch(err=>{
-          console.log(err)
         }).finally(()=>{
           setLoading(false)
         })
@@ -219,7 +245,7 @@ function ProductTableModal(){
                     <Flex justify="end">
                         <Flex gap={12}>
                             <DefaultButton text={"取消"} onClick={cancel} />
-                            <PrimaryButton text={"保存"} onClick={submit} />
+                            <PrimaryButton loading={loading} text={"保存"} onClick={submit} />
                         </Flex>
                     </Flex>
                 )}

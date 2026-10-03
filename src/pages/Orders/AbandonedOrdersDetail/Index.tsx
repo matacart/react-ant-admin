@@ -1,7 +1,7 @@
 import ButtonIcon from "@/components/Button/ButtonSvg";
 import { LeftIcon, RightIcon } from "@/components/Icons/Icons";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import { getAbandonedOrderDetail, searchScrollAbandonedOrder } from "@/services/y2/ApiAbandonedOrder";
+import { getAbandonedOrderDetail, searchScrollAbandonedOrder } from "@/services/y2/apiAbandonedOrder";
 import abandonedOrder from "@/store/order/abandonedOrder/abandonedOrder";
 import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { useParams,history } from "@umijs/max";
@@ -16,7 +16,7 @@ import Unpaid from "./Unpaid";
 import OrdersTimeline from "./OrdersTimeline";
 import CustomsInformation from "./CustomsInformation";
 import dayjs from 'dayjs';
-import { getStoreInfo } from "@/services/y2/api";
+import { getStoreInfo } from "@/services/y2/apiAppstore";
 import LangSelect from "@/components/Select/LangSelect";
 
 const Index = () => {
@@ -48,16 +48,15 @@ const Index = () => {
                 abandonedOrderSeq:id || "",
                 sortBy:"1",
             }),
-             getStoreInfo({
+            getStoreInfo({
                 languages_id:languagesId || "",
             })
         ]).then(res=>{
             abandonedOrder.setAbandonedOrderData(res[0].data)
             abandonedOrder.setScrollData(res[1].data)
-            abandonedOrder.setServiceEmail(res[2].service_email || "")
+            abandonedOrder.setServiceEmail(res[2].data.service_email || "")
             abandonedOrder.setLanguages(languagesId)
         }).catch(err=>{
-            message.error(err.message)
         }).finally(()=>{
             setIsSkeleton(false)
         })

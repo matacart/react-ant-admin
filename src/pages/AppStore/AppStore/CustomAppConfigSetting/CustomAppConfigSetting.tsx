@@ -1,15 +1,13 @@
-import { ArrowLeftOutlined, ExportOutlined, InfoCircleFilled, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, Form, Input, Modal, Select, Table, TableProps, TabsProps } from "antd"
-import { history, useParams, useSearchParams } from "@umijs/max"
+import { ArrowLeftOutlined } from "@ant-design/icons"
+import { Button, Card, Form, Input, Modal, Select, Table, TableProps, TabsProps } from "antd"
+import { history, useSearchParams } from "@umijs/max"
 import styled from "styled-components"
 import { useEffect, useState } from "react"
-import { creatAppStore, getEmployeeList, getPermissionsList } from "@/services/y2/api"
+import { getPermissionsList } from "@/services/y2/apiAppstore"
 import AccessRangeCard from "./AccessRangeCard"
 import WebHookSubscriptionTable from "./WebHookSubscriptionTable"
 import customAppConfigSetting from "@/store/appStore/customAppConfigSetting"
-import { observer } from "mobx-react-lite"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
-import { set } from "lodash"
 import ModifyModal from "@/components/Modal/ModifyModal"
 import PrimaryButton from "@/components/Button/PrimaryButton"
 
@@ -36,17 +34,14 @@ function CustomAppConfigSetting() {
     )
 
     // 获取权限列表
-    const fetchPermissionsList = async ()=>{
-        try {
-            const permissionsList = await getPermissionsList(searchParams.get("appId")?? "",searchParams.get("type")?? "","2")
-            customAppConfigSetting.setPermissionsList(permissionsList.data)
-            // console.log(permissionsList.data)
-            customAppConfigSetting.setNewPermissionsList(permissionsList.data)
-        } catch (error) {
-            // 
-        }finally{
+    const fetchPermissionsList = ()=>{
+        getPermissionsList(searchParams.get("appId")?? "",searchParams.get("type")?? "","2").then(res=>{
+            customAppConfigSetting.setPermissionsList(res.data)
+            customAppConfigSetting.setNewPermissionsList(res.data)
+        }).catch(()=>{
+        }).finally(()=>{
             setIsSkeleton(false)
-        }
+        })
     }
 
     useEffect(()=>{

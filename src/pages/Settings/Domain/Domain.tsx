@@ -1,4 +1,4 @@
-import { getDomainNameList } from "@/services/y2/api"
+import { getDomainNameList } from "@/services/y2/apiAppstore"
 import { ArrowLeftOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import styled from "styled-components"
@@ -19,13 +19,12 @@ function Domain() {
     const { createAbortController } = useAbortController();
     
     const [isRenewal,setIsRenewal] = useState(false);
+    
     useEffect(()=>{
         const signal = createAbortController();
         getDomainNameList(signal).then(res=>{
             domain.setDomain(JSON.stringify(res.data) === '[]' ? {} : res.data )
-        }).catch(e=>{
-            console.log(e)
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false)
         })
     },[])

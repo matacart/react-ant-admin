@@ -65,7 +65,7 @@ function ExportProductModal(){
                     productList:JSON.stringify(productList.productList || []),
                 }
             }
-            exportProductTask(newRes).then(async res=>{
+            exportProductTask(newRes).then(async (res:any)=>{
                 let taskId = res.taskId
                 let confirmInstance:any;
                 // 3 非邮件
@@ -113,7 +113,7 @@ function ExportProductModal(){
                     if (data.task_status === "completed" || data.task_status === "failed") {
                         clearTimerId();
                         confirmInstance?.destroy();
-                        if(productList.exportTask.isBackstage){
+                        if(productList.exportTask?.isBackstage){
                             //后台运行
                             notification.success({
                                 message: '导出成功',
@@ -134,8 +134,7 @@ function ExportProductModal(){
                                     </Flex>
                                 )
                             })
-                            JobExecResult(taskId).then(res=>{
-                                // console.log(res)
+                            JobExecResult(taskId).then((res:any)=>{
                                 // 转为blob对象
                                 const blob = new Blob([res])
                                 // 为blob创建URL
@@ -160,9 +159,7 @@ function ExportProductModal(){
                         })
                     }
                 });
-                
             }).catch(err=>{
-                message.error("导出失败，请重试")
             }).finally(()=>{
                 setOpen(false)
                 setLoading(false)

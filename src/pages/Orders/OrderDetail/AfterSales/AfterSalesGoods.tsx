@@ -63,7 +63,7 @@ function AfterSalesGoods({groupIndex,returnReasonList,form}:{groupIndex:number,r
         </Flex>
       }
     >
-    <Form form={form}>
+      <Form form={form}>
         <div className="font-w-400">
           {ordersPackage.itemGroupList[0]?.itemList?.map((item,index)=>{
             const refundReason = refundReasonMap[index];
@@ -74,14 +74,14 @@ function AfterSalesGoods({groupIndex,returnReasonList,form}:{groupIndex:number,r
                     <Flex style={{paddingRight:"40px"}}>
                       <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.title} style={{ width: "80px", height: "80px", marginRight: "20px" }} />
                       <Flex vertical align="flex-start" justify="flex-start" flex="1">
-                        <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px" }} className="font-w-500">{item.title}</div>
-                        <div style={{ fontSize: "14px", color: "#474F5E" }}>{item.attributes?.map((item:any)=>item.attributeValue??"").join("/")}</div>
-                        <div style={{ fontSize: "14px", color: "#474F5E" }}>model:{}</div>
+                        <div className="font-14 color-474F5E font-w-500 title">{item.title}</div>
+                        <div className="font-14 color-474F5E">{item.attributes?.map((item:any)=>item.attributeValue??"").join("/")}</div>
+                        <div className="font-14 color-474F5E">model:{}</div>
                       </Flex>
                     </Flex>
                   </Col>
                   <Col span={5}>
-                    <div style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice)} X {item.productNum}</div>
+                    <div className="font-14 color-474F5E">{symbolLeft}{currencyPrecision(Number(item.productPrice))} X {item.productNum}</div>
                     <Form.Item name={["skuInfos",groupIndex,index,"skuNum"]}>
                       <NumberInput disabled={!ordersPackage.itemGroupList[0]?.requireShipping} style={{marginTop:"8px",width:"100%",maxWidth:"120px",height:"36px"}}
                         min={0} 
@@ -97,7 +97,7 @@ function AfterSalesGoods({groupIndex,returnReasonList,form}:{groupIndex:number,r
                   </Col>
                   <Col span={5}>
                     <Flex justify="end" style={{height:"100%"}}>
-                      <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice*(item.productModifyNum || 0))}</span>
+                      <span className="font-14 color-474F5E">{symbolLeft}{currencyPrecision(Number(item.productPrice)*(Number(item.productModifyNum || 0)))}</span>
                     </Flex>
                   </Col>
                 </Row>
@@ -134,7 +134,15 @@ const MyCard = styled(Card)`
       padding-top: 0;
     }
   }
-
+  .title{
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
 `;
 
 export default observer(AfterSalesGoods);

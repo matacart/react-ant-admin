@@ -3,7 +3,7 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MySearch from "@/components/Input/MySearch";
 import LangSelect from "@/components/Select/LangSelect";
 import { useAbortController } from "@/hooks/customHooks";
-import { getCategoryList } from "@/services/y2/api";
+import { getCategoryList } from "@/services/y2/apiStore";
 import product from "@/store/product/product";
 import { App, Avatar, Flex, Modal, Table, TableProps } from "antd";
 import React, {useMemo, useRef } from "react";
@@ -103,11 +103,7 @@ export default function ProductCategoryModal() {
             total:Number(res.count || 0)
           })
           setData(res.data)
-        }).catch(err=>{
-            if (err.name !== 'CanceledError') {
-                message.error('获取数据失败');
-            }
-        }).finally(()=>{
+        }).catch(()=>{}).finally(()=>{
           setLoading(false)
         })
     };

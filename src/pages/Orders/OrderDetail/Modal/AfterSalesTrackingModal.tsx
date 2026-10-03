@@ -10,7 +10,7 @@ import globalStore from "@/store/globalStore";
 import { FavoriteIcon } from "@/components/Icons/Icons";
 import { Logistic } from "../AfterSales/ReturnInformation";
 import { observer } from "mobx-react-lite";
-import { updateReturnExpressInfo } from "@/services/y2/apiStore";
+import { updateReturnExpressInfo } from "@/services/y2/apiOrders";
 
 function AfterSalesTrackingModal({afterSaleOrder}:{afterSaleOrder:AfterSaleOrderType}){
     
@@ -43,9 +43,8 @@ function AfterSalesTrackingModal({afterSaleOrder}:{afterSaleOrder:AfterSaleOrder
                 expressCompanyCode:values.expressCompanyCode || "",
                 expressUrl:values.expressUrl || "",
             }).then((res)=>{
-                res.code == 0 && order.triggerRefresh();
+                order.triggerRefresh();
             }).catch(()=>{
-
             }).finally(()=>{
                 setOpen(false);
                 setLoading(false)

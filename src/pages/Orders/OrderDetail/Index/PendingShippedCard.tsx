@@ -9,8 +9,9 @@ import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyButton from "@/components/Button/MyButton";
 import SplitPackage from "../Modal/SplitPackage";
 import SuspendDelivery from "../Modal/SuspendDelivery";
-import { currencyPrecision } from "@/utils/common";
+import { currencyPrecision, getCurrencyAmount } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
+import styled from "styled-components";
 
 
 function PendingShippedCard({groupIndex}:{groupIndex:number}) {
@@ -20,7 +21,7 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
   const fulfillment  = order.fulfillmentOrderList[groupIndex];
 
   return (
-    <Card
+    <MyCard
       title={
         <Flex style={{ fontSize: "16px", color: "#474F5E"}} align="center" justify="space-between" >
           <Flex align="center" gap={10}>
@@ -54,73 +55,82 @@ function PendingShippedCard({groupIndex}:{groupIndex:number}) {
         </Flex>
       }
     >
-      <Form>
-        <div className="font-w-400">
-          <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
-            <Flex gap={6}>
-              <EnvironmentOutlined className="color-7A8499" />
-              <div className="color-7A8499">{"地点"}</div>
-            </Flex>
-            <div className="color-242833">{"默认地点"}</div>
+      <div className="font-w-400">
+        <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
+          <Flex gap={6}>
+            <EnvironmentOutlined className="color-7A8499" />
+            <div className="color-7A8499">{"地点"}</div>
           </Flex>
-          {fulfillment.fulfillmentOrder?.deliveryMethod?.deliveryName && <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
-            <Flex gap={6}>
-              <EnvironmentOutlined className="color-7A8499" />
-              <div className="color-7A8499">{"配送方案"}</div>
-            </Flex>
-            <div className="color-242833">{fulfillment.fulfillmentOrder.deliveryMethod.deliveryName}</div>
-          </Flex>}
-          {fulfillment.fulfillmentItemList.map((item:FulfillmentItemType,index:number)=>{
-            return(
-              <Row key={index} style={{marginBottom:"20px"}}>
-                <Col span={14}>
-                  <Flex style={{paddingRight:"40px"}}>
-                    <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
-                    <Flex vertical align="flex-start" justify="flex-start">
-                      <div style={{ fontSize: "14px", color: "#474F5E",wordBreak:"break-all",marginBottom:"4px"}} className="font-w-500">{item.title}</div>
-                      <div style={{ fontSize: "14px", color: "#474F5E" }}>{
-                        item.attributes?.map((item:any)=>item.attributeValue??"").join("/")
-                      }</div>
-                      <div style={{ fontSize: "14px", color: "#474F5E" }}>model : </div>
-                    </Flex>
-                  </Flex>
-                </Col>
-                <Col span={5}>
-                  <Flex style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(item.productPrice)} X {item.productNum}</span>
-                  </Flex>
-                </Col>
-                <Col span={5}>
-                  <Flex justify="end" style={{height:"100%"}}>
-                    <span style={{ fontSize: "14px", color: "#474F5E" }}>{symbolLeft}{currencyPrecision(Number(item.productAmount || 0))}</span>
-                  </Flex>
-                </Col>
-              </Row>
-            )
-          })}
-        </div>
-      </Form>
-      <Divider />
-      <Form>
-        <Flex justify="flex-end" gap={12}>
-            <MyDropdown 
-            tiggerEle={
-                <MyButton text={"承运商发货"} style={{height:"36px"}} icon={<UnfoldIcon className="font-20" />} iconPosition={"end"} />
-            }
-            menu={{
-                items:[
-                    {
-                        key: "1", label: (
-                            <div onClick={() => { } } className="">使用Shipper迅朋物流发货</div>
-                        )
-                    }
-                ]
-            }} />
-            <PrimaryButton text={"标记为已发货"} onClick={()=>history.push(`/orders/delivery/${order.orderInfo.orderSeq}/${fulfillment.fulfillmentOrder.fulfillmentOrderSeq}/${order.languages}`)}  />
+          <div className="color-242833">{"默认地点"}</div>
         </Flex>
-      </Form>
-    </Card>
+        {fulfillment.fulfillmentOrder?.deliveryMethod?.deliveryName && <Flex gap={12} className="font-14" style={{marginBottom:"8px"}}>
+          <Flex gap={6}>
+            <EnvironmentOutlined className="color-7A8499" />
+            <div className="color-7A8499">{"配送方案"}</div>
+          </Flex>
+          <div className="color-242833">{fulfillment.fulfillmentOrder.deliveryMethod.deliveryName}</div>
+        </Flex>}
+        {fulfillment.fulfillmentItemList.map((item:FulfillmentItemType,index:number)=>{
+          return(
+            <Row key={index} style={{marginBottom:"20px"}}>
+              <Col span={14}>
+                <Flex style={{paddingRight:"40px"}}>
+                  <img src={item.firstImage?item.firstImage+"?x-oss-process=image/resize,w_200":"/icons/ProductCoverBlank.svg"} alt={item.title} style={{ width: "60px", height: "60px", marginRight: "10px" }} />
+                  <Flex vertical align="flex-start" justify="flex-start">
+                    <div className="font-w-500 color-474F5E font-14 title">{item.title}</div>
+                    <div className="color-474F5E font-14">{
+                      item.attributes?.map((item:any)=>item.attributeValue??"").join("/")
+                    }</div>
+                    <div className="color-474F5E font-14">model : </div>
+                  </Flex>
+                </Flex>
+              </Col>
+              <Col span={5}>
+                <Flex style={{height:"100%"}} vertical>
+                  <div className="color-474F5E font-14">{getCurrencyAmount(item.finalPriceSet.settleMoney.currencyCode,item.finalPriceSet.settleMoney.amount)} X {item.productNum}</div>
+                  {(item.finalPriceSet.settleMoney.amount !== item.productPriceSet.settleMoney.amount) && <div className="color-474F5E font-14 line-through">{getCurrencyAmount(item.productPriceSet.settleMoney.currencyCode,item.productPriceSet.settleMoney.amount)}</div>}
+                </Flex>
+              </Col>
+              <Col span={5}>
+                <Flex justify="end" style={{height:"100%"}}>
+                  <span className="color-474F5E font-14">{getCurrencyAmount(item.productAmountWithPromotionSet.settleMoney.currencyCode,item.productAmountWithPromotionSet.settleMoney.amount)}</span>
+                </Flex>
+              </Col>
+            </Row>
+          )
+        })}
+      </div>
+      <Divider />
+      <Flex justify="flex-end" gap={12}>
+          <MyDropdown 
+          tiggerEle={
+              <MyButton text={"承运商发货"} style={{height:"36px"}} icon={<UnfoldIcon className="font-20" />} iconPosition={"end"} />
+          }
+          menu={{
+              items:[
+                  {
+                      key: "1", label: (
+                          <div onClick={() => { } } className="">使用Shipper迅朋物流发货</div>
+                      )
+                  }
+              ]
+          }} />
+          <PrimaryButton text={"标记为已发货"} onClick={()=>history.push(`/orders/delivery/${order.orderInfo.orderSeq}/${fulfillment.fulfillmentOrder.fulfillmentOrderSeq}/${order.languages}`)}  />
+      </Flex>
+    </MyCard>
   );
 }
 
 export default observer(PendingShippedCard);
+
+const MyCard = styled(Card)`
+  .title{
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
+`

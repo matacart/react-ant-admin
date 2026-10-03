@@ -1,7 +1,8 @@
 import { Input, Button, Select, MenuProps, Flex, Tag } from "antd";
 import { useEffect, useRef, useState } from "react"
 import { SearchOutlined } from "@ant-design/icons";
-import { getAddWarehouseList, getPurchaseList, selectSupplier } from "@/services/y2/api";
+import { getAddWarehouseList, getPurchaseList } from "@/services/y2/apiStore";
+import { selectSupplier } from "@/services/y2/apiAppstore";
 import purchaseOrderList from "@/store/product/purchaseOrder/purchaseOrderListStore";
 import { observer } from "mobx-react-lite";
 import DropdownSort from "@/components/Dropdown/DropdownSort";
@@ -133,14 +134,8 @@ function SelectCard(){
     // 筛选采购订单
     const selecterPurchaseOrderList = (orderNumber?:string,status?:string,supplier?:string,warehouse?:string)=>{
       getPurchaseList(orderNumber,status,supplier,warehouse).then(res=>{
-        console.log(res)
-        if(res.code === 0){
-          setPurchaseorderData(res.data)
-        }else if(res.code == 201){
-          // 无数据
-          setPurchaseorderData([])
-        }
-      })
+        setPurchaseorderData(res.data || [])
+      }).catch(()=>{})
     }
 
     const firstUpdate = useRef(true);
@@ -168,30 +163,26 @@ function SelectCard(){
     useEffect(()=>{
       // 获取供应商
       selectSupplier().then(res=>{
-        if(res.code == 0){
-          let newList:any = []
-          res.data.forEach((e:any) => {
-            newList.push({
-              label:e.name,
-              value:e.id
-            })
-          });
-          setSupplierList(newList)
-        }
+        let newList:any = []
+        res.data.forEach((e:any) => {
+          newList.push({
+            label:e.name,
+            value:e.id
+          })
+        });
+        setSupplierList(newList)
       })
       // 获取收货地
       getAddWarehouseList().then(res=>{
-        if(res.code == 0){
-          let newList:any = []
-          res.data.forEach((e:any) => {
-            newList.push({
-              label:e.name,
-              value:e.id
-            })
+        let newList:any = []
+        res.data.forEach((e:any) => {
+          newList.push({
+            label:e.name,
+            value:e.id
           })
-          setPlaceOfReceiptList(newList)
-        }
-      })
+        })
+        setPlaceOfReceiptList(newList)
+      }).catch(()=>{})
 
       // 获取采购订单列表--条件
       // getPurchaseList().then(res=>{

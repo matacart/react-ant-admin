@@ -2,7 +2,7 @@ import { ArrowLeftOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { App, Divider,Flex,Form,MenuProps } from 'antd';
 import { useEffect, useState } from 'react';
 import TradingRecords from './TradingRecords';
-import { deleteProduct, getProductDetail, getProductStyleValueList, upDateProduct, upDateProductStatus } from '@/services/y2/api';
+import { deleteProduct, getProductDetail, getProductStyleValueList, upDateProduct, upDateProductStatus } from '@/services/y2/apiStore';
 import React from 'react';
 import { styled } from 'styled-components';
 import { observer } from 'mobx-react-lite';
@@ -127,21 +127,22 @@ function ProductDetail() {
 
     // 获取所有款式的选项
     const fetchOptions = (optionId: string) => {
-        return getProductStyleValueList(optionId,product.languageId).then(res=>{
-        return res?.data || []
+        return getProductStyleValueList({
+            option_id: optionId,
+            languages_id: product.languageId
+        }).then(res=>{
+            return res?.data || []
+        }).catch(()=>{
+            return []
         })
     }
     
     // 删除
     async function productDel(id:any){
-        const res = await deleteProduct(id);
-        // 业务状态 code
-        if(res?.code==0){
+        deleteProduct(id).then(res=>{
             message.success('删除成功');
             history.push('/products/index');
-        }else{
-            message.error('noooo');
-        }
+        }).catch(()=>{});
     }
     // 设置产品状态
     function setProductStatus(status:string){
@@ -152,9 +153,7 @@ function ProductDetail() {
                 status:status
             })
         }).catch(err=>{
-            message.error("失败")
         }).finally(()=>{
-            
         })
     }
     // 存档弹窗
@@ -221,32 +220,31 @@ function ProductDetail() {
     // 获取商品详情
     const fetchProductDetail = async (id:string,langId:string) => {
         setIsSkeleton(true)
-        const res = await getProductDetail(id,langId);
-        if(res.code == 0 && res.data){
-            setProductTitle(res.data.title);
+        getProductDetail(id,langId).then(async res=>{
+            setProductTitle(res.data?.title || "");
             // 提取数据
             const { diversion,attributes,variants,...productInfo } = res.data;
             // 格式过滤 --- 有效的json格式
             let newAdditonalImage = []
             try {
-                newAdditonalImage = (JSON.parse(res.data.additional_image || "[]") instanceof Array)?JSON.parse(res.data.additional_image || "[]"):[]
+                newAdditonalImage = (JSON.parse(res.data?.additional_image || "[]") instanceof Array)?JSON.parse(res.data?.additional_image || "[]"):[]
             } catch (error) {
                 console.log(error)
                 newAdditonalImage = []
             }
-            if(res.data.product_image == ""){
+            if(res.data?.product_image == ""){
                 product.setProductInfo({
                     ...productInfo,
-                    start_time:(res.data.start_time == "0" || res.data.start_time == "") ? "" : dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                    end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    start_time:(res.data?.start_time == "0" || res.data?.start_time == "") ? "" : dayjs(res.data?.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    end_time:(res.data?.end_time == "0" || res.data?.end_time == "")?"":dayjs(res.data?.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
                     additional_image:[...newAdditonalImage]
                 })
             }else{
                 product.setProductInfo({
                     ...productInfo,
-                    start_time:(res.data.start_time == "0" || res.data.start_time == "")?"":dayjs(res.data.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                    end_time:(res.data.end_time == "0" || res.data.end_time == "")?"":dayjs(res.data.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                    additional_image:[res.data.product_image,...newAdditonalImage]
+                    start_time:(res.data?.start_time == "0" || res.data?.start_time == "")?"":dayjs(res.data?.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    end_time:(res.data?.end_time == "0" || res.data?.end_time == "")?"":dayjs(res.data?.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
+                    additional_image:[res.data?.product_image,"",...newAdditonalImage]
                 })
             }
             product.setLanguageId(langId);
@@ -259,9 +257,7 @@ function ProductDetail() {
             // 属性映射 -- 收集所有输入值后调用父组件提供的回调函数
             const attributesMap = await transformAttributes(product.attributes,fetchOptions);
             product.setAttributesMap(attributesMap);
-        }else{
-            message.error("商品不存在");
-        }
+        });
         setIsSkeleton(false)
     };
 
@@ -281,38 +277,37 @@ function ProductDetail() {
     const onFinish = async ()=>{
         if(await formValidation()){
             setLoading(true)
-            try {
-                const remove = product.variants.filter((item:any)=>!product.variantList.some(variant => variant.id === item.id))
-                // 转换格式
-                let newAttributesOptions:any = [];
-                toJS(product.attributesMap).forEach((attributes:any)=>{
-                    attributes.optionValue.forEach((item:string)=>{
-                        const option = attributes.options.find((option:any)=>option.option_values_id == item);
-                        option && newAttributesOptions.push({
-                            option_id:attributes.value,
-                            option_name:attributes.label,
-                            ...option,
-                        })
+            const remove = product.variants.filter((item:any)=>!product.variantList.some(variant => variant.id === item.id))
+            // 转换格式
+            let newAttributesOptions:any = [];
+            toJS(product.attributesMap).forEach((attributes:any)=>{
+                attributes.optionValue.forEach((item:string)=>{
+                    const option = attributes.options.find((option:any)=>option.option_values_id == item);
+                    option && newAttributesOptions.push({
+                        option_id:attributes.value,
+                        option_name:attributes.label,
+                        ...option,
                     })
                 })
-                const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
-                // 过滤要删除的属性
-                await upDateProduct({
-                    ...product.productInfo,
-                    languages_id:product.languageId,
-                    product_image:product.productInfo.additional_image[0] || "",
-                    additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
-                    diversion:JSON.stringify([product.diversion || {}]),
-                    attributes:JSON.stringify([...newAttributesOptions,...removeAttributes]),
-                    variants:JSON.stringify([...product.variantList,...remove])
-                })
+            })
+            const removeAttributes = toJS(product.attributes).filter((item:any)=>!newAttributesOptions.some((newItem:any)=>newItem?.id == item?.id))
+            // 过滤要删除的属性
+            upDateProduct({
+                ...product.productInfo,
+                languages_id:product.languageId,
+                product_image:product.productInfo.additional_image[0] || "",
+                additional_image:JSON.stringify(product.productInfo.additional_image.slice(1) || []),
+                diversion:JSON.stringify([product.diversion || {}]),
+                attributes:JSON.stringify([...newAttributesOptions,...removeAttributes]),
+                variants:JSON.stringify([...product.variantList,...remove])
+            }).then(()=>{
                 message.success('修改成功')
                 setProductTitle(product.productInfo.title)
                 setIsOverlay(false)
-            }catch(err){
-            }finally{
+            }).catch(()=>{
+            }).finally(()=>{
                 setLoading(false)
-            }
+            })
         }
     }
     // 在组件加载时调用 fetchProductDetail
@@ -484,7 +479,6 @@ const Scoped = styled.div`
             &-content {
                 flex: 9;
                 min-width: 510px;
-
                 display: flex;
                 flex-direction: column;
                 gap: 20px;

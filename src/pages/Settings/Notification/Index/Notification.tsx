@@ -68,6 +68,7 @@ function Notification() {
                 }
             )))
             setIsSkeleton(!res)
+        }).catch(()=>{
         })
     },[])
 

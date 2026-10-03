@@ -1,9 +1,9 @@
 import DefaultButton from "@/components/Button/DefaultButton"
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import { DownloadIcon, ExportIcon, SuccessIcon } from "@/components/Icons/Icons"
-import { getTaskStatus, importProductTask } from "@/services/y2/api"
+import { importProductTask } from "@/services/y2/api"
 import { Modal, Flex, Checkbox, App } from "antd"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import ProductUploadImport from "./ProductUploadImport"
 import productList from "@/store/product/productList"
 import { clearTimerId, startPolling } from "./timerService"
@@ -22,7 +22,11 @@ function ImportShopifyModal() {
 
     const UploadImport = (file:File)=>{
         setLoading(true)
-        importProductTask(file,"shopify_product_import",coverHandle).then(async res=>{
+        importProductTask({
+            file:file,
+            type:"shopify_product_import",
+            handle:coverHandle
+        }).then(async (res:any)=>{
             let taskId = res.taskId
             await productList.setTask({
                 status:"done",
@@ -57,8 +61,6 @@ function ImportShopifyModal() {
                 }
             });
         }).catch(err=>{
-            // 
-            message.error("解析失败，请重试")
         }).finally(()=>{
             setLoading(false)
         })

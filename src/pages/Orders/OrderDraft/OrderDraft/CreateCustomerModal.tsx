@@ -3,7 +3,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";
-import { createCustomer, getAddressList, getCustomerList } from "@/services/y2/api";
+import { createCustomer, getAddressList, getCustomerList } from "@/services/y2/apiAppstore";
 import orderDraft from "@/store/order/orderDraft";
 import { Col, Flex, Form, Modal, Row, Select, Space } from "antd"
 import FormItem from "antd/es/form/FormItem";
@@ -108,7 +108,7 @@ function CreateCustomerModal(){
                 value:item.id,
                 info:{...item}
             })))
-        })
+        }).catch(()=>{})
     },[])
 
     return (
@@ -182,8 +182,7 @@ function CreateCustomerModal(){
                             is_same_delivery:"1"
                         })
                     }
-                }).catch(err=>{ 
-                    console.log(err)
+                }).catch(()=>{ 
                 })
                 
             }} placeholder="搜索或创建客户" options={customerList} onClick={()=>setIsModalOpen(true)} />

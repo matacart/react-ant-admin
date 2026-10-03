@@ -5,7 +5,7 @@ import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { App } from 'antd';
 import cookie from 'react-cookies';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { getArticleComments } from '@/services/y2/api';
+import { getArticleComments } from '@/services/y2/apiArticle';
 import ArticlesCommentList from './ArticlesCommentList';
 
 
@@ -25,12 +25,11 @@ function ArticlesComment(){
             limit:"10",
             languages_id:languagesId,
         }).then(res=>{
-            res.code == 0 && setComments({
+            setComments({
                 data:res.data.list,
                 count:res.data.total
             });
         }).catch((err)=>{
-            message.error(err?.msg);
         }).finally(()=>{
             setIsSkeleton(false)
         })

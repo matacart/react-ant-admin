@@ -468,6 +468,26 @@ const HideSvg = ()=>(
   <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g><path fillRule="evenodd" clipRule="evenodd" d="M15.6072 8.16636C15.689 8.19983 15.7283 8.29344 15.6932 8.37455C14.4152 11.3311 11.4502 13.3997 8 13.3997C4.54976 13.3997 1.58482 11.3311 0.306781 8.37455C0.271719 8.29344 0.310987 8.19983 0.39277 8.16636L1.20721 7.83306C1.28899 7.79959 1.38228 7.83893 1.41762 7.91992C2.5151 10.4357 5.04772 12.1997 8 12.1997C10.9523 12.1997 13.4849 10.4357 14.5824 7.91992C14.6177 7.83893 14.711 7.79959 14.7928 7.83306L15.6072 8.16636Z" fill="#474F5E"></path><path d="M2.79999 10.7998L1.19999 12.3998" stroke="#474F5E" strokeWidth="1.2" strokeLinejoin="round"></path><path d="M13.28 10.7998L14.7194 12.3998" stroke="#474F5E" strokeWidth="1.2" strokeLinejoin="round"></path><path d="M9.95514 12.3994L10.8 14.7994" stroke="#474F5E" strokeLinejoin="round"></path><path d="M6.07999 12.4004L5.27999 14.8004" stroke="#474F5E" strokeLinejoin="round"></path></g></svg>
 )
 
+const DomainLangSvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="24"><path d="M5.25 11.875A2.375 2.375 0 0 1 7.625 9.5h1.32a.528.528 0 1 1 0 1.056h-1.32a1.32 1.32 0 1 0 0 2.638h1.32a.528.528 0 0 1 0 1.056h-1.32a2.375 2.375 0 0 1-2.375-2.375ZM14.75 11.875a2.375 2.375 0 0 1-2.375 2.375h-1.32a.528.528 0 1 1 0-1.056h1.32a1.32 1.32 0 1 0 0-2.638h-1.32a.528.528 0 1 1 0-1.056h1.32a2.375 2.375 0 0 1 2.375 2.375Z" fill="#356DFF"></path><path d="M7.889 11.875c0-.291.236-.528.528-.528h3.166a.528.528 0 1 1 0 1.056H8.417a.528.528 0 0 1-.528-.528Z" fill="#356DFF"></path><path d="M2 3.8a.8.8 0 0 1 .8-.8h14.4a.8.8 0 0 1 .8.8v12.4a.8.8 0 0 1-.8.8H2.8a.8.8 0 0 1-.8-.8V3.8Zm1.5 2.7h13v-2h-13v2Zm0 1.5v7.5h13V8h-13Z" fill="#474F5E"></path></svg>
+)
+
+const ProductSvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="24"><path d="M6.25 9.4a.1.1 0 0 0 .1.1h1.3a.1.1 0 0 0 .1-.1V5.6a.1.1 0 0 0-.1-.1h-1.3a.1.1 0 0 0-.1.1v3.8Zm6 0V5.6a.1.1 0 0 1 .1-.1h1.3a.1.1 0 0 1 .1.1v3.8a.1.1 0 0 1-.1.1h-1.3a.1.1 0 0 1-.1-.1Z" fill="#356DFF"></path><path d="M10 2a3.75 3.75 0 0 0-3.75 3.75H4.46a.5.5 0 0 0-.499.458l-.916 11a.5.5 0 0 0 .498.542h12.913a.5.5 0 0 0 .498-.541l-.916-11a.5.5 0 0 0-.498-.459h-1.79A3.75 3.75 0 0 0 10 2Zm2.25 3.75h-4.5a2.25 2.25 0 0 1 4.5 0Zm2.37 1.5.75 9H4.63l.75-9h9.24Z" fill="#242833"></path></svg>
+)
+
+const InventorySvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="24"><path d="M7.1 2c-.4 0-.725.325-.725.725v.15H4.3c-.58 0-1.05.47-1.05 1.05v13.4c0 .58.47 1.05 1.05 1.05h11.4c.58 0 1.05-.47 1.05-1.05v-13.4c0-.58-.47-1.05-1.05-1.05h-2.075v-.15c0-.4-.325-.725-.725-.725H7.1Zm6.525 2.375h1.625v12.5H4.75v-12.5h1.625v.15c0 .4.325.725.725.725h5.8c.4 0 .725-.325.725-.725v-.15Zm-6-.375v-.75h4.75V4h-4.75Z" fill="#242833"></path><path d="M10 7.039a.5.5 0 0 1 .5.5v.541a3.004 3.004 0 0 1 2.33 1.959h-1.098a2 2 0 0 0-3.464 0H7.17A3.004 3.004 0 0 1 9.5 8.08V7.54a.5.5 0 0 1 .5-.5ZM6.5 10.539a.5.5 0 0 0 0 1h1.563a2.003 2.003 0 0 1 0-1H6.5ZM11.937 10.539a2.005 2.005 0 0 1 0 1H13.5a.5.5 0 1 0 0-1h-1.563ZM12.83 12.039h-1.098a2 2 0 0 1-3.464 0H7.17A3.004 3.004 0 0 0 9.5 13.997v.542a.5.5 0 1 0 1 0v-.542a3.004 3.004 0 0 0 2.33-1.958Z" fill="#356DFF"></path></svg>
+)
+
+const NavShippingSvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="24"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.625 7.825a.3.3 0 0 1-.3.3h-2.4a.3.3 0 0 1-.3-.3v-.65a.3.3 0 0 1 .3-.3h2.4a.3.3 0 0 1 .3.3v.65ZM5.625 9.825a.3.3 0 0 1-.3.3h-3.4a.3.3 0 0 1-.3-.3v-.65a.3.3 0 0 1 .3-.3h3.4a.3.3 0 0 1 .3.3v.65Z" fill="#356DFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M2.875 3.5a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 .75.75v.25h3.25a.75.75 0 0 1 .685.445l1.802 4.055h.513a.75.75 0 0 1 .75.75v5a.75.75 0 0 1-.75.75H15.98a2 2 0 1 1-3.71 0H8.98a2 2 0 1 1-3.71 0H3.625a.75.75 0 0 1-.75-.75v-2.3c0-.11.09-.2.2-.2h1.1c.11 0 .2.09.2.2v1.55h12.5v-3.5h-6.25a.75.75 0 0 1-.75-.75V4.25h-5.5V5.3a.2.2 0 0 1-.2.2h-1.1a.2.2 0 0 1-.2-.2V3.5Zm4.25 11.25a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm6.25.75a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0Zm-2-7.25v-3h2.763l1.333 3h-4.096Z" fill="#242833"></path></svg>
+)
+
+const PaySvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="24"><path d="m13.737 3.054 1.774 3.072 1.299-.75-2.149-3.722a.75.75 0 0 0-1.024-.274L7.625 4.85l.75 1.3 5.362-3.096Z" fill="#356DFF"></path><path d="M5.5 6H7v11H5.5V6Z" fill="#242833"></path><path d="M15.5 11.25a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0Z" fill="#356DFF"></path><path d="M1.75 5.5a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 .75.75V15a2.75 2.75 0 0 1-2.75 2.75h-13a.75.75 0 0 1-.75-.75V5.5Zm1.5.75v10H15.5c.69 0 1.25-.56 1.25-1.25V6.25H3.25Z" fill="#242833"></path></svg>
+)
+
 
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
@@ -770,6 +790,28 @@ export const DataSourceIcon = (props: Partial<CustomIconComponentProps>) => (
 export const HideIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HideSvg} {...props} />
 );
+
+export const DomainLangIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={DomainLangSvg} {...props} />
+);
+
+export const ProductIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={ProductSvg} {...props} />
+);
+
+export const PayIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={PaySvg} {...props} />
+);
+
+export const InventoryIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={InventorySvg} {...props} />
+);
+
+export const NavShippingIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={NavShippingSvg} {...props} />
+);
+
+
 
 
 // -----------编辑组件图标-----------------

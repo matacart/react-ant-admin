@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import MyButton from "@/components/Button/MyButton";
 import NumberInput from "@/components/Input/NumberInput";
 import orderRefund from "@/store/order/orderRefund";
-import { setOrderRefunded } from "@/services/y2/api";
+import { setOrderRefunded } from "@/services/y2/apiOrders";
 import MyAlert from "@/components/Alert/MyAlert";
 import { useNavigate } from "react-router-dom";
 
@@ -35,7 +35,6 @@ function RefundAmount() {
         setOrderRefunded(res).then(res=>{
             navigate(`/orders/${orderRefund.orderInfo.order_id}`)
         }).catch(err=>{
-
         }).finally(()=>{
             setLoading(false)
         })

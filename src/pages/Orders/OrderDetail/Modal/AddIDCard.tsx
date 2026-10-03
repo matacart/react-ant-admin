@@ -1,10 +1,10 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
-import { setOrderIdNumber } from "@/services/y2/api";
+import { setOrderIdNumber } from "@/services/y2/apiOrders";
 import order from "@/store/order/order";
 import { Checkbox, Flex, Form, Input, Modal, Space } from "antd"
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { styled } from 'styled-components';
 
 
@@ -27,7 +27,6 @@ function AddIDCard(){
                 order.triggerRefresh()
                 setOpen(false);
             }).catch(()=>{
-
             }).finally(()=>{
                 setLoading(false)
             })

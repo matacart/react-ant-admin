@@ -32,72 +32,66 @@ function NewNavgate(){
     const HandleCardRef = useRef<FormInstance>(null);
     // 统一校验方法
     const validateAll = async () => {
+        // 校验标题卡
+        await titleCardRef.current?.validateFields();
+        // 校验handle卡
+        await HandleCardRef.current?.validateFields();
+
+        const title = titleCardRef.current?.getFieldsValue().title;
+        const handle = HandleCardRef.current?.getFieldsValue().handle || title.replace(/\s+/g, '-').toLowerCase();
+
+        let data:TreeItem[] = [{
+            id:"",
+            languages_id:languagesId,
+            title:title,
+            handle:handle,
+            content:"",
+            sort:"1000",
+            pid:"0",
+            status:"1",
+            is_url:"0",
+            is_sys:navgate.isSys,
+            is_share:navgate.isShare,
+            is_bind:navgate.isBind,
+        }];
         try {
-            // 校验标题卡
-            await titleCardRef.current?.validateFields();
-            // 校验handle卡
-            await HandleCardRef.current?.validateFields();
-
-            const title = titleCardRef.current?.getFieldsValue().title;
-            const handle = HandleCardRef.current?.getFieldsValue().handle || title.replace(/\s+/g, '-').toLowerCase();
-
-            let data:TreeItem[] = [{
-                id:"",
-                languages_id:languagesId,
-                title:title,
-                handle:handle,
-                content:"",
-                sort:"1000",
-                pid:"0",
-                status:"1",
-                is_url:"0",
-	            is_sys:navgate.isSys,
-                is_share:navgate.isShare,
-                is_bind:navgate.isBind,
-            }];
-            try {
-                flattenTree(navgate.initialItems).forEach((item:any)=>{
-                    data.push({
-                        id:"",
-                        languages_id:item.languagesId,
-                        title:item?.title,
-                        image:item?.img,
-                        page_link:item?.pageLink,
-                        handle:(item.id).replace(/\s+/g, '-').toLowerCase(),
-                        pid:(item?.parentId??handle).replace(/\s+/g, '-').toLowerCase(),
-                        content:"",
-                        sort:"1000",
-                        status:"1",
-                        is_url:"1",
-                        is_sys:item.isSys,
-                        is_share:item.isShare,
-                        open_mode:item.openMode
-                    })
-                });
-            } catch (error) {
-                console.error(error);
-            }
-            // 提交数据
-            setLoading(true);
-            batchAddNavgate({
-                languages_id:navgate.languagesId,
-                pages:JSON.stringify(data)
-            }).then(res=>{
-                if(res.code == 0){
-                    // 清空状态
-                    navgate.clear();
-                    sleep(2000);
-                    message.success('success');
-                    history.push('/website/navList');
-                }
-            }).catch(err=>{
-                message.error(err?.msg);
-            }).finally(()=>{
-                setLoading(false);
+            flattenTree(navgate.initialItems).forEach((item:any)=>{
+                data.push({
+                    id:"",
+                    languages_id:item.languagesId,
+                    title:item?.title,
+                    image:item?.img,
+                    page_link:item?.pageLink,
+                    handle:(item.id).replace(/\s+/g, '-').toLowerCase(),
+                    pid:(item?.parentId??handle).replace(/\s+/g, '-').toLowerCase(),
+                    content:"",
+                    sort:"1000",
+                    status:"1",
+                    is_url:"1",
+                    is_sys:item.isSys,
+                    is_share:item.isShare,
+                    open_mode:item.openMode
+                })
             });
         } catch (error) {
-            // console.error('Validation failed:', "表单验证未通过");
+            console.error(error);
         }
+        // 提交数据
+        setLoading(true);
+        batchAddNavgate({
+            languages_id:navgate.languagesId,
+            pages:JSON.stringify(data)
+        }).then(res=>{
+            // 清空状态
+            navgate.clear();
+            sleep(2000);
+            message.success('success');
+            history.push('/website/navList');
+        }).catch(err=>{
+        }).finally(()=>{
+            setLoading(false);
+        });
+        
     };
 
     // 初始化

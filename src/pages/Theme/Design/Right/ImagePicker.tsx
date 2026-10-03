@@ -1,7 +1,8 @@
 import MyButton from "@/components/Button/MyButton";
 import { AddIcon, SearchSecondIcon } from "@/components/Icons/Icons";
 import MyInput from "@/components/Input/MyInput";
-import { getFileList, uploadPic } from "@/services/y2/api";
+import { getFileList } from "@/services/y2/api";
+import { uploadPic } from "@/services/y2/apiAppstore";
 import { CheckCircleFilled, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, Drawer, Flex, App, Row, Spin, Upload } from "antd";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -49,17 +50,13 @@ function ImagePicker({item,data,setData}:{item:any,data:DataType,setData:(item:a
         formData.append("file", file)
         setLoading(true);
         uploadPic(formData).then((res: any) => {
-            if(res.code == 0){
-                setImgData({
-                    value:{
-                        url:res.data.data.src,
-                        alt:file.name
-                    },
-                    resource:null
-                });
-            }else{
-                message.error("上传失败", 1)
-            }
+            setImgData({
+                value:{
+                    url:res.data.data.src,
+                    alt:file.name
+                },
+                resource:null
+            });
         }).catch((err: any) => {
         }).finally(() => {
             setLoading(false);
@@ -92,18 +89,15 @@ function ImagePicker({item,data,setData}:{item:any,data:DataType,setData:(item:a
             pageNum:1,
             pageSize:10,
         }).then(res=>{
-            if(res.code == 0){
-                const newList = res.data.list.map((item:any)=>{
-                    return {
-                        id:item.id,
-                        url:item.url,
-                        type:item.nameSuffix
-                    }
-                })
-                setImgList(newList);
-            }
+            const newList = res.data.list.map((item:any)=>{
+                return {
+                    id:item.id,
+                    url:item.url,
+                    type:item.nameSuffix
+                }
+            })
+            setImgList(newList);
         }).catch(err=>{
-            console.log(err);
         }).finally(()=>{
             setLoading(false);
         })

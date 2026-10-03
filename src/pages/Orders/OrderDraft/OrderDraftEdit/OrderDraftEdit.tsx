@@ -4,7 +4,7 @@ import { App, Divider, Flex, Spin } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { delDraftOrder, editDraftOrder, getDraftDetail } from '@/services/y2/api';
+import { delDraftOrder, editDraftOrder, getDraftDetail } from '@/services/y2/apiStore';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import DangerButton from '@/components/Button/DangerButton';
 import orderDraft from '@/store/order/orderDraft';
@@ -50,11 +50,9 @@ function OrderDraftEdit() {
     // 保存
     const submit = ()=>{
         const productInfo = convertFlatToNested(orderDraft.productInfo);
-        console.log(productInfo)
         if(orderDraft.customerInfo && orderDraft.productInfo?.length>0){
             setIsAlert(null)
             setLoading(true)
-            console.log(orderDraft.orderInfo)
             editDraftOrder({
                 draft_id :orderDraft.orderInfo.id,
                 orderInfo:JSON.stringify(orderDraft.orderInfo),
@@ -65,8 +63,7 @@ function OrderDraftEdit() {
             }).then(res=>{
                 setIsOverlay(false)
                 message.success('修改内容已更新')
-            }).catch(err=>{
-
+            }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
             })

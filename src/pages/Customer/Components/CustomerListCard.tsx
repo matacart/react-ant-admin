@@ -5,7 +5,7 @@ import Tag from 'antd/lib/tag';
 import { SearchOutlined } from '@ant-design/icons';
 import DefaultTag from '@/components/Tag/DefaultTag';
 import { useNavigate } from 'react-router-dom';
-import { getCustomerList } from '@/services/y2/api';
+import { getCustomerList } from '@/services/y2/apiAppstore';
 
 // 表单项订单数据类型
 interface DataType {
@@ -102,8 +102,7 @@ export default function CustmoerListAjax() {
             total: Number(res.count),
           }
         });
-      }).catch(error => {
-        console.error('Error fetching data:', error);
+      }).catch(()=>{
       }).finally(() => {
         setLoading(false);
       });

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import { App, Flex } from 'antd';
 import cookie from 'react-cookies';
-import { getRechargeList } from '@/services/y2/api';
+import { getRechargeList } from '@/services/y2/apiAppstore';
 import PaymentList from './PaymentList';
 import PaymentModal from './PaymentModal';
 
@@ -22,12 +22,11 @@ function Payment(){
             page:"1",
             limit:"10",
         }).then(res=>{
-            res.code == 0 && setPayList({
+            setPayList({
                 data:res.data,
                 count:res.count
             });
-        }).catch((err)=>{
-            message.error(err?.msg);
+        }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
         })

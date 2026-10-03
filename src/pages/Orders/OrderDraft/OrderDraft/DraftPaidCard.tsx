@@ -8,9 +8,8 @@ import DiscountEditModal from './DiscountEditModal';
 import ShippingFeeEditingModal from './ShippingFeeEditingModal';
 import MyButton from '@/components/Button/MyButton';
 import MySelect from '@/components/Select/MySelect';
-import cookie from 'react-cookies';
 import { observer } from 'mobx-react-lite';
-import { getAddonsConfigs, getAddonsList, getDeliveryList } from '@/services/y2/api';
+import { getAddonsConfigs } from '@/services/y2/apiAppstore';
 import orderDraft from '@/store/order/orderDraft';
 import MySelectIcon from '@/components/Select/MySelectIcon';
 import { Link } from 'react-router-dom';
@@ -115,10 +114,8 @@ function DraftPaidCard() {
         }
       })
       setPaymentList(newPaymentList)
-    }).catch(err=>{
+    }).catch(()=>{
     })
-
-    console.log(orderDraft.orderInfo)
   },[])
 
 

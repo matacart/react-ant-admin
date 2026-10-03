@@ -84,18 +84,14 @@ export default function RenameTemplateModal({
                 oldFileName:templateInfo.templateName, 
                 newFileName:part1+values.name+part2, 
             }).then((res)=>{
-                if(res.code == 0){
-                    message.success("成功");
-                }
+                message.success("成功");
             }).catch((err)=>{
                 console.log(err);
             }).finally(()=>{
                 setIsLoading(false);
             })
             // 销毁
-        }).catch(()=>{
-
-        })
+        }).catch(()=>{})
     }
 
     return (

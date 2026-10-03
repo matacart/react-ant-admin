@@ -403,96 +403,94 @@ export default function({form,secondData}:{form:FormInstance<any>,secondData?:an
 };
 
 export async function getNavlistSecondData(param:any){
-    const navlistSecondData = await getLinkList({...param}).then(res=>{
-        if(res.code == 0){
-            let newOptions = [];
-            if(param.nodeType == "2"){
-                newOptions = res.data.list.map((item:any)=>{
-                    return {
-                        value: JSON.stringify({
-                            id:item.id,
-                            pageType:item.pageType
-                        }),
-                        label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
-                            <EditorRichTextIcon className="font-18" />
-                            <div>{item.name?.default}</div>
-                        </Flex>
-                    }
-                })
-            }
-            if(param.nodeType == "3"){
-                newOptions = res.data.list.map((item:any)=>{
-                    return {
-                        value: item.sortationId,
-                        label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
-                            <EditorFeaturedProductIcon className="font-18" />
-                            <div>{item.sortationName}</div>
-                        </Flex>
-                    }
-                })
-            }
-            if(param.nodeType == "4"){
-                newOptions = res.data.list.map((item:any)=>{
-                    return {
-                        value: JSON.stringify({
-                            id:item.id,
-                            collectionId:item.collectionId
-                        }),
-                        label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
-                            <EditorFeaturedProductIcon className="font-18" />
-                            <div>{item?.title}</div>
-                        </Flex>
-                    }
-                })
-            }
-            if(param.nodeType == "10"){
-                newOptions = res.data.list.map((item:any)=>{
-                    return {
-                        value: item.id,
-                        label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
-                            <EditorFeaturedProductIcon className="font-18" />
-                            <div>{item?.name.default}</div>
-                        </Flex>
-                    }
-                })
-            }
-            if(param.nodeType == "11"){
-                newOptions = res.data.list.map((item:any)=>{
-                    return {
-                        value: item.id,
-                        label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
-                            <EditorRichTextIcon className="font-18" />
-                            <div>{item.title}</div>
-                        </Flex>
-                    }
-                })
-            }
-            if(param.nodeType == "12"){
-                newOptions = res.data.list.map((item:any)=>{
-                    return {
-                        value: JSON.stringify({
-                            id:item.id,
-                            pageType:item.pageType
-                        }),
-                        label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
-                            <EditorFeaturedProductIcon className="font-18" />
-                            <div>{item.name?.default}</div>
-                        </Flex>
-                    }
-                })
-            }
-            return {
-                lastPage:res.data.lastPage,
-                options: newOptions,
-                count:res.data.total
-            };
+    let navlistSecondData = {
+        lastPage:false,
+        options:[],
+        count:0
+    }
+    await getLinkList({...param}).then(res=>{
+        let newOptions = [];
+        if(param.nodeType == "2"){
+            newOptions = res.data.list.map((item:any)=>{
+                return {
+                    value: JSON.stringify({
+                        id:item.id,
+                        pageType:item.pageType
+                    }),
+                    label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
+                        <EditorRichTextIcon className="font-18" />
+                        <div>{item.name?.default}</div>
+                    </Flex>
+                }
+            })
         }
-    }).catch(()=>{
-        return {
-            lastPage:false,
-            options:[],
-            count:0
+        if(param.nodeType == "3"){
+            newOptions = res.data.list.map((item:any)=>{
+                return {
+                    value: item.sortationId,
+                    label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
+                        <EditorFeaturedProductIcon className="font-18" />
+                        <div>{item.sortationName}</div>
+                    </Flex>
+                }
+            })
+        }
+        if(param.nodeType == "4"){
+            newOptions = res.data.list.map((item:any)=>{
+                return {
+                    value: JSON.stringify({
+                        id:item.id,
+                        collectionId:item.collectionId
+                    }),
+                    label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
+                        <EditorFeaturedProductIcon className="font-18" />
+                        <div>{item?.title}</div>
+                    </Flex>
+                }
+            })
+        }
+        if(param.nodeType == "10"){
+            newOptions = res.data.list.map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
+                        <EditorFeaturedProductIcon className="font-18" />
+                        <div>{item?.name.default}</div>
+                    </Flex>
+                }
+            })
+        }
+        if(param.nodeType == "11"){
+            newOptions = res.data.list.map((item:any)=>{
+                return {
+                    value: item.id,
+                    label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
+                        <EditorRichTextIcon className="font-18" />
+                        <div>{item.title}</div>
+                    </Flex>
+                }
+            })
+        }
+        if(param.nodeType == "12"){
+            newOptions = res.data.list.map((item:any)=>{
+                return {
+                    value: JSON.stringify({
+                        id:item.id,
+                        pageType:item.pageType
+                    }),
+                    label: <Flex align="center" style={{padding:"4px 0px"}} gap={6}>
+                        <EditorFeaturedProductIcon className="font-18" />
+                        <div>{item.name?.default}</div>
+                    </Flex>
+                }
+            })
+        }
+        navlistSecondData = {
+            lastPage:res.data.lastPage,
+            options: newOptions,
+            count:res.data.total
         };
+    }).catch(()=>{
     })
     return navlistSecondData;
 }

@@ -5,7 +5,7 @@ import { Divider } from 'antd';
 import { history } from '@umijs/max';
 import DefaultButton from '@/components/Button/DefaultButton';
 import { observer } from 'mobx-react-lite';
-import { createArticles } from '@/services/y2/api';
+import { createArticles } from '@/services/y2/apiArticle';
 import { useSleep } from '@/hooks/customHooks';
 import { useEffect, useState } from 'react';
 import PrimaryButton from '@/components/Button/PrimaryButton';
@@ -45,7 +45,6 @@ function NewArticles(){
                 message.success('创建成功')
                 history.push('/website/articles')
             }).catch(err=>{
-                message.error('创建失败')
             }).finally(()=>{
                 setLoading(false)
             }) 

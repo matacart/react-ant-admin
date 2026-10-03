@@ -7,7 +7,7 @@ import { Flex, Form, Modal, Radio } from "antd"
 import FormItem from "antd/es/form/FormItem";
 import { useEffect, useState } from "react";
 import orderDraft from "@/store/order/orderDraft";
-import { getDeliveryList } from "@/services/y2/api";
+import { getDeliveryList } from "@/services/y2/apiAppstore";
 import { getPrecision } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
 
@@ -115,7 +115,7 @@ function ShippingFeeEditingModal(){
                     },
                     ...newDeliveryList
                 ])
-            }).catch(err=>{
+            }).catch(()=>{
             }).finally(()=>{
                 setLoading(false)
             })

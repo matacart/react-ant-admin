@@ -2,7 +2,7 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import DefaultSelect from "@/components/Select/DefaultSelect";
-import { addCountry } from "@/services/y2/ApiCheckoutAdditional";
+import { addCountry } from "@/services/y2/apiCheckoutAdditional";
 import country from "@/store/settings/additional/country";
 import { setLocalStorageCountryList } from "@/utils/common";
 import { App, Flex, Form, Modal } from "antd";
@@ -28,13 +28,11 @@ const AddCountry = ({refreshCountryList}:{refreshCountryList:(page:number,limit:
                 languages_id: country.languagesId,
                 ...values,
             }).then((res)=>{
-                if(res.code === 0){
-                    message.success("成功");
-                    // 刷新数据
-                    refreshCountryList(1,10,country.languagesId);
-                    setOpen(false);
-                }
-            }).finally(()=>{
+                message.success("成功");
+                // 刷新数据
+                refreshCountryList(1,10,country.languagesId);
+                setOpen(false);
+            }).catch(()=>{}).finally(()=>{
                 form.resetFields();
                 setLoading(false);
             })

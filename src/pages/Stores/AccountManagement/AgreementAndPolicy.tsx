@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import accountManagement from "@/store/shops/accountManagementStore";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import { setUserSharing } from "@/services/y2/api";
+import { setUserSharing } from "@/services/y2/apiAppstore";
 
 
 function AgreementAndPolicy() {
@@ -13,13 +13,9 @@ function AgreementAndPolicy() {
 
     const sharedState = (checked:boolean)=>{
         setUserSharing(checked?"1":"0").then(res=>{
-            if(res?.code == 0){
-                checked?message.success("已开启"):message.success("已关闭")
-                accountManagement.setUserInfo({...accountManagement.userInfo,data_sharing:checked?"1":"0"})
-            }else{
-                message.error("修改失败")
-            }
-        })
+            checked?message.success("已开启"):message.success("已关闭")
+            accountManagement.setUserInfo({...accountManagement.userInfo,data_sharing:checked?"1":"0"})
+        }).catch(()=>{})
     }
     
     // 注册时间
