@@ -212,3 +212,32 @@ export function insertFileInTree(treeData: any[], fileName: string, fileType: st
     level: pathParts.length + 1
   };
 };
+
+/**
+ * 按指定字段将数组分组为树形结构
+ * @param {Array} list 原始数组
+ * @param {String} key 分组字段，例如 'regionCode'
+ * @param {String} [labelKey] 父节点显示名称字段，例如 'regionName'
+ * @param {String} [childrenKey='children'] 子节点字段名
+ * @returns {Array}
+ */
+export function groupToTree(list:any[], key: string, labelKey: string, childrenKey = 'children') {
+  const map = new Map();
+  const tree:any[] = [];
+  list.forEach(item => {
+    const groupValue = item[key];
+    if (!map.has(groupValue)) {
+      const parentNode = {
+        [key]: groupValue,
+        [childrenKey]: [],
+      };
+      if (labelKey) {
+        parentNode[labelKey] = item[labelKey];
+      }
+      map.set(groupValue, parentNode);
+      tree.push(parentNode);
+    }
+    map.get(groupValue)[childrenKey].push(item);
+  });
+  return tree;
+}

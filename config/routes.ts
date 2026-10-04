@@ -866,6 +866,18 @@ export default  [
         component:"./Settings/Markets/Index/Index",
       },
       {
+        path:"markets/preferences",
+        component:"./Settings/Markets/Preferences/Preferences",
+      },
+      {
+        path:"markets/new",
+        component:"./Settings/Markets/Create/Create",
+      },
+      {
+        path:"markets/edit/:marketId/:langId",
+        component:"./Settings/Markets/Edit/Edit",
+      },
+      {
         path:"markets/:marketId/:langId",
         component:"./Settings/Markets/Detail/Detail",
       },

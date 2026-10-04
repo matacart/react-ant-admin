@@ -48,7 +48,7 @@ function Index() {
                         </div>
                         <Flex gap={12}>
                             <DefaultButton onClick={() => {}} text="偏好设置" />
-                            <PrimaryButton onClick={() => {}} text="创建市场" />
+                            <PrimaryButton onClick={() => history.push("/settings/markets/new")} text="创建市场" />
                         </Flex>
                     </div>
                     <div className='mc-layout-main'>
