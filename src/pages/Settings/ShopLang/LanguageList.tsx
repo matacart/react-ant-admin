@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { ExclamationCircleOutlined, HolderOutlined, MoreOutlined } from '@ant-design/icons';
+import { ExclamationCircleFilled, HolderOutlined, MoreOutlined } from '@ant-design/icons';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
@@ -11,23 +11,23 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { App, Button, Checkbox, Flex, Modal, Skeleton, Spin, Table, Tag } from 'antd';
+import { App, Button, Flex, Space, Spin, Table, Tag } from 'antd';
 import type { TableColumnsType } from 'antd';
 import MyDropdown from '@/components/Dropdown/MyDropdown';
 import styled from 'styled-components';
 import { addLanguages, delLanguages } from '@/services/y2/apiAppstore';
-import { getLanguagesList } from '@/services/y2/apiAppstore';
 import _ from 'lodash';
 import cookie from 'react-cookies';
 import DefaultButton from '@/components/Button/DefaultButton';
-import PrimaryButton from '@/components/Button/PrimaryButton';
 import { useSleep } from '@/hooks/customHooks';
+import MyButton from '@/components/Button/MyButton';
+import SetMarkets from './SetMarkets';
+import shopLang, { LanguageType } from '@/store/settings/shopLang/shopLang';
+import { observer } from 'mobx-react-lite';
+import AddLanguage from './AddLanguage';
+import DangerButton from '@/components/Button/DangerButton';
+import { resetLanguagesList } from '@/utils/common';
 
-interface DataType {
-    key: string;
-    language: any;
-}
-  
 interface RowContextProps {
     setActivatorNodeRef?: (element: HTMLElement | null) => void;
     listeners?: SyntheticListenerMap;
@@ -68,7 +68,7 @@ const Row: React.FC<RowProps> = (props) => {
     ...props.style,
     transform: CSS.Translate.toString(transform),
     transition,
-    ...(isDragging ? { position: 'relative', zIndex: 9999 } : {}),
+    ...(isDragging ? { position: 'relative', zIndex: 99 } : {}),
     };
 
     const contextValue = useMemo<RowContextProps>(
@@ -83,67 +83,65 @@ const Row: React.FC<RowProps> = (props) => {
     );
 };
 
-export default function LanguageList() {
-
-    const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
+ function LanguageList() {
 
     const sleep = useSleep();
 
-    const [isLoading, setIsLoading] = useState(false);
+    const {modal,message} = App.useApp();
 
     const [loading,setLoading] = useState(false);
 
-    const [isLangModalOpen, setIsLangModalOpen] = useState(false);
+    const [data, setData] = React.useState<LanguageType[]>([]);
 
-    const [dataSource, setDataSource] = React.useState<DataType[]>([
-        
-    ]);
-
-    const [hasLanguages,setHasLanguages] = useState<any[]>([]);
-    const [languages,setLanguages] = useState<any[]>([]);
-
-    const [isCheckedAll,setIsCheckedAll] = useState(false);
-
-    const columns: TableColumnsType<DataType> = [
+    const columns: TableColumnsType<LanguageType> = [
         { key: 'sort', align: 'center', width: 80, render: () => <DragHandle /> },
-        { title: 'Lang', dataIndex: 'language',render: (value, record, index) => {
+        { title: 'Lang', dataIndex: 'id',render: (value, record, index) => {
             return (
                 <Flex style={{width:"100%",justifyContent:"space-between",alignItems:"center"}}>
-                    <div>{value.name}
-                        {value.is_default == 1 && <Tag color="default" style={{borderRadius:"12px",marginLeft:"10px"}}>默认语言</Tag>}
+                    <div>
+                        {record.languageNameDefault}
+                        {record.isDefault && <Tag color="default" style={{borderRadius:"12px",marginLeft:"10px"}}>默认语言</Tag>}
                     </div>
-                    <MyDropdown
-                        tiggerEle={<Button style={{width:"28px",height:"28px",padding:"0",transform:"rotate(90deg)"}}><MoreOutlined /></Button>}
-                        menu={{
-                            items:value.is_default !== 1?[
-                                {key:"1",label:(
-                                    <div onClick={()=>setDefaultLanguage(record)}>设置为默认语言</div>
-                                )},
-                                {key:"2",label:(<div className='color-F86140' onClick={()=>{
-                                    const delModal = modal.confirm({
-                                        title: '确认要删除该语言吗？',
-                                        icon: <ExclamationCircleOutlined />,
-                                        content: '删除后，客户将无法浏览该语言版本店铺。',
-                                        centered:true,
-                                        footer:()=><Flex justify="flex-end" gap={12}>
-                                            <DefaultButton loading={loading} text="取消" onClick={()=>{
-                                                delModal.destroy();
-                                            }}/>
-                                            <PrimaryButton loading={loading} text="确认" onClick={()=>{
-                                                deleteLanguages(delModal,record)
-                                            }}/>
-                                        </Flex>,
-                                    });
-                                }}>删除语言</div>)}
-                            ]:[
-                                {key:"1",label:(
-                                    <div>修改默认语言</div>
-                                )},
-                            ]
-                        }}
-                        position={"bottomRight"}
-                    />
-                    {/* <Button style={{width:"28px",height:"28px",padding:"0",transform:"rotate(90deg)"}}><MoreOutlined /></Button> */}
+                    <Space.Compact>
+                        <SetMarkets langObj={record} setLanguageMarketsConfig={setLanguageMarketsConfig} />
+                        {record.isDefault ? <MyDropdown
+                            tiggerEle={<MyButton text={<MoreOutlined />} style={{width:"32px",height:"32px",padding:"0",transform:"rotate(90deg)"}} />}
+                            menu={{
+                                items:[
+                                    {key:"1",label:(
+                                        <div onClick={()=>{}}>修改默认语言</div>
+                                    )},
+                                ]
+                            }}
+                            placement={"bottomRight"}
+                        />:<MyDropdown
+                            tiggerEle={<MyButton text={<MoreOutlined />} style={{width:"32px",height:"32px",padding:"0",transform:"rotate(90deg)"}} />}
+                            menu={{
+                                items:[
+                                    {key:"1",label:(
+                                        <div onClick={()=>setDefaultLanguage(record)}>设为默认语言</div>
+                                    )},
+                                    {key:"2",label:(<div className='color-F86140' onClick={()=>{
+                                        const delModal = modal.confirm({
+                                            title: '确认要删除该语言吗？',
+                                            icon: <ExclamationCircleFilled />,
+                                            content: '删除后，客户将无法浏览该语言版本店铺。',
+                                            centered:true,
+                                            footer:()=><Flex justify="flex-end" gap={12}>
+                                                <DefaultButton loading={loading} text="取消" onClick={()=>{
+                                                    delModal.destroy();
+                                                }}/>
+                                                <DangerButton loading={loading} text="删除" onClick={()=>{
+                                                    deleteLanguages(delModal,record)
+                                                }}/>
+                                            </Flex>,
+                                        });
+                                    }}>删除语言</div>)}
+                                ]
+                            }}
+                            placement={"bottomRight"}
+                        />}
+                    </Space.Compact>
                 </Flex>
             )
         }},
@@ -152,38 +150,39 @@ export default function LanguageList() {
     // 删除语言
     const deleteLanguages = (delModel:any,record:any)=>{
         setLoading(true)
-        delLanguages(record.language.id).then(res=>{
-            let newDataSource = [...dataSource]
-            newDataSource = newDataSource.filter((item:any)=>item.language.id !== record.language.id)
-            setDataSource(newDataSource)
-            getLanguages()
-        }).catch(()=>{}).finally(()=>{
+        delLanguages(record.id).then(res=>{
+            message.success("删除成功")
+            shopLang.setRefresh();
+            resetLanguagesList();
+        }).catch(()=>{
+        }).finally(()=>{
             delModel.destroy();
             setLoading(false)
         })
     }
     // 设置默认语言
     const setDefaultLanguage = (record:any)=>{
-        // console.log(record)
         addLanguages([{
             domain_id:cookie.load("domain")?.id,
-            languages_id:record.language.id,
+            languages_id:record.id,
             is_default:"1",
             sort:"0",
             checked:"1"
         }]).then(async res=>{
             await sleep(2000);
-            getLanguages();
+            message.success("成功");
+            shopLang.setRefresh();
         }).catch(()=>{});
     }
+    // 排序
     const onDragEnd = ({ active, over }: DragEndEvent) => {
         if (active.id !== over?.id) {
             let afterDataSource:any = [];
-            let befortDataSource:any = [...dataSource];
-            const activeIndex = befortDataSource.findIndex((record) => record.key === active?.id);
-            const overIndex = befortDataSource.findIndex((record) => record.key === over?.id);
+            let befortDataSource:any = [...data];
+            const activeIndex = befortDataSource.findIndex((record:any) => record.key === active?.id);
+            const overIndex = befortDataSource.findIndex((record:any) => record.key === over?.id);
             afterDataSource = arrayMove(befortDataSource, activeIndex, overIndex);
-            setDataSource(afterDataSource);
+            setData(afterDataSource);
             addLanguages(afterDataSource.map((item:any,index:number)=>{
                 return{
                     domain_id:cookie.load("domain")?.id,
@@ -194,126 +193,44 @@ export default function LanguageList() {
                 }
             })).then(res=>{
                 message.success("更新成功")
-                setDataSource(befortDataSource)
+                setData(befortDataSource)
             }).catch(()=>{})
         }
     };
-    // 全选
-    const onCheckAllChange = ()=>{
-        // setCheckLanguages(languages.map((item:any)=>item.code))
-        setLanguages(languages.map(item=>({...item,checked:"1"})))
-        setIsCheckedAll(true)
-    }
-    // 取消全选
-    const CancelCheckAllChange = ()=>{
-        setLanguages(languages.map(item=>({...item,checked:"0"})))
-        setIsCheckedAll(false)
-    }
-    // 选择
-    const checkHandleChange = (e,index)=>{
-        let newLanguages = [...languages]
-        e.target.checked ? newLanguages[index].checked="1" : newLanguages[index].checked="0"
-        setLanguages(newLanguages)
-    }
-    // 保存
-    const handleOK = ()=>{
-        // 更新
-        const langs = languages.map((item:any)=>{
-            if(item.checked=="1"){
-                return{
-                    domain_id:cookie.load("domain")?.id,
-                    languages_id:item.id,
-                    name:item.name,
-                    code:item.code,
-                    language_code:item.language_code,
-                    is_default:"0",
-                    sort:"",
-                    checked:"1"
-                }
+    // 更新语言市场配置
+    const setLanguageMarketsConfig = (langId:string,assigned:boolean)=>{
+        let newDataSource = [...data]
+        newDataSource.forEach((item:any)=>{
+            if(item.id==langId){
+                item.assigned = assigned
             }
-        }).filter(item=>item!==undefined)
-        setLoading(true)
-        addLanguages(langs).then(async res=>{
-            setIsCheckedAll(false)
-            setIsLangModalOpen(false)
-            await sleep(2000);
-            getLanguages()
-        }).catch(()=>{
-        }).finally(()=>{
-            setLoading(false)
         })
+        setData(newDataSource)
     }
-    // 取消弹窗
-    const handleCancel = () => {
-        setLanguages(languages.map(item=>({...item,checked:"0"})))
-        setIsLangModalOpen(false)
-        setIsCheckedAll(false)
-    };
-    // 获取语言列表
-    const getLanguages = ()=>{
-        setIsLoading(true)
-        getLanguagesList().then(res=>{
-            setLanguages(res.data.filter((item:any)=>item.checked!=="1"))
-            // 已有语言不可添加
-            setHasLanguages(res.data.filter((item:any)=>item.checked=="1"))
-            // 将数据根据sort排序
-            const languages = res.data.filter((item:any)=>item.checked=="1").sort((a:any,b:any)=>a.sort-b.sort)
-            setDataSource(languages.map((item:any)=>({key:item.id.toString(),language:item})))
-        }).catch(err=>{
-            console.log(err)
-        }).finally(()=>{
-            setIsLoading(false)
-        })
-    }
-    useEffect(() => {
-        getLanguages()
-    }, [])
+
+    useEffect(()=>{
+        setData(shopLang.hasLanguages)
+    },[shopLang.hasLanguages])
+    
 
     return (
         <Scoped>
-            {dataSource.length>0 ? <div className='drag_box'><DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
-                <SortableContext items={dataSource.map((i) => i.key)} strategy={verticalListSortingStrategy}>
-                    <Table<DataType>
+            {data.length>0 ? <div className='drag_box'><DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={onDragEnd}>
+                <SortableContext items={data.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+                    <Table<LanguageType>
                         showHeader={false}
                         pagination={false}
                         rowKey="key"
                         components={{ body: { row: Row } }}
                         columns={columns}
-                        dataSource={dataSource}
+                        dataSource={data}
                     />
                 </SortableContext>
             </DndContext></div>:<div style={{padding:"20px"}}></div>}
             {/* 添加语言 */}
-            <div className='add_language'>
-                <DefaultButton text={'添加语言'} onClick={()=>setIsLangModalOpen(true)} />
+            <div style={{marginTop:"12px"}}>
+                <AddLanguage />
             </div>
-            <Modal 
-                title="添加语言" 
-                centered 
-                open={isLangModalOpen} 
-                onCancel={handleCancel}
-                footer={()=><Flex justify="flex-end" gap={12}>
-                    <DefaultButton loading={loading} text={'取消'} onClick={handleCancel} />
-                    <PrimaryButton loading={loading} text={'保存'} onClick={handleOK} />
-                </Flex>}
-            >
-            {!isLoading?<ScopedModal>
-                {isCheckedAll?<div className='check_all color-356DFF cursor-pointer' onClick={CancelCheckAllChange}>全不选</div>:<div className='check_all color-356DFF cursor-pointer' onClick={onCheckAllChange}>全选</div>}
-                <div className='checkbox_group_list'>
-                    {languages.map((item,index)=>(
-                        <div style={{margin:"6px 0"}}>
-                            <Checkbox checked={item.checked == "1"} onChange={(e)=>checkHandleChange(e,index)}>{item.name}</Checkbox>
-                        </div>
-                    )
-                    )}
-                    {hasLanguages.map((item)=>(
-                        <div style={{margin:"6px 0"}}>
-                            <Checkbox checked disabled>{item.name}</Checkbox>
-                        </div>
-                    ))}
-                </div>
-            </ScopedModal>:<Spin spinning={isLoading}><div style={{height:"240px"}}></div></Spin>}
-            </Modal>
         </Scoped>
     )
 }
@@ -324,14 +241,7 @@ const Scoped = styled.div`
         border-bottom: 0;
         border-radius: 4px;
     }
-    .add_language{
-        margin-top: 12px;
-    }
+
 `
 
-const ScopedModal = styled.div`
-    .checkbox_group_list{
-        height: 240px;
-        overflow-y: auto;
-    }
-`
+export default observer(LanguageList)

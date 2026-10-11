@@ -17,6 +17,7 @@ export interface MarketsInfoType {
     marketId:string,
     marketName:string,
     homeMarket:boolean,
+    active:boolean,
     storeCurrency:string,
     domainLanguage:DomainLanguageType,
     deliveryStatistic:{
@@ -31,6 +32,7 @@ const defaultMarketsInfo = (): MarketsInfoType => ({
     marketId: "",
     marketName: "",
     homeMarket: false,
+    active: true,
     storeCurrency:"",
     domainLanguage: { 
         mainDomain: "", 

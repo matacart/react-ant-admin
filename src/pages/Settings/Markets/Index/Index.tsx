@@ -47,8 +47,8 @@ function Index() {
                             <div className="mc-header-left-content">市场</div>
                         </div>
                         <Flex gap={12}>
-                            <DefaultButton onClick={() => {}} text="偏好设置" />
-                            <PrimaryButton onClick={() => {}} text="创建市场" />
+                            <DefaultButton onClick={() => history.push(`/settings/markets/preferences/${marketsList.languagesId}`)} text="偏好设置" />
+                            <PrimaryButton onClick={() => history.push("/settings/markets/new")} text="创建市场" />
                         </Flex>
                     </div>
                     <div className='mc-layout-main'>
@@ -163,12 +163,10 @@ const Scoped = styled.div`
                     margin-left: 12px;
                 }
                 .item-right{
-                    flex: 1;
-                    justify-content: flex-end;
                     gap: 20px;
                     .item-right-content{
                         align-items: center;
-                        min-width: 220px;
+                        min-width: 180px;
                     }
                 }
             }

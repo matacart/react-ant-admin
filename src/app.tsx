@@ -45,12 +45,7 @@ ConfigProvider.config({
 // 配置化请求参数
 const CONFIG_REQUESTS = [
   {
-    url: '/api/ApiAppstore/currencies_select',
-    storageKey: 'MC_DATA_CURRENCIES', 
-    retry: 3
-  },
-  {
-    url: '/api/ApiAppstore/country_select_v2',
+    url: '/api/ApiAppstore/country_select',
     storageKey: 'MC_DATA_COUNTRY',
     retry: 3
   }

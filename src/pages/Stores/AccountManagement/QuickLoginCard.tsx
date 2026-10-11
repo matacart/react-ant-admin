@@ -1,6 +1,5 @@
 import { AppleIcon, FaceBookIcon } from "@/components/Icons/Icons";
-import SuccessTag from "@/components/Tag/SuccessTag";
-import { Button, Card, Flex, List } from "antd";
+import { Card, Flex } from "antd";
 import styled from "styled-components";
 
 

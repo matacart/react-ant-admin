@@ -562,7 +562,7 @@ export default  [
   {
     path: '/stores/account',
     icon: 'UserSwitchOutlined',
-    component: './Stores/AccountManagement/AccountManagement',
+    component: './Stores/AccountManagement/Index',
     menuRender: false,
     hideInMenu: true,
   },
@@ -864,6 +864,22 @@ export default  [
       {
         path:"markets",
         component:"./Settings/Markets/Index/Index",
+      },
+      {
+        path:"markets/preferences/:langId",
+        component:"./Settings/Markets/Preferences/Preferences",
+      },
+      {
+        path:"markets/priceRounding/:langId",
+        component:"./Settings/Markets/PriceRounding/PriceRounding",
+      },
+      {
+        path:"markets/new",
+        component:"./Settings/Markets/Create/Create",
+      },
+      {
+        path:"markets/edit/:marketId/:langId",
+        component:"./Settings/Markets/Edit/Edit",
       },
       {
         path:"markets/:marketId/:langId",

@@ -8,6 +8,13 @@ import { observer } from "mobx-react-lite";
 
 function MarketsList() {
 
+    const names = (list:any[])=>{
+        const nameList = list.map(item => item.name || "");
+        const otherNum = nameList.length - 2;
+        return nameList.slice(0, 2).join("、") + (otherNum > 0 ? `和其它${otherNum}个国家` : "");
+        
+    }
+
     const handleClick = (item:MarketType) => {
         history.push(`/settings/markets/${item.marketId}/${marketsList.languagesId}`)
     }
@@ -47,7 +54,7 @@ function MarketsList() {
                     if(item.homeMarket){
                         return (
                             <List.Item className="item" key={item.marketId} onClick={()=>handleClick(item)}>
-                                <Flex style={{width:"100%"}} wrap justify="space-between" gap={12}>
+                                <Flex style={{width:"100%"}} wrap justify="space-between" gap={20}>
                                     <Flex align="center">
                                         <div>
                                             <div className="item-icon">
@@ -56,7 +63,6 @@ function MarketsList() {
                                         </div>
                                         <div style={{marginLeft:28}}>
                                             <div className="font-16 color-242833 font-w-600">{item.marketName}</div>
-                                            {/* <div className="font-14 color-474F5E">{"韩国、菲律宾"}</div> */}
                                         </div>
                                         <div>
                                             <span className="item-tag">主要市场</span>
@@ -83,7 +89,7 @@ function MarketsList() {
                     }else{
                         return (
                             <List.Item className="item" key={item.marketId} onClick={()=>handleClick(item)}>
-                                <Flex style={{width:"100%"}} wrap justify="space-between" gap={12}>
+                                <Flex style={{width:"100%"}} wrap justify="space-between" gap={20}>
                                     <Flex align="center">
                                         <div>
                                             <div className="item-icon">
@@ -91,8 +97,11 @@ function MarketsList() {
                                             </div>
                                         </div>
                                         <div style={{marginLeft:28}}>
-                                            <div className="font-16 color-242833 font-w-600">{item.marketName}</div>
-                                            <div className="font-14 color-474F5E">{"韩国、菲律宾"}</div>
+                                            <Flex align="center">
+                                                <div className="font-16 color-242833 font-w-600">{item.marketName}</div>
+                                                {!item.active && <span className="item-tag">已禁用</span>}
+                                            </Flex>
+                                            <div className="font-14 color-474F5E">{names(item.countryList)}</div>
                                         </div>
                                     </Flex>
                                     <Flex className="item-right" align="center">

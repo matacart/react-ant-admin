@@ -1,13 +1,41 @@
 import { ArrowLeftOutlined } from "@ant-design/icons"
-import { Card, Flex, Skeleton } from "antd"
+import { Card, Flex } from "antd"
 import styled from "styled-components"
 import { history } from "@umijs/max"
 import LanguageList from "./LanguageList"
+import { useEffect, useState } from "react"
+import { getShopLanguagesList } from "@/services/y2/apiAppstore"
+import shopLang, { LanguageType } from "@/store/settings/shopLang/shopLang"
+import SkeletonCard from "@/components/Skeleton/SkeletonCard"
+import { observer } from "mobx-react-lite"
 
-export default function Language() {
+function Language() {
+
+    const [isSkeleton, setIsSkeleton] = useState(true)
+
+    useEffect(() => {
+        getShopLanguagesList().then(res=>{
+            // 未添加语言
+            shopLang.setUnHasLanguages(res.data.languages.filter((item:LanguageType)=>!item.checked))
+            // 将数据根据sort排序
+            const languages = res.data.languages.filter((item:LanguageType)=>item.checked).sort((a:LanguageType,b:LanguageType)=>a.sortNumber-b.sortNumber)
+            shopLang.setHasLanguages(languages)
+        }).catch(()=>{
+        }).finally(()=>{
+            setIsSkeleton(false)
+        })
+    }, [shopLang.refresh])
+
+    useEffect(()=>{
+        return ()=>{
+            shopLang.reset();
+        }
+    },[])
+
+
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -55,7 +83,7 @@ export default function Language() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>}
         </Scoped>
     )
 }
@@ -158,3 +186,5 @@ const Scoped = styled.div`
     }
 }
 `
+
+export default observer(Language)

@@ -12,6 +12,7 @@ import { useAbortController } from '@/hooks/customHooks';
 import { getCurrencyAmount } from '@/utils/common';
 import OrderEmptyTag from '@/components/Tag/OrderEmptyTag';
 import { DownIcon } from '@/components/Icons/Icons';
+import { friendlyTime } from '@/utils/formatFriendlyTime';
 
 // 表单项订单数据类型
 interface DataType {
@@ -81,11 +82,52 @@ function OrdersListAjax({ id }: FilterCondition) {
     {
       title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.orderDate' }),
       dataIndex: 'date_purchased',
-      render: (text: string) => (
-        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          {text}
-        </span>
-      ),
+      render: (text: string) => {
+        return(
+          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {friendlyTime(Number(text)*1000)}
+          </span>
+        )
+      }
+    },
+    {
+      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.consignee' }),
+      dataIndex: 'delivery_name',
+    },
+    {
+      title: "渠道",
+      dataIndex: 'paymentchannel',
+    },
+    {
+      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.priceTotal' }),
+      dataIndex: 'store_amount',
+      align: 'center',
+      render: (value: number, record: any, index: any) => {
+        return <>
+          {record.orderAmountSet.storeMoney.currencyCode == record.orderAmountSet.settleMoney.currencyCode?<>
+            {getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}
+          </>:
+            <Popover
+              content={<>
+                <div>店铺币种：{getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}</div>
+                <div>订单币种：{getCurrencyAmount(record.orderAmountSet.settleMoney.currencyCode,record.orderAmountSet.settleMoney.amount)}</div>
+              </>}
+              trigger="click"
+              arrow={false}
+              placement="bottomRight"
+              open={record.order_id == popoverKey}
+              onOpenChange={(open) => {
+                setPopoverKey(open ? record.order_id : null)
+              }}
+            >
+              <Flex className='cursor-pointer' justify='center' gap={6} onClick={(e) => e.stopPropagation()}>
+                {getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}
+                <DownIcon />
+              </Flex>
+            </Popover>
+          }
+        </>;
+      },
     },
     {
       title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.orderStatus' }),
@@ -106,62 +148,28 @@ function OrdersListAjax({ id }: FilterCondition) {
         {value === 100 ? <OrderWarningTag text={intl.formatMessage({ id: 'order.orderList.ordersListAjax.readyToShip' })} /> : value === 150 ? <OrderWarningTag text={intl.formatMessage({ id: 'order.orderList.ordersListAjax.partiallyShipped' })} /> : <OrderDefaultTag text={intl.formatMessage({ id: 'order.orderList.ordersListAjax.shipped' })} />}
       </>,
     },
-    {
-      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.paymentMethod' }),
-      dataIndex: 'payment_method',
-      render: (text: string) => <span>{text}</span>,
-    },
-    {
-      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.paymentChannel' }),
-      dataIndex: 'paymentchannel',
-    },
-    {
-      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.consignee' }),
-      dataIndex: 'delivery_name',
-    },
-    {
-      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.mobile' }),
-      dataIndex: 'tel',
-      render: (tel: string) => {
-        // 显示手机号的前两位和后两位，中间用星号(*)代替
-        const maskedTel = `${tel.substring(0, 2)}****${tel.substring(tel.length - 2)}`;
-        return <span>{maskedTel}</span>;
-      },
-    },
+    // {
+    //   title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.paymentMethod' }),
+    //   dataIndex: 'payment_method',
+    //   render: (text: string) => <span>{text}</span>,
+    // },
+    
+    // {
+    //   title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.mobile' }),
+    //   dataIndex: 'tel',
+    //   render: (tel: string) => {
+    //     // 显示手机号的前两位和后两位，中间用星号(*)代替
+    //     const maskedTel = `${tel.substring(0, 2)}****${tel.substring(tel.length - 2)}`;
+    //     return <span>{maskedTel}</span>;
+    //   },
+    // },
     {
       title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.shippingMethod' }),
       dataIndex: 'shippingmethod',
     },
     {
-      title: intl.formatMessage({ id: 'order.orderList.ordersListAjax.priceTotal' }),
-      dataIndex: 'store_amount',
-      align: 'right',
-      render: (value: number, record: any, index: any) => {
-        return <>
-          {record.orderAmountSet.storeMoney.currencyCode == record.orderAmountSet.settleMoney.currencyCode?<>
-            {getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}
-          </>:
-            <Popover
-              content={<>
-                <div>店铺币种：{getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}</div>
-                <div>订单币种：{getCurrencyAmount(record.orderAmountSet.settleMoney.currencyCode,record.orderAmountSet.settleMoney.amount)}</div>
-              </>}
-              trigger="click"
-              arrow={false}
-              placement="bottomRight"
-              open={record.order_id == popoverKey}
-              onOpenChange={(open) => {
-                setPopoverKey(open ? record.order_id : null)
-              }}
-            >
-              <Flex className='cursor-pointer' justify='flex-end' gap={6} onClick={(e) => e.stopPropagation()}>
-                {getCurrencyAmount(record.orderAmountSet.storeMoney.currencyCode,record.orderAmountSet.storeMoney.amount)}
-                <DownIcon />
-              </Flex>
-            </Popover>
-          }
-        </>;
-      },
+      title: "标记",
+      dataIndex: 'tag',
     },
   ];
 
@@ -208,8 +216,6 @@ function OrdersListAjax({ id }: FilterCondition) {
 
   useEffect(() => {
     fetchData(id,orderList.languages);
-    console.log(orderList.condition)
-    console.log(orderList.bizOrderStatuses)
   }, [tableParams.pagination?.current,tableParams.pagination?.pageSize,id,orderList.languages,orderList.condition.saleStoreHandles,orderList.bizOrderStatuses]);
 
 

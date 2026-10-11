@@ -308,15 +308,13 @@ function AttributesModal({tagData,flag,editTagData,attributes,setAttributes}:any
     
 
     useEffect(() => {
-        let tempList = JSON.parse(sessionStorage["languages"] || '[]').map((item:any)=>{
+        const list = JSON.parse(localStorage["MC_DATA_LANGUAGES"] || '[]').map((item:any)=>{
             return {
-                value: item.id,
-                label: item.name
+                value: item.id.toString(),
+                label: item.display_name,
             }
         })
-        setLanguages(tempList)
-
-        
+        setLanguages(list)
     }, [])
 
 

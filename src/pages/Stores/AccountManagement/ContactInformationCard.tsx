@@ -1,6 +1,6 @@
 import { Card, Flex, Form, Input, Select, Space } from "antd";
 import styled from "styled-components";
-import accountManagement from "@/store/shops/accountManagementStore";
+import accountManagement from "@/store/shops/accountManagement";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import MyInput from "@/components/Input/MyInput";
 import MySelect from "@/components/Select/MySelect";

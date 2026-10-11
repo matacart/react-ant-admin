@@ -2,26 +2,27 @@ import SuccessTag from "@/components/Tag/SuccessTag";
 import { Button, Card, Flex, Select } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import accountManagement from "@/store/shops/accountManagementStore";
-import { getUserLanguages } from "@/services/y2/api";
 import MySelect from "@/components/Select/MySelect";
+import { getPlatformLanguagesList } from "@/services/y2/apiAppstore";
+import accountManagement from "@/store/shops/accountManagement";
+import { observer } from "mobx-react-lite";
 
 function AccountLanguage() {
 
     const [languageList, setLanguageList] = useState([]);
 
     useEffect(()=>{
-        let tempList = [];
-        if(languageList.length==0){
-            tempList = JSON.parse(sessionStorage["languages"]).map((item:any)=>{
+        getPlatformLanguagesList().then((res) => {
+            setLanguageList(res.data.map((item:any)=>{
                 return {
                     value: item.id,
-                    label: item.name
+                    label: item.languageName
                 }
-            })
-            setLanguageList(tempList)
-        }
-    })
+            }));
+        }).catch(()=>{
+        }).finally(()=>{
+        });
+    },[])
 
     const handleChange = (value:string)=>{
         accountManagement.setUserInfo({
@@ -35,7 +36,7 @@ function AccountLanguage() {
             <Card>
                 <div className="title color-242833 font-w-600">账户语言</div>
                 <div>
-                    <MySelect style={{width:"240px",height:"36px"}} defaultValue={accountManagement.userInfo.languages_id} options={languageList} onChange={handleChange} />
+                    <MySelect style={{width:"240px",height:"36px"}} value={Number(accountManagement.userInfo.languages_id)} options={languageList} onChange={handleChange} />
                 </div>
             </Card>
         </Scoped>
@@ -43,7 +44,7 @@ function AccountLanguage() {
 
 }
 
-export default AccountLanguage;
+export default observer(AccountLanguage);
 
 const Scoped = styled.div`
     margin-bottom: 20px;

@@ -234,7 +234,6 @@ declare namespace ApiStore {
 }
 
 declare namespace ApiNav {
-
   type Default = {
     code:number,
     count?:string,

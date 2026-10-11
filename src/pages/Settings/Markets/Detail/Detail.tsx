@@ -1,9 +1,9 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import { getMarketDetail } from "@/services/y2/apiSaleMarket";
+import { getMarketDetail, modifyMarketStatus } from "@/services/y2/apiSaleMarket";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { history, useParams } from "@umijs/max"
-import { Flex } from "antd";
+import { App, Divider, Flex, Switch } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MarketsConfig from "./MarketsConfig";
@@ -12,13 +12,35 @@ import marketsInfo from "@/store/settings/markets/marketsInfo";
 import DomainConfig from "./DomainConfig";
 import MarketsPreview from "./MarketsPreview";
 import MarketsEdit from "./MarketsEdit";
+import MarketDelete from "./MarketDelete";
 
 function Detail() {
 
     const {marketId="", langId=""} = useParams();
 
+    const { message } = App.useApp();
+
     const [isSkeleton, setIsSkeleton] = useState(true);
 
+    const [active, setActive] = useState(true);
+
+    const [switchLoading, setSwitchLoading] = useState(false);
+
+    // 更新市场状态
+    const setMarketStatus = (status: boolean) => {
+        setSwitchLoading(true);
+        modifyMarketStatus({
+            languages_id:langId,
+            marketId:marketId,
+            visible:status,
+        }).then(()=>{
+            setActive(status);
+            message.success("成功");
+        }).catch(()=>{
+        }).finally(()=>{
+            setSwitchLoading(false);
+        })
+    }
 
     useEffect(() => {
         getMarketDetail({
@@ -26,6 +48,7 @@ function Detail() {
             languages_id:langId,
         }).then(res => {
             marketsInfo.setMarketsInfo(res.data);
+            setActive(res.data.active);
         }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false);
@@ -43,8 +66,13 @@ function Detail() {
                             </div>
                             <div className="mc-header-left-content">{marketsInfo.marketsInfo.marketName || "市场"}</div>
                         </Flex>
-                        <Flex gap={12}>
-                            <MarketsEdit />
+                        <Flex gap={12} align="center">
+                            {!marketsInfo.marketsInfo.homeMarket && <>
+                                <Switch loading={switchLoading} checked={active} onChange={(checked)=>setMarketStatus(checked)} />
+                                {active ? <span className="font-14 font-w-400">已启用</span> : <span className="font-14 font-w-400">已禁用</span>}
+                                <Divider type="vertical" />
+                            </>}
+                            {marketsInfo.marketsInfo.homeMarket ? <MarketsEdit /> : <DefaultButton text="编辑" onClick={()=>history.push(`/settings/markets/edit/${marketId}/${langId}`)} />}
                             <MarketsPreview />
                         </Flex>
                     </div>
@@ -58,6 +86,9 @@ function Detail() {
                             <MarketData />
                         </div>
                     </div>
+                    {!marketsInfo.marketsInfo.homeMarket && <Flex className="submit-btn">
+                        <MarketDelete marketId={marketId} langId={langId} />
+                    </Flex>}
                 </div>
             </Flex>}
         </Scoped>
@@ -122,6 +153,10 @@ const Scoped = styled.div`
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
+            }
+
+            .submit-btn {
+                margin-top: 24px;
             }
         }
     }

@@ -1,5 +1,6 @@
 import menu from "./en-US/menu";
 import settings from "./en-US/settings";
+import stores from "./en-US/stores";
 import user from "./en-US/user";
 
 // 此文件由 scripts/aggregateLocales.js 自动生成
@@ -7,6 +8,7 @@ const enUS = {
         ...user,
         ...settings,
         ...menu,
+        ...stores,
         "px": "px",
         "%": "%",
   "admin.shopTimeDisplay.shopTimeDisplay": "Store timezone time",

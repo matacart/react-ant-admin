@@ -3,7 +3,7 @@ import { upDatePassword } from "@/services/y2/apiAppstore";
 import { App, Card, Flex, Form, Input, Modal } from "antd";
 import { useState } from "react";
 import styled from "styled-components";
-import accountManagement from "@/store/shops/accountManagementStore";
+import accountManagement from "@/store/shops/accountManagement";
 import DefaultButton from "@/components/Button/DefaultButton";
 
 function LoginAccountCard() {

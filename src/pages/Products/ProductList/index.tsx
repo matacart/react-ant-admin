@@ -227,8 +227,6 @@ const App: React.FC = () => {
           </Form.Item>
         </Modal>
       </div>
-      {/*  */}
-      {/* <Outlet /> */}
     </Scoped>
   );
 }

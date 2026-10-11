@@ -11,16 +11,13 @@ export default function LangSelect({lang,setLang}:{lang:string,setLang:any}){
     const [languageData, setLanguageData] = useState([]);
 
     useEffect(() => {
-        let tempList = [];
-        if(languageData.length==0){
-            tempList = JSON.parse(sessionStorage["languages"] || "[]").map((item:any)=>{
-                return {
-                    value: item.id.toString(),
-                    label: item.name
-                }
-            })
-            setLanguageData(tempList)
-        }
+        const list = JSON.parse(localStorage["MC_DATA_LANGUAGES"] || "[]").map((item:any)=>{
+            return {
+                value: item.id.toString(),
+                label: item.display_name
+            }
+        })
+        setLanguageData(list)
     }, [])
 
     return (

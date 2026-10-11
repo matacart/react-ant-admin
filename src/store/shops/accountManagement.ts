@@ -18,11 +18,10 @@ interface UserInfoType{
     status:string;
 }
 
-class AccountManagementStore {
+class AccountManagement{
     constructor() {
       makeAutoObservable(this)
     }
-
 
     userInfo:UserInfoType = {
         area_code: "",
@@ -48,16 +47,7 @@ class AccountManagementStore {
     setLoginRecord(value:any[]){
         this.loginRecord = value
     }
-
-    // 获取账号信息
-    async getUser(){
-        // await getUserInfo().then(res=>{
-        //     this.user = res.data.user
-        //     this.loginRecord = res.data.login_record == null ? [] : res.data.login_record
-        //     console.log(res.data)
-        // })
-    }
 }
 
-export default new AccountManagementStore();
+export default new AccountManagement();
 

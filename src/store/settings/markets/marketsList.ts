@@ -6,6 +6,8 @@ export interface MarketType {
     marketId:number,
     homeMarket:boolean,
     marketName:string,
+    countryList:any[],
+    active:boolean,
 }
 
 class MarketsList {

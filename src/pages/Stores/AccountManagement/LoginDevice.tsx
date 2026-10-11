@@ -3,7 +3,7 @@ import { App, Button, Card, Divider, Table, TableProps } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import accountManagement from "@/store/shops/accountManagementStore";
+import accountManagement from "@/store/shops/accountManagement";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { history } from '@umijs/max';
 import { delLoginRecord } from "@/services/y2/apiAppstore";
