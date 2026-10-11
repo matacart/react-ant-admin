@@ -1,6 +1,6 @@
 import cookie from 'react-cookies';
 import currencyList from "@/../public/json/currency.json";
-import { getCountryList } from "@/services/y2/apiAppstore";
+import { getCountryList, getLanguagesList } from "@/services/y2/apiAppstore";
 
 // 清除当前域名下的cookie
 export function clearAllCookies() {
@@ -67,5 +67,17 @@ export function getCurrencySymbol(currencyCode: string) {
   const localStorageCurrencyList = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || "[]");
   const currencyObj = localStorageCurrencyList.find((item: any) => item.code === currencyCode);
   return currencyObj?.symbol_left || "";
+}
+
+// 重新获取店铺语言
+export function resetLanguagesList(){
+  const useLang = localStorage.getItem("USE_LANG") || "2";
+  getLanguagesList({
+    only_bound:"1",
+    languages_id:useLang,
+  }).then(res=>{
+    const languages = res?.data || [];
+    localStorage.setItem('MC_DATA_LANGUAGES', JSON.stringify(languages));
+  }).catch(()=>{});
 }
 

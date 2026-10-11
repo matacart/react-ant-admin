@@ -1,24 +1,66 @@
-
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import { getMarketConfigV2 } from "@/services/y2/apiSaleMarket";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { history, useParams } from "@umijs/max";
-import { Flex } from "antd";
+import { App, Flex } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import markets from "@/store/settings/markets/markets";
+import LangSelect from "@/components/Select/LangSelect";
+import { observer } from "mobx-react-lite";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import { getMarketDetail, modifyMarketCountry } from "@/services/y2/apiSaleMarket";
+import MarketsCountry from "../Markets/MarketsCountry";
 
 function Edit() {
 
+    const [isSkeleton, setIsSkeleton] = useState(true);
+    
     const { marketId="", langId="" } = useParams();
 
-    const [isSkeleton, setIsSkeleton] = useState(false);
+    const { message } = App.useApp();
+
+    const [loading, setLoading] = useState(false);
+
+    const submit = () => {
+        if(!markets.marketName){
+            message.error("市场名称不能为空");
+            return;
+        }
+        setLoading(true);
+        const countryCodeList = markets.countryList.map(item => item.countryCode || "");
+        modifyMarketCountry({
+            languages_id:markets.languagesId || "",
+            marketId:markets.marketId || "",
+            marketName:markets.marketName || "",
+            countryCodeList:JSON.stringify(countryCodeList),
+        }).then(()=>{
+            message.success("成功");
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false);
+        })
+    }
 
     useEffect(() => {
-        getMarketConfigV2({
-            marketId: marketId,
-            languages_id: langId,
+        getMarketDetail({
+            market_id:marketId,
+            languages_id:langId,
+        }).then(res => {
+            const countryList = res.data.countryList.map((item:any) => ({
+                countryCode:item.code || "",
+                countryCnName:item.name || "",
+            }));
+            markets.setCountryList(countryList);
+            markets.setMarketId(marketId || "");
+            markets.setMarketName(res.data.marketName || "");
+        }).catch(()=>{
+        }).finally(()=>{
+            setIsSkeleton(false);
         })
-    }, [])
+        return ()=>{
+            markets.reset();
+        }
+    }, [langId])
 
     return (
             <Scoped>
@@ -26,18 +68,22 @@ function Edit() {
                     <div className="mc-layout">
                         <div className="mc-header">
                             <Flex className="mc-header-left">
-                                <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/markets")}>
+                                <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className="mc-header-left-content">{"域名和语言"}</div>
+                                <div className="mc-header-left-content">{"编辑市场"}</div>
                             </Flex>
                             <Flex gap={12}>
+                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/edit/${marketId}/${lang}`)} />    
                             </Flex>
                         </div>
                         {/* 主要内容 */}
-                        <div className='mc-layout-main'>
-                            <div>123</div>
+                        <div>
+                            <MarketsCountry />
                         </div>
+                        <Flex justify="right" className="submit-btn">
+                            <PrimaryButton loading={loading} text="更新" onClick={submit}  />
+                        </Flex>
                     </div>
                 </Flex>}
             </Scoped>
@@ -50,7 +96,7 @@ const Scoped = styled.div`
         .mc-layout {
             width: 100%;
             max-width: 1200px;
-            margin: '0 auto';
+            margin: 0 auto;
             .mc-header {
                 color: rgb(36, 40, 51);
                 font-size: 30px;
@@ -75,22 +121,17 @@ const Scoped = styled.div`
                     &-icon {
                         font-size: 18px;
                     }
-
                 }
                 .mc-header-left-content {
                     margin-left: 12px;
                     font-size: 20px;
                 }
             }
-
-            &-main {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 20px;
+            .submit-btn {
+                margin-top: 24px;
             }
         }
     }
 `
 
-export default Edit;
+export default observer(Edit);

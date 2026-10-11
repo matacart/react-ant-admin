@@ -313,57 +313,57 @@ function ProductListAjax(selectProps:any) {
   return (
     <Scoped>
       {/* 商品列表 */}
-        <div className='table-box'>
-          <Table
-            columns={columns}
-            components={
-              productList.productList.length !== 0 ?{
-                header: {
-                  wrapper:()=>{
-                    return (
-                      <thead>
-                        <tr>
-                          <th colSpan={7}>
-                            {/* 显示选择的数量和操作按钮 */}
-                            <SelectedActions onFetchData={fetchData}/>
-                          </th>
-                        </tr>
-                      </thead>
-                    )
-                  }
-                },
-              }:{}
-            }
-            dataSource={data}
-            pagination={tableParams.pagination}
-            loading={loading}
-            onChange={handleTableChange}
-            scroll={{
-              y: 'calc(100vh - 410px)', // 垂直滚动
-              x: 1300
-            }}
-            rowKey={(record) => record.id}
-            onRow={(record) => ({
-              onClick: () => {
-                handleOrderClick(record.id,productList.languagesId); // 点击行时调用handleOrderClick
-              },
-            })}
-            rowSelection={{
-              type: 'checkbox',
-              selectedRowKeys:productList.productList, // 使用状态来记录选中的行
-              onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-                productList.setProductList(selectedRowKeys)
-                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-                if(productList.allSelected){
-                  productList.setAllSelected(false)
-                  message.success('已取消全选');
+      <div className='table-box'>
+        <Table
+          columns={columns}
+          components={
+            productList.productList.length !== 0 ?{
+              header: {
+                wrapper:()=>{
+                  return (
+                    <thead>
+                      <tr>
+                        <th colSpan={7}>
+                          {/* 显示选择的数量和操作按钮 */}
+                          <SelectedActions onFetchData={fetchData}/>
+                        </th>
+                      </tr>
+                    </thead>
+                  )
                 }
               },
-            }}
-            // 隐藏表头
-            // showHeader={selectedRowKeys.length === 0}
-          />
-        </div>
+            }:{}
+          }
+          dataSource={data}
+          pagination={tableParams.pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={{
+            y: 'calc(100vh - 410px)', // 垂直滚动
+            x: 1300
+          }}
+          rowKey={(record) => record.id}
+          onRow={(record) => ({
+            onClick: () => {
+              handleOrderClick(record.id,productList.languagesId); // 点击行时调用handleOrderClick
+            },
+          })}
+          rowSelection={{
+            type: 'checkbox',
+            selectedRowKeys:productList.productList, // 使用状态来记录选中的行
+            onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+              productList.setProductList(selectedRowKeys)
+              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+              if(productList.allSelected){
+                productList.setAllSelected(false)
+                message.success('已取消全选');
+              }
+            },
+          }}
+          // 隐藏表头
+          // showHeader={selectedRowKeys.length === 0}
+        />
+      </div>
         
       {/* 复制商品模态框 */}
       <Modal

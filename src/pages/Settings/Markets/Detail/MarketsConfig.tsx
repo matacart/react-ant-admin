@@ -25,7 +25,7 @@ function MarketsConfig() {
                 title: '商品与定价',
                 icon: ProductIcon,
                 info: currencies?.name || "货币",
-                url: ``,
+                url: `/settings/markets/pricing/${marketsInfo.marketsInfo.marketId}/${marketsInfo.languagesId}`,
             },
             {
                 title: '库存',

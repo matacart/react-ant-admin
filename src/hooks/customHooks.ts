@@ -152,7 +152,7 @@ export function useSymbolLeft() {
   const defaultCurrency = cookie.load("domain")?.default_currency;
   const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || '[]');
   // 查找默认币种
-  const defaultCurrencyObj = currencies.find((item: any) => item.code === defaultCurrency);
+  const defaultCurrencyObj = currencies.find((item: any) => item.code == defaultCurrency);
   if(defaultCurrencyObj){
     symbolLeft = defaultCurrencyObj.symbol_left
   }

@@ -1,7 +1,7 @@
 import { ExportIcon } from "@/components/Icons/Icons";
 import { App, Card, Divider, Flex, Switch } from "antd";
 import { observer } from "mobx-react-lite";
-import accountManagement from "@/store/shops/accountManagementStore";
+import accountManagement from "@/store/shops/accountManagement";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import { setUserSharing } from "@/services/y2/apiAppstore";

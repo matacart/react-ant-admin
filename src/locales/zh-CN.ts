@@ -2,12 +2,14 @@ import user from './zh-CN/user';
 import settings from './zh-CN/settings';
 import menu from './zh-CN/menu';
 import order from './zh-CN/order';
+import stores from './zh-CN/stores';
 
 const zhCN = {
         ...user,
         ...settings,
         ...menu,
         ...order,
+        ...stores,
         "px": "px",
         "%": "%",
 "admin.shopTimeDisplay.shopTimeDisplay": "店铺所在时区时间",
@@ -126,15 +128,12 @@ const zhCN = {
   "orders.orderList.ordersListAjax.consignee": "收货人",
   "orders.orderList.ordersListAjax.mobile": "手机号",
   "orders.orderList.ordersListAjax.shippingMethod": "配送方式",
-  "orders.orderList.ordersListAjax.priceTotal": "价格总计",
   "orders.orderList.ordersListAjax.processing": "处理中",
   "orders.orderList.ordersListAjax.paid": "已付款",
   "orders.orderList.ordersListAjax.unpaid": "未付款",
   "orders.orderList.ordersListAjax.readyToShip": "待发货",
   "orders.orderList.ordersListAjax.partiallyShipped": "部分发货",
   "orders.orderList.ordersListAjax.shipped": "已发货",
-  "orders.orderList.index.orderList": "订单列表",
-  "orders.orderList.index.exportOrder": "导出订单",
   "orders.orderList.index.batchDelivery": "批量发货",
   "orders.orderList.index.updateTrackingNumber": "更新追踪编号",
   "orders.orderList.index.createOrder": "创建订单",

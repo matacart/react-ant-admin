@@ -158,8 +158,11 @@ export async function getCurrenciesList(page?: number, limit?: number) {
   return res;
 }
 
-// 获取语言列表 -- 所有：暂用于平台语言
-export async function getLanguagesList() {
+// 获取语言列表 only_bound:店铺绑定的语言
+export async function getLanguagesList(options?:{
+  languages_id:string,
+  only_bound:string,
+}) {
   const res = await request<ApiAppstore.Default>(`/ApiAppstore/languages_list`, {
     method: 'POST',
     retryOnError: true,
@@ -167,7 +170,9 @@ export async function getLanguagesList() {
       'Content-Type': 'multipart/form-data',
     },
     data:{
-      domain_id:cookie.load("domain")?.id
+      domain_id:cookie.load("domain")?.id,
+      limit:100,
+      ...options
     }
   })
   if (res.code != 0) errHandle(res);
@@ -1456,6 +1461,35 @@ export async function getGenerateAuthToken(signal?:AbortSignal){
       'Content-Type': 'multipart/form-data',
     },
     signal:signal
+  })
+  if (res.code != 0) errHandle(res);
+  return res;
+}
+
+// 平台语言
+export async function getPlatformLanguagesList(signal?:AbortSignal){
+  const res = await request<ApiAppstore.Default>(`/ApiAppstore/admin_ui_languages`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    signal:signal
+  })
+  if (res.code != 0) errHandle(res);
+  return res;
+}
+
+
+// 店铺语言
+export async function getShopLanguagesList(){
+  const res = await request<ApiAppstore.Default>(`/ApiAppstore/store_language_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data:{
+      domain_id:cookie.load("domain")?.id,
+    },
   })
   if (res.code != 0) errHandle(res);
   return res;

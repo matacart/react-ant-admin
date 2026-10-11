@@ -155,7 +155,7 @@ function SettlementCurrencyCard() {
     // 获取币种
     const getCurrencies = ()=>{
         setLoading(true)
-        getCurrenciesList(1,100).then(res=>setData(res.data)).catch(()=>{}).finally(()=>setLoading(false))
+        getCurrenciesList(1,200).then(res=>setData(res.data)).catch(()=>{}).finally(()=>setLoading(false))
     }
 
     // 提交

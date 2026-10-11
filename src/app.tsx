@@ -45,12 +45,7 @@ ConfigProvider.config({
 // 配置化请求参数
 const CONFIG_REQUESTS = [
   {
-    url: '/api/ApiAppstore/currencies_select',
-    storageKey: 'MC_DATA_CURRENCIES', 
-    retry: 3
-  },
-  {
-    url: '/api/ApiAppstore/country_select_v2',
+    url: '/api/ApiAppstore/country_select',
     storageKey: 'MC_DATA_COUNTRY',
     retry: 3
   }
@@ -118,7 +113,7 @@ export async function getInitialState(): Promise<{
       // 获取时区列表
       getTimeZoneList().then(res=>localStorage.setItem('MC_DATA_TIME_ZONEZ', JSON.stringify(res?.data??[]))).catch(()=>{});
       // 获取币种列表
-      getCurrenciesList(1,100).then(res=>localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res.data??[]))).catch(()=>{});
+      getCurrenciesList(1,200).then(res=>localStorage.setItem('MC_DATA_CURRENCIES', JSON.stringify(res.data??[]))).catch(()=>{});
       return msg.data // 返回用户信息
     } catch (error) {
       // history.push(loginPath);

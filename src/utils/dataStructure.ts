@@ -241,3 +241,27 @@ export function groupToTree(list:any[], key: string, labelKey: string, childrenK
   });
   return tree;
 }
+
+/**
+ * 提取树形结构中的所有叶子节点
+ * @param tree 树形数组
+ * @param childrenKey 子节点字段名，默认 'children'
+ * @returns 叶子节点数组
+ */
+export function flattenTreeLeaves(tree: any[], childrenKey = 'children'): any[] {
+  const result: any[] = [];
+
+  function traverse(nodes: any[]) {
+    nodes.forEach(node => {
+      const children = node[childrenKey];
+      if (Array.isArray(children) && children.length > 0) {
+        traverse(children); // 有子节点则继续深入
+      } else {
+        result.push(node);  // 无子节点则收集
+      }
+    });
+  }
+
+  traverse(tree);
+  return result;
+}

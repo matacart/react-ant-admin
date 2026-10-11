@@ -81,13 +81,13 @@ export default function Orders() {
           <div className="create-title">
             <Flex className="create-title-left" align='center' gap={12}>
               <h3>
-                {intl.formatMessage({ id: 'orders.orderList.index.orderList' })}
+                {intl.formatMessage({ id: 'order.orderList.index.order' })}
               </h3>
               <div style={{paddingTop:"4px"}}>
                 <Dropdown menu={{ items: aItems }} trigger={["click"]}>
                   <a onClick={(e) => e.preventDefault()} style={{ color: '#242833' }}>
                     <ExportOutlined style={{marginRight:"6px"}} />
-                    <Space>{intl.formatMessage({ id: 'orders.orderList.index.exportOrder' })}</Space>
+                    <Space>{intl.formatMessage({ id: 'order.orderList.index.export' })}</Space>
                   </a>
                 </Dropdown>
               </div>

@@ -19,22 +19,7 @@ function MarketsEdit() {
 
     const [loading, setLoading] = useState(false);
 
-    const [treeData, setTreeData] = useState<TreeDataNode[]>([
-        {
-            title: 'parent 1',
-            key: '0-0',
-            children: [
-                {
-                    title: 'parent 1-0',
-                    key: '0-0-0',
-                },
-                {
-                    title: 'parent 1-1',
-                    key: '0-0-1',
-                }
-            ],
-        }
-    ]);
+    const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
     const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 

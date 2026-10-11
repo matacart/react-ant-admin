@@ -38,4 +38,3 @@ export async function batchShipmentStatus(options:{
   if (res.code != 0) errHandle(res);
   return res;
 }
-

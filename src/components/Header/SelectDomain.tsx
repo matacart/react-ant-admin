@@ -115,10 +115,14 @@ export default function SelectDomain() {
 
     // 店铺语言
     const setLanguage = (store:storeType | null)=>{
-        // 根据code 查找对应的id -- shop_lang 店铺默认语言
-        getLanguagesList().then(res=>{
+        // 根据 code 查找对应的id -- shop_lang 店铺默认语言,同时根据用户语言存入店铺语言列表
+        const useLang = localStorage.getItem("USE_LANG") || "2";
+        getLanguagesList({
+            only_bound:"1",
+            languages_id:useLang,
+        }).then(res=>{
             const languages = res?.data || [];
-            sessionStorage.setItem('languages', JSON.stringify(languages));
+            localStorage.setItem('MC_DATA_LANGUAGES', JSON.stringify(languages));
             const languagesId = languages.filter((item:any)=>item.code == store?.default_lang)[0]?.id ?? "2";
             cookie.save('shop_lang', languagesId, { path: '/' });
         }).catch(()=>{});

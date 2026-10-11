@@ -1,22 +1,64 @@
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
-import { getMarketConfigV2 } from "@/services/y2/apiSaleMarket";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { history, useParams } from "@umijs/max";
-import { Flex } from "antd";
+import { App, Flex } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import DomainCard from "./DomainCard";
+import LangCard from "./LangCard";
+import { getMarketConfigV2, updateMarketLanguage } from "@/services/y2/apiSaleMarket";
+import domainAndLang from "@/store/settings/markets/domainAndLang";
+
+
 
 function DomainAndLang() {
 
     const { marketId="", langId="" } = useParams();
 
-    const [isSkeleton, setIsSkeleton] = useState(false);
+    const [isSkeleton, setIsSkeleton] = useState(true);
+
+    const { message } = App.useApp();
+
+    const [loading, setLoading] = useState(false);
+
+    const submit = () => {
+        setLoading(true);
+        const marketLanguageList = domainAndLang.marketLanguageList.map(item=>{
+            return {
+                iso:item.iso,
+                defaultLanguage:item.defaultLanguage,
+            };
+        });
+        updateMarketLanguage({
+            languages_id:langId,
+            marketId:marketId,
+            configType:domainAndLang.otherInfo.configType,
+            configValue:domainAndLang.otherInfo.configValue,
+            marketLanguageList:JSON.stringify(marketLanguageList),
+        }).then(()=>{
+            message.success("成功");
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false);
+        })
+    }
 
     useEffect(() => {
         getMarketConfigV2({
-            marketId: marketId,
-            languages_id: langId,
+            languages_id:langId,
+            marketId:marketId,
+        }).then(res=>{
+            const { marketLanguageList,...otherInfo } = res.data || {};
+            domainAndLang.setMarketLanguageList(marketLanguageList || []);
+            domainAndLang.setOtherInfo(otherInfo);
+        }).catch(()=>{
+        }).finally(()=>{
+            setIsSkeleton(false);
         })
+        return ()=>{
+            domainAndLang.reset();
+        }
     }, [])
 
     return (
@@ -25,18 +67,23 @@ function DomainAndLang() {
                     <div className="mc-layout">
                         <div className="mc-header">
                             <Flex className="mc-header-left">
-                                <div className="mc-header-left-secondary" onClick={()=>history.push("/settings/markets")}>
+                                <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
                                 <div className="mc-header-left-content">{"域名和语言"}</div>
                             </Flex>
-                            <Flex gap={12}>
-                            </Flex>
+                            {/* <Flex gap={12}>
+                                <LangSelect lang={markets.languagesId} setLang={(lang:string)=>markets.setLanguagesId(lang)} />    
+                            </Flex> */}
                         </div>
                         {/* 主要内容 */}
-                        <div className='mc-layout-main'>
-                            <div>123</div>
-                        </div>
+                        <Flex gap={20} vertical>
+                            <DomainCard />
+                            <LangCard />
+                        </Flex>
+                        <Flex justify="right" className="submit-btn">
+                            <PrimaryButton loading={loading} text="更新" onClick={submit}  />
+                        </Flex>
                     </div>
                 </Flex>}
             </Scoped>
@@ -49,7 +96,7 @@ const Scoped = styled.div`
         .mc-layout {
             width: 100%;
             max-width: 1200px;
-            margin: '0 auto';
+            margin: 0 auto;
             .mc-header {
                 color: rgb(36, 40, 51);
                 font-size: 30px;
@@ -74,19 +121,14 @@ const Scoped = styled.div`
                     &-icon {
                         font-size: 18px;
                     }
-
                 }
                 .mc-header-left-content {
                     margin-left: 12px;
                     font-size: 20px;
                 }
             }
-
-            &-main {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 20px;
+            .submit-btn {
+                margin-top: 24px;
             }
         }
     }
