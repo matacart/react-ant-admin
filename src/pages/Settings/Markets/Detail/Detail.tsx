@@ -48,6 +48,7 @@ function Detail() {
             languages_id:langId,
         }).then(res => {
             marketsInfo.setMarketsInfo(res.data);
+            marketsInfo.setLanguagesId(langId);
             setActive(res.data.active);
         }).catch(()=>{
         }).finally(()=>{

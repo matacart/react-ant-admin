@@ -9,10 +9,45 @@ interface PriceRule {
 }
 
 
+export interface Product {
+    productId: string;
+    title: string;
+    baseCurrency: string;
+    excluded: boolean;
+    originalPriceMin: number;
+    originalPriceMax: number;
+    priceMin: number;
+    priceMax: number;
+}
+
+
+interface CustomPrice {
+    price: number;
+    priceType: string;
+}
+
+
+export interface ProductPriceExchange {
+    productId: string;
+    customPriceList: CustomPrice[];
+}
+
+export interface MarketDetail {
+    homeMarket: string;
+}
+
 
 class ProductAndPricing{
     constructor() {
         makeAutoObservable(this)
+    }
+
+    marketDetail:MarketDetail = {
+        homeMarket: ""
+    };
+    
+    setMarketDetail(detail:MarketDetail){
+        this.marketDetail = detail;
     }
 
     priceRule:PriceRule = {
@@ -23,6 +58,30 @@ class ProductAndPricing{
 
     setPriceRule(rule:PriceRule){
         this.priceRule = rule;
+    }
+
+
+    excludedNum:number = 0;
+    setExcludedNum(count:number){
+        this.excludedNum = count;
+    }
+    includedNum:number = 0;
+    setIncludedNum(count:number){
+        this.includedNum = count;
+    }
+    count:number = 0;
+    setCount(count:number){
+        this.count = count;
+    }
+    productList:Product[] = [];
+    setProductList(list:Product[]){
+        this.productList = list;
+    }
+
+    // 更新的产品价格
+    productPriceExchangeList:ProductPriceExchange[] = [];
+    setProductPriceExchangeList(list:ProductPriceExchange[]){
+        this.productPriceExchangeList = list;
     }
 
 

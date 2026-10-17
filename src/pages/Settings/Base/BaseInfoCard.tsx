@@ -4,7 +4,6 @@ import DefaultButton from "@/components/Button/DefaultButton";
 import DefaultInput from "@/components/Input/DefaultInput";
 import { sendServiceVerifyEmail } from "@/services/y2/apiEmail";
 import { uploadPic } from "@/services/y2/apiAppstore";
-import baseInfoStore from "@/store/setUp/baseInfoStore";
 import { DeleteOutlined, ExclamationCircleFilled, ExportOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { App, Card, Flex, Form, GetProp, Upload, UploadProps } from "antd";
 import modal from "antd/es/modal";
@@ -12,6 +11,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import cookie from 'react-cookies';
+import base from "@/store/settings/base/base";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -51,8 +51,8 @@ function BaseInfoCard() {
         formData.append("file", file);
         setLoading(true);
         uploadPic(formData).then((res: any) => {
-            baseInfoStore.setStoreInfo({
-            ...baseInfoStore.storeInfo,
+            base.setStoreInfo({
+            ...base.storeInfo,
             store_logo:res.data.src
             })
         }).catch((err)=>{
@@ -76,7 +76,7 @@ function BaseInfoCard() {
         // 发送验证邮件
         sendServiceVerifyEmail({
             languages_id:lang,
-            email:baseInfoStore.storeInfo.service_email,
+            email:base.storeInfo.service_email,
         }).then(res => {
             setCount(60);
             timerRef.current = window.setInterval(()=>{
@@ -120,7 +120,7 @@ function BaseInfoCard() {
                         >
                         <div style={{marginBottom:"12px"}}>该Logo展示在您的店铺管理页面上。详见 <a className="font-w-500">此链接</a> 展示Logo的位置。图片最大限制 10MB。</div>
                         {/* <Spin spinning={loading}> */}
-                            {(baseInfoStore.storeInfo.store_logo == null || baseInfoStore.storeInfo.store_logo == "") ? <Upload
+                            {(base.storeInfo.store_logo == null || base.storeInfo.store_logo == "") ? <Upload
                                 style={{width:"90px",height:"90px"}}
                                 name="avatar"
                                 listType="picture-card"
@@ -130,7 +130,7 @@ function BaseInfoCard() {
                             >
                                 {uploadButton}
                             </Upload> : <div className="image-container" onMouseEnter={()=>setIsMaskVisible(true)} onMouseLeave={()=>setIsMaskVisible(false)}>
-                                <img src={baseInfoStore.storeInfo.store_logo} style={{width:"100%"}}/>
+                                <img src={base.storeInfo.store_logo} style={{width:"100%"}}/>
                                 {isMaskVisible && (
                                     <div className="mask">
                                         <div className="delete-icon" onClick={(e)=>{
@@ -144,8 +144,8 @@ function BaseInfoCard() {
                                                     <Flex gap={12} justify="flex-end" style={{marginTop:"24px"}}>
                                                         <DefaultButton text={`取消`} autoInsertSpace={false} onClick={()=>newModal.destroy()} />
                                                         <DangerButton text={`确认`} loading={loading} autoInsertSpace={false} onClick={async ()=>{
-                                                            baseInfoStore.setStoreInfo({
-                                                                ...baseInfoStore.storeInfo,
+                                                            base.setStoreInfo({
+                                                                ...base.storeInfo,
                                                                 store_logo:""
                                                             })
                                                             newModal.destroy();
@@ -164,8 +164,8 @@ function BaseInfoCard() {
                     <Form.Item
                         label="商店名称"
                         >
-                        <DefaultInput placeholder="请输入店铺名称" value={baseInfoStore.storeInfo.store_name} onChange={(e:any)=>baseInfoStore.setStoreInfo({
-                            ...baseInfoStore.storeInfo,
+                        <DefaultInput placeholder="请输入店铺名称" value={base.storeInfo.store_name} onChange={(e:any)=>base.setStoreInfo({
+                            ...base.storeInfo,
                             store_name:e.target.value
                         })} />
                     </Form.Item>
@@ -173,8 +173,8 @@ function BaseInfoCard() {
                         label="商店联系人邮箱"
                         >
                         <div style={{marginBottom:"8px"}}>MataCart可通过此邮箱与你联系。</div>
-                        <DefaultInput placeholder="请输入商店联系人邮箱" value={baseInfoStore.storeInfo.merchant_email} onChange={(e:any)=>baseInfoStore.setStoreInfo({
-                            ...baseInfoStore.storeInfo,
+                        <DefaultInput placeholder="请输入商店联系人邮箱" value={base.storeInfo.merchant_email} onChange={(e:any)=>base.setStoreInfo({
+                            ...base.storeInfo,
                             merchant_email:e.target.value
                         })}  />
                     </Form.Item>
@@ -182,8 +182,8 @@ function BaseInfoCard() {
                         label="客服邮箱"
                         >
                         <div style={{marginBottom:"8px"}}>客户可通过此邮箱与您联系。</div>
-                        <DefaultInput placeholder="请输入客服邮箱" value={baseInfoStore.storeInfo.service_email} onChange={(e:any)=>baseInfoStore.setStoreInfo({
-                            ...baseInfoStore.storeInfo,
+                        <DefaultInput placeholder="请输入客服邮箱" value={base.storeInfo.service_email} onChange={(e:any)=>base.setStoreInfo({
+                            ...base.storeInfo,
                             service_email:e.target.value
                         })} />
                     </Form.Item>
@@ -191,11 +191,11 @@ function BaseInfoCard() {
                         {"您的电子邮件在收件箱中可能通过以下形式显示：StoreName<no-reply@matacart.com>，您可以自行配置为带域名的品牌邮箱以提升邮件到达率。了解展示效果"}
                     </div>
                     {/*  */}
-                    {baseInfoStore.storeInfo.service_email && baseInfoStore.storeInfo.email_verify_status == 0 ?
+                    {base.storeInfo.service_email && base.storeInfo.email_verify_status == 0 ?
                         <div style={{marginTop:"12px"}}>
                             <MyAlert className="my-alert" type="warning" showIcon closable message={
                                 <Flex align="center" className="font-w-500 font-12">
-                                    <div>请通过点击发送到邮箱的链接来验证您有权访问{baseInfoStore.storeInfo.service_email}。</div>
+                                    <div>请通过点击发送到邮箱的链接来验证您有权访问{base.storeInfo.service_email}。</div>
                                     {isSendVerify ? <Flex align="center">
                                         <button disabled className="font-12 color-356DFF my-alert-resend">
                                             <div>重新发送验证码（{count}）</div>

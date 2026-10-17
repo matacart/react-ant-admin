@@ -5,17 +5,17 @@ import styled from "styled-components"
 import { useEffect } from 'react';
 import product from "@/store/product/product";
 import DefaultSelect from "@/components/Select/DefaultSelect";
+import cookie from 'react-cookies';
 
 
  function Subnumber(){
     
     const [form] = Form.useForm();
 
-
     useEffect(()=>{
         form.setFieldsValue({
             partsWarehouse:product.productInfo.is_sys,
-            isShare:product.productInfo.is_share == '1' ? true : false
+            isShare:product.productInfo.is_share == '1' ? true : false,
         })
     },[])
 
@@ -66,6 +66,15 @@ import DefaultSelect from "@/components/Select/DefaultSelect";
                                 })
                             }} />
                         </Form.Item>
+                    </Flex>
+                    <Flex align="center" justify="space-between" style={{ marginTop: "20px" }}>
+                        <span>全站共享</span>
+                        <Switch checked={product.productInfo.data_scope == '1'} onChange={(e)=>{
+                            product.setProductInfo({
+                                ...product.productInfo,
+                                data_scope:e?'1':'0'
+                            })
+                        }} />
                     </Flex>
                 </Form>
             </Card>

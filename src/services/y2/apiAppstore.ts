@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { message } from 'antd';
+import { start } from 'nprogress';
 import cookie from 'react-cookies';
 
 // 错误处理
@@ -626,7 +627,8 @@ export async function getAddonsConfigs(langId:string,id?:string,) {
       id:id,
       domain_id: cookie.load("domain")?.id,
       languages_id:langId,
-      addons_id:"23"
+      addons_id:"85030669",
+      limit:100,
     }
   });
   if (res.code != 0) errHandle(res);

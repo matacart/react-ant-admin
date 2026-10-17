@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, ConfigProvider, Divider, Drawer, Flex, Tag } from 'antd';
+import { Button, ConfigProvider, Divider, Drawer, Flex, Radio, Tag } from 'antd';
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
 import { useIntl } from '@umijs/max';
@@ -9,6 +9,9 @@ import NumberInput from '@/components/Input/NumberInput';
 import CheckSelectSubmit from '@/components/Select/CheckSelectSubmit';
 import { getPrecision } from '@/utils/common';
 import { useSymbolLeft } from '@/hooks/customHooks';
+import productList from '@/store/product/productList';
+import { observer } from 'mobx-react-lite';
+import MyButton from '@/components/Button/MyButton';
 
 // 修改第20行状态声明
 interface OptionType {
@@ -17,21 +20,14 @@ interface OptionType {
   checked: boolean;
 }
 
-export default function MoreSelect(){
+function MoreSelect(){
 
   const Ref = React.useRef(null);
   const intl = useIntl();
 
-  const symbolLeft = useSymbolLeft();
-  const {decimals,amountRule} = getPrecision();
-
   const [open, setOpen] = useState(false);
-
-  const [min,setMin] = useState<number | null>(null);
-
-  const [max,setMax] = useState<number | null>(null);
-
-  const [productTypeOption,setProductTypeOption] = useState<OptionType[]>([])
+  // 条件
+  const [condition, setCondition] = useState<{[key: string]: any}>();
 
   const items: CollapseProps['items'] = [
     {
@@ -39,7 +35,7 @@ export default function MoreSelect(){
       label: <div className='font-w-600 font-16'>价格区间</div>,
       children: (
         <div className='price-rang'>
-          <Flex>
+          {/* <Flex>
             <NumberInput 
                 className="input" 
                 placeholder='最小值'
@@ -63,10 +59,8 @@ export default function MoreSelect(){
                   value?setMax(Math.round(value*amountRule)):setMax(null)
                 }}
             />
-          </Flex>
+          </Flex> */}
           <div className={'cleanText'} onClick={()=>{
-            setMin(null)
-            setMax(null)
           }}>清除</div>
         </div>
       ),
@@ -76,7 +70,7 @@ export default function MoreSelect(){
       label: <div className='font-w-600 font-16'>商品类型</div>,
       children: (
       <>
-        <CheckSelectSubmit options={productTypeOption} setOptions={setProductTypeOption} placeholder="商品类型" style={{width:"100%",height:"36px"}}/>
+        {/* <CheckSelectSubmit options={productTypeOption} setOptions={setProductTypeOption} placeholder="商品类型" style={{width:"100%",height:"36px"}}/>
         <Flex wrap gap={8} style={{marginTop:"12px"}}>
           {productTypeOption.map((item:OptionType)=>{
             if(item.checked){
@@ -93,11 +87,8 @@ export default function MoreSelect(){
               )
             }
           })}
-        </Flex>
+        </Flex> */}
         <div className={'cleanText'} onClick={()=>{
-          setProductTypeOption(prev => 
-            prev.map(item => ({ ...item, checked: false }))
-          );
         }}>清除</div>
       </>)
       ,
@@ -162,46 +153,62 @@ export default function MoreSelect(){
         </>
       ),
     },
+    {
+      key: '9',
+      label: <div className='font-w-600 font-16'>店铺</div>,
+      children: (
+        <>
+          <Radio.Group
+            value={condition?.saleStoreHandles??1}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+            options={[
+              { value: 0, label: "其它店铺" },
+              { value: 1, label: intl.formatMessage({ id: 'orders.orderList.ordersMoreSelect.currentShop' }) },
+            ]}
+            onChange={(e)=>{
+              setCondition({...condition,saleStoreHandles:e.target.value})
+            }}
+          />
+          <div className={'cleanText'} onClick={()=>{
+            setCondition({...condition,saleStoreHandles:null})
+            }}
+          />
+          <div className={'cleanText'}>清除</div>
+        </>
+      ),
+    },
   ];
 
-  const showDrawer = () => {
+  const init = () => {
     setOpen(true);
+    setCondition(productList.condition)
   };
 
   const onClose = () => {
     setOpen(false);
   };
 
-
-  useEffect(()=>{
-    // // 平台类型 --- 平台多语言
-    // getPlatformCategorySelect("2").then(res=>{
-    //   const newProductTypeOption = res.data.map(item=>{
-    //     return {
-    //       value: item.id,
-    //       label: item.category_name,
-    //       checked:false
-    //     }
-    //   })
-    //   setProductTypeOption(newProductTypeOption)
-    // })
-  },[])
-
+  const onSubmit = () => {
+    productList.setCondition({...condition})
+    setOpen(false);
+  };
 
   const Footed = () => {
     return (
-      <Flex justify="flex-end" style={{padding:"12px 0"}}>
-        <div>
-          <Button style={{marginRight:"12px"}}>取消</Button>
-          <Button type="primary">保存</Button>
-        </div>
+      <Flex justify="flex-end" style={{padding:"12px 0"}} gap={12}>
+        <MyButton onClick={onClose} type="default" text="取消" />
+        <MyButton onClick={onSubmit} type="primary" text="保存" />
       </Flex>
     )
   }
 
   return (
     <Scoped ref={Ref}>
-      <DefaultButton text={"更多筛选"} onClick={()=>setOpen(true)} />
+      <DefaultButton text={"更多筛选"} onClick={init} />
       <Drawer getContainer={()=>Ref.current!} title={<div className="font-20">筛选</div>} styles={{body:{padding:"8px"}}} footer={<Footed/>} closeIcon={false} onClose={onClose} open={open}>
         <ConfigProvider 
           theme={{
@@ -215,7 +222,6 @@ export default function MoreSelect(){
             expandIconPosition={'end'} 
             ghost
             items={items}
-            // size='small'
           />
         </ConfigProvider>
       </Drawer>
@@ -223,6 +229,8 @@ export default function MoreSelect(){
   );
 };
 
+
+export default observer(MoreSelect);
 
 const Scoped = styled.div`
   .cleanText{

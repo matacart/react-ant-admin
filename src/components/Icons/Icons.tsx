@@ -492,6 +492,10 @@ const SettingsTaxSvg = ()=>(
   <svg width="1em" height="1em" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" fontSize="28"><rect width="40" height="40" rx="4" fill="#F5F8FC"></rect><path d="M8 7a1 1 0 0 1 1-1h22a1 1 0 0 1 1 1v26a1 1 0 0 1-1 1h-1.335a1 1 0 0 1-.81-.415L27.5 31.71l-1.354 1.876a1 1 0 0 1-.811.415h-.67a1 1 0 0 1-.81-.415L22.5 31.71l-1.354 1.876a1 1 0 0 1-.811.415h-.67a1 1 0 0 1-.81-.415L17.5 31.71l-1.354 1.876a1 1 0 0 1-.811.415h-.67a1 1 0 0 1-.81-.415L12.5 31.71l-1.354 1.876a1 1 0 0 1-.811.415H9a1 1 0 0 1-1-1V7Zm2 1v23.755l1.69-2.34a1 1 0 0 1 1.62 0l1.69 2.34 1.69-2.34a1 1 0 0 1 1.62 0l1.69 2.34 1.69-2.34a1 1 0 0 1 1.62 0l1.69 2.34 1.69-2.34a1 1 0 0 1 1.62 0l1.69 2.34V8H10Z" fill="#474F5E"></path><path d="M12 25a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Z" fill="#474F5E"></path><path d="M23.707 12.293a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414-1.414l6-6a1 1 0 0 1 1.414 0ZM19 13.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM24 18.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" fill="#356DFF"></path></svg>
 )
 
+const CheckSvg = ()=>(
+  <svg width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="s-selection-card-checked-icon-check"><path fillRule="evenodd" clipRule="evenodd" d="m17.53 6.53-8 8a.75.75 0 0 1-1.06 0l-5-5 1.06-1.06L9 12.94l7.47-7.47 1.06 1.06Z"></path></svg>
+)
+
 export const HeartIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={HeartSvg} {...props} />
 );
@@ -818,7 +822,9 @@ export const SettingsTaxIcon = (props: Partial<CustomIconComponentProps>) => (
   <Icon component={SettingsTaxSvg} {...props} />
 );
 
-
+export const CheckIcon = (props: Partial<CustomIconComponentProps>) => (
+  <Icon component={CheckSvg} {...props} />
+);
 
 
 // -----------编辑组件图标-----------------

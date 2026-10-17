@@ -7,8 +7,9 @@ import { getAddonsList } from "@/services/y2/apiAppstore";
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import LangSelect from "@/components/Select/LangSelect";
 import cookie from 'react-cookies';
+import DefaultTag from "@/components/Tag/DefaultTag";
 
-function OtherCollection() {
+function Index() {
     
     const { message } = App.useApp();
 
@@ -21,12 +22,7 @@ function OtherCollection() {
     const setLang = (lang:string) => {
         setLanguage(lang)
     }
-    // const [config,setConfig] = useState<any>({
-    //     isAddressRequired:"0",
-    //     isUploadCredentials:"0",
-    //     credentialsText:"",
-    //     credentialsImg:""
-    // });
+    
     useEffect(()=>{
         getAddonsList(language,"1","2").then(res=>{
             setSupportPayments(res.data)
@@ -70,6 +66,7 @@ function OtherCollection() {
                                             }}>
                                                 <Flex align="center">
                                                     <div style={{marginRight:"8px"}} className="font-w-600">{item.title}</div>
+                                                    {item?.status != 1 && <DefaultTag text="未启用" />}
                                                 </Flex>
                                                 <Flex>
                                                     <RightOutlined style={{marginLeft:8}} />
@@ -88,7 +85,7 @@ function OtherCollection() {
     )
 }
 
-export default OtherCollection
+export default Index
 
 const Scoped = styled.div`
 

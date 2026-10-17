@@ -31,6 +31,7 @@ interface DataType {
   handle:string;
   product_id:string;
   languages_id:string;
+  domain_id:string;
 
   ISBN?: string;
   HSCode?:string;
@@ -260,14 +261,15 @@ function ProductListAjax(selectProps:any) {
     const limit  = getRandomuserParams(tableParams).results;
     const page = getRandomuserParams(tableParams).page;
     getProductList({
-      page:page,
-      limit:limit,
+      page:page?.toString() || "1",
+      limit:limit?.toString() || "10",
       title:"",
       languages_id:productList.languagesId,
       tag:"",
-      status:productList.flag,
-      alliance_status:productList.isAlliance,
-      hosted_status:productList.isHosted,
+      status:productList.flag || "",
+      // 条件
+      alliance_status:productList.isAlliance || "",
+      hosted_status:productList.isHosted || "",
       // 条件
       condition:JSON.stringify(productList.condition)
     },signal).then((res)=>{
@@ -305,9 +307,8 @@ function ProductListAjax(selectProps:any) {
     });
   };
 
-  const handleOrderClick = (productId: string,languages_id:string) => {
-    // console.log('Clicked product:', productId); // 添加调试日志
-    history.push(`/products/edit/${productId}/${languages_id}`)
+  const handleOrderClick = (record: DataType) => {
+    history.push(`/products/edit/${record.id}/${productList.languagesId}`);
   };
   
   return (
@@ -345,7 +346,7 @@ function ProductListAjax(selectProps:any) {
           rowKey={(record) => record.id}
           onRow={(record) => ({
             onClick: () => {
-              handleOrderClick(record.id,productList.languagesId); // 点击行时调用handleOrderClick
+              handleOrderClick(record); // 点击行时调用handleOrderClick
             },
           })}
           rowSelection={{
@@ -353,7 +354,6 @@ function ProductListAjax(selectProps:any) {
             selectedRowKeys:productList.productList, // 使用状态来记录选中的行
             onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
               productList.setProductList(selectedRowKeys)
-              console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
               if(productList.allSelected){
                 productList.setAllSelected(false)
                 message.success('已取消全选');

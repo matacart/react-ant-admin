@@ -78,7 +78,7 @@ export async function upDateProduct(options:any){
     },
     data: {
       domain_id: cookie.load("domain")?.id,
-      ...options
+      ...options,
     }
   })
   if (res.code != 0) errHandle(res);
@@ -93,7 +93,17 @@ export async function upDateProduct(options:any){
 // model: 1
 // title: 
 // tags
-export async function getProductList(options:any,signal?: AbortSignal) {
+export async function getProductList(options:{
+  page:string,
+  limit:string,
+  title:string,
+  languages_id:string,
+  tag:string,
+  status:string,
+  alliance_status:string,
+  hosted_status:string,
+  condition:string
+},signal?: AbortSignal) {
   const res = await request<ApiStore.ProductList>(`/ApiStore/product_list`, {
     method: 'POST',
     headers: {
@@ -636,7 +646,23 @@ export async function delPurchaseOrders(id:string){
 }
 
 // 添加仓库地址
-export async function addWarehouse(options:any){
+export async function addWarehouse(options:{
+  name:string,
+  code:string,
+  capacity:number,
+  country:string,
+  country_id: string,
+  state:string,
+  state_id:string,
+  city:string,
+  city_id:string,
+  district:string,
+  postcode:string,
+  address:string,
+  detailed_address:string,
+  telephone:string,
+  email_address:string,
+}){
   const res = await request<ApiStore.Default>('/ApiStore/warehouse_add',{
     method: 'POST',
     headers: {
@@ -644,28 +670,11 @@ export async function addWarehouse(options:any){
     },
     data:{
       domain_id:cookie.load("domain")?.id,
+      ...options,
       id:"",
-      code:options.warehouseLocationCode,
-      name:options.warehouseLocationName,
-      // 邮箱
-      capacity:options.capacity,
       occupied_space:"",
-      country:options.countryLaber,
-      country_id:options.nation,
-      state:options.provinceLaber,
-      state_id:options.province,
-      city:options.cityLaber,
-      city_id:options.city,
-      district:options.district,
-      postcode:options.postcode,
-      address:options.address,
-      detailed_address:options.detailedAddress,
-      // 姓氏
-      lastname:options.lastName,
-      // 名称
-      firstname:options.name,
-      telephone:options.phone,
-      email_address:options.email,
+      lastname:"",
+      firstname:"",
       status:"1",
       is_default:"0"
     }

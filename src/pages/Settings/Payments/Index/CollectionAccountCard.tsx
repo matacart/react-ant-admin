@@ -17,7 +17,7 @@ export default function CollectionAccountCard() {
                     <img src="/icons/payment/AmericanExpress.svg" />
                     <img src="/icons/payment/Dinersclub.svg" />
                     <img src="/icons/payment/Discover.svg" />
-                    <img src="/icons/payment/UnionPay.svg" />
+                    <img src="/icons/payment/UnionPayInternational.svg" />
                     <img src="/icons/payment/GooglePay.svg" />
                     <img src="/icons/payment/ApplePay.svg" />
                     <img src="/icons/payment/Paynow.svg" />

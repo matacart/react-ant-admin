@@ -12,6 +12,8 @@ import { observer } from "mobx-react-lite";
 import payments from "@/store/settings/payments/payments";
 import DefaultButton from "@/components/Button/DefaultButton";
 import LangSelect from "@/components/Select/LangSelect";
+import MyInput from "@/components/Input/MyInput";
+import MySelect from "@/components/Select/MySelect";
 
 // 新增类型定义
 interface FormItem {
@@ -153,7 +155,7 @@ function ThirdCreditCollectionDetail() {
                                                 {(()=>{
                                                     switch(value.type){
                                                         case "text":
-                                                            return <Input value={(payments.oldThirdCreditCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
+                                                            return <MyInput style={{height:"36px"}} value={(payments.oldThirdCreditCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
                                                                 payments.setOldThirdCreditCollection({
                                                                     ...payments.oldThirdCreditCollection,
                                                                     ["config["+key+"]"]:e.target.value
@@ -166,7 +168,7 @@ function ThirdCreditCollectionDetail() {
                                                                     value:key
                                                                 }
                                                             })
-                                                            return <Select value={(payments.oldThirdCreditCollection as Record<string, any>)["config["+key+"]"] || null} placeholder={value.title} options={options} onChange={(value)=>{
+                                                            return <MySelect style={{height:"36px"}} value={(payments.oldThirdCreditCollection as Record<string, any>)["config["+key+"]"] || null} placeholder={value.title} options={options} onChange={(value)=>{
                                                                 payments.setOldThirdCreditCollection({
                                                                     ...payments.oldThirdCreditCollection,
                                                                     ["config["+key+"]"]:value
@@ -195,7 +197,7 @@ function ThirdCreditCollectionDetail() {
                                             </Form.Item>
                                         ))}
                                         <Form.Item label={<div className="font-w-600">自定义标题</div>}>
-                                            <Input value={payments.oldThirdCreditCollection.title} onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} value={payments.oldThirdCreditCollection.title} onChange={(e)=>{
                                                 payments.setOldThirdCreditCollection({
                                                     ...payments.oldThirdCreditCollection,
                                                     title:e.target.value
@@ -219,7 +221,7 @@ function ThirdCreditCollectionDetail() {
                                             }} />
                                         </Form.Item>
                                         <Form.Item label={<div className="font-w-600">排序</div>}>
-                                            <Input value={payments.oldThirdCreditCollection.sort} onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} value={payments.oldThirdCreditCollection.sort} onChange={(e)=>{
                                                 payments.setOldThirdCreditCollection({
                                                     ...payments.oldThirdCreditCollection,
                                                     sort:e.target.value

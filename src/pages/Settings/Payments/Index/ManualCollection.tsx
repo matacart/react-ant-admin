@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import ButtonDropdownSecondary from "@/components/Dropdown/ButtonDropdownSecondary";
 import PrimaryButton from "@/components/Button/PrimaryButton";
+import DefaultTag from "@/components/Tag/DefaultTag";
 
 const { Text } = Typography;
 
@@ -35,15 +36,16 @@ function ManualCollection() {
                 {/* <List.Item className="payment-item" onClick={()=>history.push('/settings/payments/edit/COD')}>
                     <Flex align="center">
                         <div style={{marginRight:"8px"}}>{"货到付款"}</div>
-                        <DefaultTag text="未启用" />
+                        
                     </Flex>
                     <RightOutlined />
                 </List.Item> */}
                 {payments.manualCollectionList.length!==0 && <List className="payment-list">
                     {payments.manualCollectionList.map(item=>(
-                        item?.status == 1 && <List.Item className="payment-item" onClick={()=>history.push(`/settings/payments/edit/${item.id}/${payments.languagesId}`)}>
+                        <List.Item className="payment-item" onClick={()=>history.push(`/settings/payments/edit/${item.id}/${payments.languagesId}`)}>
                             <Flex align="center">
                                 <div style={{marginRight:"8px"}}>{item.title}</div>
+                                {item?.status != 1 && <DefaultTag text="未启用" />}
                             </Flex>
                             <RightOutlined />
                         </List.Item>

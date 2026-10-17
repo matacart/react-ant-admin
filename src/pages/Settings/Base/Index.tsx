@@ -7,12 +7,13 @@ import SettlementCurrencyCard from "./SettlementCurrencyCard"
 import BaseInfoCard from "./BaseInfoCard"
 import ShopOperationInformation from "./ShopOperationInformation"
 import ShopStatusCard from './ShopStatusCard';
-import baseInfoStore from "@/store/setUp/baseInfoStore"
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import OrderSetUpCard from "./OrderSetUpCard"
 import cookie from 'react-cookies'
 import PrimaryButton from "@/components/Button/PrimaryButton"
 import { getStoreInfo, setStoreInfo } from "@/services/y2/apiAppstore"
+import DataShare from "./DataShare"
+import base from "@/store/settings/base/base"
 
 function Base() {
 
@@ -24,12 +25,12 @@ function Base() {
 
     const submit = () => {
         setLoading(true)
-        setStoreInfo(baseInfoStore.storeInfo).then(res=>{
-            cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == baseInfoStore.storeInfo.timezone)[0]), { path: '/' });
+        setStoreInfo(base.storeInfo).then(res=>{
+            cookie.save('timeZone', JSON.stringify(JSON.parse(localStorage["MC_DATA_TIME_ZONEZ"] || '[]').filter((item:any)=>item.time_zone_name == base.storeInfo.timezone)[0]), { path: '/' });
             const newDomain = {
                 ...cookie.load("domain") || {},
-                store_name:baseInfoStore.storeInfo.store_name,
-                store_logo:baseInfoStore.storeInfo.store_logo,
+                store_name:base.storeInfo.store_name,
+                store_logo:base.storeInfo.store_logo,
             }
             cookie.save("domain", newDomain, { path: '/' });
             message.success('更新成功');
@@ -40,9 +41,8 @@ function Base() {
     }
 
     useEffect(()=>{
-        const lang = cookie.load("shop_lang") || '2'
-        getStoreInfo({languages_id:lang}).then(res=>{
-            baseInfoStore.setStoreInfo(res.data)
+        getStoreInfo({languages_id:base.languagesId}).then(res=>{
+            base.setStoreInfo(res.data)
         }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false)
@@ -110,6 +110,18 @@ function Base() {
                             </div>
                             <div className="mc-layout-content-right">
                                 <OrderSetUpCard />
+                            </div>
+                        </div>
+                    </div>
+                    {/* 数据共享模式 */}
+                    <div className='mc-layout-main'>
+                        <div className='mc-layout-content'>
+                            <div className="mc-layout-content-left">
+                                <div className="font-20 font-w-600">数据共享模式</div>
+                                <p className="font-14 color-474F5E desc line-h-20">管控店铺数据的适用范围，适配不同运营场景。</p>
+                            </div>
+                            <div className="mc-layout-content-right">
+                                <DataShare />
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,10 @@ import axios from "axios";
 import modal from "antd/es/modal";
 import DangerButton from "@/components/Button/DangerButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
-import DefaultButton from "@/components/Button/DefaultButton";
+import DefaultDangerModal from "@/components/Modal/DefaultDangerModal";
+import DefaultInput from "@/components/Input/DefaultInput";
+import DefaultSelect from "@/components/Select/DefaultSelect";
+import MySelect from "@/components/Select/MySelect";
 
 
 const { TextArea } = Input;
@@ -20,6 +23,8 @@ function ManualCollectionDetail() {
 
     const { id = "",languagesId = "2" } = useParams();
 
+    const [loading, setLoading] = useState(false);
+
     const [isSkeleton,setIsSkeleton] = useState(true)
 
     const [imgLoading, setimgLoading] = useState(false);
@@ -27,6 +32,7 @@ function ManualCollectionDetail() {
     const [isMaskVisible, setIsMaskVisible] = useState(false);
 
     const [addonConfigForm,setAddonConfigForm] = useState({});
+
     // 配置信息
     const [config,setConfig] = useState<any>({
         isAddressRequired:"0",
@@ -40,7 +46,7 @@ function ManualCollectionDetail() {
 
     const [manualCollection,setManualCollection] = useState<any>([])
 
-    const [manualCollectionData,setManualCollectionData] = useState<any>()
+    // const [manualCollectionData,setManualCollectionData] = useState<any>()
 
     const uploadButton = (
         <button style={{ border: 0, background: 'none',width:"100%",height:"100%" }} type="button">
@@ -50,40 +56,27 @@ function ManualCollectionDetail() {
         </button>
     );
 
-    const handleOk = (confirm:any)=>{
-        upDataAddonsConfig({...manualCollectionData,status:0,config:config}).then(res=>{
-            message.success("支付方式已停用")
+    // 停用服务商
+    const handleDisable = ()=>{
+        setLoading(true);
+        console.log(manualCollection)
+        upDataAddonsConfig({...manualCollection,status:0,config:config}).then(res=>{
+            message.success("支付方式已停用");
+            history.push("/settings/payments");
         }).catch(()=>{}).finally(()=>{
-            confirm.destroy();
+            setLoading(false);
         });
-    }
-
-    const handleCancel = (confirm:any)=>{
-        confirm.destroy();
-    }
-
-    const handleStop = ()=>{
-        const confirm = modal.confirm({
-            title: '停用服务商？',
-            icon: <ExclamationCircleFilled style={{color:"#F86140"}}/>,
-            content: '停用后，网店客户将不可使用此服务商结账。',
-            centered:true,
-            okButtonProps:{style:{backgroundColor:"#F86140",color:"#FFFFFF"}},
-            footer:()=><>
-                <Flex justify="flex-end" gap={12}>
-                    <DefaultButton text={"取消"} onClick={()=>handleCancel(confirm)} />
-                    <DangerButton text="确认停用" onClick={()=>handleOk(confirm)} />
-                </Flex>
-            </>
-        });
-        
     }
 
     // 更新
     const submit = ()=>{
+        setLoading(true);
         upDataAddonsConfig({...manualCollection,languages_id:languagesId,status:1,config:config}).then(res=>{
             message.success("已更新")
-        }).catch(()=>{});
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false);
+        });
     }
 
     // 凭证图片
@@ -168,24 +161,24 @@ function ManualCollectionDetail() {
                                             <TextArea value={manualCollection.summary} onChange={(e)=>{setManualCollection({...manualCollection,summary:e.target.value})}} style={{ height: 120, resize: 'none' }} showCount placeholder={`输入简介内容，如有多个内容，建议分段展示，如：\x0A1、需要注意的付款说明... \x0A2、....`} maxLength={500} />
                                             <div style={{marginTop:"8px"}} className="color-356DFF cursor-pointer">了解展示效果</div>
                                         </Form.Item>
-                                        {Object.entries(addonConfigForm).map(([key, value])=>(
+                                        {Object.entries(addonConfigForm).map(([key, value]:[string, any])=>(
                                             <Form.Item key={key} label={<div className="font-w-600">{value.title}</div>}>
                                                 {(()=>{
                                                     switch(value.type){
                                                         case "text":
-                                                            return <Input placeholder={value.title} />;
+                                                            return <DefaultInput placeholder={value.title} />;
                                                         case "select":
                                                             const options = Object.entries(value.options).map(([key, value])=>{
                                                                 return {
-                                                                    label:value,
+                                                                    label:(value || "").toString(),
                                                                     value:key
                                                                 }
                                                             })
-                                                            return options && <Select value={config[key]} onChange={(value)=>{
+                                                            return options && <MySelect style={{height:"36px"}} value={config[key]} onChange={(value)=>{
                                                                 setConfig({...config,[key]:value})
                                                             }} placeholder={value.title} options={options} />
                                                         case "textarea":
-                                                            return <TextArea placeholder={value.title} />
+                                                            return <TextArea  placeholder={value.title} />
                                                     }
                                                 })()}
                                             </Form.Item>
@@ -251,8 +244,16 @@ function ManualCollectionDetail() {
                                 </div>
                             </Card>
                             <Flex justify="space-between">
-                                <DangerButton onClick={handleStop} text={"停用"} />
-                                <PrimaryButton onClick={submit} text={"更新"} />
+                                <DefaultDangerModal 
+                                    title="停用服务商" 
+                                    cancelText="取消" 
+                                    okText="确认停用" 
+                                    loading={loading}
+                                    removeFunc={()=>handleDisable()} 
+                                    content="停用后，网店客户将不可使用此服务商结账。"
+                                    tElement={<DangerButton text={"停用"} />} 
+                                />
+                                <PrimaryButton loading={loading} onClick={submit} text={"更新"} />
                             </Flex>
                         </div>
                     </div>

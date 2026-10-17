@@ -1,6 +1,6 @@
 import InputSearch from "@/components/Search/InputSearch";
 import { getCityList, getProvinceList } from "@/services/y2/apiAppstore";
-import baseInfoStore from "@/store/setUp/baseInfoStore";
+import base from "@/store/settings/base/base";
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Flex, Form, Input, Modal, Row, Select, Switch, Table, TableProps } from "antd";
 import { observer } from "mobx-react-lite";
@@ -111,7 +111,7 @@ function ShopOperationInformation() {
                         label="商品种类"
                         >
                         <DefaultSelect
-                            defaultValue={baseInfoStore.storeInfo.product_type}
+                            defaultValue={base.storeInfo.product_type}
                             style={{ width: 256 }}
                             options={[
                                 { value: '0', label: '全类目' },
@@ -127,8 +127,8 @@ function ShopOperationInformation() {
                                 { value: '10', label: '未填写' }
                             ]}
                             onChange={(e)=>{
-                                baseInfoStore.setStoreInfo({
-                                    ...baseInfoStore.storeInfo,
+                                base.setStoreInfo({
+                                    ...base.storeInfo,
                                     product_type:e
                                 })
                             }}
@@ -138,12 +138,12 @@ function ShopOperationInformation() {
                         label="经营所在地时区"
                     >
                         <DefaultSelect
-                            defaultValue={baseInfoStore.storeInfo.timezone}
+                            defaultValue={base.storeInfo.timezone}
                             style={{ width: 256 }}
                             options={timeZone}
                             onChange={(e)=>{
-                                baseInfoStore.setStoreInfo({
-                                    ...baseInfoStore.storeInfo,
+                                base.setStoreInfo({
+                                    ...base.storeInfo,
                                     timezone:e
                                 })
                             }}

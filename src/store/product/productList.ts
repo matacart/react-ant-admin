@@ -11,6 +11,7 @@ interface ConditionType{
     sortationId:string,
     startPrice:number,
     endPrice:number,
+    saleStoreHandles:number,
 }
 
 interface SortConditionType{
@@ -66,7 +67,8 @@ class ProductList {
         searchType: "",
         sortationId: "",
         startPrice: 0,
-        endPrice: 0
+        endPrice: 0,
+        saleStoreHandles:1
     }
 
     setCondition = (value: any) => {

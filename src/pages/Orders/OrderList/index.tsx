@@ -71,7 +71,9 @@ export default function Orders() {
 
 
   useEffect(() => {
-    orderList.reset();
+    return () => {
+      orderList.reset();
+    }
   }, []);
 
   return (

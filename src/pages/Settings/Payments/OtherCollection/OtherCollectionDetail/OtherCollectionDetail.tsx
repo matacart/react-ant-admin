@@ -12,6 +12,8 @@ import { observer } from "mobx-react-lite";
 import payments from "@/store/settings/payments/payments";
 import DefaultButton from "@/components/Button/DefaultButton";
 import LangSelect from "@/components/Select/LangSelect";
+import MyInput from "@/components/Input/MyInput";
+import MySelect from "@/components/Select/MySelect";
 
 // 新增类型定义
 interface FormItem {
@@ -153,12 +155,17 @@ function OtherCollectionDetail() {
                                                 {(()=>{
                                                     switch(value.type){
                                                         case "text":
-                                                            return <Input value={(payments.oldOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
-                                                                payments.setOldOtherCollection({
-                                                                    ...payments.oldOtherCollection,
-                                                                    ["config["+key+"]"]:e.target.value
-                                                                })
-                                                            }} />;
+                                                            return <MyInput 
+                                                                style={{height:"36px"}} 
+                                                                value={(payments.oldOtherCollection as Record<string, any>)["config["+key+"]"] || ""} 
+                                                                placeholder={value.title} 
+                                                                onChange={(e:any)=>{
+                                                                    payments.setOldOtherCollection({
+                                                                        ...payments.oldOtherCollection,
+                                                                        ["config["+key+"]"]:e.target.value
+                                                                    })
+                                                                }}
+                                                            />;
                                                         case "select":
                                                             const options = Object.entries(value.options || {}).map(([key, value])=>{
                                                                 return {
@@ -166,12 +173,18 @@ function OtherCollectionDetail() {
                                                                     value:key
                                                                 }
                                                             })
-                                                            return <Select value={(payments.oldOtherCollection as Record<string, any>)["config["+key+"]"] || null} placeholder={value.title} options={options} onChange={(value)=>{
-                                                                payments.setOldOtherCollection({
-                                                                    ...payments.oldOtherCollection,
-                                                                    ["config["+key+"]"]:value
-                                                                })
-                                                            }} />
+                                                            return <MySelect 
+                                                                style={{height:"36px"}}
+                                                                value={(payments.oldOtherCollection as Record<string, any>)["config["+key+"]"] || null} 
+                                                                placeholder={value.title} 
+                                                                options={options} 
+                                                                onChange={(value)=>{
+                                                                    payments.setOldOtherCollection({
+                                                                        ...payments.oldOtherCollection,
+                                                                        ["config["+key+"]"]:value
+                                                                    })
+                                                                }} 
+                                                            />
                                                         case "textarea":
                                                             return <TextArea placeholder={value.title} />
                                                         case "radio":
@@ -195,7 +208,7 @@ function OtherCollectionDetail() {
                                             </Form.Item>
                                         ))}
                                         <Form.Item label={<div className="font-w-600">自定义标题</div>}>
-                                            <Input value={payments.oldOtherCollection.title} onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} value={payments.oldOtherCollection.title} onChange={(e)=>{
                                                 payments.setOldOtherCollection({
                                                     ...payments.oldOtherCollection,
                                                     title:e.target.value
@@ -219,7 +232,7 @@ function OtherCollectionDetail() {
                                             }} />
                                         </Form.Item>
                                         <Form.Item label={<div className="font-w-600">排序</div>}>
-                                            <Input value={payments.oldOtherCollection.sort} onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} value={payments.oldOtherCollection.sort} onChange={(e)=>{
                                                 payments.setOldOtherCollection({
                                                     ...payments.oldOtherCollection,
                                                     sort:e.target.value

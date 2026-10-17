@@ -333,8 +333,31 @@ export async function getMarketPriceRule(options:{
 export async function getMarketProductList(options:{
   languages_id:string,
   marketId:string,
+  pageNum:number,
+  pageSize:number,
 }){
   const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/product_list_v2`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options,
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+
+// 修改商品定价
+export async function modifyMarketProductPrice(options:{
+  languages_id:string,
+  marketId:string,
+  baseCurrency:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/price_modify_v2`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -345,5 +368,123 @@ export async function getMarketProductList(options:{
     }
   })
   if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 批量排除/包含商品
+export async function excludeMarketProductBatch(options:{
+  languages_id:string,
+  marketId:string,
+  excludedProductIds:string,
+  includedProductIds:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/product_excluded_batch`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 市场库存配置
+export async function getMarketInventory(options:{
+  languages_id:string,
+  marketId:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/stock_rule_query`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 库存地点
+export async function getInventoryLocationList(options:{
+  languages_id:string,
+  marketId:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/stock_location_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 更新库存配置
+export async function updateMarketInventory(options:{
+  languages_id:string,
+  marketId:string,
+  status:number,
+  locationIds:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/stock_rule_save`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 市场配送配置
+export async function getMarketDelivery(options:{
+  languages_id:string,
+  marketId:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/delivery_query`,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 市场收款方式配置
+export async function getMarketPayment(options:{
+  languages_id:string,
+  marketId:string,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/payment_v2`,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != 0) errHandle(res);
   return res;
 }

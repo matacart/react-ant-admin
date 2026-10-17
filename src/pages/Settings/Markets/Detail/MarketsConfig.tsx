@@ -31,19 +31,19 @@ function MarketsConfig() {
                 title: '库存',
                 icon: InventoryIcon,
                 info: "管理你的多市场库存",
-                url: ``,
+                url: `/settings/markets/inventory/${marketsInfo.marketsInfo.marketId}/${marketsInfo.languagesId}`,
             },
             {
                 title: '发货',
                 icon: NavShippingIcon,
                 info: marketsInfo.marketsInfo.deliveryStatistic.deliveryPlanNum == 0 ? "暂无发货方案" : `${marketsInfo.marketsInfo.deliveryStatistic.deliveryPlanNum}组方案`,
-                url: ``,
+                url: `/settings/markets/shipping/${marketsInfo.marketsInfo.marketId}/${marketsInfo.languagesId}`,
             },
             {
                 title: '支付',
                 icon: PayIcon,
                 info: "管理客户在该市场下可用的支付方式",
-                url: ``,
+                url: `/settings/markets/payments/${marketsInfo.marketsInfo.marketId}/${marketsInfo.languagesId}`,
             }
         ]
 
@@ -56,7 +56,7 @@ function MarketsConfig() {
             <div className='font-12 color-7A8499'>仅管理你的商店在此市场中的客户体验</div>
             <div>
                 {list.map((item, index) => (
-                    <Flex key={index} className='item' justify='space-between' align='center' onClick={() => item?.url && history.push(item.url)}>
+                    <Flex key={index} className='item' justify='space-between' align='center'>
                         <Flex align='center'>
                             <Flex className='item-img-box' align='center' justify='center'>
                                 <item.icon />
@@ -66,7 +66,7 @@ function MarketsConfig() {
                                 <div className='font-12 color-474F5E'>{item.info}</div>
                             </Flex>
                         </Flex>
-                        <DefaultButton text='编辑' />
+                        <DefaultButton text='编辑' onClick={() => item?.url && history.push(item.url)} />
                     </Flex>
                 ))}
             </div>

@@ -7,7 +7,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 import { observer } from 'mobx-react-lite';
 import cookie from 'react-cookies';
-import { history,useParams } from '@umijs/max';
+import { history,useParams, useSearchParams } from '@umijs/max';
 import dayjs from "dayjs";
 import product from '@/store/product/product';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
@@ -229,7 +229,6 @@ function ProductDetail() {
             try {
                 newAdditonalImage = (JSON.parse(res.data?.additional_image || "[]") instanceof Array)?JSON.parse(res.data?.additional_image || "[]"):[]
             } catch (error) {
-                console.log(error)
                 newAdditonalImage = []
             }
             if(res.data?.product_image == ""){
@@ -244,7 +243,7 @@ function ProductDetail() {
                     ...productInfo,
                     start_time:(res.data?.start_time == "0" || res.data?.start_time == "")?"":dayjs(res.data?.start_time*1000).format("YYYY-MM-DD HH:mm:ss"),
                     end_time:(res.data?.end_time == "0" || res.data?.end_time == "")?"":dayjs(res.data?.end_time*1000).format("YYYY-MM-DD HH:mm:ss"),
-                    additional_image:[res.data?.product_image,"",...newAdditonalImage]
+                    additional_image:[res.data?.product_image,...newAdditonalImage]
                 })
             }
             product.setLanguageId(langId);
@@ -257,8 +256,10 @@ function ProductDetail() {
             // 属性映射 -- 收集所有输入值后调用父组件提供的回调函数
             const attributesMap = await transformAttributes(product.attributes,fetchOptions);
             product.setAttributesMap(attributesMap);
+        }).catch(()=>{
+        }).finally(()=>{
+            setIsSkeleton(false)
         });
-        setIsSkeleton(false)
     };
 
     // 表单验证

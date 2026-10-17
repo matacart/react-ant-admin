@@ -3,27 +3,16 @@ import { ArrowLeftOutlined, EnvironmentOutlined } from "@ant-design/icons"
 import { history } from "@umijs/max"
 import { Button, Card, Flex, Modal, Radio } from "antd"
 import styled from "styled-components"
-import AddWarehouseAddressModal from "./AddWarehouseAddressModal"
 import { useEffect, useState } from "react"
+import AddressModalV2 from "./AddressModalV2"
+import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 
 
-type RadioOptionType = {
-    label: string;
-    value: string | number;
-    disabled?: boolean;
-    style?: React.CSSProperties;
-}
+function Index() {
 
-const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    marginTop:"12px"
-};
+    const [refreshKey,setRefreshKey] = useState(true);
 
-function WarehouseAddress() {
-
-    const [openDefaultLocation,setOpenDefaultLocation] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true)
 
     const [warehouseAddressList,setWarehouseAddressList] = useState([])
 
@@ -37,12 +26,15 @@ function WarehouseAddress() {
         getAddWarehouseList().then(res=>{
             setWarehouseAddressList(res.data)
             setWarehouseAddressCount(Number(res.count) || 0)
-        }).catch(()=>{})
-    },[])
+        }).catch(()=>{
+        }).finally(()=>{
+            setIsSkeleton(false);
+        })
+    },[refreshKey])
  
     return (
         <Scoped>
-            <div className='mc-layout-wrap'>
+            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -69,7 +61,8 @@ function WarehouseAddress() {
                                             <div className="font-16 color-242833 font-w-600">可用地点</div>
                                             <div className="font-14 color-474F5E" style={{marginTop:"4px"}}>管理存放库存的位置、发货订单并销售产品，您已添加 {warehouseAddressCount}/100 个地点。</div>
                                         </div>
-                                        <AddWarehouseAddressModal/>
+                                        <AddressModalV2 onRefresh={()=>setRefreshKey(!refreshKey)} />
+                                        {/* <AddWarehouseAddressModal/> */}
                                     </Flex>
                                     {warehouseAddressList.map((item:any)=>{
                                         return (
@@ -90,7 +83,7 @@ function WarehouseAddress() {
                                     <div className="font-16 color-242833 font-w-600">默认地点</div>
                                     <div className="font-14 color-474F5E" style={{marginTop:"4px"}}>设置一个的地点，作为您在发货时和添加新商品时的默认地点</div>
                                     <div style={{marginTop:"12px"}}>
-                                        <Button onClick={()=>setOpenDefaultLocation(true)}>设置默认地点</Button>
+                                        {/* <Button onClick={()=>setOpenDefaultLocation(true)}>设置默认地点</Button> */}
                                     </div>
                                 </Card>
                                 
@@ -98,17 +91,16 @@ function WarehouseAddress() {
                                     <div className="font-16 color-242833 font-w-600">发货优先顺序</div>
                                     <div className="font-14 color-474F5E" style={{marginTop:"4px"}}>当有新订单时，将根据此地点优先级分配新订单</div>
                                     <div style={{marginTop:"12px"}}>
-                                        <Button>编辑发货顺序</Button>
+                                        {/* <Button>编辑发货顺序</Button> */}
                                     </div>
                                 </Card>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
+            </div>}
             {/* 设置默认地点 */}
-            <Modal
+            {/* <Modal
                 title="设置默认地点"
                 centered
                 open={openDefaultLocation}
@@ -124,11 +116,11 @@ function WarehouseAddress() {
                     style={style}
                 >
                 </Radio.Group>
-            </Modal>
+            </Modal> */}
         </Scoped>
     )
 }
-export default WarehouseAddress
+export default Index
 
 const Scoped = styled.div`
 .mc-layout-wrap{

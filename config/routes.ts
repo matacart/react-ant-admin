@@ -699,7 +699,7 @@ export default  [
       {
         path:"base",
         parentKeys: ['/settings'],
-        component:"./Settings/Base/Base"
+        component:"./Settings/Base/Index"
       },
       {
         path:"payments",
@@ -721,7 +721,7 @@ export default  [
       // -------------------
       {
         path:"payments/thirdCreditCard",
-        component:"./Settings/Payments/ThirdCreditCollection/ThirdCreditCollection"
+        component:"./Settings/Payments/ThirdCreditCollection/Index"
       },
       {
         path:"payments/thirdCreditCard/add",
@@ -741,7 +741,7 @@ export default  [
       },
       {
         path:"payments/other",
-        component:"./Settings/Payments/OtherCollection/OtherCollection"
+        component:"./Settings/Payments/OtherCollection/Index"
       },
       {
         path:"payments/other/add",
@@ -769,7 +769,7 @@ export default  [
       // 仓库地址
       {
         path:"location",
-        component:"./Settings/WarehouseAddress/WarehouseAddress"
+        component:"./Settings/WarehouseAddress/Index/Index"
       },
       {
         path:"location/detail/:id",
@@ -893,6 +893,18 @@ export default  [
         path:"markets/pricing/:marketId/:langId",
         component:"./Settings/Markets/ProductAndPricing/Index",
       },
+      {
+        path:"markets/inventory/:marketId/:langId",
+        component:"./Settings/Markets/Inventory/Index",
+      },
+      {
+        path:"markets/shipping/:marketId/:langId",
+        component:"./Settings/Markets/Shipping/Index",
+      },
+      {
+        path:"markets/payments/:marketId/:langId",
+        component:"./Settings/Markets/Payments/Index",
+      }
     ]
   },
   // 结账编辑器

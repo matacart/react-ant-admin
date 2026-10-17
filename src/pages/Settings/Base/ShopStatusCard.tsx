@@ -1,7 +1,7 @@
-import { Button, Card, Form, Input, Modal, Select, Switch, Table, TableProps } from "antd";
+import { Card, Form } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import baseInfoStore from "@/store/setUp/baseInfoStore"
+import base from "@/store/settings/base/base";
 import { observer } from "mobx-react-lite";
 import DefaultSelect from "@/components/Select/DefaultSelect";
 
@@ -19,10 +19,10 @@ function shopStatusCard() {
                         label="商店状态"
                         >
                         <DefaultSelect
-                            defaultValue={baseInfoStore.storeInfo.status}
+                            defaultValue={base.storeInfo.status}
                             style={{ width: 256 }}
-                            onChange={(value)=>baseInfoStore.setStoreInfo({
-                                ...baseInfoStore.storeInfo,
+                            onChange={(value)=>base.setStoreInfo({
+                                ...base.storeInfo,
                                 status:value
                             })}
                             options={[

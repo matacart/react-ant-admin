@@ -51,7 +51,7 @@ export function getPrecision() {
 export function getCurrencyAmount(currencyCode: string,amount:number) {
   const localStorageCurrencyList = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || "[]");
   const currencyObj = localStorageCurrencyList.find((item: any) => item.code === currencyCode);
-  const symbolLeft = currencyObj.symbol_left || "";
+  const symbolLeft = currencyObj?.symbol_left || "";
   const defaultCurrencyObj = currencyList.find((item: any) => item.currency_code === currencyCode);
   if(defaultCurrencyObj){
     const decimals = Math.log10(defaultCurrencyObj.amount_rule);

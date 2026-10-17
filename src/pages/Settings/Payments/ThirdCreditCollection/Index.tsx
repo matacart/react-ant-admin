@@ -7,8 +7,9 @@ import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import { getAddonsList } from "@/services/y2/apiAppstore";
 import cookie from 'react-cookies';
 import LangSelect from "@/components/Select/LangSelect";
+import DefaultTag from "@/components/Tag/DefaultTag";
 
-function ThirdCreditCollection() {
+function Index() {
 
     const [isSkeleton,setIsSkeleton] = useState(true)
 
@@ -66,6 +67,7 @@ function ThirdCreditCollection() {
                                             >
                                                 <Flex align="center">
                                                     <div style={{marginRight:"8px"}} className="font-w-600">{item.title}</div>
+                                                    {item?.status != 1 && <DefaultTag text="未启用" />}
                                                 </Flex>
                                                 <Flex>
                                                     <RightOutlined style={{marginLeft:8}} />
@@ -84,7 +86,7 @@ function ThirdCreditCollection() {
     )
 }
 
-export default ThirdCreditCollection
+export default Index
 
 const Scoped = styled.div`
 

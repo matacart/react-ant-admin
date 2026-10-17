@@ -7,6 +7,14 @@ export interface MarketLanguage {
     defaultLanguage: boolean;
 }
 
+
+export interface OtherInfo {
+    configType: number;
+    configValue: string;
+    marketType: number;
+    mainDomain: string;
+}
+
 class DomainAndLang{
     constructor() {
         makeAutoObservable(this)
@@ -18,14 +26,24 @@ class DomainAndLang{
         this.marketLanguageList = list;
     }
 
-    otherInfo:any = {};
-    setOtherInfo(info:any){
+    otherInfo:OtherInfo = {
+        configType: 1,
+        configValue:'',
+        marketType:1,
+        mainDomain:'',
+    };
+    setOtherInfo(info:OtherInfo){
         this.otherInfo = info;
     }
 
     reset(){
         this.marketLanguageList = [];
-        this.otherInfo = {};
+        this.otherInfo = {
+            configType: 1,
+            configValue:'',
+            marketType:1,
+            mainDomain:'',
+        };
     }
 
 }

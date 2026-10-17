@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import styled from "styled-components"
 import ProductSelect from "./ProductSelect"
 import ProductTable from "./ProductTable"
+import productAndPricing from "@/store/settings/markets/productAndPricing"
 
 
 const ProductCard = ()=>{
@@ -19,19 +20,19 @@ function ProductList() {
 
     const items = [
         {
-          label: <div>全部</div>,
+          label: <div>全部{productAndPricing.count>0 && `（${productAndPricing.count}）`}</div>,
           children: (<ProductCard/>),
           key: '1',
           closable: false,
         },
         {
-          label: <div>已包含</div>,
+          label: <div>已包含{productAndPricing.includedNum>0 && `（${productAndPricing.includedNum}）`}</div>,
           children:  (<ProductCard/>),
           key: '2',
           closable: false,
         },
         {
-          label: <div>已排除</div>,
+          label: <div>已排除{productAndPricing.excludedNum>0 && `（${productAndPricing.excludedNum}）`}</div>,
           children:  (<ProductCard/>),
           key: '3',
           closable: false,

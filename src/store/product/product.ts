@@ -15,7 +15,6 @@ export interface ProductType {
   status: string;
   ad_waf_status: string;
   template_id: string | undefined;
-
   cod_languages_id: string;
   cod_currency: string;
   cod_is_711_enabled: number;
@@ -27,6 +26,7 @@ export interface ProductType {
 
   is_share: string;
   is_sys: string;
+  data_scope: string;
   hosted_status: number;
   alliance_status: number;
   is_new: number;
@@ -148,6 +148,7 @@ class Product{
         productCategories: "",
         is_home: 0,
         is_bind: 1,
+        data_scope: "0",
         status: "1",
         ad_waf_status: "",
         template_id: "0",

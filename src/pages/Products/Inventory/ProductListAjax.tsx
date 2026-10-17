@@ -225,6 +225,7 @@ function ProductListAjax(selectProps:any) {
       status:productList.flag,
       alliance_status:productList.isAlliance,
       hosted_status:productList.isHosted,
+      saleStoreHandles:productList.condition.saleStoreHandles,
       // 条件
       condition:JSON.stringify(productList.condition)
     }).then(res=>{

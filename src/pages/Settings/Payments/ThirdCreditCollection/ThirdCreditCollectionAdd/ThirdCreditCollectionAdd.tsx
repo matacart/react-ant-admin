@@ -7,6 +7,8 @@ import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/apiAp
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import payments from "@/store/settings/payments/payments";
+import MyInput from "@/components/Input/MyInput";
+import MySelect from "@/components/Select/MySelect";
 
 // 修改FormItem接口增加value类型
 interface FormItem {
@@ -96,7 +98,7 @@ function ThirdCreditCollectionAdd() {
                                                 {(()=>{
                                                     switch(value.type){
                                                         case "text":
-                                                            return <Input defaultValue={(payments.newThirdCreditCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
+                                                            return <MyInput style={{height:"36px"}} defaultValue={(payments.newThirdCreditCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
                                                                 payments.setNewThirdCreditCollection({
                                                                     ...payments.newThirdCreditCollection,
                                                                     ["config["+key+"]"]:e.target.value
@@ -109,7 +111,7 @@ function ThirdCreditCollectionAdd() {
                                                                     value:key
                                                                 }
                                                             })
-                                                            return <Select defaultValue={(payments.newThirdCreditCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} options={options} onChange={(value)=>{
+                                                            return <MySelect style={{height:"36px"}} defaultValue={(payments.newThirdCreditCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} options={options} onChange={(value)=>{
                                                                 payments.setNewThirdCreditCollection({
                                                                     ...payments.newThirdCreditCollection,
                                                                     ["config["+key+"]"]:value
@@ -138,7 +140,7 @@ function ThirdCreditCollectionAdd() {
                                             </Form.Item>
                                         ))}
                                         <Form.Item label={<div className="font-w-600">自定义标题</div>}>
-                                            <Input placeholder="标题" onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} placeholder="标题" onChange={(e)=>{
                                                 payments.setNewThirdCreditCollection({
                                                     ...payments.newThirdCreditCollection,
                                                     title:e.target.value
@@ -162,7 +164,7 @@ function ThirdCreditCollectionAdd() {
                                             }} />
                                         </Form.Item>
                                         <Form.Item label={<div className="font-w-600">排序</div>}>
-                                            <Input defaultValue={payments.newThirdCreditCollection.sort} onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} defaultValue={payments.newThirdCreditCollection.sort} onChange={(e)=>{
                                                 payments.setNewThirdCreditCollection({
                                                     ...payments.newThirdCreditCollection,
                                                     sort:e.target.value

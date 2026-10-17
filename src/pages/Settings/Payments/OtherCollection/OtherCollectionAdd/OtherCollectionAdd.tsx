@@ -7,6 +7,8 @@ import { getAddonsConfigCreditCard, setAddonsConfigs } from "@/services/y2/apiAp
 import SkeletonCard from "@/components/Skeleton/SkeletonCard";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import payments from "@/store/settings/payments/payments";
+import MyInput from "@/components/Input/MyInput";
+import MySelect from "@/components/Select/MySelect";
 
 // 修改FormItem接口增加value类型
 interface FormItem {
@@ -98,7 +100,7 @@ function OtherCollectionAdd() {
                                                 {(()=>{
                                                     switch(value.type){
                                                         case "text":
-                                                            return <Input defaultValue={(payments.newOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
+                                                            return <MyInput style={{height:"36px"}} defaultValue={(payments.newOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} onChange={(e)=>{
                                                                 payments.setNewOtherCollection({
                                                                     ...payments.newOtherCollection,
                                                                     ["config["+key+"]"]:e.target.value
@@ -111,7 +113,7 @@ function OtherCollectionAdd() {
                                                                     value:key
                                                                 }
                                                             })
-                                                            return <Select defaultValue={(payments.newOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} options={options} onChange={(value)=>{
+                                                            return <MySelect style={{height:"36px"}} defaultValue={(payments.newOtherCollection as Record<string, any>)["config["+key+"]"] || ""} placeholder={value.title} options={options} onChange={(value)=>{
                                                                 payments.setNewOtherCollection({
                                                                     ...payments.newOtherCollection,
                                                                     ["config["+key+"]"]:value
@@ -140,7 +142,7 @@ function OtherCollectionAdd() {
                                             </Form.Item>
                                         ))}
                                         <Form.Item label={<div className="font-w-600">自定义标题</div>}>
-                                            <Input placeholder="标题" onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} placeholder="标题" onChange={(e)=>{
                                                 payments.setNewOtherCollection({
                                                     ...payments.newOtherCollection,
                                                     title:e.target.value
@@ -164,7 +166,7 @@ function OtherCollectionAdd() {
                                             }} />
                                         </Form.Item>
                                         <Form.Item label={<div className="font-w-600">排序</div>}>
-                                            <Input defaultValue={payments.newOtherCollection.sort} onChange={(e)=>{
+                                            <MyInput style={{height:"36px"}} defaultValue={payments.newOtherCollection.sort} onChange={(e)=>{
                                                 payments.setNewOtherCollection({
                                                     ...payments.newOtherCollection,
                                                     sort:e.target.value

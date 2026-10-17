@@ -9,6 +9,7 @@ import { observer } from "mobx-react-lite";
 import BaseCurrency from "./BaseCurrency";
 import productAndPricing from "@/store/settings/markets/productAndPricing";
 import ProductList from "./ProductList";
+import LangSelect from "@/components/Select/LangSelect";
 
 
 
@@ -33,19 +34,13 @@ function Index() {
                 languages_id:langId,
                 marketId:marketId,
             }),
-            getMarketProductList({
-                languages_id:langId,
-                marketId:marketId,
-            }),
-        ]).then(([marketDetail,priceRule,productList])=>{
+        ]).then(([marketDetail,priceRule])=>{
+            marketDetail.status == "fulfilled" && productAndPricing.setMarketDetail(marketDetail.value.data);
             priceRule.status == "fulfilled" && productAndPricing.setPriceRule(priceRule.value.data);
         }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false);
         })
-        return ()=>{
-            // domainAndLang.reset();
-        }
-    }, [])
+    }, [langId])
 
     return (
             <Scoped>
@@ -58,9 +53,9 @@ function Index() {
                                 </div>
                                 <div className="mc-header-left-content">{"商品与定价"}</div>
                             </Flex>
-                            {/* <Flex gap={12}>
-                                <LangSelect lang={markets.languagesId} setLang={(lang:string)=>markets.setLanguagesId(lang)} />    
-                            </Flex> */}
+                            <Flex gap={12}>
+                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/pricing/${marketId}/${lang}`)} />    
+                            </Flex>
                         </div>
                         {/* 主要内容 */}
                         <Flex gap={20} vertical>

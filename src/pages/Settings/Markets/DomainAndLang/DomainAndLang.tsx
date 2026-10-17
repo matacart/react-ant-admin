@@ -33,7 +33,7 @@ function DomainAndLang() {
         updateMarketLanguage({
             languages_id:langId,
             marketId:marketId,
-            configType:domainAndLang.otherInfo.configType,
+            configType:domainAndLang.otherInfo.configType.toString(),
             configValue:domainAndLang.otherInfo.configValue,
             marketLanguageList:JSON.stringify(marketLanguageList),
         }).then(()=>{
