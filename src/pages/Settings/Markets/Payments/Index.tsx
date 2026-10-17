@@ -37,19 +37,23 @@ function Index() {
             <Scoped>
                 {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">
                     <div className="mc-layout">
-                        <div className="mc-header">
+                        <Flex className="mc-header" justify="space-between">
                             <Flex className="mc-header-left">
                                 <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className="mc-header-left-content">{"支付"}</div>
+                                <div style={{marginLeft:"12px"}}>
+                                    <div className="font-20">{"支付"}</div>
+                                    <div style={{marginTop:"4px"}} className="font-12 font-w-400">管理市场下各个国家/地区可使用的支付方式及支付货币。如需添加更多支付方式，可前往<a onClick={()=>history.push("/settings/payments")}>收款设置</a>。</div>
+                                </div>
                             </Flex>
-                            <Flex gap={12}>
-                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/inventory/${marketId}/${lang}`)} />    
+                            <Flex gap={12} align="flex-start">
+                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/payments/${marketId}/${lang}`)} />    
                             </Flex>
-                        </div>
+                        </Flex>
                         {/* 主要内容 */}
                         <Flex gap={20} vertical>
+                            
                         </Flex>
                     </div>
                 </Flex>}
@@ -66,13 +70,8 @@ const Scoped = styled.div`
             margin: 0 auto;
             .mc-header {
                 color: rgb(36, 40, 51);
-                font-size: 30px;
-                height: 42px;
                 font-weight: bold;
                 margin: 8px 0px 24px;
-                display: flex;
-                justify-content: space-between;
-                align-content: center;
                 .mc-header-left-secondary {
                     height: 32px;
                     width: 32px;
@@ -88,10 +87,6 @@ const Scoped = styled.div`
                     &-icon {
                         font-size: 18px;
                     }
-                }
-                .mc-header-left-content {
-                    margin-left: 12px;
-                    font-size: 20px;
                 }
             }
             .submit-btn {

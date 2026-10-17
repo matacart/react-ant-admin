@@ -616,7 +616,7 @@ export async function delAddonsConfig(options:{
   return res;
 }
 
-// 收款 --手动收款方式 addons_id:23  -- 所有/详细
+// 收款 --手动收款方式 addons_id:85030669
 export async function getAddonsConfigs(langId:string,id?:string,) {
   const res = await request<ApiAppstore.Default>("/ApiAppstore/addons_config_get", {
     method: 'POST',
@@ -702,7 +702,7 @@ export async function setAddonsConfig(options:any) {
     data:{
       domain_id: cookie.load("domain")?.id,
       languages_id:"2",
-      addons_id:"23",
+      addons_id:"85030669",
       title:options.title,
       "config[isAddressRequired]":options.config.isAddressRequired,
       "config[isUploadCredentials]":options.config.isUploadCredentials,

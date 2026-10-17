@@ -66,19 +66,14 @@ export default function Create() {
             default_currency:form.getFieldsValue().currencie,
             merchant_email:form.getFieldsValue().email,
         }).then(async res=>{
-            switch(res.code){
-                case 0:
-                    await sleep(2000);
-                    message.success("创建成功");
-                    history.push(`/stores/list`);
-                    globalStore.setHeadRefresh(!globalStore.headRefresh);
-                    break;
-                case 201:
-                    message.error(res.msg);
-                    break;
-            }
+            await sleep(2000);
+            message.success("创建成功");
+            history.push(`/stores/list`);
+            globalStore.setHeadRefresh(!globalStore.headRefresh);
+        }).catch(()=>{
+        }).finally(()=>{
             setLoading(false)
-        }).catch(()=>{})
+        })
     }
     return (
         <Scoped>
