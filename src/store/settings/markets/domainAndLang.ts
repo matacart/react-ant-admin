@@ -7,12 +7,19 @@ export interface MarketLanguage {
     defaultLanguage: boolean;
 }
 
+interface CountryType {
+    countryCnName: string;
+    countryCode: string;
+    currencyCode: string;
+}
+
 
 export interface OtherInfo {
     configType: number;
     configValue: string;
     marketType: number;
     mainDomain: string;
+    countryInfoList:CountryType[]
 }
 
 class DomainAndLang{
@@ -31,6 +38,7 @@ class DomainAndLang{
         configValue:'',
         marketType:1,
         mainDomain:'',
+        countryInfoList:[]
     };
     setOtherInfo(info:OtherInfo){
         this.otherInfo = info;
@@ -43,6 +51,7 @@ class DomainAndLang{
             configValue:'',
             marketType:1,
             mainDomain:'',
+            countryInfoList:[]
         };
     }
 

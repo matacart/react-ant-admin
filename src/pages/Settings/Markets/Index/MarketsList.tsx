@@ -6,14 +6,14 @@ import { history } from "@umijs/max";
 import { Card, Flex, List } from "antd"
 import { observer } from "mobx-react-lite";
 
-function MarketsList() {
 
-    const names = (list:any[])=>{
-        const nameList = list.map(item => item.name || "");
-        const otherNum = nameList.length - 2;
-        return nameList.slice(0, 2).join("、") + (otherNum > 0 ? `和其它${otherNum}个国家` : "");
-        
-    }
+export const names = (list:any[])=>{
+    const nameList = list.map(item => item.name || "");
+    const otherNum = nameList.length - 2;
+    return nameList.slice(0, 2).join("、") + (otherNum > 0 ? `和其它${otherNum}个国家` : "");
+}
+
+function MarketsList() {
 
     const handleClick = (item:MarketType) => {
         history.push(`/settings/markets/${item.marketId}/${marketsList.languagesId}`)
@@ -62,10 +62,11 @@ function MarketsList() {
                                             </div>
                                         </div>
                                         <div style={{marginLeft:28}}>
-                                            <div className="font-16 color-242833 font-w-600">{item.marketName}</div>
-                                        </div>
-                                        <div>
-                                            <span className="item-tag">主要市场</span>
+                                            <Flex align="center">
+                                                <div className="font-16 color-242833 font-w-600">{item.marketName}</div>
+                                                <span className="item-tag">主要市场</span>
+                                            </Flex>
+                                            <div className="font-12 color-474F5E">{names(item.countryList)}</div>
                                         </div>
                                     </Flex>
                                     <Flex className="item-right" align="center">
@@ -101,7 +102,7 @@ function MarketsList() {
                                                 <div className="font-16 color-242833 font-w-600">{item.marketName}</div>
                                                 {!item.active && <span className="item-tag">已禁用</span>}
                                             </Flex>
-                                            <div className="font-14 color-474F5E">{names(item.countryList)}</div>
+                                            <div className="font-12 color-474F5E">{names(item.countryList)}</div>
                                         </div>
                                     </Flex>
                                     <Flex className="item-right" align="center">

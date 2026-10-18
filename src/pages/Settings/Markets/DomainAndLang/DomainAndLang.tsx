@@ -9,8 +9,14 @@ import DomainCard from "./DomainCard";
 import LangCard from "./LangCard";
 import { getMarketConfigV2, updateMarketLanguage } from "@/services/y2/apiSaleMarket";
 import domainAndLang from "@/store/settings/markets/domainAndLang";
+import LangSelect from "@/components/Select/LangSelect";
 
 
+const names = (list:any[])=>{
+    const nameList = list.map(item => item.countryCnName || "");
+    const otherNum = nameList.length - 2;
+    return nameList.slice(0, 2).join("、") + (otherNum > 0 ? `和其它${otherNum}个国家` : "");
+}
 
 function DomainAndLang() {
 
@@ -65,17 +71,20 @@ function DomainAndLang() {
             <Scoped>
                 {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">
                     <div className="mc-layout">
-                        <div className="mc-header">
+                        <Flex className="mc-header" justify="space-between">
                             <Flex className="mc-header-left">
                                 <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className="mc-header-left-content">{"域名和语言"}</div>
+                                <div style={{marginLeft:"12px"}}>
+                                    <div className="font-20 font-w-500">{"域名和语言"}</div>
+                                    <div style={{marginTop:"4px"}} className="font-12 font-w-400">{names(domainAndLang.otherInfo?.countryInfoList || [])}</div>
+                                </div>
                             </Flex>
-                            {/* <Flex gap={12}>
-                                <LangSelect lang={markets.languagesId} setLang={(lang:string)=>markets.setLanguagesId(lang)} />    
-                            </Flex> */}
-                        </div>
+                            <Flex align="center">
+                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/domainAndLang/${marketId}/${lang}`)} />    
+                            </Flex>
+                        </Flex>
                         {/* 主要内容 */}
                         <Flex gap={20} vertical>
                             <DomainCard />
@@ -99,13 +108,7 @@ const Scoped = styled.div`
             margin: 0 auto;
             .mc-header {
                 color: rgb(36, 40, 51);
-                font-size: 30px;
-                height: 42px;
-                font-weight: bold;
                 margin: 8px 0px 24px;
-                display: flex;
-                justify-content: space-between;
-                align-content: center;
                 .mc-header-left-secondary {
                     height: 32px;
                     width: 32px;

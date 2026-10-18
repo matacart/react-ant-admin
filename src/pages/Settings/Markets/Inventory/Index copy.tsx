@@ -4,13 +4,19 @@ import { history, useParams } from "@umijs/max";
 import { App, Flex } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMarketDetail, getMarketPriceRule, getMarketProductList } from "@/services/y2/apiSaleMarket";
+import { getInventoryLocationList, getMarketDetail, getMarketInventory, getMarketPriceRule, getMarketProductList, updateMarketInventory } from "@/services/y2/apiSaleMarket";
 import { observer } from "mobx-react-lite";
-import BaseCurrency from "./BaseCurrency";
-import productAndPricing from "@/store/settings/markets/productAndPricing";
-import ProductList from "./ProductList";
 import LangSelect from "@/components/Select/LangSelect";
+import InventoryCard from "./InventoryCard";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import inventory from "@/store/settings/markets/inventory";
+import LocationList from "./LocationList";
 
+
+export interface InventoryLocation{
+    locationId:string,
+    locationName:string,
+}
 
 
 function Index() {
@@ -23,33 +29,40 @@ function Index() {
 
     const [loading, setLoading] = useState(false);
 
+    const [inventoryLocationList, setInventoryLocationList] = useState<InventoryLocation[]>([]);
+
+    const submit = () => {
+        if(inventory.inventoryConfig.status == 1 && inventoryLocationList.length == 0){
+            message.error("请选择指定库存地点");
+            return;
+        }
+        setLoading(true);
+        updateMarketInventory({
+            languages_id:langId,
+            marketId:marketId,
+            status:inventory.inventoryConfig.status,
+            locationIds:JSON.stringify(inventory.inventoryConfig?.locationIds || []),
+        }).then(()=>{
+            message.success("更新成功");
+        }).catch(()=>{}).finally(()=>{
+            setLoading(false);
+        })
+    }
+
     // 初始化数据
     useEffect(() => {
         Promise.allSettled([
-            getMarketDetail({
-                market_id:marketId,
-                languages_id:langId,
-            }),
-            getMarketPriceRule({
+            getMarketInventory({
                 languages_id:langId,
                 marketId:marketId,
             }),
-            // getMarketProductList({
-            //     languages_id:langId,
-            //     marketId:marketId,
-            //     pageNum:1,
-            //     pageSize:10,
-            // }),
-        ]).then(([marketDetail,priceRule,productList])=>{
-            marketDetail.status == "fulfilled" && productAndPricing.setMarketDetail(marketDetail.value.data);
-            priceRule.status == "fulfilled" && productAndPricing.setPriceRule(priceRule.value.data);
-            // if (productList.status == 'fulfilled') {
-            //     const { list, total, excludedNum, includedNum } = productList.value.data
-            //     productAndPricing.setProductList(list)
-            //     productAndPricing.setCount(total)
-            //     productAndPricing.setExcludedNum(excludedNum)
-            //     productAndPricing.setIncludedNum(includedNum)
-            // }
+            getInventoryLocationList({
+                languages_id:langId,
+                marketId:marketId,
+            }),
+        ]).then(([marketInventory,inventoryLocationList])=>{
+            marketInventory.status == "fulfilled" && inventory.setInventoryConfig(marketInventory.value.data || {});
+            inventoryLocationList.status == "fulfilled" && setInventoryLocationList(inventoryLocationList.value.data?.locationList || []);
         }).catch(()=>{}).finally(()=>{
             setIsSkeleton(false);
         })
@@ -64,16 +77,19 @@ function Index() {
                                 <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className="mc-header-left-content">{"商品与定价"}</div>
+                                <div className="mc-header-left-content">{"库存"}</div>
                             </Flex>
                             <Flex gap={12}>
-                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/pricing/${marketId}/${lang}`)} />    
+                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/inventory/${marketId}/${lang}`)} />    
                             </Flex>
                         </div>
                         {/* 主要内容 */}
                         <Flex gap={20} vertical>
-                            <BaseCurrency />
-                            <ProductList />
+                            <InventoryCard />
+                            {inventory.inventoryConfig.status == 1 && <LocationList inventoryLocationList={inventoryLocationList} /> }
+                        </Flex>
+                        <Flex justify="right" className="submit-btn">
+                            <PrimaryButton loading={loading} text="更新" onClick={submit}  />
                         </Flex>
                     </div>
                 </Flex>}

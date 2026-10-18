@@ -30,6 +30,7 @@ class Markets {
         this.marketName = value;
     }
 
+    // 国家列表
     countryList:Country[] = [];
     setCountryList(value:Country[]){
         this.countryList = value;

@@ -1,11 +1,12 @@
 import DefaultButton from "@/components/Button/DefaultButton";
 import PrimaryButton from "@/components/Button/PrimaryButton";
 import MyInput from "@/components/Input/MyInput";
+import { useSleep } from "@/hooks/customHooks";
 import { getMarketCountry, modifyMarketCountry } from "@/services/y2/apiSaleMarket";
 import marketsInfo from "@/store/settings/markets/marketsInfo";
 import { groupToTree } from "@/utils/dataStructure";
 import { useParams } from "@umijs/max";
-import { Flex, Modal, Radio, Tree, TreeDataNode, TreeProps } from "antd";
+import { App, Flex, Modal, Radio, Tree, TreeDataNode, TreeProps } from "antd";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
@@ -15,9 +16,15 @@ function MarketsEdit() {
     
     const scopedRef = useRef<HTMLDivElement>(null);
 
+    const sleep = useSleep();
+
     const {marketId="", langId=""} = useParams();
 
     const [loading, setLoading] = useState(false);
+
+    const [btnLoading, setBtnLoading] = useState(false);
+
+    const { message } = App.useApp();
 
     const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
@@ -67,14 +74,20 @@ function MarketsEdit() {
     }
 
     const submit = ()=>{
+        setBtnLoading(true);
         modifyMarketCountry({
             languages_id:langId,
             marketId:marketId,
             marketName:marketsInfo.marketsInfo.marketName || "",
             countryCodeList:JSON.stringify([selectedKeys]),
-        }).then(()=>{
+        }).then(async ()=>{
+            await sleep(2000);
+            message.success("成功");
+            marketsInfo.refresh();
+            setOpen(false);
         }).catch(()=>{
         }).finally(()=>{
+            setBtnLoading(false);
         })
     }
 
@@ -84,8 +97,8 @@ function MarketsEdit() {
             <DefaultButton onClick={init} text="编辑" />
             <Modal open={open} onCancel={() => setOpen(false)} getContainer={()=>scopedRef.current!} title="选择国家/地区" loading={loading} width={620} centered footer={()=><>
                 <Flex justify="flex-end" gap={12}>
-                    <DefaultButton onClick={() => setOpen(false)} text="取消" />
-                    <PrimaryButton onClick={submit} text="确定" />
+                    <DefaultButton loading={btnLoading} onClick={() => setOpen(false)} text="取消" />
+                    <PrimaryButton loading={btnLoading} onClick={submit} text="确定" />
                 </Flex>
             </>}>
                 <MyInput placeholder="请输入国家/地区" style={{ height:"36px",marginTop:"12px" }} />

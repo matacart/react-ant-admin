@@ -72,17 +72,20 @@ function Index() {
             <Scoped>
                 {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">
                     <div className="mc-layout">
-                        <div className="mc-header">
+                        <Flex className="mc-header" justify="space-between">
                             <Flex className="mc-header-left">
                                 <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className="mc-header-left-content">{"库存"}</div>
+                                <div style={{marginLeft:"12px"}}>
+                                    <div className="font-20 font-w-500">{"库存"}</div>
+                                    {/* <div style={{marginTop:"4px"}} className="font-12 font-w-400">{names(domainAndLang.otherInfo?.countryInfoList || [])}</div> */}
+                                </div>
                             </Flex>
-                            <Flex gap={12}>
+                            <Flex align="center">
                                 <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/inventory/${marketId}/${lang}`)} />    
                             </Flex>
-                        </div>
+                        </Flex>
                         {/* 主要内容 */}
                         <Flex gap={20} vertical>
                             <InventoryCard />
@@ -106,13 +109,7 @@ const Scoped = styled.div`
             margin: 0 auto;
             .mc-header {
                 color: rgb(36, 40, 51);
-                font-size: 30px;
-                height: 42px;
-                font-weight: bold;
                 margin: 8px 0px 24px;
-                display: flex;
-                justify-content: space-between;
-                align-content: center;
                 .mc-header-left-secondary {
                     height: 32px;
                     width: 32px;

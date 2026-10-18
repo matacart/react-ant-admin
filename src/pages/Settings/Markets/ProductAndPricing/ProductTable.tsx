@@ -12,6 +12,8 @@ function ProductTable() {
 
     const { marketId="", langId="" } = useParams();
 
+    const [loadingKeys, setLoadingKeys] = useState<Set<string>>(new Set());
+
     const [data,setData] = useState<Product[]>([]);
 
     const [pagination,setPagination] = useState({
@@ -34,12 +36,32 @@ function ProductTable() {
                     <Flex align="center" gap={8}>
                         <Switch
                             checked={!value}
+                            loading={loadingKeys.has(record.productId)}
                             onChange={(checked)=>{
+                                if(loadingKeys.has(record.productId)){
+                                    return;
+                                }
+                                setLoadingKeys((prev) => new Set(prev).add(record.productId));
                                 excludeMarketProductBatch({
                                     languages_id:langId,
                                     marketId:marketId,
                                     excludedProductIds:checked?"":JSON.stringify([record.productId]),
                                     includedProductIds:checked?JSON.stringify([record.productId]):"",
+                                }).then(()=>{
+                                    const next = [...data];
+                                    next.forEach((item)=>{
+                                        if(item.productId == record.productId){
+                                            item.excluded = !checked;
+                                        }
+                                    })
+                                    setData(next);
+                                }).catch(()=>{
+                                }).finally(()=>{
+                                    setLoadingKeys((prev) => {
+                                        const next = new Set(prev);
+                                        next.delete(record.productId);
+                                        return next;
+                                    });
                                 })
                             }}
                         />

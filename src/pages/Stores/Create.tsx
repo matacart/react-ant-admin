@@ -38,6 +38,7 @@ export default function Create() {
             return {
                 value: item.country_id,
                 label: item.country_name,
+                codes:item.codes,
                 iso_code_2:item.iso_code_2,
                 iso_code_3:item.iso_code_3,
             }
@@ -55,16 +56,18 @@ export default function Create() {
     },[])
 
     const createStoreFinish = ()=>{
+        const values = form.getFieldsValue(true);
         setLoading(true);
         createStore({
             languages_id:"2",
             default_lang:"en-us",
-            country_name:form.getFieldsValue().country,
-            store_name:form.getFieldsValue().name,
-            handle:form.getFieldsValue().handle,
-            domain_primary:`${form.getFieldsValue().handle}.${previewDomain}`,
-            default_currency:form.getFieldsValue().currencie,
-            merchant_email:form.getFieldsValue().email,
+            country_name:values.countryId,
+            country_code:values.countryCode,
+            store_name:values.name,
+            handle:values.handle,
+            domain_primary:`${values.handle}.${previewDomain}`,
+            default_currency:values.currencie,
+            merchant_email:values.email,
         }).then(async res=>{
             await sleep(2000);
             message.success("创建成功");
@@ -139,9 +142,10 @@ export default function Create() {
                             </div>
                             {/* 选择国家 */}
                             <div className='form-item-box'>
-                                <Form.Item name="country" rules={[{ required: true, message: '请选择国家' }]}>
-                                    <DefaultSelect style={{width:"480px",height:"36px"}} placeholder={"国家"} options={countryList} onChange={(value)=>{
-                                        form.setFieldValue("country",value)
+                                <Form.Item name="countryId" rules={[{ required: true, message: '请选择国家' }]}>
+                                    <DefaultSelect style={{width:"480px",height:"36px"}} placeholder={"国家"} options={countryList} onChange={(value,options:any)=>{
+                                        form.setFieldValue("countryId",value)
+                                        form.setFieldValue("countryCode",options?.iso_code_2)
                                     }} />
                                 </Form.Item>
                             </div>

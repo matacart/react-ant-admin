@@ -10,8 +10,7 @@ import BaseCurrency from "./BaseCurrency";
 import productAndPricing from "@/store/settings/markets/productAndPricing";
 import ProductList from "./ProductList";
 import LangSelect from "@/components/Select/LangSelect";
-
-
+import { names } from "../Index/MarketsList";
 
 function Index() {
 
@@ -46,17 +45,20 @@ function Index() {
             <Scoped>
                 {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">
                     <div className="mc-layout">
-                        <div className="mc-header">
+                        <Flex className="mc-header" justify="space-between">
                             <Flex className="mc-header-left">
                                 <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
                                     <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                                 </div>
-                                <div className="mc-header-left-content">{"商品与定价"}</div>
+                                <div style={{marginLeft:"12px"}}>
+                                    <div className="font-20 font-w-500">{"商品与定价"}</div>
+                                    <div style={{marginTop:"4px"}} className="font-12 font-w-400">{names(productAndPricing.marketDetail?.countryList || [])}</div>
+                                </div>
                             </Flex>
                             <Flex gap={12}>
                                 <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/pricing/${marketId}/${lang}`)} />    
                             </Flex>
-                        </div>
+                        </Flex>
                         {/* 主要内容 */}
                         <Flex gap={20} vertical>
                             <BaseCurrency />
@@ -77,13 +79,7 @@ const Scoped = styled.div`
             margin: 0 auto;
             .mc-header {
                 color: rgb(36, 40, 51);
-                font-size: 30px;
-                height: 42px;
-                font-weight: bold;
                 margin: 8px 0px 24px;
-                display: flex;
-                justify-content: space-between;
-                align-content: center;
                 .mc-header-left-secondary {
                     height: 32px;
                     width: 32px;

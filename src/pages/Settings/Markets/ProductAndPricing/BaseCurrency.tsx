@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BaseCurrencyItem from "./BaseCurrencyItem";
+import PriceChangeItem from "./PriceChangeItem";
 
 function BaseCurrency() {
 
@@ -25,13 +26,12 @@ function BaseCurrency() {
                     <div className="item">
                         <BaseCurrencyItem />
                     </div>
-                    <div className="item">
+                    {(productAndPricing.priceRule.baseCurrency !== productAndPricing.priceRule.storeCurrency) &&<div className="item">
                         <div className="font-w-500 title">汇率策略</div>
                         <DefaultSelect value={productAndPricing.priceRule.storeCurrency} options={options} style={{width:"100%"}} />
-                    </div>
+                    </div>}
                     <div className="item">
-                        <div className="font-w-500 title">价格调整</div>
-                        <DefaultSelect value={productAndPricing.priceRule.storeCurrency} options={options} style={{width:"100%"}} />
+                        <PriceChangeItem />
                     </div>
                 </Flex>
                 <div style={{marginTop:"12px"}}>

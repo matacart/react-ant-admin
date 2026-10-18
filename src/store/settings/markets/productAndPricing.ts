@@ -1,11 +1,14 @@
 import { makeAutoObservable } from "mobx";
 import cookie from 'react-cookies';
+import { CountryType, MarketsInfoType } from "./marketsInfo";
 
 
 interface PriceRule {
     baseCurrency: string;
     storeCurrency: string;
     useLocalCurrency: boolean;
+    downAdjust:boolean;
+    priceAdjustRate:number;
 }
 
 
@@ -34,6 +37,7 @@ export interface ProductPriceExchange {
 
 export interface MarketDetail {
     homeMarket: string;
+    countryList:CountryType[],
 }
 
 
@@ -42,18 +46,38 @@ class ProductAndPricing{
         makeAutoObservable(this)
     }
 
-    marketDetail:MarketDetail = {
-        homeMarket: ""
+    marketDetail:MarketsInfoType = {
+        marketId: "",
+        marketName: "",
+        homeMarket: false,
+        active: false,
+        storeCurrency: "",
+        domainLanguage: {
+            mainDomain: "",
+            marketLanguageList: [] 
+        },
+        deliveryStatistic: {
+            deliveryPlanNum: 0
+        },
+        priceRuleInfo: {
+            baseCurrency: "",
+            autoExchangeRate: 0,
+            autoExchangeUpdateTime: ""
+        },
+        countryList: [],
+        urlPreview: []
     };
     
-    setMarketDetail(detail:MarketDetail){
+    setMarketDetail(detail:MarketsInfoType){
         this.marketDetail = detail;
     }
 
     priceRule:PriceRule = {
         baseCurrency: "",
         storeCurrency: "",
-        useLocalCurrency: false
+        useLocalCurrency: false,
+        downAdjust:false,
+        priceAdjustRate:0,
     };
 
     setPriceRule(rule:PriceRule){

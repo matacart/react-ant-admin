@@ -1,10 +1,11 @@
 import DefaultButton from '@/components/Button/DefaultButton';
 import { DomainLangIcon, InventoryIcon, NavShippingIcon, PayIcon, ProductIcon, ReceiveGoodsIcon } from '@/components/Icons/Icons';
 import marketsInfo from '@/store/settings/markets/marketsInfo';
-import { history } from '@umijs/max';
 import { Card, Flex } from 'antd';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { history } from '@umijs/max';
+import { observer } from 'mobx-react-lite';
 
 function MarketsConfig() {
 
@@ -12,7 +13,7 @@ function MarketsConfig() {
     
     useEffect(() => {
 
-        const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || "[]").find((item: any) => item.code == marketsInfo.marketsInfo.storeCurrency)
+        const currencies = JSON.parse(localStorage.getItem("MC_DATA_CURRENCIES") || "[]").find((item: any) => item.code == marketsInfo.marketsInfo.priceRuleInfo?.baseCurrency)
 
         const list = [
             {
@@ -88,4 +89,4 @@ const MyCard = styled(Card)`
     }
 `
 
-export default MarketsConfig
+export default observer(MarketsConfig)

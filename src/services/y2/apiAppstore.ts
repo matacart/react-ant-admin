@@ -405,6 +405,7 @@ export async function setStoreInfo(options:any){
 export async function createStore(options:{
   languages_id:string,
   country_name:string,
+  country_code:string,
   store_name:string,
   handle:string,
   domain_primary:string,

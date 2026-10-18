@@ -13,6 +13,11 @@ interface UrlType{
     url:string,
 }
 
+export interface CountryType{
+    code:string,
+    name:string,
+}
+
 export interface MarketsInfoType {
     marketId:string,
     marketName:string,
@@ -23,6 +28,12 @@ export interface MarketsInfoType {
     deliveryStatistic:{
         deliveryPlanNum:number,
     }
+    priceRuleInfo:{
+        baseCurrency:string,
+        autoExchangeRate:number,
+        autoExchangeUpdateTime:string
+    }
+    countryList:CountryType[],
     urlPreview:UrlType[]
 }
 
@@ -38,9 +49,15 @@ const defaultMarketsInfo = (): MarketsInfoType => ({
         mainDomain: "", 
         marketLanguageList: [] 
     },
+    priceRuleInfo:{
+        baseCurrency:"",
+        autoExchangeRate:0,
+        autoExchangeUpdateTime:""
+    },
     deliveryStatistic:{
         deliveryPlanNum:0,
     },
+    countryList:[],
     urlPreview:[]
 });
 
@@ -48,6 +65,12 @@ class MarketsInfo {
 
     constructor() {
       makeAutoObservable(this)
+    }
+
+    refreshKey = false;
+    // 刷新
+    refresh(){
+        this.refreshKey = !this.refreshKey;
     }
 
     // 店铺语言
@@ -65,6 +88,7 @@ class MarketsInfo {
     reset(){
         this.languagesId = cookie.load("shop_lang") || '2'
         this.marketsInfo = defaultMarketsInfo();
+        this.refreshKey = false;
     }
 }
 
