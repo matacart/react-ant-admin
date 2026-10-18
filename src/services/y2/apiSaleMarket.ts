@@ -356,6 +356,8 @@ export async function modifyMarketProductPrice(options:{
   languages_id:string,
   marketId:string,
   baseCurrency:string,
+  downAdjust:boolean,
+  priceAdjustRate:number
 }){
   const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/price_modify_v2`, {
     method: 'POST',

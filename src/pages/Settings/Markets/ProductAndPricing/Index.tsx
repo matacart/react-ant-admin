@@ -41,6 +41,19 @@ function Index() {
         })
     }, [langId])
 
+
+    useEffect(()=>{
+        if(isSkeleton) return;
+        getMarketPriceRule({
+            languages_id:langId,
+            marketId:marketId,
+        }).then(res=>{
+            productAndPricing.setPriceRule(res.data)
+        }).catch(()=>{
+        }).finally(()=>{
+        })
+    },[productAndPricing.priceRule.baseCurrency])
+
     return (
             <Scoped>
                 {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">

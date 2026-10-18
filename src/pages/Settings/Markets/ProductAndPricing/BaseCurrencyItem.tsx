@@ -30,12 +30,17 @@ function BaseCurrencyItem() {
             languages_id:langId,
             marketId:marketId,
             baseCurrency:selectedValue.value,
+            downAdjust:productAndPricing.priceRule.downAdjust,
+            priceAdjustRate:productAndPricing.priceRule.priceAdjustRate
         }).then(()=>{
             setOpen(false);
+            productAndPricing.setPriceRule({
+                ...productAndPricing.priceRule,
+                baseCurrency:selectedValue.value
+            })
         }).catch(()=>{
         }).finally(()=>{
             setLoading(false);
-
         })
     }
 
