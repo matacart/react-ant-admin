@@ -8,13 +8,12 @@ import AddPaymentPeriod from "../Modal/AddPaymentPeriod";
 import DefaultButton from "@/components/Button/DefaultButton";
 import { setOrderPaid } from "@/services/y2/apiOrders";
 import { useState } from "react";
-import { currencyPrecision } from "@/utils/common";
+import { currencyPrecision, getCurrencyAmount } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
 
 function OrderUnpaidCard() {
 
     const intl = useIntl();
-    const symbolLeft = useSymbolLeft();
 
     const [loading,setLoading] = useState(false);
 
@@ -33,10 +32,10 @@ function OrderUnpaidCard() {
                         <div style={{ fontSize: '14px', color: '#474F5E' }}>{intl.formatMessage({ id:'order.orderDetail.subtotal'})}</div>
                     </Col>
                     <Col span={19}>
-                        {/* <Flex justify="space-between">
-                            <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.productInfo.length}{intl.formatMessage({ id:'order.orderDetail.commodity'})}</div>
-                            <div style={{ fontSize: '14px', color: '#474F5E' }}>{symbolLeft}{currencyPrecision(order.orderTotal[0].value)}</div>
-                        </Flex> */}
+                        <Flex justify="space-between">
+                            <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.orderInfo.priceSetInfo?.subtotalInfo?.productNum || 0}{intl.formatMessage({ id:'order.orderDetail.commodity'})}</div>
+                            <div style={{ fontSize: '14px', color: '#474F5E' }}>{getCurrencyAmount(order.orderInfo.priceSetInfo?.subtotalInfo?.amountSet?.settleMoney?.currencyCode || "",order.orderInfo.priceSetInfo?.subtotalInfo?.amountSet?.settleMoney?.amount || 0)}</div>
+                        </Flex>
                     </Col>
                 </Row>
                 {/* 运费 */}

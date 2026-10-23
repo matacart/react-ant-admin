@@ -4,7 +4,7 @@ import { history, useParams } from "@umijs/max";
 import { App, Flex } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getInventoryLocationList, getMarketDetail, getMarketInventory, getMarketPriceRule, getMarketProductList, updateMarketInventory } from "@/services/y2/apiSaleMarket";
+import { getInventoryLocationList, getMarketDetail, getMarketInventory, updateMarketInventory } from "@/services/y2/apiSaleMarket";
 import { observer } from "mobx-react-lite";
 import LangSelect from "@/components/Select/LangSelect";
 import InventoryCard from "./InventoryCard";

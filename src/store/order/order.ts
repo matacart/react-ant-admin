@@ -59,6 +59,11 @@ export interface PriceSetInfoType{
       };
     };
   };
+  // 小计
+  subtotalInfo:{
+    productNum:number;
+    amountSet:AmountSet;
+  }
 }
 
 export interface OrderInfoType{

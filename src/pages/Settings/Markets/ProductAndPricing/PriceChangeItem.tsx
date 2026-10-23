@@ -33,13 +33,17 @@ function PriceChangeItem() {
             marketId:marketId,
             baseCurrency:productAndPricing.priceRule.baseCurrency,
             downAdjust:downAdjust,
-            priceAdjustRate:priceAdjustRate??0
+            priceAdjustRate:priceAdjustRate??0,
+            useLocalCurrency:productAndPricing.priceRule.useLocalCurrency,
+            skuPriceExchangeList:"[]",
+            productPriceExchangeList:"[]",
         }).then(()=>{
             productAndPricing.setPriceRule({
                 ...productAndPricing.priceRule,
                 downAdjust:downAdjust,
                 priceAdjustRate:priceAdjustRate??0
             })
+            productAndPricing.refreshTable();
             setOpen(false);
         }).catch(()=>{
         }).finally(()=>{
@@ -74,7 +78,8 @@ function PriceChangeItem() {
                     }}
                 />
                 <NumberInput 
-                    value={productAndPricing.priceRule.priceAdjustRate} 
+                    value={productAndPricing.priceRule.priceAdjustRate}
+                    suffix="%"
                     onBlur={(e:any)=>{
                         setOpen(true)
                         setPriceAdjustRate(e.target.value)

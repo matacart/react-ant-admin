@@ -16,8 +16,6 @@ import styled from "styled-components";
 
 function PendingShippedCard({groupIndex}:{groupIndex:number}) {
 
-  const symbolLeft = useSymbolLeft();
-
   const fulfillment  = order.fulfillmentOrderList[groupIndex];
 
   return (

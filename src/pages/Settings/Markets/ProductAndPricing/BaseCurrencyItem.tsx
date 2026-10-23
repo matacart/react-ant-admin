@@ -31,7 +31,10 @@ function BaseCurrencyItem() {
             marketId:marketId,
             baseCurrency:selectedValue.value,
             downAdjust:productAndPricing.priceRule.downAdjust,
-            priceAdjustRate:productAndPricing.priceRule.priceAdjustRate
+            priceAdjustRate:productAndPricing.priceRule.priceAdjustRate,
+            useLocalCurrency:productAndPricing.priceRule.useLocalCurrency,
+            skuPriceExchangeList:"[]",
+            productPriceExchangeList:"[]",
         }).then(()=>{
             setOpen(false);
             productAndPricing.setPriceRule({

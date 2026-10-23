@@ -739,7 +739,7 @@ export async function getAddonsList(lang:string,type:string,group_id?:string) {
   return res;
 }
 
-// 支付服务  -- 配置
+// 插件服务  -- 配置 addons_id：插件id
 export async function getAddonsConfigCreditCard(id:string,addonsId?:string,languagesId?:string) {
   const res = await request<ApiAppstore.Default>("/ApiAppstore/addons_config_array", {
     method: 'POST',

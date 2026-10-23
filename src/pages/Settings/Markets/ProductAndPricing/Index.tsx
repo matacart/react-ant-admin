@@ -4,13 +4,16 @@ import { history, useParams } from "@umijs/max";
 import { App, Flex } from "antd";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getMarketDetail, getMarketPriceRule, getMarketProductList } from "@/services/y2/apiSaleMarket";
+import { getMarketDetail, getMarketPriceRule, getMarketProductList, modifyMarketProductPrice } from "@/services/y2/apiSaleMarket";
 import { observer } from "mobx-react-lite";
 import BaseCurrency from "./BaseCurrency";
 import productAndPricing from "@/store/settings/markets/productAndPricing";
 import ProductList from "./ProductList";
 import LangSelect from "@/components/Select/LangSelect";
 import { names } from "../Index/MarketsList";
+import PrimaryButton from "@/components/Button/PrimaryButton";
+import { toJS } from "mobx";
+import Overlay from "@/components/Overlay/Overlay";
 
 function Index() {
 
@@ -21,6 +24,29 @@ function Index() {
     const { message } = App.useApp();
 
     const [loading, setLoading] = useState(false);
+
+    const submit = ()=>{
+        console.log(toJS(productAndPricing.productPriceExchangeList));
+        console.log(toJS(productAndPricing.skuPriceExchangeList));
+        setLoading(true);
+        modifyMarketProductPrice({
+            languages_id:langId,
+            marketId:marketId,
+            baseCurrency:productAndPricing.priceRule.baseCurrency,
+            downAdjust:productAndPricing.priceRule.downAdjust,
+            priceAdjustRate:productAndPricing.priceRule.priceAdjustRate,
+            useLocalCurrency:productAndPricing.priceRule.useLocalCurrency,
+            skuPriceExchangeList:JSON.stringify(productAndPricing.skuPriceExchangeList),
+            productPriceExchangeList:JSON.stringify(productAndPricing.productPriceExchangeList),
+        }).then(()=>{
+            message.success("保存成功");
+            // 刷新数据
+            productAndPricing.refreshTable();
+        }).catch(()=>{
+        }).finally(()=>{
+            setLoading(false);
+        })
+    }
 
     // 初始化数据
     useEffect(() => {
@@ -41,7 +67,6 @@ function Index() {
         })
     }, [langId])
 
-
     useEffect(()=>{
         if(isSkeleton) return;
         getMarketPriceRule({
@@ -54,33 +79,43 @@ function Index() {
         })
     },[productAndPricing.priceRule.baseCurrency])
 
+    useEffect(()=>{
+        productAndPricing.reset();
+    },[])
+
     return (
-            <Scoped>
-                {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">
-                    <div className="mc-layout">
-                        <Flex className="mc-header" justify="space-between">
-                            <Flex className="mc-header-left">
-                                <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
-                                    <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
-                                </div>
-                                <div style={{marginLeft:"12px"}}>
-                                    <div className="font-20 font-w-500">{"商品与定价"}</div>
-                                    <div style={{marginTop:"4px"}} className="font-12 font-w-400">{names(productAndPricing.marketDetail?.countryList || [])}</div>
-                                </div>
-                            </Flex>
-                            <Flex gap={12}>
-                                <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/pricing/${marketId}/${lang}`)} />    
-                            </Flex>
+        <Scoped>
+            {isSkeleton?<SkeletonCard />:<Flex className='mc-layout-wrap' align="center">
+                <div className="mc-layout">
+                    <Flex className="mc-header" justify="space-between">
+                        <Flex className="mc-header-left">
+                            <div className="mc-header-left-secondary" onClick={()=>history.push(`/settings/markets/${marketId}/${langId}`)}>
+                                <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
+                            </div>
+                            <div style={{marginLeft:"12px"}}>
+                                <div className="font-20 font-w-500">{"商品与定价"}</div>
+                                <div style={{marginTop:"4px"}} className="font-12 font-w-400">{names(productAndPricing.marketDetail?.countryList || [])}</div>
+                            </div>
                         </Flex>
-                        {/* 主要内容 */}
-                        <Flex gap={20} vertical>
-                            <BaseCurrency />
-                            <ProductList />
+                        <Flex gap={12}>
+                            <LangSelect lang={langId} setLang={(lang:string)=>history.push(`/settings/markets/pricing/${marketId}/${lang}`)} />    
                         </Flex>
-                    </div>
-                </Flex>}
-            </Scoped>
-        )
+                    </Flex>
+                    {/* 主要内容 */}
+                    <Flex gap={20} vertical>
+                        <BaseCurrency />
+                        <ProductList />
+                    </Flex>
+                    {!productAndPricing.marketDetail?.homeMarket && <Flex justify="right" className="submit-btn">
+                        <PrimaryButton loading={loading} text="更新" onClick={submit}  />
+                    </Flex>}
+                </div>
+                {(productAndPricing.productPriceExchangeList.length > 0 || productAndPricing.skuPriceExchangeList.length > 0 )&& <Overlay status={loading} okText="更新" onExit={()=>{
+                    history.push(`/settings/markets/${marketId}/${langId}`)
+                }} onSubmit={submit} />}
+            </Flex>}
+        </Scoped>
+    )
 }
 
 const Scoped = styled.div`

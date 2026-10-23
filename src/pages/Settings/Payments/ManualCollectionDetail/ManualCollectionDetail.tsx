@@ -103,20 +103,10 @@ function ManualCollectionDetail() {
     }
 
     useEffect(()=>{
-        // 多语言
-        // if(id=="0"){
-        //     // 货到付款
-        //     setManualCollection({
-        //         id:"0",
-        //         title:"货到付款",
-        //         languages_id:languagesId,
-        //         addons_id:"23",
-        //     })
-        // }else{
         getAddonsConfigArray({
             id:id,
             languages_id:languagesId,
-            addons_id:"23"
+            addons_id:"85030669"
         }).then(res=>{
             // 结构
             setAddonConfigForm(res.data.addon.config)

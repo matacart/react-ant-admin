@@ -156,10 +156,8 @@ export default function EditFreightModal({record}:{record:any}){
                 billingMethod:config.MODULE_SHIPPING_FREESHIPPER_METHOD
             })
             setBillingMethod(parseInt(config.MODULE_SHIPPING_FREESHIPPER_METHOD))
-        }).catch(err=>{
-            console.log(err)
+        }).catch(()=>{
         }).finally(()=>{
-            setOpen(false)
             setIsLoading(false)
         })
     }

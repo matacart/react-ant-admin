@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BaseCurrencyItem from "./BaseCurrencyItem";
 import PriceChangeItem from "./PriceChangeItem";
+import ExchangeRateItem from "./ExchangeRateItem";
+import LocalCurrencyItem from "./LocalCurrencyItem";
 
 function BaseCurrency() {
 
@@ -27,16 +29,13 @@ function BaseCurrency() {
                         <BaseCurrencyItem />
                     </div>
                     {(productAndPricing.priceRule.baseCurrency !== productAndPricing.priceRule.storeCurrency) &&<div className="item">
-                        <div className="font-w-500 title">汇率策略</div>
-                        <DefaultSelect value={productAndPricing.priceRule.storeCurrency} options={options} style={{width:"100%"}} />
+                        <ExchangeRateItem />
                     </div>}
                     <div className="item">
                         <PriceChangeItem />
                     </div>
                 </Flex>
-                <div style={{marginTop:"12px"}}>
-                    <Checkbox>以客户所在国家/地区的当地货币显示价格</Checkbox>
-                </div>
+                {productAndPricing.marketDetail?.countryList?.length > 1 && <LocalCurrencyItem />}
             </>}
         </MyCard>
     )

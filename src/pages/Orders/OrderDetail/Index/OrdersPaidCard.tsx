@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { useIntl } from "@umijs/max";
 import { SuccessSecondIcon } from "@/components/Icons/Icons";
 import order from "@/store/order/order";
-import { currencyPrecision } from "@/utils/common";
+import { currencyPrecision, getCurrencyAmount } from "@/utils/common";
 import { useSymbolLeft } from "@/hooks/customHooks";
 
 function OrdersPaidCard() {
@@ -34,8 +34,8 @@ function OrdersPaidCard() {
           </Col>
           <Col span={19}>
               <Flex justify="space-between">
-                  <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.productInfo.length}{intl.formatMessage({ id:'order.orderDetail.commodity'})}</div>
-                  <div style={{ fontSize: '14px', color: '#474F5E' }}>{symbolLeft}{currencyPrecision(order.orderTotal[0]?.value)}</div>
+                  <div style={{ fontSize: '14px', color: '#474F5E'}}>{order.orderInfo.priceSetInfo?.subtotalInfo?.productNum || 0}{intl.formatMessage({ id:'order.orderDetail.commodity'})}</div>
+                  <div style={{ fontSize: '14px', color: '#474F5E' }}>{getCurrencyAmount(order.orderInfo.priceSetInfo?.subtotalInfo?.amountSet?.settleMoney?.currencyCode || "",order.orderInfo.priceSetInfo?.subtotalInfo?.amountSet?.settleMoney?.amount || 0)}</div>
               </Flex>
           </Col>
       </Row>

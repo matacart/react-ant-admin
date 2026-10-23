@@ -1,4 +1,4 @@
-import { ExclamationCircleOutlined, InfoCircleOutlined } from "@ant-design/icons"
+import { ExclamationCircleFilled, InfoCircleOutlined } from "@ant-design/icons"
 import { App, Button, Flex } from "antd"
 import styled from "styled-components"
 import React from "react";
@@ -15,7 +15,7 @@ function ProductOverlay({status,okText,onExit,onSubmit}:{status:boolean,okText:s
     const confirm = () => {
         const confirmModal = modal.confirm({
           title: '未保存的内容将丢失，确认退出页面？',
-          icon: <ExclamationCircleOutlined />,
+          icon: <ExclamationCircleFilled />,
           content:<div style={{height:"20px"}}></div>,
           centered: true,
           footer: ()=><>

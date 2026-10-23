@@ -333,6 +333,7 @@ export async function getMarketPriceRule(options:{
 export async function getMarketProductList(options:{
   languages_id:string,
   marketId:string,
+  countryCode:string,
   pageNum:number,
   pageSize:number,
 }){
@@ -357,7 +358,10 @@ export async function modifyMarketProductPrice(options:{
   marketId:string,
   baseCurrency:string,
   downAdjust:boolean,
-  priceAdjustRate:number
+  priceAdjustRate:number,
+  useLocalCurrency:boolean,
+  skuPriceExchangeList:string,
+  productPriceExchangeList:string,
 }){
   const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/price_modify_v2`, {
     method: 'POST',
@@ -488,5 +492,46 @@ export async function getMarketPayment(options:{
     }
   })
   if (res.code != 0) errHandle(res);
+  return res;
+}
+
+// 修改市场收款方式配置
+export async function modifyMarketPayment(options:{
+  languages_id:string,
+  marketId:string,
+  countryPaymentInfos:string,
+ }){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/payment_modify_v2`,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 修改市场汇率策略
+export async function modifyMarketExchangeRate(options:{
+  languages_id:string,
+  marketId:string,
+  enableManualExchangeRate:boolean,
+  manualExchangeRate?:number,
+}){
+  const res = await request<ApiSaleMarket.Default>(`/ApiSaleMarket/exchange_rate_modify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id:cookie.load("domain")?.id,
+      ...options
+    }
+  })
+  if (res.code != "SUCCESS") errHandle(res);
   return res;
 }
