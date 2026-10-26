@@ -12,7 +12,7 @@ import CarrierAccount from "./CarrierAccount"
 import PlatformPopularChannels from "./PlatformPopularChannels"
 import { history } from "@umijs/max"
 import { queryProductGroup } from "@/services/y2/apiLogistics"
-import shippingDistribution from "@/store/settings/ShippingAndDistribution/shippingDistribution"
+import shippingDistribution, { Group } from "@/store/settings/ShippingAndDistribution/shippingDistribution"
 
 function ShippingAndDistribution() {
 
@@ -22,8 +22,16 @@ function ShippingAndDistribution() {
         queryProductGroup({
             languages_id:shippingDistribution.languagesId,
             pageNum:1,
-            pageSize:10,
+            pageSize:100,
         }).then(res=>{
+            const customFreight = res.data.list.map((item:Group)=>{
+                if(item.type == "2"){
+                    shippingDistribution.setGeneralFreight(item);
+                    return;
+                }
+                return item;
+            }).filter((item:Group)=>item);
+            shippingDistribution.setCustomFreight(customFreight);
         }).catch(()=>{
         }).finally(()=>{
             setIsSkeleton(false);

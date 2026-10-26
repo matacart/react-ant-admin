@@ -40,17 +40,12 @@ function ExchangeRateItem() {
             marketId:marketId,
             ...options,
         }).then(()=>{
-            if(enableManualExchangeRate){
-                setSelectedValue(`固定汇率:1${productAndPricing.priceRule.storeCurrency} = ${manualExchangeRate??0}${productAndPricing.priceRule.baseCurrency}`);
-            }else{
-                setSelectedValue(`动态汇率:1${productAndPricing.priceRule.storeCurrency} = ${productAndPricing.priceRule.autoExchangeRate??0}${productAndPricing.priceRule.baseCurrency}`);
-            }
             productAndPricing.setPriceRule({
                 ...productAndPricing.priceRule,
                 ...options
             })
-            productAndPricing.refreshTable();
             // 刷新
+            productAndPricing.refreshTable();
             setOpen(false);
         }).catch(()=>{
         }).finally(()=>{
@@ -65,7 +60,7 @@ function ExchangeRateItem() {
 
     useEffect(()=>{
         setSelectedValue(productAndPricing.priceRule.enableManualExchangeRate?`固定汇率:1${productAndPricing.priceRule.storeCurrency} = ${productAndPricing.priceRule.manualExchangeRate??0}${productAndPricing.priceRule.baseCurrency}`:`动态汇率:1${productAndPricing.priceRule.storeCurrency} = ${productAndPricing.priceRule.autoExchangeRate??0}${productAndPricing.priceRule.baseCurrency}`);
-    },[productAndPricing.priceRule.baseCurrency]);
+    },[productAndPricing.priceRule.enableManualExchangeRate,productAndPricing.priceRule.manualExchangeRate]);
 
     return (
         <>

@@ -46,6 +46,7 @@ export interface Product {
     imageList:string[];
 
     skuId?:string;
+    attributes?:string;
 }
 
 

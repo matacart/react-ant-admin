@@ -69,7 +69,7 @@ function ProductTable() {
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
                                     maxWidth:'calc(100% - 60px)',
-                                }}>{record.title}</div>
+                                }}>{record.attributes || ""}</div>
                             </div>
                         </Flex>
                     )

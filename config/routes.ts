@@ -763,7 +763,7 @@ export default  [
       },
       // 通用运费
       {
-        path:"logistics/edit/common",
+        path:"logistics/edit/common/:id",
         component:"./Settings/ShippingAndDistribution/EditCustomLogistics/EditCustomLogistics"
       },
       // 仓库地址

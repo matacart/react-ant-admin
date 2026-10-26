@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import cookie from 'react-cookies';
 import { errHandle } from './apiAppstore';
 
 // 查询物流服务商
@@ -24,6 +25,7 @@ export async function setFavoriteCourier(options:{
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      domain_id: cookie.load("domain")?.id,
       ...options
     }
   });
@@ -41,6 +43,7 @@ export async function cancelFavoriteCourier(options:{
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      domain_id: cookie.load("domain")?.id,
       ...options
     }
   });
@@ -60,6 +63,7 @@ export async function queryCouriers(options:{
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      domain_id: cookie.load("domain")?.id,
       ...options
     }
   });
@@ -79,6 +83,7 @@ export async function queryProductGroup(options:{
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      domain_id: cookie.load("domain")?.id,
       ...options
     }
   });
@@ -97,6 +102,27 @@ export async function setProductGroup(options:{
       'Content-Type': 'multipart/form-data',
     },
     data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != 0) errHandle(res);
+  return res;
+}
+
+
+// 获取物流商品分组详情
+export async function getProductGroup(options:{
+  languages_id:string,
+  productGroupSeq:string
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_set_v2`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
       ...options
     }
   });

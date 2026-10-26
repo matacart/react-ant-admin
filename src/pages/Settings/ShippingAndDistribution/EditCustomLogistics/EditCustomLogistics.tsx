@@ -9,6 +9,7 @@ import generalFreight from "@/store/settings/ShippingAndDistribution/generalFrei
 import SkeletonCard from "@/components/Skeleton/SkeletonCard"
 import { observer } from "mobx-react-lite"
 import LangSelect from "@/components/Select/LangSelect"
+import { getProductGroup } from "@/services/y2/apiLogistics"
 
 function EditCustomLogistics() {
 
@@ -31,6 +32,14 @@ function EditCustomLogistics() {
             setIsSkeleton(false)
         })
     },[generalFreight.deliverysLanguage])
+
+
+    useEffect(()=>{
+        getProductGroup({
+            languages_id:"1",
+            productGroupSeq:"1"
+        })
+    },[])
     
     return (
         <Scoped>
