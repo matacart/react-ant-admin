@@ -1,13 +1,38 @@
 import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
-import { Button, Card, Divider, Flex, List, TabsProps } from "antd"
+import { Button, Card, Divider, Flex, Form, List, TabsProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
 import GroupNameCard from "./GroupNameCard"
 import ApplicableGoods from "./ApplicableGoods"
 import ManagementGroupCard from "./ManagementGroupCard"
+import PrimaryButton from "@/components/Button/PrimaryButton"
+import { setProductGroup } from "@/services/y2/apiLogistics"
 
 
 function AddCustomLogistics() {
+
+    const [form] = Form.useForm();
+    const submit = ()=>{
+        form.validateFields().then((values:any)=>{
+            console.log(values)
+            const productGroup = {
+                createdProductIds:[],
+                deletedProductIds:[],
+                productGroupName:values.groupName,
+            }
+            const deliveryLocationGroupSetInfo = {
+                createDeliveryLocationGroup: [],
+                deleteDeliveryLocationGroupSeqs: [],
+                updateDeliveryLocationGroup: []
+            }
+            setProductGroup({
+                languages_id:"2",
+                productGroup:JSON.stringify(productGroup),
+                deliveryLocationGroupSetInfo:JSON.stringify(deliveryLocationGroupSetInfo),
+            })
+
+        })
+    }
     
     return (
         <Scoped>
@@ -25,15 +50,14 @@ function AddCustomLogistics() {
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                           <GroupNameCard />
+                           <GroupNameCard form={form} />
                            <ApplicableGoods />
                            <ManagementGroupCard />
                         </div>
                     </div>
                     <Divider className="divider" />
                     <div className="submit-btn">
-                        <Button type="primary" style={{height: "36px"}} loading={false} onClick={()=>{
-                        }}>新建</Button>
+                        <PrimaryButton text="新建" style={{height: "36px"}} loading={false} onClick={submit} />
                     </div>
                 </div>
             </div>

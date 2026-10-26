@@ -27,12 +27,12 @@ function LocalDistribution() {
                     <div className="location" style={{width:"48px",height:"48px",display:"flex",justifyContent:"center",alignItems:"center"}}>
                         <EnvironmentOutlined className="font-24 color-7A8499" />
                     </div>
-                    <div>
+                    <Flex flex={1} vertical>
                         <Flex className="color-242833" align="center">
                             <div style={{marginRight:"8px"}}>默认地点</div><DefaultTag text="不提供配送服务" />
                         </Flex>
-                        <div className="color-7A8499">这是MATACART为您自动创建的地点。为了不影响您的业务，请您自由进行调整修改,东城区,北京市 北京市,中国</div>
-                    </div>
+                        <Flex className="color-7A8499">这是MATACART为您自动创建的地点。为了不影响您的业务，请您自由进行调整修改,东城区,北京市 北京市,中国</Flex>
+                    </Flex>
                     <Flex align="center" style={{marginLeft:"12px"}}>
                         <Button>编辑</Button>
                     </Flex>

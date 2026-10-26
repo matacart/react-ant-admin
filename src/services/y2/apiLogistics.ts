@@ -66,3 +66,41 @@ export async function queryCouriers(options:{
   if (res.code != 0) errHandle(res);
   return res;
 }
+
+// 查询物流商品分组
+export async function queryProductGroup(options:{
+  languages_id:string,
+  pageNum:number,
+  pageSize:number,
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_page`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      ...options
+    }
+  });
+  if (res.code != 0) errHandle(res);
+  return res;
+}
+// 添加物流商品分组
+export async function setProductGroup(options:{
+  languages_id:string,
+  productGroup:string,
+  deliveryLocationGroupSetInfo:string
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_set_v2`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      ...options
+    }
+  });
+  if (res.code != 0) errHandle(res);
+  return res;
+}
+

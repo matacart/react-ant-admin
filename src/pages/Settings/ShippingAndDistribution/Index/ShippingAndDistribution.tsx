@@ -11,13 +11,23 @@ import Parcel from "./Parcel"
 import CarrierAccount from "./CarrierAccount"
 import PlatformPopularChannels from "./PlatformPopularChannels"
 import { history } from "@umijs/max"
+import { queryProductGroup } from "@/services/y2/apiLogistics"
+import shippingDistribution from "@/store/settings/ShippingAndDistribution/shippingDistribution"
 
 function ShippingAndDistribution() {
 
-    const [isSkeleton,setIsSkeleton] = useState(false)
+    const [isSkeleton,setIsSkeleton] = useState(true);
 
     useEffect(()=>{
-       
+        queryProductGroup({
+            languages_id:shippingDistribution.languagesId,
+            pageNum:1,
+            pageSize:10,
+        }).then(res=>{
+        }).catch(()=>{
+        }).finally(()=>{
+            setIsSkeleton(false);
+        })
     },[])
 
     return (
@@ -200,6 +210,7 @@ const Scoped = styled.div`
             gap:20px;
             &-left{
                 flex: 1;
+                min-width: 0;
                 margin-right: 20px;
                 .desc{
                     margin-top: 8px;
@@ -207,6 +218,7 @@ const Scoped = styled.div`
             }
             &-right{
                 flex: 2;
+                min-width: 0;
                 .availableLocation_box{
                     padding: 12px 0;
                     border-bottom: 1px solid #EEF1F7;
