@@ -25,19 +25,19 @@ export function handleTokenExpired(originalRequest: AxiosRequestConfig): Promise
     }
     // 发起新的刷新任务
     refreshTokenPromise = getAccessToken().then((tokenRes: any) => {
-            const { access_token } = tokenRes;
-            // 保存 token（区分 localhost 和域名）
-            const hostname = window.location.hostname;
-            if (hostname.startsWith('localhost')) {
-                cookie.save('access_token', access_token, { path: '/' });
-            } else {
-                const domain = hostname.slice(hostname.indexOf('.')); // 如 ".example.com"
-                cookie.save('access_token', access_token, { domain, path: '/' });
-            }
-            // 重试原始请求
-            originalRequest.headers = originalRequest.headers || {};
-            originalRequest.headers['Authorization'] = 'Bearer ' + access_token;
-            return axios(originalRequest);
+        const { access_token } = tokenRes;
+        // 保存 token（区分 localhost 和域名）
+        const hostname = window.location.hostname;
+        if (hostname.startsWith('localhost')) {
+            cookie.save('access_token', access_token, { path: '/' });
+        } else {
+            const domain = hostname.slice(hostname.indexOf('.')); // 如 ".example.com"
+            cookie.save('access_token', access_token, { domain, path: '/' });
+        }
+        // 重试原始请求
+        originalRequest.headers = originalRequest.headers || {};
+        originalRequest.headers['Authorization'] = 'Bearer ' + access_token;
+        return axios(originalRequest);
     }).catch((err) => {
         // 刷新失败，清理所有 cookie，跳转登录
         clearAllCookies();

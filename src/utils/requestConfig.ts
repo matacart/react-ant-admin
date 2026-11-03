@@ -92,6 +92,26 @@ export const requestConfig: RequestConfig = {
             // 成功响应数据
             (res:any) =>{
                 endProgress();
+                // ----------------- 刷新AccessToken
+                if (res?.config?.isRefreshTokenRequest) {
+                    // 成功：直接返回给 getAccessToken 使用
+                    if (res.data?.code === 200 || res.data?.code === 0) {
+                        return res;
+                    }
+                    // 失败：静默清理 + 跳转，不弹 message
+                    const hostname = window.location.hostname;
+                    const domain = hostname.startsWith('localhost') ? undefined : hostname.slice(hostname.indexOf('.'));
+                    cookie.remove("token", { domain, path: '/' });
+                    clearAllCookies();
+                    sessionStorage.setItem('loginReason', 'refresh_expired');
+                    if (window.location.pathname !== loginPath) {
+                        history.replace(loginPath);
+                    }
+                    return Promise.reject(Object.assign(new Error('登录已过期'), {
+                        isAuthExpired: true,
+                        silent: true,
+                    }));
+                }
                 // 确保res存在
                 if (!res) {
                     return Promise.reject(new Error('Response is undefined'));
@@ -107,6 +127,7 @@ export const requestConfig: RequestConfig = {
                 let test = window.location.hostname.slice(window.location.hostname.indexOf("."))
                 // access_token过期
                 if(res.data.code==40013){
+                    // return Promise.reject(new Error(res?.data?.msg || '登录已过期'));
                     return handleTokenExpired(res.config);
                 }
                 // token过期 清除token 重新登录
@@ -120,7 +141,7 @@ export const requestConfig: RequestConfig = {
                     // 终断其它请求
                     history.push(`${loginPath}?${redirectPath ? `redirect=${redirectPath}` : ""}`);
                     // 抛出错误
-                    return Promise.reject(new Error(res.data.msg || '登录已过期'));
+                    return Promise.reject(new Error(res?.data?.msg || '登录已过期'));
                 }
                 // 业务数据异常
                 if(res.data.code>2000){

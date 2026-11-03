@@ -11,6 +11,7 @@ export const errHandle = (res:ApiAppstore.Default)=>{
     key: 'api-error', // 关键：固定 key，只保留一个错误提示
     duration: 2,
   });
+  console.log(res)
   throw new Error(res.msg || '失败');
 }
 

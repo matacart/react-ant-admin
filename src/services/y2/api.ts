@@ -339,7 +339,6 @@ export async function resetPassword(body:any, options?: { [key: string]: any }) 
     },
   });
   if (res.code != 0){
-    message.error(res.msg || '失败');
     throw new Error(res.msg || '失败');
   };
   return res;
@@ -392,6 +391,7 @@ export async function getAccessToken() {
       accessKeyId: Oauth2.accessKeyId,
       accessKeySecret: Oauth2.accessKeySecret
     },
+    isRefreshTokenRequest: true,   // ← 告诉拦截器：我是刷新请求
     skipAuthRefresh: true,
   });
 }
