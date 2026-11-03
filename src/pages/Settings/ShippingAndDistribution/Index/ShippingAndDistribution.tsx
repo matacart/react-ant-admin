@@ -25,7 +25,7 @@ function ShippingAndDistribution() {
             pageSize:100,
         }).then(res=>{
             const customFreight = res.data.list.map((item:Group)=>{
-                if(item.type == "2"){
+                if(item.type == "1"){
                     shippingDistribution.setGeneralFreight(item);
                     return;
                 }

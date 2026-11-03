@@ -7,7 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import product from '@/store/product/product';
 import PrimaryButton from '@/components/Button/PrimaryButton';
-import { upDateProduct } from '@/services/y2/apiStore';
+import { getProductDetail, upDateProduct } from '@/services/y2/apiStore';
 import SkeletonCard from '@/components/Skeleton/SkeletonCard';
 import Overlay from '@/components/Overlay/Overlay';
 import ProductData from '../Product/ProductData';
@@ -36,6 +36,9 @@ function AddNewProduct(){
     
     const { message } = App.useApp();
 
+    // 复制商品信息
+    const productInfo = history.location.search;
+
     const [isSkeleton,setIsSkeleton] = useState(true);
 
     const [loading,setLoading] = useState(false);
@@ -43,7 +46,7 @@ function AddNewProduct(){
     const [form] = Form.useForm();
 
     // 复制信息
-    // let productInfo = history.location.state as LocationState;
+    
     // if(productInfo){
     //     // 复制图片
     //     if(productInfo.copyProductImage){
@@ -130,10 +133,40 @@ function AddNewProduct(){
     useEffect(()=>{
         // 清空状态
         const init = async () => {
+            // 复制商品信息
+            let copyProductInfo:any = {};
+            try{
+                const params = new URLSearchParams(productInfo);
+                const copyFrom = params.get('copyFrom');
+                const isInventory = params.get('isInventory');
+                const status = params.get('status');
+                const isImage = params.get('isImage');
+                if(copyFrom){
+                    // 复制商品信息
+                    const productInfo = await getProductDetail({
+                        id:copyFrom,
+                        languages_id:product.languageId,
+                    })
+                    if(productInfo){
+                        const newAdditonalImage = (JSON.parse(productInfo.data?.additional_image || "[]") instanceof Array)?JSON.parse(productInfo.data?.additional_image || "[]"):[]
+                        const productImage = productInfo.data?.product_image?[productInfo.data?.product_image,...newAdditonalImage]:newAdditonalImage
+                        copyProductInfo={
+                            title:'[Copy]'+params.get('title'),
+                            quantity:isInventory?productInfo.data.quantity:1000,
+                            status:status=="0"?0:1,
+                            additional_image:isImage?productImage:[],
+                        }
+                    }
+                }
+            }catch(e){
+            }
             // 随机初始化型号
             const randomModal = "m"+new Date().getTime()
+            console.log(copyProductInfo)
+            
             await product.setProductInfo({
                 ...product.productInfo,
+                ...copyProductInfo,
                 model:randomModal
             })
             setIsSkeleton(false)

@@ -1,49 +1,49 @@
-import { ArrowLeftOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined, ExportOutlined } from "@ant-design/icons"
+import { Button, Card, Divider, Flex, Form, List, TabsProps } from "antd"
 import { history } from "@umijs/max"
 import styled from "styled-components"
-import ApplicableGoods from "./ApplicableGoods"
-import ManagementGroup from "./ManagementGroup"
-import { useEffect, useState } from "react"
-import { getDeliveryList } from "@/services/y2/apiAppstore"
-import generalFreight from "@/store/settings/ShippingAndDistribution/generalFreight"
-import SkeletonCard from "@/components/Skeleton/SkeletonCard"
-import { observer } from "mobx-react-lite"
+import PrimaryButton from "@/components/Button/PrimaryButton"
+import { setProductGroup } from "@/services/y2/apiLogistics"
+import GroupNameCard from "../Freight/GroupNameCard"
+import ApplicableGoods from "../Freight/ApplicableGoods"
+import { useEffect } from "react"
+import customFreight from "@/store/settings/ShippingAndDistribution/customFreight"
 import LangSelect from "@/components/Select/LangSelect"
-import { getProductGroup } from "@/services/y2/apiLogistics"
+import { observer } from "mobx-react-lite"
 
-function EditCustomLogistics() {
 
-    const [isSkeleton,setIsSkeleton] = useState(true)
-    const setLang = (lang:string)=>{
-        generalFreight.setDeliverysLanguage(lang)
+function AddCustomLogistics() {
+
+    const [form] = Form.useForm();
+    const submit = ()=>{
+        form.validateFields().then((values:any)=>{
+            console.log(values)
+            const productGroup = {
+                createdProductIds:[],
+                deletedProductIds:[],
+                productGroupName:values.groupName,
+            }
+            const deliveryLocationGroupSetInfo = {
+                createDeliveryLocationGroup: [],
+                deleteDeliveryLocationGroupSeqs: [],
+                updateDeliveryLocationGroup: []
+            }
+            setProductGroup({
+                languages_id:"2",
+                productGroup:JSON.stringify(productGroup),
+                deliveryLocationGroupSetInfo:JSON.stringify(deliveryLocationGroupSetInfo),
+            })
+
+        })
     }
 
-    // 语言
     useEffect(()=>{
-        generalFreight.reset();
-    },[])
-
-    useEffect(()=>{
-        getDeliveryList(generalFreight.deliverysLanguage).then((res:any)=>{
-            generalFreight.setDeliverys(res.data)
-        }).catch(err=>{
-            console.log(err)
-        }).finally(()=>{
-            setIsSkeleton(false)
-        })
-    },[generalFreight.deliverysLanguage])
-
-
-    useEffect(()=>{
-        getProductGroup({
-            languages_id:"1",
-            productGroupSeq:"1"
-        })
+        customFreight.reset();
     },[])
     
     return (
         <Scoped>
-            {isSkeleton?<SkeletonCard />:<div className='mc-layout-wrap'>
+            <div className='mc-layout-wrap'>
                 <div className="mc-layout">
                     <div className="mc-header">
                         <div className="mc-header-left">
@@ -52,26 +52,31 @@ function EditCustomLogistics() {
                             }}>
                                 <ArrowLeftOutlined className="mc-header-left-secondary-icon" />
                             </div>
-                            <div className="mc-header-left-content">通用运费设置</div>
+                            <div className="mc-header-left-content">新增自定义运费</div>
                         </div>
                         <div className="mc-header-right">
                             {/* 语言 */}
-                            <LangSelect lang={generalFreight.deliverysLanguage} setLang={setLang} />
+                            <LangSelect lang={customFreight.language} setLang={(lang:string)=>customFreight.setLanguage(lang)} />
                         </div>
                     </div>
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
-                            <ApplicableGoods />
-                            <ManagementGroup />
+                           <GroupNameCard form={form} />
+                           <ApplicableGoods />
+                           {/* <ManagementGroupCard /> */}
                         </div>
                     </div>
+                    <Divider className="divider" />
+                    <div className="submit-btn">
+                        <PrimaryButton text="新建" style={{height: "36px"}} loading={false} onClick={submit} />
+                    </div>
                 </div>
-            </div>}
+            </div>
         </Scoped>
     )
 }
 
-export default observer(EditCustomLogistics)
+export default observer(AddCustomLogistics)
 
 const Scoped = styled.div`
 

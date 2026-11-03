@@ -4,7 +4,10 @@ import cookie from 'react-cookies';
 
 export interface Group{
     type:string;
-    areaNum:number
+    productGroupSeq:string;
+    productGroupName:string;
+    areaNum:number;
+    productNum:number;
 }
 
 class ShippingDistribution {

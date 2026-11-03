@@ -530,7 +530,7 @@ export async function setCurrenciesList(currenciesList:any) {
       currencies:JSON.stringify(currenciesList)
     }
   })
-  if (res.code != 0) errHandle(res);
+  if (res.code != 0 && res.code !== 201) errHandle(res);
   return res;
 }
 

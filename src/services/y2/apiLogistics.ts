@@ -90,7 +90,7 @@ export async function queryProductGroup(options:{
   if (res.code != 0) errHandle(res);
   return res;
 }
-// 添加物流商品分组
+// 添加物流分组
 export async function setProductGroup(options:{
   languages_id:string,
   productGroup:string,
@@ -110,13 +110,12 @@ export async function setProductGroup(options:{
   return res;
 }
 
-
-// 获取物流商品分组详情
-export async function getProductGroup(options:{
+// 删除物流分组
+export async function deleteProductGroup(options:{
   languages_id:string,
-  productGroupSeq:string
+  productGroupSeq:string,
 }){
-  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_set_v2`, {
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_delete`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -126,7 +125,120 @@ export async function getProductGroup(options:{
       ...options
     }
   });
-  if (res.code != 0) errHandle(res);
+  if (res.code != "SUCCESS") errHandle(res);
   return res;
 }
 
+// 获取物流商品分组
+export async function getProductGroup(options:{
+  languages_id:string,
+  productGroupSeq:string
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/shipping_plans_v2`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+// 获取物流商品分组详情
+export async function getProductGroupDetail(options:{
+  languages_id:string,
+  productGroupSeq:string
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_detail`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+// 查询物流商品分组下的商品
+export async function queryProductGroupGoods(options:{
+  languages_id:string,
+  productGroupSeq:string,
+  pageNum:number,
+  pageSize:number,
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_search_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 查询所有物流国家/地区
+export async function queryProductGroupCountry(options:{
+  languages_id:string,
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/country_list`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 查询物流商品列表
+export async function queryProductList(options:{
+  languages_id:string,
+  pageNum:number,
+  pageSize:number,
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiStore/product_query_page_selector`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}
+
+// 查询物流商品详情
+export async function queryProductInfo(options:{
+  languages_id:string,
+  productIds:string,
+}){
+  const res = await request<ApiLogistics.Default>(`/ApiLogistics/product_group_related`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: {
+      domain_id: cookie.load("domain")?.id,
+      ...options
+    }
+  });
+  if (res.code != "SUCCESS") errHandle(res);
+  return res;
+}

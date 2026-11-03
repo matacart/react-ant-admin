@@ -1,5 +1,7 @@
 import MyInput from "@/components/Input/MyInput"
-import { Card, Form, FormInstance, Input } from "antd"
+import customFreight from "@/store/settings/ShippingAndDistribution/customFreight"
+import { Card, Form, FormInstance } from "antd"
+import { observer } from "mobx-react-lite"
 import { useEffect } from "react"
 import styled from "styled-components"
 
@@ -7,8 +9,10 @@ import styled from "styled-components"
 function GroupNameCard({form}:{form:FormInstance}) {
 
     useEffect(()=>{
-        console.log("GroupNameCard")
-    },[])
+        form.setFieldsValue({
+            groupName:customFreight.productGroupDetail?.name || ""
+        })
+    },[customFreight.productGroupDetail])
     
     return (
         <Scoped>
@@ -23,7 +27,7 @@ function GroupNameCard({form}:{form:FormInstance}) {
     )
 }
 
-export default GroupNameCard
+export default observer(GroupNameCard)
 
 const Scoped = styled.div`
     .card{

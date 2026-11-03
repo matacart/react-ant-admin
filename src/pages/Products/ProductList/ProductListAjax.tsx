@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
-import { App, Avatar, Checkbox, Flex, Input, Modal, Popover, Radio, Switch, Table, Tooltip } from 'antd';
-import type { GetProp, RadioChangeEvent, TableColumnsType, TableProps } from 'antd';
-import { CopyOutlined, EyeOutlined, InfoCircleFilled, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { App, Avatar, Flex, Popover, Switch, Table, Tooltip } from 'antd';
+import type { GetProp,TableColumnsType, TableProps } from 'antd';
+import { CopyOutlined, EyeOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { getProductList, upDateProductStatus } from '@/services/y2/apiStore';
 import { history } from '@umijs/max';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ import DefaultButton from '@/components/Button/DefaultButton';
 import PrimaryButton from '@/components/Button/PrimaryButton';
 import { currencyPrecision } from '@/utils/common';
 import { useSymbolLeft,usePrimaryDomain } from '@/hooks/customHooks';
+import ProductCopyModal from './ProductCopyModal';
 
 type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>;
 
@@ -47,7 +48,6 @@ const content: ReactNode = (<>
   <div>·WhatsApp</div>
   <div>·Facebook</div>
   <div>·Telegram</div>
-
 </>)
 
 interface TableParams {
@@ -56,10 +56,8 @@ interface TableParams {
   sortOrder?: string;
   filters?: Parameters<GetProp<TableProps, 'onChange'>>[1];
 }
-// 商品复制
 
-
-
+// 分页参数适配器
 const getRandomuserParams = (params: TableParams) => ({
   results: params.pagination?.pageSize,
   page: params.pagination?.current,
@@ -70,6 +68,8 @@ function ProductListAjax(selectProps:any) {
 
   const { createAbortController } = useAbortController();
 
+  const primaryDomain = usePrimaryDomain();
+
   const { modal, message } = App.useApp();  // 获取带有上下文的 modal 对象
 
   const symbolLeft = useSymbolLeft();
@@ -79,7 +79,9 @@ function ProductListAjax(selectProps:any) {
   const [onLoadingList, setOnLoadingList] = useState<any>([]);
   // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); // 新增的状态
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // 复制商品模态框状态
+  const [open, setOpen] = useState(false);
+  const [copyProduct, setCopyProduct] = useState<DataType | null>(null);
 
   // 分页器初始参数
   const [tableParams, setTableParams] = useState<TableParams>({
@@ -89,14 +91,6 @@ function ProductListAjax(selectProps:any) {
       pageSizeOptions:[10,20,50,100]
     },
   });
-  // 复制商品模态框
-  const [radioValue, setRadioValue] = useState(1)
-  // 复制商品的数据
-  const [copyProduct, setCopyProduct] = useState<any>({});
-  // 是否复制商品图片
-  const [copyProductImage, setCopyProductImage] = useState(false);
-  // 是否复制商品库存
-  const [copyProductInventory, setCopyProductInventory] = useState(false);
   // 商品状态弹窗
   const productStatusConfirm = (product:DataType,index:number,checked:boolean) => {
     const tempModal = modal.info({
@@ -127,14 +121,8 @@ function ProductListAjax(selectProps:any) {
       </Flex>,
     });
   };
-  // 
-  const onChangeRadio = (e: RadioChangeEvent) => {
-    // console.log('radio checked', e.target.value);
-    setRadioValue(e.target.value);
-  };
   //列表数据
   const [data, setData] = useState<DataType[]>([]);
-
   // 状态
   const onChangeSwich = (index: number,checked:boolean) => {
     // 改变商品的状态
@@ -227,23 +215,21 @@ function ProductListAjax(selectProps:any) {
 
           }} >
             <ButtonIcon>
-                <div className='wrap' onClick={(e) => {
-                    e.stopPropagation()
-                    const primaryDomain = usePrimaryDomain();
-                    primaryDomain && window.open(`${primaryDomain}/products/${record.handle}`)
-                  }}>
-                  <Tooltip title="预览">
-                    <EyeOutlined />
-                  </Tooltip>
-                </div>
-              {/* </Link> */}
+              <div className='wrap' onClick={(e) => {
+                  e.stopPropagation()
+                  primaryDomain && window.open(`${primaryDomain}/products/${record.handle}`)
+                }}>
+                <Tooltip title="预览">
+                  <EyeOutlined />
+                </Tooltip>
+              </div>
             </ButtonIcon>
             <ButtonIcon>
               <Tooltip title="复制">
                 <div className='wrap' onClick={(e) => {
                   e.stopPropagation()
-                  setCopyProduct(record)
-                  setModalOpen(true);
+                  setCopyProduct({...record})
+                  setOpen(true);
                 }}>
                   <CopyOutlined />
                 </div>
@@ -364,67 +350,8 @@ function ProductListAjax(selectProps:any) {
           // showHeader={selectedRowKeys.length === 0}
         />
       </div>
-        
       {/* 复制商品模态框 */}
-      <Modal
-        centered
-        title="复制商品"
-        open={modalOpen}
-        onOk={()=>{
-          setModalOpen(false)
-          history.push('/products/new',{copyProduct:copyProduct,copyProductImage:copyProductImage,copyProductInventory:copyProductInventory,radioValue:radioValue})
-        }}
-        onCancel={() => {
-          setModalOpen(false);
-          // 重置
-          setRadioValue(1);
-          setCopyProductImage(false);
-          setCopyProductInventory(false);
-        }}
-      >
-        <Content>
-          <div>商品名称</div>
-          <div>
-            <Input value={`[Copy]`+copyProduct.title} />
-          </div>
-          <div>
-            <Checkbox className='selectItem' checked={copyProductImage} onChange={(e)=>{setCopyProductImage(e.target.checked)}}>
-              <span style={{
-                  marginRight: '3px',
-                  display: 'flex',
-                  alignContent: 'center',
-                  flexWrap: 'nowrap',
-                  width: '200px'
-                }}>
-                <span style={{
-                  marginRight: '3px',
-                }}>复制商品图片</span>
-                <Tooltip title="勾选该选项后，商品主图、属性值图、SKU图将会被一并复制">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            </Checkbox>
-          </div>
-          <div>
-            <Checkbox checked={copyProductInventory} onChange={(e)=>{setCopyProductInventory(e.target.checked)}}>
-              <span>复制商品库存</span>
-            </Checkbox>
-          </div>
-          <div>商品状态</div>
-          <Radio.Group onChange={onChangeRadio} value={radioValue}>
-            <div>
-              <Radio value={1}>
-                <span>已上架</span>
-              </Radio>
-            </div>
-            <div>
-              <Radio value={0}>
-                <span>已下架</span>
-              </Radio>
-            </div>
-          </Radio.Group>
-        </Content>
-      </Modal>
+      <ProductCopyModal open={open} setOpen={setOpen} product={copyProduct} />
     </Scoped>
   );
 };

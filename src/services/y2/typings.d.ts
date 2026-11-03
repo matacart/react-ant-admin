@@ -163,7 +163,7 @@ declare namespace ApiAppstore {
 
 declare namespace ApiLogistics {
   type Default = {
-    code:number,
+    code:number|string,
     count?:string,
     data:any,
     msg:string,

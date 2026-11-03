@@ -26,6 +26,6 @@
       }
     ]
   },
-  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx", "src/pages/Channel/FaceBook/Index"],
+  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx", "src/pages/Channel/FaceBook/Index", "src/pages/Settings/ShippingAndDistribution/General/Index json"],
   "suppressImplicitAnyIndexErrors":true
 }

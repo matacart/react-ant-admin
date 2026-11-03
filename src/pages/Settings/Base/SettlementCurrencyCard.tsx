@@ -211,7 +211,7 @@ function SettlementCurrencyCard() {
                     </Form.Item>
                 </Form>
             </Card>
-            <Modal open={isOpen} title="自定义货币格式" destroyOnClose width={860} centered
+            <Modal open={isOpen} title="自定义货币格式" width={860} centered
                 onCancel={onCancel}
                 footer={()=>(
                     <Flex justify="flex-end" gap={12}>

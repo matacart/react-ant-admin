@@ -88,7 +88,7 @@ function ProductTable() {
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                maxWidth:'calc(100% - 60px)',
+                                width:'320px',
                             }}>{record.title}</div>
                             <Flex style={{marginTop:"4px",height:"20px"}} align="center">
                                 {record?.skuList?.length >0 ? <span className="font-12 cursor-pointer" onClick={()=>{

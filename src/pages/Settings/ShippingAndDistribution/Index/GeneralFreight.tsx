@@ -37,7 +37,7 @@ function GeneralFreight() {
                 </div>:<Flex className="no-freight-box" align="center" vertical>
                     <div className="color-7A8499">无运费</div>
                     <div className="font-12 color-7A8499">添加运费以便客户完成结账</div>
-                    <PrimaryButton text="添加区域运费" onClick={()=>history.push("/settings/logistics/edit/common/1")} />
+                    <PrimaryButton text="添加区域运费" onClick={()=>history.push("/settings/logistics/edit/common")} />
                 </Flex>}
             </Card>
         </Scoped>

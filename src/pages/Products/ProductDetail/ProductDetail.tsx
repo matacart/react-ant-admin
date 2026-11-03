@@ -220,7 +220,10 @@ function ProductDetail() {
     // 获取商品详情
     const fetchProductDetail = async (id:string,langId:string) => {
         setIsSkeleton(true)
-        getProductDetail(id,langId).then(async res=>{
+        getProductDetail({
+            id:id,
+            languages_id:langId
+        }).then(async res=>{
             setProductTitle(res.data?.title || "");
             // 提取数据
             const { diversion,attributes,variants,...productInfo } = res.data;
@@ -356,15 +359,7 @@ function ProductDetail() {
                                 }} />
                                 <div style={{borderRight:"1px solid #d7dbe7",height:"36px"}}></div>
                                 <DefaultButton text={"复制"} onClick={()=>{
-                                    // if(cookie.load("domain").domain_primary && cookie.load("domain").domain_primary!==""){
-                                    //     window.open(`https://${cookie.load("domain").domain_primary}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                    //     message.success('复制成功')
-                                    // }else if(cookie.load("domain").handle){
-                                    //     window.open(`https://${cookie.load("domain").handle}${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
-                                    //     message.success('复制成功')
-                                    // }else{
-                                    //     message.error("店铺缺少handle")
-                                    // }
+                                    history.push(`/products/new?copyFrom=${productId}&title=${productTitle}&isImage=1&isInventory=1&status=${product.productInfo.status}`)
                                 }} />
                                 <DefaultButton text={"预览"} onClick={()=>{
                                     previewDomain && window.open(`${previewDomain}/products/${product.productInfo.handle.replace(new RegExp(" ","gm"),"-")}`)
@@ -372,40 +367,40 @@ function ProductDetail() {
                                 <ButtonDropdownSecondary text='分享' menu={{items:items}} trigger={['click']} />
                             </Flex>
                         </div>
-                            <div className='mc-layout-main'>
-                                <div className='mc-layout-content'>
-                                    <ProductData form={form} />
-                                    <ProductImg />
-                                    <PriceOrTransaction form={form} />
-                                    <StockCard form={form} />
-                                    <AttributesMapList />
-                                    {product.productInfo.has_variant == "1" && <VariantList />}
-                                </div>
-                                <div className='mc-layout-extra'>
-                                    <Relevance />
-                                    <ProductSettingsCard />
-                                    <TradingRecords />
-                                    <Recommendation />
-                                    <SEOCard />
-                                    <Winnow />
-                                    <PlatformHosting />
-                                    <Subnumber />
-                                    <ProtectionInformation />
-                                    <ThirdPartyInfoCard />
-                                    <CodTemplateCard />
-                                    <ThemeTemplateCard />
-                                </div>
+                        <div className='mc-layout-main'>
+                            <div className='mc-layout-content'>
+                                <ProductData form={form} />
+                                <ProductImg />
+                                <PriceOrTransaction form={form} />
+                                <StockCard form={form} />
+                                <AttributesMapList />
+                                {product.productInfo.has_variant == "1" && <VariantList />}
                             </div>
-                            <Divider />
-                            <div className='mc-footer'>
-                                <Flex gap={12}>
-                                    <DangerButton text='将商品删除' onClick={delProduct} />
-                                    {product.productInfo.status !== "2"?
-                                    <DefaultButton text='将商品存档' onClick={onFile} />
-                                    :<DefaultButton text='将商品取消存档' onClick={noONFile} />}
-                                </Flex>
-                                <PrimaryButton loading={loading} text='更新' onClick={onFinish} />
+                            <div className='mc-layout-extra'>
+                                <Relevance />
+                                <ProductSettingsCard />
+                                <TradingRecords />
+                                <Recommendation />
+                                <SEOCard />
+                                <Winnow />
+                                <PlatformHosting />
+                                <Subnumber />
+                                <ProtectionInformation />
+                                <ThirdPartyInfoCard />
+                                <CodTemplateCard />
+                                <ThemeTemplateCard />
                             </div>
+                        </div>
+                        <Divider />
+                        <div className='mc-footer'>
+                            <Flex gap={12}>
+                                <DangerButton text='将商品删除' onClick={delProduct} />
+                                {product.productInfo.status !== "2"?
+                                <DefaultButton text='将商品存档' onClick={onFile} />
+                                :<DefaultButton text='将商品取消存档' onClick={noONFile} />}
+                            </Flex>
+                            <PrimaryButton loading={loading} text='更新' onClick={onFinish} />
+                        </div>
                     </div>
                 </div>
                 {/* 编辑提示 */}

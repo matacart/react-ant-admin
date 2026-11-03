@@ -38,7 +38,7 @@ export async function deleteProduct(id: string) {
 }
 
 // 获取产品详情
-export async function getProductDetail(id: string,languagesId: string) {
+export async function getProductDetail(options:{id: string,languages_id: string}) {
   const res = await request<ApiStore.Default>('/ApiStore/product', {
     method: 'POST',
     headers: {
@@ -46,8 +46,7 @@ export async function getProductDetail(id: string,languagesId: string) {
     },
     data: {
       domain_id: cookie.load("domain")?.id,
-      id: id,
-      languages_id: languagesId
+      ...options,
     },
   })
   if (res.code != 0) errHandle(res);

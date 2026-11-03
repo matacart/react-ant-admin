@@ -1,0 +1,63 @@
+{
+    "productGroup": {
+        "productGroupSeq": "1"
+    },
+    "deliveryLocationGroupSetInfo": {
+        "createDeliveryLocationGroup": [],
+        "updateDeliveryLocationGroup": [
+            {
+                "defaultTag": true,
+                "deliveryLocationGroupSeq": "DLGD1",
+                "deliveryLocationSeqs": [],
+                "groupName": "Default Group",
+                "areaPlansSetDetail": {
+                    "createdAreaPlans": [
+                        {
+                            "shippingName": "区域二",
+                            "shippingAreas": [
+                                {
+                                    "countryCode": "AW",
+                                    "isCountryAllChoose": true,
+                                    "totalAreaNum": 0
+                                },
+                                {
+                                    "countryCode": "AI",
+                                    "isCountryAllChoose": true,
+                                    "totalAreaNum": 0
+                                }
+                            ],
+                            "isDefault": false,
+                            "addressType": 2,
+                            "deliveryPlans": [
+                                {
+                                    "shippingPlans": [
+                                        {
+                                            "chargeMode": 4,
+                                            "customAmount": 4000,
+                                            "conditionalInterval": 1,
+                                            "shippingType": 2,
+                                            "currencyCode": "USD"
+                                        }
+                                    ],
+                                    "expressTypeName": "custom name",
+                                    "expressTypeSource": 2,
+                                    "status": 1,
+                                    "deliveryName": "运费",
+                                    "operationReason": 0,
+                                    "supportedCheckoutTypes": [
+                                        2
+                                    ],
+                                    "customerDeliveryAddressRequired": true,
+                                    "supportedEmapType": null
+                                }
+                            ]
+                        }
+                    ],
+                    "updatedAreaPlans": [],
+                    "deletedAreaPlans": []
+                }
+            }
+        ],
+        "deleteDeliveryLocationGroupSeqs": []
+    }
+}

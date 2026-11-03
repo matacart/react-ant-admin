@@ -117,7 +117,6 @@ function AppList(props) {
                     }} 
                     title="卸载应用" 
                     content={"您的应用的访问令牌将被撤销，并且应用将无权访问商店数据。如果您重新安装应用，您将获得新的访问令牌。"}
-                    okText="卸载"
                 />
                 <DeleteModal
                     tElement={

@@ -1,4 +1,4 @@
-import { ConfigProvider, Input, InputNumber } from "antd"
+import { ConfigProvider, Input } from "antd"
 
 
 const {TextArea} = Input

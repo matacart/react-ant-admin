@@ -756,15 +756,20 @@ export default  [
         path:"delivery",
         component:"./Settings/ShippingAndDistribution/Index/ShippingAndDistribution"
       },
-      // 自定义运费
-      {
-        path:"logistics/add/custom",
-        component:"./Settings/ShippingAndDistribution/AddCustomLogistics/AddCustomLogistics"
-      },
       // 通用运费
       {
-        path:"logistics/edit/common/:id",
-        component:"./Settings/ShippingAndDistribution/EditCustomLogistics/EditCustomLogistics"
+        path:"logistics/edit/common",
+        component:"./Settings/ShippingAndDistribution/General/Index"
+      },
+      // 自定义分组运费-添加
+      {
+        path:"logistics/add/custom",
+        component:"./Settings/ShippingAndDistribution/Add/Index"
+      },
+      // 自定义分组运费-编辑
+      {
+        path:"logistics/edit/custom/:id",
+        component:"./Settings/ShippingAndDistribution/Edit/Index"
       },
       // 仓库地址
       {
